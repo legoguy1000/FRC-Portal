@@ -4,7 +4,7 @@
 			<md-button class="md-icon-button" ui-sref="main.admin.seasons" ng-click="admin.clickBack()">
 				<md-tooltip md-direction="top">Go Back to Season List</md-tooltip>
 				<i class="material-icons">arrow_back</i>
-			</md-button> 
+			</md-button>
 			Season Information
 		</h1>
 		<form class="md-margin" flex>
@@ -103,13 +103,13 @@
 				<table md-table md-row-select multiple ng-model="vm.selectedUsers">
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
-							<th md-column md-order-by="full_name"><span>Name</span></th>										
-							<th md-column md-order-by="join_team"><span>Join Team</span></th>										
-							<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>										
+							<th md-column md-order-by="full_name"><span>Name</span></th>
+							<th md-column md-order-by="join_team"><span>Join Team</span></th>
+							<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>
 							<th md-column md-order-by="dues"><span>Pay Dues</span></th>
-							<th md-column md-order-by="season_hours"><span>Season Hours</span></th>										
-							<th md-column md-order-by="reqs_complete"><span>Requirements Complete</span></th><!-- 										
-							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>										
+							<th md-column md-order-by="season_hours"><span>Season Hours (exluding exemptions)</span></th>
+							<th md-column md-order-by="reqs_complete"><span>Requirements Complete</span></th><!--
+							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
 							<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
 					</thead>
@@ -138,7 +138,7 @@
 							<td md-cell>
 								<md-icon class="material-icons" style="color:green;" ng-show="user.min_hours">check_circle</md-icon>
 								<md-icon class="material-icons" style="color:red;" ng-hide="user.min_hours">remove_circle</md-icon>
-								{{user.season_hours}}
+								{{user.season_hours_exempt}}
 							</td>
 							<td md-cell>
 								<md-icon class="material-icons" style="color:green;" ng-show="user.reqs_complete">check_circle</md-icon>
@@ -177,5 +177,5 @@
 				</md-fab-actions>
 			</md-fab-speed-dial>
 		</div>
-	</md-content>		
+	</md-content>
 </div>
