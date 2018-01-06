@@ -113,7 +113,9 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 					vm.pin = vm.pin+'0';
 				}
 			} else if(vm.pin.length > 0) {
-				
+					if(e.originalEvent.code == 'Backspace' || e.originalEvent.code == 'Delete') {
+						vm.pin = vm.pin.slice(0, -1);
+					}
 			}
 	});
 
