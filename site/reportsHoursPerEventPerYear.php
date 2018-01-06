@@ -21,15 +21,12 @@ $result = db_select($query);
 foreach($result as $re) {
 	$name = $re['name'];
 	if($re['event_start'] == $re['event_end']) {
-		$date = new DateTime();
-		$date->setISODate($re['event_start']);
+		$date = new DateTime($re['event_start']);
 		$name .= ' '.$date->format('m/d');
 	} else {
-		$date = new DateTime();
-		$date->setISODate($re['event_start']);
+		$date = new DateTime($re['event_start']);
 		$name .= ' '.$date->format('m/d');
-		$date = new DateTime();
-		$date->setISODate($re['event_end']);
+		$date = new DateTime($re['event_end']);
 		$name .= '-'.$date->format('m/d/');
 	}
 	$labels[] = $name;
