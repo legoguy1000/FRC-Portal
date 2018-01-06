@@ -6,8 +6,8 @@ function userQuery($sel='',$joins='', $where = '', $order = '') {
 	$whereStr = isset($where) && $where !='' ? ' '.$where : '';
 	$query = 'SELECT users.*,
 					 CONCAT(users.fname," ",users.lname) AS full_name,
-					 schools.*,
-					 
+					 schools.*
+
 					 '.$selStr.'
 			  FROM users
 			  LEFT JOIN schools USING (school_id)
