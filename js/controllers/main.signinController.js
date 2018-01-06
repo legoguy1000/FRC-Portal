@@ -88,9 +88,9 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
     }
 		console.log(e.keyCode);
 	}
-	$(document).on("keyup", function (e) {
+	$(document).keyup(function (e) {
 	    //console.log(e);
-		//	if(vm.pin.length < 8) {
+			if(vm.pin.length < 8) {
 				if(e.originalEvent.code == 'Digit1' || e.originalEvent.code == 'Numpad1') {
 					vm.pin = vm.pin+'1';
 				} else if(e.originalEvent.code == 'Digit2' || e.originalEvent.code == 'Numpad2') {
@@ -112,12 +112,12 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 				} else if(e.originalEvent.code == 'Digit0' || e.originalEvent.code == 'Numpad0') {
 					vm.pin = vm.pin+'0';
 				}
-		//	}
-		//	if(vm.pin.length > 0) {
+			}
+			if(vm.pin.length > 0) {
 					if(e.originalEvent.code == 'Backspace' || e.originalEvent.code == 'Delete') {
 						vm.pin = vm.pin.slice(0, -1);
 					}
-			//}
+			}
 	});
 
 }
