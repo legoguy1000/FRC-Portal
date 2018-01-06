@@ -22,7 +22,7 @@ $result = db_select($query);
 foreach($result as $re) {
 	$date = new DateTime();
 	$date->setISODate($year,$re['week']);
-	$labels[] = $date->format('M/d/Y');
+	$labels[] = $date->format('m/d/Y');
 	$data[0][] = (double) $re['sum'];
 }
 $allData = array(

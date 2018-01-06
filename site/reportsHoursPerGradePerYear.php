@@ -30,7 +30,7 @@ $query = 'SELECT CASE
  WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=48 THEN "Freshman"
  ELSE ""
 END AS student_grade,
-SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600) as sum, year(a.time_in) as year from meeting_hours a LEFT JOIN users b USING (user_id) WHERE year(a.time_in) BETWEEN '.$start_date.' AND '.$end_date.' GROUP BY year,student_grade';
+IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as sum, year(a.time_in) as year from meeting_hours a LEFT JOIN users b USING (user_id) WHERE year(a.time_in) BETWEEN '.$start_date.' AND '.$end_date.' GROUP BY year,student_grade';
 $result = db_select($query);
 foreach($result as $re) {
 	$student_grade = $re['student_grade'];
