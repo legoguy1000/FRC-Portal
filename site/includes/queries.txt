@@ -37,5 +37,3 @@ SELECT a.*,b.*,c.*, (SELECT SUM(time_to_sec(timediff(d.time_out, d.time_in)) / 3
 SELECT b.*,c.*, hours.*, (hours.hours >= (SELECT mentor from hour_requirements)) as hours_met FROM users b
 LEFT JOIN anual_requirements c USING (user_id)
 LEFT JOIN (SELECT d.user_id, SUM(time_to_sec(timediff(d.time_out, d.time_in)) / 3600) AS hours FROM meeting_hours d GROUP BY d.user_id) AS hours USING (user_id)
-
-asdfasdfasdfasdf
