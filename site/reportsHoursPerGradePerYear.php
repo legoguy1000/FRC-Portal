@@ -14,7 +14,7 @@ $end_date = $_GET['end_date'];
 
 $years = array();
 for($i = $start_date; $i <= $end_date; $i++) {
-	$years[] = $i;
+	$years[] = (integer) $i;
 }
 
 $series = array('Senior','Junior','Sophmore','Freshman','Mentor');
