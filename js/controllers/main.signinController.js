@@ -117,7 +117,6 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 					vm.pin = vm.pin.slice(0, -1);
 				}
 			}
-		}
 	});
 
 }
