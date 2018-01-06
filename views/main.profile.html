@@ -1,11 +1,7 @@
 <div flex layout-gt-sm="row" layout="column">
 	<md-content flex flex-gt-sm="50" flex-gt-md="33" layout="column" class="md-margin">
 		<h1 class="md-headline">
-			<md-button class="md-icon-button" ui-sref="main.admin.users" ng-click="admin.clickBack()">
-				<md-tooltip md-direction="top">Go Back to User List</md-tooltip>
-				<i class="material-icons">arrow_back</i>
-			</md-button>
-			User Information
+			My Profile
 		</h1>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading.profile"></md-progress-linear>
 		<form class="md-margin" flex layout="column" ng-submit="vm.updateUser()">
