@@ -88,5 +88,8 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
     }
 		console.log(e.keyCode);
 	}
+	$(document).on("keypress", function (e) {
+	    console.log(e);
+	});
 
 }
