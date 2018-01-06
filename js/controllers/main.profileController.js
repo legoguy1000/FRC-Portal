@@ -24,6 +24,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.loading = {
 		note_types: false,
 		note_devices: false,
+		profile: false,
 	}
 
 	vm.notificationOptions = {
@@ -58,7 +59,9 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.getProfileInfo();
 
 	vm.updateUser = function() {
+		vm.loading.profile = true;
 		usersService.updateUserPersonalInfo($scope.main.userInfo).then(function(response) {
+			vm.loading.profile = false;
 			if(response.status) {
 
 			}

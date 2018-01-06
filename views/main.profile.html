@@ -7,6 +7,7 @@
 			</md-button>
 			User Information
 		</h1>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading.profile"></md-progress-linear>
 		<form class="md-margin" flex layout="column" ng-submit="vm.updateUser()">
 			<md-input-container flex required>
 				<label>First Name</label>
