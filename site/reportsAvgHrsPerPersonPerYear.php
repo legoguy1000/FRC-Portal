@@ -22,13 +22,13 @@ $data = array();
 foreach($series as $se) {
 	$data[strtolower($se)] = array_fill_keys($years,0);
 }
-$query = 'SELECT SUM(d.hours) as sum, AVG(d.hours) as avg, d.year from (SELECT a.user_id, SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600) as hours, year(a.time_in) as year from meeting_hours a GROUP BY user_id,year) d GROUP BY year';
+$query = 'SELECT SUM(d.hours) as sum, AVG(d.hours) as avg, d.year from (SELECT a.user_id, SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600) as hours, year(a.time_in) as year from meeting_hours a WHERE year(a.time_in) BETWEEN '.$start_date.' AND '.$end_date.' GROUP BY user_id,year) d GROUP BY year';
 $result = db_select($query);
 foreach($result as $re) {
 	$year = (integer) $re['year'];
 	$sum = (double) $re['sum'];
 	$avg = (double) $re['avg'];
-	
+
 	$data['sum'][$year] = $sum;
 	$data['avg'][$year] = $avg;
 }

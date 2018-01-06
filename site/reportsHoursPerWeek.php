@@ -13,8 +13,8 @@ $series = array('Total Hours'); //,'Total'
 $data = array(array());
 $labels = array();
 //$total = array_fill_keys($years,0);
-$query = 'SELECT SUM(a.hours) as sum, AVG(a.hours) as avg, a.week FROM 
-(SELECT IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, week(mh.time_in) as week from meeting_hours mh WHERE year(mh.time_in)='.db_quote($year).' GROUP BY week) a 
+$query = 'SELECT SUM(a.hours) as sum, AVG(a.hours) as avg, a.week FROM
+(SELECT IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, week(mh.time_in) as week from meeting_hours mh WHERE year(mh.time_in)='.db_quote($year).' GROUP BY week) a
 GROUP BY week';
 //die($query);
 

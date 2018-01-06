@@ -22,14 +22,14 @@ $data = array();
 foreach($series as $se) {
 	$data[$se] = array_fill_keys($years,0);
 }
-$query = 'SELECT b.user_type, SUM(d.hours) as sum, AVG(d.hours) as avg, d.year from (SELECT a.user_id, SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600) as hours, year(a.time_in) as year from meeting_hours a GROUP BY user_id,year) d LEFT JOIN users b USING (user_id) GROUP BY year,user_type';
+$query = 'SELECT b.user_type, SUM(d.hours) as sum, AVG(d.hours) as avg, d.year from (SELECT a.user_id, SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600) as hours, year(a.time_in) as year from meeting_hours a WHERE year(a.time_in) BETWEEN '.$start_date.' AND '.$end_date.' GROUP BY user_id,year) d LEFT JOIN users b USING (user_id) GROUP BY year,user_type';
 $result = db_select($query);
 foreach($result as $re) {
 	$user_type = $re['user_type'];
 	$year = $re['year'];
 	$sum = $re['sum'];
 	$avg = $re['avg'];
-	
+
 	$data[$user_type.' - Sum'][$year] = $sum;
 	$data[$user_type.' - Avg'][$year] = $avg;
 }
