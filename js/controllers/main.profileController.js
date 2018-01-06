@@ -58,9 +58,9 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.getProfileInfo();
 
 	vm.updateUser = function() {
-		usersService.updateUserPersonalInfo(main.userInfo).then(function(response) {
+		usersService.updateUserPersonalInfo($scope.main.userInfo).then(function(response) {
 			if(response.status) {
-				
+
 			}
 		});
 	}
