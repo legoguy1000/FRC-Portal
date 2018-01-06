@@ -7,27 +7,20 @@ function userQuery($sel='',$joins='', $where = '', $order = '') {
 	$query = 'SELECT users.*,
 					 CONCAT(users.fname," ",users.lname) AS full_name,
 					 schools.*,
-					 CASE
-						WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=0  THEN "Graduated"
-						WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=12 THEN "Senior"
-						WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=24 THEN "Junior"
-						WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=36 THEN "Sophmore"
-						WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=48 THEN "Freshman"
-						ELSE ""
-					 END AS student_grade
+					 
 					 '.$selStr.'
-			  FROM users 
+			  FROM users
 			  LEFT JOIN schools USING (school_id)
 			  '.$joinStr.' '.$whereStr.' '.$orderStr;
 	return $query;
 }
 
 /* function annualRequirementsQueryArr($l = 'annual_requirements') {
-	
+
 	$sel = 'IFNULL('.$l.'.join_team,0) AS join_team, IFNULL('.$l.'.stims,0) AS stims, IFNULL('.$l.'.dues,0) AS dues';
 	$joins = 'CROSS JOIN seasons b';
 	$joins .= ' LEFT JOIN annual_requirements '.$l.' USING (user_id,season_id)';
-	
+
 	$data = array(
 		'selects' => $sel,
 		'joins' => $joins
@@ -36,11 +29,11 @@ function userQuery($sel='',$joins='', $where = '', $order = '') {
 }
 
 function userHoursQueryArr($l = 'off_season_hours', $q = 'on_season_hours') {
-	
+
 	$sel =  'IFNULL('.$l.'.off_season_hours,0) AS off_season_hours, IFNULL('.$q.'.season_hours,0) AS season_hours, (IFNULL('.$l.'.off_season_hours,0)+IFNULL('.$q.'.season_hours,0)) AS total';
 	$joins = ' LEFT JOIN (SELECT meeting_hours.user_id,year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS off_season_hours, seasons.* FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>seasons.end_date GROUP BY meeting_hours.user_id,seasons.year) '.$l.' USING (user_id,year)';
 	$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id,year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS season_hours, seasons.* FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.end_date GROUP BY meeting_hours.user_id,seasons.year) '.$q.' USING (user_id,year)';
-	
+
 	$data = array(
 		'selects' => $sel,
 		'joins' => $joins
@@ -49,7 +42,7 @@ function userHoursQueryArr($l = 'off_season_hours', $q = 'on_season_hours') {
 } */
 
 function userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requirements', $c = 'off_season_hours', $d = 'on_season_hours') {
-	
+
 	$sel =  $b.'.*';
 	$joins = 'CROSS JOIN seasons '.$b;
 	if($l != false) {
@@ -75,7 +68,7 @@ function userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requir
 }
 
 function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements') {
-	
+
 	$sel =  $b.'.*, year('.$b.'.event_start) as year';
 	$joins = 'CROSS JOIN events '.$b;
 	if($l != false) {
@@ -109,8 +102,8 @@ function userSignInList() {
 	$where = 'WHERE users.status = "1"';
 	$order = 'ORDER BY users.lname ASC';
 	$query = userQuery($sel, $joins, $where, $order);
-	
-	
+
+
 	$result = db_select($query);
 	//die($query);
 	if(count($result > 0)) {
@@ -197,7 +190,7 @@ function userEventInfo($user_id = null, $event = null) {
 }
 
 function userAnnualRequirements($user_id = null, $year = null) {
-	
+
 	$data = array();
 	$reqsQuery = userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requirements', $c = false, $d = false);
 	$where = '';
@@ -235,7 +228,7 @@ function userAnnualRequirements($user_id = null, $year = null) {
 }
 
 function userHours($user_id = null, $year = null) {
-	
+
 	$data = array();
 	$hoursQuery = userHoursQueryArr($l = 'c', $q = 'd');
 	$where = '';
@@ -255,7 +248,7 @@ function userHours($user_id = null, $year = null) {
 	}
 	$order = 'ORDER BY users.lname ASC, b.year DESC';
 	$query = userQuery($sel, $joins, $where, $order);
-	
+
 	$result = db_select($query);
 	if(count($result > 0)) {
 		$data = $result;
@@ -264,11 +257,11 @@ function userHours($user_id = null, $year = null) {
 }
 
 function userHoursbyDate($user_id = null, $year = null) {
-	
+
 	$data = array();
 	$where = '';
 	$whereArr = array();
-	
+
 	if($user_id != null) {
 		$whereArr[] = 'user_id = '.db_quote($user_id);
 	}
@@ -343,7 +336,7 @@ function checkUserLogin($userData) {
 					}
 				}
 			}
-		} 
+		}
 		if($user != false) {
 			$data = formatUserData($user);
 			$data['oauth_id'] = $userData['id'];
@@ -397,7 +390,7 @@ function checkUserLogin($userData) {
 		$data = getUserDataFromParam('user_id', $id);
 		$data['newUser'] = true;
 	} */
-	
+
 	return $data;
 }
 
@@ -513,7 +506,7 @@ function getNotificationPreferencesByUser($user_id) {
 			$t = $re['type'];
 			$data[$m][$t] = true;
 		}
-	} 
+	}
 	return $data;
 }
 
@@ -533,7 +526,7 @@ function sendPushNotificationByUser($user, $title='', $body='', $tag='') {
 		'GCM' => getIniProp('fcm_key'),
 	);
 	$webPush = new WebPush($apiKeys);
-	
+
 	$endpoints = getNotifiationEndpointsByUser($user);
 	$payload = array(
 		'title'=>'Team 2363 Portal'.$ti,
@@ -562,7 +555,7 @@ function sendUserNotification($user_id, $type, $msgData)
 	global $db;
 
 	//$preferences = checkNotificationPreference($user_id, $type);
-	
+
 	$preferences = array('push' => true, 'email' => false);
 	if($preferences['email'] == true) {
 
@@ -582,7 +575,7 @@ function sendUserNotification($user_id, $type, $msgData)
 }
 
 function getAllUsersFilter($filter = '', $limit = 10, $order = 'full_name', $page = 1) {
-	
+
 	/* if(isset($filter) && $filter != '') {
 		$filter = $filter;
 	}
@@ -619,11 +612,11 @@ function getAllUsersFilter($filter = '', $limit = 10, $order = 'full_name', $pag
 			$queryArr[] = '(student_grade LIKE '.db_quote('%'.$filter.'%').')';
 		}
 	}
-	
+
 	if(count($queryArr) > 0) {
 		$queryStr = ' HAVING '.implode(' OR ',$queryArr);
 	}
-	
+
 	$orderBy = '';
 	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
 	if(in_array($orderCol,array('full_name','fname','lname','email','user_type','gender','schoool_name'))) {
@@ -636,12 +629,12 @@ function getAllUsersFilter($filter = '', $limit = 10, $order = 'full_name', $pag
 	$query = userQuery($sel='',$joins='', $where, $order = '');
 	$result = db_select($query);
 	$totalNum = count($result);
-	         
-	$offset	= ($page - 1) * $limit;	 
+
+	$offset	= ($page - 1) * $limit;
 	$order = 'ORDER BY '.$orderCol.' '.$orderBy.' LIMIT '.$offset.', '.$limit;
 	$query = userQuery($sel='',$joins='', $where, $order);
 	//die($query);
-	$result = db_select($query);	
+	$result = db_select($query);
 	if(count($result) > 0) {
 		foreach($result as $user) {
 			$temp = formatUserData($user);
@@ -652,7 +645,7 @@ function getAllUsersFilter($filter = '', $limit = 10, $order = 'full_name', $pag
 	$data['query'] = $query;
 	$data['total'] = $totalNum;
 	$data['maxPage'] = ceil($totalNum/$limit);
-	
+
 	return $data;
 }
 ?>
