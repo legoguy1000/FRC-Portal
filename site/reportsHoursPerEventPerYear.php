@@ -19,7 +19,20 @@ GROUP BY e.event_id HAVING year='.db_quote($year).' ORDER BY e.event_start';
 //die($query);
 $result = db_select($query);
 foreach($result as $re) {
-	$labels[] = $re['name'];
+	$name = $re['name'];
+	if($re['event_start'] == $re['event_end']) {
+		$date = new DateTime();
+		$date->setISODate($re['event_start']);
+		$name .= ' '.$date->format('m/d');
+	} else {
+		$date = new DateTime();
+		$date->setISODate($re['event_start']);
+		$name .= ' '.$date->format('m/d');
+		$date = new DateTime();
+		$date->setISODate($re['event_end']);
+		$name .= '-'.$date->format('m/d/');
+	}
+	$labels[] = $name;
 	$data[0][] = (double) $re['hours'];
 }
 $allData = array(
