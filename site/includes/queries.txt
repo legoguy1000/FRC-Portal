@@ -19,11 +19,11 @@ SELECT b.user_type, SUM(d.hours) as sum, AVG(d.hours) as avg, 'ALL' AS year from
 
 
 
-SELECT 	users.*, 
+SELECT 	users.*,
 		CONCAT(users.fname," ",users.lname) AS full_name,
 		schools.school_name,
 		reqs.*
-		FROM users 
+		FROM users
 		LEFT JOIN schools USING (school_id)
 		LEFT JOIN (
 			SELECT a.*,b.year FROM anual_requirements a LEFT JOIN seasons b USING (season_id) WHERE CURDATE() <= b.end_date
@@ -34,9 +34,9 @@ SELECT 	users.*,
 
 SELECT a.*,b.*,c.*, (SELECT SUM(time_to_sec(timediff(d.time_out, d.time_in)) / 3600) FROM meeting_hours d GROUP BY d.user_id) AS hours, ((SELECT SUM(time_to_sec(timediff(d.time_out, d.time_in)) / 3600) FROM meeting_hours d GROUP BY d.user_id) >= (SELECT mentor from hour_requirements )) AS hours_met FROM `user_event_requirements` a LEFT JOIN users b USING (user_id) LEFT JOIN anual_requirements c USING (user_id)
 
-SELECT b.*,c.*, hours.*, (hours.hours >= (SELECT mentor from hour_requirements)) as hours_met FROM users b 
+SELECT b.*,c.*, hours.*, (hours.hours >= (SELECT mentor from hour_requirements)) as hours_met FROM users b
 LEFT JOIN anual_requirements c USING (user_id)
 LEFT JOIN (SELECT d.user_id, SUM(time_to_sec(timediff(d.time_out, d.time_in)) / 3600) AS hours FROM meeting_hours d GROUP BY d.user_id) AS hours USING (user_id)
 
 
-ss
+This is a test
