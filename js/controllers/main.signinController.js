@@ -15,20 +15,20 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 		order: 'full_name',
 		page: 1
 	};
-	
+
 	var tick = function() {
 		vm.clock = Date.now();
 	}
 	tick();
 	$interval(tick, 1000);
-  
+
 	vm.getUsers = function() {
 		usersService.signInUserList().then(function(response) {
 			vm.users = response;
 		});
 	}
 	vm.getUsers();
-	
+
 	//vm.signInAuthed = signinService.isAuthed();
 	vm.authorizeSignIn = function() {
 		signinService.authorizeSignIn().then(function(response) {
@@ -54,7 +54,7 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 			}
 		});
 	}
-	
+
 	vm.signinOut = function($event, numbers) {
 		console.log(vm.pin);
 		vm.user_id = ''
@@ -79,6 +79,13 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 			vm.pin = '';
 			vm.selected_user = [];
 		});
-	   
+
 	}
+
+	vm.keyDown = function(e) {
+		if(e.keyCode == 46 || e.keyCode == 8) {
+        //alert('Delete Key Pressed');
+    }
+	}
+
 }

@@ -1,4 +1,4 @@
-<div flex layout="column" layout-gt-sm="row">
+<div flex layout="column" layout-gt-sm="row" ng-keydown="vm.keyDown($event)">
 	<div flex>
 		<md-toolbar class="md-table-toolbar" ng-hide="vm.filter.show">
 			<div class="md-toolbar-tools">
@@ -15,11 +15,11 @@
 			<table md-table md-row-select ng-model="vm.selected_user" md-progress="vm.promise">
 				<thead md-head md-order="vm.query.order" md-on-reorder="vm.getUsers">
 					<tr md-row>
-						<th md-column md-order-by="full_name"><span>Name</span></th>					
-						<!-- <th md-column md-order-by="user_type"><span>Type</span></th>	 -->				
-						<th md-column md-order-by="time_in"><span>Time In</span></th>					
-						<th md-column md-order-by="time_out"><span>Time Out</span></th>				
-						<th md-column md-order-by="time_out"><span>Hours (On/Off Season)</span></th>				
+						<th md-column md-order-by="full_name"><span>Name</span></th>
+						<!-- <th md-column md-order-by="user_type"><span>Type</span></th>	 -->
+						<th md-column md-order-by="time_in"><span>Time In</span></th>
+						<th md-column md-order-by="time_out"><span>Time Out</span></th>
+						<th md-column md-order-by="time_out"><span>Hours (On/Off Season)</span></th>
 					</tr>
 				</thead>
 				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
@@ -74,7 +74,7 @@
 		></bc-keypad>
 	</div>
 </div>
-	
+
 <!-- Define the keypad: -->
 <!-- <bc-keypad
 	bc-number-model="vm.numbers"
