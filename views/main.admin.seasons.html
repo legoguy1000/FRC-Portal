@@ -1,0 +1,67 @@
+
+	<md-toolbar class="md-table-toolbar md-default" ng-hide="vm.filter.show">
+		<div class="md-toolbar-tools">
+			<span>Seasons</span>
+			<div flex></div>
+			<md-button class="md-icon-button" ng-click="vm.showFilter()">
+				<md-icon>filter_list</md-icon>
+			</md-button>
+			<md-button class="md-icon-button" ng-click="vm.getSeasons()">
+				<md-icon>refresh</md-icon>
+			</md-button>
+			<md-button class="md-icon-button" ng-click="vm.newSeasonModal()">
+				<md-icon>add</md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+	
+	<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
+		<div class="md-toolbar-tools">
+			<md-icon class="material-icons">search</md-icon>
+			<form flex name="filter.form" >
+				<input type="text" ng-model="vm.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">
+			</form>
+			<md-button class="md-icon-button" ng-click="vm.removeFilter()">
+				<md-icon class="material-icons">close</md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+	
+	<md-table-container>
+		<table md-table ng-model="selected" md-progress="vm.promise">
+			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getSeasons">
+				<tr md-row>
+					<th md-column md-order-by="year"><span>Year</span></th>					
+					<th md-column md-order-by="game_name"><span>Game Name</span></th>					
+					<th md-column md-order-by="start_date"><span>Start Date</span></th>					
+					<th md-column md-order-by="bag_day"><span>Bag Day</span></th>					
+					<th md-column md-order-by="end_date"><span>End Date</span></th>			
+					<th md-column style="width: 150px;"></th>			
+				</tr>
+			</thead>
+			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+				<tr md-row ng-repeat="season in vm.seasons">
+					<td md-cell>{{season.year}}</td>
+					<td md-cell>
+						<md-list-item style="padding: 0px;">
+							<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
+							{{season.game_name}}
+						</md-list-item>
+					</td>
+					<td md-cell>{{season.start_date}}</td>
+					<td md-cell>{{season.bag_day}}</td>
+					<td md-cell>{{season.end_date}}</td>
+					<td md-cell>
+						<md-button class="md-icon-button" ui-sref="main.admin.season({'season_id':season.season_id})" ng-click="admin.slideLeft()">
+							<md-icon>open_in_new</md-icon>
+						</md-button>
+						<md-button class="md-icon-button" ng-click="">
+							<md-icon>delete_forever</md-icon>
+						</md-button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</md-table-container>
+
+<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.total}}" md-page-select md-boundary-links md-on-paginate="vm.getSeasons"></md-table-pagination></md-content>

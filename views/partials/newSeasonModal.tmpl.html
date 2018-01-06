@@ -1,0 +1,79 @@
+<md-dialog aria-label="New Season" style="" layout="column" flex="50" >
+	<form ng-cloak layout="column" flex layout-fill style="background: #FDB813;" ng-submit="vm.addSeason()">
+		<md-toolbar layout="row">
+		  <div class="md-toolbar-tools">
+			<h2>New Season</h2>
+			<span flex></span>
+			<md-button class="md-icon-button" ng-click="vm.cancel()">
+			  <md-icon class=""> close </md-icon>
+			</md-button>
+		  </div>
+		</md-toolbar>
+		<md-dialog-content layout="column" layout-margin>
+			<div layout="column" layout-gt-xs="row">
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Year</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.data.year" required
+						 format="YYYY"
+						 min-view="decade"
+						 max-view="year"
+						 change="vm.onYearChange(newValue, oldValue)"
+						 ng-model="vm.data.year_full">
+					</input>
+				</md-input-container>
+				<md-input-container flex>
+					<label>Game Name</label>
+					<input ng-model="vm.data.game_name" required>
+				</md-input-container>
+			</div>
+			<div layout="column" layout-gt-xs="row">
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Start Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.data.start_date" required
+						 format="YYYY-MM-DD"
+						 min-view="year"
+						 max-view="day"
+						 ng-model="vm.data.start_date_full">
+					</input>
+				</md-input-container>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Bag Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.data.bag_day" required
+						 format="YYYY-MM-DD"
+						 min-view="year"
+						 max-view="day"
+						 ng-model="vm.data.bag_day_full">
+					</input>
+				</md-input-container>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>End Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.data.end_date" required
+						 format="YYYY-MM-DD"
+						 min-view="year"
+						 max-view="day"
+						 ng-model="vm.data.end_date_full">
+					</input>
+				</md-input-container>
+			</div>
+			<div layout="column" layout-gt-xs="row">
+				<md-input-container flex>
+					<label>Game Logo URL</label>
+					<input ng-model="vm.data.game_logo" type="url" required>
+				</md-input-container>
+			</div>
+			<div layout="column" layout-gt-xs="row">
+			</div>
+			<!-- <pre>{{vm.userInfo | json}}</pre> -->
+		</md-dialog-content>
+		<md-dialog-actions layout="row">
+			<span flex></span>
+			<md-button type="submit">
+				Submit
+			</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>

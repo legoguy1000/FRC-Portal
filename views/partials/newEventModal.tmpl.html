@@ -1,0 +1,83 @@
+<md-dialog aria-label="New Event" style="" layout="column" flex="50" >
+	<form ng-cloak layout="column" flex layout-fill style="background: #FDB813;" ng-submit="vm.addEvent()">
+		<md-toolbar layout="row">
+		  <div class="md-toolbar-tools">
+			<h2>New Event</h2>
+			<span flex></span>
+			<md-button class="md-icon-button" ng-click="vm.cancel()">
+			  <md-icon class=""> close </md-icon>
+			</md-button>
+		  </div>
+		</md-toolbar>
+		<md-dialog-content layout="column" layout-margin>
+			<div layout="column">
+				<md-input-container>
+					<label>FRC Season</label>
+					<md-select ng-model="vm.data.season_id"
+							   md-on-close="vm.clearSearchSeason()"
+							   data-md-container-class="selectdemoSelectHeader">
+						<md-select-header class="demo-select-header">
+							<input ng-model="vm.searchSeason"
+							type="search"
+							placeholder="Search for a Season.."
+							class="demo-header-searchbox md-text">
+						</md-select-header>
+						<md-optgroup label="Seasons">
+							<md-option value=""></md-option>
+							<md-option ng-value="season.season_id" ng-repeat="season in vm.seasons | filter:vm.searchSeason">
+								<md-list-item style="padding: 0px;">
+								<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
+								{{season.year}} - {{season.game_name}}
+								</md-list-item>
+							</md-option>
+						</md-optgroup>
+					</md-select>
+				</md-input-container>
+				<md-input-container flex>
+					<label>Event Name</label>
+					<input ng-model="vm.data.name" required/>
+				</md-input-container>
+				<md-input-container flex>
+					<label>Type</label>
+					<input ng-model="vm.data.type" required/>
+				</md-input-container>
+				<div layout="row">
+					<div flex>
+						<md-input-container flex class="md-icon-float md-block">
+							<label>Start Date</label>
+							<md-icon md-font-library="material-icons">today</md-icon>
+							<input moment-picker="vm.data.event_start" required
+								 format="YYYY-MM-DD"
+								 min-view="year"
+								 max-view="day"
+								 ng-model="vm.data.event_start_full">
+							</input>
+						</md-input-container>
+					</div>
+					<div>
+						<md-checkbox ng-model="vm.data.single_day" aria-label="Single Day" ng-click="vm.checkSingle()">
+							Single Day
+						</md-checkbox>
+					</div>
+				</div>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>End Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.data.event_end" required
+						 format="YYYY-MM-DD"
+						 min-view="year"
+						 max-view="day"
+						 ng-model="vm.data.event_end_full"
+						 disable="vm.data.single_day">
+					</input>
+				</md-input-container>
+			</div>
+		</md-dialog-content>
+		<md-dialog-actions layout="row">
+			<span flex></span>
+			<md-button type="submit">
+				Submit
+			</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>

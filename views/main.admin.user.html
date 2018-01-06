@@ -1,0 +1,140 @@
+<div flex layout-gt-sm="row" layout="column">
+	<md-content flex flex-gt-sm="50" flex-gt-md="33" layout="column" class="md-margin">
+		<h1 class="md-headline">
+			<md-button class="md-icon-button" ui-sref="main.admin.users" ng-click="admin.clickBack()">
+				<md-tooltip md-direction="top">Go Back to User List</md-tooltip>
+				<i class="material-icons">arrow_back</i>
+			</md-button> 
+			User Information
+		</h1>
+		<form class="md-margin" flex layout="column">
+			<md-input-container flex required>
+				<label>First Name</label>
+				<input ng-model="vm.userInfo.fname">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Last Name</label>
+				<input ng-model="vm.userInfo.lname">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Alt Email</label>
+				<input ng-model="vm.userInfo.email">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Team Email</label>
+				<input ng-model="vm.userInfo.team_email">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Phone</label>
+				<input ng-model="vm.userInfo.phone" phone-input type='text'/>
+			</md-input-container>
+			<div layout="row">
+			<md-input-container flex>
+				<label>User Type</label>
+				<md-select ng-model="vm.userInfo.user_type">
+					<md-option ng-value="'Student'">Student</md-option>
+					<md-option ng-value="'Mentor'">Mentor</md-option>
+				</md-select>
+			</md-input-container>
+			<md-input-container flex>
+				<label>Gender</label>
+				<md-select ng-model="vm.userInfo.gender" required>
+					<md-option value=""><em>Not Set</em></md-option>
+					<md-option value="Male">Male</md-option>
+					<md-option value="Female">Female</md-option>
+				</md-select>
+			</md-input-container>
+			</div>
+			<div layout="row">
+				<md-autocomplete flex ng-required="vm.userInfo.user_type=='Student'"  ng-disabled="vm.userInfo.user_type!='Student'"
+					md-input-name="autocompleteField"
+					md-no-cache="false"
+					md-selected-item="vm.userInfo.schoolData"
+					md-search-text="vm.searchText"
+					md-items="item in vm.querySearch(vm.searchText)"
+					md-item-text="item.school_name"
+					md-floating-label="School Name">
+					<md-item-template>
+						<span md-highlight-text="vm.searchText">{{item.school_name}}</span>
+					</md-item-template>
+				</md-autocomplete>
+				<md-input-container flex="33">
+					<label>Graduation Year</label>
+					<input ng-model="vm.userInfo.grad_year" ng-required="vm.userInfo.user_type=='Student'" ng-disabled="vm.userInfo.user_type!='Student'"/>
+				</md-input-container>
+			</div>
+			<div flex layout="row">
+				<span flex></span>
+				<md-button type="submit" class="md-raised md-primary">
+					Submit
+				</md-button>
+			</div>
+		</form>
+	</md-content>
+	<md-content flex="grow" class="md-margin" layout="column">
+		<div flex layout="column">
+			<h1 class="md-headline">
+				<md-button class="md-icon-button" ng-click="vm.showPastReqs = !vm.showPastReqs">
+					<md-tooltip md-direction="top">Show past season requirements</md-tooltip>
+					<i class="material-icons">history</i>
+				</md-button> 
+				<span ng-hide="vm.showPastReqs">{{vm.seasonInfo.upcomming.year}} {{vm.seasonInfo.upcomming.game_name}}</span>
+				<span ng-show="vm.showPastReqs">All</span>			
+				Season Information
+			</h1>
+			<md-table-container>
+				<table md-table>
+					<thead md-head md-order="vm.query.order">
+						<tr md-row>
+							<th md-column md-order-by="year"><span>Season</span></th>										
+							<th md-column md-order-by="join_team"><span>Join Team</span></th>										
+							<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>										
+							<th md-column md-order-by="dues"><span>Pay Dues</span></th>
+							<th md-column md-order-by="season_hours"><span>On Season Hours</span></th>										
+							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>										
+							<th md-column md-order-by="total"><span>Total Hours</span></th>				
+						</tr>
+					</thead>
+					<tbody md-body>
+						<tr md-row ng-repeat="season in vm.userInfo.seasonInfo.all | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" ng-show="vm.showPastReqs || $first">
+							<td md-cell>
+								<md-list-item style="padding: 0px;">
+									<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
+									{{season.year}} - {{season.game_name}}
+								</md-list-item>
+							</td>
+							<td md-cell>
+								<md-icon class="material-icons" style="color:green;" ng-show="season.join_team">check_circle</md-icon>
+								<md-icon class="material-icons" style="color:red;" ng-hide="season.join_team">remove_circle</md-icon>
+							</td>
+							<td md-cell>
+								<md-icon class="material-icons" style="color:green;" ng-show="season.stims">check_circle</md-icon>
+								<md-icon class="material-icons" style="color:red;" ng-hide="season.stims">remove_circle</md-icon>
+							</td>
+							<td md-cell>
+								<span ng-hide="main.userInfo.user_type == 'Mentor'">
+									<md-icon class="material-icons" style="color:green;" ng-show="season.dues">check_circle</md-icon>
+									<md-icon class="material-icons" style="color:red;" ng-hide="season.dues">remove_circle</md-icon>
+								</span>
+								<md-icon class="material-icons" ng-hide="main.userInfo.user_type == 'Student'">indeterminate_check_box</md-icon>
+							</td>
+							<td md-cell>
+								{{season.season_hours}}
+							</td>
+							<td md-cell>
+								{{season.off_season_hours}}
+							</td>
+							<td md-cell>
+								<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.total}}</md-button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.seasonInfo.all.length}}" md-page-select md-boundary-links md-on-paginate="vm.getSeasons"></md-table-pagination></md-content>
+			</md-table-container>
+		</div>
+		<!-- <div>
+			<pre>{{vm.userInfo | json}}
+		</div> -->
+	</md-content>		
+</div>

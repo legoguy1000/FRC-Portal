@@ -1,0 +1,115 @@
+
+	<md-toolbar class="md-table-toolbar md-default" ng-hide="vm.filter.show">
+		<div class="md-toolbar-tools">
+			<span>Users</span>
+			<div flex></div>
+			<md-button class="md-icon-button" ng-click="vm.showFilter()">
+				<md-icon>filter_list</md-icon>
+			</md-button>
+			<md-button class="md-icon-button" ng-click="vm.getUsers()">
+				<md-icon>refresh</md-icon>
+			</md-button>
+			</div>
+	</md-toolbar>
+	
+	<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
+		<div class="md-toolbar-tools">
+			<md-icon class="material-icons">search</md-icon>
+			<form flex name="filter.form" >
+				<input type="text" ng-model="vm.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">
+			</form>
+			<md-button class="md-icon-button" ng-click="vm.showSearchOptions = !vm.showSearchOptions">
+				<md-icon class="material-icons">arrow_drop_down</md-icon>
+			</md-button>
+			<md-button class="md-icon-button" ng-click="vm.removeFilter()">
+				<md-icon class="material-icons">close</md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+	<md-content layout="column" ng-show="vm.showSearchOptions" class="md-padding" style="background-color: #fff; position: absolute; margin-top: 3px;width: 750px; z-index: 60;box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.2);">
+		<md-input-container class="md-icon-float md-block">
+			<label>Name</label>
+			<md-icon class="material-icons">person</md-icon>
+			<input ng-model="user.name" type="text">
+		</md-input-container>
+		<md-input-container md-no-float class="md-block">
+			<label>Phone Number</label>
+			<md-icon class="material-icons">phone</md-icon>
+			<input ng-model="user.phone" type="text">
+		</md-input-container>
+		<md-input-container class="md-block">
+			<label>Email</label>
+			<md-icon class="material-icons">email</md-icon>
+			<input ng-model="user.email" type="email">
+		</md-input-container>
+		<md-input-container class="md-block">
+			<label>User Type</label>
+			<md-icon class="material-icons">person</md-icon>
+			<md-select ng-model="user.statusa">
+				<md-option value="" ></md-option>
+				<md-option value="Mentor" >Mentor</md-option>
+				<md-option value="Student" >Student</md-option>
+			</md-select>
+		</md-input-container>
+		<md-input-container class="md-block">
+			<label>User Type</label>
+			<md-icon class="material-icons">person</md-icon>
+			<md-select ng-model="user.stsatus" >
+				<md-option value="" ></md-option>
+				<md-option value="1" >Active</md-option>
+				<md-option value="0" >Inactive</md-option>
+			</md-select>
+		</md-input-container>
+		<div layout="row">
+			<md-button ng-click="vm.showSearchOptions = false">Close</md-button>
+			<div flex></div>
+			<md-button>Reset</md-button>
+			<md-button class="md-raised md-primary">Search</md-button>
+		</div>
+	</md-content>
+	
+	<md-table-container>
+		<table md-table ng-model="selected" md-progress="vm.promise">
+			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getUsers">
+				<tr md-row>
+					<th md-column style="width:56px"></th>					
+					<th md-column md-order-by="full_name"><span>Name</span></th>					
+					<th md-column md-order-by="user_type"><span>Type - Grade (Grad Year)</span></th>					
+					<th md-column md-order-by="school_name"><span>School</span></th>					
+					<th md-column md-order-by="email"><span>Email</span></th>					
+					<th md-column md-order-by="gender"><span>Gender</span></th>					
+					<th md-column md-order-by="status"><span>Status</span></th>					
+					<th md-column></th>					
+				</tr>
+			</thead>
+			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+				<tr md-row ng-repeat="user in vm.users">
+					<td md-cell>
+						<md-list-item style="padding: 0px;">
+							<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
+						</md-list-item>
+					</td>
+					<td md-cell>
+						{{user.full_name}}
+					</td>
+					<td md-cell>{{user.user_type}} <span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</td>
+					<td md-cell>{{user.school_name}}</td>
+					<td md-cell>{{user.email}}</td>
+					<td md-cell>{{user.gender}}</td>
+					<td md-cell>
+						<md-select ng-model="user.status" placeholder="Status">
+							<md-option ng-value="true" >Active</md-option>
+							<md-option ng-value="false" >Inactive</md-option>
+						</md-select>
+					</td>
+					<td md-cell>
+						<md-button class="md-icon-button" ui-sref="main.admin.user({'user_id':user.user_id})" ng-click="admin.slideLeft()">
+							<md-icon>open_in_new</md-icon>
+						</md-button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</md-table-container>
+
+	<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.total}}" md-page-select md-boundary-links md-on-paginate="vm.getUsers"></md-table-pagination>

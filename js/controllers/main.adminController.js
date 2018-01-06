@@ -1,0 +1,57 @@
+angular.module('FrcPortal')
+.controller('main.adminController', ['$log','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog',
+	mainAdminController
+]);
+function mainAdminController($log,$timeout, $q, $scope, $state, eventsService, $mdDialog) {
+    var admin = this;
+
+	//$log.log($state.current)
+	admin.state = $state.current.name;
+	admin.tabs = [
+      {
+        name: 'Users',
+        icon: 'dashboard',
+        sref: 'main.admin.users'
+      }, {
+        name: 'Seasons',
+        icon: 'dashboard',
+        sref: 'main.admin.seasons'
+      }, {
+        name: 'Events',
+        icon: 'dashboard',
+        sref: 'main.admin.events'
+      }, {
+        name: 'Schools',
+        icon: 'dashboard',
+        sref: 'main.admin.schools'
+      }, {
+        name: 'Metrics',
+        icon: 'dashboard',
+        sref: 'main.admin.metrics'
+      }, 
+    ];
+	admin.slide = 'slide-left';
+	
+	admin.clickTab = function(tab) {
+		var clicked = admin.tabs.indexOf(tab);
+		var cur = admin.tabs.map(function(e) { return e.sref; }).indexOf($state.current.name);
+		//$log.log(cur +' -> '+ clicked);
+		
+		if(clicked > cur) {
+			admin.slideLeft();
+		} else {
+			admin.slideRight();
+		}
+	//	
+	}
+	
+	admin.slideLeft = function() {
+		admin.slide = 'slide-left';
+	}
+	admin.slideRight = function() {
+		admin.slide = 'slide-right';
+	}
+	admin.clickBack = function() {
+		admin.slideRight();
+	}
+}

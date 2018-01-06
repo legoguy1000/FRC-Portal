@@ -1,0 +1,94 @@
+<md-dialog aria-label="New User" style="" layout="column" flex="50" >
+	<form ng-cloak layout="column" name="newUser" flex layout-fill style="background: #FDB813;" ng-submit="vm.updateUser()">
+		<md-toolbar layout="row">
+		  <div class="md-toolbar-tools">
+			<h2>New User Complete Registration</h2>
+			<span flex></span>
+			<!-- <md-button class="md-icon-button" ng-click="vm.cancel()">
+			  <md-icon class=""> close </md-icon>
+			</md-button> -->
+		  </div>
+		</md-toolbar>
+		<md-dialog-content layout="column" layout-margin>
+			<div layout="column" layout-gt-xs="row">
+				<md-input-container flex required>
+					<label>First Name</label>
+					<input ng-model="vm.userInfo.fname">
+				</md-input-container>
+				<md-input-container flex required>
+					<label>Last Name</label>
+					<input ng-model="vm.userInfo.lname">
+				</md-input-container>
+			</div>
+			<div layout="column" layout-gt-xs="row">
+				<md-input-container flex required>
+					<label>Personal Email</label>
+					<input ng-model="vm.userInfo.email">
+				</md-input-container>
+				<md-input-container flex required>
+					<label>Team Email</label>
+					<input ng-model="vm.userInfo.team_email">
+				</md-input-container>
+				<md-input-container flex required>
+					<label>Phone</label>
+					<input ng-model="vm.userInfo.phone" phone-input type='text'/>
+				</md-input-container>
+			</div>
+			<div layout="column" layout-gt-xs="row">
+				<md-input-container flex>
+					<label>Gender</label>
+					<md-select ng-model="vm.userInfo.gender">
+						<md-option value=""></md-option>
+						<md-option value="Male">Male</md-option>
+						<md-option value="Female">Female</md-option>
+					</md-select>
+				</md-input-container>
+				<md-input-container flex>
+					<label>User Type</label>
+					<md-select ng-model="vm.userInfo.user_type">
+						<md-option ng-value="'Student'">Student</md-option>
+						<md-option ng-value="'Mentor'">Mentor</md-option>
+					</md-select>
+				</md-input-container>
+				<md-input-container flex class="md-icon-float md-icon-right md-block" ng-show="vm.userInfo.signin_pin == ''">
+					<label>Time In/Out PIN</label>
+					<input ng-model="vm.userInfo.time_pin" type='number' min="0" max="99999999" minlength="4" maxlength="8" ng-required="vm.userInfo.signin_pin == ''"/>
+					<md-icon class="material-icons">help</md-icon>
+					<div class="hint">4 to 8 digits.  Numbers ONLY!</div>
+				</md-input-container>
+			</div>
+			<div layout="column" layout-gt-xs="row">
+				<md-autocomplete flex
+					ng-required="vm.userInfo.user_type=='Student'" 
+					ng-disabled="vm.userInfo.user_type!='Student'"
+					md-input-name="autocompleteField"
+					md-no-cache="false"
+					md-selected-item="vm.userInfo.schoolData"
+					md-search-text="vm.searchText"
+					md-items="item in vm.querySearch(vm.searchText)"
+					md-item-text="item.school_name"
+					md-floating-label="School Name"
+					md-require-match="true"
+					md-clear-button="true">
+					<md-item-template>
+						<span md-highlight-text="vm.searchText">{{item.school_name}}</span>
+					</md-item-template>
+					<md-not-found>
+						No matches found.
+					</md-not-found>
+				</md-autocomplete>
+				<md-input-container flex>
+					<label>Graduation Year</label>
+					<input ng-model="vm.userInfo.grad_year" ng-required="vm.userInfo.user_type=='Student'" ng-disabled="vm.userInfo.user_type!='Student'"/>
+				</md-input-container>
+			</div>
+			<!-- <pre>{{vm.userInfo | json}}</pre> -->
+		</md-dialog-content>
+		<md-dialog-actions layout="row">
+			<span flex></span>
+			<md-button class="md-raised" type="submit">
+				Submit
+			</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>

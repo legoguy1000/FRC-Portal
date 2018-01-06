@@ -1,0 +1,63 @@
+<div layout-gt-md="row" flex layout-margin>
+	<md-content flex>
+		<md-toolbar layout="row" class="md-hue-3">
+			<div class="md-toolbar-tools">
+				<div>Hours Leaderboard</div>
+				<div flex></div>
+				<div style="margin-top:40px;">
+					<md-input-container class="md-icon-float md-block">
+						<label>Select a Year...</label>
+						<md-icon md-font-library="material-icons">today</md-icon>
+						<input moment-picker="vm.topUsersYear"
+						locale="en"
+						format="YYYY"
+						change="vm.topHourUsers()"
+						ng-model="vm.momentDate"
+						ng-model-options="{ updateOn: 'blur' }"/>
+					</md-input-container>	
+				</div>
+			</div>
+		</md-toolbar>
+		<md-toolbar layout="row" class="md-hue-3">
+			<div class="md-toolbar-tools">
+				<div>Team Member</div>
+				<div flex></div>
+				<div>Total # of Hours</div>
+			</div>
+		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingTopUsers"></md-progress-linear>
+		<md-list flex>
+			<md-list-item class="md-1-line" ng-repeat = "user in vm.topUsers track by $index" ng-click="null">
+				<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
+				<div class="md-list-item-text" flex layout="row">
+					<div><h3> {{ user.full_name }} </h3></div>
+					<div flex></div>
+					<div><h3> {{ user.hours }} </h3></div>
+				</div>
+			</md-list-item>
+			<div ng-show="vm.topUsers.length == 0 && !vm.loadingTopUsers" layout="row" layout-align="center center">
+				<h4>No hours recorded in {{ vm.topUsersYear }}</h4>
+			</div>
+		</md-list>
+		<!-- <md-button ng-click="vm.test()">test</md-button> -->
+	</md-content>
+	<div flex>
+		<iframe src="https://calendar.google.com/calendar/embed?src=iifound.org_qm79uhga7lqeguhn25tjifl8g4%40group.calendar.google.com&ctz=America/New_York" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+	</div>
+</div>
+<!-- <div layout-gt-md="row">
+  <panel-widget flex title="Site visitors" template="views/partials/visitors.html" class="fixed-height-widget"></panel-widget>
+  <panel-widget flex title="Warnings" template="views/partials/warnings.html" class="fixed-height-widget"></panel-widget>
+  <panel-widget flex title="Memory load" template="views/partials/memory.html" class="fixed-height-widget"></panel-widget>
+</div>
+
+<div layout-gt-md="row">
+  <panel-widget flex title="Server Control Panel" template="views/partials/controlPanel.html" class="fixed-height-widget"></panel-widget>
+  <panel-widget flex title="Usage Stats" template="views/partials/usage.html" class="fixed-height-widget"></panel-widget>
+  <panel-widget flex title="Autocomplete Input" template="views/partials/autocomplete.html" options="true" class="fixed-height-widget"></panel-widget>
+</div>
+
+<div layout-gt-md="row">
+  <panel-widget flex title="Performance" template="views/partials/performance.html" options="true"></panel-widget>
+  <panel-widget flex title="TODO list" template="views/partials/checkboxes.html"></panel-widget>
+</div> -->

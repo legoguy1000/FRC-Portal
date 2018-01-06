@@ -1,0 +1,257 @@
+body {
+  color: #7A7A7A;
+}
+
+.toolbar-button {
+  min-width: 20px;
+}
+
+.share-label {
+  vert-align: middle;
+  margin-left: 10px;
+}
+
+.page-content {
+  background-color: #ECECEC;
+}
+
+.widget-progress {
+  width: 95% !important;
+  margin-left: 10px;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.img-circle {
+  height: 50px;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+
+.messages {
+  position: relative;
+}
+.messages-content {
+  height: 100vh;
+}
+
+.notifications-label {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 50%;
+  position: absolute;
+  font-size: 12px;
+  top: 2px;
+  right: 2px;
+  background-color: #E75753;
+}
+
+.panel-widget {
+  background-color: white;
+}
+.panel-widget-toolbar {
+  box-shadow: none;
+  margin: 0;
+}
+.panel-widget-tittle {
+  color: #7A7A7A;
+}
+
+.options {
+  -webkit-transition: all linear 0.5s;
+  transition: all linear 0.5s;
+}
+
+.options.ng-hide {
+  opacity: 0;
+}
+
+.fixed-height-widget {
+  height: 310px;
+}
+
+.donut-chart-title {
+  text-align: center;
+}
+
+.custom-tooltip {
+  font-size: 22px;
+  color: #7A7A7A;
+  text-align: center;
+}
+
+md-radio-group {
+  border: none;
+}
+
+md-icon {
+  height: auto;
+}
+
+md-sidenav.md-locked-open.md-sidenav-left {
+  width: 110px;
+  min-width: 110px;
+  max-width: 110px;
+}
+
+a.md-button.md-warn.md-raised, a.md-button.md-warn.md-fab, .md-button.md-warn.md-raised, .md-button.md-warn.md-fab {
+  color: white;
+}
+
+md-radio-button.md-accent.md-checked .md-label span {
+  color: #009688;
+}
+
+.md-toolbar-tools h1 {
+  font-size: 22px;
+}
+
+md-backdrop.md-sidenav-backdrop {
+  position: fixed;
+}
+
+.material-icons {
+  vertical-align: middle;
+}
+
+.material-icons.md-18 {
+  font-size: 18px;
+}
+
+.material-icons.md-24 {
+  font-size: 24px;
+}
+
+.material-icons.md-36 {
+  font-size: 36px;
+}
+
+.material-icons.md-48 {
+  font-size: 48px;
+}
+
+.nvd3.nv-pie .nv-pie-title {
+  fill: #444444;
+  font-weight: 600;
+  font-size: 22px !important;
+}
+
+.nvtooltip {
+  background-color: transparent;
+  border: none;
+  font-weight: 600;
+}
+
+.orange .md-bar2 {
+  background-color: orange;
+}
+
+.orange .md-container {
+  background-color: #ffecc9;
+}
+
+.btn-large {
+  height: 54px;
+  line-height: 54px;
+}
+
+.btn-large i {
+  font-size: 1.6rem;
+}
+
+.mdi {
+  display: inline-block;
+}
+
+md-toolbar.md-table-toolbar form {
+  margin-left: 16px;
+}
+md-toolbar.md-table-toolbar form > input {
+  width: 100%;
+  margin: 0;
+  border: none;
+  color: rgba(0, 0, 0, 0.87);
+}
+md-toolbar.md-table-toolbar form > input:focus {
+  outline: none;
+}
+
+md-toolbar.search-bar form {
+  margin-left: 16px;
+}
+md-toolbar.search-bar form > input {
+  width: 100%;
+  margin: 0;
+  border: none;
+  color: white;
+  background-color: rgb(102,46,145);
+}
+md-toolbar.search-bar form > input:focus {
+  outline: none;
+}
+
+.moment-picker-input:focus {
+    outline: none;
+}
+.bc-keypad__key {
+	color: #FDB813;
+	margin-bottom: 10px;
+}
+.bc-keypad__key-button {
+	font-size: 3em !important;
+    font-weight: bolder;
+	color: #FDB813;
+}
+.bc-keypad__key-button svg {
+	fill: #FDB813;
+}
+
+md-input-container .hint {
+    position: absolute;
+    left: 2px;
+    right: auto;
+    bottom: 7px;
+    font-size: 12px;
+    line-height: 14px;
+    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+    color: rgb(102,46,145);
+}
+
+.this-device {
+	color: red;
+}
+
+.selectdemoSelectHeader {
+  /* Please note: All these selectors are only applied to children of elements with the 'selectdemoSelectHeader' class */ }
+  .selectdemoSelectHeader .demo-header-searchbox {
+    border: none;
+    outline: none;
+    height: 100%;
+    width: 100%;
+    padding: 0; }
+  .selectdemoSelectHeader .demo-select-header {
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12);
+    padding-left: 10.667px;
+    height: 48px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: auto; }
+  .selectdemoSelectHeader md-content._md {
+    max-height: 240px; }
+	
+/* Remove arrows from numbe input */
+/* Hide HTML5 Up and Down arrows. */
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+ 
+input[type="number"] {
+    -moz-appearance: textfield;
+}

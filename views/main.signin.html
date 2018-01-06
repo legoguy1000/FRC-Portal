@@ -1,0 +1,84 @@
+<div flex layout="column" layout-gt-sm="row">
+	<div flex>
+		<md-toolbar class="md-table-toolbar" ng-hide="vm.filter.show">
+			<div class="md-toolbar-tools">
+				<span>Team Members</span>
+				<div flex></div>
+				<md-button class="md-icon-button" ng-click="vm.getUsers()">
+					<md-icon>refresh</md-icon>
+				</md-button>
+				<md-button class="md-accent md-hue-3" ng-click="vm.authorizeSignIn()" ng-hide="main.signInAuthed">Authorize Sign In</md-button>
+				<md-button class="md-warn" ng-click="vm.deauthorizeSignIn()" ng-show="main.signInAuthed">Deauthorize Sign In</md-button>
+			</div>
+		</md-toolbar>
+		<md-table-container>
+			<table md-table md-row-select ng-model="vm.selected_user" md-progress="vm.promise">
+				<thead md-head md-order="vm.query.order" md-on-reorder="vm.getUsers">
+					<tr md-row>
+						<th md-column md-order-by="full_name"><span>Name</span></th>					
+						<!-- <th md-column md-order-by="user_type"><span>Type</span></th>	 -->				
+						<th md-column md-order-by="time_in"><span>Time In</span></th>					
+						<th md-column md-order-by="time_out"><span>Time Out</span></th>				
+						<th md-column md-order-by="time_out"><span>Hours (On/Off Season)</span></th>				
+					</tr>
+				</thead>
+				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+					<tr md-row ng-repeat="user in vm.users | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" md-select="user" md-select-id="user_id" md-auto-select>
+						<td md-cell>
+							<md-list-item style="padding: 0px;">
+								<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
+								{{user.full_name}}
+							</md-list-item>
+						</td>
+						<!-- <td md-cell>{{user.user_type}}</td> -->
+						<td md-cell><span ng-if="user.time_in">{{user.time_in_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span ng-if="user.time_out">{{user.time_out_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell>{{user.season_hours ? user.season_hours:'0.00'}} / {{user.off_season_hours ? user.off_season_hours:'0.00'}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.users.length}}" md-page-select md-boundary-links></md-table-pagination></md-content>
+		</md-table-container>
+		<div>
+			<h3>Sign In Instructions: </h3>
+			<ol>
+				<li>Select your name from the list above*</li>
+				<li>Type your 4-8 digit PIN number in the number pad**</li>
+				<li>Press the submit button under the 9</li>
+			</ol>
+			<div>* If your name is not listed, Please fill out the Team 2363 Join Team Form (<a href="http://join.team2363.org" target="_blank">Click Here</a>).</div>
+			<div>	 Students: Your default PIN will be your student ID that you entered into the Team 2363 Join Team Form.</div>
+			<div>  Mentors/Others: Please log in to the portal by clicking the "Log In" button in the top rght corner.  Please select one of the login providers (It does not have to be your team2363.org email).  Upon successful log in, please complete the new user form.  Here you will set your 4-8 digit PIN number.</div>
+		</div>
+	</div>
+	<div flex style="background:#662E91">
+		<md-toolbar flex style="height:30px;background:#FDB813;color:#662E91;"  layout="row" layout-align="center center">
+			<div class="" style="color:">
+				<h3>{{ vm.clock | date:'medium'}}</h3>
+			</div>
+		</md-toolbar>
+		<md-toolbar flex style="height:30px;color: #FDB813;border-bottom: #FDB813 1px solid;"  layout="row" layout-align="center center">
+			<div class="">
+				<h1>{{ vm.pin }}</h1>
+			</div>
+		</md-toolbar>
+		<!-- <div flex style="height:30px;"  layout="row" layout-align="center center">
+			<h1>{{ vm.pin }}</h1>
+		</div> -->
+		<bc-keypad
+			bc-number-model="vm.pin"
+			bc-left-button="backspace"
+			bc-right-button="submit"
+			bc-max-length="8"
+			bc-right-button-method="vm.signinOut($event, numbers)"
+		></bc-keypad>
+	</div>
+</div>
+	
+<!-- Define the keypad: -->
+<!-- <bc-keypad
+	bc-number-model="vm.numbers"
+	bc-max-length="8"
+	bc-left-button="backspace"
+	bc-right-button="submit"
+></bc-keypad> -->

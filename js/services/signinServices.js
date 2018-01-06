@@ -1,0 +1,58 @@
+angular.module('FrcPortal')
+.service('signinService', function ($window, $http) {
+	return {
+		parseJwt: function(token) {
+			if(token != '' && token != undefined) {
+				var base64Url = token.split('.')[1];
+				var base64 = base64Url.replace('-', '+').replace('_', '/');
+				return JSON.parse($window.atob(base64));
+			}
+			else {
+				return false;
+			}
+		},
+		saveToken: function(token) {
+			$window.localStorage['signin_token'] = token;
+		},
+		getToken: function() {
+			return $window.localStorage['signin_token'];
+		},
+		getTokenJti: function() {
+			var token = this.getToken();
+			var data = this.parseJwt(token);
+			return data.jti;
+		},
+		isAuthed: function() {
+			var token = this.getToken();
+			if(token) {
+				var params = this.parseJwt(token);
+				return Math.round(new Date().getTime() / 1000) <= params.exp;
+			} 
+			else {
+				return false;
+			}
+		},
+		logout: function() {
+			$window.localStorage.removeItem('signin_token');
+		},
+		authorizeSignIn: function () {
+			this.logout();
+			return $http.post('site/authorizeSignIn.php')
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		deauthorizeSignIn: function (formData) {
+			return $http.post('site/deauthorizeSignIn.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		signInOut: function (formData) {
+			return $http.post('site/signInOut.php',formData,{skipAuthorization: true})
+			.then(function(response) {
+				return response.data;
+			});
+		},
+	};
+});

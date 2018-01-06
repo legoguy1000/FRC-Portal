@@ -1,0 +1,30 @@
+<md-dialog aria-label="Mango (Fruit)" style="height:300px" layout="column" flex="25" >
+  <form ng-cloak layout="column" layout-fill layout-align="space-between center" style="background: #FDB813;">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Log In</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="vm.cancel()">
+          <md-icon class=""> close </md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content layout="column" layout-align="center center">
+		<md-button class="md-raised google btn-large social" ng-click="vm.authenticate('google')" style="min-width: 300px;">
+			<i class="mdi mdi-google"></i>
+			Log in with Google
+		</md-button>
+		<md-button class="md-raised facebook btn-large social" ng-click="vm.authenticate('facebook')" style="min-width: 300px;">
+			<i class="mdi mdi-facebook"></i>
+			Log in with Facebook
+		</md-button>
+		<md-button class="md-raised microsoft btn-large social" ng-click="vm.authenticate('live')">
+			<i class="mdi mdi-microsoft"></i>
+			Log in with Microsoft
+		</md-button>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+     
+    </md-dialog-actions>
+  </form>
+</md-dialog>
