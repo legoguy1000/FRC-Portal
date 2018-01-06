@@ -6,8 +6,15 @@ function userQuery($sel='',$joins='', $where = '', $order = '') {
 	$whereStr = isset($where) && $where !='' ? ' '.$where : '';
 	$query = 'SELECT users.*,
 					 CONCAT(users.fname," ",users.lname) AS full_name,
-					 schools.*
-
+					 schools.*,
+					 CASE
+						WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=0  THEN "Graduated"
+						WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=12 THEN "Senior"
+						WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=24 THEN "Junior"
+						WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=36 THEN "Sophmore"
+						WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=48 THEN "Freshman"
+						ELSE ""
+					 END AS student_grade
 					 '.$selStr.'
 			  FROM users
 			  LEFT JOIN schools USING (school_id)
