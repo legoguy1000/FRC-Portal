@@ -112,6 +112,8 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 				} else if(e.originalEvent.code == 'Digit0' || e.originalEvent.code == 'Numpad0') {
 					vm.pin = vm.pin+'0';
 				}
+			} else if(vm.pin.length > 0) {
+				
 			}
 	});
 
