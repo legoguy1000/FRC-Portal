@@ -214,7 +214,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			}
 			usersService.editDeviceLabel(data).then(function(response){
 					if(response.status) {
-						vm.notificationPreferences = response.endpoints;
+						vm.notificationEndpoints = response.endpoints;
 					}
 			});
 		}, function() {
