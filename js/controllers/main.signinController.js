@@ -86,6 +86,7 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 		if(e.keyCode == 46 || e.keyCode == 8) {
         console.log('backspace');
     }
+		console.log(e.keyCode);
 	}
 
 }

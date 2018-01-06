@@ -19,14 +19,14 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 	main.notifications = [];
 	main.signInAuthed = signinService.isAuthed();
 	main.browserData = {}
-	
+
 	main.enablePush = {
 		status:false,
 		disabled:true,
 		subscription: null,
 		endpoint: null,
 	};
-	
+
 	navService
 	  .loadAllItems()
 	  .then(function(menuItems) {
@@ -85,7 +85,7 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 		  .position('bottom right')
 	  );
 	}
-	
+
 	function loginModal(ev) {
 		$mdDialog.show({
 			controller: loginModalController,
@@ -108,7 +108,7 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
 	}
-	
+
 	function newUserModal(ev) {
 		$mdDialog.show({
 			controller: newUserModalController,
@@ -123,54 +123,54 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 			}
 		})
 		.then(function(data) {
-			
+
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
 	}
 
-	
-	main.initServiceWorkerState = function() {  
+
+	main.initServiceWorkerState = function() {
 		console.log('Initializing');
-		// Are Notifications supported in the service worker?  
-		if (!('showNotification' in ServiceWorkerRegistration.prototype)) {  
-			console.warn('Notifications aren\'t supported.');  
+		// Are Notifications supported in the service worker?
+		if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
+			console.warn('Notifications aren\'t supported.');
 			return false;
 		}
 
-		// Check the current Notification permission.  
-		// If its denied, it's a permanent block until the  
-		// user changes the permission  
-		if (Notification.permission === 'denied') {  
-			console.warn('The user has blocked notifications.');  
-			return false;  
+		// Check the current Notification permission.
+		// If its denied, it's a permanent block until the
+		// user changes the permission
+		if (Notification.permission === 'denied') {
+			console.warn('The user has blocked notifications.');
+			return false;
 		}
 
-		// Check if push messaging is supported  
-		if (!('PushManager' in window)) {  
-			console.warn('Push messaging isn\'t supported.');  
-			return false; 
+		// Check if push messaging is supported
+		if (!('PushManager' in window)) {
+			console.warn('Push messaging isn\'t supported.');
+			return false;
 		}
 
-		// We need the service worker registration to check for a subscription  
-		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) { 
+		// We need the service worker registration to check for a subscription
+		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 			console.log('Service Worker Ready');
-			// Do we already have a push message subscription?  
-			serviceWorkerRegistration.pushManager.getSubscription()  
-			.then(function(subscription) {  
+			// Do we already have a push message subscription?
+			serviceWorkerRegistration.pushManager.getSubscription()
+			.then(function(subscription) {
 				console.log('Checkig Subscription');
-				// Enable any UI which subscribes / unsubscribes from  
-				// push messages.  
-			//	var pushButton = document.querySelector('.js-push-button');  
+				// Enable any UI which subscribes / unsubscribes from
+				// push messages.
+			//	var pushButton = document.querySelector('.js-push-button');
 			//	pushButton.disabled = false;
 
-				if (!subscription) {  
+				if (!subscription) {
 					console.log('Not Scubscribed');
-					// We aren't subscribed to push, so set UI  
-					// to allow the user to enable push  
-					return false;  
+					// We aren't subscribed to push, so set UI
+					// to allow the user to enable push
+					return false;
 				}
-				
+
 				//console.log(subscription);
 				// Keep your server in sync with the latest subscriptionId
 				// sendSubscriptionToServer(subscription);
@@ -183,7 +183,7 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 				main.browserData = data;
 				$scope.$apply( function () {
 					main.enablePush.subscription = subscription;
-					main.enablePush.status = true; 
+					main.enablePush.status = true;
 					main.enablePush.disabled = false;
 					main.enablePush.endpoint = endpoint;
 				});
@@ -192,23 +192,23 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 				});
 				console.log(data);
 				return true;
-			})  
-			.catch(function(err) {  
-				console.warn('Error during getSubscription()', err);  
-			});  
-		});  
+			})
+			.catch(function(err) {
+				console.warn('Error during getSubscription()', err);
+			});
+		});
 	}
 
 	main.checkServiceWorker = function() {
 		console.log('Check Service Worker');
-		if ('serviceWorker' in navigator) {  
-			navigator.serviceWorker.register('/sw.js').then(main.initServiceWorkerState);  
-		} else {  
-			console.warn('Service workers aren\'t supported in this browser.');  
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('/sw.js').then(main.initServiceWorkerState);
+		} else {
+			console.warn('Service workers aren\'t supported in this browser.');
 		}
 	}
-	
-	
+
+
 	main.StartEventSource = function() {
 		var source = new EventSource('site/eventSourceNotifications.php');
 		source.onmessage = function (event) {
@@ -217,7 +217,7 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 			//alert(event.data);
 		};
 	}
-	
+
 	var loginActions = function() {
 		main.isAuthed = $auth.isAuthenticated();
 		main.userInfo = $auth.getPayload().data;
@@ -227,7 +227,7 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 			newUserModal();
 		}
 	}
-		
+
 	if(main.isAuthed) {
 		console.info('I\'m Authed');
 		var data = {
@@ -250,8 +250,8 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 			loginActions();
 		}
 	});
-	
-	
+
+
 	$rootScope.$on('logOutAction', function(event, data) {
 		console.info('LogOut Initiated');
 		main.isAuthed = false;
@@ -268,7 +268,7 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 		main.signInAuthed = signinService.isAuthed();
 		if(data.response.status && data.logout) {
 			main.logout();
-		}		
+		}
 	});
-	
+
 }
