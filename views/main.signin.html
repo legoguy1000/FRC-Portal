@@ -39,7 +39,7 @@
 						<!-- <td md-cell>{{user.user_type}}</td> -->
 						<td md-cell><span ng-if="user.time_in">{{user.time_in_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell><span ng-if="user.time_out">{{user.time_out_unix*1000 | date:'medium'}}</span></td>
-						<td md-cell>{{user.season_hours_exempt ? user.season_hours_exempt:'0.00'}} / {{user.off_season_hours ? user.off_season_hours:'0.00'}}</td>
+						<td md-cell>{{user.season_hours_exempt ? user.season_hours_exempt:'0.00'}} ({{user.season_hours}}) / {{user.off_season_hours ? user.off_season_hours:'0.00'}}</td>
 					</tr>
 				</tbody>
 			</table>
