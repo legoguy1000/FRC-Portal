@@ -84,7 +84,7 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 
 	vm.keyDown = function(e) {
 		if(e.keyCode == 46 || e.keyCode == 8) {
-        //alert('Delete Key Pressed');
+        console.log('backspace');
     }
 	}
 
