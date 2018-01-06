@@ -4,10 +4,10 @@
 			<md-button class="md-icon-button" ui-sref="main.admin.users" ng-click="admin.clickBack()">
 				<md-tooltip md-direction="top">Go Back to User List</md-tooltip>
 				<i class="material-icons">arrow_back</i>
-			</md-button> 
+			</md-button>
 			User Information
 		</h1>
-		<form class="md-margin" flex layout="column">
+		<form class="md-margin" flex layout="column" ng-submit="vm.updateUser()">
 			<md-input-container flex required>
 				<label>First Name</label>
 				<input ng-model="main.userInfo.fname">
@@ -79,22 +79,22 @@
 						<md-button class="md-icon-button" ng-click="vm.showPastReqs = !vm.showPastReqs">
 							<md-tooltip md-direction="top">Show past season requirements</md-tooltip>
 							<i class="material-icons">history</i>
-						</md-button> 
+						</md-button>
 						<span ng-hide="vm.showPastReqs">{{vm.seasonInfo.upcomming.year}} {{vm.seasonInfo.upcomming.game_name}}</span>
-						<span ng-show="vm.showPastReqs">All</span>			
+						<span ng-show="vm.showPastReqs">All</span>
 						Season Information
 					</h1>
 					<md-table-container>
 						<table md-table>
 							<thead md-head md-order="vm.query.order">
 								<tr md-row>
-									<th md-column md-order-by="year"><span>Season</span></th>										
-									<th md-column md-order-by="join_team"><span>Join Team</span></th>										
-									<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>										
+									<th md-column md-order-by="year"><span>Season</span></th>
+									<th md-column md-order-by="join_team"><span>Join Team</span></th>
+									<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>
 									<th md-column md-order-by="dues"><span>Pay Dues</span></th>
-									<th md-column md-order-by="season_hours"><span>On Season Hours</span></th>										
-									<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>										
-									<th md-column md-order-by="total"><span>Total Hours</span></th>				
+									<th md-column md-order-by="season_hours"><span>On Season Hours</span></th>
+									<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
+									<th md-column md-order-by="total"><span>Total Hours</span></th>
 								</tr>
 							</thead>
 							<tbody md-body>
@@ -134,13 +134,13 @@
 						</table>
 						<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.seasonInfo.all.length}}" md-page-select md-boundary-links md-on-paginate="vm.getSeasons"></md-table-pagination>
 					</md-table-container>
-				</md-content>	
+				</md-content>
 			</md-tab>
 			<md-tab label="Linked Accounts">
 				<md-content  flex layout="column">
 					<h1 class="md-headline" flex layout="row">
 						<span flex></span>
-						<span>Linked Accounts</span>			
+						<span>Linked Accounts</span>
 						<span flex></span>
 						<md-menu>
 							<md-button class="md-icon-button" ng-click="$mdMenu.open()"> <!--  -->
@@ -174,7 +174,7 @@
 							<div flex></div>
 							<div>Linked Accounts</div>
 							<div flex></div>
-							
+
 						</div>
 					</md-toolbar> -->
 					<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingDevices"></md-progress-linear>
@@ -210,14 +210,14 @@
 							<h4>No Devices</h4>
 						</div>
 					</md-list>
-				</md-content>	
+				</md-content>
 			</md-tab>
 			<md-tab label="Notification Preferences">
 				<div flex layout="column" layout-gt-sm="row" style="min-height:100%;">
 					<md-content  flex layout="column">
 						<h1 class="md-headline" layout="row">
 							<span flex></span>
-							<span>Notification Devices</span>			
+							<span>Notification Devices</span>
 							<span flex></span>
 						</h1>
 						<md-progress-linear md-mode="indeterminate" ng-show="vm.loading.note_devices"></md-progress-linear>
@@ -257,7 +257,7 @@
 					<md-content  flex layout="column">
 						<h1 class="md-headline" layout="row">
 							<span flex></span>
-							<span>Notification Types</span>			
+							<span>Notification Types</span>
 							<span flex></span>
 						</h1>
 						<md-progress-linear md-mode="indeterminate" ng-show="vm.loading.note_types"></md-progress-linear>
@@ -272,14 +272,14 @@
 								</md-switch>
 							</div>
 						</div>
-					</md-content>	
+					</md-content>
 				</div>
 			</md-tab>
 			<md-tab label="Time Information">
 				<md-content  flex layout="column">
 					<h1 class="md-headline" flex layout="row">
 						<span flex></span>
-						<span>Time Information</span>			
+						<span>Time Information</span>
 						<span flex></span>
 					</h1>
 					<div flex layout="column" layout-gt-sm="row">
@@ -332,8 +332,8 @@
 							</form>
 						</md-card>
 					</div>
-				</md-content>	
+				</md-content>
 			</md-tab>
 		</md-tabs>
-	</md-content>		
+	</md-content>
 </div>

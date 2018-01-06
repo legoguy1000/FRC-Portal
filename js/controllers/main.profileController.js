@@ -11,7 +11,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.notificationEndpoints = [];
 	vm.linkedAccounts = [];
 	vm.seasonInfo = {};
-	
+
 	vm.showPastReqs = false;
 	vm.checkPinNum = null;
 	vm.changePinNum = null;
@@ -25,7 +25,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		note_types: false,
 		note_devices: false,
 	}
-		
+
 	vm.notificationOptions = {
 		sign_in_out: 'Clock In & Out',
 		new_season: 'New Season',
@@ -34,7 +34,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		dues: 'Season - Pay Dues',
 		stims: 'Season - Complete STIMS/TIMS',
 	}
-		
+
 	if($scope.main.userInfo.school_id != null) {
 			$scope.main.userInfo.schoolData = {
 			school_id: $scope.main.userInfo.school_id,
@@ -44,7 +44,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	function querySearch (query) {
 		return schoolsService.searchAllSchools(query);
 	}
-	
+
 	vm.getProfileInfo = function() {
 		vm.loading.note_devices = true;
 		usersService.getProfileInfo().then(function(response){
@@ -56,7 +56,15 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		});
 	}
 	vm.getProfileInfo();
-	
+
+	vm.updateUser = function() {
+		usersService.updateUserPersonalInfo(main.userInfo).then(function(response) {
+			if(response.status) {
+				
+			}
+		});
+	}
+
 	vm.showSeasonHoursGraph = function(ev,year) {
 		$mdDialog.show({
 			controller: SeasonHoursGraphModalController,
@@ -75,7 +83,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		})
 		.then(function(answer) {}, function() {});
 	}
-	
+
 	vm.checkPin = function() {
 		vm.loadingDevices = true;
 		var data = {
@@ -83,9 +91,9 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		}
 		console.log(data);
 		usersService.checkPin(data).then(function(response){
-			
+
 		});
-	}	
+	}
 	vm.changePinMsg = '';
 	vm.changePin = function() {
 		vm.loadingDevices = true;
@@ -100,7 +108,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			}
 		});
 	}
-	
+
 	vm.updateNotePrefs = function(method,type,value) {
 		vm.loading.note_types = true;
 		var data = {
@@ -113,20 +121,20 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		});
 	}
 
-	vm.subscribePush = function() {	
-	  // Disable the button so it can't be changed while  
-	  // we process the permission request   
+	vm.subscribePush = function() {
+	  // Disable the button so it can't be changed while
+	  // we process the permission request
 	  $scope.main.enablePush.disabled = true;
 
-	  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {  
-		serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})  
-		  .then(function(subscription) {  
-			// The subscription was successful 
-			
-			// TODO: Send the subscription.endpoint to your server  
+	  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+		serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
+		  .then(function(subscription) {
+			// The subscription was successful
+
+			// TODO: Send the subscription.endpoint to your server
 			// and save it to send a push message at a later date
-		  
-	//	  return sendSubscriptionToServer(subscription);  
+
+	//	  return sendSubscriptionToServer(subscription);
 			var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
 			var key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
 			var rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';
@@ -139,28 +147,28 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			console.log(data);
 			$scope.$apply( function () {
 				$scope.main.enablePush.subscription = subscription;
-				$scope.main.enablePush.status = true; 
+				$scope.main.enablePush.status = true;
 				$scope.main.enablePush.disabled = false;
 				$scope.main.enablePush.endpoint = endpoint;
 			});
-		  })  
-		  .catch(function(e) {  
-			if (Notification.permission === 'denied') {  
-			  // The user denied the notification permission which  
-			  // means we failed to subscribe and the user will need  
-			  // to manually change the notification permission to  
-			  // subscribe to push messages  
-			  console.warn('Permission for Notifications was denied');  
-			  $scope.main.enablePush.disabled = true;  
-			} else {  
-			  // A problem occurred with the subscription; common reasons  
-			  // include network errors, and lacking gcm_sender_id and/or  
-			  // gcm_user_visible_only in the manifest.  
-			  console.error('Unable to subscribe to push.', e);  
+		  })
+		  .catch(function(e) {
+			if (Notification.permission === 'denied') {
+			  // The user denied the notification permission which
+			  // means we failed to subscribe and the user will need
+			  // to manually change the notification permission to
+			  // subscribe to push messages
+			  console.warn('Permission for Notifications was denied');
+			  $scope.main.enablePush.disabled = true;
+			} else {
+			  // A problem occurred with the subscription; common reasons
+			  // include network errors, and lacking gcm_sender_id and/or
+			  // gcm_user_visible_only in the manifest.
+			  console.error('Unable to subscribe to push.', e);
 			  $scope.main.enablePush.disabled = false;
-			}  
-		  });  
-	  });  
+			}
+		  });
+	  });
 	}
 
 	vm.unsubscribePush = function() {
@@ -173,7 +181,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 
 				});
 				$scope.$apply( function () {
-					$scope.main.enablePush.status = false; 
+					$scope.main.enablePush.status = false;
 					$scope.main.enablePush.disabled = false;
 				});
 			}).catch(function(error) {
@@ -181,8 +189,8 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			});
 		}
 	}
-	
-	
+
+
 
 	vm.showDeviceEdit = function(ev, device) {
 		// Appending dialog to document.body to cover sidenav in docs app
@@ -197,9 +205,9 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			.ok('Submit')
 			.cancel('Cancel');
 		$mdDialog.show(confirm).then(function(result) {
-			
+
 		}, function() {
-			
+
 		});
 	};
 
@@ -213,12 +221,12 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		.ok('Delete')
 		.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
-			
+
 		}, function() {
 
 		});
 	};
-	
+
 	vm.linkAccount = function(provider) {
 	  $auth.link(provider,{'link_account':true, 'provider':provider})
 		.then(function(response) {
