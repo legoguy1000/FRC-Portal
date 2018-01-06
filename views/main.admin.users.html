@@ -74,8 +74,7 @@
 				<tr md-row>
 					<th md-column style="width:56px"></th>
 					<th md-column md-order-by="full_name"><span>Name</span></th>
-					<th md-column md-order-by="user_type"><span>Type - Grade (Grad Year)</span></th>
-					<th md-column md-order-by="student_grade"><span>Grade (Grad Year)</span></th>
+					<th md-column md-order-by="user_type"><span>Type - Grade (Grad Year)</span></th>					
 					<th md-column md-order-by="school_name"><span>School</span></th>
 					<th md-column md-order-by="email"><span>Email</span></th>
 					<th md-column md-order-by="gender"><span>Gender</span></th>
@@ -93,8 +92,7 @@
 					<td md-cell>
 						{{user.full_name}}
 					</td>
-					<td md-cell>{{user.user_type}}</td>
-					<td md-cell><span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</span></td>
+					<td md-cell>{{user.user_type}} <span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</td>
 					<td md-cell>{{user.school_name}}</td>
 					<td md-cell>{{user.email}}</td>
 					<td md-cell>{{user.gender}}</td>
