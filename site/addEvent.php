@@ -5,7 +5,7 @@ $authToken = checkToken(true,true);
 $user_id = $authToken['data']['user_id'];
 checkAdmin($user_id, $die = true);
 
-$json = file_get_contents('php://input'); 
+$json = file_get_contents('php://input');
 $formData = json_decode($json,true);
 
 
@@ -40,8 +40,8 @@ if(!(strtotime($formData['event_start']) >= $formData['event_end'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Start Date must be before End Date.')));
 }
 $event_id = uniqid();
-$query = 'INSERT INTO events (event_id, season_id, name, type, event_start, event_end) VALUES 
-		('.db_quote($event_id).', '.$season.', '.db_quote($formData['name']).', '.db_quote($formData['type']).','.db_quote($formData['event_start']).', '.db_quote($formData['event_end']).')';
+$query = 'INSERT INTO events (event_id, season_id, name, type, event_start, event_end, exempt_hours) VALUES
+		('.db_quote($event_id).', '.$season.', '.db_quote($formData['name']).', '.db_quote($formData['type']).','.db_quote($formData['event_start']).', '.db_quote($formData['event_end']).', '.db_quote($formData['exempt_hours']).')';
 //die($query);
 $result = db_query($query);
 if($result) {

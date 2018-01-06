@@ -4,7 +4,7 @@
 			<md-button class="md-icon-button" ui-sref="main.admin.events" ng-click="admin.clickBack()">
 				<md-tooltip md-direction="top">Go Back to Event List</md-tooltip>
 				<i class="material-icons">arrow_back</i>
-			</md-button> 
+			</md-button>
 			Event Information
 		</h1>
 		<form class="md-margin" flex layout="column">
@@ -71,6 +71,11 @@
 					 disable="vm.event.single_day">
 				</input>
 			</md-input-container>
+			<div>
+				<md-checkbox ng-model="vm.event.exempt_hours" aria-label="Exempt Hours">
+					Exempt Hours from counting to season total
+				</md-checkbox>
+			</div>
 			<div flex layout="row">
 				<span flex></span>
 				<md-button type="">
@@ -111,12 +116,12 @@
 				<table md-table>
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
-							<th md-column md-order-by="full_name"><span>Name</span></th>										
-							<th md-column md-order-by="registration"><span>Registration</span></th>										
-							<th md-column md-order-by="payment"><span>Payment</span></th>										
+							<th md-column md-order-by="full_name"><span>Name</span></th>
+							<th md-column md-order-by="registration"><span>Registration</span></th>
+							<th md-column md-order-by="payment"><span>Payment</span></th>
 							<th md-column md-order-by="permission_slip"><span>Permission Slip</span></th>
-							<th md-column md-order-by="food"><span>Food Order</span></th><!-- 										
-							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>										
+							<th md-column md-order-by="food"><span>Food Order</span></th><!--
+							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
 							<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
 					</thead>
@@ -161,5 +166,5 @@
 				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.event.requirements.data | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination></md-content>
 			</md-table-container>
 		</div>
-	</md-content>	
+	</md-content>
 </div>
