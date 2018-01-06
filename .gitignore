@@ -7,3 +7,5 @@ composer.phar
 
 google
 config.ini
+/git-deploy/
+deploy.log
