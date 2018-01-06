@@ -88,28 +88,30 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
     }
 		console.log(e.keyCode);
 	}
-	$(document).on("keypress", function (e) {
+	$(document).on("keydown", function (e) {
 	    console.log(e);
-			if(e.originalEvent.code == 'Digit1' || e.originalEvent.code == 'Numpad1') {
-				vm.pin = vm.pin+'1';
-			} else if(e.originalEvent.code == 'Digit2' || e.originalEvent.code == 'Numpad2') {
-				vm.pin = vm.pin+'2';
-			} else if(e.originalEvent.code == 'Digit3' || e.originalEvent.code == 'Numpad3') {
-				vm.pin = vm.pin+'3';
-			} else if(e.originalEvent.code == 'Digit4' || e.originalEvent.code == 'Numpad4') {
-				vm.pin = vm.pin+'4';
-			} else if(e.originalEvent.code == 'Digit5' || e.originalEvent.code == 'Numpad5') {
-				vm.pin = vm.pin+'5';
-			} else if(e.originalEvent.code == 'Digit6' || e.originalEvent.code == 'Numpad6') {
-				vm.pin = vm.pin+'6';
-			} else if(e.originalEvent.code == 'Digit7' || e.originalEvent.code == 'Numpad7') {
-				vm.pin = vm.pin+'7';
-			} else if(e.originalEvent.code == 'Digit8' || e.originalEvent.code == 'Numpad8') {
-				vm.pin = vm.pin+'8';
-			} else if(e.originalEvent.code == 'Digit9' || e.originalEvent.code == 'Numpad9') {
-				vm.pin = vm.pin+'9';
-			} else if(e.originalEvent.code == 'Digit0' || e.originalEvent.code == 'Numpad0') {
-				vm.pin = vm.pin+'0';
+			if(vm.pin.length <= 8) {
+				if(e.originalEvent.code == 'Digit1' || e.originalEvent.code == 'Numpad1') {
+					vm.pin = vm.pin+'1';
+				} else if(e.originalEvent.code == 'Digit2' || e.originalEvent.code == 'Numpad2') {
+					vm.pin = vm.pin+'2';
+				} else if(e.originalEvent.code == 'Digit3' || e.originalEvent.code == 'Numpad3') {
+					vm.pin = vm.pin+'3';
+				} else if(e.originalEvent.code == 'Digit4' || e.originalEvent.code == 'Numpad4') {
+					vm.pin = vm.pin+'4';
+				} else if(e.originalEvent.code == 'Digit5' || e.originalEvent.code == 'Numpad5') {
+					vm.pin = vm.pin+'5';
+				} else if(e.originalEvent.code == 'Digit6' || e.originalEvent.code == 'Numpad6') {
+					vm.pin = vm.pin+'6';
+				} else if(e.originalEvent.code == 'Digit7' || e.originalEvent.code == 'Numpad7') {
+					vm.pin = vm.pin+'7';
+				} else if(e.originalEvent.code == 'Digit8' || e.originalEvent.code == 'Numpad8') {
+					vm.pin = vm.pin+'8';
+				} else if(e.originalEvent.code == 'Digit9' || e.originalEvent.code == 'Numpad9') {
+					vm.pin = vm.pin+'9';
+				} else if(e.originalEvent.code == 'Digit0' || e.originalEvent.code == 'Numpad0') {
+					vm.pin = vm.pin+'0';
+				}
 			}
 	});
 
