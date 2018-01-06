@@ -107,7 +107,7 @@
 							<th md-column md-order-by="join_team"><span>Join Team</span></th>
 							<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>
 							<th md-column md-order-by="dues"><span>Pay Dues</span></th>
-							<th md-column md-order-by="season_hours"><span>Season Hours (exluding exemptions)</span></th>
+							<th md-column md-order-by="season_hours_exempt"><span>On Season Hours <br/> (including exemptions)</span></th>
 							<th md-column md-order-by="reqs_complete"><span>Requirements Complete</span></th><!--
 							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
 							<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
@@ -138,7 +138,7 @@
 							<td md-cell>
 								<md-icon class="material-icons" style="color:green;" ng-show="user.min_hours">check_circle</md-icon>
 								<md-icon class="material-icons" style="color:red;" ng-hide="user.min_hours">remove_circle</md-icon>
-								{{user.season_hours_exempt}}
+								{{user.season_hours_exempt}} ({{user.season_hours}})
 							</td>
 							<td md-cell>
 								<md-icon class="material-icons" style="color:green;" ng-show="user.reqs_complete">check_circle</md-icon>
