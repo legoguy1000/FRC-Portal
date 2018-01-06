@@ -88,7 +88,7 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
     }
 		console.log(e.keyCode);
 	}
-	$(document).on("keydown", function (e) {
+	$(document).on("keyup", function (e) {
 	    //console.log(e);
 			if(vm.pin.length < 8) {
 				if(e.originalEvent.code == 'Digit1' || e.originalEvent.code == 'Numpad1') {
