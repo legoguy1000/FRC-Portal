@@ -4,7 +4,7 @@
 			<md-button class="md-icon-button" ui-sref="main.admin.users" ng-click="admin.clickBack()">
 				<md-tooltip md-direction="top">Go Back to User List</md-tooltip>
 				<i class="material-icons">arrow_back</i>
-			</md-button> 
+			</md-button>
 			User Information
 		</h1>
 		<form class="md-margin" flex layout="column">
@@ -77,22 +77,22 @@
 				<md-button class="md-icon-button" ng-click="vm.showPastReqs = !vm.showPastReqs">
 					<md-tooltip md-direction="top">Show past season requirements</md-tooltip>
 					<i class="material-icons">history</i>
-				</md-button> 
+				</md-button>
 				<span ng-hide="vm.showPastReqs">{{vm.seasonInfo.upcomming.year}} {{vm.seasonInfo.upcomming.game_name}}</span>
-				<span ng-show="vm.showPastReqs">All</span>			
+				<span ng-show="vm.showPastReqs">All</span>
 				Season Information
 			</h1>
 			<md-table-container>
 				<table md-table>
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
-							<th md-column md-order-by="year"><span>Season</span></th>										
-							<th md-column md-order-by="join_team"><span>Join Team</span></th>										
-							<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>										
+							<th md-column md-order-by="year"><span>Season</span></th>
+							<th md-column md-order-by="join_team"><span>Join Team</span></th>
+							<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>
 							<th md-column md-order-by="dues"><span>Pay Dues</span></th>
-							<th md-column md-order-by="season_hours"><span>On Season Hours</span></th>										
-							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>										
-							<th md-column md-order-by="total"><span>Total Hours</span></th>				
+							<th md-column md-order-by="season_hours_exempt"><span>On Season Hours <br/> (including exemptions)</span></th>
+							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
+							<th md-column md-order-by="total"><span>Total Hours</span></th>
 						</tr>
 					</thead>
 					<tbody md-body>
@@ -119,7 +119,7 @@
 								<md-icon class="material-icons" ng-hide="main.userInfo.user_type == 'Student'">indeterminate_check_box</md-icon>
 							</td>
 							<td md-cell>
-								{{season.season_hours}}
+								{{season.season_hours_exempt}} ({{season.season_hours)}})
 							</td>
 							<td md-cell>
 								{{season.off_season_hours}}
@@ -136,5 +136,5 @@
 		<!-- <div>
 			<pre>{{vm.userInfo | json}}
 		</div> -->
-	</md-content>		
+	</md-content>
 </div>
