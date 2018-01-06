@@ -208,7 +208,15 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			.ok('Submit')
 			.cancel('Cancel');
 		$mdDialog.show(confirm).then(function(result) {
-
+			var data = {
+				note_id: device.note_id,
+				label: result
+			}
+			usersService.editDeviceLabel(data).then(function(response){
+					if(response.status) {
+						vm.notificationPreferences = response.endpoints;
+					}
+			});
 		}, function() {
 
 		});

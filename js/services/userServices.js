@@ -55,6 +55,12 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		editDeviceLabel: function (formData) {
+			return $http.post('site/editDeviceLabel.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		checkPin: function (formData) {
 			return $http.post('site/checkPin.php',formData)
 			.then(function(response) {
