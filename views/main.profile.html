@@ -342,24 +342,24 @@
 										<md-input-container flex class="md-icon-float md-icon-left md-block">
 											<label>Start Time</label>
 											<md-icon md-font-library="material-icons">today</md-icon>
-											<input moment-picker="vm.start_time" required
+											<input moment-picker="vm.rmhf.start_time" required
 												 format="LLL"
 												 min-view="year"
 												 max-view="minute"
 												 today="true"
-												 ng-model="vm.start_time_full">
+												 ng-model="vm.rmhf.start_time_full">
 											</input>
 										</md-input-container>
 										<md-input-container flex class="md-icon-float md-icon-left md-block">
 											<label>End Time</label>
 											<md-icon md-font-library="material-icons">today</md-icon>
-											<input moment-picker="vm.end_time" required
+											<input moment-picker="vm.rmhf.end_time" required
 												 format="LLL"
 												 min-view="year"
 												 max-view="minute"
-												 min-date="vm.start_time_full"
+												 min-date="vm.rmhf.start_time_full"
 												 today="true"
-												 ng-model="vm.end_time_full">
+												 ng-model="vm.rmhf.end_time_full">
 											</input>
 										</md-input-container>
 									</div>
@@ -367,7 +367,7 @@
 										<md-input-container flex class="md-icon-float md-icon-left md-block">
 											<label>Comment</label>
 											<md-icon md-font-library="material-icons">comment</md-icon>
-											<textarea ng-model="vm.comment" required>
+											<textarea ng-model="vm.rmhf.comment" required>
 											</textarea>
 										</md-input-container>
 									</div>

@@ -92,5 +92,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		requestMissingHours: function (formData) {
+			return $http.post('site/requestMissingHours.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

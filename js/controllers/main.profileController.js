@@ -11,7 +11,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.notificationEndpoints = [];
 	vm.linkedAccounts = [];
 	vm.seasonInfo = {};
-
+	vm.rmhf = {};
 	vm.showPastReqs = false;
 	vm.checkPinNum = null;
 	vm.changePinNum = null;
@@ -25,6 +25,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		note_types: false,
 		note_devices: false,
 		profile: false,
+		rmh: false,
 	}
 
 	vm.notificationOptions = {
@@ -121,6 +122,14 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		}
 		usersService.updateNotificationPreferences(data).then(function(response){
 			vm.loading.note_types = false;
+		});
+	}
+
+	vm.requestMissingHours = function(method,type,value) {
+		vm.loading.rmh = true;
+		var data = vm.rmhf;
+		usersService.requestMissingHours(data).then(function(response){
+			vm.loading.rmh = false;
 		});
 	}
 
