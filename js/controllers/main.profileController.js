@@ -108,7 +108,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.changePinMsg = '';
 	vm.changePin = function() {
 		vm.loadingDevices = true;
-		vm.changePinMsg = ''response.msg'';
+		vm.changePinMsg = '';
 		var data = {
 			pin: vm.changePinNum
 		}
