@@ -281,7 +281,7 @@
 					</h1>
 					<div flex layout="column" layout-gt-sm="row">
 						<md-card flex>
-							<form ng-submit="vm.checkPin()">
+							<form ng-submit="vm.checkPin()" name="vm.checkPinForm">
 								<md-card-title>
 									<md-card-title-text>
 										<span class="md-headline">Check PIN</span>
@@ -290,10 +290,13 @@
 								<md-card-content>
 									<md-input-container flex class="md-icon-float md-icon-right md-block">
 										<label>Check PIN</label>
-										<input ng-model="vm.checkPinNum" type="text" pattern="[0-9]{4,8}"  required/>
+										<input ng-model="vm.checkPinNum" name="checkPinNum"  type="text" pattern="[0-9]{4,8}"  required/>
 										<!-- <md-icon class="material-icons">help</md-icon> -->
 										<!-- <div class="hint"></div> -->
 									</md-input-container>
+									<div>
+										{{vm.checkPinMsg}}
+									</div>
 								</md-card-content>
 								<md-card-actions layout="row" layout-align="end center">
 									<md-button type="submit">Check</md-button>
@@ -301,7 +304,7 @@
 							</form>
 						</md-card>
 						<md-card flex>
-							<form ng-submit="vm.changePin()" name="changePin">
+							<form ng-submit="vm.changePin()"  name="vm.changePinForm">
 								<md-card-title>
 									<md-card-title-text>
 										<span class="md-headline">Change PIN</span>
@@ -372,7 +375,7 @@
 										</md-input-container>
 									</div>
 									<div flex>
-										{{vm.rmhfMsg}}
+										{{vm.rmhMsg}}
 									</div>
 								</md-card-content>
 								<md-card-actions layout="row" layout-align="end center">

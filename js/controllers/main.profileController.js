@@ -14,7 +14,9 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.rmhData = {};
 	vm.showPastReqs = false;
 	vm.checkPinNum = null;
+	vm.checkPinMsg = '';
 	vm.changePinNum = null;
+	vm.changePinMsg = '';
 	vm.query = {
 		filter: '',
 		limit: 5,
@@ -95,7 +97,12 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		}
 		console.log(data);
 		usersService.checkPin(data).then(function(response){
-
+			vm.checkPinMsg = response.msg;
+			if(response.status) {
+				vm.checkPinNum = null;
+				vm.checkPinForm.$setPristine();
+				vm.checkPinForm.$setUntouched();
+			}
 		});
 	}
 	vm.changePinMsg = '';
@@ -109,6 +116,8 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			vm.changePinMsg = response.msg;
 			if(response.status) {
 				vm.changePinNum = null;
+				vm.changePinForm.$setPristine();
+				vm.changePinForm.$setUntouched();
 			}
 		});
 	}
