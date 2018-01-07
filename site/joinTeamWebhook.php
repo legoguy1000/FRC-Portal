@@ -1,7 +1,7 @@
 <?php
 include('./includes.php');
 
-$json = file_get_contents('php://input'); 
+$json = file_get_contents('php://input');
 $formData = json_decode($json,true);
 
 
@@ -86,7 +86,7 @@ if($user == false) {
 		$columns .= ', signin_pin';
 		$values .= ', '.db_quote($signin_pin);
 	}
-	
+
 	$query = 'insert into users ('.$columns.') values ('.$values.')';
 	$result = db_query($query);
 }
@@ -96,14 +96,14 @@ $where = 'WHERE bag_day >= '.db_quote(date('Y-m-d'));
 $query = seasonQuery($sel='',$joins='', $where, $order = '');
 $season = db_select_single($query);
 if(!is_null($season)) {
-	$season_id = season['season_id'];
+	$season_id = $season['season_id'];
 	$query = 'SELECT * FROM annual_requirements WHERE season_id='.db_quote($season_id).' AND user_id='.db_quote($user_id);
 	$season = db_select_single($query);
 	if(!is_null($season)) {
 		$query = 'UPDATE annual_requirements SET join_team="1" WHERE season_id='.db_quote($season_id).' AND user_id='.db_quote($user_id);
 	} else {
 		$req_id = uniqid();
-		$query = 'INSERT INTO annual_requirements (req_id, user_id, season_id, join_team) VALUES 
+		$query = 'INSERT INTO annual_requirements (req_id, user_id, season_id, join_team) VALUES
 		('.db_quote($req_id).', '.db_quote($user_id).', '.db_quote($season_id).', "1")';
 		$result = db_query($query);
 	}
@@ -113,7 +113,7 @@ $joins = '';
 $where = 'WHERE users.fname='.db_query($fname).' AND users.lname='.db_query($lname).' AND users.user_type='.db_query($user_type);
 $query = userQuery($sel,$joins, $where, $order = '');
 $user = db_select_single($query);
-	
+
 $userInfo = $user!=false ? json_encode($user) : $query;
 
 $id = uniqid();
