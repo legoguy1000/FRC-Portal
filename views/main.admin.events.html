@@ -14,7 +14,7 @@
 			</md-button>
 		</div>
 	</md-toolbar>
-	
+
 	<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
 		<div class="md-toolbar-tools">
 			<md-icon class="material-icons">search</md-icon>
@@ -26,17 +26,17 @@
 			</md-button>
 		</div>
 	</md-toolbar>
-	
+
 	<md-table-container>
 		<table md-table ng-model="selected" md-progress="vm.promise">
 			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getEvents">
 				<tr md-row>
 					<th md-column md-order-by="name"><span>Event</span></th>
-					<th md-column md-order-by="event_start"><span>Date</span></th>	
-					<th md-column md-order-by="num_days"><span># Days</span></th>	
-					<th md-column md-order-by="type"><span>Event Type</span></th>	
-					<th md-column md-order-by="game_name"><span>Season</span></th>	
-					
+					<th md-column md-order-by="event_start"><span>Date</span></th>
+					<th md-column md-order-by="num_days"><span># Days</span></th>
+					<th md-column md-order-by="type"><span>Event Type</span></th>
+					<th md-column md-order-by="game_name"><span>Season</span></th>
+
 				</tr>
 			</thead>
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
@@ -71,4 +71,4 @@
 		</table>
 	</md-table-container>
 
-<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.total}}" md-page-select md-boundary-links md-on-paginate="vm.getEvents"></md-table-pagination></md-content>
+<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.total}}" md-page-select md-boundary-links md-on-paginate="vm.getEvents"></md-table-pagination>

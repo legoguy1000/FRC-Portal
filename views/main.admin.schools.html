@@ -14,7 +14,7 @@
 			</md-button>
 		</div>
 	</md-toolbar>
-	
+
 	<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
 		<div class="md-toolbar-tools">
 			<md-icon class="material-icons">search</md-icon>
@@ -26,16 +26,16 @@
 			</md-button>
 		</div>
 	</md-toolbar>
-	
+
 	<md-table-container>
 		<table md-table ng-model="selected" md-progress="vm.promise">
 			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getSchools">
 				<tr md-row>
-					<th md-column style="width:56px"></th>					
-					<th md-column md-order-by="school_name"><span>School Name</span></th>					
-					<th md-column md-order-by="abv"><span>Abreviation</span></th>					
-					<th md-column md-order-by="student_count"><span># of Students</span></th>	
-					<th md-column style="width: 150px;"></th>			
+					<th md-column style="width:56px"></th>
+					<th md-column md-order-by="school_name"><span>School Name</span></th>
+					<th md-column md-order-by="abv"><span>Abreviation</span></th>
+					<th md-column md-order-by="student_count"><span># of Students</span></th>
+					<th md-column style="width: 150px;"></th>
 				</tr>
 			</thead>
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
@@ -60,4 +60,4 @@
 		</table>
 	</md-table-container>
 
-<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.total}}" md-page-select md-boundary-links md-on-paginate="vm.getSchools"></md-table-pagination></md-content>
+<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.total}}" md-page-select md-boundary-links md-on-paginate="vm.getSchools"></md-table-pagination>
