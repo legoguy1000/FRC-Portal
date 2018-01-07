@@ -52,14 +52,14 @@
 				</md-input-container>
 				<md-input-container flex class="md-icon-float md-icon-right md-block" ng-show="vm.userInfo.signin_pin == ''">
 					<label>Time In/Out PIN</label>
-					<input ng-model="vm.userInfo.time_pin" type='number' min="0" max="99999999" minlength="4" maxlength="8" ng-required="vm.userInfo.signin_pin == ''"/>
+					<input ng-model="vm.userInfo.time_pin" type="text" pattern="/^[0-9]{4,8}/"  md-maxlength="8"  md-minlength="4" ng-required="vm.userInfo.signin_pin == ''"/>
 					<md-icon class="material-icons">help</md-icon>
 					<div class="hint">4 to 8 digits.  Numbers ONLY!</div>
 				</md-input-container>
 			</div>
 			<div layout="column" layout-gt-xs="row">
 				<md-autocomplete flex
-					ng-required="vm.userInfo.user_type=='Student'" 
+					ng-required="vm.userInfo.user_type=='Student'"
 					ng-disabled="vm.userInfo.user_type!='Student'"
 					md-input-name="autocompleteField"
 					md-no-cache="false"

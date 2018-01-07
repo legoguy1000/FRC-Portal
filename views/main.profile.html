@@ -313,21 +313,21 @@
 								<md-card-content>
 									<md-input-container flex class="md-icon-float md-icon-right md-block">
 										<label>Change PIN</label>
-										<input ng-model="vm.changePinNum" name="changePinNum"  type="text" pattern="[0-9]{4,8}" required/>
+										<input ng-model="vm.changePinNum" name="changePinNum" type="text" pattern="/^[0-9]{4,8}/"  md-maxlength="8"  md-minlength="4" required/>
 										<md-icon class="material-icons">help</md-icon>
-										<div class="hint">4 to 8 digits.  Numbers ONLY!</div>
-										<!-- <div ng-messages="changePin.changePinNum.$error">
+										<!--<div class="hint">4 to 8 digits.  Numbers ONLY!</div>-->
+										<div ng-messages="vm.changePinForm.changePinNum.$error">
 											<div ng-message="required">PIN cannot be blank</div>
 											<div ng-message="md-maxlength">The name has to be less than 8 numbers long.</div>
 											<div ng-message="md-minlength">The name has to be greater than 4 numbers long.</div>
-										</div> -->
+										</div>
 									</md-input-container>
 									<div>
 										{{vm.changePinMsg}}
 									</div>
 								</md-card-content>
 								<md-card-actions layout="row" layout-align="end center">
-									<md-button type="submit" ng-disabled="!changePin.$valid">Submit</md-button>
+									<md-button type="submit" ng-disabled="!vm.changePinForm.$valid">Submit</md-button>
 								</md-card-actions>
 							</form>
 						</md-card>
@@ -370,7 +370,7 @@
 										<md-input-container flex class="md-icon-float md-icon-left md-block">
 											<label>Comment</label>
 											<md-icon md-font-library="material-icons">comment</md-icon>
-											<textarea ng-model="vm.rmhData.comment" maxlength="200" required>
+											<textarea ng-model="vm.rmhData.comment"  md-maxlength="200" required>
 											</textarea>
 										</md-input-container>
 									</div>
@@ -379,7 +379,7 @@
 									</div>
 								</md-card-content>
 								<md-card-actions layout="row" layout-align="end center">
-									<md-button type="submit">Submit</md-button>
+									<md-button type="submit" ng-disabled="!vm.rmhForm.$valid">Submit</md-button>
 								</md-card-actions>
 							</form>
 						</md-card>
