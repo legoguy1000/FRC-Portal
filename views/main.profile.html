@@ -290,7 +290,7 @@
 								<md-card-content>
 									<md-input-container flex class="md-icon-float md-icon-right md-block">
 										<label>Check PIN</label>
-										<input ng-model="vm.checkPinNum" type='number'  required/>
+										<input ng-model="vm.checkPinNum" type="text" pattern="[0-9]{4-8}"  required/>
 										<!-- <md-icon class="material-icons">help</md-icon> -->
 										<!-- <div class="hint"></div> -->
 									</md-input-container>
@@ -310,7 +310,7 @@
 								<md-card-content>
 									<md-input-container flex class="md-icon-float md-icon-right md-block">
 										<label>Change PIN</label>
-										<input ng-model="vm.changePinNum" name="changePinNum" type='number' minlength="4" maxlength="8" required/>
+										<input ng-model="vm.changePinNum" name="changePinNum"  type="text" pattern="[0-9]{4-8}" required/>
 										<md-icon class="material-icons">help</md-icon>
 										<div class="hint">4 to 8 digits.  Numbers ONLY!</div>
 										<!-- <div ng-messages="changePin.changePinNum.$error">
