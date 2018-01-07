@@ -17,7 +17,7 @@ for($i = $start_date; $i <= $end_date; $i++) {
 	$years[] = (integer) $i;
 }
 
-$series = array('Senior','Junior','Sophmore','Freshman','Mentor');
+$series = array('Senior','Junior','Sophmore','Freshman','Pre-Freshman','Mentor');
 $data = array();
 foreach($series as $se) {
 	$data[$se] = array_fill_keys($years,0);
@@ -28,6 +28,7 @@ $query = 'SELECT CASE
  WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=24 THEN "Junior"
  WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=36 THEN "Sophmore"
  WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=48 THEN "Freshman"
+ WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) >48 THEN "Pre-Freshman"
  ELSE ""
 END AS student_grade,
 IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as sum, year(a.time_in) as year from meeting_hours a LEFT JOIN users b USING (user_id) WHERE year(a.time_in) BETWEEN '.$start_date.' AND '.$end_date.' GROUP BY year,student_grade';
