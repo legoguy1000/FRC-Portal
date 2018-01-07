@@ -20,14 +20,22 @@ GROUP BY e.event_id HAVING year='.db_quote($year).' ORDER BY e.event_start';
 $result = db_select($query);
 foreach($result as $re) {
 	$name = $re['name'];
+	$sa = explode('-',$re['event_start']);
+	$ea = explode('-',$re['event_end']);
+
 	if($re['event_start'] == $re['event_end']) {
 		$date = new DateTime($re['event_start']);
-		$name .= ' ('.$date->format('M d').')';
+		$name .= ' ('.$date->format('M j').')';
+	} elseif($sa[1] == $ea[1]) {
+		$date = new DateTime($re['event_start']);
+		$name .= ' ('.$date->format('M j');
+		$date = new DateTime($re['event_end']);
+		$name .= '-'.$date->format('j').')';
 	} else {
 		$date = new DateTime($re['event_start']);
-		$name .= ' ('.$date->format('M d');
+		$name .= ' ('.$date->format('M j');
 		$date = new DateTime($re['event_end']);
-		$name .= '-'.$date->format('d').')';
+		$name .= '-'.$date->format('M j').')';
 	}
 	$labels[] = $name;
 	$data[0][] = (double) $re['hours'];
