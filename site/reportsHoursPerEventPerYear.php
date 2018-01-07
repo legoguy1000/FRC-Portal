@@ -22,12 +22,12 @@ foreach($result as $re) {
 	$name = $re['name'];
 	if($re['event_start'] == $re['event_end']) {
 		$date = new DateTime($re['event_start']);
-		$name .= ' '.$date->format('m/d');
+		$name .= ' ('.$date->format('M d').')';
 	} else {
 		$date = new DateTime($re['event_start']);
-		$name .= ' '.$date->format('m/d');
+		$name .= ' ('.$date->format('M d');
 		$date = new DateTime($re['event_end']);
-		$name .= '-'.$date->format('m/d/');
+		$name .= '-'.$date->format('d').')';
 	}
 	$labels[] = $name;
 	$data[0][] = (double) $re['hours'];
