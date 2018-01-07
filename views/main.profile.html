@@ -329,6 +329,47 @@
 							</form>
 						</md-card>
 					</div>
+					<div flex layout="column" layout-gt-sm="row">
+						<md-card flex>
+							<form ng-submit="vm.checkPin()">
+								<md-card-title>
+									<md-card-title-text>
+										<span class="md-headline">Request Lost Hours</span>
+									</md-card-title-text>
+								</md-card-title>
+								<md-card-content>
+									<div flex>
+										<md-input-container flex class="md-icon-float md-icon-right md-block">
+											<label>Start Time</label>
+											<md-icon md-font-library="material-icons">today</md-icon>
+											<input moment-picker="vm.start_time" required
+												 format="LLL"
+												 min-view="year"
+												 max-view="minute"
+												 ng-model="vm.start_time_full">
+											</input>
+										</md-input-container>
+									</div>
+									<div flex>
+										<md-input-container flex class="md-icon-float md-icon-right md-block">
+											<label>Start Time</label>
+											<md-icon md-font-library="material-icons">today</md-icon>
+											<input moment-picker="vm.end_time" required
+												 format="LLL"
+												 min-view="year"
+												 max-view="minute"
+												 ng-model="vm.end_time_full">
+											</input>
+										</md-input-container>
+									</div>
+								</md-card-content>
+								<md-card-actions layout="row" layout-align="end center">
+									<md-button type="submit">Submit</md-button>
+								</md-card-actions>
+							</form>
+						</md-card>
+						<div flex></div>
+					</div>
 				</md-content>
 			</md-tab>
 		</md-tabs>
