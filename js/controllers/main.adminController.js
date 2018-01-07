@@ -28,23 +28,27 @@ function mainAdminController($log,$timeout, $q, $scope, $state, eventsService, $
         name: 'Metrics',
         icon: 'dashboard',
         sref: 'main.admin.metrics'
-      }, 
+      }, {
+        name: 'Time Management',
+        icon: 'dashboard',
+        sref: 'main.admin.time'
+      },
     ];
 	admin.slide = 'slide-left';
-	
+
 	admin.clickTab = function(tab) {
 		var clicked = admin.tabs.indexOf(tab);
 		var cur = admin.tabs.map(function(e) { return e.sref; }).indexOf($state.current.name);
 		//$log.log(cur +' -> '+ clicked);
-		
+
 		if(clicked > cur) {
 			admin.slideLeft();
 		} else {
 			admin.slideRight();
 		}
-	//	
+	//
 	}
-	
+
 	admin.slideLeft = function() {
 		admin.slide = 'slide-left';
 	}

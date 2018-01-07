@@ -24,8 +24,8 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 			}
 		});
 	}
-	
-	
-	
-	
+
+
+
+
 }
