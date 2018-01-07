@@ -24,6 +24,10 @@ $request_date = date('Y-m-d H:i:s');
 $query = 'INSERT INTO missing_hours_requests (request_id, user_id, time_in, time_out, comment, request_date) VALUES
 				('.db_quote($request_id).', '.db_quote($user_id).', '.db_quote($start_time).', '.db_quote($end_time).', '.db_quote($formData['comment']).', '.db_quote($request_date).')';
 $result = db_query($query);
-
+if($result) {
+	die(json_encode(array('status'=>false, 'msg'=>'Request submited')));
+} else {
+	die(json_encode(array('status'=>false, 'msg'=>'Something went wrong')));
+}
 
 ?>

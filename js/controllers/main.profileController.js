@@ -130,6 +130,10 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		var data = vm.rmhf;
 		usersService.requestMissingHours(data).then(function(response){
 			vm.loading.rmh = false;
+			vm.rmhfMsg = response.msg;
+			if(response.status) {
+				vm.rmhf = {};
+			}
 		});
 	}
 
