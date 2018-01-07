@@ -16,8 +16,8 @@ if(!isset($formData['end_time']) || $formData['end_time'] == '') {
 if(!isset($formData['comment']) || $formData['comment'] == '') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Comment cannot be blank')));
 }
-$start_time = date('Y-m-d H:i:s',strotime($formData['start_time']));
-$end_time = date('Y-m-d H:i:s',strotime($formData['end_time']));;
+$start_time = date('Y-m-d H:i:s',strtotime($formData['start_time']));
+$end_time = date('Y-m-d H:i:s',strtotime($formData['end_time']));;
 
 $request_id = uniqid();
 $request_date = date('Y-m-d H:i:s');
