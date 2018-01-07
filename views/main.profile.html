@@ -337,8 +337,8 @@
 										<span class="md-headline">Request Lost Hours</span>
 									</md-card-title-text>
 								</md-card-title>
-								<md-card-content>
-									<div flex>
+								<md-card-content layout="column" layout-gt-sm="row">
+									<div flex layout="row">
 										<md-input-container flex class="md-icon-float md-icon-right md-block">
 											<label>Start Time</label>
 											<md-icon md-font-library="material-icons">today</md-icon>
@@ -346,11 +346,10 @@
 												 format="LLL"
 												 min-view="year"
 												 max-view="minute"
+												 today="true"
 												 ng-model="vm.start_time_full">
 											</input>
 										</md-input-container>
-									</div>
-									<div flex>
 										<md-input-container flex class="md-icon-float md-icon-right md-block">
 											<label>Start Time</label>
 											<md-icon md-font-library="material-icons">today</md-icon>
@@ -358,8 +357,19 @@
 												 format="LLL"
 												 min-view="year"
 												 max-view="minute"
+												 min-date="vm.start_time_full"
+												 today="true"
 												 ng-model="vm.end_time_full">
 											</input>
+										</md-input-container>
+									</div>
+									<div flex>
+										<md-input-container flex class="md-icon-float md-icon-right md-block">
+											<label>Start Time</label>
+											<md-icon md-font-library="material-icons">today</md-icon>
+											<textarea
+												 ng-model="vm.comment">
+											</textarea>
 										</md-input-container>
 									</div>
 								</md-card-content>
