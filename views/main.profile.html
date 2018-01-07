@@ -337,7 +337,7 @@
 										<span class="md-headline">Request Lost Hours</span>
 									</md-card-title-text>
 								</md-card-title>
-								<md-card-content layout="column" layout-gt-sm="row">
+								<md-card-content layout="column">
 									<div flex layout="row">
 										<md-input-container flex class="md-icon-float md-icon-right md-block">
 											<label>Start Time</label>
@@ -367,8 +367,7 @@
 										<md-input-container flex class="md-icon-float md-icon-right md-block">
 											<label>Start Time</label>
 											<md-icon md-font-library="material-icons">today</md-icon>
-											<textarea
-												 ng-model="vm.comment">
+											<textarea ng-model="vm.comment" required>
 											</textarea>
 										</md-input-container>
 									</div>
