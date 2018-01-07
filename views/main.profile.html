@@ -339,7 +339,7 @@
 								</md-card-title>
 								<md-card-content layout="column">
 									<div flex layout="row">
-										<md-input-container flex class="md-icon-float md-icon-right md-block">
+										<md-input-container flex class="md-icon-float md-icon-left md-block">
 											<label>Start Time</label>
 											<md-icon md-font-library="material-icons">today</md-icon>
 											<input moment-picker="vm.start_time" required
@@ -350,7 +350,7 @@
 												 ng-model="vm.start_time_full">
 											</input>
 										</md-input-container>
-										<md-input-container flex class="md-icon-float md-icon-right md-block">
+										<md-input-container flex class="md-icon-float md-icon-left md-block">
 											<label>Start Time</label>
 											<md-icon md-font-library="material-icons">today</md-icon>
 											<input moment-picker="vm.end_time" required
@@ -364,9 +364,9 @@
 										</md-input-container>
 									</div>
 									<div flex>
-										<md-input-container flex class="md-icon-float md-icon-right md-block">
-											<label>Start Time</label>
-											<md-icon md-font-library="material-icons">today</md-icon>
+										<md-input-container flex class="md-icon-float md-icon-left md-block">
+											<label>Comment</label>
+											<md-icon md-font-library="material-icons">comment</md-icon>
 											<textarea ng-model="vm.comment" required>
 											</textarea>
 										</md-input-container>
