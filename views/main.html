@@ -27,18 +27,18 @@
             <md-button hide-gt-sm ng-click="main.toggleItemsList()" aria-label="Menu">
                 <i class="material-icons">menu</i>
             </md-button>
-			<div class="" >
-				<span hide-sm hide-xs>Team 2363 Portal <span ng-show="main.title != ''"> | </span></span>{{main.title}}
-			</div>
+						<div class="" >
+							<span hide-sm hide-xs>Team 2363 Portal <span ng-show="main.title != ''"> | </span></span>{{main.title}}
+						</div>
         </section>
         <section layout-align="end center" ng-show="main.isAuthed">
             <!-- <md-button class="toolbar-button" aria-label="Search" ng-click="main.showSearch = !main.showSearch">
                 <i class="material-icons">search</i>
             </md-button> -->
-            <md-button class="toolbar-button" aria-label="Notifications">
+          <!--  <md-button class="toolbar-button" aria-label="Notifications">
                 <i class="material-icons">notifications</i>
                 <span class="notifications-label">7</span>
-            </md-button>
+            </md-button> -->
             <md-button class="toolbar-button" aria-label="Settings" ng-click="main.toggleRightSidebar()">
 				<i class="material-icons">menu</i>
             </md-button>
@@ -104,8 +104,8 @@
 			<md-button class="md-raised md-primary">Search</md-button>
 		</div>
 	</md-content> -->
-	
-	
+
+
     <md-content flex class="md-padding page-content">
         <div ui-view style="height: 100%;"></div>
     </md-content>
