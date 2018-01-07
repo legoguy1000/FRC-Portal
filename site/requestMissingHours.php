@@ -16,11 +16,13 @@ if(!isset($formData['end_time']) || $formData['end_time'] == '') {
 if(!isset($formData['comment']) || $formData['comment'] == '') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Comment cannot be blank')));
 }
+$start_time = date('Y-m-d H:i:s',strotime($formData['start_time']));
+$end_time = date('Y-m-d H:i:s',strotime($formData['end_time']));;
 
 $request_id = uniqid();
 $request_date = date('Y-m-d H:i:s');
 $query = 'INSERT INTO missing_hours_requests (request_id, user_id, time_in, time_out, comment, request_date) VALUES
-				('.db_quote($request_id).', '.db_quote($user_id).', '.db_quote($formData['start_time']).', '.db_quote($formData['end_time']).', '.db_quote($formData['comment']).', '.db_quote($request_date).')';
+				('.db_quote($request_id).', '.db_quote($user_id).', '.db_quote($start_time).', '.db_quote($end_time).', '.db_quote($formData['comment']).', '.db_quote($request_date).')';
 $result = db_query($query);
 
 
