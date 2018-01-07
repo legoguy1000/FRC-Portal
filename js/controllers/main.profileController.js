@@ -11,7 +11,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.notificationEndpoints = [];
 	vm.linkedAccounts = [];
 	vm.seasonInfo = {};
-	vm.rmhf = {};
+	vm.rmhData = {};
 	vm.showPastReqs = false;
 	vm.checkPinNum = null;
 	vm.changePinNum = null;
@@ -127,12 +127,14 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 
 	vm.requestMissingHours = function(method,type,value) {
 		vm.loading.rmh = true;
-		var data = vm.rmhf;
+		var data = vm.rmhData;
 		usersService.requestMissingHours(data).then(function(response){
 			vm.loading.rmh = false;
-			vm.rmhfMsg = response.msg;
+			vm.rmhMsg = response.msg;
 			if(response.status) {
-				vm.rmhf = {};
+				vm.rmhData = {};
+				vm.rmhForm.$setPristine();
+				vm.rmhForm.$setUntouched();
 			}
 		});
 	}
