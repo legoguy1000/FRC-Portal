@@ -1,4 +1,4 @@
 <md-tabs md-border-bottom md-autoselect md-swipe-content style="margin-bottom: 10px;">
 	<md-tab label="{{tab.name}}" ui-sref="{{tab.sref}}" md-active="admin.state == tab.sref" ng-repeat="tab in admin.tabs" md-on-select="admin.clickTab(tab)"></md-tab>
 </md-tabs>
-<div ui-view ng-class="admin.slide" style="background:white;"></div>
+<div ui-view ng-class="admin.slide" style="background:white;" flex></div>
