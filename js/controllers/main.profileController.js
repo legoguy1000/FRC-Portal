@@ -92,10 +92,10 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 
 	vm.checkPin = function() {
 		vm.loadingDevices = true;
+		vm.checkPinMsg = '';
 		var data = {
 			pin: vm.checkPinNum
 		}
-		console.log(data);
 		usersService.checkPin(data).then(function(response){
 			vm.checkPinMsg = response.msg;
 			if(response.status) {
@@ -108,10 +108,10 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.changePinMsg = '';
 	vm.changePin = function() {
 		vm.loadingDevices = true;
+		vm.changePinMsg = ''response.msg'';
 		var data = {
 			pin: vm.changePinNum
 		}
-		console.log(data);
 		usersService.changePin(data).then(function(response){
 			vm.changePinMsg = response.msg;
 			if(response.status) {
@@ -136,6 +136,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 
 	vm.requestMissingHours = function(method,type,value) {
 		vm.loading.rmh = true;
+		vm.rmhMsg = '';
 		var data = vm.rmhData;
 		usersService.requestMissingHours(data).then(function(response){
 			vm.loading.rmh = false;
