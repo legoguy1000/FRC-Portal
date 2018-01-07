@@ -3,12 +3,12 @@ include('./includes.php');
 
 use \Firebase\JWT\JWT;
 
-$json = file_get_contents('php://input'); 
+$json = file_get_contents('php://input');
 $formData = json_decode($json,true);
 
 $jwt = getTokenFromHeaders();
 if(!$jwt) {
-	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Sign in is not authorized at this time.')));
+	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Sign in is not authorized at this time and/or on this device. Please see a mentor.')));
 }
 
 $key = getIniProp('jwt_signin_key');
@@ -17,7 +17,7 @@ try{
 }catch(\Firebase\JWT\ExpiredException $e){
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Authorization Error. '.$e->getMessage().'.  Please see Mentor.')));
 }catch(\Firebase\JWT\SignatureInvalidException $e){
-	
+
 }
 $data = (array) $decoded;
 if(!isset($data['jti']) || $data['jti'] == '') {
@@ -27,7 +27,7 @@ $jti = $data['jti'];
 $query = 'SELECT * FROM signin_tokens WHERE jti = '.db_quote($jti).' AND valid = "1"';
 $result = db_select_single($query);
 if(!$result) {
-	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Sign in is not authorized at this time.')));
+	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Sign in is not authorized at this time and/or on this device. Please see a mentor.')));
 }
 
 if(!isset($formData['pin']) || $formData['pin'] == '') {
@@ -63,7 +63,7 @@ if(!is_null($result)) {
 			);
 			sendUserNotification($user_id, 'Sign out', $msgData);
 			$signInList = userSignInList();
-			die(json_encode(array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i:s A', $date), 'signInList'=>$signInList)));	
+			die(json_encode(array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i:s A', $date), 'signInList'=>$signInList)));
 		} else {
 			die(json_encode(array('status'=>false, 'msg'=>'Something went wrong signing out')));
 		}
