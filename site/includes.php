@@ -16,11 +16,6 @@ include($root.'/site/includes/functions/school_functions.php');
 include($root.'/site/includes/functions/report_functions.php');
 include($root.'/site/includes/functions/season_functions.php');
 include($root.'/site/includes/functions/event_functions.php');
-/* include($root.'/site/includes/functions/match_functions.php');
-include($root.'/site/includes/functions/tba_api_functions.php');
-include($root.'/site/includes/functions/report_functions.php');
-include($root.'/site/includes/functions/report_table_functions.php');
-include($root.'/site/includes/functions/mq_functions.php');
-include($root.'/site/includes/functions/email_functions.php');
-include($root.'/site/includes/functions/stats_functions.php'); */
+include($root.'/site/includes/functions/time_functions.php');
+
 ?>
