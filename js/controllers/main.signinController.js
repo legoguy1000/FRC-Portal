@@ -12,7 +12,7 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 	vm.query = {
 		filter: '',
 		limit: 10,
-		order: 'full_name',
+		order: 'lname',
 		page: 1
 	};
 
