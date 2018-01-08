@@ -4,7 +4,76 @@
 	   <md-button class="md-raised" ng-click="vm.deauthorizeSignIn()" ng-show="vm.signInAuthed">Deauthorize Sign In</md-button>
 	</div>-->
 	<md-content flex class="md-margin">
-
+		<md-toolbar class="md-table-toolbar md-default" ng-hide="vm.filter.show">
+			<div class="md-toolbar-tools">
+				<span>Users</span>
+				<div flex></div>
+				<md-button class="md-icon-button" ng-click="vm.showFilter()">
+					<md-icon>filter_list</md-icon>
+				</md-button>
+				<md-button class="md-icon-button" ng-click="vm.getSignIns()">
+					<md-icon>refresh</md-icon>
+				</md-button>
+				</div>
+		</md-toolbar>
+		<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
+			<div class="md-toolbar-tools">
+				<md-icon class="material-icons">search</md-icon>
+				<form flex name="filter.form" >
+					<input type="text" ng-model="vm.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">
+				</form>
+				<md-button class="md-icon-button" ng-click="vm.showSearchOptions = !vm.showSearchOptions">
+					<md-icon class="material-icons">arrow_drop_down</md-icon>
+				</md-button>
+				<md-button class="md-icon-button" ng-click="vm.removeFilter()">
+					<md-icon class="material-icons">close</md-icon>
+				</md-button>
+			</div>
+		</md-toolbar>
+		<md-table-container>
+			<table md-table ng-model="selected" md-progress="vm.promise">
+				<thead md-head md-order="vm.query.order" md-on-reorder="vm.getSignIns">
+					<tr md-row>
+						<th md-column style="width:56px"></th>
+						<th md-column md-order-by="full_name"><span>Name</span></th>
+						<th md-column md-order-by="user_type"><span>Type - Grade (Grad Year)</span></th>
+						<th md-column md-order-by="school_name"><span>School</span></th>
+						<th md-column md-order-by="email"><span>Email</span></th>
+						<th md-column md-order-by="gender"><span>Gender</span></th>
+						<th md-column md-order-by="status"><span>Status</span></th>
+						<th md-column></th>
+					</tr>
+				</thead>
+				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+					<tr md-row ng-repeat="user in vm.users">
+						<td md-cell>
+							<md-list-item style="padding: 0px;">
+								<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
+							</md-list-item>
+						</td>
+						<td md-cell>
+							<span>{{user.full_name}}</span>
+						</td>
+						<td md-cell><span>{{user.user_type}}</span> <span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</td>
+						<td md-cell><span>{{user.school_name}}</span></td>
+						<td md-cell><span>{{user.email}}</span></td>
+						<td md-cell><span>{{user.gender}}</span></td>
+						<td md-cell>
+							<md-select ng-model="user.status" placeholder="Status">
+								<md-option ng-value="true" >Active</md-option>
+								<md-option ng-value="false" >Inactive</md-option>
+							</md-select>
+						</td>
+						<td md-cell>
+							<md-button class="md-icon-button" ui-sref="main.admin.user({'user_id':user.user_id})" ng-click="admin.slideLeft()">
+								<md-icon>open_in_new</md-icon>
+							</md-button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</md-table-container>
+		<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.total}}" md-page-select md-boundary-links md-on-paginate="vm.getSignIns"></md-table-pagination>
 	</md-content>
 	<md-content flex class="md-margin">
 
