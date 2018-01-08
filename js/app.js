@@ -1,7 +1,7 @@
 angular.module('FrcPortal', [
 	'ngAnimate',
-	'ngSanitize', 
-	'ui.router', 
+	'ngSanitize',
+	'ui.router',
 	'ngMaterial',
 	'md.data.table',
 	'ngMdIcons',
@@ -263,7 +263,7 @@ angular.module('FrcPortal', [
 				var $rootScope = $injector.get('$rootScope');
 				if(res.data.token) {
 					$auth.setToken(res.data.token);
-				} else if (res.data.signin_token) { 
+				} else if (res.data.signin_token) {
 					signinService.saveToken(res.data.signin_token);
 					var data = {
 						'response': res.data,
@@ -311,7 +311,7 @@ angular.module('FrcPortal', [
 					var $uibModal = $injector.get('$mdDialog');
 					var $auth = $injector.get('$auth');
 					var $rootScope = $injector.get('$rootScope');
-					
+
 					$mdDialog.show({
 						controller: loginModalController,
 						controllerAs: 'vm',
@@ -330,10 +330,10 @@ angular.module('FrcPortal', [
 						$log.info('Dialog dismissed at: ' + new Date());
 						$log.error('Authentication Required');
 					});
-					
-					
-					
-					
+
+
+
+
 					var openLoginModal = function () {
 						var modalInstance = $uibModal.open({
 							animation: true,
@@ -361,7 +361,7 @@ angular.module('FrcPortal', [
 .run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log) {
 	$transitions.onStart({to: function(state) { return state != null && state.authenticate;}}, function(trans) {
 		var toState = trans.$to();
-		
+
 		if (!$auth.isAuthenticated()){
 			trans.abort();
 			/* event.preventDefault();  */
@@ -480,8 +480,8 @@ angular.module('FrcPortal', [
 		popupOptions: { width: 559, height: 519 }
 	}); */
 
-	
-	
+
+
 	$authProvider.httpInterceptor = function() { return true; },
 	$authProvider.withCredentials = true;
 	$authProvider.tokenRoot = null;
