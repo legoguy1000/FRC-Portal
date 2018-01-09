@@ -117,15 +117,15 @@
 						</td>
 					</tr>
 					<tr md-row ng-repeat-end ng-show="vm.requestRow == req.request_id">
-							<td md-cell style="border-top:0px;">
+							<td md-cell style="border-top:0px;" colspan="2">
 								<div>Requested: </div>
 								<div>{{req.request_date_unix*1000 | date:'medium'}}</div>
 							</td>
-							<td md-cell style="border-top:0px;">
+							<td md-cell style="border-top:0px;" colspan="2">
 								<div>Decision By: </div>
 								<div>{{req.approved_by}}</div>
 							</td>
-							<td md-cell style="border-top:0px;">
+							<td md-cell style="border-top:0px;" colspan="2">
 								<div>Decision Date: </div>
 								<div ng-if="req.approved_date">{{req.approved_date_unix*1000 | date:'medium'}}</div>
 							</td>
