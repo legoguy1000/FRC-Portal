@@ -12,7 +12,7 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 		vm.query = {
 			filter: '',
 			limit: 10,
-			order: 'full_name',
+			order: '-time_in',
 			page: 1
 		};
 		vm.users = [];

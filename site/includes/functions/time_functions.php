@@ -30,7 +30,7 @@ function getAllSignInsFilter($filter = '', $limit = 10, $order = 'full_name', $p
 
 	$orderBy = '';
 	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
-	if(in_array($orderCol,array('full_name'))) {
+	if(in_array($orderCol,array('full_name','time_in','time_out','hours'))) {
 		$orderBy = 'ASC';
 		if($order[0] == '-') {
 			$orderBy = 'DESC';

@@ -34,7 +34,6 @@
 			<table md-table ng-model="selected" md-progress="vm.promise">
 				<thead md-head md-order="vm.query.order" md-on-reorder="vm.getSignIns">
 					<tr md-row>
-						<th md-column style="width:56px"></th>
 						<th md-column md-order-by="full_name"><span>Name</span></th>
 						<th md-column md-order-by="time_in"><span>Time In</span></th>
 						<th md-column md-order-by="time_out"><span>Time Out</span></th>
@@ -44,11 +43,6 @@
 				</thead>
 				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 					<tr md-row ng-repeat="user in vm.users">
-						<td md-cell>
-							<md-list-item style="padding: 0px;">
-								<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
-							</md-list-item>
-						</td>
 						<td md-cell>
 							<span>{{user.full_name}}</span>
 						</td>
