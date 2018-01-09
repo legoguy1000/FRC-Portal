@@ -113,6 +113,7 @@ function getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'f
 	if(count($result) > 0) {
 		foreach($result as $user) {
 			$temp = formatUserData($user);
+			$temp['approved'] = (bool) $temp['approved'];
 			$users[] = $temp;
 		}
 	}
