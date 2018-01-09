@@ -120,7 +120,7 @@
 						<td md-cell colspan="5" style="border-top:0px;">
 							<span>Requested: {{req.request_date_unix*1000 | date:'medium'}}</span>
 							<span>Decision By: {{req.approved_by}}</span>
-							<span>Decision Date: {{req.approved_date_unix*1000 | date:'medium'}}</span>
+							<span>Decision Date: <span ng-if="req.approved_date">{{req.approved_date_unix*1000 | date:'medium'}}</span></span>
 						</td>
 					</tr>
 				</tbody>
