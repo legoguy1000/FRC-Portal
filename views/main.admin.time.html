@@ -117,9 +117,18 @@
 						</td>
 					</tr>
 					<tr md-row ng-repeat-end ng-show="vm.requestRow == req.request_id">
-							<td md-cell style="border-top:0px;">Requested: {{req.request_date_unix*1000 | date:'medium'}}</td>
-							<td md-cell style="border-top:0px;">Decision By: {{req.approved_by}}</td>
-							<td md-cell style="border-top:0px;">Decision Date: <span ng-if="req.approved_date">{{req.approved_date_unix*1000 | date:'medium'}}</span></td>
+							<td md-cell style="border-top:0px;">
+								<span>Requested: </span><br/>
+								<span>{{req.request_date_unix*1000 | date:'medium'}}</span>
+							</td>
+							<td md-cell style="border-top:0px;">
+								<span>Decision By: </span><br/>
+								<span>{{req.approved_by}}</span>
+							</td>
+							<td md-cell style="border-top:0px;">
+								<span>Decision Date: </span><br/>
+								<span ng-if="req.approved_date">{{req.approved_date_unix*1000 | date:'medium'}}</span>
+							</td>
 
 					</tr>
 				</tbody>
