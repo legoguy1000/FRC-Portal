@@ -36,7 +36,8 @@
 					<tr md-row>
 						<th md-column style="width:56px"></th>
 						<th md-column md-order-by="full_name"><span>Name</span></th>
-						<th md-column md-order-by="email"><span>Email</span></th>
+						<th md-column md-order-by="time_in"><span>Time In</span></th>
+						<th md-column md-order-by="time_out"><span>Time Out</span></th>
 						<th md-column md-order-by="hours"><span>Hours</span></th>
 						<th md-column></th>
 					</tr>
@@ -51,7 +52,6 @@
 						<td md-cell>
 							<span>{{user.full_name}}</span>
 						</td>
-						<td md-cell><span>{{user.email}}</span></td>
 						<td md-cell><span ng-if="user.time_in">{{user.time_in_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell><span ng-if="user.time_out">{{user.time_out_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell><span>{{user.hours}}</span></td>
