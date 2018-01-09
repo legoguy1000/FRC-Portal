@@ -65,8 +65,8 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 		});
 
 		vm.getSignIns = function () {
-			vm.promise = timeService.getAllSignInsFilter($.param(vm.query)).then(function(response){
-				vm.sil.users = response.data;
+			vm.sil.promise = timeService.getAllSignInsFilter($.param(vm.sil.query)).then(function(response){
+				vm.users = response.data;
 				vm.sil.total = response.total;
 				vm.sil.maxPage = response.maxPage;
 			});
@@ -104,10 +104,10 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 		});
 
 		vm.getAllMissingHoursRequestsFilter = function () {
-			vm.promise = timeService.getAllMissingHoursRequestsFilter($.param(vm.query)).then(function(response){
-				vm.users = response.data;
-				vm.total = response.total;
-				vm.maxPage = response.maxPage;
+			vm.mhrl.promise = timeService.getAllMissingHoursRequestsFilter($.param(vm.mhrl.query)).then(function(response){
+				vm.requests = response.data;
+				vm.mhrl.total = response.total;
+				vm.mhrl.maxPage = response.maxPage;
 			});
 		};
 
