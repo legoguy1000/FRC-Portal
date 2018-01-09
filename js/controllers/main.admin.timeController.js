@@ -5,45 +5,60 @@ angular.module('FrcPortal')
 function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinService, timeService) {
     var vm = this;
 
-
-		vm.filter = {
-			show: false,
-		};
-		vm.query = {
-			filter: '',
-			limit: 10,
-			order: '-time_in',
-			page: 1
-		};
-		vm.users = [];
 		vm.limitOptions = [10,25,50,100];
-
-		vm.showFilter = function () {
-			vm.filter.show = true;
-			vm.query.filter = '';
+		vm.sil = {
+			filter: {
+				show: false,
+			},
+			query: {
+				filter: '',
+				limit: 10,
+				order: '-time_in',
+				page: 1
+			},
+			users: [],
 		};
-		vm.removeFilter = function () {
-			vm.filter.show = false;
-			vm.query.filter = '';
+		vm.mhrl = {
+			filter: {
+				show: false,
+			},
+			query: {
+				filter: '',
+				limit: 10,
+				order: '-time_in',
+				page: 1
+			},
+			users: [],
+		};
 
-			if(vm.filter.form.$dirty) {
-				vm.filter.form.$setPristine();
+
+
+		vm.showFilter = function (list) {
+			vm[list].filter.show = true;
+			vm[list].query.filter = '';
+		};
+		vm.removeFilter = function (list) {
+			vm[list].filter.show = false;
+			vm[list].query.filter = '';
+
+			if(vm[list].filter.form.$dirty) {
+				vm[list].filter.form.$setPristine();
 			}
 		};
 
-		var timeoutPromise;
-		$scope.$watch('vm.query.filter', function (newValue, oldValue) {
-			$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
+		var timeoutPromise1;
+		$scope.$watch('vm.sil.query.filter', function (newValue, oldValue) {
+			$timeout.cancel(timeoutPromise1);  //does nothing, if timeout alrdy done
 			if(!oldValue) {
-				bookmark = vm.query.page;
+				bookmark = vm.sil.query.page;
 			}
 			if(newValue !== oldValue) {
-				vm.query.page = 1;
+				vm.sil.query.page = 1;
 			}
 			if(!newValue) {
-				vm.query.page = bookmark;
+				vm.sil.query.page = bookmark;
 			}
-			timeoutPromise = $timeout(function(){   //Set timeout
+			timeoutPromise1 = $timeout(function(){   //Set timeout
 				vm.getSignIns();
 			},500);
 
@@ -51,13 +66,50 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 
 		vm.getSignIns = function () {
 			vm.promise = timeService.getAllSignInsFilter($.param(vm.query)).then(function(response){
+				vm.sil.users = response.data;
+				vm.sil.total = response.total;
+				vm.sil.maxPage = response.maxPage;
+			});
+		};
+
+		vm.mhrl = {
+			filter: {
+				show: false,
+			},
+			query: {
+				filter: '',
+				limit: 10,
+				order: '-time_in',
+				page: 1
+			},
+			users: [],
+		};
+
+		var timeoutPromise2;
+		$scope.$watch('vm.mhrl.query.filter', function (newValue, oldValue) {
+			$timeout.cancel(timeoutPromise2);  //does nothing, if timeout alrdy done
+			if(!oldValue) {
+				bookmark = vm.mhrl.query.page;
+			}
+			if(newValue !== oldValue) {
+				vm.mhrl.query.page = 1;
+			}
+			if(!newValue) {
+				vm.mhrl.query.page = bookmark;
+			}
+			timeoutPromise2 = $timeout(function(){   //Set timeout
+				vm.getAllMissingHoursRequestsFilter();
+			},500);
+
+		});
+
+		vm.getAllMissingHoursRequestsFilter = function () {
+			vm.promise = timeService.getAllMissingHoursRequestsFilter($.param(vm.query)).then(function(response){
 				vm.users = response.data;
 				vm.total = response.total;
 				vm.maxPage = response.maxPage;
 			});
 		};
-
-
 
 
 
