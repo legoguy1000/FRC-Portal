@@ -36,7 +36,7 @@ function getAllSignInsFilter($filter = '', $limit = 10, $order = 'full_name', $p
 			$orderBy = 'DESC';
 		}
 	}
-	$sel='mh.*';
+	$sel='mh.time_in, mh.time_out, UNIX_TIMESTAMP(mh.time_in) AS time_in_unix, UNIX_TIMESTAMP(mh.time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(mh.time_out, mh.time_in),0)) / 3600) as hours';
 	$joins='RIGHT JOIN meeting_hours mh USING (user_id)';
 	$where = $queryStr;
 	$query = userQuery($sel,$joins, $where, $order = '');

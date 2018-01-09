@@ -36,11 +36,8 @@
 					<tr md-row>
 						<th md-column style="width:56px"></th>
 						<th md-column md-order-by="full_name"><span>Name</span></th>
-						<th md-column md-order-by="user_type"><span>Type - Grade (Grad Year)</span></th>
-						<th md-column md-order-by="school_name"><span>School</span></th>
 						<th md-column md-order-by="email"><span>Email</span></th>
-						<th md-column md-order-by="gender"><span>Gender</span></th>
-						<th md-column md-order-by="status"><span>Status</span></th>
+						<th md-column md-order-by="hours"><span>Hours</span></th>
 						<th md-column></th>
 					</tr>
 				</thead>
@@ -54,21 +51,10 @@
 						<td md-cell>
 							<span>{{user.full_name}}</span>
 						</td>
-						<td md-cell><span>{{user.user_type}}</span> <span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</td>
-						<td md-cell><span>{{user.school_name}}</span></td>
 						<td md-cell><span>{{user.email}}</span></td>
-						<td md-cell><span>{{user.gender}}</span></td>
-						<td md-cell>
-							<md-select ng-model="user.status" placeholder="Status">
-								<md-option ng-value="true" >Active</md-option>
-								<md-option ng-value="false" >Inactive</md-option>
-							</md-select>
-						</td>
-						<td md-cell>
-							<md-button class="md-icon-button" ui-sref="main.admin.user({'user_id':user.user_id})" ng-click="admin.slideLeft()">
-								<md-icon>open_in_new</md-icon>
-							</md-button>
-						</td>
+						<td md-cell><span ng-if="user.time_in">{{user.time_in_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span ng-if="user.time_out">{{user.time_out_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span>{{user.hours}}</span></td>
 					</tr>
 				</tbody>
 			</table>
