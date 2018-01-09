@@ -90,6 +90,7 @@
 						<th md-column md-order-by="time_in"><span>Time In</span></th>
 						<th md-column md-order-by="time_out"><span>Time Out</span></th>
 						<th md-column md-order-by="hours"><span>Hours</span></th>
+						<th md-column md-order-by="approved"><span>Status</span></th>
 						<th md-column></th>
 					</tr>
 				</thead>
@@ -101,6 +102,10 @@
 						<td md-cell><span ng-if="req.time_in">{{req.time_in_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell><span ng-if="req.time_out">{{req.time_out_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell><span>{{req.hours}}</span></td>
+						<td md-cell>
+							<span ng-if="req.approved"><md-icon class="material-icons">check_circle</md-icon></span>
+							<span ng-if="!req.approved"><md-icon class="material-icons">remove_circle</md-icon></span>
+						</td>
 						<td md-cell>
 							<span>
 								<md-button class="md-icon-button" ng-click="vm.showRequestRow(req.request_id)">
