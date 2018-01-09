@@ -103,8 +103,8 @@
 						<td md-cell><span ng-if="req.time_out">{{req.time_out_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell><span>{{req.hours}}</span></td>
 						<td md-cell ng-switch="req.approved">
-							<span ng-switch-when="req.approved === true"><md-icon class="material-icons">check_circle</md-icon></span>
-							<span ng-switch-when="req.approved === false"><md-icon class="material-icons">remove_circle</md-icon></span>
+							<span ng-switch-when="true"><md-icon class="material-icons">check_circle</md-icon></span>
+							<span ng-switch-when="false"><md-icon class="material-icons">remove_circle</md-icon></span>
 							<span ng-switch-default></span>
 						</td>
 						<td md-cell>
