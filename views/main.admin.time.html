@@ -104,14 +104,16 @@
 						<td md-cell>
 							<span>
 								<md-button class="md-icon-button" ng-click="vm.showRequestRow(req.request_id)">
-									<md-icon class="material-icons">arrow_drop_down</md-icon>
+									<md-icon class="material-icons" ng-show="vm.requestRow != req.request_id">arrow_drop_down</md-icon>
+									<md-icon class="material-icons" ng-show="vm.requestRow == req.request_id">arrow_drop_down</md-icon>
 								</md-button>
 							</span>
 						</td>
 					</tr>
 					<tr md-row ng-repeat-end ng-show="vm.requestRow == req.request_id">
 						<td md-cell colspan="5" style="border-top:0px;">
-							<span>{{req.email}}</span>
+							<span>Requested: {{req.request_date}}</span>
+							<span>Approved By: {{req.approved_by}}</span>
 						</td>
 					</tr>
 				</tbody>
