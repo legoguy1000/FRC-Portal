@@ -30,7 +30,7 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 			},
 			users: [],
 		};
-
+		vm.showRequestRow = '';
 
 
 		vm.showFilter = function (list) {

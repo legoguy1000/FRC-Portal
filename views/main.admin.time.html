@@ -94,13 +94,25 @@
 					</tr>
 				</thead>
 				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
-					<tr md-row ng-repeat="user in vm.requests">
+					<tr md-row ng-repeat-start="req in vm.requests">
 						<td md-cell>
-							<span>{{user.full_name}}</span>
+							<span>{{req.full_name}}</span>
 						</td>
-						<td md-cell><span ng-if="user.time_in">{{user.time_in_unix*1000 | date:'medium'}}</span></td>
-						<td md-cell><span ng-if="user.time_out">{{user.time_out_unix*1000 | date:'medium'}}</span></td>
-						<td md-cell><span>{{user.hours}}</span></td>
+						<td md-cell><span ng-if="req.time_in">{{req.time_in_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span ng-if="req.time_out">{{req.time_out_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span>{{req.hours}}</span></td>
+						<td md-cell>
+							<span>
+								<md-button class="md-icon-button" ng-click="vm.showRequestRow = req.request_id ">
+									<md-icon class="material-icons">arrow_drop_down</md-icon>
+								</md-button>
+							</span>
+						</td>
+					</tr>
+					<tr ng-repeat-end ng-show="vm.showRequestRow == req.request_id">
+						<td md-cell>
+							<span>{{user.email}}</span>
+						</td>
 					</tr>
 				</tbody>
 			</table>
