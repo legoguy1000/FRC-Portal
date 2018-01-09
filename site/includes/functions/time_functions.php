@@ -101,13 +101,13 @@ function getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'f
 	$sel='mhr.*, UNIX_TIMESTAMP(mhr.time_in) AS time_in_unix, UNIX_TIMESTAMP(mhr.time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(mhr.time_out, mhr.time_in),0)) / 3600) as hours';
 	$joins='RIGHT JOIN missing_hours_requests mhr USING (user_id)';
 	$where = $queryStr;
-	$query = userQuery($sel='',$joins='', $where, $order = '');
+	$query = userQuery($sel,$joins, $where, $order = '');
 	$result = db_select($query);
 	$totalNum = count($result);
 
 	$offset	= ($page - 1) * $limit;
 	$order = 'ORDER BY '.$orderCol.' '.$orderBy.' LIMIT '.$offset.', '.$limit;
-	$query = userQuery($sel='',$joins='', $where, $order);
+	$query = userQuery($sel,$joins, $where, $order);
 	//die($query);
 	$result = db_select($query);
 	if(count($result) > 0) {
