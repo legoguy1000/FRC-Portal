@@ -103,16 +103,20 @@
 						<td md-cell><span>{{req.hours}}</span></td>
 						<td md-cell>
 							<span>
-								<md-button class="md-icon-button" ng-click="vm.showRequestRow = req.request_id ">
+								<md-button class="md-icon-button" ng-click="vm.showRequestRow(req.request_id)">
 									<md-icon class="material-icons">arrow_drop_down</md-icon>
 								</md-button>
 							</span>
 						</td>
 					</tr>
-					<tr ng-repeat-end ng-show="vm.showRequestRow == req.request_id">
+					<tr ng-repeat-end ng-show="vm.requestRow == req.request_id">
 						<td md-cell>
-							<span>{{user.email}}</span>
+							<span>{{req.email}}</span>
 						</td>
+						<td md-cell></td>
+						<td md-cell></td>
+						<td md-cell></td>
+						<td md-cell></td>
 					</tr>
 				</tbody>
 			</table>

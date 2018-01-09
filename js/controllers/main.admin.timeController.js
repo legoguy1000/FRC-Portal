@@ -30,7 +30,7 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 			},
 			users: [],
 		};
-		vm.showRequestRow = '';
+		vm.requestRow = '';
 
 
 		vm.showFilter = function (list) {
@@ -46,6 +46,13 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 			}
 		};
 
+		vm.showRequestRow(req) {
+			if(vm.requestRow == req) {
+				vm.requestRow = '';
+			} else {
+				vm.requestRow = req;
+			}
+		}
 		var timeoutPromise1;
 		$scope.$watch('vm.sil.query.filter', function (newValue, oldValue) {
 			$timeout.cancel(timeoutPromise1);  //does nothing, if timeout alrdy done
