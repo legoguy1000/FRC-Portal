@@ -46,7 +46,7 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 			}
 		};
 
-		vm.showRequestRow(req) {
+		vm.showRequestRow = function(req) {
 			if(vm.requestRow == req) {
 				vm.requestRow = '';
 			} else {
