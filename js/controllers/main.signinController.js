@@ -91,7 +91,9 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 	$(document).keyup(function (e) {
 	    console.log(e);
 			if(vm.pin.length >= 4 && vm.pin.length <= 8) {
-				
+				if(e.originalEvent.code == 'Enter') {
+					vm.signinOut();
+				}
 			}
 			/*if(vm.pin.length < 8) {
 				if(e.originalEvent.code == 'Digit1' || e.originalEvent.code == 'Numpad1') {
