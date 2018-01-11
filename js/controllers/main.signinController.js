@@ -88,7 +88,7 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
     }
 		console.log(e.keyCode);
 	}
-	$(document).keyup(function (e) {
+/*	$(document).keyup(function (e) {
 	    //console.log(e);
 			if(vm.pin.length < 8) {
 				if(e.originalEvent.code == 'Digit1' || e.originalEvent.code == 'Numpad1') {
@@ -118,6 +118,6 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 						vm.pin = vm.pin.slice(0, -1);
 					}
 			}
-	});
+	}); */
 
 }
