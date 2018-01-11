@@ -194,6 +194,16 @@ md-toolbar.search-bar form > input:focus {
   outline: none;
 }
 
+input.signin-pin {
+  width: 100%;
+  margin: 0;
+  border: none;
+  color: rgba(0, 0, 0, 0.87);
+}
+input.signin-pin:focus {
+  outline: none;
+}
+
 .moment-picker-input:focus {
     outline: none;
 }
@@ -244,14 +254,14 @@ md-input-container .hint {
     width: auto; }
   .selectdemoSelectHeader md-content._md {
     max-height: 240px; }
-	
+
 /* Remove arrows from numbe input */
 /* Hide HTML5 Up and Down arrows. */
 input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
- 
+
 input[type="number"] {
     -moz-appearance: textfield;
 }
