@@ -180,6 +180,10 @@ md-toolbar.md-table-toolbar form > input:focus {
   outline: none;
 }
 
+.md-table-pagination>.buttons>.md-button.md-icon-button {
+  margin: 0 6px; 
+}
+
 md-toolbar.search-bar form {
   margin-left: 16px;
 }
