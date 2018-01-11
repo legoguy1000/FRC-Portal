@@ -92,6 +92,7 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 	    console.log(e);
 			if(vm.pin.length >= 4 && vm.pin.length <= 8) {
 				if(e.originalEvent.code == 'Enter') {
+					e.preventDefault();
 					vm.signinOut();
 				}
 			}
