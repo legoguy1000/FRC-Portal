@@ -198,10 +198,30 @@ input.signin-pin {
   width: 100%;
   margin: 0;
   border: none;
-  color: rgba(0, 0, 0, 0.87);
+  background: rgb(102,46,145);
+  color: #FDB813;
 }
 input.signin-pin:focus {
   outline: none;
+}
+
+input.signin-pin::-webkit-input-placeholder {
+    /* WebKit, Blink, Edge */
+    color: #FDB813;
+}
+input.signin-pin:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    color: #FDB813;
+    opacity: 1;
+}
+input.signin-pin::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    color: #FDB813;
+    opacity: 1;
+}
+input.signin-pin:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #FDB813;
 }
 
 .moment-picker-input:focus {
