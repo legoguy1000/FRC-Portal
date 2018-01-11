@@ -195,11 +195,15 @@ md-toolbar.search-bar form > input:focus {
 }
 
 input.signin-pin {
-  width: 100%;
-  margin: 0;
+  /*width: 100%;*/
+  margin: auto;
   border: none;
   background: rgb(102,46,145);
   color: #FDB813;
+  display: block;
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
 }
 input.signin-pin:focus {
   outline: none;
