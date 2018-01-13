@@ -144,7 +144,6 @@
 									<th md-column md-order-by="event_start"><span>Date</span></th>
 									<th md-column md-order-by="num_days"><span># Days</span></th>
 									<th md-column md-order-by="type"><span>Event Type</span></th>
-									<th md-column md-order-by="game_name"><span>Season</span></th>
 									<th md-column md-order-by="registration"><span>Registration</span></th>
 									<th md-column md-order-by="payment"><span>Payment</span></th>
 									<th md-column md-order-by="permission_slip"><span>Permission Slip</span></th>
@@ -164,12 +163,6 @@
 									</td>
 									<td md-cell>{{event.num_days}}</td>
 									<td md-cell>{{event.type}}</td>
-									<td md-cell>
-										<md-list-item style="padding: 0px;">
-											<img ng-src="{{event.game_logo}}" class="md-avatar" alt="" ng-if="event.game_logo"/>
-											{{event.game_name}}
-										</md-list-item>
-									</td>
 									<td md-cell>
 										<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="event.registration"></i>
 										<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="event.registration"></i>
