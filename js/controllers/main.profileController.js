@@ -257,7 +257,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		.ok('Delete')
 		.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
-
+			vm.unsubscribePush();
 		}, function() {
 
 		});
