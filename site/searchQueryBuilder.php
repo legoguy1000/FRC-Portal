@@ -17,13 +17,14 @@ if(stripos($search,'=') !== false) {
 	if($result) {
 		foreach($result as $re) {
 			$temp = array(
-				'text' => $re.'=',
+				'text' => $re['FIELD'].'=',
 				'disabled' => true
 			);
+			$data[] = $temp;
 		}
 	}
 }
-
+return $data;
 
 
 ?>
