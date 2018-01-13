@@ -17,7 +17,7 @@ if(stripos($search,'=') !== false) {
 	if($result) {
 		foreach($result as $re) {
 			$temp = array(
-				'text' => $re['FIELD'].'=',
+				'text' => $re['Field'].'=',
 				'disabled' => true
 			);
 			$data[] = $temp;

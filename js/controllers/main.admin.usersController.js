@@ -60,7 +60,7 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 	vm.searchText = null;
 	vm.querySearch = function(search) {
 		usersService.searchQueryBuilder(search).then(function(response){
-
+			return response;
 	 });
 	}
 
