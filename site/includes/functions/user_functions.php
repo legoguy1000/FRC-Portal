@@ -78,7 +78,7 @@ function userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requir
 
 function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements') {
 
-	$sel =  $b.'.*, year('.$b.'.event_start) as year';
+	$sel =  $b.'.*, year('.$b.'.event_start) as year, UNIX_TIMESTAMP('.$b.'.event_start) AS event_start_unix, UNIX_TIMESTAMP('.$b.'.event_end) AS event_end_unix, datediff('.$b.'.event_end,'.$b.'.event_start)+1 as num_days';
 	$joins = 'CROSS JOIN events '.$b;
 	if($l != false) {
 		$sel .= ', IFNULL('.$l.'.registration,0) AS registration, IFNULL('.$l.'.payment,0) AS payment, IFNULL('.$l.'.permission_slip,0) AS permission_slip, IFNULL('.$l.'.food,0) AS food';
