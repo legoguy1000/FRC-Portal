@@ -104,5 +104,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		searchQueryBuilder: function (search) {
+			return $http.get('site/searchQueryBuilder.php?search='+search)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });
