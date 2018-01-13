@@ -24,7 +24,7 @@ if(stripos($search,'=') !== false) {
 		}
 	}
 }
-return $data;
+die(json_encode($data));
 
 
 ?>
