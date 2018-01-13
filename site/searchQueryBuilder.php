@@ -17,8 +17,8 @@ if(stripos($search,'=') !== false) {
 	if($result) {
 		foreach($result as $re) {
 			$temp = array(
-				'text' = $re.'=',
-				'disabled' = true
+				'text' => $re.'=',
+				'disabled' => true
 			)
 		}
 	}
