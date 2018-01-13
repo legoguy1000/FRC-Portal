@@ -152,7 +152,7 @@
 								</tr>
 							</thead>
 							<tbody md-body>
-								<tr md-row ng-repeat="event in vm.eventInfo | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" ng-show="vm.showPastReqs || $first">
+								<tr md-row ng-repeat="event in vm.eventInfo">
 									<td md-cell>{{event.name}}</td>
 									<td md-cell>
 										<span ng-show="event.event_start == event.event_end">
