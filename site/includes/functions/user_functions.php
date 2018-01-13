@@ -162,7 +162,7 @@ function userSeasonInfo($user_id = null, $year = null) {
 	return $data;
 }
 
-function userEventInfo($user_id = null, $event = null) {
+function userEventInfo($user_id = null, $year = null, $event = null) {
 	$data = array();
 	$reqsQuery = userEventRequirementsQueryArr($b = 'b', $l = 'e');
 	$where = '';
@@ -174,6 +174,9 @@ function userEventInfo($user_id = null, $event = null) {
 	}
 	if($event != null) {
 		$whereArr[] = 'b.event_id = '.db_quote($event);
+	}
+	if($year != null) {
+		$whereArr[] = 'YEAR(b.event_start) = '.db_quote($year);
 	}
 	if(!empty($whereArr)) {
 		$where = 'WHERE '.implode(' AND ',$whereArr);

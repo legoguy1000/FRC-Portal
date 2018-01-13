@@ -49,7 +49,7 @@ function getEvent($event_id = null, $reqs = false) {
 			$data['exempt_hours'] = (bool) $data['exempt_hours'];
 			$data['requirements'] = array();
 			if($reqs) {
-				$reqs = userEventInfo($user_id = null, $event_id);
+				$reqs = userEventInfo($user_id = null, $year = null, $event_id);
 				$data['requirements'] = array('data'=>$reqs, 'total'=>count($reqs));
 			}
 		}
