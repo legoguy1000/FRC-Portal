@@ -17,22 +17,24 @@
 			<md-icon class="material-icons">search</md-icon>
 			<form flex name="filter.form" >
 				<!--<input type="text" ng-model="vm.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">-->
-				<!--md-transform-chip="vm.transformChip($chip)" md-item-text="item.name"-->
+				<!--md-transform-chip="vm.transformChip($chip)" -->
 				<md-chips ng-model="vm.selectedSearch" md-autocomplete-snap
 									md-require-match="vm.requireMatch">
-					<md-autocomplete
-							md-selected-item="vm.selectedItem"
-							md-search-text="vm.searchText"
-							md-items="item in vm.querySearch(vm.searchText)"
-							placeholder="Search for a User">
-						<span md-highlight-text="vm.searchText">{{item.text}}</span>
-					</md-autocomplete>
+
 					<md-chip-template>
 						<span>
 							<strong>{{$chip.text}}</strong>
 						</span>
 					</md-chip-template>
 				</md-chips>
+				<md-autocomplete
+						md-selected-item="vm.selectedItem"
+						md-search-text="vm.searchText"
+						md-items="item in vm.querySearch(vm.searchText)"
+						md-item-text="item.text"
+						placeholder="Search for a User">
+					<span md-highlight-text="vm.searchText">{{item.text}}</span>
+				</md-autocomplete>
 			</form>
 			<md-button class="md-icon-button" ng-click="vm.showSearchOptions = !vm.showSearchOptions">
 				<md-icon class="material-icons">arrow_drop_down</md-icon>
