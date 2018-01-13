@@ -19,7 +19,7 @@
 				<!--<input type="text" ng-model="vm.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">-->
 				<!--md-transform-chip="vm.transformChip($chip)" md-item-text="item.name"-->
 				<md-chips ng-model="vm.selectedSearch" md-autocomplete-snap
-									md-require-match="true">
+									md-require-match="vm.requireMatch">
 					<md-autocomplete
 							md-selected-item="vm.selectedItem"
 							md-search-text="vm.searchText"
