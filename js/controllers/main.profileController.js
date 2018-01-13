@@ -57,7 +57,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			vm.linkedAccounts = response.data.linkedAccounts;
 			vm.seasonInfo = response.data.seasonInfo;
 			vm.notificationPreferences = response.data.notificationPreferences;
-			vm.eventInfo = response.eventInfo;
+			vm.eventInfo = response.data.eventInfo;
 			vm.loading.note_devices = false;
 		});
 	}
