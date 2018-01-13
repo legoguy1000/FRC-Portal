@@ -11,6 +11,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.notificationEndpoints = [];
 	vm.linkedAccounts = [];
 	vm.seasonInfo = {};
+	vm.eventInfo = {};
 	vm.rmhData = {};
 	vm.showPastReqs = false;
 	vm.checkPinNum = null;
@@ -56,6 +57,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			vm.linkedAccounts = response.data.linkedAccounts;
 			vm.seasonInfo = response.data.seasonInfo;
 			vm.notificationPreferences = response.data.notificationPreferences;
+			vm.eventInfo = response.eventInfo;
 			vm.loading.note_devices = false;
 		});
 	}
