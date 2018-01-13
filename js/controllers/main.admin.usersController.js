@@ -56,10 +56,11 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 			vm.maxPage = response.maxPage;
 		});
 	};
-
+	vm.selectedItem = null;
+	vm.searchText = null;
 	vm.querySearch = function(search) {
 		usersService.searchQueryBuilder(search).then(function(response){
-		 
+
 	 });
 	}
 

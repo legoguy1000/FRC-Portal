@@ -19,7 +19,7 @@ if(stripos($search,'=') !== false) {
 			$temp = array(
 				'text' => $re.'=',
 				'disabled' => true
-			)
+			);
 		}
 	}
 }
