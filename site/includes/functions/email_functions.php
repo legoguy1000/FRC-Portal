@@ -62,9 +62,9 @@ function emailUser($userData = $array(),$subject = '',$content = '',$attachments
 function emailTest($userData) {
 
 	$subject = 'You Signed in at ###';
-	$content = '<p>You signed into the Team 2363 Portal at ###.  Your current season hours are ###.  DO not forget to sign out or your hours will not be recorded.</p>'
+	$content = '<p>You signed into the Team 2363 Portal at ###.  Your current season hours are ###.  DO not forget to sign out or your hours will not be recorded.</p>';
 
-	emailUser($userData,$subject,$content,$attachments = false)
+	emailUser($userData,$subject,$content,$attachments = false);
 }
 
 
