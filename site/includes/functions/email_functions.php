@@ -1,6 +1,6 @@
 <?php
 
-function emailUser($userData = $array(),$subject = '',$content = '',$attachments = false)
+function emailUser($userData = array(),$subject = '',$content = '',$attachments = false)
 {
 	$html = file_get_contents(__DIR__ . '/includes/libraries/email_template.html');
 	$css = file_get_contents(__DIR__ . '/includes/libraries/email_css.css');
