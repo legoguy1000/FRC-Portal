@@ -17,6 +17,7 @@ include($root.'/site/includes/functions/report_functions.php');
 include($root.'/site/includes/functions/season_functions.php');
 include($root.'/site/includes/functions/event_functions.php');
 include($root.'/site/includes/functions/time_functions.php');
+include($root.'/site/includes/functions/email_functions.php');
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
