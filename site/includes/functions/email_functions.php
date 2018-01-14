@@ -1,17 +1,96 @@
 <?php
 
-function smtpCredentials()
+function emailUser($userData = $array(),$subject = '',$content = '',$attachments = false)
 {
-	$data = array(
-		'host' => 'ssrs.reachmail.net',
-		'port' => '587',
-		'user' => 'RESNICKT\alex',
-		'pasword' => 'Legoguy0923',
-		'auth' => true,
-		'ssl' => 'tls'
-	);
-	return $data;
+	$html = file_get_contents(__DIR__ . '/includes/libraries/email_template.html');
+	$css = file_get_contents(__DIR__ . '/includes/libraries/email_css.css');
+	$emogrifier = new \Pelago\Emogrifier($html, $css);
+	$mergedHtml = $emogrifier->emogrify();
+
+	$subjectLine = $subject;
+	$emailContent = $content ;
+	$email = str_replace('###SUBJECT###',$subjectLine,$mergedHtml);
+	$email = str_replace('###FNAME###',$userData['fname'],$email);
+	$email = str_replace('###CONTENT###',$emailContent,$email);
+	$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+	try {
+	    //Server settings
+	    $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+	    /* $mail->isSMTP();                                      // Set mailer to use SMTP
+	    $mail->Host = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
+	    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+	    $mail->Username = 'user@example.com';                 // SMTP username
+	    $mail->Password = 'secret';                           // SMTP password
+	    $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+	    $mail->Port = 587;                                    // TCP port to connect to */
+
+	    //Recipients
+	    $mail->setFrom('portal@team2363.org', 'Team 2363 Portal');
+	    $mail->addAddress($userData['email'], $userData['full_name']);     // Add a recipient
+	   /*  $mail->addAddress('ellen@example.com');               // Name is optional
+	    $mail->addReplyTo('info@example.com', 'Information');
+	    $mail->addCC('cc@example.com');
+	    $mail->addBCC('bcc@example.com'); */
+
+	    //Attachments
+			if($attachments != false && is_array($attachments)) {
+				foreach($attachments as $file) {
+					if(is_array($file) && file_exists($file['path'])) {
+						$mail->addAttachment($file['path'], $file['name']);
+					} elseif(file_exists($file)) {
+						$mail->addAttachment($file);
+					}
+				}
+			}
+	    /* $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+	    $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name */
+
+	    //Content
+	    $mail->isHTML(true);                                  // Set email format to HTML
+	    $mail->Subject = $subject;
+	    $mail->Body    = $email;
+	    /* $mail->AltBody = 'This is the body in plain text for non-HTML mail clients'; */
+
+	    $mail->send();
+	    echo 'Message has been sent';
+	} catch (Exception $e) {
+	    echo 'Message could not be sent.';
+	    echo 'Mailer Error: ' . $mail->ErrorInfo;
+	}
 }
+
+function emailTest($userData) {
+
+	$subject = 'You Signed in at ###';
+	$content = '<p>You signed into the Team 2363 Portal at ###.  Your current season hours are ###.  DO not forget to sign out or your hours will not be recorded.</p>'
+
+	emailUser($userData,$subject,$content,$attachments = false)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* OLD */
 
 function errorHandle($error, $query = '')
 {
