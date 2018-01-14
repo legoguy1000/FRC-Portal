@@ -1,5 +1,6 @@
 <?php
-
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 function emailUser($userData = array(),$subject = '',$content = '',$attachments = false)
 {
 	$root = '/home/team2363_admin/portal.team2363.org';

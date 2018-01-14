@@ -8,8 +8,7 @@ $root = '/home/team2363_admin/portal.team2363.org';
 require $root.'/site/includes/vendor/autoload.php';
 include($root.'/site/includes/functions/getConfigFile.php');
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+
 //
 include($root.'/site/includes/functions/db_functions.php');
 include($root.'/site/includes/functions/user_functions.php');
