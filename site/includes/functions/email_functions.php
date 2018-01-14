@@ -2,8 +2,9 @@
 
 function emailUser($userData = array(),$subject = '',$content = '',$attachments = false)
 {
-	$html = file_get_contents(__DIR__ . '/includes/libraries/email_template.html');
-	$css = file_get_contents(__DIR__ . '/includes/libraries/email_css.css');
+	$root = '/home/team2363_admin/portal.team2363.org';
+	$html = file_get_contents($root.'/site/includes/libraries/email_template.html');
+	$css = file_get_contents($root.'/site/includes/libraries/email_css.css');
 	$emogrifier = new \Pelago\Emogrifier($html, $css);
 	$mergedHtml = $emogrifier->emogrify();
 
