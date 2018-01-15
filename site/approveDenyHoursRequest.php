@@ -19,10 +19,17 @@ $query = 'SELECT * FROM missing_hours_requests WHERE request_id ='.db_quote($req
 $result = db_select_single($query);
 if(!is_null($result)) {
 	$date = time();
+	$requestInfo = $result;
+	$user_id = $requestInfo['user_id'];
 	if($formData['status'] == 'approve') {
+		db_begin_transaction();
 		$query = 'UPDATE missing_hours_requests SET approved = "1", approved_date = '.db_quote(date('Y-m-d H:i:s',$date)).', approved_by = '.db_quote($user_id).' WHERE request_id = '.db_quote($request_id);
 		$result = db_query($query);
-		if($result) {
+		$hours_id = uniqid();
+		$query = 'INSERT INTO meeting_hours (hours_id, user_id, time_in, time_out) VALUES ('.db_quote($hours_id).', '.db_quote($user_id).', '.db_quote($requestInfo['time_in']).', '.db_quote($requestInfo['time_out']).')';
+		$result = db_query($query);
+		$commit = db_commit();
+		if($commit) {
 			$hoursRequestList = getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'time_in', $page = 1);
 			die(json_encode(array('status'=>true, 'msg'=>'Missing hours request approved.', 'hoursRequestList'=>$hoursRequestList)));
 		} else {
