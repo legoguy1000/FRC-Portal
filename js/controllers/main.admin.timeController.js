@@ -124,9 +124,9 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 				'status': status
 			}
 			vm.mhrl.promise = timeService.approveDenyHoursRequest(data).then(function(response){
-				vm.requests = response.data;
-				vm.mhrl.total = response.total;
-				vm.mhrl.maxPage = response.maxPage;
+				vm.requests = response.hoursRequestList.data;
+				vm.mhrl.total = response.hoursRequestList.total;
+				vm.mhrl.maxPage = response.hoursRequestList.maxPage;
 			});
 		};
 
