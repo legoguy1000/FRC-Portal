@@ -105,7 +105,14 @@
 						<td md-cell ng-switch="req.approved">
 							<span ng-switch-when="true"><md-icon class="material-icons" style="color:green;">check_circle</md-icon></span>
 							<span ng-switch-when="false"><md-icon class="material-icons" style="color:red;">remove_circle</md-icon></span>
-							<span ng-switch-default></span>
+							<span ng-switch-default>
+								<md-button class="md-icon-button" ng-click="">
+									<md-icon class="material-icons" style="color:green;">check_circle</md-icon>
+								</md-button>
+								<md-button class="md-icon-button" ng-click="">
+									<md-icon class="material-icons" style="color:red;">remove_circle</md-icon>
+								</md-button>
+							</span>
 						</td>
 						<td md-cell>
 							<span>
