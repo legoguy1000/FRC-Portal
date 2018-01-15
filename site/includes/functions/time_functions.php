@@ -63,7 +63,7 @@ function getAllSignInsFilter($filter = '', $limit = 10, $order = '-time_in', $pa
 	return $data;
 }
 
-function getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'time_in', $page = 1) {
+function getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'request_date', $page = 1) {
 
 	/* if(isset($filter) && $filter != '') {
 		$filter = $filter;
@@ -92,7 +92,7 @@ function getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 't
 
 	$orderBy = '';
 	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
-	if(in_array($orderCol,array('full_name', 'time_in'))) {
+	if(in_array($orderCol,array('full_name', 'time_in','request_date'))) {
 		$orderBy = 'ASC';
 		if($order[0] == '-') {
 			$orderBy = 'DESC';
