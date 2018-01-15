@@ -118,7 +118,17 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 			});
 		};
 
-
+		vm.approveDenyHoursRequest = function (request, status) {
+			var data = {
+				'request_id': request,
+				'status': status
+			}
+			vm.mhrl.promise = timeService.approveDenyHoursRequest(data).then(function(response){
+				vm.requests = response.data;
+				vm.mhrl.total = response.total;
+				vm.mhrl.maxPage = response.maxPage;
+			});
+		};
 
 
 

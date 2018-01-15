@@ -13,5 +13,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		approveDenyHoursRequest: function (formData) {
+			return $http.post('site/getAllMissingHoursRequestsFilter.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });
