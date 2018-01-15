@@ -29,20 +29,20 @@ if(!is_null($result)) {
 		$query = 'INSERT INTO meeting_hours (hours_id, user_id, time_in, time_out) VALUES ('.db_quote($hours_id).', '.db_quote($user_id).', '.db_quote($requestInfo['time_in']).', '.db_quote($requestInfo['time_out']).')';
 		$result = db_query($query);
 		$commit = db_commit();
+		$hoursRequestList = getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'time_in', $page = 1);
 		if($commit) {
-			$hoursRequestList = getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'time_in', $page = 1);
 			die(json_encode(array('status'=>true, 'msg'=>'Missing hours request approved.', 'hoursRequestList'=>$hoursRequestList)));
 		} else {
-			die(json_encode(array('status'=>false, 'msg'=>'Something went wrong')));
+			die(json_encode(array('status'=>false, 'msg'=>'Something went wrong', 'hoursRequestList'=>$hoursRequestList)));
 		}
 	} else {
 		$query = 'UPDATE missing_hours_requests SET approved = "0", approved_date = '.db_quote(date('Y-m-d H:i:s',$date)).', approved_by = '.db_quote($user_id).' WHERE request_id = '.db_quote($request_id);
 		$result = db_query($query);
+		$hoursRequestList = getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'time_in', $page = 1);
 		if($result) {
-			$hoursRequestList = getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'time_in', $page = 1);
 			die(json_encode(array('status'=>true, 'msg'=>'Missing hours request denied.', 'hoursRequestList'=>$hoursRequestList)));
 		} else {
-			die(json_encode(array('status'=>false, 'msg'=>'Something went wrong')));
+			die(json_encode(array('status'=>false, 'msg'=>'Something went wrong', 'hoursRequestList'=>$hoursRequestList)));
 		}
 	}
 }  else {

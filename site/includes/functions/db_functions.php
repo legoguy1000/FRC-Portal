@@ -17,7 +17,7 @@ function db_connect() {
 	if (!$db->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5)) {
 		die('Setting MYSQLI_OPT_CONNECT_TIMEOUT failed');
 	}
-	
+
 	$db_server = getIniProp('db_host'); //your mysql server
 	$db_user = getIniProp('db_user'); //your mysql server username
 	$db_pass = getIniProp('db_pass'); //your mysql server password
@@ -26,7 +26,7 @@ function db_connect() {
 	if (!$db->real_connect($db_server, $db_user, $db_pass, $db_name)) {
 		return $db->connect_error;
 	}
-      
+
     return $db;
 }
 
@@ -83,6 +83,7 @@ function db_commit() {
 	if(!$commit) {
 		$db->rollback();
 	}
+  return $commit;
 }
 
 function db_escape($value) {
