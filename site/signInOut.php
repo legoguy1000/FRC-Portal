@@ -43,6 +43,7 @@ $result = db_select_single($query);
 if(!is_null($result)) {
 	$user_id = $result['user_id'];
 	$name = $result['full_name'];
+	$userInfo = $result;
 	$date = time();
 	$query = 'SELECT * FROM meeting_hours WHERE user_id = '.db_quote($user_id).' AND (time_in IS NOT NULL AND time_out IS NULL) ORDER BY time_in DESC';
 	$result = db_select_single($query);
