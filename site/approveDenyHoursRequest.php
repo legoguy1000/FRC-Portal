@@ -19,7 +19,7 @@ $query = 'SELECT * FROM missing_hours_requests WHERE request_id ='.db_quote($req
 $result = db_select_single($query);
 if(!is_null($result)) {
 	$date = time();
-	if($formData == 'approve') {
+	if($formData['status'] == 'approve') {
 		$query = 'UPDATE missing_hours_requests SET approved = "1", approved_date = '.db_quote(date('Y-m-d H:i:s',$date)).', approved_by = '.db_quote($user_id).' WHERE request_id = '.db_quote($request_id);
 		$result = db_query($query);
 		if($result) {
@@ -29,6 +29,7 @@ if(!is_null($result)) {
 			die(json_encode(array('status'=>false, 'msg'=>'Something went wrong')));
 		}
 	} else {
+		$query = 'UPDATE missing_hours_requests SET approved = "0", approved_date = '.db_quote(date('Y-m-d H:i:s',$date)).', approved_by = '.db_quote($user_id).' WHERE request_id = '.db_quote($request_id);
 		$result = db_query($query);
 		if($result) {
 			$hoursRequestList = getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'time_in', $page = 1);
