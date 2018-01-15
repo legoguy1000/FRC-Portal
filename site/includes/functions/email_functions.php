@@ -86,12 +86,12 @@ function emailSignIn($userData,$emailData) {
 	$season_end = $season['end_date'];
 	$msg = '';
 	if($date >= $season_start && $date <= $season_end) {
-		$msg = ' Your current non-exempt season hours are '.$userSeasonInfo['season_hours_exempt'].'.';
+		$msg = ' You have accumulated '.$userSeasonInfo['season_hours_exempt'].' non-exempt season hours.';
 	} else {
-		$msg = ' Your current offseason hours are '.$userSeasonInfo['off_season_hours'].'.';
+		$msg = ' You have accumulated '.$userSeasonInfo['off_season_hours'].' offseason hours.';
 	}
 	$subject = 'You Signed in at '.$signInTime;
-	$content = '<p>You signed into the Team 2363 Portal at '.$signInTime.'.</p><p> '.$msg.' Your total annual hours are '.$userSeasonInfo['total'].'. Do not forget to sign out or your hours will not be recorded.</p>';
+	$content = '<p>You signed into the Team 2363 Portal at '.$signInTime.'.</p><p> '.$msg.' You have accumulated '.$userSeasonInfo['total'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
 
 	emailUser($userData,$subject,$content,$attachments = false);
 }
