@@ -91,7 +91,7 @@ function emailSignIn($userData,$emailData) {
 		$msg = ' Your current offseason hours are '.$userSeasonInfo['off_season_hours'].'.';
 	}
 	$subject = 'You Signed in at '.$signInTime;
-	$content = '<p>You signed into the Team 2363 Portal at '.$signInTime.'. '.$msg.' Your total annual hours are '.$userSeasonInfo['total'].'. Do not forget to sign out or your hours will not be recorded.</p>';
+	$content = '<p>You signed into the Team 2363 Portal at '.$signInTime.'.</p><p> '.$msg.' Your total annual hours are '.$userSeasonInfo['total'].'. Do not forget to sign out or your hours will not be recorded.</p>';
 
 	emailUser($userData,$subject,$content,$attachments = false);
 }
