@@ -18,9 +18,6 @@ $request_id = $formData['request_id'];
 $query = 'SELECT * FROM missing_hours_requests WHERE request_id ='.db_quote($request_id);
 $result = db_select_single($query);
 if(!is_null($result)) {
-	$user_id = $result['user_id'];
-	$name = $result['full_name'];
-	$userInfo = $result;
 	$date = time();
 	if($formData == 'approve') {
 		$query = 'UPDATE missing_hours_requests SET approved = "1", approved_date = '.db_quote(date('Y-m-d H:i:s',$date)).', approved_by = '.db_quote($user_id).' WHERE request_id = '.db_quote($request_id);
