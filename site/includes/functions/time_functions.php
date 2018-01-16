@@ -103,7 +103,7 @@ function getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'r
 							 UNIX_TIMESTAMP(mhr.time_in) AS time_in_unix,
 							 UNIX_TIMESTAMP(mhr.time_out) AS time_out_unix,
 							 (time_to_sec(IFNULL(timediff(mhr.time_out, mhr.time_in),0)) / 3600) as hours,
-							 (SELECT CONCAT(users.fname," ",users.lname) AS full_name FROM users WHERE user_id = mhr.approved_by) as approved_by_full_name,';
+							 (SELECT CONCAT(fname," ",lname) AS full_name FROM users WHERE user_id = mhr.approved_by) as approved_by_full_name';
 	$joins='RIGHT JOIN missing_hours_requests mhr USING (user_id)';
 	$where = $queryStr;
 	$query = userQuery($sel,$joins, $where, $order = '');
