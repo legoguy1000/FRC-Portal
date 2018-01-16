@@ -155,22 +155,12 @@ function emailUser($userData = array(),$subject = '',$content = '',$attachments 
 	}
 }
 
-function emailTest($userData,$emailData) {
-
-	$signInTime = $emailData['signin_time'] ? $emailData['signin_time']:'';
-	$seasonHours = $emailData['season_hours'] ? $emailData['season_hours']:'';
-
-	$subject = 'You Signed in at ###';
-	$content = '<p>You signed into the Team 2363 Portal at ###.  Your current season hours are ###.  Do not forget to sign out or your hours will not be recorded.</p>';
-
-	emailUser($userData,$subject,$content,$attachments = false);
-}
-
 function emailSignInOut($user_id,$emailData) {
 	$year = date('Y');
 	$date = date('Y-m-d');
 
 	$signInTime = $emailData['signin_time'] ? $emailData['signin_time']:'';
+	$signInOut= $emailData['signin_out'] ? $emailData['signin_out']:'';
 
 	$seasonInfo = userSeasonInfo($user_id, $year);
 	$userSeasonInfo = $seasonInfo[0];
@@ -184,8 +174,15 @@ function emailSignInOut($user_id,$emailData) {
 	} else {
 		$msg = ' You have accumulated '.$userSeasonInfo['off_season_hours'].' offseason hours.';
 	}
-	$subject = 'You Signed in at '.$signInTime;
-	$content = '<p>You signed into the Team 2363 Portal at '.$signInTime.'.</p><p> '.$msg.' You have accumulated '.$userSeasonInfo['total'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
+
+	$io = '';
+	if($signInOut == 'sign_in') {
+		$io = 'in';
+	} else if($signInOut == 'sign_out') {
+		$io = 'out';
+	}
+	$subject = 'You signed '.$io.' at '.$signInTime;
+	$content = '<p>You signed '.$io.' using the Team 2363 Portal at '.$signInTime.'.</p><p> '.$msg.' You have accumulated '.$userSeasonInfo['total'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
 
 	return array(
 		'subject' => $subject,

@@ -53,7 +53,8 @@ if(!is_null($result)) {
 		$result = db_query($query);
 		if($result) {
 			$emailData = array(
-				'signin_time' => date('M d, Y H:i:s A', $date)
+				'signin_time' => date('M d, Y H:i:s A', $date),
+				'signin_out' => 'sign_out';
 			);
 			$emailInfo = emailSignInOut($user_id,$emailData);
 			$msgData = array(
@@ -80,7 +81,8 @@ if(!is_null($result)) {
 		$result = db_query($query);
 		if($result) {
 			$emailData = array(
-				'signin_time' => date('M d, Y H:i:s A', $date)
+				'signin_time' => date('M d, Y H:i:s A', $date),
+				'signin_out' => 'sign_in';
 			);
 			$emailInfo = emailSignInOut($user_id,$emailData);
 			$msgData = array(
