@@ -2,7 +2,7 @@
 include('./includes.php');
 
 $authToken = checkToken(true,true);
-$user_id = $authToken['data']['user_id'];
+$admin_user_id = $authToken['data']['user_id'];
 checkAdmin($user_id, $die = true);
 
 $json = file_get_contents('php://input');
@@ -23,7 +23,7 @@ if(!is_null($result)) {
 	$user_id = $requestInfo['user_id'];
 	if($formData['status'] == 'approve') {
 		db_begin_transaction();
-		$query = 'UPDATE missing_hours_requests SET approved = "1", approved_date = '.db_quote(date('Y-m-d H:i:s',$date)).', approved_by = '.db_quote($user_id).' WHERE request_id = '.db_quote($request_id);
+		$query = 'UPDATE missing_hours_requests SET approved = "1", approved_date = '.db_quote(date('Y-m-d H:i:s',$date)).', approved_by = '.db_quote($admin_user_id).' WHERE request_id = '.db_quote($request_id);
 		$result = db_query($query);
 		$hours_id = uniqid();
 		$query = 'INSERT INTO meeting_hours (hours_id, user_id, time_in, time_out) VALUES ('.db_quote($hours_id).', '.db_quote($user_id).', '.db_quote($requestInfo['time_in']).', '.db_quote($requestInfo['time_out']).')';
@@ -36,7 +36,7 @@ if(!is_null($result)) {
 			die(json_encode(array('status'=>false, 'msg'=>'Something went wrong', 'hoursRequestList'=>$hoursRequestList)));
 		}
 	} else {
-		$query = 'UPDATE missing_hours_requests SET approved = "0", approved_date = '.db_quote(date('Y-m-d H:i:s',$date)).', approved_by = '.db_quote($user_id).' WHERE request_id = '.db_quote($request_id);
+		$query = 'UPDATE missing_hours_requests SET approved = "0", approved_date = '.db_quote(date('Y-m-d H:i:s',$date)).', approved_by = '.db_quote($admin_user_id).' WHERE request_id = '.db_quote($request_id);
 		$result = db_query($query);
 		$hoursRequestList = getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'time_in', $page = 1);
 		if($result) {
