@@ -568,13 +568,17 @@ function sendUserNotification($user_id, $type, $msgData)
 {
 	global $db;
 
-	//$preferences = checkNotificationPreference($user_id, $type);
+	$preferences = getNotificationPreferencesByUser($user_id);
 
-	$preferences = array('push' => true, 'email' => false);
-	if($preferences['email'] == true) {
-
+	//$preferences = array('push' => true, 'email' => false);
+	if($preferences['email'][$type] == true) {
+		$msg = $msgData['email'];
+		$subject = $msg['subject'];
+		$content = $msg['content'];
+		$userData = $msg['userData'];
+		emailUser($userData,$subject,$content,$attachments = false);
 	}
-	if($preferences['push'] == true) {
+	if($preferences['push'][$type] == true) {
 		$msg = $msgData['push'];
 		$title = $msg['title'];
 		$body = $msg['body'];

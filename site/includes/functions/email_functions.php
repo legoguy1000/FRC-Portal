@@ -72,13 +72,13 @@ function emailTest($userData,$emailData) {
 	emailUser($userData,$subject,$content,$attachments = false);
 }
 
-function emailSignIn($userData,$emailData) {
+function emailSignInOut($user_id,$emailData) {
 	$year = date('Y');
 	$date = date('Y-m-d');
 
 	$signInTime = $emailData['signin_time'] ? $emailData['signin_time']:'';
 
-	$seasonInfo = userSeasonInfo($user_id = $userData['user_id'], $year = date('Y'));
+	$seasonInfo = userSeasonInfo($user_id, $year);
 	$userSeasonInfo = $seasonInfo[0];
 
 	$season = getSeasonByYear($year, $reqs = false);
@@ -93,7 +93,11 @@ function emailSignIn($userData,$emailData) {
 	$subject = 'You Signed in at '.$signInTime;
 	$content = '<p>You signed into the Team 2363 Portal at '.$signInTime.'.</p><p> '.$msg.' You have accumulated '.$userSeasonInfo['total'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
 
-	emailUser($userData,$subject,$content,$attachments = false);
+	return array(
+		'subject' => $subject,
+		'content' => $content
+	);
+	//emailUser($userData,$subject,$content,$attachments = false);
 }
 
 

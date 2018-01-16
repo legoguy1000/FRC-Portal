@@ -52,17 +52,20 @@ if(!is_null($result)) {
 		$query = 'UPDATE meeting_hours SET time_out = '.db_quote(date('Y-m-d H:i:s',$date)).' WHERE hours_id = '.db_quote($hours_id);
 		$result = db_query($query);
 		if($result) {
+			$emailData['signin_time'] = date('M d, Y H:i:s A', $date);
+			$emailInfo = emailSignInOut($user_id,$emailData);
 			$msgData = array(
 				'push' => array(
 					'title' => 'Sign out',
-					'body' => 'You signed out at '.date('M d, Y H:i:s A', $date)
+					'body' => 'You signed out at '.$emailData['signin_time']
 				),
 				'email' => array(
-					'title' => 'Sign out',
-					'body' => 'You signed out at '.date('M d, Y H:i:s A', $date)
+					'subject' => $emailInfo['subject'],
+					'content' =>  $emailInfo['content'],
+					'userData' => $userInfo
 				)
 			);
-			sendUserNotification($user_id, 'Sign out', $msgData);
+			sendUserNotification($user_id, 'sign_in_out', $msgData);
 			$signInList = userSignInList();
 			die(json_encode(array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i:s A', $date), 'signInList'=>$signInList)));
 		} else {
@@ -84,7 +87,7 @@ if(!is_null($result)) {
 					'body' => 'You signed in at '.date('M d, Y H:i:s A', $date)
 				)
 			);
-			sendUserNotification($user_id, 'Sign in', $msgData);
+			sendUserNotification($user_id, 'sign_in_out', $msgData);
 			$signInList = userSignInList();
 			die(json_encode(array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i:s A', $date), 'signInList'=>$signInList)));
 		} else {
