@@ -57,7 +57,7 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 
 	vm.signinOut = function($event, numbers) {
 		console.log(vm.pin);
-		vm.user_id = ''
+		vm.user_id = '';
 		if(vm.selected_user[0]) {
 			vm.user_id = vm.selected_user[0].user_id;
 		}
