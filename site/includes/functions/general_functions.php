@@ -174,7 +174,7 @@ function endOfDayHoursToSlack() {
 		$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE year(a.time_in)='.db_quote(date('Y')).' GROUP BY year(a.time_in)';
 		$result = db_select_single($query);
 		$total = !is_null($result) ? $result['hours'] : 0;
-		$msg .= 'Triple Helix completed another '.$hours.' of work for an annual total of '.$total'.  Keep up the amazing work!!';
+		$msg .= 'Triple Helix completed another '.$hours.' of work for an annual total of '.$total.'.  Keep up the amazing work!!';
 		postToSlack($msg, $channel = null);
 	}
 }
