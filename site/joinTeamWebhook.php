@@ -86,9 +86,11 @@ if($user == false) {
 		$columns .= ', signin_pin';
 		$values .= ', '.db_quote($signin_pin);
 	}
-
+	db_begin_transaction();
 	$query = 'insert into users ('.$columns.') values ('.$values.')';
 	$result = db_query($query);
+	setDefaultNotifications($user_id);
+	$commit = db_commit();
 }
 
 $season_id = '';

@@ -2,7 +2,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-function getNotificationPreferencesByUser($user_id) {
+function getNotificationOptions() {
 	$default = array(
 		'sign_in_out' => false,
 		'new_season' => false,
@@ -15,6 +15,11 @@ function getNotificationPreferencesByUser($user_id) {
 		'push' => $default,
 		'email' => $default,
 	);
+	return $data;
+}
+
+function getNotificationPreferencesByUser($user_id) {
+	$data = getNotificationOptions();
 	$query = 'SELECT np.* FROM notification_preferences np WHERE user_id='.db_quote($user_id);
 	$result = db_select($query);
 	if(count($result) > 0) {
@@ -25,6 +30,23 @@ function getNotificationPreferencesByUser($user_id) {
 		}
 	}
 	return $data;
+}
+
+function setDefaultNotifications($user_id) {
+	$data = getNotificationOptions();
+	$queryArr = array();
+	$queryStr	 = '';
+	foreach($data as $meth=>$types) {
+		foreach($types as $type) {
+			$pref_id = uniqid();
+			$queryArr[] = '('.db_quote($pref_id).', '.db_quote($user_id).', '.db_quote($meth).', '.db_quote($type).')';
+		}
+	}
+	if(!empty($queryArr)) {
+		$queryStr = implode(',',$queryArr);
+	}
+	$query 'INSERT INTO notification_preferences (pref_id, user_id, method, type) VALUES '.$queryStr;
+	$result = db_query($query);
 }
 
 use Minishlink\WebPush\WebPush;
@@ -79,7 +101,8 @@ function sendUserNotification($user_id, $type, $msgData)
 		$subject = $msg['subject'];
 		$content = $msg['content'];
 		$userData = $msg['userData'];
-		emailUser($userData,$subject,$content,$attachments = false);
+		$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
+		emailUser($userData,$subject,$content,$attachments);
 	}
 	if($preferences['push'][$type] == true) {
 		$msg = $msgData['push'];
