@@ -54,7 +54,7 @@ if(!is_null($result)) {
 		if($result) {
 			$emailData = array(
 				'signin_time' => date('M d, Y H:i:s A', $date),
-				'signin_out' => 'sign_out';
+				'signin_out' => 'sign_out'
 			);
 			$emailInfo = emailSignInOut($user_id,$emailData);
 			$msgData = array(
@@ -82,7 +82,7 @@ if(!is_null($result)) {
 		if($result) {
 			$emailData = array(
 				'signin_time' => date('M d, Y H:i:s A', $date),
-				'signin_out' => 'sign_in';
+				'signin_out' => 'sign_in'
 			);
 			$emailInfo = emailSignInOut($user_id,$emailData);
 			$msgData = array(
