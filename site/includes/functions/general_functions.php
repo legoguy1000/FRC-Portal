@@ -141,4 +141,28 @@ function defaultTableParams() {
 	return $params;
 }
 
+function postToSlack($msg = '', $channel = null) {
+	$data = array(
+		'text'=>$msg,
+		//'username'=> 'Team 2363 Portal',
+		//'icon_url'=> '',
+		//'icon_emoji'=>':taco:'
+	);
+	if($channel != null) {
+		$data["channel"] = $channel;
+	}
+
+	$url = 'https://hooks.slack.com/services/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';
+	$options = array(
+		'http' => array(
+			'header'  => "Content-Type: application/json",
+			'method'  => 'POST',
+			'content' => http_build_query($data)
+		)
+	);
+
+	$result = file_get_contents($url, false, stream_context_create($options));
+	$accessTokenArr = json_decode($result, true);
+}
+
 ?>
