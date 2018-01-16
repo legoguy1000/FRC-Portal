@@ -143,7 +143,7 @@ function defaultTableParams() {
 
 function postToSlack($msg = '', $channel = null) {
 	$data = array(
-		'text'=>$msg,
+		'text'=>$msg
 		//'username'=> 'Team 2363 Portal',
 		//'icon_url'=> '',
 		//'icon_emoji'=>':taco:'
