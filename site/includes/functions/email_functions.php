@@ -45,7 +45,7 @@ function setDefaultNotifications($user_id) {
 	if(!empty($queryArr)) {
 		$queryStr = implode(',',$queryArr);
 	}
-	$query 'INSERT INTO notification_preferences (pref_id, user_id, method, type) VALUES '.$queryStr;
+	$query = 'INSERT INTO notification_preferences (pref_id, user_id, method, type) VALUES '.$queryStr;
 	$result = db_query($query);
 }
 
