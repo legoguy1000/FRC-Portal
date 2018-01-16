@@ -165,7 +165,10 @@ function postToSlack($msg = '', $channel = null) {
 	$accessTokenArr = json_decode($result, true);
 }
 
-function endOfDayHoursToSlack($date = date('Y-m-d')) {
+function endOfDayHoursToSlack($date = null) {
+	if(is_null($date)) {
+		$date = date('Y-m-d');
+	}
 	$msg = 'Congratulations on another hard day of work.\n';
 	$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE DATE(a.time_in)='.db_quote($date).' AND DATE(a.time_out)=DATE(a.time_in) GROUP BY DATE(a.time_in)';
 	$result = db_select_single($query);
