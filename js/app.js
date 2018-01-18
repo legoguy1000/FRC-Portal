@@ -419,12 +419,13 @@ angular.module('FrcPortal', [
 	//	url: '/api/v1/login/google',
 		authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
 		redirectUri: window.location.origin,
-		requiredUrlParams: ['scope'],
+		requiredUrlParams: ['scope','prompt'],
 		optionalUrlParams: ['display'],
 		scope: ['profile', 'email','https://www.googleapis.com/auth/plus.login'],
 		scopePrefix: 'openid',
 		scopeDelimiter: ' ',
 		display: 'popup',
+		prompt: 'select_account',
 		type: '2.0',
 		popupOptions: { width: 452, height: 633 }
 	});
