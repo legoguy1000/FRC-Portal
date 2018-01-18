@@ -3,7 +3,7 @@ include('./includes.php');
 
 $authToken = checkToken(true,true);
 $admin_user_id = $authToken['data']['user_id'];
-checkAdmin($user_id, $die = true);
+checkAdmin($admin_user_id, $die = true);
 
 $json = file_get_contents('php://input');
 $formData = json_decode($json,true);
