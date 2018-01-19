@@ -156,6 +156,7 @@ function getAllExemptHoursFilter($filter = '', $limit = 10, $order = '-time_star
 		$queryArr[] = '(time_start LIKE '.db_quote('%'.$filter.'%').')';
 		$queryArr[] = '(time_end LIKE '.db_quote('%'.$filter.'%').')';
 		$queryArr[] = '(comment LIKE '.db_quote('%'.$filter.'%').')';
+		$queryArr[] = '(game_name LIKE '.db_quote('%'.$filter.'%').')';
 	}
 
 	if(count($queryArr) > 0) {
