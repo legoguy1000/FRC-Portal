@@ -31,10 +31,9 @@
 		<table md-table ng-model="selected" md-progress="vm.promise">
 			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getExemptHours">
 				<tr md-row>
-					<th md-column md-order-by="name"><span>Event</span></th>
-					<th md-column md-order-by="event_start"><span>Date</span></th>
-					<th md-column md-order-by="num_days"><span># Days</span></th>
-					<th md-column md-order-by="type"><span>Event Type</span></th>
+					<th md-column md-order-by="time_start"><span>Start</span></th>
+						<th md-column md-order-by="time_end"><span>End</span></th>
+					<th md-column md-order-by="comment"><span>Comment</span></th>
 					<th md-column md-order-by="game_name"><span>Season</span></th>
 
 				</tr>
@@ -43,15 +42,12 @@
 				<tr md-row ng-repeat="event in vm.events">
 					<td md-cell>{{event.name}}</td>
 					<td md-cell>
-						<span ng-show="event.event_start == event.event_end">
-							{{event.event_start_unix*1000 | date:'longDate'}}
-						</span>
-						<span ng-show="event.event_start != event.event_end">
-							{{event.event_start_unix*1000 | date:'MMMM d'}} - {{event.event_end_unix*1000 | date:'d, y'}}
-						</span>
+							{{event.time_start_unix*1000 | date:'medium'}}
 					</td>
-					<td md-cell>{{event.num_days}}</td>
-					<td md-cell>{{event.type}}</td>
+					<td md-cell>
+							{{event.time_end_unix*1000 | date:'medium'}}
+					</td>
+					<td md-cell>{{event.comment}}</td>
 					<td md-cell>
 						<md-list-item style="padding: 0px;">
 							<img ng-src="{{event.game_logo}}" class="md-avatar" alt="" ng-if="event.game_logo"/>
