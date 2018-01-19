@@ -41,10 +41,10 @@
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 				<tr md-row ng-repeat="event in vm.events">
 					<td md-cell>
-							{{event.time_start_unix*1000 | date:'medium'}}
+							{{event.time_start_unix*1000 | date:'MMM d, y h:mm a'}}
 					</td>
 					<td md-cell>
-							{{event.time_end_unix*1000 | date:'medium'}}
+							{{event.time_end_unix*1000 | date:'MMM d, y h:mm a'}}
 					</td>
 					<td md-cell>{{event.comment}}</td>
 					<td md-cell>
