@@ -119,7 +119,7 @@ function userSignInList() {
 	$where = 'WHERE users.status = "1"';
 	$order = 'ORDER BY users.lname ASC';
 	$query = userQuery($sel, $joins, $where, $order);
-
+	die($query);
 
 	$result = db_select($query);
 	//die($query);
