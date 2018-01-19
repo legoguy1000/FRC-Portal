@@ -109,7 +109,7 @@ function userSignInList() {
 	$data = array();
 	$reqsQuery = userHoursAnnualRequirementsQueryArr($b = false, $l = false, $c = 'off_season_hours', $d = 'on_season_hours');
 
-	$sel = 'b.time_in, b.time_out, UNIX_TIMESTAMP(b.time_in) AS time_in_unix, UNIX_TIMESTAMP(b.time_out) AS time_out_unix' //, IFNULL(c.season_hours,0) AS season_hours, IFNULL(c1.season_hours_exempt,0) AS season_hours_exempt, IFNULL(d.off_season_hours,0) as off_season_hours';
+	$sel = 'b.time_in, b.time_out, UNIX_TIMESTAMP(b.time_in) AS time_in_unix, UNIX_TIMESTAMP(b.time_out) AS time_out_unix'; //, IFNULL(c.season_hours,0) AS season_hours, IFNULL(c1.season_hours_exempt,0) AS season_hours_exempt, IFNULL(d.off_season_hours,0) as off_season_hours';
 	$joins = 'LEFT JOIN meeting_hours b ON b.hours_id = (SELECT hours_id from meeting_hours WHERE meeting_hours.user_id=users.user_id ORDER BY time_in DESC LIMIT 1)';
 	$sel .= $reqsQuery['selects'];
 	$joins .= $reqsQuery['joins'];
