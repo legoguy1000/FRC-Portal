@@ -1,0 +1,74 @@
+<md-content>
+	<md-toolbar class="md-table-toolbar md-default" ng-hide="vm.filter.show">
+		<div class="md-toolbar-tools">
+			<span>Events</span>
+			<div flex></div>
+			<md-button class="md-icon-button" ng-click="vm.showFilter()">
+				<md-icon>filter_list</md-icon>
+			</md-button>
+			<md-button class="md-icon-button" ng-click="vm.getExemptHours()">
+				<md-icon>refresh</md-icon>
+			</md-button>
+			<md-button class="md-icon-button" ng-click="vm.newEventModal()">
+				<md-icon>add</md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+
+	<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
+		<div class="md-toolbar-tools">
+			<md-icon class="material-icons">search</md-icon>
+			<form flex name="filter.form" >
+				<input type="text" ng-model="vm.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">
+			</form>
+			<md-button class="md-icon-button" ng-click="vm.removeFilter()">
+				<md-icon class="material-icons">close</md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+
+	<md-table-container>
+		<table md-table ng-model="selected" md-progress="vm.promise">
+			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getExemptHours">
+				<tr md-row>
+					<th md-column md-order-by="name"><span>Event</span></th>
+					<th md-column md-order-by="event_start"><span>Date</span></th>
+					<th md-column md-order-by="num_days"><span># Days</span></th>
+					<th md-column md-order-by="type"><span>Event Type</span></th>
+					<th md-column md-order-by="game_name"><span>Season</span></th>
+
+				</tr>
+			</thead>
+			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+				<tr md-row ng-repeat="event in vm.events">
+					<td md-cell>{{event.name}}</td>
+					<td md-cell>
+						<span ng-show="event.event_start == event.event_end">
+							{{event.event_start_unix*1000 | date:'longDate'}}
+						</span>
+						<span ng-show="event.event_start != event.event_end">
+							{{event.event_start_unix*1000 | date:'MMMM d'}} - {{event.event_end_unix*1000 | date:'d, y'}}
+						</span>
+					</td>
+					<td md-cell>{{event.num_days}}</td>
+					<td md-cell>{{event.type}}</td>
+					<td md-cell>
+						<md-list-item style="padding: 0px;">
+							<img ng-src="{{event.game_logo}}" class="md-avatar" alt="" ng-if="event.game_logo"/>
+							{{event.game_name}}
+						</md-list-item>
+					</td>
+					<td md-cell>
+						<md-button class="md-icon-button" ui-sref="main.admin.event({'event_id':event.event_id})" ng-click="admin.slideLeft()">
+							<md-icon>open_in_new</md-icon>
+						</md-button>
+						<md-button class="md-icon-button" ng-click="">
+							<md-icon>delete_forever</md-icon>
+						</md-button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</md-table-container>
+	<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.total}}" md-page-select md-boundary-links md-on-paginate="vm.getExemptHours"></md-table-pagination>
+</md-content>

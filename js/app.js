@@ -160,7 +160,17 @@ angular.module('FrcPortal', [
 		data: {
 		  title: 'Metrics'
 		}
-	  });
+	  })
+		.state('main.admin.exemptHours', {
+		 url: '/exemptHours',
+		 templateUrl: 'views/main.admin.exemptHours.html',
+		 controller: 'main.admin.exemptHoursController',
+		 controllerAs: 'vm',
+		 authenticate: true,
+		 data: {
+			 title: 'Metrics'
+		 }
+		 });
 
 	$urlRouterProvider.otherwise('/home');
 

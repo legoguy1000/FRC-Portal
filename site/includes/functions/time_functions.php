@@ -133,7 +133,62 @@ function getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'r
 	return $data;
 }
 
+function getAlExemptHoursFilter($filter = '', $limit = 10, $order = 'time_start', $page = 1) {
 
+	/* if(isset($filter) && $filter != '') {
+		$filter = $filter;
+	}
+	if(isset($limit) && $limit != '') {
+		$limit = $limit;
+	}
+	if(isset($order) && $order != '') {
+		$order = $order;
+	}
+	if(isset($page) && $page != '') {
+		$page = $page;
+	} */
+
+	$hours = array();
+	$data = array();
+	$queryArr = array();
+	$queryStr = '';
+	if($filter != '') {
+		$queryArr[] = '(time_start LIKE '.db_quote('%'.$filter.'%').')';
+		$queryArr[] = '(time_end LIKE '.db_quote('%'.$filter.'%').')';
+	}
+
+	if(count($queryArr) > 0) {
+		$queryStr = ' HAVING '.implode(' OR ',$queryArr);
+	}
+
+	$orderBy = '';
+	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
+	if(in_array($orderCol,array('time_in','time_out', 'comment'))) {
+		$orderBy = 'ASC';
+		if($order[0] == '-') {
+			$orderBy = 'DESC';
+		}
+	}
+	$query='SELECT eh.*, UNIX_TIMESTAMP(eh.time_start) AS time_start_unix, UNIX_TIMESTAMP(eh.time_end) AS time_end_unix, seasons.* FROM exempt_hours eh LEFT JOIN seasons USING (season_id)'.$queryStr;
+	$result = db_select($query);
+	$totalNum = count($result);
+
+	$offset	= ($page - 1) * $limit;
+	$query = $query.' ORDER BY '.$orderCol.' '.$orderBy.' LIMIT '.$offset.', '.$limit;
+	//die($query);
+	$result = db_select($query);
+	if(count($result) > 0) {
+		foreach($result as $re) {
+			$hours[] = $re;
+		}
+	}
+	$data['data'] = $hours;
+	$data['query'] = $query;
+	$data['total'] = $totalNum;
+	$data['maxPage'] = ceil($totalNum/$limit);
+
+	return $data;
+}
 
 
  ?>
