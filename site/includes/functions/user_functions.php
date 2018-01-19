@@ -65,7 +65,10 @@ function userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requir
 		$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id,year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS off_season_hours, seasons.* FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>seasons.end_date GROUP BY meeting_hours.user_id,seasons.year) '.$c.' USING (user_id,year)';
 	}
 	if($d != false) {
-		$sel .= ', IFNULL('.$d.'.season_hours,0) AS season_hours, IFNULL('.$d.'1.season_hours_exempt,0) AS season_hours_exempt, IFNULL('.$d.'1.season_hours_exempt >= '.$b.'.hour_requirement,0) AS min_hours';
+		$sel .= ', IFNULL('.$d.'.season_hours,0) AS season_hours, IFNULL('.$d.'1.season_hours_exempt,0) AS season_hours_exempt';
+		if($b != false) {
+			$sel = ', IFNULL('.$d.'1.season_hours_exempt >= '.$b.'.hour_requirement,0) AS min_hours';
+		}
 		$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS season_hours, seasons.* FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.end_date GROUP BY meeting_hours.user_id,seasons.year) '.$d.' USING (user_id,year)';
 		$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS season_hours_exempt, seasons.*,exempt_hours.exempt_id FROM meeting_hours LEFT JOIN exempt_hours ON meeting_hours.time_in >= DATE_SUB(exempt_hours.time_start, INTERVAL 1 HOUR) AND meeting_hours.time_out < DATE_ADD(exempt_hours.time_end, INTERVAL 1 HOUR) LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.end_date  AND exempt_hours.exempt_id IS NULL GROUP BY meeting_hours.user_id,seasons.year) '.$d.'1 USING (user_id,year)';
 	}
@@ -107,7 +110,7 @@ function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements')
 
 function userSignInList() {
 	$data = array();
-	$reqsQuery = userHoursAnnualRequirementsQueryArr($b = false, $l = false, $c = 'off_season_hours', $d = 'on_season_hours');
+	$reqsQuery = userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = false, $c = 'off_season_hours', $d = 'on_season_hours');
 
 	$sel = 'b.time_in, b.time_out, UNIX_TIMESTAMP(b.time_in) AS time_in_unix, UNIX_TIMESTAMP(b.time_out) AS time_out_unix'; //, IFNULL(c.season_hours,0) AS season_hours, IFNULL(c1.season_hours_exempt,0) AS season_hours_exempt, IFNULL(d.off_season_hours,0) as off_season_hours';
 	$joins = 'LEFT JOIN meeting_hours b ON b.hours_id = (SELECT hours_id from meeting_hours WHERE meeting_hours.user_id=users.user_id ORDER BY time_in DESC LIMIT 1)';
@@ -116,7 +119,7 @@ function userSignInList() {
 	//$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, IFNULL(SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600),0) as season_hours from meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(CURRENT_DATE()) WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.end_date GROUP BY meeting_hours.user_id) c ON c.user_id=users.user_id';
 	//$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, IFNULL(SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600),0) as season_hours_exempt from meeting_hours LEFT JOIN events ON meeting_hours.time_in >= events.event_start AND meeting_hours.time_out < DATE_ADD(events.event_end, INTERVAL 1 DAY) LEFT JOIN seasons ON seasons.year=YEAR(CURRENT_DATE()) WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.end_date AND (events.exempt_hours IS NULL OR events.exempt_hours = "0") GROUP BY meeting_hours.user_id) c1 ON c1.user_id=users.user_id';
 	//$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, IFNULL(SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600),0) as off_season_hours from meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(CURRENT_DATE()) WHERE meeting_hours.time_in>seasons.end_date GROUP BY meeting_hours.user_id) d ON d.user_id=users.user_id  ';
-	$where = 'WHERE users.status = "1"';
+	$where = 'WHERE users.status = "1" AND seasons.year=YEAR(CURRENT_DATE())';
 	$order = 'ORDER BY users.lname ASC';
 	$query = userQuery($sel, $joins, $where, $order);
 	die($query);
