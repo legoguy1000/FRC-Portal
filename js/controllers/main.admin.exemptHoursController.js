@@ -1,5 +1,5 @@
 angular.module('FrcPortal')
-.controller('main.admin.exemptHoursController', ['$log','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog',
+.controller('main.admin.exemptHoursController', ['$log','$timeout', '$q', '$scope', '$state', 'timeService', '$mdDialog',
 	mainAdminExemptHoursController
 ]);
 function mainAdminExemptHoursController($log,$timeout, $q, $scope, $state, timeService, $mdDialog) {

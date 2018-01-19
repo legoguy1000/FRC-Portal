@@ -22,7 +22,7 @@ angular.module('FrcPortal')
 		getAllExemptHoursFilter: function (params) {
 			return $http.get('site/getAllExemptHoursFilter.php?'+params)
 			.then(function(response) {
-				return response.data
+				return response.data;
 			});
 		},
 	};
