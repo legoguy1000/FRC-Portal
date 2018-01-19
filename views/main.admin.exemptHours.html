@@ -32,7 +32,7 @@
 			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getExemptHours">
 				<tr md-row>
 					<th md-column md-order-by="time_start"><span>Start</span></th>
-						<th md-column md-order-by="time_end"><span>End</span></th>
+					<th md-column md-order-by="time_end"><span>End</span></th>
 					<th md-column md-order-by="comment"><span>Comment</span></th>
 					<th md-column md-order-by="game_name"><span>Season</span></th>
 
@@ -40,7 +40,6 @@
 			</thead>
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 				<tr md-row ng-repeat="event in vm.events">
-					<td md-cell>{{event.name}}</td>
 					<td md-cell>
 							{{event.time_start_unix*1000 | date:'medium'}}
 					</td>
