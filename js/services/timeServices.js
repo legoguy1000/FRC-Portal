@@ -19,8 +19,8 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		getAlExemptHoursFilter: function (params) {
-			return $http.get('site/getAlExemptHoursFilter.php?'+params)
+		getAllExemptHoursFilter: function (params) {
+			return $http.get('site/getAllExemptHoursFilter.php?'+params)
 			.then(function(response) {
 				return response.data;
 			});
