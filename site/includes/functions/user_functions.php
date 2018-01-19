@@ -145,7 +145,7 @@ function userSeasonInfo($user_id = null, $year = null) {
 	}
 	$order = 'ORDER BY users.lname ASC, b.year DESC';
 	$query = userQuery($sel, $joins, $where, $order);
-die($query);
+
 	$result = db_select($query);
 	if(count($result > 0)) {
 		foreach($result as $id=>$res) {
