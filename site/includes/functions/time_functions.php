@@ -133,7 +133,7 @@ function getAllMissingHoursRequestsFilter($filter = '', $limit = 10, $order = 'r
 	return $data;
 }
 
-function getAllExemptHoursFilter($filter = '', $limit = 10, $order = 'time_start', $page = 1) {
+function getAllExemptHoursFilter($filter = '', $limit = 10, $order = '-time_start', $page = 1) {
 
 	/* if(isset($filter) && $filter != '') {
 		$filter = $filter;

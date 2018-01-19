@@ -13,7 +13,7 @@ function mainAdminExemptHoursController($log,$timeout, $q, $scope, $state, timeS
 	vm.query = {
 		filter: '',
 		limit: 10,
-		order: '-event_start',
+		order: '-time_start',
 		page: 1
 	};
 	vm.events = [];
