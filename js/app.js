@@ -505,4 +505,7 @@ angular.module('FrcPortal', [
 	$authProvider.authHeader = 'Authorization';
 	$authProvider.authToken = 'Bearer';
 	$authProvider.storageType = 'localStorage';
-});
+})
+.config(['momentPickerProvider', function (momentPickerProvider) {
+	momentPickerProvider.options({ minutesFormat: 'HH:mm' });
+}]);
