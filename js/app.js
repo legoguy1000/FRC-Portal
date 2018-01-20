@@ -507,5 +507,5 @@ angular.module('FrcPortal', [
 	$authProvider.storageType = 'localStorage';
 })
 .config(['momentPickerProvider', function (momentPickerProvider) {
-	momentPickerProvider.options({ hoursFormat: 'LT' });
+	//momentPickerProvider.options({ hoursFormat: 'LT' });
 }]);
