@@ -159,6 +159,10 @@ function userSeasonInfo($user_id = null, $year = null) {
 			$result[$id]['dues'] = $dues;
 			$result[$id]['min_hours'] = $mh;
 			$result[$id]['reqs_complete'] = $jt && $stims && (($stu && $dues) || !$stu) && $mh;
+			$result[$id]['season_hours'] = (float) $res['season_hours'];
+			$result[$id]['season_hours_exempt'] = (float) $res['season_hours_exempt'];
+			$result[$id]['off_season_hours'] = (float) $res['off_season_hours'];
+			$result[$id]['total'] = (float) $res['total'];
 		}
 		$data = $result;
 	}
