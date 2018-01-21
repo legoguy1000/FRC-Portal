@@ -14,6 +14,7 @@ function topHourUsers($year) {
 	$result = db_select($query);
 	if($result) {
 		foreach($result as $id=>$res) {
+			$result[$id] = formatUserData($res);
 			$result[$id]['hours'] = (float) $res['hours'];
 		}
 		$data = $result;
