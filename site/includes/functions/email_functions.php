@@ -84,7 +84,10 @@ function sendPushNotificationByUser($user, $title='', $body='', $tag='') {
 			$notification['payload'], // optional (defaults null)
 			$notification['userPublicKey'], // optional (defaults null)
 			$notification['userAuthToken'], // optional (defaults null)
-			true
+			true,
+			$options = array(
+				'TTL' => 60
+			)
 		);
 	}
 }
