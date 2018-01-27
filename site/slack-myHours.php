@@ -12,7 +12,7 @@ $result = db_select_single($query);
 if(!is_null($result)) {
 	//die('yes');
 	$userInfo = userSeasonInfo($user_id = $result['user_id'], $year = date('Y'));
-	die(json_encode($userInfo));
+	die($userInfo[0]['total']);
 }  else {
 	die('no');
 }
