@@ -16,7 +16,7 @@ $years = array();
 for($i = $start_date; $i <= $end_date; $i++) {
 	$years[] = (integer) $i;
 }
-$series = array('Students','Mentors','Males','Females','Senior','Junior','Sophmore','Freshman','Pre-Freshman','Mentor'); //,'Total'
+$series = array('Students','Mentors','Males','Females','Senior','Junior','Sophmore','Freshman','Pre-Freshman'); //,'Total'
 $data = array();
 foreach($series as $se) {
 	$data[$se] = array_fill_keys($years,0);
