@@ -300,8 +300,7 @@ function getUserDataFromParam($param, $value) {
 	$query =  $userQuery.' WHERE users.'.db_escape($param).'='.db_quote($value);
 	$user = db_select_single($query);
 	if(!is_null($user)) {
-		$data = $user;
-		$data['admin'] = (bool) $data['admin'];
+		$data = formatUserData($user);
 		//$data['notifiation_endpoints'] = getNotifiationEndpointsByUser($data['user_id']);
 	} else {
 		$data = false;
