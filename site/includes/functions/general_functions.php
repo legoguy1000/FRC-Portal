@@ -152,7 +152,7 @@ function postToSlack($msg = '', $channel = null) {
 		$data["channel"] = $channel;
 	}
 	$content = str_replace('#new_line#','\n',json_encode($data));
-	$url = 'https://hooks.slack.com/services/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';
+	$url = 'https://hooks.slack.com/services/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';
 	$ch = curl_init();
 	//set the url, number of POST vars, POST data
 	curl_setopt($ch,CURLOPT_URL, $url);
