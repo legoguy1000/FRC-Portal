@@ -43,7 +43,7 @@ foreach($result as $re) {
 	//$total[$year] = array_sum(array_column($data,$year));
 }
 //WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=0  THEN "Graduated"
-$query = 'SELECT
+$query = 'SELECT CASE
  WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=12 THEN "Senior"
  WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=24 THEN "Junior"
  WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=36 THEN "Sophmore"
