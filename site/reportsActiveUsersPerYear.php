@@ -42,15 +42,15 @@ foreach($result as $re) {
 	$data[$gender.'s'][$year] = $uc;
 	//$total[$year] = array_sum(array_column($data,$year));
 }
-$query = 'SELECT CASE
- WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=0  THEN "Graduated"
+//WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=0  THEN "Graduated"
+$query = 'SELECT
  WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=12 THEN "Senior"
  WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=24 THEN "Junior"
  WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=36 THEN "Sophmore"
  WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=48 THEN "Freshman"
  WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) >48 THEN "Pre-Freshman"
  ELSE ""
-END AS student_grade, COUNT(DISTINCT(m.user_id)) as user_count, YEAR(m.time_in) as year FROM meeting_hours m LEFT JOIN users u USING(user_id) WHERE YEAR(m.time_in) BETWEEN '.$start_date.' AND '.$end_date.' GROUP BY year,student_grade';
+END AS student_grade, COUNT(DISTINCT(m.user_id)) as user_count, YEAR(m.time_in) as year FROM meeting_hours m LEFT JOIN users u USING(user_id) WHERE u.user_type="student" AND YEAR(m.time_in) BETWEEN '.$start_date.' AND '.$end_date.' GROUP BY year,student_grade';
 $result = db_select($query);
 foreach($result as $re) {
 	$grade = $re['student_grade'];
@@ -60,6 +60,7 @@ foreach($result as $re) {
 	$data[$grade][$year] = $uc;
 	//$total[$year] = array_sum(array_column($data,$year));
 }
+
 //$data['Total'] = $total;
 foreach($series as $se) {
 	$data[$se] = array_values($data[$se]);
