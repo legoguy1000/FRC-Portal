@@ -7,10 +7,10 @@ $user_name = $_POST['user_name'];
 
 $where = ' WHERE slack_id = '.db_quote($user_id).' OR slack_id = '.db_quote($user_name);
 $query = userQuery($sel='',$joins='', $where, $order = '');
-die($query);
+//die($query);
 $result = db_select_single($query);
 if(!is_null($result)) {
-	die('yes');
+	//die('yes');
 	$userInfo = userSeasonInfo($user_id = $result['user_id'], $year = date('Y'));
 	die($userInfo['total']);
 }  else {
