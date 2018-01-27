@@ -24,10 +24,16 @@
 				<label>Team Email</label>
 				<input ng-model="vm.userInfo.team_email">
 			</md-input-container>
-			<md-input-container flex required>
-				<label>Phone</label>
-				<input ng-model="vm.userInfo.phone" phone-input type='text'/>
-			</md-input-container>
+			<div layout="row">
+				<md-input-container flex required>
+					<label>Phone</label>
+					<input ng-model="vm.userInfo.phone" phone-input type='text'/>
+				</md-input-container>
+				<md-input-container flex required>
+					<label>Slack User</label>
+					<input ng-model="vm.userInfo.slack_id" type='text'/>
+				</md-input-container>
+			</div>
 			<div layout="row">
 			<md-input-container flex>
 				<label>User Type</label>
