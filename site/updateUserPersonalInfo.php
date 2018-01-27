@@ -36,6 +36,7 @@ $query = 'UPDATE users SET  fname='.db_quote($formData['fname']).',
 							grad_year='.$grad_year.',
 							gender='.$gender.',
 							user_type='.$user_type.',
+							slack_id='.db_quote($formData['slack_id']).',
 							'.($formData['signin_pin']=='' && isset($formData['time_pin']) ? 'signin_pin='.db_quote(hash('SHA256', $formData['time_pin'])).',' : '').'
 							'.(isset($formData['status']) && $admin ? 'status='.db_quote($formData['status']).',' : '').'
 							'.($realUser ? 'first_login="0"' : '').'
