@@ -151,18 +151,34 @@ function postToSlack($msg = '', $channel = null) {
 	if($channel != null) {
 		$data["channel"] = $channel;
 	}
-
+	$content = str_replace('#new_line#','\n',json_encode($data);
 	$url = 'https://hooks.slack.com/services/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';
-	$options = array(
+	$ch = curl_init();
+	//set the url, number of POST vars, POST data
+	curl_setopt($ch,CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+	    'Content-Type: application/json',
+	    'Content-Length: ' . strlen($content))
+	);
+	$result = curl_exec($ch);
+	//close connection
+	curl_close($ch);
+
+
+
+	/*$options = array(
 		'http' => array(
 			'header'  => "Content-Type: application/json",
 			'method'  => 'POST',
-			'content' => str_replace('#new_line#','\n',json_encode($data))
+			'content' => )
 		)
 	);
 
 	$result = file_get_contents($url, false, stream_context_create($options));
-	$accessTokenArr = json_decode($result, true);
+	$accessTokenArr = json_decode($result, true); */
 }
 
 function endOfDayHoursToSlack($date = null) {
