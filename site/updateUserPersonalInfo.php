@@ -11,7 +11,7 @@ if(!isset($formData['user_id']) || $formData['user_id'] == '')
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid user_id.  Reload the page and try again.')));
 }
 $realUser = verifyUser($formData['user_id'], $authToken['data']['user_id'], $die = false);
-$admin = checkAdmin($user_id, $die = false);
+$admin = checkAdmin($formData['user_id'], $die = false);
 if(!$realUser && !$admin) {
 	header("HTTP/1.1 403 Forbidden");
 	exit;
