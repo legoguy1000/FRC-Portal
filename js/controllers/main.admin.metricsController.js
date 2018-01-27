@@ -23,7 +23,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 		  stacked: true
 		}]
 	};
-	
+
 	vm.myInput = 2016
 	vm.labels = [];
 	vm.series = [];
@@ -39,7 +39,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 	};
 	vm.reportsAvgHrsPerPersonPerYear();
 
-	
+
 	vm.labels2 = [];
 	vm.series2 = [];
 	vm.data2 = [];
@@ -53,14 +53,14 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 		});
 	};
 	vm.reportsAvgHrsPerUserTypePerYear();
-	
-	
+
+
 	vm.labels3 = [];
 	vm.series3 = [];
 	vm.data3 = [];
 	vm.start_date3 = new Date().getFullYear()-2;
 	vm.end_date3 = new Date().getFullYear();
-	
+
 	vm.reportsActiveUsersPerYear = function () {
 		metricsService.reportsActiveUsersPerYear(vm.start_date3, vm.end_date3).then(function(response){
 			vm.labels3 = response.labels;
@@ -79,6 +79,24 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 			  }, {
 				label: vm.series3[3],
 				stack: 'Stack 1',
+			  }, {
+				label: vm.series3[4],
+				stack: 'Stack 2',
+			  }, {
+				label: vm.series3[5],
+				stack: 'Stack 2',
+			  }, {
+				label: vm.series3[6],
+				stack: 'Stack 2',
+			  }, {
+				label: vm.series3[7],
+				stack: 'Stack 2',
+			  }, {
+				label: vm.series3[8],
+				stack: 'Stack 2',
+			  }, {
+				label: vm.series3[9],
+				stack: 'Stack 2',
 			  }
 			];
 		});
@@ -90,7 +108,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 	vm.series4 = [];
 	vm.data4 = [];
 	vm.year4 = new Date().getFullYear();
-	
+
 	vm.reportsHoursPerEventPerYear = function () {
 		metricsService.reportsHoursPerEventPerYear(vm.year4).then(function(response){
 			vm.labels4 = response.labels;
@@ -105,7 +123,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 	vm.data5 = [];
 	vm.start_date5 = new Date().getFullYear()-2;
 	vm.end_date5 = new Date().getFullYear();
-	
+
 	vm.reportsAvgHrsPerGenderPerYear = function () {
 		metricsService.reportsAvgHrsPerGenderPerYear(vm.start_date5, vm.end_date5).then(function(response){
 			vm.labels5 = response.labels;
@@ -119,7 +137,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 	vm.series6 = [];
 	vm.data6 = [];
 	vm.year6= new Date().getFullYear();
-	
+
 	vm.reportsHoursPerWeek = function () {
 		metricsService.reportsHoursPerWeek(vm.year6).then(function(response){
 			vm.labels6 = response.labels;
@@ -128,13 +146,13 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 		});
 	};
 	vm.reportsHoursPerWeek();
-	
+
 	vm.labels7 = [];
 	vm.series7 = [];
 	vm.data7 = [];
 	vm.start_date7 = new Date().getFullYear()-2;
 	vm.end_date7 = new Date().getFullYear();
-	
+
 	vm.reportsHoursPerGradePerYear = function () {
 		metricsService.reportsHoursPerGradePerYear(vm.start_date7, vm.end_date7).then(function(response){
 			vm.labels7 = response.labels;
