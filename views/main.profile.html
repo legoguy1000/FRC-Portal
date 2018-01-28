@@ -273,7 +273,7 @@
 			</md-tab>
 			<md-tab label="Notification Preferences">
 				<div flex layout="column" layout-gt-sm="row" style="min-height:100%;">
-					<md-content  flex layout="column">
+		<!--			<md-content  flex layout="column">
 						<h1 class="md-headline" layout="row">
 							<span flex></span>
 							<span>Notification Devices</span>
@@ -286,9 +286,6 @@
 									<i class="mdi mdi-36px md-icon-avatar" ng-class="{'mdi-google-chrome': device.endpoint.includes('google'),'mdi-firefox': device.endpoint.includes('mozilla'),'this-device': device.endpoint == main.browserData.endpoint}">
 										<md-tooltip md-direction="left">Google Chrome</md-tooltip>
 									</i>
-									<!-- <i class="mdi mdi-apple-safari mdi-36px md-icon-avatar"></i>
-									<i class="mdi mdi-internet-explorer mdi-36px md-icon-avatar"></i>
-									<i class="mdi mdi-edge mdi-36px md-icon-avatar"></i> -->
 								</div>
 								<div class="md-list-item-text" flex layout="row">
 									<div>
@@ -313,7 +310,7 @@
 							</div>
 						</md-list>
 						<md-button ng-click="vm.subscribePush()" ng-hide="main.enablePush.status">Subscribe this device</md-button>
-					</md-content>
+					</md-content> -->
 					<md-content  flex layout="column">
 						<h1 class="md-headline" layout="row">
 							<span flex></span>
@@ -324,11 +321,11 @@
 						<div class="md-margin">
 							<div layout="row" flex  layout-align="start center" ng-repeat="(key,title) in vm.notificationOptions track by $index">
 								<span flex="50">{{title}}</span>
-								<md-switch ng-model="vm.notificationPreferences.push[key]" class="md-warn" flex ng-change="vm.updateNotePrefs('push',key,vm.notificationPreferences.push[key])">
+								<md-switch ng-model="vm.notificationPreferences.slack[key]" class="md-warn" flex ng-change="vm.updateNotePrefs('slack',key,vm.notificationPreferences.push[key])">
 									Push
 								</md-switch>
 								<md-switch ng-model="vm.notificationPreferences.email[key]" class="md-warn" flex ng-change="vm.updateNotePrefs('email',key,vm.notificationPreferences.email[key])">
-									Email
+									Slack
 								</md-switch>
 							</div>
 						</div>
