@@ -69,6 +69,14 @@
 					<input ng-model="vm.userInfo.grad_year" ng-required="vm.userInfo.user_type=='Student'" ng-disabled="vm.userInfo.user_type!='Student'"/>
 				</md-input-container>
 			</div>
+			<div layout="row" flex  layout-align="start center">
+				<md-switch ng-model="vm.userInfo.admin" class="md-warn" flex>
+					Admin
+				</md-switch>
+				<md-switch ng-model="vm.userInfo.status" class="md-warn" flex>
+					Status
+				</md-switch>
+			</div>
 			<div flex layout="row">
 				<span flex></span>
 				<md-button type="submit" class="md-raised md-primary">
