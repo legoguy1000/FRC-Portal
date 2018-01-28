@@ -317,6 +317,7 @@ function formatUserData($user) {
 		$data['first_login'] = (bool) $data['first_login'];
 		$data['former_student'] = (bool) $data['former_student'];
 		$data['status'] = (bool) $data['status'];
+		$data['slackEnabled'] = isset($data['slack_id']) && $data['slack_id'] != '';
 		if(isset($data['hours'])) {
 			$data['hours'] = (float) $data['hours'];
 		}
