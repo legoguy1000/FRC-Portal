@@ -7,7 +7,7 @@
 			</md-button>
 			User Information
 		</h1>
-		<form class="md-margin" flex layout="column">
+		<form class="md-margin" flex layout="column" ng-submit="vm.updateUser()">
 			<md-input-container flex required>
 				<label>First Name</label>
 				<input ng-model="vm.userInfo.fname">

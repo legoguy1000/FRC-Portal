@@ -7,7 +7,7 @@ function mainAdminUserController($timeout, $q, $scope, schoolsService, usersServ
 
 	vm.user_id = $stateParams.user_id;
 	vm.userInfo = {};
-	
+
     vm.selectedItem  = null;
     vm.searchText    = null;
     vm.querySearch   = querySearch;
@@ -22,13 +22,13 @@ function mainAdminUserController($timeout, $q, $scope, schoolsService, usersServ
 		order: '-year',
 		page: 1
 	};
-	
-	
-	
+
+
+
 	function querySearch (query) {
 		return schoolsService.searchAllSchools(query);
 	}
-	
+
 	vm.getProfileInfo = function() {
 		vm.loadingDevices = true;
 		usersService.getProfileInfo($stateParams.user_id).then(function(response){
@@ -43,7 +43,16 @@ function mainAdminUserController($timeout, $q, $scope, schoolsService, usersServ
 	}
 	vm.getProfileInfo();
 
-	
+	vm.updateUser = function() {
+		vm.loading.profile = true;
+		usersService.updateUserPersonalInfo(vm.userInfo).then(function(response) {
+			vm.loading.profile = false;
+			if(response.status) {
+				
+			}
+		});
+	}
+
 	vm.showSeasonHoursGraph = function(ev,year) {
 		$mdDialog.show({
 			controller: SeasonHoursGraphModalController,
@@ -62,7 +71,7 @@ function mainAdminUserController($timeout, $q, $scope, schoolsService, usersServ
 		})
 		.then(function(answer) {}, function() {});
 	}
-	
+
 	vm.showDeviceEdit = function(ev, device) {
 		// Appending dialog to document.body to cover sidenav in docs app
 		var confirm = $mdDialog.prompt()
@@ -76,9 +85,9 @@ function mainAdminUserController($timeout, $q, $scope, schoolsService, usersServ
 			.ok('Submit')
 			.cancel('Cancel');
 		$mdDialog.show(confirm).then(function(result) {
-			
+
 		}, function() {
-			
+
 		});
 	};
 
@@ -92,7 +101,7 @@ function mainAdminUserController($timeout, $q, $scope, schoolsService, usersServ
 		.ok('Delete')
 		.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
-			
+
 		}, function() {
 
 		});
