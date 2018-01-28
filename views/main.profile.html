@@ -321,7 +321,7 @@
 						<div class="md-margin">
 							<div layout="row" flex  layout-align="start center" ng-repeat="(key,title) in vm.notificationOptions track by $index">
 								<span flex="50">{{title}}</span>
-								<md-switch ng-model="vm.notificationPreferences.slack[key]" class="md-warn" flex ng-change="vm.updateNotePrefs('slack',key,vm.notificationPreferences.push[key])">
+								<md-switch ng-model="vm.notificationPreferences.slack[key]" class="md-warn" flex ng-change="vm.updateNotePrefs('slack',key,vm.notificationPreferences.slack[key])">
 									Slack
 								</md-switch>
 								<md-switch ng-model="vm.notificationPreferences.email[key]" class="md-warn" flex ng-change="vm.updateNotePrefs('email',key,vm.notificationPreferences.email[key])">
