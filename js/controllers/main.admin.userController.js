@@ -44,11 +44,11 @@ function mainAdminUserController($timeout, $q, $scope, schoolsService, usersServ
 	vm.getProfileInfo();
 
 	vm.updateUser = function() {
-		vm.loading.profile = true;
+		vm.loadingDevices = true;
 		usersService.updateUserPersonalInfo(vm.userInfo).then(function(response) {
-			vm.loading.profile = false;
+			vm.loadingDevices = false;
 			if(response.status) {
-				
+
 			}
 		});
 	}
