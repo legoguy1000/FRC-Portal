@@ -166,19 +166,6 @@ function postToSlack($msg = '', $channel = null) {
 	$result = curl_exec($ch);
 	//close connection
 	curl_close($ch);
-
-
-
-	/*$options = array(
-		'http' => array(
-			'header'  => "Content-Type: application/json",
-			'method'  => 'POST',
-			'content' => )
-		)
-	);
-
-	$result = file_get_contents($url, false, stream_context_create($options));
-	$accessTokenArr = json_decode($result, true); */
 }
 
 function endOfDayHoursToSlack($date = null) {
@@ -195,6 +182,15 @@ function endOfDayHoursToSlack($date = null) {
 		$total = !is_null($result) ? $result['hours'] : 0;
 		$msg .= 'Triple Helix completed another '.round($hours,1).' hours of work for an annual total of '.round($total,1).'.#new_line#Keep up the amazing work!!';
 		postToSlack($msg, $channel = null);
+	}
+}
+
+function slackMessageToUser($user_id, $msg) {
+	$userData = false;
+	$userData = getUserDataFromParam('user_id', $user_id);
+	if($userData) {
+		$channel = $userData['slack_id'];
+		postToSlack($msg, $channel);
 	}
 }
 ?>

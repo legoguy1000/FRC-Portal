@@ -296,8 +296,8 @@ function userHoursbyDate($user_id = null, $year = null) {
 
 function getUserDataFromParam($param, $value) {
 	$data = array();
-	$userQuery = userQuery();
-	$query =  $userQuery.' WHERE users.'.db_escape($param).'='.db_quote($value);
+	$where = ' WHERE users.'.db_escape($param).'='.db_quote($value);
+	$query = userQuery($sel='',$joins='', $where, $order = '');
 	$user = db_select_single($query);
 	if(!is_null($user)) {
 		$data = formatUserData($user);

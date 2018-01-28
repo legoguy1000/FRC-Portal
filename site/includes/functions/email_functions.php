@@ -49,6 +49,7 @@ function setDefaultNotifications($user_id) {
 	$result = db_query($query);
 }
 
+/*
 use Minishlink\WebPush\WebPush;
 function sendPushNotificationByUser($user, $title='', $body='', $tag='') {
 	$db = db_connect();
@@ -90,7 +91,7 @@ function sendPushNotificationByUser($user, $title='', $body='', $tag='') {
 			)
 		);
 	}
-}
+} */
 
 function sendUserNotification($user_id, $type, $msgData)
 {
@@ -108,7 +109,7 @@ function sendUserNotification($user_id, $type, $msgData)
 		emailUser($userData,$subject,$content,$attachments);
 	}
 	if($preferences['slack'][$type] == true) {
-		$msg = $msgData['push'];
+		$msg = $msgData['slack'];
 		$title = $msg['title'];
 		$body = $msg['body'];
 		$tag = '';
@@ -116,7 +117,8 @@ function sendUserNotification($user_id, $type, $msgData)
 		$query = 'INSERT INTO notifications (note_id,user_id,message) VALUES ('.db_quote($note_id).','.db_quote($user_id).','.db_quote($body).')';
 		$result = db_query($query);
 		if($result) {
-			sendPushNotificationByUser($user_id, $title, $body, $note_id);
+			slackMessageToUser($user_id, $body);
+			//sendPushNotificationByUser($user_id, $title, $body, $note_id);
 		}
 	}
 }
