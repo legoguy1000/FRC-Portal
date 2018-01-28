@@ -5,9 +5,9 @@ angular.module('FrcPortal')
 function mainProfileController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth) {
     var vm = this;
 
-    vm.selectedItem  = null;
-    vm.searchText    = null;
-    vm.querySearch   = querySearch;
+  vm.selectedItem  = null;
+  vm.searchText    = null;
+  vm.querySearch   = querySearch;
 	vm.notificationEndpoints = [];
 	vm.linkedAccounts = [];
 	vm.seasonInfo = {};
@@ -151,7 +151,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		});
 	}
 
-	vm.subscribePush = function() {
+/*	vm.subscribePush = function() {
 	  // Disable the button so it can't be changed while
 	  // we process the permission request
 	  $scope.main.enablePush.disabled = true;
@@ -218,11 +218,11 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 				console.log('Error unsubscribing', error);
 			});
 		}
-	}
+	} */
 
 
 
-	vm.showDeviceEdit = function(ev, device) {
+/*	vm.showDeviceEdit = function(ev, device) {
 		// Appending dialog to document.body to cover sidenav in docs app
 		var confirm = $mdDialog.prompt()
 			.title('Edit Device')
@@ -263,7 +263,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		}, function() {
 
 		});
-	};
+	}; */
 
 	vm.linkAccount = function(provider) {
 	  $auth.link(provider,{'link_account':true, 'provider':provider})
