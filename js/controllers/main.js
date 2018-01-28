@@ -196,7 +196,7 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 			.catch(function(err) {
 				//console.warn('Error during getSubscription()', err);
 			});
-		});
+		//});
 	}
 
 	main.checkServiceWorker = function() {
