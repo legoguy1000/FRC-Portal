@@ -107,7 +107,7 @@ function sendUserNotification($user_id, $type, $msgData)
 		$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
 		emailUser($userData,$subject,$content,$attachments);
 	}
-	if($preferences['push'][$type] == true) {
+	if($preferences['slack'][$type] == true) {
 		$msg = $msgData['push'];
 		$title = $msg['title'];
 		$body = $msg['body'];

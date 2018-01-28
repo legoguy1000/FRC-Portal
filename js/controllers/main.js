@@ -133,7 +133,7 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 	main.initServiceWorkerState = function() {
 		console.log('Initializing');
 		// Are Notifications supported in the service worker?
-		if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
+	/*	if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
 			console.warn('Notifications aren\'t supported.');
 			return false;
 		}
@@ -150,13 +150,13 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 		if (!('PushManager' in window)) {
 			console.warn('Push messaging isn\'t supported.');
 			return false;
-		}
+		} */
 
 		// We need the service worker registration to check for a subscription
 		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 			console.log('Service Worker Ready');
 			// Do we already have a push message subscription?
-			serviceWorkerRegistration.pushManager.getSubscription()
+		/*	serviceWorkerRegistration.pushManager.getSubscription()
 			.then(function(subscription) {
 				console.log('Checkig Subscription');
 				// Enable any UI which subscribes / unsubscribes from
@@ -190,11 +190,11 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 				usersService.deviceNotificationUpdateEndpoint(data).then(function(response){
 					console.log('Endpoint Updated');
 				});
-				console.log(data);
+				console.log(data); */
 				return true;
 			})
 			.catch(function(err) {
-				console.warn('Error during getSubscription()', err);
+				//console.warn('Error during getSubscription()', err);
 			});
 		});
 	}
@@ -243,7 +243,7 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 		}
 		$auth.logout();
 	}
-	
+
 	$rootScope.$on('afterLoginAction', function(event, data) {
 		console.info('Login Initiated');
 		if(data.allActions) {

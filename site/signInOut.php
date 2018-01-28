@@ -58,7 +58,7 @@ if(!is_null($result)) {
 			);
 			$emailInfo = emailSignInOut($user_id,$emailData);
 			$msgData = array(
-				'push' => array(
+				'slack' => array(
 					'title' => 'Sign out',
 					'body' => 'You signed out at '.$emailData['signin_time']
 				),
@@ -86,7 +86,7 @@ if(!is_null($result)) {
 			);
 			$emailInfo = emailSignInOut($user_id,$emailData);
 			$msgData = array(
-				'push' => array(
+				'slack' => array(
 					'title' => 'Sign in',
 					'body' => 'You signed in at '.date('M d, Y H:i:s A', $date)
 				),
