@@ -17,7 +17,7 @@ function getNotificationOptions() {
 	);
 	return $data;
 }
-
+//test
 function getNotificationPreferencesByUser($user_id) {
 	$data = getNotificationOptions();
 	$query = 'SELECT np.* FROM notification_preferences np WHERE user_id='.db_quote($user_id);
