@@ -12,7 +12,7 @@ function getNotificationOptions() {
 		'stims' => false,
 	);
 	$data = array(
-		'push' => $default,
+		'slack' => $default,
 		'email' => $default,
 	);
 	return $data;
