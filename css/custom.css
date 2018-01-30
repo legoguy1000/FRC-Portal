@@ -181,7 +181,7 @@ md-toolbar.md-table-toolbar form > input:focus {
 }
 
 .md-table-pagination>.buttons>.md-button.md-icon-button {
-  margin: 0 6px; 
+  margin: 0 6px;
 }
 
 md-toolbar.search-bar form {
@@ -292,4 +292,10 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 
 input[type="number"] {
     -moz-appearance: textfield;
+}
+
+button.md-icon-button.profile {
+    height: 50px;
+    width: 50px;
+    padding: 0px;
 }
