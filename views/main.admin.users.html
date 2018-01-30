@@ -115,11 +115,15 @@
 					<td md-cell><span>{{user.email}}</span></td>
 					<td md-cell><span>{{user.gender}}</span></td>
 					<td md-cell>
+						<span ng-show="user.status">Active</span>
+						<span ng-hide="user.status">Inactive</span>
+					</td>
+<!--					<td md-cell>
 						<md-select ng-model="user.status" placeholder="Status">
 							<md-option ng-value="true" >Active</md-option>
 							<md-option ng-value="false" >Inactive</md-option>
 						</md-select>
-					</td>
+					</td> -->
 					<td md-cell>
 						<md-button class="md-icon-button" ui-sref="main.admin.user({'user_id':user.user_id})" ng-click="admin.slideLeft()">
 							<md-icon>open_in_new</md-icon>
