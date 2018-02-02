@@ -1,11 +1,15 @@
 <div flex layout-gt-sm="row" layout="column">
 	<md-content flex flex-gt-sm="50" flex-gt-md="33" layout="column" class="md-margin">
-		<h1 class="md-headline">
+		<h1 class="md-headline" layout="row" layout-align="start center">
 			<md-button class="md-icon-button" ui-sref="main.admin.users" ng-click="admin.clickBack()">
 				<md-tooltip md-direction="top">Go Back to User List</md-tooltip>
 				<i class="material-icons">arrow_back</i>
 			</md-button>
-			User Information
+			<span flex>User Information</span>
+			<md-button class="md-icon-button md-warn" ng-click="vm.deleteUser()">
+				<md-tooltip md-direction="top">Delete User/md-tooltip>
+				<i class="material-icons">delete_forever</i>
+			</md-button>
 		</h1>
 		<form class="md-margin" flex layout="column" ng-submit="vm.updateUser()">
 			<md-input-container flex required>
