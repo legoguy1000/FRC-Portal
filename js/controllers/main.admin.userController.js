@@ -53,6 +53,23 @@ function mainAdminUserController($timeout, $q, $scope, schoolsService, usersServ
 		});
 	}
 
+	vm.deleteUser = function() {
+		var data = {
+			user_id: vm.userInfo.user_id,
+		};
+		usersService.deleteUser(data).then(function(response) {
+			if(response.status) {
+				$mdDialog.show(
+		      $mdDialog.alert()
+		        .title('User Deleted')
+		        .textContent('User "'+vm.userInfo.full_name+'" has been deleted.  You will now be redirected to the user list.')
+		        .ariaLabel('User Deleted')
+		        .ok('Got it!')
+		    );
+			}
+		});
+	}
+
 	vm.showSeasonHoursGraph = function(ev,year) {
 		$mdDialog.show({
 			controller: SeasonHoursGraphModalController,

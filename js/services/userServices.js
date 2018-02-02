@@ -110,5 +110,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		deleteUser: function (formData) {
+			return $http.post('site/deleteUser.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });
