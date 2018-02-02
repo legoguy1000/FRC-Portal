@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.userController', ['$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog','$stateParams',
+.controller('main.admin.userController', ['$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog','$stateParams',
 	mainAdminUserController
 ]);
-function mainAdminUserController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $stateParams) {
+function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $stateParams) {
     var vm = this;
 
 	vm.user_id = $stateParams.user_id;
@@ -65,7 +65,9 @@ function mainAdminUserController($timeout, $q, $scope, schoolsService, usersServ
 		        .textContent('User "'+vm.userInfo.full_name+'" has been deleted.  You will now be redirected to the user list.')
 		        .ariaLabel('User Deleted')
 		        .ok('Got it!')
-		    );
+		    ).then(function() {
+		      $state.go('main.admin.users');
+		    }, function() {);
 			}
 		});
 	}
