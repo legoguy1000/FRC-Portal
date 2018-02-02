@@ -67,7 +67,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 		        .ok('Got it!')
 		    ).then(function() {
 		      $state.go('main.admin.users');
-		    }, function() {);
+		    }, function() {});
 			}
 		});
 	}
