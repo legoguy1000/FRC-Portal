@@ -57,19 +57,27 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 		var data = {
 			user_id: vm.userInfo.user_id,
 		};
-		usersService.deleteUser(data).then(function(response) {
-			if(response.status) {
-				$mdDialog.show(
-		      $mdDialog.alert()
-		        .title('User Deleted')
-		        .textContent('User "'+vm.userInfo.full_name+'" has been deleted.  You will now be redirected to the user list.')
-		        .ariaLabel('User Deleted')
-		        .ok('Got it!')
-		    ).then(function() {
-		      $state.go('main.admin.users');
-		    }, function() {});
-			}
-		});
+		var confirm = $mdDialog.confirm()
+          .title('Delete User "'+vm.userInfo.full_name+'"')
+          .textContent('Are you sure you want to delete user "'+vm.userInfo.full_name+'"?  This action is unreversable and any accumulated hours will be removed.'	)
+          .ariaLabel('Delete User')
+          .ok('Delete')
+          .cancel('Cancel');
+    $mdDialog.show(confirm).then(function() {
+			usersService.deleteUser(data).then(function(response) {
+				if(response.status) {
+					$mdDialog.show(
+			      $mdDialog.alert()
+			        .title('User Deleted')
+			        .textContent('User "'+vm.userInfo.full_name+'" has been deleted.  You will now be redirected to the user list.')
+			        .ariaLabel('User Deleted')
+			        .ok('OK')
+			    ).then(function() {
+			      $scope.admin.clickBack()
+			    }, function() {});
+				}
+			});
+    }, function() {});
 	}
 
 	vm.showSeasonHoursGraph = function(ev,year) {
