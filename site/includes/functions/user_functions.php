@@ -355,7 +355,7 @@ function checkUserLogin($userData) {
 	$te = false;
 	$sel = 'oauth_ids.*';
 	$joins = 'LEFT JOIN oauth_ids USING (user_id)';
-	$where = 'WHERE oauth_ids.oauth_id='.db_quote($userData['id']).' AND oauth_ids.oauth_provider='.db_quote($userData['provider']);
+	$where = 'WHERE oauth_ids.oauth_id='.db_quote($userData['id']).' AND oauth_ids.oauth_provider='.db_quote($userData['provider']).' AND status="1"';
 	$query = userQuery($sel,$joins, $where, $order = '');
 	$user = db_select_single($query);
 	if(!is_null($user)) {
@@ -370,7 +370,7 @@ function checkUserLogin($userData) {
 					$em = $emailArr[0];
 					$fname = substr($em,0,strlen($em)-1);
 					$li = substr($em,strlen($em)-1,strlen($em)-1);
-					$where = 'WHERE users.fname='.db_quote($fname).' AND users.lname LIKE "'.$li.'%"';
+					$where = 'WHERE users.fname='.db_quote($fname).' AND users.lname LIKE "'.$li.'%" AND status="1"';;
 					$query = userQuery($sel='',$joins='', $where, $order = '');
 					$user = db_select_single($query);
 					if(!is_null($user)) {
