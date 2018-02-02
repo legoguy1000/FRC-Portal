@@ -73,7 +73,8 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 			        .ariaLabel('User Deleted')
 			        .ok('OK')
 			    ).then(function() {
-			      $scope.admin.clickBack()
+			      $scope.admin.clickBack();
+						$state.go('main.admin.users');
 			    }, function() {});
 				}
 			});
