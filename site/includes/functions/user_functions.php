@@ -464,7 +464,7 @@ function verifyUser($formId, $tokenId, $die = true) {
 }
 
 function checkAdmin($userId, $die = true) {
-	$query = 'SELECT * FROM users WHERE user_id='.db_quote($userId).' AND admin="1"';
+	$query = 'SELECT * FROM users WHERE user_id='.db_quote($userId).' AND admin="1" AND status="1"';
 	$result = db_select_single($query);
 	if(!$result) {
 		if($die) {
