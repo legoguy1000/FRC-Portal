@@ -77,6 +77,24 @@ function db_begin_transaction() {
 	$db->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 }
 
+function db_select_user($query) {
+    $rows = array();
+    $result = db_query($query);
+
+    // If query failed, return `false`
+    if($result === false) {
+        return false;
+    }
+
+    // If query was successful, retrieve all the rows into an array
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = formatUserData($row);
+    }
+    return $rows;
+}
+
+
+
 function db_commit() {
 	$db = db_connect();
 	$commit = $db->commit();

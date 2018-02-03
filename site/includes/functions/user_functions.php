@@ -345,6 +345,9 @@ function formatUserData($user) {
 		if(isset($data['total'])) {
 			$data['total'] = (float) $data['total'];
 		}
+		if(isset($data['hours'])) {
+			$data['hours'] = (float) $data['hours'];
+		}
 
 	}
 	return $data;
