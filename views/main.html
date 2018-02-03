@@ -40,7 +40,8 @@
                 <span class="notifications-label">7</span>
             </md-button> -->
             <md-button class="toolbar-button" aria-label="Settings" ng-click="main.toggleRightSidebar()">
-				<i class="material-icons">menu</i>
+				<!--<i class="material-icons">menu</i>-->
+				<img class="img-circle" ng-src="{{main.userInfo.profile_image}}">
             </md-button>
         </section>
 		<section layout-align="end center" ng-hide="main.isAuthed">
