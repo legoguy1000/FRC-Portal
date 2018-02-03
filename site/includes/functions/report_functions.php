@@ -11,7 +11,7 @@ function topHourUsers($year) {
 	$where = 'WHERE a.hours > 0';
 	$order = 'ORDER BY a.hours DESC,users.lname ASC LIMIT 5';
 	$query = userQuery($sel,$joins, $where, $order);
-	$result = db_select($query);
+	$result = db_select_user($query);
 	if($result) {
 	/*	foreach($result as $id=>$res) {
 			$result[$id] = formatUserData($res);
