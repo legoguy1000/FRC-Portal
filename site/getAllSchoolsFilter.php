@@ -1,7 +1,7 @@
 <?php
 include('includes.php');
 
-$authToken = checkToken();
+$authToken = checkToken(true,true);
 
 $filter = null;
 $limit = null;
