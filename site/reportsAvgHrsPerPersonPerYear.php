@@ -42,7 +42,10 @@ $allData = array(
 	'labels' => $years,
 	'series' => $series,
 	'data' => array_values($data),
-	'csvData' => $csvData
+	'csvData' => array(
+		'data' => $csvData,
+		'header' => array_unshift($series,'Year')
+	)
 );
 die(json_encode($allData));
 
