@@ -38,13 +38,15 @@ $csvData = transposeData(array_values($data));
 for ($i=0; $i < count($csvData); $i++) {
 	array_unshift($csvData[$i],$years[$i]);
 }
+$csvHeader = $series;
+array_unshift($series,'Year');
 $allData = array(
 	'labels' => $years,
 	'series' => $series,
 	'data' => array_values($data),
 	'csvData' => array(
 		'data' => $csvData,
-		'header' => array_unshift($series,'Year')
+		'header' => $csvHeader
 	)
 );
 die(json_encode($allData));
