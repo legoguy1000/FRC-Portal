@@ -36,10 +36,20 @@ foreach($result as $re) {
 foreach($series as $se) {
 	$data[$se] = array_values($data[$se]);
 }
+$csvData = transposeData(array_values($data));
+for ($i=0; $i < count($csvData); $i++) {
+	array_unshift($csvData[$i],$years[$i]);
+}
+$csvHeader = $series;
+array_unshift($csvHeader,'Year');
 $allData = array(
 	'labels' => $years,
 	'series' => $series,
 	'data' => array_values($data),
+	'csvData' => array(
+		'data' => $csvData,
+		'header' => $csvHeader
+	)
 );
 die(json_encode($allData));
 

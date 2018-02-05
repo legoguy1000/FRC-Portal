@@ -45,6 +45,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 	vm.labels2 = [];
 	vm.series2 = [];
 	vm.data2 = [];
+	vm.csvData2 = [];
 	vm.start_date2 = new Date().getFullYear()-2;
 	vm.end_date2 = new Date().getFullYear();
 	vm.reportsAvgHrsPerUserTypePerYear = function () {
@@ -52,6 +53,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 			vm.labels2 = response.labels;
 			vm.series2 = response.series;
 			vm.data2 = response.data;
+			vm.csvData2 = response.csvData;
 		});
 	};
 	vm.reportsAvgHrsPerUserTypePerYear();
