@@ -35,7 +35,7 @@ foreach($result as $re) {
 $data['sum'] = array_values($data['sum']);
 $data['avg'] = array_values($data['avg']);
 $csvData = transposeData(array_values($data));
-for ($i=0; $i < cout($csvData); $i++) {
+for ($i=0; $i < count($csvData); $i++) {
 	array_unshift($csvData[$i],$years[$i]);
 }
 $allData = array(
