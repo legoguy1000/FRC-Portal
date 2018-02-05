@@ -113,6 +113,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 	vm.labels4 = [];
 	vm.series4 = [];
 	vm.data4 = [];
+	vm.csvData4 = [];
 	vm.year4 = new Date().getFullYear();
 
 	vm.reportsHoursPerEventPerYear = function () {
@@ -120,6 +121,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 			vm.labels4 = response.labels;
 			vm.series4 = response.series;
 			vm.data4 = response.data;
+			vm.csvData4 = response.csvData;
 		});
 	};
 	vm.reportsHoursPerEventPerYear();
