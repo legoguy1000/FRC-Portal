@@ -39,7 +39,7 @@ for ($i=0; $i < count($csvData); $i++) {
 	array_unshift($csvData[$i],$years[$i]);
 }
 $csvHeader = $series;
-array_unshift($series,'Year');
+array_unshift($csvHeader,'Year');
 $allData = array(
 	'labels' => $years,
 	'series' => $series,
