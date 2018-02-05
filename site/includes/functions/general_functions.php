@@ -193,4 +193,15 @@ function slackMessageToUser($user_id, $msg) {
 		postToSlack($msg, $channel);
 	}
 }
+
+function transposeData($data)
+{
+  $retData = array();
+  foreach ($data as $row => $columns) {
+    foreach ($columns as $row2 => $column2) {
+        $retData[$row2][$row] = $column2;
+    }
+  }
+  return $retData;
+}
 ?>

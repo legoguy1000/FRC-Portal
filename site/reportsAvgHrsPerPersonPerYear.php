@@ -34,10 +34,15 @@ foreach($result as $re) {
 }
 $data['sum'] = array_values($data['sum']);
 $data['avg'] = array_values($data['avg']);
+$csvData = transposeData(array_values($data));
+for ($i=0; $i < cout($csvData); $i++) {
+	array_unshift($csvData[$i],$years[$i]);
+}
 $allData = array(
 	'labels' => $years,
 	'series' => $series,
 	'data' => array_values($data),
+	'csvData' => $csvData
 );
 die(json_encode($allData));
 
