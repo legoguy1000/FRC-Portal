@@ -12,6 +12,7 @@ angular.module('FrcPortal', [
 	'bc.AngularKeypad',
 	'angularRipple',
 	'moment-picker',
+	'ngCsv',
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider, $locationProvider) {
 
 	$locationProvider.html5Mode({ enabled: true, requireBase: true });
