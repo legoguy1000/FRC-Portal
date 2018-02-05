@@ -62,6 +62,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 	vm.labels3 = [];
 	vm.series3 = [];
 	vm.data3 = [];
+	vm.csvData3 = [];
 	vm.start_date3 = new Date().getFullYear()-2;
 	vm.end_date3 = new Date().getFullYear();
 
@@ -70,6 +71,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 			vm.labels3 = response.labels;
 			vm.series3 = response.series;
 			vm.data3 = response.data;
+			vm.csvData3 = response.csvData;
 			vm.datasetOverride3 = [
 			  {
 				label: vm.series3[0],
