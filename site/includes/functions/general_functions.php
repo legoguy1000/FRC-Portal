@@ -211,7 +211,7 @@ function metricsCreateCsvData($data, $timeInc, $series) {
 		array_unshift($csvData[$i],$timeInc[$i]);
 	}
 	$csvHeader = $series;
-	array_unshift($csvHeader,'Year');
+	array_unshift($csvHeader,'');
 	return array(
 		'data' => $csvData,
 		'header' => $csvHeader
