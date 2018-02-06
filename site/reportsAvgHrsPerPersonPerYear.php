@@ -34,20 +34,12 @@ foreach($result as $re) {
 }
 $data['sum'] = array_values($data['sum']);
 $data['avg'] = array_values($data['avg']);
-$csvData = transposeData(array_values($data));
-for ($i=0; $i < count($csvData); $i++) {
-	array_unshift($csvData[$i],$years[$i]);
-}
-$csvHeader = $series;
-array_unshift($csvHeader,'Year');
+
 $allData = array(
 	'labels' => $years,
 	'series' => $series,
 	'data' => array_values($data),
-	'csvData' => array(
-		'data' => $csvData,
-		'header' => $csvHeader
-	)
+	'csvData' => metricsCreateCsvData($data, $series)
 );
 die(json_encode($allData));
 
