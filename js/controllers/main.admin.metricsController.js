@@ -121,6 +121,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 			vm.labels4 = response.labels;
 			vm.series4 = response.series;
 			vm.data4 = response.data;
+			vm.csvData4 = response.csvData;
 		});
 	};
 	vm.reportsHoursPerEventPerYear();
@@ -128,6 +129,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 	vm.labels5 = [];
 	vm.series5 = [];
 	vm.data5 = [];
+	vm.csvData6 = [];
 	vm.start_date5 = new Date().getFullYear()-2;
 	vm.end_date5 = new Date().getFullYear();
 
@@ -136,6 +138,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 			vm.labels5 = response.labels;
 			vm.series5 = response.series;
 			vm.data5 = response.data;
+			vm.csvData5 = response.csvData;
 		});
 	};
 	vm.reportsAvgHrsPerGenderPerYear();
@@ -143,6 +146,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 	vm.labels6 = [];
 	vm.series6 = [];
 	vm.data6 = [];
+	vm.csvData6 = [];
 	vm.year6= new Date().getFullYear();
 
 	vm.reportsHoursPerWeek = function () {
@@ -150,6 +154,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 			vm.labels6 = response.labels;
 			vm.series6 = response.series;
 			vm.data6 = response.data;
+			vm.csvData6 = response.csvData;
 		});
 	};
 	vm.reportsHoursPerWeek();
