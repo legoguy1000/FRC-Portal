@@ -205,10 +205,10 @@ function transposeData($data)
   return $retData;
 }
 
-function metricsCreateCsvData($data, $years, $series) {
+function metricsCreateCsvData($data, $timeInc, $series) {
 	$csvData = transposeData(array_values($data));
 	for ($i=0; $i < count($csvData); $i++) {
-		array_unshift($csvData[$i],$years[$i]);
+		array_unshift($csvData[$i],$timeInc[$i]);
 	}
 	$csvHeader = $series;
 	array_unshift($csvHeader,'Year');
