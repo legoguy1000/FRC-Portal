@@ -184,19 +184,13 @@ function userEventInfo($user_id = null, $year = null, $event = null) {
 	$order = 'ORDER BY users.lname ASC, b.event_start DESC';
 	$query = userQuery($sel, $joins, $where, $order);
 	//die($query);
-	$result = db_select($query);
+	$result = db_select_user($query);
 	if(count($result > 0)) {
-		foreach($result as $id=>$res) {
-			$reg = (bool) $res['registration'];
-			$pay = (bool) $res['payment'];
-			$ps = (bool) $res['permission_slip'];
-			$food = (bool) $res['food'];
-			$result[$id]['registration'] = $reg;
-			$result[$id]['payment'] = $pay;
-			$result[$id]['permission_slip'] = $ps;
-			$result[$id]['food'] = $food;
+		/*foreach($result as $id=>$res) {
+			$temp = $res;
+			$data[] = $temp
 			//$result[$id]['reqs_complete'] = $jt && $stims && (($stu && $dues) || !$stu) && $mh;
-		}
+		} */
 		$data = $result;
 	}
 	return $data;
@@ -221,21 +215,20 @@ function userAnnualRequirements($user_id = null, $year = null) {
 	}
 	$order = 'ORDER BY users.lname ASC, b.year DESC';
 	$query = userQuery($sel, $joins, $where, $order);
-	$result = db_select($query);
+	$result = db_select_user($query);
 	if(count($result > 0)) {
 		foreach($result as $id=>$res) {
-			$jt = (bool) $res['join_team'];
-			$stims = (bool) $res['stims'];
-			$dues = (bool) $res['dues'];
-			$mh = (bool) $res['min_hours'];
-			$stu = (bool) $res['user_type'] == 'Student';
-			$result[$id]['join_team'] = $jt;
-			$result[$id]['stims'] = $stims;
-			$result[$id]['dues'] = $dues;
-			$result[$id]['min_hours'] = $mh;
-			$result[$id]['reqs_complete'] = $jt && $stims && (($stu && $dues) || !$stu) && $mh;
+			$temp = $res;
+			$jt = $temp['join_team'];
+			$stims = $temp['stims'];
+			$dues = $temp['dues'];
+			$mh = $temp['min_hours'];
+			$stu = (bool) $temp['user_type'] == 'Student';
+			$men = (bool) $temp['user_type'] == 'Mentor';
+			$temp['reqs_complete'] = $jt && $stims && (($stu && $dues) || $men) && $mh;
+			$data[] = $temp;
 		}
-		$data = $result;
+		//$data = $result;
 	}
 	return $data;
 }
@@ -317,10 +310,8 @@ function formatUserData($user) {
 		$data['first_login'] = (bool) $data['first_login'];
 		$data['former_student'] = (bool) $data['former_student'];
 		$data['status'] = (bool) $data['status'];
-		$data['slackEnabled'] = isset($data['slack_id']) && $data['slack_id'] != '';
-		if(isset($data['hours'])) {
-			$data['hours'] = (float) $data['hours'];
-		}
+		$data['slackEnabled'] = (bool) isset($data['slack_id']) && $data['slack_id'] != '';
+		//Annual Requirements
 		if(isset($data['join_team'])) {
 			$data['join_team'] = (bool) $data['join_team'];
 		}
@@ -332,6 +323,26 @@ function formatUserData($user) {
 		}
 		if(isset($data['min_hours'])) {
 			$data['min_hours'] = (bool) $data['min_hours'];
+		}
+		//Event Requirements
+		if(isset($data['registration'])) {
+			$data['registration'] = (bool) $data['registration'];
+		}
+		if(isset($data['payment'])) {
+			$data['payment'] = (bool) $data['payment'];
+		}
+		if(isset($data['permission_slip'])) {
+			$data['permission_slip'] = (bool) $data['permission_slip'];
+		}
+		if(isset($data['food'])) {
+			$data['food'] = (bool) $data['food'];
+		}
+		if(isset($data['room'])) {
+			$data['room'] = (bool) $data['room'];
+		}
+		//Hours
+		if(isset($data['hours'])) {
+			$data['hours'] = (float) $data['hours'];
 		}
 		if(isset($data['season_hours'])) {
 			$data['season_hours'] = (float) $data['season_hours'];
