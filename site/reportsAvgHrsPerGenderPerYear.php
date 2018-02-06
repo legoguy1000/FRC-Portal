@@ -40,7 +40,7 @@ $allData = array(
 	'labels' => $years,
 	'series' => $series,
 	'data' => array_values($data),
-	'csvData' => metricsCreateCsvData($data, $series)
+	'csvData' => metricsCreateCsvData($data, $years, $series)
 );
 die(json_encode($allData));
 

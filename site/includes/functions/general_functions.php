@@ -205,7 +205,7 @@ function transposeData($data)
   return $retData;
 }
 
-function metricsCreateCsvData($data, $series) {
+function metricsCreateCsvData($data, $years, $series) {
 	$csvData = transposeData(array_values($data));
 	for ($i=0; $i < count($csvData); $i++) {
 		array_unshift($csvData[$i],$years[$i]);
