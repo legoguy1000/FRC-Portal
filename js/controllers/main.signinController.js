@@ -66,13 +66,15 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 			'pin':vm.pin
 		};
 		signinService.signInOut(data).then(function(response) {
-			$mdDialog.show(
-				$mdDialog.alert()
-				.clickOutsideToClose(true)
-				.textContent(response.msg)
-				.ariaLabel('Time In/Out')
-				.ok('Got it!')
-			);
+			var dialog = $mdDialog.alert()
+									.clickOutsideToClose(true)
+									.textContent(response.msg)
+									.ariaLabel('Time In/Out')
+									.ok('Got it!');
+			$mdDialog.show(dialog);
+			$timeout( function(){
+          $mdDialog.cancel();
+        }, 5000 );
 			if(response.status) {
 				vm.users = response.signInList;
 			}
