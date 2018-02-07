@@ -74,7 +74,7 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 			$mdDialog.show(dialog);
 			$timeout( function(){
           $mdDialog.cancel();
-        }, 5000 );
+        }, 2000 );
 			if(response.status) {
 				vm.users = response.signInList;
 			}
