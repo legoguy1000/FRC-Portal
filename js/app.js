@@ -188,9 +188,9 @@ angular.module('FrcPortal', [
 	 .state('main.event.info', {
 	 url: '/info',
 	 templateUrl: 'views/main.event.info.html',
-	 controller: 'main.event.infoController',
-	 controllerAs: 'vm',
-	 authenticate: true,
+	 //controller: 'main.event.infoController',
+	// controllerAs: 'vm',
+	 //authenticate: true,
 	 //admin: true,
 	 data: {
 		 title: 'Seasons'
