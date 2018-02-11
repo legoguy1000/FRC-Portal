@@ -46,7 +46,6 @@ function getEvent($event_id = null, $reqs = false) {
 		$result = db_select_single($query);
 		if($result) {
 			$data = $result;
-			$data['exempt_hours'] = (bool) $data['exempt_hours'];
 			$data['requirements'] = array();
 			if($reqs) {
 				$reqs = userEventInfo($user_id = null, $year = null, $event_id);
