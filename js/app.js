@@ -171,7 +171,31 @@ angular.module('FrcPortal', [
 		 data: {
 			 title: 'Metrics'
 		 }
-		 });
+		 })
+ 	  .state('main.event', {
+ 		url: '/events/{event_id}',
+ 		templateUrl: 'views/main.event.html',
+ 		controller: 'main.eventController',
+ 		controllerAs: 'vm',
+		abstract: true,
+		authenticate: true,
+		default: 'main.event.info',
+		//admin: true,
+ 		data: {
+ 		  title: 'Seasons'
+ 		}
+ 	  })
+	 .state('main.event.info', {
+	 url: '/info',
+	 templateUrl: 'views/main.event.info.html',
+	 controller: 'main.event.infoController',
+	 controllerAs: 'vm',
+	 authenticate: true,
+	 //admin: true,
+	 data: {
+		 title: 'Seasons'
+	 }
+	 });
 
 	$urlRouterProvider.otherwise('/home');
 
