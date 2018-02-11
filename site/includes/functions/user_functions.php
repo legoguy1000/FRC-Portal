@@ -81,7 +81,7 @@ function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements')
 	$sel =  $b.'.*, year('.$b.'.event_start) as year, UNIX_TIMESTAMP('.$b.'.event_start) AS event_start_unix, UNIX_TIMESTAMP('.$b.'.event_end) AS event_end_unix, datediff('.$b.'.event_end,'.$b.'.event_start)+1 as num_days';
 	$joins = 'CROSS JOIN events '.$b;
 	if($l != false) {
-		$sel .= ', IFNULL('.$l.'.registration,0) AS registration, IFNULL('.$l.'.payment,0) AS payment, IFNULL('.$l.'.permission_slip,0) AS permission_slip, IFNULL('.$l.'.food,0) AS food';
+		$sel .= ', IFNULL('.$l.'.registration,0) AS registration, IFNULL('.$l.'.payment,0) AS payment, IFNULL('.$l.'.permission_slip,0) AS permission_slip, IFNULL('.$l.'.food,0) AS food, '.$l.'.room_id, '.$l.'.car_space';
 		$joins .= ' LEFT JOIN event_requirements '.$l.' USING (user_id,event_id)';
 	}
 	/* if($c != false) {
@@ -337,8 +337,11 @@ function formatUserData($user) {
 		if(isset($data['food'])) {
 			$data['food'] = (bool) $data['food'];
 		}
-		if(isset($data['room'])) {
-			$data['room'] = (bool) $data['room'];
+		if(isset($data['room_id'])) {
+			$data['room_bool'] = (bool) $data['room_id'];
+		}
+		if(isset($data['car_space'])) {
+			$data['can_drive'] = (bool) $data['car_space'];
 		}
 		//Hours
 		if(isset($data['hours'])) {
