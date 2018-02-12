@@ -1,6 +1,6 @@
 angular.module('FrcPortal')
 .controller('main.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService',
-	mainAdminEventController
+	mainEventController
 ]);
 function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService) {
     var vm = this;
