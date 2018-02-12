@@ -418,8 +418,8 @@ angular.module('FrcPortal', [
 					$rootScope.$broadcast('afterLoginAction',data);
 					$log.info('Logged in');
 					$log.info(toState.name);
-					$log.info(toState.params);
-					$state.go(toState.name, toState.params);
+					$log.info(trans.params());
+					$state.go(toState.name, trans.params());
 				}
 				else if(trans.$from().name == '') {
 					$state.go('main.home');
