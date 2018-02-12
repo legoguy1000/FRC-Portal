@@ -1,9 +1,47 @@
 angular.module('FrcPortal')
-.controller('main.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService',
+.controller('eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService',
 	mainAdminEventController
 ]);
 function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService) {
     var vm = this;
+
+		vm.state = $state.current.name;
+		vm.tabs = [
+				{
+					name: 'Event Information',
+					icon: 'dashboard',
+					sref: 'main.event.info({event_id:$stateParams.event_id})'
+				},
+				{
+					name: 'Registration',
+					icon: 'dashboard',
+					sref: 'main.event.register({event_id:$stateParams.event_id})'
+				},
+			];
+		vm.slide = 'slide-left';
+
+		vm.clickTab = function(tab) {
+			var clicked = vm.tabs.indexOf(tab);
+			var cur = vm.tabs.map(function(e) { return e.sref; }).indexOf($state.current.name);
+			//$log.log(cur +' -> '+ clicked);
+			if(clicked > cur) {
+				vm.slideLeft();
+			} else {
+				vm.slideRight();
+			}
+		//
+		}
+		vm.slideLeft = function() {
+			vm.slide = 'slide-left';
+		}
+		vm.slideRight = function() {
+			vm.slide = 'slide-right';
+		}
+		vm.clickBack = function() {
+			vm.slideRight();
+		}
+
+
 
 	vm.filter = {
 		show: false,

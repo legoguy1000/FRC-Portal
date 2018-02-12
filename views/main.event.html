@@ -19,6 +19,9 @@
 		</div>
 	</md-content>
 	<md-content flex="grow" class="md-margin" layout="column">
-		<div ui-view></div>
+		<md-tabs md-border-bottom md-autoselect md-swipe-content style="margin-bottom: 10px;">
+			<md-tab label="{{tab.name}}" ui-sref="{{tab.sref}}" md-active="vm.state == tab.sref" ng-repeat="tab in vm.tabs" md-on-select="vm.clickTab(tab)"></md-tab>
+		</md-tabs>
+		<div ui-view ng-class="vm.slide" flex></div>
 	</md-content>
 </div>
