@@ -188,8 +188,8 @@ angular.module('FrcPortal', [
 	 .state('main.event.info', {
 	 url: '/info',
 	 templateUrl: 'views/main.event.info.html',
-	 //controller: 'main.event.infoController',
-	// controllerAs: 'vm',
+	 controller: 'main.event.infoController',
+	 controllerAs: 'vmi',
 	 authenticate: true,
 	 //admin: true,
 	 data: {
