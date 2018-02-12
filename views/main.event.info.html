@@ -1,5 +1,5 @@
 <div flex layout="row">
-    <ng-map zoom="0" style="width:100%">
+    <ng-map zoom="0" style="width:100%" center="{{vm.event.location}}">
       <marker position="{{vm.event.location}}"
        title="You are here"
        centered="true"></marker>
