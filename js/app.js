@@ -190,7 +190,7 @@ angular.module('FrcPortal', [
 	 templateUrl: 'views/main.event.info.html',
 	 //controller: 'main.event.infoController',
 	// controllerAs: 'vm',
-	 //authenticate: true,
+	 authenticate: true,
 	 //admin: true,
 	 data: {
 		 title: 'Seasons'
