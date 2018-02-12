@@ -16,6 +16,12 @@
 					{{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}
 				</span>
 			</div>
+			<div>
+				<md-icon class="material-icons">location_on</md-icon> {{vm.event.location}}
+			</div>
+			<div>
+				<span ng-bind-html="vm.event.details"></span>
+			</div>
 		</div>
 	</md-content>
 	<md-content flex="grow" class="md-margin" layout="column">
