@@ -417,6 +417,8 @@ angular.module('FrcPortal', [
 					}
 					$rootScope.$broadcast('afterLoginAction',data);
 					$log.info('Logged in');
+					$log.info(toState.name);
+					$log.info(toState.params);
 					$state.go(toState.name, toState.params);
 				}
 				else if(trans.$from().name == '') {
