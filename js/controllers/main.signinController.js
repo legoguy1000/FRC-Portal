@@ -15,6 +15,7 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 		order: 'lname',
 		page: 1
 	};
+	var signInBool = true;
 
 	var tick = function() {
 		vm.clock = Date.now();
@@ -56,7 +57,7 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 	}
 
 	vm.signinOut = function($event, numbers) {
-		console.log(vm.pin);
+		var signInBool = false;
 		vm.user_id = '';
 		if(vm.selected_user[0]) {
 			vm.user_id = vm.selected_user[0].user_id;
@@ -66,6 +67,8 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 			'pin':vm.pin
 		};
 		signinService.signInOut(data).then(function(response) {
+			vm.pin = '';
+			vm.selected_user = [];
 			var dialog = $mdDialog.alert()
 									.clickOutsideToClose(true)
 									.textContent(response.msg)
@@ -78,10 +81,8 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 			if(response.status) {
 				vm.users = response.signInList;
 			}
-			vm.pin = '';
-			vm.selected_user = [];
+			var signInBool = true;
 		});
-
 	}
 
 	vm.keyDown = function(e) {
