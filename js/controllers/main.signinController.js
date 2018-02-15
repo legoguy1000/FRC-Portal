@@ -57,31 +57,34 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 	}
 
 	vm.signinOut = function($event, numbers) {
-		var signInBool = false;
-		vm.user_id = '';
-		if(vm.selected_user[0]) {
-			vm.user_id = vm.selected_user[0].user_id;
-		}
-		var data = {
-			'user_id': vm.user_id,
-			'pin':vm.pin
-		};
-		signinService.signInOut(data).then(function(response) {
-			vm.pin = '';
-			vm.selected_user = [];
-			var dialog = $mdDialog.alert()
-									.clickOutsideToClose(true)
-									.textContent(response.msg)
-									.ariaLabel('Time In/Out')
-									.ok('Got it!');
-			$mdDialog.show(dialog);
-			$timeout( function(){
-          $mdDialog.cancel();
-        }, 2000 );
-			if(response.status) {
-				vm.users = response.signInList;
+		if(signInBool) {
+			signInBool = false;
+			vm.user_id = '';
+			if(vm.selected_user[0]) {
+				vm.user_id = vm.selected_user[0].user_id;
 			}
-			var signInBool = true;
+			var data = {
+				'user_id': vm.user_id,
+				'pin':vm.pin
+			};
+			signinService.signInOut(data).then(function(response) {
+				vm.pin = '';
+				vm.selected_user = [];
+				var dialog = $mdDialog.alert()
+										.clickOutsideToClose(true)
+										.textContent(response.msg)
+										.ariaLabel('Time In/Out')
+										.ok('Got it!');
+				$mdDialog.show(dialog);
+				$timeout( function(){
+			      $mdDialog.cancel();
+			    }, 2000 );
+				if(response.status) {
+					vm.users = response.signInList;
+				}
+				signInBool = true;
+			}
+
 		});
 	}
 
