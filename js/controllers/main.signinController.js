@@ -83,9 +83,8 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 					vm.users = response.signInList;
 				}
 				signInBool = true;
-			}
-
-		});
+			});
+		}
 	}
 
 	vm.keyDown = function(e) {
