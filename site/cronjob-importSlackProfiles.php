@@ -24,6 +24,7 @@ if($result) {
 				$query = 'UPDATE users SET slack_id = '.db_quote($user_id).' WHERE email='.db_quote($email).' OR team_email='.db_quote($email);
 				$result = db_query($query);
 			}
+		}
 	}
 }
 ?>
