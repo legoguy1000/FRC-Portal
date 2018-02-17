@@ -13,7 +13,7 @@ curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 $result = curl_exec($ch);
 curl_close($ch);
 if($result) {
-	$data = json_decode($result);
+	$data = (array) json_decode($result);
 	if(isset($data['members']) && is_array($data['members']) && count($data['members']) > 0) {
 		$users = $data['members'];
 		foreach($users as $user) {
