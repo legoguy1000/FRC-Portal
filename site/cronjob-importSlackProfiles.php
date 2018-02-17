@@ -4,7 +4,7 @@ include('includes.php');
 $users = array();
 //$data = http_get('https://slack.com/api/users.list?token=xoxp-10783605152-80482018594-316256639697-04ba2a06532f0849c52bed9783c62fce');
 //$slack_token = getIniProp('slack_token');
-$slack_token = 'xoxp-10783605152-80482018594-316256639697-04ba2a06532f0849c52bed9783c62fce'
+$slack_token = 'xoxp-10783605152-80482018594-316256639697-04ba2a06532f0849c52bed9783c62fce';
 $url = 'https://slack.com/api/users.list?token='.$slack_token;
 $ch = curl_init();
 curl_setopt($ch,CURLOPT_URL, $url);
