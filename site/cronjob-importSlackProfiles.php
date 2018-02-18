@@ -28,7 +28,9 @@ if($result) {
 				$whereArr[] = '(fname='.db_quote($first_name).' AND lname='.db_quote($last_name).')';
 			}
 			$where = count($whereArr) > 0 ? 'WHERE '.implode(' OR ', $whereArr) : '';
-			die($where);
+			if($profile['email'] = 'alexr@team2363.org'){
+				echo $where;
+			}
 			$q = userQuery($sel='',$joins='', $where, $order = '');
 			$result = db_select_single($q);
 			if(!is_null($result)) {
