@@ -15,7 +15,7 @@ if($result) {
 	if(isset($data['members']) && is_array($data['members']) && count($data['members']) > 0) {
 		$users = $data['members'];
 		foreach($users as $user) {
-			$user_id = $user['id'];
+			$slack_id = $user['id'];
 			$profile = $user['profile'];
 			$whereArr = array();
 			if(isset($profile['email']) && $profile['email'] != '') {
@@ -32,7 +32,7 @@ if($result) {
 			$result = db_select_single($q);
 			if(!is_null($result)) {
 				$user_id = $result['user_id'];
-				$query = 'UPDATE users SET slack_id = '.db_quote($user_id).' WHERE user_id='.db_quote($user_id);
+				$query = 'UPDATE users SET slack_id = '.db_quote($slack_id).' WHERE user_id='.db_quote($user_id);
 				$result = db_query($query);
 			}
 		}
