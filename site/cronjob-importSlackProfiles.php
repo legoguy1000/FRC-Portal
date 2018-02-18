@@ -18,6 +18,7 @@ if($result) {
 			$slack_id = $user['id'];
 			$profile = $user['profile'];
 			$whereArr = array();
+			$where = '';
 			if(isset($profile['email']) && $profile['email'] != '') {
 				$email = $profile['email'];
 				$whereArr[] = '(email='.db_quote($email).' OR team_email='.db_quote($email).')';
@@ -27,16 +28,15 @@ if($result) {
 				$last_name = $profile['last_name'];
 				$whereArr[] = '(fname='.db_quote($first_name).' AND lname='.db_quote($last_name).')';
 			}
-			$where = count($whereArr) > 0 ? 'WHERE '.implode(' OR ', $whereArr) : '';
-			if($profile['email'] = 'alexr@team2363.org'){
-				echo $where;
-			}
-			$q = userQuery($sel='',$joins='', $where, $order = '');
-			$result = db_select_single($q);
-			if(!is_null($result)) {
-				$user_id = $result['user_id'];
-				$query = 'UPDATE users SET slack_id = '.db_quote($slack_id).' WHERE user_id='.db_quote($user_id);
-				$result = db_query($query);
+			if(count($whereArr) > 0) {
+				$where =  'WHERE '.implode(' OR ', $whereArr);
+				$q = userQuery($sel='',$joins='', $where, $order = '');
+				$result = db_select_single($q);
+				if(!is_null($result)) {
+					$user_id = $result['user_id'];
+					$query = 'UPDATE users SET slack_id = '.db_quote($slack_id).' WHERE user_id='.db_quote($user_id);
+					$result = db_query($query);
+				}
 			}
 		}
 	}
