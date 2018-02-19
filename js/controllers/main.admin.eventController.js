@@ -54,12 +54,18 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
       parent: angular.element(document.body),
       targetEvent: ev,
       clickOutsideToClose:true,
-      fullscreen: true // Only for -xs, -sm breakpoints.
+      fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				eventInfo: {
+					'event_id': vm.event_id,
+					'name':vm.event.name
+				},
+			}
     })
     .then(function(answer) {
 
     }, function() {
-    
+
     });
   };
 	vm.list = [
