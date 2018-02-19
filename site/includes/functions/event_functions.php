@@ -74,9 +74,18 @@ function getEvent($event_id = null, $reqs = false) {
 
 function getEventRoomList($event_id) {
 	$data = array();
+	$rooms = array();
 	if(isset($event_id) && $event_id != '') {
 		$query = 'SELECT * FROM event_rooms WHERE event_id='.db_quote($event_id);
 		$result = db_select($query);
+		foreach($result as $room) {
+			$room_id = $room['room_id']
+			$joins = ' RIGHT JOIN event_requirements USING (user_id)';
+			$where = ' WHERE event_requirements.room_id = '.db_quote($room_id);
+			$uq = userQuery($sel='', $joins, $where, $order='');
+			$uqr = db_select_user($uq);
+			$rooms[$room_id] = $uqr;
+		}
 		$data = array('data'=>$result, 'total'=>count($result));
 	} else {
 		return false;
