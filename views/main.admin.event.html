@@ -175,7 +175,7 @@
 </div>
 <div flex layout="row">
 	<md-content flex class="md-margin">
-		<md-card>
+		<md-card flex>
 			<md-card-title>
 				<md-card-title-text>
 					<span class="md-headline">Room X</span>
@@ -186,7 +186,7 @@
 				<ul dnd-list="vm.list">
 				    <li ng-repeat="item in vm.list"
 				        dnd-draggable="item"
-				        dnd-moved="lvm.ist.splice($index, 1)"
+				        dnd-moved="vm.list.splice($index, 1)"
 				        dnd-effect-allowed="move"
 				        dnd-selected="models.selected = item"
 				        ng-class="{'selected': models.selected === item}"
@@ -200,7 +200,7 @@
 				<md-button>Action 2</md-button>
 			</md-card-actions>
 		</md-card>
-		<md-card>
+		<md-card flex>
 			<md-card-title>
 				<md-card-title-text>
 					<span class="md-headline">Room A</span>
