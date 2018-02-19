@@ -15,7 +15,7 @@
 					{{room.room_title}}
 				</div>
 				<div flex>
-					<md-list ng-cloak
+					<md-list ng-cloak class="dndList"
 						dnd-list="vm.room_list.room_selection[room.room_id]"
 						dnd-disable-if="vm.room_list.room_selection[room.room_id].length >= 4"
 						style="min-height:20px;">

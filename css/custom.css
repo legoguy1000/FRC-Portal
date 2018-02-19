@@ -299,3 +299,43 @@ button.md-icon-button.profile {
     width: 50px;
     padding: 0px;
 }
+
+/**
+ * For the correct positioning of the placeholder element, the dnd-list and
+ * it's children must have position: relative
+ */
+.dndList ul[dnd-list], .dndList md-list[dnd-list],
+.dndList ul[dnd-list] > li, .dndList md-list[dnd-list] > md-list-item {
+  position: relative;
+}
+
+/**
+ * The dnd-list should always have a min-height,
+ * otherwise you can't drop to it once it's empty
+ */
+.dndList ul[dnd-list], .dndList md-list[dnd-list] {
+  min-height: 42px;
+  padding-left: 0px;
+}
+
+/**
+ * The dndDraggingSource class will be applied to
+ * the source element of a drag operation. It makes
+ * sense to hide it to give the user the feeling
+ * that he's actually moving it.
+ */
+.dndList ul[dnd-list] .dndDraggingSource, .dndList md-list[dnd-list] .dndDraggingSource {
+  display: none;
+}
+
+/**
+ * An element with .dndPlaceholder class will be
+ * added to the dnd-list while the user is dragging
+ * over it.
+ */
+.dndList ul[dnd-list] .dndPlaceholder, .dndList md-list[dnd-list] .dndPlaceholder {
+  display: block;
+  background-color: #ddd;
+  padding: 10px 15px;
+  min-height: 42px;
+}
