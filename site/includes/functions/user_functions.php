@@ -83,7 +83,7 @@ function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements')
 	if($l != false) {
 		$sel .= ', IFNULL('.$l.'.registration,0) AS registration, IFNULL('.$l.'.payment,0) AS payment, IFNULL('.$l.'.permission_slip,0) AS permission_slip, IFNULL('.$l.'.food,0) AS food, '.$l.'.room_id, '.$l.'.car_space';
 		$joins .= ' LEFT JOIN event_requirements '.$l.' USING (user_id,event_id)';
-		$sel .= ', '.$l.'_room.gender';,
+		$sel .= ', '.$l.'_room.gender';
 		$joins .= ' LEFT JOIN event_rooms '.$l.'_room USING (event_id,room_id)';
 	}
 	/* if($c != false) {
