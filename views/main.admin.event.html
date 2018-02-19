@@ -96,6 +96,10 @@
 					<md-button class="md-icon-button" ng-click="vm.showFilter()">
 						<md-icon>filter_list</md-icon>
 					</md-button>
+					<md-button class="md-icon-button" ng-click="">
+						<md-tooltip md-direction="top">View/Edit hotel room list</md-tooltip>
+						<md-icon>hotel</md-icon>
+					</md-button>
 					<md-button class="md-icon-button" ng-click="vm.getUsers()">
 						<md-icon>refresh</md-icon>
 					</md-button>
@@ -152,13 +156,14 @@
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.food"></i>
 								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.food"></i>
 							</td>
-							<td md-cell ng-show="vm.event.room" layout="row" layout-align="start center" style="height:49px;">
+							<td md-cell ng-show="vm.event.room" >
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.room_bool"></i>
 								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.room_bool"></i>
-								<md-select ng-model="user.room_id" flex style="margin-left:10px;">
+								<span style="margin-left:10px;">{{user.room_title}}</span>
+							<!--	layout="row" layout-align="start center" style="height:49px;" <md-select ng-model="user.room_id" flex style="margin-left:10px;">
 									<md-option value=""></md-option>
 									<md-option value="{{room.room_id}}" ng-repeat="room in vm.event.room_list.data">{{room.room_title}}</md-option>
-								</md-select>
+								</md-select> -->
 							</td>
 							<!-- <td md-cell>
 								{{user.season_hours}}
