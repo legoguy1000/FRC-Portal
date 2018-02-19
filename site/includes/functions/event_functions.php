@@ -86,7 +86,7 @@ function getEventRoomList($event_id) {
 			$uqr = db_select_user($uq);
 			$rooms[$room_id] = $uqr;
 		}
-		$data = array('data'=>$result, 'total'=>count($result), 'room_selection'=>$rooms);
+		$data = array('rooms'=>$result, 'total'=>count($result), 'room_selection'=>$rooms);
 	} else {
 		return false;
 	}

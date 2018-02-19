@@ -10,8 +10,23 @@
 		  </div>
 		</md-toolbar>
 		<md-dialog-content layout="column" layout-margin>
-			<div layout="column">
-
+			<div layout="row" ng-repeat="(room_id,room) in vm.room_list.rooms">
+				<div flex>
+					{{room.room_title}}
+				</div>
+				<div flex>
+					<ul dnd-list="vm.room_list.room_selection[room_id]" style="min-height:20px;">
+					    <li ng-repeat="user in vm.room_list.room_selection[room_id]"
+					        dnd-draggable="user"
+					        dnd-moved="vm.room_list.room_selection[room_id].splice($index, 1)"
+					        dnd-effect-allowed="move"
+					        dnd-selected="models.selected = user"
+					        ng-class="{'selected': models.selected === user}"
+					        >
+					        {{user.full_name}}
+					    </li>
+					</ul>
+				</div>
 			</div>
 		</md-dialog-content>
 		<md-dialog-actions layout="row">
