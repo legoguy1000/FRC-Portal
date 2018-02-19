@@ -50,6 +50,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.showRoomListModal = function(ev) {
     $mdDialog.show({
       controller: roomListModalController,
+			controllerAs: 'vm',
       templateUrl: 'views/partials/roomListModal.tmpl.html',
       parent: angular.element(document.body),
       targetEvent: ev,
