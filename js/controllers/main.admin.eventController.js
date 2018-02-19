@@ -59,7 +59,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			locals: {
 				eventInfo: {
 					'event_id': vm.event_id,
-					'name':vm.event.name
+					'name':vm.event.name,
+					//'room_info': vm.event.room_list
 				},
 			}
     })

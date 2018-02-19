@@ -9,7 +9,12 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-
-	
-
+	vm.room_list = {};
+	//function get room list
+	vm.getEventRoomList = function () {
+		vm.promise = eventsService.getEventRoomList().then(function(response){
+			vm.room_list = response.data;
+		});
+	};
+	vm.getEventRoomList();
 }

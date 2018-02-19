@@ -63,7 +63,7 @@ function getEvent($event_id = null, $reqs = false) {
 			if($reqs) {
 				$reqs = userEventInfo($user_id = null, $year = null, $event_id);
 				$data['requirements'] = array('data'=>$reqs, 'total'=>count($reqs));
-				$data['room_list'] = $data['room'] ? getEventRoomList($event_id): array();
+				//$data['room_list'] = $data['room'] ? getEventRoomList($event_id): array();
 			}
 		}
 	} else {

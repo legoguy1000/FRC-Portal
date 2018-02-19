@@ -20,5 +20,12 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getEventRoomList: function (event_id) {
+			var eid = event_id != undefined ? event_id: '';
+			return $http.get('site/getEventRoomList.php?event_id='+eid)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });
