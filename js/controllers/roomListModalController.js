@@ -10,6 +10,6 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 		$mdDialog.cancel();
 	}
 
-
+	
 
 }
