@@ -12,13 +12,26 @@ function eventQuery($sel='',$joins='', $where = '', $order = '') {
 	return $query;
 }
 
+function formatEventData($event) {
+	$data = array();
+	if(isset($event) && is_array($$eventuser)) {
+		$data = $event;
+		$data['drivers'] = (bool) $data['drivers'];
+		$data['food'] = (bool) $data['food'];
+		$data['payment'] = (bool) $data['payment'];
+		$data['permission_slip'] = (bool) $data['permission_slip'];
+		$data['room'] = (bool) $data['room'];
+	}
+	return $data;
+}
+
 function getAllEvents() {
 	$db = db_connect();
 	$data = array();
 	$query = eventQuery($sel='',$joins='', $where = '', $order = '');
-	$seasons = db_select($query);
-	foreach($seasons as $seas) {
-		$data[] = $seas;
+	$result = db_select($query);
+	foreach($result as $event) {
+		$data[] = formatEventData($event);
 	}
 	return $data;
 }
@@ -31,7 +44,7 @@ function getUpcommingEvents() {
 	$result = db_select($query);
 	if(count($result) > 0) {
 		foreach($result as $event) {
-			$events[] = $event;
+			$events[] = formatEventData($event);
 		}
 	}
 	return $events;
@@ -45,7 +58,7 @@ function getEvent($event_id = null, $reqs = false) {
 		$query = eventQuery($sel='',$joins='', $where, $order = '');
 		$result = db_select_single($query);
 		if($result) {
-			$data = $result;
+			$data = formatEventData($result);
 			$data['requirements'] = array();
 			if($reqs) {
 				$reqs = userEventInfo($user_id = null, $year = null, $event_id);
@@ -116,7 +129,7 @@ function getAllEventsFilter($filter = '', $limit = 10, $order = '-event_start', 
 	$result = db_select($query);
 	if(count($result) > 0) {
 		foreach($result as $event) {
-			$events[] = $event;
+			$events[] = formatEventData($event);
 		}
 	}
 	$data['data'] = $events;
