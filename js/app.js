@@ -14,6 +14,7 @@ angular.module('FrcPortal', [
 	'moment-picker',
 	'ngCsv',
 	'ngMap',
+	'dndLists',
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider, $locationProvider) {
 
 	$locationProvider.html5Mode({ enabled: true, requireBase: true });
