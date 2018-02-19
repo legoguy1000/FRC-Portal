@@ -14,7 +14,7 @@ function eventQuery($sel='',$joins='', $where = '', $order = '') {
 
 function formatEventData($event) {
 	$data = array();
-	if(isset($event) && is_array($$eventuser)) {
+	if(isset($event) && is_array($event)) {
 		$data = $event;
 		$data['drivers'] = (bool) $data['drivers'];
 		$data['food'] = (bool) $data['food'];
