@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService',
+.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','$mdDialog',
 	mainAdminEventController
 ]);
-function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService) {
+function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,$mdDialog) {
     var vm = this;
 
 	vm.filter = {
@@ -45,6 +45,23 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		page: 1
 	};
 
+
+
+	vm.showRoomListModal = function(ev) {
+    $mdDialog.show({
+      controller: roomListModalController,
+      templateUrl: 'views/partials/roomListModal.tmpl.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose:true,
+      fullscreen: true // Only for -xs, -sm breakpoints.
+    })
+    .then(function(answer) {
+
+    }, function() {
+    
+    });
+  };
 	vm.list = [
       {
         "label": "Item A1"
