@@ -13,11 +13,10 @@
 			<div layout="row" ng-repeat="room in vm.room_list.rooms">
 				<div flex>
 					{{room.room_title}}
-					<pre> {{vm.room_list.room_selection[room.room_id] | json}} </pre>
 				</div>
 				<div flex>
 					<ul dnd-list="vm.room_list.room_selection[room.room_id]" style="min-height:20px;">
-					    <li ng-repeat="user in vm.room_list.room_selection[room_id]"
+					    <li ng-repeat="user in vm.room_list.room_selection[room.room_id]"
 					        dnd-draggable="user"
 					        dnd-moved="vm.room_list.room_selection[room.room_id].splice($index, 1)"
 					        dnd-effect-allowed="move"
