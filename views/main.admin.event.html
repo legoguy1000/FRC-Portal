@@ -152,10 +152,10 @@
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.food"></i>
 								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.food"></i>
 							</td>
-							<td md-cell ng-show="vm.event.room">
+							<td md-cell ng-show="vm.event.room" layout="row" layout-align="start center" style="height:49px;">
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.room_bool"></i>
 								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.room_bool"></i>
-								<md-select ng-model="user.room_id">
+								<md-select ng-model="user.room_id" flex style="margin-left:10px;">
 									<md-option value=""></md-option>
 									<md-option value="{{room.room_id}}" ng-repeat="room in vm.event.room_list.data">{{room.room_title}}</md-option>
 								</md-select>
