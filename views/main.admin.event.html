@@ -156,7 +156,8 @@
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.room_bool"></i>
 								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.room_bool"></i>
 								<md-select ng-model="user.room_id">
-
+									<md-option value=""></md-option>
+									<md-option value="{{room.room_id}}" ng-repeat="room in vm.event.room_list">{{room.room_title}}</md-option>
 								</md-select>
 							</td>
 							<!-- <td md-cell>
