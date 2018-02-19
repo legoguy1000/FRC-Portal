@@ -186,11 +186,6 @@ function userEventInfo($user_id = null, $year = null, $event = null) {
 	//die($query);
 	$result = db_select_user($query);
 	if(count($result > 0)) {
-		/*foreach($result as $id=>$res) {
-			$temp = $res;
-			$data[] = $temp
-			//$result[$id]['reqs_complete'] = $jt && $stims && (($stu && $dues) || !$stu) && $mh;
-		} */
 		$data = $result;
 	}
 	return $data;
@@ -337,6 +332,7 @@ function formatUserData($user) {
 		if(isset($data['food'])) {
 			$data['food'] = (bool) $data['food'];
 		}
+		$data['room_bool'] = false;
 		if(isset($data['room_id'])) {
 			$data['room_bool'] = (bool) $data['room_id'];
 		}

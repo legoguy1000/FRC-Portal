@@ -118,9 +118,10 @@
 						<tr md-row>
 							<th md-column md-order-by="full_name"><span>Name</span></th>
 							<th md-column md-order-by="registration"><span>Registration</span></th>
-							<th md-column md-order-by="payment"><span>Payment</span></th>
-							<th md-column md-order-by="permission_slip"><span>Permission Slip</span></th>
-							<th md-column md-order-by="food"><span>Food Order</span></th><!--
+							<th md-column md-order-by="payment" ng-show="vm.event.payment"><span>Payment</span></th>
+							<th md-column md-order-by="permission_slip" ng-show="vm.event.permission_slip"><span>Permission Slip</span></th>
+							<th md-column md-order-by="food" ng-show="vm.event.food"><span>Food Order</span></th>
+							<th md-column md-order-by="food" ng-show="vm.event.room"><span>Room Booked</span></th><!--
 							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
 							<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
@@ -136,20 +137,24 @@
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.registration"></i>
 								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.registration"></i>
 							</td>
-							<td md-cell>
+							<td md-cell ng-show="vm.event.payment">
 								<span ng-hide="user.user_type == 'Mentor'">
 									<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.payment"></i>
 									<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.payment"></i>
 								</span>
 								<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type == 'Student'"></i>
 							</td>
-							<td md-cell>
+							<td md-cell ng-show="vm.event.permission_slip">
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.permission_slip"></i>
 								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.permission_slip"></i>
 							</td>
-							<td md-cell>
+							<td md-cell ng-show="vm.event.food">
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.food"></i>
 								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.food"></i>
+							</td>
+							<td md-cell ng-show="vm.event.room">
+								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.room_bool"></i>
+								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.room_bool"></i>
 							</td>
 							<!-- <td md-cell>
 								{{user.season_hours}}
