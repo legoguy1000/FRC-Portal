@@ -4,7 +4,7 @@ angular.module('FrcPortal')
 ]);
 function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService) {
     var vm = this;
-	
+
 	vm.filter = {
 		show: false,
 	};
@@ -20,7 +20,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			vm.filter.form.$setPristine();
 		}
 	};
-	
+
 	vm.event_id = $stateParams.event_id;
 	vm.event = {};
 	vm.getEvent = function () {
@@ -28,14 +28,14 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			vm.event = response.data;
 		});
 	};
-	
+
 	vm.getSeasons = function () {
 		vm.promise = seasonsService.getAllSeasons().then(function(response){
 			vm.seasons = response.data;
 		});
 	};
 	vm.getSeasons();
-	
+
 	vm.getEvent();
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
@@ -44,5 +44,27 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		order: 'full_name',
 		page: 1
 	};
-	
+
+	vm.list = [
+      {
+        "label": "Item A1"
+      },
+      {
+        "label": "Item A2"
+      },
+      {
+        "label": "Item A3"
+      }
+    ];
+	vm.list1 = [
+      {
+        "label": "Item B2"
+      },
+      {
+        "label": "Item B1"
+      },
+      {
+        "label": "Item B3"
+      }
+    ];
 }

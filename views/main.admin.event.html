@@ -174,7 +174,7 @@
 	</md-content>
 </div>
 <div flex layout="row">
-	<md-content flex>
+	<md-content flex class="md-margin">
 		<md-card>
 			<md-card-title>
 				<md-card-title-text>
@@ -183,7 +183,42 @@
 				</md-card-title-text>
 			</md-card-title>
 			<md-card-content>
-				Room Info
+				<ul dnd-list="vm.list">
+				    <li ng-repeat="item in vm.list"
+				        dnd-draggable="item"
+				        dnd-moved="lvm.ist.splice($index, 1)"
+				        dnd-effect-allowed="move"
+				        dnd-selected="models.selected = item"
+				        ng-class="{'selected': models.selected === item}"
+				        >
+				        {{item.label}}
+				    </li>
+				</ul>
+			</md-card-content>
+			<md-card-actions layout="row" layout-align="end center">
+				<md-button>Action 1</md-button>
+				<md-button>Action 2</md-button>
+			</md-card-actions>
+		</md-card>
+		<md-card>
+			<md-card-title>
+				<md-card-title-text>
+					<span class="md-headline">Room A</span>
+					<span class="md-subhead">asdfasdfasdf</span>
+				</md-card-title-text>
+			</md-card-title>
+			<md-card-content>
+				<ul dnd-list="vm.list1">
+				    <li ng-repeat="item in vm.list1"
+				        dnd-draggable="item"
+				        dnd-moved="vm.list1.splice($index, 1)"
+				        dnd-effect-allowed="move"
+				        dnd-selected="models.selected = item"
+				        ng-class="{'selected': models.selected === item}"
+				        >
+				        {{item.label}}
+				    </li>
+				</ul>
 			</md-card-content>
 			<md-card-actions layout="row" layout-align="end center">
 				<md-button>Action 1</md-button>
