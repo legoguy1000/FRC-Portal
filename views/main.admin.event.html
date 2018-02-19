@@ -155,6 +155,9 @@
 							<td md-cell ng-show="vm.event.room">
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.room_bool"></i>
 								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.room_bool"></i>
+								<md-select ng-model="user.room_id">
+
+								</md-select>
 							</td>
 							<!-- <td md-cell>
 								{{user.season_hours}}
@@ -173,7 +176,7 @@
 		</div>
 	</md-content>
 </div>
-<div flex layout="row">
+<!--<div flex layout="row">
 	<md-content flex class="md-margin" layout="row">
 		<md-card flex>
 			<md-card-title>
@@ -225,17 +228,5 @@
 				<md-button>Action 2</md-button>
 			</md-card-actions>
 		</md-card>
-		<!--
-		<ul dnd-list="list">
-		    <li ng-repeat="item in list"
-		        dnd-draggable="item"
-		        dnd-moved="list.splice($index, 1)"
-		        dnd-effect-allowed="move"
-		        dnd-selected="models.selected = item"
-		        ng-class="{'selected': models.selected === item}"
-		        >
-		        {{item.label}}
-		    </li>
-		</ul> -->
 	</md-content>
-</div>
+</div> -->
