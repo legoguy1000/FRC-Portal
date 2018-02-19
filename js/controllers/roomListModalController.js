@@ -12,7 +12,7 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 	vm.room_list = {};
 	//function get room list
 	vm.getEventRoomList = function () {
-		vm.promise = eventsService.getEventRoomList().then(function(response){
+		vm.promise = eventsService.getEventRoomList(vm.eventInfo.event_id).then(function(response){
 			vm.room_list = response.data;
 		});
 	};
