@@ -26,10 +26,9 @@
 					        dnd-selected="models.selected = user"
 					        ng-class="{'selected': models.selected === user}"
 					        >
-									<dnd-nodrag>
-	        					<div dnd-handle class="handle">:::</div>
-						        	{{user.full_name}}
-										</div>
+									<dnd-nodrag style="display: block;padding: 10px 15px;">
+	        					<div dnd-handle style="cursor: move;position: absolute;  top: 14px;">:::</div>
+						        <div>{{user.full_name}}</div>
 								</dnd-nodrag>
 					    </li>
 					</ul>
