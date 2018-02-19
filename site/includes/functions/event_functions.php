@@ -63,8 +63,21 @@ function getEvent($event_id = null, $reqs = false) {
 			if($reqs) {
 				$reqs = userEventInfo($user_id = null, $year = null, $event_id);
 				$data['requirements'] = array('data'=>$reqs, 'total'=>count($reqs));
+				$data['room_list'] = $data['room'] ? getEventRoomList($event_id): array();
 			}
 		}
+	} else {
+		return false;
+	}
+	return $data;
+}
+
+function getEventRoomList($event_id) {
+	$data = array();
+	if(isset($event_id) && $event_id != '') {
+		$query = 'SELECT * FROM event_rooms WHERE event_id='.db_quote($event_id);
+		$result = db_select($query);
+		$data = array('data'=>$result, 'total'=>count($result));
 	} else {
 		return false;
 	}
