@@ -86,6 +86,12 @@ function getEventRoomList($event_id) {
 			$uqr = db_select_user($uq);
 			$rooms[$room_id] = $uqr;
 		}
+		//no user yet users
+		$joins = ' RIGHT JOIN event_requirements USING (user_id)';
+		$where = ' WHERE event_requirements.room_id IS NULL';
+		$uq = userQuery($sel='', $joins, $where, $order='');
+		$uqr = db_select_user($uq);
+		$rooms['non_select'] = $uqr;
 		$data = array('rooms'=>$result, 'total'=>count($result), 'room_selection'=>$rooms);
 	} else {
 		return false;
