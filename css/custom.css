@@ -1,3 +1,6 @@
+@media print  { .noprint  { display: none; } }
+@media screen { .noscreen { display: none; } }
+
 body {
   color: #7A7A7A;
 }
