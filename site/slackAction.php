@@ -2,8 +2,8 @@
 include('./includes.php');
 
 $data = array();
-parse_str(file_get_contents("php://input"), $data);
-$data = (array) $data;
+parse_str(urldecode(file_get_contents("php://input")), $data);
+$data = (array) $data['payload'];
 
 $where = ' WHERE users.user_id="5a11bd670484e"';
 $query = userQuery($sel='', $joins='', $where, $order='');
