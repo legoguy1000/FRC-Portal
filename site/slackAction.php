@@ -4,7 +4,7 @@ include('./includes.php');
 $data = array();
 parse_str(file_get_contents("php://input"), $data);
 $json = urldecode($data['payload']);
-$data = json_decode($json);
+$data = json_decode($json,true);
 
 if($data['callback_id'] == 'sign_out' && $data['actions'][0]['name'] == 'sign_out') {
   $answer = explode('-',$data['actions'][0]['value']);
