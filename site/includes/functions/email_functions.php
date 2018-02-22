@@ -178,6 +178,7 @@ function emailUser($userData = array(),$subject = '',$content = '',$attachments 
 	    $mail->send();
 	//    echo 'Message has been sent';
 	} catch (Exception $e) {
+		return $mail->ErrorInfo;
 	 //   echo 'Message could not be sent.';
 	  //  echo 'Mailer Error: ' . $mail->ErrorInfo;
 	}
