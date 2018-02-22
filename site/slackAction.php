@@ -26,7 +26,7 @@ if($data['callback_id'] == 'sign_out' && $data['actions'][0]['name'] == 'sign_ou
 }
 
 
-/*
+/*asdff
 $where = ' WHERE users.user_id="5a11bd670484e"';
 $query = userQuery($sel='', $joins='', $where, $order='');
 $result = db_select_single($query);
