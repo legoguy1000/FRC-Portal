@@ -1,5 +1,5 @@
 <?php
-include('../includes.php');
+include(__DIR__ . '/../includes.php');
 
 $users = array();
 if(date('n') == 7) {

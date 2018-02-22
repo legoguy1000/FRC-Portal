@@ -1,5 +1,6 @@
 <?php
-include('../includes.php');
+include(__DIR__ . '/../includes.php');
+
 
 $users = array();
 $slack_token = getIniProp('slack_api_token');
