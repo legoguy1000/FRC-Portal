@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . '/../includes.php');
-//as
+//
 
 $hids = array();
 $date= date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s")." -12 hours"));
