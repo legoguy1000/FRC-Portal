@@ -47,7 +47,7 @@ if((date('N') <= 5 && date('H') == 21) || (date('N') > 5 && date('H') == 18)) {
 					'Content-Type: application/json',
 					'Content-Length: ' . strlen($content),
 					'Authorization: Bearer '.$slack_token
-				);
+				));
 				$result = curl_exec($ch);
 				//close connection
 				curl_close($ch);
