@@ -15,17 +15,19 @@ if((date('N') <= 5 && date('H') == 21) || (date('N') > 5 && date('H') == 18)) {
 				$msg = 'Hey '.$user['fname'].',#new_line##new_line#';
 				$msg .= 'I noticed that you signed in on '.date('F j, Y',strtotime($user['time_in'])).' at '.date('g:i A',strtotime($user['time_in'])).' and have not signed out yet.  Most weeekday meetings end at 9pm and weeekend meetings at 6pm.  If you forgot to sign out please use the button below, if not please do not forget to sign out before leaving the shop.  This is your only reminder, if you do not sign out your hours will not count.';
 				$attachments = array(
-					'fallback' => 'You are unable to sign out',
-					'callback_id' => 'sign_out',
-					'color' => '#662E91',
-					'attachment_type' => 'default',
-					'actions' => array(
-						array(
-							'name' => 'sign_out',
-							'text' => 'Sign Out Now',
-							'type' => 'button',
-							'value' => $user['user_id'].'-'.$user['hours_id'],
-							'style' => 'primary'
+					array(
+						'fallback' => 'You are unable to sign out',
+						'callback_id' => 'sign_out',
+						'color' => '#662E91',
+						'attachment_type' => 'default',
+						'actions' => array(
+							array(
+								'name' => 'sign_out',
+								'text' => 'Sign Out Now',
+								'type' => 'button',
+								'value' => $user['user_id'].'-'.$user['hours_id'],
+								'style' => 'primary'
+							)
 						)
 					)
 				);
