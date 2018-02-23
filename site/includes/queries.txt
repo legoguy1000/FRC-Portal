@@ -38,4 +38,4 @@ SELECT b.*,c.*, hours.*, (hours.hours >= (SELECT mentor from hour_requirements))
 LEFT JOIN anual_requirements c USING (user_id)
 LEFT JOIN (SELECT d.user_id, SUM(time_to_sec(timediff(d.time_out, d.time_in)) / 3600) AS hours FROM meeting_hours d GROUP BY d.user_id) AS hours USING (user_id)
 
-12345
+SELECT COUNT(*), DATE_FORMAT(FROM_UNIXTIME(AVG(UNIX_TIMESTAMP(time_in))), "%Y-%m-%d %H:%i:%s"), DATE_FORMAT(FROM_UNIXTIME(AVG(UNIX_TIMESTAMP(`time_out`))), "%Y-%m-%d %H:%i:%s") FROM `meeting_hours` WHERE DATE(time_in) = CURRENT_DATE
