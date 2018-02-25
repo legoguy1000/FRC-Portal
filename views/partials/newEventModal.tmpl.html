@@ -9,7 +9,7 @@
 			</md-button>
 		  </div>
 		</md-toolbar>
-		<md-dialog-content layout="column" layout-margin >
+		<md-dialog-content layout="column" class="md-margin">
 			<div ng-show="vm.showGoogle">
 				<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.searchGoogleFunc()">
 					<div layout="column" layout-gt-sm="row">
@@ -89,6 +89,28 @@
 					  </div>
 					</md-toolbar>
 					<div>
+						<div layout="column" layout-gt-xs="row">
+							<md-input-container flex class="md-icon-float md-block" readonly>
+								<label>Event Name</label>
+								<md-icon md-font-library="material-icons">event_available</md-icon>
+								<input ng-model="vm.data.name"></input>
+							</md-input-container>
+							<md-input-container flex class="md-icon-float md-block">
+								<label>Start Time</label>
+								<md-icon md-font-library="material-icons">today</md-icon>
+								<input ng-model="vm.data.event_start*1000 | date:'MMM d, y h:mm a'"></input>
+							</md-input-container>
+							<md-input-container flex class="md-icon-float md-block">
+								<label>End Time</label>
+								<md-icon md-font-library="material-icons">today</md-icon>
+								<input ng-model="vm.data.event_end*1000 | date:'MMM d, y h:mm a'"></input>
+							</md-input-container>
+							<md-input-container flex class="md-icon-float md-block" readonly>
+									<label>Location</label>
+									<md-icon md-font-library="material-icons">location_on</md-icon>
+									<input ng-model="vm.data.location"></input>
+								</md-input-container>
+						</div>
 						<pre>{{vm.data | json }}</pre>
 					</div>
 				</div>
