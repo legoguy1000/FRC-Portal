@@ -21,7 +21,7 @@ if(!isset($formData['event_start']) || $formData['event_start'] == '') {
 if(!isset($formData['event_end']) || $formData['event_end'] == '') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'End Date cannot be blank!')));
 }
-if(!(strtotime($formData['event_start']) >= strtotime($formData['event_end']))) {
+if(strtotime($formData['event_start']) >= strtotime($formData['event_end'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Start Date must be before End Date.')));
 }
 $event_id = uniqid();
@@ -34,7 +34,7 @@ $query = 'INSERT INTO events (event_id, google_cal_id, name, type, event_start, 
 		 '.db_quote($formData['event_end']).',
 		 '.db_quote($formData['details']).',
 		 '.db_quote($formData['location']).',
-		 '.db_quote(isset($formData['payment']) && $formData['payment'] ? true:false).', 
+		 '.db_quote(isset($formData['payment']) && $formData['payment'] ? true:false).',
 		 '.db_quote($formData['location']).',
 		 '.db_quote($formData['location']).',
 		 '.db_quote($formData['location']).',
