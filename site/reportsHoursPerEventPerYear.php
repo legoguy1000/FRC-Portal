@@ -14,7 +14,7 @@ $data = array(array());
 $labels = array();
 //$total = array_fill_keys($years,0);
 $query = 'SELECT IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, year(e.event_start) as year, e.* from meeting_hours mh
-LEFT JOIN events e ON mh.time_in >=e.event_start AND mh.time_out < DATE_ADD(e.event_end, INTERVAL 1 DAY)
+LEFT JOIN events e ON mh.time_in >=DATE_SUB(e.event_start, INTERVAL 1.5 HOUR)  AND mh.time_out < DATE_ADD(e.event_end, INTERVAL 1.5 HOUR)
 GROUP BY e.event_id HAVING year='.db_quote($year).' ORDER BY e.event_start';
 //die($query);
 $result = db_select($query);
