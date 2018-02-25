@@ -37,13 +37,26 @@ $events = $service->events->listEvents($calendar, $optParams);
 while(true) {
   foreach ($events->getItems() as $event) {
 		if($event->status == 'confirmed') {
-			$temp = $event;
-			$temp->{"allDay"} = false;
-			$start = $event->start->dateTime;
-			if(empty($start)) {
-				$start = $event->start->date;
-				$temp->allDay = true;
+			$temp = array(
+				'google_event' => $event,
+				'name' => $event->summary,
+				'location' => $event->summary,
+				'allDay' => false,
+				'event_start' => null,
+				'event_end' => null,
+				'event_start_unix' => null,
+				'event_end_unix' => null,
+			);
+			if(empty($gevent->start->dateTime)) {
+				$temp['allDay'] = true;
+				$temp['event_start'] = $gevent->start->date.' 00:00:00';
+				$temp['event_end'] = $gevent->end->date.' 23:59:59';
+			} else {
+				$temp['event_start'] = date('Y-m-d H:i:s', strtotime($gevent->start->dateTime));
+				$temp['event_end'] =date('Y-m-d H:i:s', strtotime($gevent->end->dateTime));
 			}
+			$temp['event_start_unix'] = strtotime($temp['event_start']);
+			$temp['event_end_unix'] = strtotime($temp['event_end']);
     	$allEvents[] = $temp;
 		}
   }

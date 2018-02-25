@@ -21,10 +21,10 @@ if(count($result) > 0) {
 				$event_end =date('Y-m-d H:i:s', strtotime($gevent->end->dateTime));
 			}
 			$location = $gevent->location;
-			echo json_encode($event);
+			//echo json_encode($event);
 			$query = 'UPDATE events SET name='.db_quote($name).', event_start='.db_quote($event_start).', event_end='.db_quote($event_end).', location='.db_quote($location).' WHERE event_id='.db_quote($event['event_id']);
 			$result = db_query($query);
-			echo $result;
+			//echo $result;
 		}
 	}
 }

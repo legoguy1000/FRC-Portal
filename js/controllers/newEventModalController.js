@@ -17,12 +17,24 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 		timeMax:null,
 		timeMin:null,
 	};
+	vm.googleEvents = {
+		data: [],
+		total: 0
+	};
+	vm.query = {
+		filter: '',
+		limit: 5,
+		order: 'event_start',
+		page: 1
+	};
+
 	vm.searchGoogleFunc = function() {
 		vm.loading.searchGoogle = true;
 		var data = vm.searchGoogle;
 		eventsService.getGoogleCalendarEvents(data.q, vm.searchGoogle.timeMin, vm.searchGoogle.timeMax).then(function(response) {
 			if(response.status) {
-
+					vm.googleEvents.data = response.data;
+					vm.googleEvents.total = response.count;
 			}
 		});
 	}
