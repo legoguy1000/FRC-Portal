@@ -127,6 +127,11 @@
 										<textarea ng-model="vm.data.details" required></textarea>
 									</md-input-container>
 							</div>
+							<div layout="row">
+								<md-switch class="md-primary"  ng-model="vm.data.requirements.payment">
+							   Payment Required
+							  </md-switch>
+							</div>
 						</form>
 						<pre>{{vm.data | json }}</pre>
 					</div>
