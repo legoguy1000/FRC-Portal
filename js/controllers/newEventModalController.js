@@ -8,7 +8,7 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-
+	vm.data = {};
 	vm.showGoogle = true;
 	vm.loading = {
 		searchGoogle: false,
@@ -41,10 +41,15 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 
 	vm.selectGoogleEvent = function(data) {
 		vm.data = data;
+		vm.showGoogle = true;
+	}
+
+	vm.backToSearch = function() {
+		vm.data = {}};
 		vm.showGoogle = false;
 	}
 
-	vm.data = {};
+
 	vm.searchSeason = '';
 	vm.seasons;
 	vm.clearSearchSeason = function() {
