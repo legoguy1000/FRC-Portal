@@ -9,6 +9,7 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 		$mdDialog.cancel();
 	}
 
+	vm.showGoogle = true;
 	vm.loading = {
 		searchGoogle: false,
 	}
@@ -29,9 +30,8 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 	};
 
 	vm.searchGoogleFunc = function() {
-		vm.loading.searchGoogle = true;
 		var data = vm.searchGoogle;
-		eventsService.getGoogleCalendarEvents(data.q, vm.searchGoogle.timeMin, vm.searchGoogle.timeMax).then(function(response) {
+		vm.loading.searchGoogle = eventsService.getGoogleCalendarEvents(data.q, vm.searchGoogle.timeMin, vm.searchGoogle.timeMax).then(function(response) {
 			if(response.status) {
 					vm.googleEvents.data = response.data;
 					vm.googleEvents.total = response.count;
@@ -39,7 +39,10 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 		});
 	}
 
-
+	vm.selectGoogleEvent = function(data) {
+		vm.data = data;
+		vm.showGoogle = false;
+	}
 
 	vm.data = {};
 	vm.searchSeason = '';

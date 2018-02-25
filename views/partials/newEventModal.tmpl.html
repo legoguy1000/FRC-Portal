@@ -10,70 +10,73 @@
 		  </div>
 		</md-toolbar>
 		<md-dialog-content layout="column" layout-margin >
-			<div layout="column" layout-gt-sm="row">
-				<md-input-container flex>
-					<label>Search</label>
-					<input ng-model="vm.searchGoogle.q"/>
-				</md-input-container>
+			<div ng-show="vm.showGoogle">
+				<div layout="column" layout-gt-sm="row">
 					<md-input-container flex>
-						<label>Min Time</label>
-						<input moment-picker="vm.searchGoogle.end_form"
-							format="LL"
-							min-view="year"
-							max-view="month"
-							locale="en"
-						 	ng-model="vm.searchGoogle.timeMin">
-						</input>
+						<label>Search</label>
+						<input ng-model="vm.searchGoogle.q"/>
 					</md-input-container>
-					<md-input-container flex>
-						<label>Max Time</label>
-						<input moment-picker="vm.searchGoogle.start_form"
+						<md-input-container flex>
+							<label>Min Time</label>
+							<input moment-picker="vm.searchGoogle.end_form"
 								format="LL"
-							 	min-view="year"
-							 	max-view="month"
+								min-view="year"
+								max-view="month"
 								locale="en"
-							 	ng-model="vm.searchGoogle.timeMax">
-						</input>
-					</md-input-container>
-					<md-button type="button" ng-click="vm.searchGoogleFunc()">
-						Submit
-					</md-button>
+							 	ng-model="vm.searchGoogle.timeMin">
+							</input>
+						</md-input-container>
+						<md-input-container flex>
+							<label>Max Time</label>
+							<input moment-picker="vm.searchGoogle.start_form"
+									format="LL"
+								 	min-view="year"
+								 	max-view="month"
+									locale="en"
+								 	ng-model="vm.searchGoogle.timeMax">
+							</input>
+						</md-input-container>
+						<md-button type="button" ng-click="vm.searchGoogleFunc()">
+							Submit
+						</md-button>
+					</div>
+					<div>
+						<md-table-container>
+							<table md-table ng-model="selected" md-progress="vm.loading.searchGoogle">
+								<thead md-head md-order="vm.query.order" md-on-reorder="vm.searchGoogleFunc">
+									<tr md-row>
+										<th md-column md-order-by="name"><span>Event Name</span></th>
+										<th md-column md-order-by="event_start"><span>Start Date</span></th>
+										<th md-column md-order-by="event_end"><span>End Date</span></th>
+										<th md-column md-order-by="location"><span>Location</span></th>
+									</tr>
+								</thead>
+								<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+									<tr md-row ng-repeat="event in vm.googleEvents.data | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+										<td md-cell>{{event.name}}</td>
+										<td md-cell>
+											{{event.event_start_unix*1000 | date:'MMM d, y h:mm a'}}
+										</td>
+										<td md-cell>
+											{{event.event_end_unix*1000 | date:'MMM d, y h:mm a'}}
+										</td>
+										<td md-cell>
+											{{event.location}}
+										</td>
+										<td md-cell>
+											<md-button class="md-icon-button"  ng-click="vm.selectGoogleEvent(event)">
+												<md-tooltip md-direction="top">Add event from Google calendar</md-tooltip>
+												<md-icon>add</md-icon>
+											</md-button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</md-table-container>
+						<md-table-pagination md-limit="vm.query.limit" md-limit-options="[5]" md-page="vm.query.page" md-total="{{vm.googleEvents.total}}" md-page-select md-boundary-links md-on-paginate="vm.searchGoogleFunc"></md-table-pagination>
+					</div>
 				</div>
-				<div>
-					<md-table-container>
-						<table md-table ng-model="selected" md-progress="vm.promise">
-							<thead md-head md-order="vm.query.order" md-on-reorder="vm.searchGoogleFunc">
-								<tr md-row>
-									<th md-column md-order-by="name"><span>Event</span></th>
-									<th md-column md-order-by="event_start"><span>Start Date</span></th>
-									<th md-column md-order-by="event_end"><span>End Date</span></th>
-									<th md-column md-order-by="location"><span>Location</span></th>
-								</tr>
-							</thead>
-							<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
-								<tr md-row ng-repeat="event in vm.googleEvents.data | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
-									<td md-cell>{{event.name}}</td>
-									<td md-cell>
-										{{event.event_start_unix*1000 | date:'MMM d, y h:mm a'}}
-									</td>
-									<td md-cell>
-										{{event.event_end_unix*1000 | date:'MMM d, y h:mm a'}}
-									</td>
-									<td md-cell>
-										{{event.location}}
-									</td>
-									<td md-cell>
-										<md-button class="md-icon-button"  ng-click="">
-											<md-icon>add</md-icon>
-										</md-button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</md-table-container>
-					<md-table-pagination md-limit="vm.query.limit" md-limit-options="[5]" md-page="vm.query.page" md-total="{{vm.googleEvents.total}}" md-page-select md-boundary-links md-on-paginate="vm.searchGoogleFunc"></md-table-pagination>
-				</div>
-				<pre>{{vm.searchGoogle | json }}</pre>
+				<pre>{{vm.data | json }}</pre>
 				<!--<md-input-container>
 					<label>FRC Season</label>
 					<md-select ng-model="vm.data.season_id"
