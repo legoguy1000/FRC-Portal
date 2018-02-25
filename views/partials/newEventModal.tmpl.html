@@ -98,12 +98,18 @@
 							<md-input-container flex class="md-icon-float md-block">
 								<label>Start Time</label>
 								<md-icon md-font-library="material-icons">today</md-icon>
-								<input value="{{vm.data.event_end*1000 | date:'MMM d, y h:mm a'}}" readonly></input>
+								<input moment-picker="vm.data.startTime" readonly
+									 format="LLL"
+									 ng-model="vm.data.event_start*1000">
+								</input>
 							</md-input-container>
 							<md-input-container flex class="md-icon-float md-block">
 								<label>End Time</label>
 								<md-icon md-font-library="material-icons">today</md-icon>
-								<input value="{{vm.data.event_end*1000 | date:'MMM d, y h:mm a'}}" readonly></input>
+								<input moment-picker="vm.data.endTime" readonly
+									 format="LLL"
+									 ng-model="vm.data.event_end*1000">
+								</input>
 							</md-input-container>
 							<md-input-container flex class="md-icon-float md-block" >
 									<label>Location</label>
