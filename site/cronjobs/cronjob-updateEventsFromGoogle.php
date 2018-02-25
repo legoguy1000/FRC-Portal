@@ -3,7 +3,7 @@ include(__DIR__ . '/../includes.php');
 //
 $calendar = getIniProp('google_calendar_id');
 $api_key = getIniProp('google_api_key');
-$query = 'SELECT * FROM events';
+$query = 'SELECT * FROM events WHERE date(event_start) >= CURDATE()-interval 3 month';
 $result = db_select($query);
 if(count($result) > 0) {
 	$client = new Google_Client();
