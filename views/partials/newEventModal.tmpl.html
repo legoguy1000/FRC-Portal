@@ -131,9 +131,21 @@
 								<md-switch class="md-primary"  ng-model="vm.data.requirements.payment">
 							   Payment Required
 							  </md-switch>
+								<md-switch class="md-primary"  ng-model="vm.data.requirements.permission_slip">
+							   Permission Slip Required
+							  </md-switch>
+								<md-switch class="md-primary"  ng-model="vm.data.requirements.food">
+							   Food Order Required
+							  </md-switch>
+								<md-switch class="md-primary"  ng-model="vm.data.requirements.room">
+									Lodging Required
+							  </md-switch>
+								<md-switch class="md-primary"  ng-model="vm.data.requirements.drivers">
+							   	Drivers Required
+							  </md-switch>
 							</div>
 						</form>
-						<pre>{{vm.data | json }}</pre>
+						<div>{{vm.data | json }}</div>
 					</div>
 				</div>
 
