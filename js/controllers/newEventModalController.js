@@ -45,7 +45,7 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 	}
 
 	vm.backToSearch = function() {
-		vm.data = {}};
+		vm.data = {};
 		vm.showGoogle = false;
 	}
 
