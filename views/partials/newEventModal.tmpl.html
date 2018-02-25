@@ -87,34 +87,47 @@
 						<span flex></span>
 					</div>
 					<div>
-						<div layout="column" layout-gt-xs="row">
-							<md-input-container flex class="md-icon-float md-block">
-								<label>Event Name</label>
-								<md-icon md-font-library="material-icons">event_available</md-icon>
-								<input ng-model="vm.data.name" readonly></input>
-							</md-input-container>
-							<md-input-container flex class="md-icon-float md-block">
-								<label>Start Time</label>
-								<md-icon md-font-library="material-icons">today</md-icon>
-								<input moment-picker="vm.data.startTime" disable="true"
-									 format="LLL" start-date="vm.data.event_start_iso"
-									 ng-model="vm.data.event_start_iso">
-								</input>
-							</md-input-container>
-							<md-input-container flex class="md-icon-float md-block">
-								<label>End Time</label>
-								<md-icon md-font-library="material-icons">today</md-icon>
-								<input moment-picker="vm.data.endTime" disable="true"
-									 format="LLL" start-date="vm.data.event_end_iso"
-									 ng-model="vm.data.event_end_iso">
-								</input>
-							</md-input-container>
-							<md-input-container flex class="md-icon-float md-block" >
-									<label>Location</label>
-									<md-icon md-font-library="material-icons">location_on</md-icon>
-									<input ng-model="vm.data.location" readonly></input>
+						<form ng-cloak layout="column" flex layout-fill style="" ng-submit="">
+							<div layout="row">
+								<md-input-container flex class="md-icon-float md-block">
+									<label>Event Name</label>
+									<md-icon md-font-library="material-icons">event_available</md-icon>
+									<input ng-model="vm.data.name" readonly required></input>
 								</md-input-container>
-						</div>
+							</div>
+							<div layout="row">
+								<md-input-container flex class="md-icon-float md-block">
+									<label>Start Time</label>
+									<md-icon md-font-library="material-icons">today</md-icon>
+									<input moment-picker="vm.data.startTime" disable="true"
+										 format="LLL" start-date="vm.data.event_start_iso"
+										 ng-model="vm.data.event_start_iso" required>
+									</input>
+								</md-input-container>
+								<md-input-container flex class="md-icon-float md-block">
+									<label>End Time</label>
+									<md-icon md-font-library="material-icons">today</md-icon>
+									<input moment-picker="vm.data.endTime" disable="true"
+										 format="LLL" start-date="vm.data.event_end_iso"
+										 ng-model="vm.data.event_end_iso" required>
+									</input>
+								</md-input-container>
+							</div>
+							<div layout="row">
+								<md-input-container flex class="md-icon-float md-block" >
+										<label>Location</label>
+										<md-icon md-font-library="material-icons">location_on</md-icon>
+										<input ng-model="vm.data.location" readonly required></input>
+									</md-input-container>
+							</div>
+							<div layout="row">
+								<md-input-container flex class="md-icon-float md-block" >
+										<label>Details</label>
+										<md-icon md-font-library="material-icons">event_note</md-icon>
+										<textarea ng-model="vm.data.details" required></textarea>
+									</md-input-container>
+							</div>
+						</form>
 						<pre>{{vm.data | json }}</pre>
 					</div>
 				</div>
