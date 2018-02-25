@@ -2,42 +2,53 @@
 include('includes.php');
 
 //$authToken = checkToken(true,true);
+$calendar = getIniProp('google_calendar_id');
+$api_key = getIniProp('google_api_key');
+$optParams = array();
+if(isset($_GET['q']) && $_GET['q'] != '') {
+	$q = trim($_GET['q']);
+	$optParams['q'] = $q;
+}
+if(isset($_GET['timeMax']) && $_GET['timeMax'] != '') {
+	$timeMax = $_GET['timeMax'];
+	$optParams['timeMax'] = $timeMax;
+}
+if(isset($_GET['timeMin']) && $_GET['timeMin'] != '') {
+	$timeMin = $_GET['timeMin'];
+	$optParams['timeMin'] = $timeMin;
+}
+$optParams['maxResults'] = 2500;
+$optParams['orderBy'] = 'startTime';
+$optParams['singleEvents'] = true;
 
-$filter = null;
-$limit = null;
-$order = null;
-$page = null;
-if(isset($_GET['filter']) && $_GET['filter'] != '') {
-	$filter = $_GET['filter'];
-}
-if(isset($_GET['limit']) && $_GET['limit'] != '') {
-	$limit = $_GET['limit'];
-}
-if(isset($_GET['order']) && $_GET['order'] != '') {
-	$order = $_GET['order'];
-}
-if(isset($_GET['page']) && $_GET['page'] != '') {
-	$page = $_GET['page'];
-}
-
+$allEvents = array();
 $client = new Google_Client();
 $client->setDeveloperKey($api_key);
 $service = new Google_Service_Calendar($client);
-$events = $service->events->listEvents('iifound.org_qm79uhga7lqeguhn25tjifl8g4@group.calendar.google.com');
+$events = $service->events->listEvents($calendar, $optParams);
 
 while(true) {
   foreach ($events->getItems() as $event) {
-    echo $event->getSummary().'<br/>';
+		if($event->status == 'confirmed') {
+			$temp = $event;
+			$temp->{"allDay"} = false;
+			$start = $event->start->dateTime;
+			if(empty($start)) {
+				$start = $event->start->date;
+				$temp->allDay = true;
+			}
+    	$allEvents[] = $temp;
+		}
   }
   $pageToken = $events->getNextPageToken();
   if ($pageToken) {
     $optParams = array('pageToken' => $pageToken);
-    $events = $service->events->listEvents('iifound.org_qm79uhga7lqeguhn25tjifl8g4@group.calendar.google.com', $optParams);
+    $events = $service->events->listEvents($calendar, $optParams);
   } else {
     break;
   }
 }
-
+die(json_encode($allEvents));
 
 
 
