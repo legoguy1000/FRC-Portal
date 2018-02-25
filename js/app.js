@@ -395,7 +395,18 @@ angular.module('FrcPortal', [
 		}
 	});
 })
-.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log) {
+.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log, $location, $window) {
+	// initialise google analytics
+  $window.ga('create', 'UA-114656092-1', 'auto');
+
+  // track pageview on state change
+	$transitions.onSuccess({}, function(transition) {
+  	$window.ga('send', 'pageview', $location.path());
+	  console.log(
+	      "Successful Transition from " + transition.from().name +
+	      " to " + transition.to().name
+	  );
+	});
 	$transitions.onStart({to: function(state) { return state != null && state.authenticate;}}, function(trans) {
 		var toState = trans.$to();
 
