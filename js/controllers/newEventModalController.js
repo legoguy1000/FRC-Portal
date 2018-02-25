@@ -20,7 +20,7 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 	vm.searchGoogleFunc = function() {
 		vm.loading.searchGoogle = true;
 		var data = vm.searchGoogle;
-		eventsService.getGoogleCalendarEvents(data.q, vm.searchGoogle.start_form, vm.searchGoogle.end_form).then(function(response) {
+		eventsService.getGoogleCalendarEvents(data.q, vm.searchGoogle.timeMin, vm.searchGoogle.timeMax).then(function(response) {
 			if(response.status) {
 
 			}
