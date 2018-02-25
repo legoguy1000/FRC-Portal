@@ -24,6 +24,15 @@ if(!isset($formData['event_end']) || $formData['event_end'] == '') {
 if(strtotime($formData['event_start']) >= strtotime($formData['event_end'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Start Date must be before End Date.')));
 }
+if(!isset($formData['google_cal_id']) || $formData['google_cal_id'] == '') {
+	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid Google calendar ID')));
+}
+$query = 'SELECT * FROM events WHERE google_cal_id='.db_quote($formData['google_cal_id']);
+$result = db_select_single($query);
+if(!is_null($result)) {
+	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Event already exists')));
+}
+
 $event_id = uniqid();
 $query = 'INSERT INTO events (event_id, google_cal_id, name, type, event_start, event_end, details, location, payment, permission_slip, food, room, drivers) VALUES
 		('.db_quote($event_id).',
