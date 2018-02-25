@@ -41,7 +41,7 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 
 	vm.selectGoogleEvent = function(data) {
 		vm.data = data;
-		vm.data.start_moment = moment.moment(vm.data.event_start);
+		vm.data.start_moment = moment(vm.data.event_start);
 		vm.showGoogle = false;
 
 	}
