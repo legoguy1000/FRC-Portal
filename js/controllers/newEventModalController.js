@@ -8,29 +8,34 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-	
+
+	vm.searchGoogle = {};
+
+
+
+
 	vm.data = {};
 	vm.searchSeason = '';
 	vm.seasons;
 	vm.clearSearchSeason = function() {
 		vm.searchSeason = '';
 	};
-	
+
 	vm.getSeasons = function () {
 		vm.promise = seasonsService.getAllSeasons().then(function(response){
 			vm.seasons = response.data;
 		});
 	};
 	vm.getSeasons();
-	
+
 	vm.checkSingle = function () {
 		$log.log('asdf');
 		if(!vm.data.single_day) {
 			$log.log('a');
 			vm.data.event_end_full = angular.copy(vm.data.event_start_full);
-		}		
+		}
 	}
-	
+
 	vm.addEvent = function() {
 		eventsService.addEvent(vm.data).then(function(response) {
 			if(response.status) {
@@ -38,11 +43,11 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 			}
 		});
 	}
-	
+
 	vm.onYearChange = function (newValue, oldValue) {
 		$log.log('Meeting changed from ' + oldValue + ' to ' + newValue);
 	};
-	
+
 	$element.find('input').on('keydown', function(ev) {
 		ev.stopPropagation();
 	});

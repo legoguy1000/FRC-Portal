@@ -1,5 +1,5 @@
 <md-dialog aria-label="New Event" style="" layout="column" flex="50" >
-	<form ng-cloak layout="column" flex layout-fill style="background: #FDB813;" ng-submit="vm.addEvent()">
+	<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.addEvent()">
 		<md-toolbar layout="row">
 		  <div class="md-toolbar-tools">
 			<h2>New Event</h2>
@@ -10,8 +10,32 @@
 		  </div>
 		</md-toolbar>
 		<md-dialog-content layout="column" layout-margin>
-			<div layout="column">
-				<md-input-container>
+			<div layout="column" layout-gt-sm="row">
+				<md-input-container flex>
+					<label>Search</label>
+					<input ng-model="vm.searchGoogle.q"/>
+				</md-input-container>
+				<div layout="column" layout-gt-sm="row">
+					<md-input-container flex>
+						<label>Min Time</label>
+						<input moment-picker="vm.searchGoogle.end_form"
+							format="LL"
+							min-view="year"
+							max-view="month">
+						 	ng-model="vm.searchGoogle.timeMin">
+						</input>
+					</md-input-container>
+					<div layout="column" layout-gt-sm="row">
+						<md-input-container flex>
+							<label>Max Time</label>
+							<input moment-picker="vm.searchGoogle.start_form"
+									format="LL"
+								 	min-view="year"
+								 	max-view="month"
+								 	ng-model="vm.searchGoogle.timeMax">
+							</input>
+						</md-input-container>
+				<!--<md-input-container>
 					<label>FRC Season</label>
 					<md-select ng-model="vm.data.season_id"
 							   md-on-close="vm.clearSearchSeason()"
@@ -70,12 +94,7 @@
 						 ng-model="vm.data.event_end_full"
 						 disable="vm.data.single_day">
 					</input>
-				</md-input-container>
-		<!--	<div>
-					<md-checkbox ng-model="vm.data.exempt_hours" aria-label="Exempt Hours">
-						Exempt Hours from counting to season total
-					</md-checkbox>
-				</div> -->
+				</md-input-container> -->
 			</div>
 		</md-dialog-content>
 		<md-dialog-actions layout="row">
