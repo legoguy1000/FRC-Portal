@@ -40,14 +40,14 @@ while(true) {
 			$temp = array(
 				'google_event' => $event,
 				'name' => $event->summary,
-				'location' => $event->summary,
+				'location' => $event->location,
 				'allDay' => false,
 				'event_start' => null,
 				'event_end' => null,
 				'event_start_unix' => null,
 				'event_end_unix' => null,
 			);
-			if(empty($gevent->start->dateTime)) {
+			if(empty($event->start->dateTime)) {
 				$temp['allDay'] = true;
 				$temp['event_start'] = $event->start->date.' 00:00:00';
 				$temp['event_end'] = $event->end->date.' 23:59:59';
