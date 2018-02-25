@@ -9,7 +9,7 @@ if(isset($_GET['q']) && $_GET['q'] != '') {
 	$q = trim($_GET['q']);
 	$optParams['q'] = $q;
 }
-if(isset($_GET['timeMax']) && $_GET['timeMax'] != '') {
+if(isset($_GET['timeMax']) && $_GET['timeMax'] != '' && $_GET['timeMax'] != 'null' && $_GET['timeMax'] != 'undefined') {
 	$timeMax = date('c', strtotime($_GET['timeMax']));
 	if(is_numeric($_GET['timeMax'])) {
 		$timeMax = date('c',$_GET['timeMax']/1000);
@@ -17,7 +17,7 @@ if(isset($_GET['timeMax']) && $_GET['timeMax'] != '') {
 	$optParams['timeMax'] = $timeMax;
 }
 $optParams['timeMin'] = date('c',strtotime('-6 months'));
-if(isset($_GET['timeMin']) && $_GET['timeMin'] != '') {
+if(isset($_GET['timeMin']) && $_GET['timeMin'] != '' && $_GET['timeMax'] != 'null' && $_GET['timeMax'] != 'undefined') {
 	$timeMin = date('c', strtotime($_GET['timeMin']));
 	if(is_numeric($_GET['timeMin'])) {
 		$timeMin = date('c',$_GET['timeMin']/1000);
