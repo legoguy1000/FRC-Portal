@@ -55,7 +55,12 @@ while(true) {
     break;
   }
 }
-die(json_encode($allEvents));
+$data = array(
+	'data'=>$allEvents,
+	'count'=>count($allEvents),
+	'status'=>true
+);
+die(json_encode($data));
 
 
 
