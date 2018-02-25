@@ -13,6 +13,7 @@ if(isset($_GET['timeMax']) && $_GET['timeMax'] != '') {
 	$timeMax = $_GET['timeMax'];
 	$optParams['timeMax'] = $timeMax;
 }
+$optParams['timeMin'] = date('c',strtotime('-6 months'));
 if(isset($_GET['timeMin']) && $_GET['timeMin'] != '') {
 	$timeMin = $_GET['timeMin'];
 	$optParams['timeMin'] = $timeMin;
