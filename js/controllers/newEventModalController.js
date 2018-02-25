@@ -42,6 +42,7 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 	vm.selectGoogleEvent = function(data) {
 		vm.data = data;
 		vm.showGoogle = true;
+		console.log(data);
 	}
 
 	vm.backToSearch = function() {
