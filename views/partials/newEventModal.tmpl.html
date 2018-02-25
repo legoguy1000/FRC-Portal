@@ -80,13 +80,11 @@
 				</div>
 				<div ng-hide="vm.showGoogle">
 					<md-toolbar layout="row">
-					  <div class="md-toolbar-tools">
-							<md-button class="md-icon-button" type="button" ng-click="vm.backToSearch()">
-								<md-tooltip md-direction="top">Go Back to Event Search</md-tooltip>
-								<i class="material-icons">arrow_back</i>
-							</md-button>
-							<span flex></span>
-					  </div>
+						<md-button class="md-icon-button" type="button" ng-click="vm.backToSearch()">
+							<md-tooltip md-direction="top">Go Back to Event Search</md-tooltip>
+							<i class="material-icons">arrow_back</i>
+						</md-button>
+						<span flex></span>
 					</md-toolbar>
 					<div>
 						<div layout="column" layout-gt-xs="row">
@@ -100,7 +98,7 @@
 								<md-icon md-font-library="material-icons">today</md-icon>
 								<input moment-picker="vm.data.startTime" readonly
 									 format="LLL"
-									 ng-model="vm.data.event_start*1000">
+									 ng-model="vm.data.event_start_iso">
 								</input>
 							</md-input-container>
 							<md-input-container flex class="md-icon-float md-block">
@@ -108,7 +106,7 @@
 								<md-icon md-font-library="material-icons">today</md-icon>
 								<input moment-picker="vm.data.endTime" readonly
 									 format="LLL"
-									 ng-model="vm.data.event_end*1000">
+									 ng-model="vm.data.event_end_iso">
 								</input>
 							</md-input-container>
 							<md-input-container flex class="md-icon-float md-block" >

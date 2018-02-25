@@ -47,6 +47,8 @@ while(true) {
 				'event_end' => null,
 				'event_start_unix' => null,
 				'event_end_unix' => null,
+				'event_start_iso' => null,
+				'event_end_iso' => null,
 			);
 			if(empty($event->start->dateTime)) {
 				$temp['allDay'] = true;
@@ -58,6 +60,8 @@ while(true) {
 			}
 			$temp['event_start_unix'] = strtotime($temp['event_start']);
 			$temp['event_end_unix'] = strtotime($temp['event_end']);
+			$temp['event_start_iso'] = date('c',strtotime($temp['event_start']));
+			$temp['event_end_iso'] = date('c',strtotime($temp['event_end']));
     	$allEvents[] = $temp;
 		}
   }
