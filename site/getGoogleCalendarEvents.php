@@ -41,7 +41,7 @@ while(true) {
 				'google_event' => $event,
 				'name' => $event->summary,
 				'location' => $event->location,
-				'google_id' => $event->id,
+				'google_cal_id' => $event->id,
 				'allDay' => false,
 				'event_start' => null,
 				'event_end' => null,
