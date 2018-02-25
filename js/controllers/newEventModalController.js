@@ -9,8 +9,18 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 		$mdDialog.cancel();
 	}
 
+	vm.loading = {
+		searchGoogle: false,
+	}
 	vm.searchGoogle = {};
+	vm.searchGoogleFunc = function() {
+		vm.loading.searchGoogle = true;
+		eventsService.getGoogleCalendarEvents(vm.searchGoogle).then(function(response) {
+			if(response.status) {
 
+			}
+		});
+	}
 
 
 
