@@ -5,7 +5,7 @@ include('includes.php');
 $calendar = getIniProp('google_calendar_id');
 $api_key = getIniProp('google_api_key');
 $optParams = array();
-if(isset($_GET['q']) && $_GET['q'] != '') {
+if(isset($_GET['q']) && $_GET['q'] != '' && $_GET['timeMax'] != 'null' && $_GET['timeMax'] != 'undefined') {
 	$q = trim($_GET['q']);
 	$optParams['q'] = $q;
 }
