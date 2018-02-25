@@ -49,11 +49,11 @@ while(true) {
 			);
 			if(empty($gevent->start->dateTime)) {
 				$temp['allDay'] = true;
-				$temp['event_start'] = $gevent->start->date.' 00:00:00';
-				$temp['event_end'] = $gevent->end->date.' 23:59:59';
+				$temp['event_start'] = $event->start->date.' 00:00:00';
+				$temp['event_end'] = $event->end->date.' 23:59:59';
 			} else {
-				$temp['event_start'] = date('Y-m-d H:i:s', strtotime($gevent->start->dateTime));
-				$temp['event_end'] =date('Y-m-d H:i:s', strtotime($gevent->end->dateTime));
+				$temp['event_start'] = date('Y-m-d H:i:s', strtotime($event->start->dateTime));
+				$temp['event_end'] =date('Y-m-d H:i:s', strtotime($event->end->dateTime));
 			}
 			$temp['event_start_unix'] = strtotime($temp['event_start']);
 			$temp['event_end_unix'] = strtotime($temp['event_end']);
