@@ -96,16 +96,16 @@
 							<md-input-container flex class="md-icon-float md-block">
 								<label>Start Time</label>
 								<md-icon md-font-library="material-icons">today</md-icon>
-								<input moment-picker="vm.data.startTime" readonly
-									 format="LLL"
+								<input moment-picker="vm.data.startTime" disable="true"
+									 format="LLL" start-date="vm.data.event_start_iso"
 									 ng-model="vm.data.event_start_iso">
 								</input>
 							</md-input-container>
 							<md-input-container flex class="md-icon-float md-block">
 								<label>End Time</label>
 								<md-icon md-font-library="material-icons">today</md-icon>
-								<input moment-picker="vm.data.endTime" readonly
-									 format="LLL"
+								<input moment-picker="vm.data.endTime" disable="true"
+									 format="LLL" start-date="vm.data.event_end_iso"
 									 ng-model="vm.data.event_end_iso">
 								</input>
 							</md-input-container>
