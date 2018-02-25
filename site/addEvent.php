@@ -35,10 +35,10 @@ $query = 'INSERT INTO events (event_id, google_cal_id, name, type, event_start, 
 		 '.db_quote($formData['details']).',
 		 '.db_quote($formData['location']).',
 		 '.db_quote(isset($formData['payment']) && $formData['payment'] ? true:false).',
-		 '.db_quote($formData['location']).',
-		 '.db_quote($formData['location']).',
-		 '.db_quote($formData['location']).',
-		 '.db_quote($formData['location']).')';
+		 '.db_quote(isset($formData['permission_slip']) && $formData['permission_slip'] ? true:false).',
+		 '.db_quote(isset($formData['food']) && $formData['food'] ? true:false).',
+		 '.db_quote(isset($formData['room']) && $formData['room'] ? true:false).',
+		 '.db_quote(isset($formData['drivers']) && $formData['drivers'] ? true:false).')';
 //die($query);
 $result = db_query($query);
 if($result) {
