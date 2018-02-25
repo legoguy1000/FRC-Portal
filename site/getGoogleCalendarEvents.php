@@ -64,7 +64,7 @@ if(!empty($users)) {
 	die(json_encode(array('status'=>true, 'msg'=>'', 'data'=>$users['data'], 'query'=>$users['query'], 'total'=>$users['total'], 'maxPage'=>$users['maxPage'])));
 } else {
 	die(json_encode(array('status'=>false, 'msg'=>'Something went wrong', 'data'=>array())));
-} 8?
+} */
 
 
 
