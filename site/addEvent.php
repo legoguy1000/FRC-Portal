@@ -9,21 +9,6 @@ $json = file_get_contents('php://input');
 $formData = json_decode($json,true);
 
 
-//Season can be blank
-if(!isset($formData['season_id']) || $formData['season_id'] == '') {
-	$season = 'NULL';
-} else {
-	$season= db_quote($formData['season_id']);
-	$query = 'SELECT * FROM seasons WHERE season_id='.db_quote($formData['season_id']);
-	$result = db_select_single($query);
-	if(!is_null($result)) {
-		if(!($formData['event_start'] >= $result['start_date'] && $formData['event_end'] <= $result['end_date'])) {
-			die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Event dates are not within season.')));
-		}
-	} else {
-		die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Season selection is incorrect.')));
-	}
-}
 if(!isset($formData['name']) || $formData['name'] == '') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Name cannot be blank!')));
 }
@@ -36,12 +21,24 @@ if(!isset($formData['event_start']) || $formData['event_start'] == '') {
 if(!isset($formData['event_end']) || $formData['event_end'] == '') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'End Date cannot be blank!')));
 }
-if(!(strtotime($formData['event_start']) >= $formData['event_end'])) {
+if(!(strtotime($formData['event_start']) >= strtotime($formData['event_end']))) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Start Date must be before End Date.')));
 }
 $event_id = uniqid();
-$query = 'INSERT INTO events (event_id, season_id, name, type, event_start, event_end) VALUES
-		('.db_quote($event_id).', '.$season.', '.db_quote($formData['name']).', '.db_quote($formData['type']).','.db_quote($formData['event_start']).', '.db_quote($formData['event_end']).')';
+$query = 'INSERT INTO events (event_id, google_cal_id, name, type, event_start, event_end, details, location, payment, permission_slip, food, room, drivers) VALUES
+		('.db_quote($event_id).',
+		 '.db_quote($formData['google_cal_id']).',
+		 '.db_quote($formData['name']).',
+		 '.db_quote($formData['type']).',
+		 '.db_quote($formData['event_start']).',
+		 '.db_quote($formData['event_end']).',
+		 '.db_quote($formData['details']).',
+		 '.db_quote($formData['location']).',
+		 '.db_quote(isset($formData['payment']) && $formData['payment'] ? true:false).', 
+		 '.db_quote($formData['location']).',
+		 '.db_quote($formData['location']).',
+		 '.db_quote($formData['location']).',
+		 '.db_quote($formData['location']).')';
 //die($query);
 $result = db_query($query);
 if($result) {

@@ -87,12 +87,17 @@
 						<span flex></span>
 					</div>
 					<div>
-						<form ng-cloak layout="column" flex layout-fill style="" ng-submit="">
+						<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.addEvent()">
 							<div layout="row">
 								<md-input-container flex class="md-icon-float md-block">
 									<label>Event Name</label>
 									<md-icon md-font-library="material-icons">event_available</md-icon>
 									<input ng-model="vm.data.name" readonly required></input>
+								</md-input-container>
+								<md-input-container flex class="md-icon-float md-block">
+									<label>Event Type</label>
+									<md-icon md-font-library="material-icons">widget</md-icon>
+									<input ng-model="vm.data.type" required></input>
 								</md-input-container>
 							</div>
 							<div layout="row">
