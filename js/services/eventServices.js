@@ -27,10 +27,10 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		getGoogleCalendarEvents: function (q,timeMax,timeMin) {
-			var q = q != undefined ? q: '';
+		getGoogleCalendarEvents: function (q,timeMin,timeMax) {
+		/*	var q = q != undefined ? q: '';
 			var timeMax = timeMax != undefined ? timeMax: '';
-			var timeMin = timeMin != undefined ? timeMin: '';
+			var timeMin = timeMin != undefined ? timeMin: ''; */
 			return $http.get('site/getGoogleCalendarEvents.php?q='+q+'&timeMax='+timeMax+'&timeMin='+timeMin)
 			.then(function(response) {
 				return response.data;
