@@ -5,7 +5,7 @@ include('includes.php');
 $calendar = getIniProp('google_calendar_id');
 $api_key = getIniProp('google_api_key');
 $optParams = array();
-if(isset($_GET['q']) && $_GET['q'] != '' && $_GET['timeMax'] != 'null' && $_GET['timeMax'] != 'undefined') {
+if(isset($_GET['q']) && $_GET['q'] != '' && $_GET['q'] != 'null' && $_GET['q'] != 'undefined') {
 	$q = trim($_GET['q']);
 	$optParams['q'] = $q;
 }
@@ -17,7 +17,7 @@ if(isset($_GET['timeMax']) && $_GET['timeMax'] != '' && $_GET['timeMax'] != 'nul
 	$optParams['timeMax'] = $timeMax;
 }
 $optParams['timeMin'] = date('c',strtotime('-6 months'));
-if(isset($_GET['timeMin']) && $_GET['timeMin'] != '' && $_GET['timeMax'] != 'null' && $_GET['timeMax'] != 'undefined') {
+if(isset($_GET['timeMin']) && $_GET['timeMin'] != '' && $_GET['timeMin'] != 'null' && $_GET['timeMin'] != 'undefined') {
 	$timeMin = date('c', strtotime($_GET['timeMin']));
 	if(is_numeric($_GET['timeMin'])) {
 		$timeMin = date('c',$_GET['timeMin']/1000);
