@@ -57,7 +57,7 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 	vm.addEvent = function() {
 		eventsService.addEvent(vm.data).then(function(response) {
 			if(response.status) {
-				//$mdDialog.hide(response);
+				$mdDialog.hide(response);
 			}
 		});
 	}
