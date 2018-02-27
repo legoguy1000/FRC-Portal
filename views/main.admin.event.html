@@ -96,7 +96,7 @@
 					<md-button class="md-icon-button" ng-click="vm.showFilter()">
 						<md-icon>filter_list</md-icon>
 					</md-button>
-					<md-button class="md-icon-button" ng-click="vm.showRoomListModal($event)">
+					<md-button class="md-icon-button" ng-click="vm.showRoomListModal($event)" ng-show="vm.event.room">
 						<md-tooltip md-direction="top">View/Edit hotel room list</md-tooltip>
 						<md-icon>hotel</md-icon>
 					</md-button>
@@ -187,18 +187,18 @@
 				</md-fab-trigger>
 				<md-fab-actions>
 					<md-button aria-label="Register Toggle" class="md-fab md-raised md-mini" ng-click="vm.toggleEventReqs('registration')">
-						<md-tooltip md-direction="left" md-autohide="false">Toggle Team Join Status</md-tooltip>
+						<md-tooltip md-direction="left" md-autohide="false">Toggle Event Registration Status</md-tooltip>
 						<md-icon class="material-icons">playlist_add_heck</md-icon>
 					</md-button>
-					<md-button aria-label="Payment Toggle" class="md-fab md-raised md-mini" ng-click="vm.toggleEventReqs('payment')">
-						<md-tooltip md-direction="left" md-autohide="false">Toggle STIMS/TIMS Status</md-tooltip>
+					<md-button aria-label="Payment Toggle" class="md-fab md-raised md-mini" ng-click="vm.toggleEventReqs('payment')" ng-show="vm.event.payment">
+						<md-tooltip md-direction="left" md-autohide="false">Toggle Payment Status</md-tooltip>
 						<md-icon class="material-icons">attach_money</md-icon>
 					</md-button>
-					<md-button aria-label="Permission Slip Toggle" class="md-fab md-raised md-mini" ng-click="vm.toggleEventReqs('permission_slip')">
-						<md-tooltip md-direction="left" md-autohide="false">Toggle Dues Status</md-tooltip>
+					<md-button aria-label="Permission Slip Toggle" class="md-fab md-raised md-mini" ng-click="vm.toggleEventReqs('permission_slip')" ng-show="vm.event.permission_slip">
+						<md-tooltip md-direction="left" md-autohide="false">Toggle Permission Slip Status</md-tooltip>
 						<md-icon class="material-icons">assignment</md-icon>
 					</md-button>
-					<md-button aria-label="Food Toggle" class="md-fab md-raised md-mini" ng-click="vm.toggleEventReqs('food')">
+					<md-button aria-label="Food Toggle" class="md-fab md-raised md-mini" ng-click="vm.toggleEventReqs('food')" ng-show="vm.event.food">
 						<md-tooltip md-direction="left" md-autohide="false">Toggle Food Status</md-tooltip>
 						<md-icon class="material-icons">local_dining</md-icon>
 					</md-button>
