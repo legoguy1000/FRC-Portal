@@ -72,7 +72,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
     });
   };
 
-	vm.toggleAnnualReqs = function (req) {
+	vm.toggleEventReqs = function (req) {
 		var data = {
 			'event_id': vm.event_id,
 			'users': vm.selectedUsers,
