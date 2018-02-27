@@ -80,7 +80,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		}
 		vm.promise = eventsService.toggleEventReqs(data).then(function(response){
 			if(response.status && response.data) {
-				vm.season.requirements.data = response.data;
+				vm.event.requirements.data = response.data;
 			}
 
 		});
