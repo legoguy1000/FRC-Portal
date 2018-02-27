@@ -88,7 +88,7 @@ function getEventRoomList($event_id) {
 		}
 		//no user yet users
 		$joins = ' RIGHT JOIN event_requirements USING (user_id)';
-		$where = ' WHERE event_requirements.room_id IS NULL';
+		$where = ' WHERE event_requirements.room_id IS NULL AND event_id='.db_quote($event_id);
 		$uq = userQuery($sel='', $joins, $where, $order='');
 		$uqr = db_select_user($uq);
 		$rooms['non_select'] = $uqr;
