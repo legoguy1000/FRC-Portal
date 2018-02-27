@@ -28,6 +28,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			vm.event = response.data;
 		});
 	};
+	vm.selectedUsers = [];
 
 	vm.getSeasons = function () {
 		vm.promise = seasonsService.getAllSeasons().then(function(response){
@@ -70,26 +71,18 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
     });
   };
-	vm.list = [
-      {
-        "label": "Item A1"
-      },
-      {
-        "label": "Item A2"
-      },
-      {
-        "label": "Item A3"
-      }
-    ];
-	vm.list1 = [
-      {
-        "label": "Item B2"
-      },
-      {
-        "label": "Item B1"
-      },
-      {
-        "label": "Item B3"
-      }
-    ];
+
+	vm.toggleAnnualReqs = function (req) {
+		var data = {
+			'event_id': vm.event_id,
+			'users': vm.selectedUsers,
+			'requirement':req
+		}
+		vm.promise = eventsService.toggleEventReqs(data).then(function(response){
+			if(response.status && response.data) {
+				vm.season.requirements.data = response.data;
+			}
+
+		});
+	};
 }

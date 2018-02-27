@@ -36,5 +36,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		toggleEventReqs: function (formData) {
+			return $http.post('site/toggleEventReqs.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

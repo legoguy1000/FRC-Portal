@@ -176,8 +176,7 @@ function userEventInfo($user_id = null, $year = null, $event = null) {
 	}
 	if($event != null) {
 		$whereArr[] = 'b.event_id = '.db_quote($event);
-	}
-	if($year != null) {
+	} else if($year != null) {
 		$whereArr[] = 'YEAR(b.event_start) = '.db_quote($year);
 	}
 	if(!empty($whereArr)) {
