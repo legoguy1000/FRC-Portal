@@ -24,7 +24,6 @@ if(is_null($result)) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Invlaid Event ID')));
 }
 
-$year = $result['year'];
 $array = array();
 $req = $formData['requirement'];
 $users = array_column($formData['users'],'user_id');
