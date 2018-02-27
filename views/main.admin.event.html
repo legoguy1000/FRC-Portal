@@ -149,8 +149,11 @@
 								<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type == 'Student'"></i>
 							</td>
 							<td md-cell ng-show="vm.event.permission_slip">
-								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.permission_slip"></i>
-								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.permission_slip"></i>
+								<span ng-hide="user.user_type == 'Mentor'">
+									<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.permission_slip"></i>
+									<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.permission_slip"></i>
+								</span>
+								<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type == 'Student'"></i>
 							</td>
 							<td md-cell ng-show="vm.event.food">
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.food"></i>
