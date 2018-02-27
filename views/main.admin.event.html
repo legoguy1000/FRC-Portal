@@ -131,7 +131,7 @@
 						</tr>
 					</thead>
 					<tbody md-body>
-						<tr md-row ng-repeat="user in vm.event.requirements.data | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+						<tr md-row md-select="user" md-select-id="user_id" md-auto-select ng-repeat="user in vm.event.requirements.data | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 							<td md-cell>
 								<md-list-item style="padding: 0px;">
 									{{user.full_name}}
