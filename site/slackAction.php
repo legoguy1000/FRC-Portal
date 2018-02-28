@@ -16,7 +16,7 @@ if($data['callback_id'] == 'sign_out' && $data['actions'][0]['name'] == 'sign_ou
   } else {
       $time = date('Y-m-d').' 18:00:00';
   }
-  $query = 'UPDATE meeting_hours SET time_out = '.db_quote($time).' WHERE hours_id = '.db_quote($hours_id).' AND time_out IS NOT NULL AND user_id='.db_quote($user_id);
+  $query = 'UPDATE meeting_hours SET time_out = '.db_quote($time).' WHERE hours_id = '.db_quote($hours_id).' AND time_out IS NULL AND user_id='.db_quote($user_id);
   $result = db_query($query);
   if($result) {
     die('You signed out at '.date('M d, Y H:i:s A', strtotime($time)));

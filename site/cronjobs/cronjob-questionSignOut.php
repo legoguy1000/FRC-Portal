@@ -13,7 +13,7 @@ if((date('N') <= 5 && date('H') == 21) || (date('N') > 5 && date('H') == 18)) {
 		foreach($result as $user) {
 			if($user['slack_id'] != '') {
 				$msg = 'Hey '.$user['fname'].',#new_line##new_line#';
-				$msg .= 'I noticed that you signed in on '.date('F j, Y',strtotime($user['time_in'])).' at '.date('g:i A',strtotime($user['time_in'])).' and have not signed out yet.  Most weeekday meetings end at 9pm and weeekend meetings at 6pm.  If you forgot to sign out please use the button below, if not please do not forget to sign out before leaving the shop.  This is your only reminder, if you do not sign out your hours will not count.';
+				$msg .= 'I noticed that you signed in on '.date('F j, Y',strtotime($user['time_in'])).' at '.date('g:i A',strtotime($user['time_in'])).' and have not signed out yet.  Most weekday meetings end at 9pm and weekend meetings at 6pm.  If you forgot to sign out please use the button below, if not please do not forget to sign out before leaving the shop.  This is your only reminder, if you do not sign out your hours will not count.';
 				$attachments = array(
 					array(
 						'fallback' => 'You are unable to sign out',
