@@ -1,4 +1,4 @@
-<div flex layout-gt-sm="row" layout="column">
+<!--<div flex layout-gt-sm="row" layout="column">
 	<md-content flex flex-gt-sm="50" flex-gt-md="33" layout="column" class="md-margin">
 		<h1 class="md-headline">
 			{{vm.event.name}}
@@ -30,4 +30,44 @@
 		</md-tabs>
 		<div ui-view ng-class="vm.slide" flex></div>
 	</md-content>
+</div> -->
+
+<div flex layout="row" class="md-margin" layout-align="center center">
+	<div layout="column">
+			<!--Counter-->
+			<div id="countdown" class="countdown font-pink mb-25">
+				<span class="first-part-count">
+					<span class="days">00</span>
+					<span>days</span>
+					<span class="time-sep">:</span>
+					<span class="hours">00</span>
+					<span>hours</span>
+				</span>
+				<span class="second-part-count">
+					<span class="time-sep">:</span>
+					<span class="minutes">00</span>
+					<span>min</span>
+					<span class="time-sep">:</span>
+					<span class="seconds">00</span>
+					<span>sec</span>
+				</span>
+			</div>
+			<!--Counter-->
+			<h1>{{vm.event.name}}</h1>
+			<h5 class="mt-20">
+				<span ng-show="vm.event.event_start == vm.event.event_end">
+					<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'longDate'}}
+				</span>
+				<span ng-show="vm.event.event_start != vm.event.event_end">
+					<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}
+				</span>
+			</h5>
+			<h5 class="mt-20">
+				{{vm.event.location}}
+			</h5>
+			<div class="mt-50">
+				<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect  bg-pink font-white mr-10" data-toggle="modal" data-target="#responsive_modal_1" href="#" data-upgraded=",MaterialButton,MaterialRipple">book now<span class="mdl-button__ripple-container"><span class="mdl-ripple is-animating" style="width: 240.308px; height: 240.308px; transform: translate(-50%, -50%) translate(81px, 9px);"></span></span></a>
+				<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect bg-indigo font-white" href="#" data-toggle="modal" data-target="#responsive_modal_2" data-upgraded=",MaterialButton,MaterialRipple">subscribe<span class="mdl-button__ripple-container"><span class="mdl-ripple is-animating" style="width: 241.035px; height: 241.035px; transform: translate(-50%, -50%) translate(83px, 26px);"></span></span></a>
+			</div>
+	</div>
 </div>
