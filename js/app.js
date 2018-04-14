@@ -184,7 +184,7 @@ angular.module('FrcPortal', [
 		default: 'main.event.info',
 		//admin: true,
  		data: {
- 		  title: 'Seasons'
+ 		  title: 'Events'
  		}
  	  })
 	 .state('main.event.info', {
@@ -195,7 +195,7 @@ angular.module('FrcPortal', [
 	 authenticate: true,
 	 //admin: true,
 	 data: {
-		 title: 'Seasons'
+		 title: 'Events'
 	 }
 	 });
 
