@@ -45,7 +45,7 @@
 					<span ng-show="vm.event.single_day">
 						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'longDate'}} {{vm.event.event_start_unix*1000 | date:'h:mm a'}}-{{vm.event.event_end_unix*1000 | date:'h:mm a'}}
 					</span>
-					<span ng-show="vm.event.event_start != vm.event.event_end">
+					<span ng-hide="vm.event.single_day">
 						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'MMMM d'}}-{{vm.event.event_end_unix*1000 | date:'d, y'}}
 					</span>
 				</h5>
