@@ -40,18 +40,24 @@
 					<timer end-time="vm.event.event_start_unix*1000">{{days}} day{{daysS}} : {{hours}} hour{{hoursS}} : {{minutes}} minute{{minutesS}} : {{seconds}} second{{secondsS}}</timer>
 				</div>
 				<!--Counter-->
-				<h1>{{vm.event.name}}</h1>
-				<h5 class="mt-20">
-					<span ng-show="vm.event.single_day">
-						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'longDate'}} {{vm.event.event_start_unix*1000 | date:'h:mm a'}} - {{vm.event.event_end_unix*1000 | date:'h:mm a'}}
-					</span>
-					<span ng-hide="vm.event.single_day">
-						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}
-					</span>
-				</h5>
-				<h5 class="mt-20">
-					{{vm.event.location}}
-				</h5>
+				<div style="text-align: center;">
+					<h1>{{vm.event.name}}</h1>
+				</div>
+				<div>
+					<h5 class="mt-20">
+						<span ng-show="vm.event.single_day">
+							<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'longDate'}} {{vm.event.event_start_unix*1000 | date:'h:mm a'}} - {{vm.event.event_end_unix*1000 | date:'h:mm a'}}
+						</span>
+						<span ng-hide="vm.event.single_day">
+							<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}
+						</span>
+					</h5>
+				</div>
+				<div>
+					<h5 class="mt-20">
+						{{vm.event.location}}
+					</h5>
+				</div>
 				<div flex layout="row" layout-align="center center">
 					<button class="md-button md-raised md-primary">Register Now</button>
 					<button class="md-button ">Register Now</button>
