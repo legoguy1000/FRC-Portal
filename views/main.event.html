@@ -61,12 +61,35 @@
 	<div layout="row" layout-align="center center" style="width:100%">
 		<div layout="column" flex-gt-md="60" flex>
 			<h2 class="mb-30">About the event</h2>
-			<md-content class="md-padding">
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="about-event-wrap">
-							<p ng-bind-html="vm.event.details"></p>
-						</div>
+			<md-content class="md-padding" layout="column">
+				<div layout="row">
+					<div ng-bind-html="vm.event.details"></div>
+				</div>
+				<div layout="row">
+					<div layout="column" flex="20">
+						<md-icon class="material-icons">attach_money</md-icon>
+						<h4>Payment Required</h4>
+						<p></p>
+					</div>
+					<div layout="column" flex="20">
+						<md-icon class="material-icons">assignment</md-icon>
+						<h4>Permission Slip Required</h4>
+						<p></p>
+					</div>
+					<div layout="column" flex="20">
+						<md-icon class="material-icons">local_dining</md-icon>
+						<h4>Food Orders Required</h4>
+						<p></p>
+					</div>
+					<div layout="column" flex="20">
+						<md-icon class="material-icons">directions_car</md-icon>
+						<h4>Drivers Required</h4>
+						<p></p>
+					</div>
+					<div layout="column" flex="20">
+						<md-icon class="material-icons">hotel</md-icon>
+						<h4>Hotel Rooms Required</h4>
+						<p></p>
 					</div>
 				</div>
 			</md-content>
