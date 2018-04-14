@@ -15,6 +15,7 @@ angular.module('FrcPortal', [
 	'ngCsv',
 	'ngMap',
 	'dndLists',
+	'timer',
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider, $locationProvider) {
 
 	$locationProvider.html5Mode({ enabled: true, requireBase: true });

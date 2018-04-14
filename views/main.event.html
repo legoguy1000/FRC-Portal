@@ -37,21 +37,7 @@
 		<div layout="column" flex-gt-md="60" flex layout-align="center center" class="md-padding" style="background:white;">
 				<!--Counter-->
 				<div id="countdown" class="countdown font-pink mb-25">
-					<span class="first-part-count">
-						<span class="days">00</span>
-						<span>days</span>
-						<span class="time-sep">:</span>
-						<span class="hours">00</span>
-						<span>hours</span>
-					</span>
-					<span class="second-part-count">
-						<span class="time-sep">:</span>
-						<span class="minutes">00</span>
-						<span>min</span>
-						<span class="time-sep">:</span>
-						<span class="seconds">00</span>
-						<span>sec</span>
-					</span>
+					<timer autostart="false" countdown="{{vm.event.event_start_unix*1000}}">{{days}} day{{daysS}} : {{hours}} hour{{hoursS}} : {{minutes}} minute{{minutesS}} : {{seconds}} second{{secondsS}}</timer>
 				</div>
 				<!--Counter-->
 				<h1>{{vm.event.name}}</h1>
