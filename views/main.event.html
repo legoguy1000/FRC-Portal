@@ -43,10 +43,10 @@
 				<h1>{{vm.event.name}}</h1>
 				<h5 class="mt-20">
 					<span ng-show="vm.event.single_day">
-						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'longDate'}} {{vm.event.event_start_unix*1000 | date:'h:mm a'}}-{{vm.event.event_end_unix*1000 | date:'h:mm a'}}
+						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'longDate'}} {{vm.event.event_start_unix*1000 | date:'h:mm a'}} - {{vm.event.event_end_unix*1000 | date:'h:mm a'}}
 					</span>
 					<span ng-hide="vm.event.single_day">
-						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'MMMM d'}}-{{vm.event.event_end_unix*1000 | date:'d, y'}}
+						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}
 					</span>
 				</h5>
 				<h5 class="mt-20">
