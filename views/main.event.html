@@ -32,8 +32,8 @@
 	</md-content>
 </div> -->
 
-<div flex layout="row" class="md-margin" layout-align="center center">
-	<div layout="column">
+<div flex layout="row" class="md-padding" layout-align="center center">
+	<div layout="column" layout-align="center center" class="md-padding" style="background:white;">
 			<!--Counter-->
 			<div id="countdown" class="countdown font-pink mb-25">
 				<span class="first-part-count">
@@ -65,9 +65,9 @@
 			<h5 class="mt-20">
 				{{vm.event.location}}
 			</h5>
-			<div class="mt-50">
-				<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect  bg-pink font-white mr-10" data-toggle="modal" data-target="#responsive_modal_1" href="#" data-upgraded=",MaterialButton,MaterialRipple">book now<span class="mdl-button__ripple-container"><span class="mdl-ripple is-animating" style="width: 240.308px; height: 240.308px; transform: translate(-50%, -50%) translate(81px, 9px);"></span></span></a>
-				<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect bg-indigo font-white" href="#" data-toggle="modal" data-target="#responsive_modal_2" data-upgraded=",MaterialButton,MaterialRipple">subscribe<span class="mdl-button__ripple-container"><span class="mdl-ripple is-animating" style="width: 241.035px; height: 241.035px; transform: translate(-50%, -50%) translate(83px, 26px);"></span></span></a>
+			<div flex layout="row" layout-align="center center">
+				<button class="md-button md-raised md-primary">Register Now</button>
+				<button class="md-button ">Register Now</button>
 			</div>
 	</div>
 </div>
