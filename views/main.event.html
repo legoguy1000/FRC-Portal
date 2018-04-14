@@ -32,7 +32,7 @@
 	</md-content>
 </div> -->
 
-<div flex layout="row" class="md-padding" layout-align="center center">
+<div flex layout="column" class="md-padding" layout-align="center center">
 	<div layout="column" layout-align="center center" class="md-padding" style="background:white;">
 			<!--Counter-->
 			<div id="countdown" class="countdown font-pink mb-25">
@@ -69,5 +69,17 @@
 				<button class="md-button md-raised md-primary">Register Now</button>
 				<button class="md-button ">Register Now</button>
 			</div>
+	</div>
+	<div layout="column">
+		<h2 class="mb-30">About the event</h2>
+		<md-content class="md-padding">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="about-event-wrap">
+						<p ng-bind-html="vm.event.details"></p>
+					</div>
+				</div>
+			</div>
+		</md-content>
 	</div>
 </div>
