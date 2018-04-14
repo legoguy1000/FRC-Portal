@@ -37,7 +37,7 @@
 		<div layout="column" flex-gt-md="60" flex layout-align="center center" class="md-padding" style="background:white;">
 				<!--Counter-->
 				<div id="countdown" class="countdown font-pink mb-25">
-					<timer end-time="{{vm.event.event_start_unix}}">{{days}} day{{daysS}} : {{hours}} hour{{hoursS}} : {{minutes}} minute{{minutesS}} : {{seconds}} second{{secondsS}}</timer>
+					<timer end-time="vm.event.event_start_unix*1000">{{days}} day{{daysS}} : {{hours}} hour{{hoursS}} : {{minutes}} minute{{minutesS}} : {{seconds}} second{{secondsS}}</timer>
 				</div>
 				<!--Counter-->
 				<h1>{{vm.event.name}}</h1>
