@@ -355,9 +355,16 @@ function formatUserData($user) {
 			$data['min_hours'] = (bool) $data['min_hours'];
 		}
 		if(isset($data['start_date']) && isset($data['bag_day']) && isset($data['end_date'])) {
-			$data['build_season'] = (bool) date('Y-m-d') >= $data['start_date'] && date('Y-m-d') <= $data['bag_day'];
-			$data['competition_season'] = (bool) date('Y-m-d') > $data['bag_day'] && date('Y-m-d') <= $data['end_date'];
-			$data['off_season'] = (bool) date('Y-m-d') > $data['end_date'];
+			$data['build_season'] = false;
+			$data['competition_season'] = false;
+			$data['off_season'] = false;
+			if(date('Y-m-d') >= $data['start_date'] && date('Y-m-d') <= $data['bag_day']) {
+				$data['build_season'] = true;
+			} else if (date('Y-m-d') > $data['bag_day'] && date('Y-m-d') <= $data['end_date']) {
+				$data['competition_season'] = true;
+			} else if(date('Y-m-d') > $data['end_date']) {
+				$data['off_season'] = true;
+			}
 		}
 		//Event Requirements
 		if(isset($data['registration'])) {
