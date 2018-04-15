@@ -111,7 +111,7 @@
 							<th md-column md-order-by="build_season_hours"><span>Build Season Hours</span></th>
 							<th md-column md-order-by="competition_season_hours"><span>Competition Season Hours</span></th>
 							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
-							<th md-column md-order-by="total_hours"><span>Total Hours</span></th>
+							<th md-column md-order-by="total_hours"><span>Total Annual Hours</span></th>
 						</tr>
 					</thead>
 					<tbody md-body>
@@ -131,11 +131,11 @@
 								<md-icon class="material-icons" style="color:red;" ng-hide="season.stims">remove_circle</md-icon>
 							</td>
 							<td md-cell>
-								<span ng-hide="main.userInfo.user_type == 'Mentor'">
+								<span ng-hide="vm.userInfo.user_type == 'Mentor'">
 									<md-icon class="material-icons" style="color:green;" ng-show="season.dues">check_circle</md-icon>
 									<md-icon class="material-icons" style="color:red;" ng-hide="season.dues">remove_circle</md-icon>
 								</span>
-								<md-icon class="material-icons" ng-hide="main.userInfo.user_type == 'Student'">indeterminate_check_box</md-icon>
+								<md-icon class="material-icons" ng-hide="vm.userInfo.user_type == 'Student'">indeterminate_check_box</md-icon>
 							</td>
 							<td md-cell>
 								{{season.build_season_hours}}
