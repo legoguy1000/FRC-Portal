@@ -185,10 +185,9 @@ function userSeasonInfo($user_id = null, $year = null) {
 	$order = 'ORDER BY users.lname ASC, b.year DESC';
 	$query = userQuery($sel, $joins, $where, $order);
 
-	$result = db_select($query);
+	$result = db_select_user($query);
 	if(count($result > 0)) {
-		foreach($result as $id=>$res) {
-			$user = formatUserData($res);
+		foreach($result as $id=>$user) {
 			$jt = $user['join_team'];
 			$stims = $user['stims'];
 			$dues = $user['dues'];
@@ -251,8 +250,7 @@ function userAnnualRequirements($user_id = null, $year = null) {
 	$query = userQuery($sel, $joins, $where, $order);
 	$result = db_select_user($query);
 	if(count($result > 0)) {
-		foreach($result as $id=>$res) {
-			$user = formatUserData($res);
+		foreach($result as $id=>$temp) {
 			$jt = $temp['join_team'];
 			$stims = $temp['stims'];
 			$dues = $temp['dues'];
