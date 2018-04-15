@@ -192,7 +192,7 @@ function userSeasonInfo($user_id = null, $year = null) {
 			$mh = $user['min_hours'];
 			$stu = (bool) $user['user_type'] == 'Student';
 			$men = (bool) $user['user_type'] == 'Mentor';
-			$temp['reqs_complete'] = $jt && $stims && (($stu && $dues) || $men) && $mh;
+			$user['reqs_complete'] = $jt && $stims && (($stu && $dues) || $men) && $mh;
 			$data[] = $user;
 		}
 	}
