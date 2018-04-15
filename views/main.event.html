@@ -1,37 +1,3 @@
-<!--<div flex layout-gt-sm="row" layout="column">
-	<md-content flex flex-gt-sm="50" flex-gt-md="33" layout="column" class="md-margin">
-		<h1 class="md-headline">
-			{{vm.event.name}}
-		</h1>
-		<div class="md-margin" flex layout="column">
-			<md-list-item style="padding: 0px;">
-				<img ng-src="{{vm.event.game_logo}}" class="md-avatar" alt="" ng-if="vm.event.game_logo"/>
-				{{vm.event.game_name}}
-			</md-list-item>
-			<div>
-				<span ng-show="vm.event.event_start == vm.event.event_end">
-					<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'longDate'}}
-				</span>
-				<span ng-show="vm.event.event_start != vm.event.event_end">
-					<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}
-				</span>
-			</div>
-			<div>
-				<md-icon class="material-icons">location_on</md-icon> {{vm.event.location}}
-			</div>
-			<div>
-				<span ng-bind-html="vm.event.details"></span>
-			</div>
-		</div>
-	</md-content>
-	<md-content flex="grow" class="md-margin" layout="column">
-		<md-tabs md-border-bottom md-autoselect md-swipe-content style="margin-bottom: 10px;">
-			<md-tab label="{{tab.name}}" ui-sref="{{tab.sref}}" md-active="vm.state == tab.sref" ng-repeat="tab in vm.tabs" md-on-select="vm.clickTab(tab)"></md-tab>
-		</md-tabs>
-		<div ui-view ng-class="vm.slide" flex></div>
-	</md-content>
-</div> -->
-
 <div flex layout="column" class="md-padding" layout-align="center center">
 	<div layout="row" layout-align="center center" style="width:100%">
 		<div layout="column" flex-gt-md="60" flex layout-align="center center" style="background:white;padding: 45px 25px;">
@@ -104,7 +70,7 @@
 	<div layout="row" layout-align="center center" style="width:100%;">
 		<div layout="column" flex-gt-md="60" flex>
 			<h2 class="mb-30">POC & Venue</h2>
-			<div layout="row" style="width:100%;" layout-align="start stretch">
+			<div layout-gt-sm="row" style="width:100%;" layout-align-gt-sm="start stretch">
 				<md-content layout="column" layout-align="start start" class="md-padding" flex style="margin-right:15px">
 					<div>Alex Resnick</div>
 					<div><a href="mailto:alexr@team2363.org" target="_blank"> Email </a></div>

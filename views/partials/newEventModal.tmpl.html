@@ -93,10 +93,11 @@
 									<label>Event Name</label>
 									<md-icon md-font-library="material-icons">event_available</md-icon>
 									<input ng-model="vm.data.name" readonly required></input>
+									<div class="hint">This is autopopulated from the Google Calendar.  Update the Google calendar for changes.</div>
 								</md-input-container>
 								<md-input-container flex class="md-icon-float md-block">
 									<label>Event Type</label>
-									<md-icon md-font-library="material-icons">widget</md-icon>
+									<md-icon md-font-library="material-icons">widgets</md-icon>
 									<input ng-model="vm.data.type" required></input>
 								</md-input-container>
 							</div>
@@ -108,6 +109,7 @@
 										 format="LLL"
 										 ng-model="vm.data.start_moment" required>
 									</input>
+									<div class="hint">This is autopopulated from the Google Calendar.  Update the Google calendar for changes.</div>
 								</md-input-container>
 								<md-input-container flex class="md-icon-float md-block">
 									<label>End Time</label>
@@ -116,6 +118,7 @@
 										 format="LLL"
 										 ng-model="vm.data.end_moment" required>
 									</input>
+									<div class="hint">This is autopopulated from the Google Calendar.  Update the Google calendar for changes.</div>
 								</md-input-container>
 							</div>
 							<div layout="row">
@@ -123,6 +126,7 @@
 										<label>Location</label>
 										<md-icon md-font-library="material-icons">location_on</md-icon>
 										<input ng-model="vm.data.location" readonly required></input>
+										<div class="hint">This is autopopulated from the Google Calendar.  Update the Google calendar for changes.</div>
 									</md-input-container>
 							</div>
 							<div layout="row">
