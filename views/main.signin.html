@@ -41,11 +41,11 @@
 						<!-- <td md-cell>{{user.user_type}}</td> -->
 						<td md-cell><span ng-if="user.time_in">{{user.time_in_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell><span ng-if="user.time_out">{{user.time_out_unix*1000 | date:'medium'}}</span></td>
-						<th md-cell>
+						<td md-cell>
 							<span ng-if="user.build_season">{{user.build_season_hours}}</span>
 							<span ng-if="user.competition_season">{{user.competition_season_hours}}</span>
 							<span ng-if="user.off_season">{{user.off_season_hours}}</span>
-						</th>
+						</td>
 					</tr>
 				</tbody>
 			</table>
