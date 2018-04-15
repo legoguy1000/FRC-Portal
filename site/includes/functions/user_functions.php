@@ -96,7 +96,7 @@ function userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requir
 		$sel .= ',	ROUND(IFNULL('.$c.'2.competition_season_hours,0),1) AS competition_season_hours';
 		//$sel .= ',	ROUND(IFNULL('.$c.'3.season_hours_exempt,0),1) AS season_hours_exempt';
 		$sel .= ',	IFNULL('.$c.'1.build_season_hours >= '.$b.'.hour_requirement,0) AS min_hours';
-		$sel .= ',	ROUND((IFNULL('.$c.'3.total_hours,0),1) AS total_hours';
+		$sel .= ',	ROUND(IFNULL('.$c.'3.total_hours,0),1) AS total_hours';
 
 		$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id,year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS off_season_hours, seasons.* FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>seasons.end_date GROUP BY meeting_hours.user_id,seasons.year) '.$c.' USING (user_id,year)';
 		$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS build_season_hours, seasons.*,exempt_hours.exempt_id FROM meeting_hours LEFT JOIN exempt_hours ON meeting_hours.time_in >= DATE_SUB(exempt_hours.time_start, INTERVAL 1 HOUR) AND meeting_hours.time_out < DATE_ADD(exempt_hours.time_end, INTERVAL 1 HOUR) LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.end_date  AND exempt_hours.exempt_id IS NULL GROUP BY meeting_hours.user_id,seasons.year) '.$c.'1 USING (user_id,year)';
