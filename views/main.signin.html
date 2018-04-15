@@ -42,9 +42,9 @@
 						<td md-cell><span ng-if="user.time_in">{{user.time_in_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell><span ng-if="user.time_out">{{user.time_out_unix*1000 | date:'medium'}}</span></td>
 						<th md-cell>
-							<span ng-show="vm.users[0].build_season">{{user.build_season_hours}}</span>
-							<span ng-show="vm.users[0].competition_season">{{user.competition_season_hours}}</span>
-							<span ng-show="vm.users[0].off_season">{{user.off_season_hours}}</span>
+							<span ng-if="user.build_season">{{user.build_season_hours}}</span>
+							<span ng-if="user.competition_season">{{user.competition_season_hours}}</span>
+							<span ng-if="user.off_season">{{user.off_season_hours}}</span>
 						</th>
 					</tr>
 				</tbody>
