@@ -142,20 +142,18 @@ function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements')
 
 function userSignInList() {
 	$data = array();
-	$sel = 'b.time_in, b.time_out, UNIX_TIMESTAMP(b.time_in) AS time_in_unix, UNIX_TIMESTAMP(b.time_out) AS time_out_unix,  ROUND(IFNULL(c.season_hours,0),1) AS season_hours,  ROUND(IFNULL(c1.season_hours_exempt,0),1) AS season_hours_exempt,  ROUND(IFNULL(d.off_season_hours,0),1) as off_season_hours';
-	$joins = 'LEFT JOIN meeting_hours b ON b.hours_id = (SELECT hours_id from meeting_hours WHERE meeting_hours.user_id=users.user_id ORDER BY time_in DESC LIMIT 1)';
-	//All Season Hours
-	$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, IFNULL(SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600),0) as season_hours FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(CURRENT_DATE()) WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.end_date GROUP BY meeting_hours.user_id) c ON c.user_id=users.user_id';
-	//Season hours not including exemptions
-	$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, IFNULL(SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600),0) as season_hours_exempt,exempt_hours.exempt_id FROM meeting_hours LEFT JOIN exempt_hours ON meeting_hours.time_in >= DATE_SUB(exempt_hours.time_start, INTERVAL 1 HOUR) AND meeting_hours.time_out < DATE_ADD(exempt_hours.time_end, INTERVAL 1 HOUR) LEFT JOIN seasons ON seasons.year=YEAR(CURRENT_DATE()) WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.end_date AND exempt_hours.exempt_id IS NULL GROUP BY meeting_hours.user_id) c1 ON c1.user_id=users.user_id';
-	//off season hours
-	$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, IFNULL(SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600),0) as off_season_hours from meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(CURRENT_DATE()) WHERE meeting_hours.time_in>seasons.end_date GROUP BY meeting_hours.user_id) d ON d.user_id=users.user_id  ';
+
+	$reqsQuery = userHoursAnnualRequirementsQueryArr($b = 'b', $l = false, $c = 'c');
+	$sel = $reqsQuery['selects'];
+	$joins = $reqsQuery['joins'];
+
+	$sel .= ', a.time_in, a.time_out, UNIX_TIMESTAMP(a.time_in) AS time_in_unix, UNIX_TIMESTAMP(a.time_out) AS time_out_unix';
+	$joins .= ' LEFT JOIN meeting_hours a ON a.hours_id = (SELECT hours_id from meeting_hours WHERE meeting_hours.user_id=users.user_id ORDER BY time_in DESC LIMIT 1)';
+
 	$where = 'WHERE users.status = "1"';
 	$order = 'ORDER BY users.lname ASC';
 	$query = userQuery($sel, $joins, $where, $order);
-
-
-	$result = db_select($query);
+	$result = db_select_user($query);
 	//die($query);
 	if(count($result > 0)) {
 		$data = $result;
