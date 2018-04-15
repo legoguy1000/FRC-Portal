@@ -25,7 +25,9 @@
 						<!-- <th md-column md-order-by="user_type"><span>Type</span></th>	 -->
 						<th md-column md-order-by="time_in"><span>Time In</span></th>
 						<th md-column md-order-by="time_out"><span>Time Out</span></th>
-						<th md-column md-order-by="season_hours_exempt"><span>On (including exemptions) /<br/>Off Season Hours</span></th>
+						<th md-column md-order-by="build_season_hours" ng-show="vm.users[0].build_season"><span>Build Season Hours</span></th>
+						<th md-column md-order-by="competition_season_hours" ng-show="vm.users[0].competition_season"><span>Competition Season Hours</span></th>
+						<th md-column md-order-by="off_season_hours" ng-show="vm.users[0].off_season"><span>Off Season Hours</span></th>
 					</tr>
 				</thead>
 				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
@@ -39,7 +41,11 @@
 						<!-- <td md-cell>{{user.user_type}}</td> -->
 						<td md-cell><span ng-if="user.time_in">{{user.time_in_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell><span ng-if="user.time_out">{{user.time_out_unix*1000 | date:'medium'}}</span></td>
-						<td md-cell>{{user.season_hours_exempt ? user.season_hours_exempt:'0.00'}} ({{user.season_hours}}) / {{user.off_season_hours ? user.off_season_hours:'0.00'}}</td>
+						<th md-cell>
+							<span ng-show="vm.users[0].build_season">{{user.build_season_hours}}</span>
+							<span ng-show="vm.users[0].competition_season">{{user.competition_season_hours}}</span>
+							<span ng-show="vm.users[0].off_season">{{user.off_season_hours}}</span>
+						</th>
 					</tr>
 				</tbody>
 			</table>
