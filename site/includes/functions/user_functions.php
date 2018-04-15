@@ -388,8 +388,8 @@ function formatUserData($user) {
 		if(isset($data['season_hours'])) {
 			$data['season_hours'] = (float) $data['season_hours'];
 		}
-		if(isset($data['buil_season_hours'])) {
-			$data['buil_season_hours'] = (float) $data['buil_season_hours'];
+		if(isset($data['build_season_hours'])) {
+			$data['build_season_hours'] = (float) $data['build_season_hours'];
 		}
 		if(isset($data['competition_season_hours'])) {
 			$data['competition_season_hours'] = (float) $data['competition_season_hours'];
