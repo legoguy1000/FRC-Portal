@@ -49,7 +49,7 @@ function userHoursQueryArr($l = 'off_season_hours', $q = 'on_season_hours') {
 	return $data;
 } */
 
-function userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requirements', $c = 'off_season_hours', $d = 'on_season_hours') {
+/*function userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requirements', $c = 'off_season_hours', $d = 'on_season_hours') {
 
 	$sel =  $b.'.*';
 	$joins = 'CROSS JOIN seasons '.$b;
@@ -72,6 +72,38 @@ function userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requir
 	}
 	if($c != false && $d != false) {
 		$sel .= ',  ROUND((IFNULL('.$c.'.off_season_hours,0)+IFNULL('.$d.'.season_hours,0)),1) AS total';
+	}
+	$data = array(
+		'selects' => $sel,
+		'joins' => $joins
+	);
+	return $data;
+} */
+
+function userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requirements', $c = 'hours') {
+
+	$sel =  $b.'.*';
+	$joins = 'CROSS JOIN seasons '.$b;
+	if($l != false) {
+		$sel .= ', IFNULL('.$l.'.join_team,0) AS join_team,
+							 IFNULL('.$l.'.stims,0) AS stims,
+							 IFNULL('.$l.'.dues,0) AS dues';
+		$joins .= ' LEFT JOIN annual_requirements '.$l.' USING (user_id,season_id)';
+	}
+	if($c != false) {
+		$sel .= ',  ROUND(IFNULL('.$c.'.off_season_hours,0),1) AS off_season_hours';
+		$sel .= ',	ROUND(IFNULL('.$c.'1.build_season_hours,0),1) AS build_season_hours';
+		$sel .= ',	ROUND(IFNULL('.$c.'2.competition_season_hours,0),1) AS competition_season_hours';
+		//$sel .= ',	ROUND(IFNULL('.$c.'3.season_hours_exempt,0),1) AS season_hours_exempt';
+		$sel .= ',	IFNULL('.$c.'1.build_season_hours >= '.$b.'.hour_requirement,0) AS min_hours';
+		$sel .= ',	ROUND((IFNULL('.$c.'3.total_hours,0),1) AS total_hours';
+
+		$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id,year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS off_season_hours, seasons.* FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>seasons.end_date GROUP BY meeting_hours.user_id,seasons.year) '.$c.' USING (user_id,year)';
+		$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS build_season_hours, seasons.*,exempt_hours.exempt_id FROM meeting_hours LEFT JOIN exempt_hours ON meeting_hours.time_in >= DATE_SUB(exempt_hours.time_start, INTERVAL 1 HOUR) AND meeting_hours.time_out < DATE_ADD(exempt_hours.time_end, INTERVAL 1 HOUR) LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.end_date  AND exempt_hours.exempt_id IS NULL GROUP BY meeting_hours.user_id,seasons.year) '.$c.'1 USING (user_id,year)';
+		//$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS build_season_hours, seasons.* FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.bag_day GROUP BY meeting_hours.user_id,seasons.year) '.$c.'1 USING (user_id,year)';
+		$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS competition_season_hours, seasons.* FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>seasons.bag_day AND meeting_hours.time_in<=seasons.end_date GROUP BY meeting_hours.user_id,seasons.year) '.$c.'2 USING (user_id,year)';
+		$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS total_hours, seasons.* FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) GROUP BY meeting_hours.user_id,seasons.year) '.$c.'3 USING (user_id,year)';
+
 	}
 	$data = array(
 		'selects' => $sel,
@@ -133,7 +165,8 @@ function userSignInList() {
 
 function userSeasonInfo($user_id = null, $year = null) {
 	$data = array();
-	$reqsQuery = userHoursAnnualRequirementsQueryArr($b = 'b', $l = 'e', $c = 'c', $d = 'd');
+	//$reqsQuery = userHoursAnnualRequirementsQueryArr($b = 'b', $l = 'e', $c = 'c', $d = 'd');
+	$reqsQuery = userHoursAnnualRequirementsQueryArr($b = 'b', $l = 'e', $c = 'c');
 /* 	$reqsQuery = annualRequirementsQueryArr($l = 'e');
 	$hoursQuery = userHoursQueryArr($l = 'c', $q = 'd'); */
 	$where = '';
@@ -161,7 +194,8 @@ function userSeasonInfo($user_id = null, $year = null) {
 			$dues = $user['dues'];
 			$mh = $user['min_hours'];
 			$stu = (bool) $user['user_type'] == 'Student';
-			$user['reqs_complete'] = $jt && $stims && (($stu && $dues) || !$stu) && $mh;
+			$men = (bool) $user['user_type'] == 'Mentor';
+			$temp['reqs_complete'] = $jt && $stims && (($stu && $dues) || $men) && $mh;
 			$data[] = $user;
 		}
 	}
@@ -199,16 +233,16 @@ function userEventInfo($user_id = null, $year = null, $event = null) {
 function userAnnualRequirements($user_id = null, $year = null) {
 
 	$data = array();
-	$reqsQuery = userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requirements', $c = false, $d = false);
+	$reqsQuery = userHoursAnnualRequirementsQueryArr($b = 'seasons', $l = 'annual_requirements', $c = false);
 	$where = '';
 	$whereArr = array();
-	$sel = 'b.*, '.$reqsQuery['selects'];
+	$sel = $reqsQuery['selects'];
 	$joins = $reqsQuery['joins'];
 	if($user_id != null) {
 		$whereArr[] = 'users.user_id = '.db_quote($user_id);
 	}
 	if($year != null) {
-		$whereArr[] = 'b.year = '.db_quote($year);
+		$whereArr[] = 'seasons.year = '.db_quote($year);
 	}
 	if(!empty($whereArr)) {
 		$where = 'WHERE '.implode(' AND ',$whereArr);
@@ -218,7 +252,7 @@ function userAnnualRequirements($user_id = null, $year = null) {
 	$result = db_select_user($query);
 	if(count($result > 0)) {
 		foreach($result as $id=>$res) {
-			$temp = $res;
+			$user = formatUserData($res);
 			$jt = $temp['join_team'];
 			$stims = $temp['stims'];
 			$dues = $temp['dues'];
@@ -348,8 +382,17 @@ function formatUserData($user) {
 		if(isset($data['hours'])) {
 			$data['hours'] = (float) $data['hours'];
 		}
+		if(isset($data['total_hours'])) {
+			$data['total_hours'] = (float) $data['total_hours'];
+		}
 		if(isset($data['season_hours'])) {
 			$data['season_hours'] = (float) $data['season_hours'];
+		}
+		if(isset($data['buil_season_hours'])) {
+			$data['buil_season_hours'] = (float) $data['buil_season_hours'];
+		}
+		if(isset($data['competition_season_hours'])) {
+			$data['competition_season_hours'] = (float) $data['competition_season_hours'];
 		}
 		if(isset($data['season_hours_exempt'])) {
 			$data['season_hours_exempt'] = (float) $data['season_hours_exempt'];
