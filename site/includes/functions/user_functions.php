@@ -150,7 +150,7 @@ function userSignInList() {
 	$sel .= ', a.time_in, a.time_out, UNIX_TIMESTAMP(a.time_in) AS time_in_unix, UNIX_TIMESTAMP(a.time_out) AS time_out_unix';
 	$joins .= ' LEFT JOIN meeting_hours a ON a.hours_id = (SELECT hours_id from meeting_hours WHERE meeting_hours.user_id=users.user_id ORDER BY time_in DESC LIMIT 1)';
 
-	$where = 'WHERE users.status = "1"';
+	$where = 'WHERE users.status = "1" AND b.year='.date('Y');
 	$order = 'ORDER BY users.lname ASC';
 	$query = userQuery($sel, $joins, $where, $order);
 	$result = db_select_user($query);
