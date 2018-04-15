@@ -82,11 +82,12 @@ if(!is_null($season)) {
 							}
 						}
 						$query = 'insert into schools (school_id, school_name, abv) values ('.db_quote($sid).','.db_quote($school).','.db_quote($abv).')';
-						$result = db_query($query);
+						echo $query.'<br/>';
+			/*			$result = db_query($query);
 						if($result) {
 							$school_id = $sid;
 						}
-					}
+					}*/
 	/*				if(strpos($school,'Menchville') !== false) {
 						$query = 'SELECT schools.* FROM schools WHERE school_name LIKE '.db_quote('%Menchville%');
 						$schools = db_select_single($query);
