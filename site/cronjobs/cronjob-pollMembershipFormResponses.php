@@ -137,7 +137,8 @@ if(!is_null($season)) {
 				}
 				//Insert Data
 				$query = 'insert into users ('.$columns.') values ('.$values.')';
-				$result = db_query($query);
+				echo $query.'<br/>';
+				//$result = db_query($query);
 			}
 
 			//Add User info into the Annual Requirements Table
@@ -148,17 +149,18 @@ if(!is_null($season)) {
 			} else {
 				$req_id = uniqid();
 				$query = 'INSERT INTO annual_requirements (req_id, user_id, season_id, join_team) VALUES ('.db_quote($req_id).', '.db_quote($user_id).', '.db_quote($season_id).', "1")';
-				$result = db_query($query);
+				//$result = db_query($query);
+				echo $query.'<br/>';
 			}
 			//Add the new user data into the logs
-			$where = 'WHERE users.fname='.db_query($fname).' AND users.lname='.db_query($lname).' AND users.user_type='.db_query($user_type);
+/*			$where = 'WHERE users.fname='.db_query($fname).' AND users.lname='.db_query($lname).' AND users.user_type='.db_query($user_type);
 			$query = userQuery($sel = '',$joins = '', $where, $order = '');
 			$user = db_select_single($query);
 			$userInfo = $user!=false ? json_encode($user) : $query;
 			$id = uniqid();
 			$date = date('Y-m-d H:i:s');
 			$query = 'INSERT INTO webhook_logs (`wh_id`, `webhook_submit`, `user_data`, `timestamp`) VALUES ("'.$id.'", '.db_quote(json_encode($formData)).', '.db_quote($userInfo).', '.db_quote($date).')';
-			$result = db_query($query);
+			$result = db_query($query); */
 		}
 	}
 }
