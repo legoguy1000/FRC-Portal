@@ -99,9 +99,10 @@
 									<th md-column md-order-by="join_team"><span>Join Team</span></th>
 									<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>
 									<th md-column md-order-by="dues"><span>Pay Dues</span></th>
-									<th md-column md-order-by="season_hours_exempt"><span>On Season Hours <br/> (including exemptions)</span></th>
+									<th md-column md-order-by="build_season_hours"><span>Build Season Hours</span></th>
+									<th md-column md-order-by="competition_season_hours"><span>Competition Season Hours</span></th>
 									<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
-									<th md-column md-order-by="total"><span>Total Hours</span></th>
+									<th md-column md-order-by="total_hours"><span>Total Annual Hours</span></th>
 								</tr>
 							</thead>
 							<tbody md-body>
@@ -128,13 +129,16 @@
 										<md-icon class="material-icons" ng-hide="main.userInfo.user_type == 'Student'">indeterminate_check_box</md-icon>
 									</td>
 									<td md-cell>
-										{{season.season_hours_exempt}} ({{season.season_hours}})
+										{{season.build_season_hours}}
+									</td>
+									<td md-cell>
+										{{season.competition_season_hours}}
 									</td>
 									<td md-cell>
 										{{season.off_season_hours}}
 									</td>
 									<td md-cell>
-										<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.total}}</md-button>
+										<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.total_hours}}</md-button>
 									</td>
 								</tr>
 							</tbody>
@@ -164,10 +168,10 @@
 								<tr md-row ng-repeat="event in vm.eventInfo">
 									<td md-cell>{{event.name}}</td>
 									<td md-cell>
-										<span ng-show="event.event_start == event.event_end">
-											{{event.event_start_unix*1000 | date:'longDate'}}
+										<span ng-show="event.single_day">
+											{{event.event_start_unix*1000 | date:'longDate'}} {{event.event_start_unix*1000 | date:'h:mm a'}} - {{event.event_end_unix*1000 | date:'h:mm a'}}
 										</span>
-										<span ng-show="event.event_start != event.event_end">
+										<span ng-hide="event.single_day">
 											{{event.event_start_unix*1000 | date:'MMMM d'}} - {{event.event_end_unix*1000 | date:'d, y'}}
 										</span>
 									</td>
