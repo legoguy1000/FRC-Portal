@@ -58,6 +58,11 @@
 				<input ng-model="vm.season.hour_requirement" type="number" min="0" required>
 			</md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
+				<label>Google Sheets Membership Form Responses </label>
+				<md-icon md-font-library="material-icons">insert_drive_file</md-icon>
+				<input ng-model="vm.season.join_spreadsheet" type="text" required>
+			</md-input-container>
+			<md-input-container flex class="md-icon-float md-block">
 				<label>Game Logo URL</label>
 				<md-icon md-font-library="material-icons">photo</md-icon>
 				<input ng-model="vm.season.game_logo" required>
@@ -65,9 +70,6 @@
 			<img ng-src="{{vm.season.game_logo}}" class="md-avatar" alt="" ng-if="vm.season.game_logo" style="max-width: 100%; max-height: 200px;"/>
 			<div flex layout="row">
 				<span flex></span>
-				<md-button type="">
-					cancel
-				</md-button>
 				<md-button type="submit" class="md-raised">
 					Submit
 				</md-button>

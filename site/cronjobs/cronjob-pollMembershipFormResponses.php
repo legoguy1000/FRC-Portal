@@ -2,20 +2,38 @@
 include(__DIR__ . '/../includes.php');
 //
 
-$season_id = '';
+$season_id = null;
+$spreadsheetId = null;
 $where = 'WHERE bag_day >= '.db_quote(date('Y-m-d'));
 $query = seasonQuery($sel='',$joins='', $where, $order = '');
 $season = db_select_single($query);
 if(!is_null($season)) {
 	$season_id = $season['season_id'];
-	$season_spreadsheet = $season['join_spreadsheet'];
-
+	$spreadsheetId = $season['join_spreadsheet'] != '' ? $season['join_spreadsheet']:null;
+} else {
+	$client = new Google_Client();
+	$client->setAuthConfigFile('./includes/libraries/team-2363-portal-0c12aca54f1c.json');
+	$client->setScopes(['https://www.googleapis.com/auth/drive.readonly']);
+	$service = new Google_Service_Drive($client);
+	$parameters = array(
+		'corpora' => 'teamDrive',
+		'q' => 'name contains "'.(date('Y')+1).'" and name contains "Membership" and name contains "(Responses)" and mimeType = "application/vnd.google-apps.spreadsheet"',
+		'includeTeamDriveItems' => 'true',
+		'supportsTeamDrives' => 'true',
+		'teamDriveId' => '0AI0WovuxnF1zUk9PVA',
+		'pageSize' => '1'
+	);
+	$files = $service->files->listFiles($parameters);
+	$result = $files->getFiles();
+	if(count($result) > 0) {
+		$spreadsheetId = $result[0]['id'];
+	}
+}
+if(!is_null($spreadsheetId)) {
 	$client = new Google_Client();
 	$client->setAuthConfigFile(__DIR__ . '/../includes/libraries/team-2363-portal-0c12aca54f1c.json');
 	$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
 	$service = new Google_Service_Sheets($client);
-	// The ID of the spreadsheet to retrieve data from.
-	$spreadsheetId = $season_spreadsheet;  // TODO: Update placeholder value.
 	// The A1 notation of the values to retrieve.
 	$range = 'Form Responses 1';  // TODO: Update placeholder value.
 	$response = $service->spreadsheets_values->get($spreadsheetId, $range);
@@ -143,18 +161,22 @@ if(!is_null($season)) {
 			}
 
 			//Add User info into the Annual Requirements Table
-			$query = 'SELECT * FROM annual_requirements WHERE season_id='.db_quote($season_id).' AND user_id='.db_quote($user_id);
-			$season = db_select_single($query);
-			if(!is_null($season)) {
-				$query = 'UPDATE annual_requirements SET join_team="1" WHERE season_id='.db_quote($season_id).' AND user_id='.db_quote($user_id);
-			} else {
-				$req_id = uniqid();
-				$query = 'INSERT INTO annual_requirements (req_id, user_id, season_id, join_team) VALUES ('.db_quote($req_id).', '.db_quote($user_id).', '.db_quote($season_id).', "1")';
-				$result = db_query($query);
+			if(!is_null($season_id)) {
+				$query = 'SELECT * FROM annual_requirements WHERE season_id='.db_quote($season_id).' AND user_id='.db_quote($user_id);
+				$season = db_select_single($query);
+				if(!is_null($season)) {
+					$query = 'UPDATE annual_requirements SET join_team="1" WHERE season_id='.db_quote($season_id).' AND user_id='.db_quote($user_id);
+					$result = db_query($query);
+				} else {
+					$req_id = uniqid();
+					$query = 'INSERT INTO annual_requirements (req_id, user_id, season_id, join_team) VALUES ('.db_quote($req_id).', '.db_quote($user_id).', '.db_quote($season_id).', "1")';
+					$result = db_query($query);
+				}
 			}
 		}
 	}
 }
+
 
 
 
