@@ -3,7 +3,7 @@ include(__DIR__ . '/../includes.php');
 //
 
 $season_id = '';
-$where = 'WHERE bag_day >= '.db_quote('2018-01-01');
+$where = 'WHERE bag_day >= '.db_quote(date('Y-m-d'));
 $query = seasonQuery($sel='',$joins='', $where, $order = '');
 $season = db_select_single($query);
 if(!is_null($season)) {
