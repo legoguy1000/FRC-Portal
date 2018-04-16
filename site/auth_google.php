@@ -3,12 +3,12 @@ include('./includes.php');
 
 use \Firebase\JWT\JWT;
 
-$json = file_get_contents('php://input'); 
+$json = file_get_contents('php://input');
 $formData = json_decode($json,true);
 $provider = 'google';
 
 $client = new Google_Client();
-$client->setAuthConfigFile('./includes/libraries/google_client_secret.json');
+$client->setAuthConfigFile('./includes/secured/google_client_secret.json');
 $plus = new Google_Service_Plus($client);
 if(isset($formData['code'])) {
 	$bob = $client->authenticate($formData['code']);
@@ -22,7 +22,7 @@ if(isset($formData['code'])) {
 	$gender = $me['gender'];
 	$id = $me['id'];
 	$age_min = $me['ageRange']['min'];
-	
+
 	$userData = array(
 		'id' => $id,
 		'provider' => $provider,
@@ -33,7 +33,7 @@ if(isset($formData['code'])) {
 		'gender' => $gender,
 		'age_min' => $age_min
 	);
-	
+
 	$data = array();
 	$data = checkUserLogin($userData);
 	if(!isset($formData['link_account']) || (isset($formData['link_account']) && !$formData['link_account'])) {
@@ -77,8 +77,8 @@ if(isset($formData['code'])) {
 			die(json_encode(array('status'=>false, 'type'=>'error', 'msg'=>'Something went wrong.')));
 		}
 	}
-	
-	
+
+
 } else {
 	//insertLogs('', 'login', 'error', $provider);
 	die(json_encode(array('status'=>false, 'type'=>'error', 'msg'=>'Google Login Error')));
