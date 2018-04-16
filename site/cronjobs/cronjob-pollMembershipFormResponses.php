@@ -11,7 +11,7 @@ if(!is_null($season)) {
 	$season_spreadsheet = $season['join_spreadsheet'];
 
 	$client = new Google_Client();
-	$client->setAuthConfigFile('./includes/libraries/team-2363-portal-0c12aca54f1c.json');
+	$client->setAuthConfigFile(__DIR__ . '/../includes/libraries/team-2363-portal-0c12aca54f1c.json');
 	$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
 	$service = new Google_Service_Sheets($client);
 	// The ID of the spreadsheet to retrieve data from.
