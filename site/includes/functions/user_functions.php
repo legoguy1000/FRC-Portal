@@ -222,7 +222,9 @@ function userEventInfo($user_id = null, $year = null, $event = null) {
 	//die($query);
 	$result = db_select_user($query);
 	if(count($result > 0)) {
-		$data = $result;
+		foreach($result as $event) {
+			$data[] = formatEventData($event);
+		}
 	}
 	return $data;
 }
