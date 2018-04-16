@@ -21,7 +21,7 @@ function formatEventData($event) {
 		$data['payment'] = (bool) $data['payment'];
 		$data['permission_slip'] = (bool) $data['permission_slip'];
 		$data['room'] = (bool) $data['room'];
-		$data['single_day'] = (bool) date('Y-m-d',$data['event_start_unix']) == date('Y-m-d',$data['event_end_unix']);
+		$data['single_day'] = (bool) (date('Y-m-d',$data['event_start_unix']) == date('Y-m-d',$data['event_end_unix']));
 	}
 	return $data;
 }
