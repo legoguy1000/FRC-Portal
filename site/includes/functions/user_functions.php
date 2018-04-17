@@ -343,7 +343,7 @@ function formatUserData($user) {
 		$data['former_student'] = (bool) $data['former_student'];
 		$data['status'] = (bool) $data['status'];
 		$data['slackEnabled'] = (bool) isset($data['slack_id']) && $data['slack_id'] != '';
-		$data['roomType'] = $data['user_type'] == 'Student' ? $room['user_type'].'.'.$room['gender'] : $room['user_type'];
+		$data['roomType'] = $data['user_type'] == 'Student' ? $data['user_type'].'.'.$data['gender'] : $data['user_type'];
 		//Annual Requirements
 		if(isset($data['join_team'])) {
 			$data['join_team'] = (bool) $data['join_team'];
