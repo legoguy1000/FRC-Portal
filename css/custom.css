@@ -344,6 +344,9 @@ button.md-icon-button.profile {
   min-height: 42px;
 }
 
-md-list-item.min-height-reset::before , md-list-item.md-list-item-inner.min-height-reset::before {
+md-list-item.min-height-rese,
+md-list-item.min-height-rese .md-list-item-inner,
+md-list-item.min-height-reset::before,
+md-list-item.min-height-reset .md-list-item-inner::before {
   min-height: 0px !important;
 }
