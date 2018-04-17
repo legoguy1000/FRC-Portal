@@ -17,7 +17,7 @@
 					<md-list ng-cloak
 						dnd-list="vm.room_list.room_selection[room.room_id]"
 						dnd-allowed-types="room.roomType"
-						dnd-disable-if="(room.userType == 'Student' && vm.room_list.room_selection[room.room_id].length >= 4) || (room.userType == 'Mentor' && vm.room_list.room_selection[room.room_id].length >= 2)"
+						dnd-disable-if="(room.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length >= 4) || (room.user_type == 'Mentor' && vm.room_list.room_selection[room.room_id].length >= 2)"
 						style="min-height:20px;">
 					    <md-list-item ng-repeat="user in vm.room_list.room_selection[room.room_id]"
 					        dnd-draggable="user"
