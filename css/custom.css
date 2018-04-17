@@ -343,3 +343,7 @@ button.md-icon-button.profile {
   padding: 10px 15px;
   min-height: 42px;
 }
+
+.min-height-reset {
+  min-height: 0px !important;
+}
