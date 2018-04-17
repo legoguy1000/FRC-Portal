@@ -87,7 +87,7 @@ function getEventRoomList($event_id) {
 			$roomTypeCount[] = $roomType;
 			$c = array_count_values($roomTypeCount);
 			$temp['roomType'] = array($roomType);
-			$temp['room_title'] = $room['user_type'] == 'Student' ? $room['user_type'].' '.$room['gender'].' '.$c[$roomType] : $room['user_type'].' '.$c[$roomType];
+			$temp['room_title'] = $room['user_type'] == 'Student' ? str_replace('Male',"Boys",str_replace('Female',"Girls",$room['gender'])).' '.$c[$roomType] : $room['user_type'].' '.$c[$roomType];
 			$roomInfo[] = $temp;
 			$room_id = $room['room_id'];
 			$joins = ' RIGHT JOIN event_requirements USING (user_id)';
