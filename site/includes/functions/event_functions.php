@@ -80,9 +80,14 @@ function getEventRoomList($event_id) {
 	if(isset($event_id) && $event_id != '') {
 		$query = 'SELECT * FROM event_rooms WHERE event_id='.db_quote($event_id);
 		$result = db_select($query);
+		$roomTypeCount = array();
 		foreach($result as $room) {
 			$temp = $room;
-			$temp['roomType'] = $room['user_type'] == 'Student' ? array($room['user_type'].'.'.$room['gender']) : array($room['user_type']);
+			$roomType = $room['user_type'] == 'Student' ? $room['user_type'].'.'.$room['gender'] : $room['user_type'];
+			$roomTypeCount[] = $roomType;
+			$c = array_count_values($roomTypeCount);
+			$temp['roomType'] = array($roomType);
+			$temp['room_title'] = $room['user_type'] == 'Student' ? $room['user_type'].' '.$room['gender'].' '.$c[$roomType] : $room['user_type'].' '.$c[$roomType];
 			$roomInfo[] = $temp;
 			$room_id = $room['room_id'];
 			$joins = ' RIGHT JOIN event_requirements USING (user_id)';
