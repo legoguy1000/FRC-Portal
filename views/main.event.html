@@ -72,10 +72,12 @@
 			<h2 class="mb-30">POC & Venue</h2>
 			<div layout-gt-sm="row" style="width:100%;" layout-align-gt-sm="start stretch">
 				<md-content layout="column" layout-align="start start" class="md-padding" flex style="margin-right:15px">
-					<div>Alex Resnick</div>
-					<div><a href="mailto:alexr@team2363.org" target="_blank"> Email </a></div>
-					<div><a href="slack://user?team=T0AP1HT4G&id=U2CE60JHG">Slack</a></div>
-					<div><a href="https://triple-helix.slack.com/messages/U2CE60JHG" target="_blank">Slack</a></div>
+					<div>{{vm.event.pocInfo.full_name}}</div>
+					<div><a ng-href="mailto:{{vm.event.pocInfo.email}}" target="_blank">{{vm.event.pocInfo.email}}</div>
+					<div ng-show="vm.event.pocInfo.slackEnabled">
+						<a ng-href="slack://user?team=T0AP1HT4G&id={{vm.event.pocInfo.slack_id}}">Slack App</a>
+						<a ng-href="https://triple-helix.slack.com/messages/{{vm.event.pocInfo.slack_id}}">Slack Web</a>
+					</div>
 				</md-content>
 			 	<div flex style="margin-left:15px">
 					 <div flex layout="row" map-lazy-load="https://maps.google.com/maps/api/js?libraries=placeses,visualization,drawing,geometry,places&key=AIzaSyBBVrU13yHk75Youk6NQbP86QXdfrPwmtk" map-lazy-load-params="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBVrU13yHk75Youk6NQbP86QXdfrPwmtk">
