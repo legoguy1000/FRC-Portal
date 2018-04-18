@@ -75,8 +75,8 @@
 					<div>{{vm.event.pocInfo.full_name}}</div>
 					<div><a ng-href="mailto:{{vm.event.pocInfo.email}}" target="_blank">{{vm.event.pocInfo.email}}</div>
 					<div ng-show="vm.event.pocInfo.slackEnabled">
-						<a ng-href="slack://user?team=T0AP1HT4G&id={{vm.event.pocInfo.slack_id}}">Slack App</a>
-						<a ng-href="https://triple-helix.slack.com/messages/{{vm.event.pocInfo.slack_id}}">Slack Web</a>
+						<a ng-href="slack://user?team=T0AP1HT4G&id={{vm.event.pocInfo.slack_id}}">Slack App</a><br/>
+						<a ng-href="https://triple-helix.slack.com/messages/{{vm.event.pocInfo.slack_id}}" target="_blank">Slack Web</a>
 					</div>
 				</md-content>
 			 	<div flex style="margin-left:15px">
