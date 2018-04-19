@@ -91,7 +91,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			filter: search,
 			limit: 0,
 			order: 'full_name',
-			page: 1
+			page: 1,
+			listOnly: true,
 		};
 		return usersService.getAllUsersFilter($.param(data));
 	};
