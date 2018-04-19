@@ -28,7 +28,7 @@
 			<md-input-container flex class="md-icon-float md-block">
         <label>Details</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
-        <textarea ng-model="vm.event.details" rows="10" md-select-on-focus></textarea>
+        <textarea ng-bind-html="vm.event.details" rows="10" md-select-on-focus></textarea>
       </md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
 				<label>FRC Season</label>
