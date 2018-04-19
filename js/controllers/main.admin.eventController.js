@@ -86,3 +86,13 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		});
 	};
 }
+
+vm.searchUsers = function (search) {
+	var data = {
+		filter: search,
+		limit: 0,
+		order: 'full_name',
+		page: 1
+	};
+	return usersService.getAllUsersFilter($.param(data));
+};

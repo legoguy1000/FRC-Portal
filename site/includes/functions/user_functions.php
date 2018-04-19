@@ -656,9 +656,13 @@ function getAllUsersFilter($filter = '', $limit = 10, $order = 'full_name', $pag
 	$query = userQuery($sel='',$joins='', $where, $order = '');
 	$result = db_select($query);
 	$totalNum = count($result);
+	if($limit > 0) {
+		$offset	= ($page - 1) * $limit;
+		$limitStr = 'LIMIT '.$offset.', '.$limit;
+	}
 
-	$offset	= ($page - 1) * $limit;
-	$order = 'ORDER BY '.$orderCol.' '.$orderBy.' LIMIT '.$offset.', '.$limit;
+	$order = ' ORDER BY '.$orderCol.' '.$orderBy.' '.$limitStr;
+	//$order = 'ORDER BY '.$orderCol.' '.$orderBy.' LIMIT '.$offset.', '.$limit;
 	$query = userQuery($sel='',$joins='', $where, $order);
 	//die($query);
 	$result = db_select($query);
