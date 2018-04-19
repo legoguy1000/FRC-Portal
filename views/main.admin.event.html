@@ -9,6 +9,57 @@
 		</h1>
 		<form class="md-margin" layout="column">
 			<md-input-container flex class="md-icon-float md-block">
+				<label>Event Name</label>
+				<md-icon md-font-library="material-icons">description</md-icon>
+				<input ng-model="vm.event.name" required readonly/>
+			</md-input-container>
+			<div flex ng-show="vm.event.single_day">
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Start Time</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.event.event_start" required
+						 format="LLL"
+						 min-view="year"
+						 max-view="day"
+						 ng-model="vm.event.event_start_full" disable="true" readonly>
+					</input>
+				</md-input-container>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>End Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.event.event_end" required
+						 format="LLL"
+						 min-view="year"
+						 max-view="day"
+						 ng-model="vm.event.event_end_full"
+						 disable="true" readonly>
+					</input>
+				</md-input-container>
+			</div>
+			<div flex ng-hide="vm.event.single_day">
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Start Time</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.event.event_start" required
+						 format="LL"
+						 min-view="year"
+						 max-view="day"
+						 ng-model="vm.event.event_start_full" disable="true" readonly>
+					</input>
+				</md-input-container>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>End Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.event.event_end" required
+						 format="LL"
+						 min-view="year"
+						 max-view="day"
+						 ng-model="vm.event.event_end_full"
+						 disable="true" readonly>
+					</input>
+				</md-input-container>
+			</div>
+			<md-input-container flex class="md-icon-float md-block">
 				<label>FRC Season</label>
 				<md-icon md-font-library="material-icons">event</md-icon>
 				<md-select ng-model="vm.event.season_id"
@@ -32,19 +83,14 @@
 				</md-select>
 			</md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
-				<label>Event Name</label>
-				<md-icon md-font-library="material-icons">description</md-icon>
-				<input ng-model="vm.event.name" required/>
-			</md-input-container>
-			<md-input-container flex class="md-icon-float md-block">
 				<label>Type</label>
 				<md-icon md-font-library="material-icons">explore</md-icon>
 				<input ng-model="vm.event.type" required/>
 			</md-input-container>
-			<div layout="row">
+<!--			<div layout="row">
 				<div flex>
 					<md-input-container flex class="md-icon-float md-block">
-						<label>Start Date</label>
+						<label>Start Time</label>
 						<md-icon md-font-library="material-icons">today</md-icon>
 						<input moment-picker="vm.event.event_start" required
 							 format="YYYY-MM-DD"
@@ -70,7 +116,7 @@
 					 ng-model="vm.event.event_end_full"
 					 disable="vm.event.single_day">
 				</input>
-			</md-input-container>
+			</md-input-container> -->
 	<!--		<div>
 				<md-checkbox ng-model="vm.event.exempt_hours" aria-label="Exempt Hours">
 					Exempt Hours from counting to season total
