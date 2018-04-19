@@ -19,18 +19,14 @@
 					<md-icon md-font-library="material-icons">today</md-icon>
 					<input moment-picker="vm.event.event_start" required
 						 format="LLL"
-						 min-view="year"
-						 max-view="day"
 						 ng-model="vm.event.event_start_full" disable="true" readonly>
 					</input>
 				</md-input-container>
 				<md-input-container flex class="md-icon-float md-block">
-					<label>End Date</label>
+					<label>End Time</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
 					<input moment-picker="vm.event.event_end" required
 						 format="LLL"
-						 min-view="year"
-						 max-view="day"
 						 ng-model="vm.event.event_end_full"
 						 disable="true" readonly>
 					</input>
@@ -38,12 +34,10 @@
 			</div>
 			<div flex ng-hide="vm.event.single_day">
 				<md-input-container flex class="md-icon-float md-block">
-					<label>Start Time</label>
+					<label>Start Date</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
 					<input moment-picker="vm.event.event_start" required
 						 format="LL"
-						 min-view="year"
-						 max-view="day"
 						 ng-model="vm.event.event_start_full" disable="true" readonly>
 					</input>
 				</md-input-container>
@@ -52,8 +46,6 @@
 					<md-icon md-font-library="material-icons">today</md-icon>
 					<input moment-picker="vm.event.event_end" required
 						 format="LL"
-						 min-view="year"
-						 max-view="day"
 						 ng-model="vm.event.event_end_full"
 						 disable="true" readonly>
 					</input>
