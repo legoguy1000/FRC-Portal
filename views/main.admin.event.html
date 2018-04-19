@@ -16,13 +16,13 @@
 				<md-input-container flex class="md-icon-float md-block"  ng-show="vm.event.single_day">
 					<label>Date & Time</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input required type="text" value="{{event.event_start_unix*1000 | date:'longDate'}} {{event.event_start_unix*1000 | date:'h:mm a'}} - {{event.event_end_unix*1000 | date:'h:mm a'}}"  readonly>
+					<input required type="text" value="{{vm.event.event_start_unix*1000 | date:'longDate'}} {{vm.event.event_start_unix*1000 | date:'h:mm a'}} - {{vm.event.event_end_unix*1000 | date:'h:mm a'}}"  readonly>
 					</input>
 				</md-input-container>
-				<md-input-container flex class="md-icon-float md-block">
+				<md-input-container flex class="md-icon-float md-block"  ng-hide="vm.event.single_day">
 					<label>End Time</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input required type="text" value="{{event.event_start_unix*1000 | date:'MMMM d'}} - {{event.event_end_unix*1000 | date:'d, y'}}"  readonly>
+					<input required type="text" value="{{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}"  readonly>
 					</input>
 				</md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
