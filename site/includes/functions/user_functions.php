@@ -656,6 +656,7 @@ function getAllUsersFilter($filter = '', $limit = 10, $order = 'full_name', $pag
 	$query = userQuery($sel='',$joins='', $where, $order = '');
 	$result = db_select($query);
 	$totalNum = count($result);
+	$limitStr = '';
 	if($limit > 0) {
 		$offset	= ($page - 1) * $limit;
 		$limitStr = 'LIMIT '.$offset.', '.$limit;
@@ -675,7 +676,7 @@ function getAllUsersFilter($filter = '', $limit = 10, $order = 'full_name', $pag
 	$data['data'] = $users;
 	$data['query'] = $query;
 	$data['total'] = $totalNum;
-	$data['maxPage'] = ceil($totalNum/$limit);
+	$data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
 
 	return $data;
 }
