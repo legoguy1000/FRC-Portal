@@ -13,39 +13,18 @@
 				<md-icon md-font-library="material-icons">description</md-icon>
 				<input ng-model="vm.event.name" required readonly/>
 			</md-input-container>
-			<div flex ng-show="vm.event.single_day">
-				<md-input-container flex class="md-icon-float md-block">
-					<label>Start Time</label>
+				<md-input-container flex class="md-icon-float md-block"  ng-show="vm.event.single_day">
+					<label>Date & Time</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input required type="text" value="{{vm.event.event_start_unix*1000 | date:'longDate'}}"  readonly>
+					<input required type="text" value="{{event.event_start_unix*1000 | date:'longDate'}} {{event.event_start_unix*1000 | date:'h:mm a'}} - {{event.event_end_unix*1000 | date:'h:mm a'}}"  readonly>
 					</input>
 				</md-input-container>
 				<md-input-container flex class="md-icon-float md-block">
 					<label>End Time</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.event.event_end" required readonly>
+					<input required type="text" value="{{event.event_start_unix*1000 | date:'MMMM d'}} - {{event.event_end_unix*1000 | date:'d, y'}}"  readonly>
 					</input>
 				</md-input-container>
-			</div>
-			<div flex ng-hide="vm.event.single_day">
-				<md-input-container flex class="md-icon-float md-block">
-					<label>Start Date</label>
-					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.event.event_start" required
-						 format="LL"
-						 ng-model="vm.event.event_start_full" disable="true" readonly>
-					</input>
-				</md-input-container>
-				<md-input-container flex class="md-icon-float md-block">
-					<label>End Date</label>
-					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.event.event_end" required
-						 format="LL"
-						 ng-model="vm.event.event_end_full"
-						 disable="true" readonly>
-					</input>
-				</md-input-container>
-			</div>
 			<md-input-container flex class="md-icon-float md-block">
 				<label>FRC Season</label>
 				<md-icon md-font-library="material-icons">event</md-icon>
