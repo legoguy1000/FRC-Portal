@@ -17,18 +17,13 @@
 				<md-input-container flex class="md-icon-float md-block">
 					<label>Start Time</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.event.event_start" required
-						 format="LLL"
-						 ng-model="vm.event.event_start_full" disable="true" readonly>
+					<input required ng-value="{{vm.event.event_start_unix*1000 | date:'longDate'}}"  readonly>
 					</input>
 				</md-input-container>
 				<md-input-container flex class="md-icon-float md-block">
 					<label>End Time</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.event.event_end" required
-						 format="LLL"
-						 ng-model="vm.event.event_end_full"
-						 disable="true" readonly>
+					<input moment-picker="vm.event.event_end" required readonly>
 					</input>
 				</md-input-container>
 			</div>
