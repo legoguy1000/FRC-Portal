@@ -48,5 +48,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		updateEvent: function (formData) {
+			return $http.post('site/updateEvent.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

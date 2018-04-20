@@ -43,7 +43,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
 		filter: '',
-		limit: 5,
+		limit: 10,
 		order: 'full_name',
 		page: 1
 	};
@@ -52,12 +52,23 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		var data = {
 			'event_id': vm.event_id
 		};
-		vm.promise = eventsService.syncGoogleCalEvent(data).then(function(response){
+		eventsService.syncGoogleCalEvent(data).then(function(response){
 			vm.event = response.data;
 			vm.event.requirements = reqs;
 		});
 	};
 
+	vm.updateEvent = function () {
+		var data = {
+			'event_id': vm.event_id,
+			'pocInfo': vm.event.pocInfo,
+			'type': v,.event.type,
+		};
+		eventsService.updateEvent(data).then(function(response){
+			vm.event = response.data;
+			vm.event.requirements = reqs;
+		});
+	};
 
 	vm.showRoomListModal = function(ev) {
     $mdDialog.show({
