@@ -182,6 +182,7 @@ function getAllEventsFilter($filter = '', $limit = 10, $order = '-event_start', 
 function syncGoogleCalendarEvent($google_cal_id, $event_id) {
 	$calendar = getIniProp('google_calendar_id');
 	$api_key = getIniProp('google_api_key');
+	$result = false;
 	if(isset($google_cal_id) && $google_cal_id != '' && isset($event_id) && $event_id != '') {
 		$client = new Google_Client();
 		$client->setDeveloperKey($api_key);
@@ -200,7 +201,7 @@ function syncGoogleCalendarEvent($google_cal_id, $event_id) {
 		//echo json_encode($event);
 		$query = 'UPDATE events SET name='.db_quote($name).', details='.db_quote($details).', event_start='.db_quote($event_start).', event_end='.db_quote($event_end).', location='.db_quote($location).' WHERE event_id='.db_quote($event_id);
 		$result = db_query($query);
-		echo $result;
 	}
+	return $result;
 }
 ?>
