@@ -42,5 +42,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		syncGoogleCalEvent: function (formData) {
+			return $http.post('site/syncGoogleCalEvent.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });
