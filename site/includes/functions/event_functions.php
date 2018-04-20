@@ -22,7 +22,7 @@ function formatEventData($event) {
 		$data['permission_slip'] = (bool) $data['permission_slip'];
 		$data['room'] = (bool) $data['room'];
 		$data['single_day'] = (bool) (date('Y-m-d',$data['event_start_unix']) == date('Y-m-d',$data['event_end_unix']));
-		$data['pocInfo'] = !is_null($data['poc']) ? getUserDataFromParam('user_id',$data['poc']) : json_encode($data['poc_other']);
+		$data['pocInfo'] = !is_null($data['poc']) ? getUserDataFromParam('user_id',$data['poc']) : json_decode($data['poc_other']);
 	}
 	return $data;
 }
