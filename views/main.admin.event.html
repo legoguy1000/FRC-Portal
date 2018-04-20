@@ -167,7 +167,9 @@
 							<th md-column md-order-by="payment" ng-show="vm.event.payment"><span>Payment</span></th>
 							<th md-column md-order-by="permission_slip" ng-show="vm.event.permission_slip"><span>Permission Slip</span></th>
 							<th md-column md-order-by="food" ng-show="vm.event.food"><span>Food Order</span></th>
-							<th md-column md-order-by="food" ng-show="vm.event.room"><span>Room Selected</span></th><!--
+							<th md-column md-order-by="room" ng-show="vm.event.room"><span>Room Selected</span></th>
+							<th md-column md-order-by="drivers" ng-show="vm.event.drivers"><span>Driver</span></th>
+							<th md-column md-order-by="" ng-show="vm.event.drivers"><span>Car</span></th><!--
 							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
 							<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
@@ -209,6 +211,18 @@
 									<md-option value=""></md-option>
 									<md-option value="{{room.room_id}}" ng-repeat="room in vm.event.room_list.data">{{room.room_title}}</md-option>
 								</md-select> -->
+							</td>
+							<td md-cell ng-show="vm.event.drivers">
+								<span ng-hide="user.user_type == 'Student'">
+									<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.driver"></i> ({{user.car_space}})
+									<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.driver"></i>
+								</span>
+								<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type == 'Student'"></i>
+							</td>
+							<td md-cell ng-show="vm.event.drivers">
+								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.car_bool"></i>
+								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.car_bool"></i>
+								<span style="margin-left:10px;">{{user.car_name}}</span>
 							</td>
 							<!-- <td md-cell>
 								{{user.season_hours}}
