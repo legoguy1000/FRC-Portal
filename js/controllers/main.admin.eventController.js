@@ -62,7 +62,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		var data = {
 			'event_id': vm.event_id,
 			'pocInfo': vm.event.pocInfo,
-			'type': v,.event.type,
+			'type': vm.event.type,
 		};
 		eventsService.updateEvent(data).then(function(response){
 			vm.event = response.data;
