@@ -200,7 +200,7 @@ function syncGoogleCalendarEvent($google_cal_id, $event_id) {
 		//echo json_encode($event);
 		$query = 'UPDATE events SET name='.db_quote($name).', details='.db_quote($details).', event_start='.db_quote($event_start).', event_end='.db_quote($event_end).', location='.db_quote($location).' WHERE event_id='.db_quote($event_id);
 		$result = db_query($query);
-		//echo $result;
+		echo $result;
 	}
 }
 ?>

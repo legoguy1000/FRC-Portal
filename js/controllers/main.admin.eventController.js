@@ -46,6 +46,11 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		page: 1
 	};
 
+	vm.syncGoogleCalEvent = function () {
+		vm.promise = eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
+			vm.event = response.data;
+		});
+	};
 
 
 	vm.showRoomListModal = function(ev) {

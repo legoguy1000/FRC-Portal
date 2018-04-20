@@ -7,6 +7,7 @@ $filter = null;
 $limit = null;
 $order = null;
 $page = null;
+$listOnly = false;
 if(isset($_GET['filter']) && $_GET['filter'] != '') {
 	$filter = $_GET['filter'];
 }
@@ -18,6 +19,9 @@ if(isset($_GET['order']) && $_GET['order'] != '') {
 }
 if(isset($_GET['page']) && $_GET['page'] != '') {
 	$page = $_GET['page'];
+}
+if(isset($_GET['listOnly']) && $_GET['listOnly'] != '' && $_GET['listOnly']==true) {
+	$listOnly = true;
 }
 
 $users = getAllEventsFilter($filter, $limit, $order, $page);

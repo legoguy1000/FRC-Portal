@@ -388,8 +388,11 @@ function formatUserData($user) {
 		if(isset($data['room_id'])) {
 			$data['room_bool'] = (bool) $data['room_id'];
 		}
-		if(isset($data['car_space'])) {
-			$data['can_drive'] = (bool) $data['car_space'];
+		if(isset($data['can_drive'])) {
+			$data['can_drive'] = (bool) $data['can_drive'];
+		}
+		if(isset($data['can_drive'])) {
+			$data['can_drive'] = (bool) $data['can_drive'];
 		}
 		//Hours
 		if(isset($data['hours'])) {
