@@ -11,24 +11,29 @@
 			<md-input-container flex class="md-icon-float md-block">
 				<label>Event Name</label>
 				<md-icon md-font-library="material-icons">description</md-icon>
-				<input ng-model="vm.event.name" required readonly/>
+				<input ng-model="vm.event.name" readonly/>
 			</md-input-container>
 			<md-input-container flex class="md-icon-float md-block"  ng-show="vm.event.single_day">
 				<label>Date & Time</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
-				<input required type="text" value="{{vm.event.event_start_unix*1000 | date:'longDate'}} {{vm.event.event_start_unix*1000 | date:'h:mm a'}} - {{vm.event.event_end_unix*1000 | date:'h:mm a'}}"  readonly>
+				<input type="text" value="{{vm.event.event_start_unix*1000 | date:'longDate'}} {{vm.event.event_start_unix*1000 | date:'h:mm a'}} - {{vm.event.event_end_unix*1000 | date:'h:mm a'}}"  readonly>
 				</input>
 			</md-input-container>
 			<md-input-container flex class="md-icon-float md-block"  ng-hide="vm.event.single_day">
 				<label>End Time</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
-				<input required type="text" value="{{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}"  readonly>
+				<input type="text" value="{{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}"  readonly>
 				</input>
 			</md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
 				<label>Event Location</label>
 				<md-icon md-font-library="material-icons">location_on</md-icon>
-				<input ng-model="vm.event.location" required readonly/>
+				<input ng-model="vm.event.location" readonly/>
+			</md-input-container>
+			<md-input-container flex class="md-icon-float md-block">
+				<label>Type</label>
+				<md-icon md-font-library="material-icons">explore</md-icon>
+				<input ng-model="vm.event.type" required/>
 			</md-input-container>
 			<div layout="row" flex>
 				<md-input-container  class="md-icon-float md-block">
@@ -50,10 +55,10 @@
 	        </md-item-template>
 	      </md-autocomplete>
 		</div>
-			<md-input-container flex class="md-icon-float md-block">
+			<md-input-container flex class="md-icon-float md-block md-icon-left">
         <label>Details</label>
 				<md-icon md-font-library="material-icons">info</md-icon>
-        <div ng-bind-html="vm.event.details"></div>
+        <div ng-bind-html="vm.event.details" syle="margin-top: 30px; white-space: pre-wrap;"></div>
       </md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
 				<label>FRC Season</label>
@@ -77,11 +82,6 @@
 						</md-option>
 					</md-optgroup>
 				</md-select>
-			</md-input-container>
-			<md-input-container flex class="md-icon-float md-block">
-				<label>Type</label>
-				<md-icon md-font-library="material-icons">explore</md-icon>
-				<input ng-model="vm.event.type" required/>
 			</md-input-container>
 <!--			<div layout="row">
 				<div flex>
