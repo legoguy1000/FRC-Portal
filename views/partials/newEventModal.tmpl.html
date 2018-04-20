@@ -97,7 +97,7 @@
 								</md-input-container>
 								<md-input-container flex class="md-icon-float md-block">
 									<label>Event Type</label>
-									<md-icon md-font-library="material-icons">widgets</md-icon>
+									<md-icon md-font-library="material-icons">info_outline</md-icon>
 									<input ng-model="vm.data.type" required></input>
 								</md-input-container>
 							</div>
@@ -130,11 +130,16 @@
 									</md-input-container>
 							</div>
 							<div layout="row">
-								<md-input-container flex class="md-icon-float md-block" >
+								<!--<md-input-container flex class="md-icon-float md-block" >
 										<label>Details</label>
 										<md-icon md-font-library="material-icons">event_note</md-icon>
 										<textarea ng-model="vm.data.details" required></textarea>
-									</md-input-container>
+									</md-input-container> -->
+									<md-input-container flex class="md-icon-float md-block md-icon-left">
+						        <label>Details</label>
+										<md-icon md-font-library="material-icons">event_note</md-icon>
+						        <div ng-bind-html="vm.data.details" style="margin-top: 30px; white-space: pre-wrap;"></div>
+						      </md-input-container>
 							</div>
 							<div layout="column">
 								<div layout="row">
