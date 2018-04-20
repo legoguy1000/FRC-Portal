@@ -58,7 +58,7 @@
 			<md-input-container flex class="md-icon-float md-block md-icon-left">
         <label>Details</label>
 				<md-icon md-font-library="material-icons">event_note</md-icon>
-        <div ng-bind-html="vm.event.details" style="margin-top: 30px; white-space: pre-wrap;"></div>
+        <div ng-bind-html="vm.event.details | linky:'_blank'" style="margin-top: 30px; white-space: pre-wrap;"></div>
       </md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
 				<label>FRC Season</label>
