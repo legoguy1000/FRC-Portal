@@ -18,7 +18,7 @@ $event_id = $formData['event_id'];
 $query = 'SELECT * FROM events WHERE event_id='.db_quote($event_id);
 $result = db_select_single($query);
 if(!is_null($result)) {
-	$cal_id = $event['google_cal_id'];
+	$cal_id = $result['google_cal_id'];
 	$sync = syncGoogleCalendarEvent($cal_id, $event_id);
 	if($sync) {
 		$event = getEvent($event_id, $reqs = false);
