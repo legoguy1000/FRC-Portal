@@ -49,6 +49,7 @@ while(true) {
 				'event_end_unix' => null,
 				'event_start_iso' => null,
 				'event_end_iso' => null,
+				'details' => $event->description,
 			);
 			if(empty($event->start->dateTime)) {
 				$temp['allDay'] = true;
