@@ -54,5 +54,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		registerForEvent: function (formData) {
+			return $http.post('site/registerForEvent.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

@@ -67,12 +67,14 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 		});
 	};
 
-	vm.getSeasons = function () {
-		vm.promise = seasonsService.getAllSeasons().then(function(response){
-			vm.seasons = response.data;
+	vm.registerForEvent = function () {
+		var data = {
+			'event_id': vm.event_id,
+		};
+		eventsService.registerForEvent(data).then(function(response){
+			//vm.event = response.data;
 		});
 	};
-	vm.getSeasons();
 
 	vm.getEvent();
 	vm.limitOptions = [5,10,25,50,100];
