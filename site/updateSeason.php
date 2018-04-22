@@ -37,8 +37,8 @@ $end_date = new DateTime($data['end_date']);
 $query = 'UPDATE seasons SET game_name='.db_quote($formData['game_name']).',
 							game_logo='.db_quote($formData['game_logo']).',
 							start_date='.db_quote($start_date->format('Y-m-d')).',
-							bag_day='.db_quote($bag_day->format('Y-m-d').' 23:59:59'.).',
-							end_date='.db_quote($end_date->format('Y-m-d').' 23:59:59'.).',
+							bag_day='.db_quote($bag_day->format('Y-m-d').' 23:59:59').',
+							end_date='.db_quote($end_date->format('Y-m-d').' 23:59:59').',
 							hour_requirement='.db_quote($formData['hour_requirement']).',
 							join_spreadsheet='.db_quote($formData['join_spreadsheet']).'
 							WHERE season_id = '.db_quote($formData['season_id']);
