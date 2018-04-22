@@ -5,7 +5,7 @@ function seasonQuery($sel='',$joins='', $where = '', $order = '') {
 	$joinStr = isset($joins) && $joins !='' ? ' '.$joins : '';
 	$orderStr = isset($order) && $order !='' ? ' '.$order : '';
 	$whereStr = isset($where) && $where !='' ? ' '.$where : '';
-	$query = 'SELECT seasons.*, UNIX_TIMESTAMP(seasons.start_date) AS start_date_unix, UNIX_TIMESTAMP(seasons.bag_day) AS bag_day_unix, UNIX_TIMESTAMP(seasons.end_date) AS end_date_unix '.$selStr.'
+	$query = 'SELECT seasons.* '.$selStr.'
 			  FROM seasons
 			  '.$joinStr.' '.$whereStr.' '.$orderStr;
 	return $query;
@@ -26,6 +26,9 @@ function formatSeasonData($season) {
 	$data = array();
 	if(isset($season) && is_array($season)) {
 		$data = $season;
+		$data['start_date_unix'] = new DateTime($data['start_date'])->format('U');
+		$data['bag_day_unix'] = new DateTime($data['bag_day'])->format('U');
+		$data['end_date_unix'] = new DateTime($data['end_date'])->format('U');
 		$date['start_date_formatted'] = date('F j, Y', $data['start_date_unix']);
 		$date['bag_day_formatted'] = date('F j, Y', $data['bag_day_unix']);
 		$date['end_date_formatted'] = date('F j, Y', $data['end_date_unix']);
