@@ -58,8 +58,27 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		var data = {
 			'year': vm.season.year
 		};
-		vm.promise = seasonsService.updateSeasonMembershipForm(data).then(function(response){
+		seasonsService.updateSeasonMembershipForm(data).then(function(response){
 			vm.season.join_spreadsheet = response.data.join_spreadsheet;
+		});
+	};
+
+	vm.updateSeason = function () {
+		var data = {
+			'year': vm.season.year,
+			'season_id': vm.season.season_id,
+			'start_date': vm.season.start_date,
+			'bag_day': vm.season.bag_day,
+			'end_date': vm.season.end_date,
+			'game_logo': vm.season.game_logo,
+			'game_name': vm.season.game_name,
+			'hour_requirement': vm.season.hour_requirement,
+			'join_spreadsheet': vm.season.join_spreadsheet,
+		};
+		vm.promise = seasonsService.updateSeason(data).then(function(response){
+			var reqs = vm.season.requirements
+			vm.season = response.data;
+			vm.season.requirements = reqs;
 		});
 	};
 }
