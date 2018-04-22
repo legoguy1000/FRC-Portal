@@ -167,7 +167,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			listOnly: true,
 			return: [
 				'fname',
-				'lname'
+				'lname',
 				'full_name',
 				'user_id',
 			]
