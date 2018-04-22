@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('newEventModalController', ['$log','$element','$mdDialog', '$scope', 'userInfo', 'usersService', 'schoolsService', 'seasonsService',
+.controller('newEventModalController', ['$log','$element','$mdDialog', '$scope', 'userInfo', 'usersService', 'schoolsService', 'seasonsService','$mdToast',
 	newEventModalController
 ]);
-function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersService,eventsService,seasonsService) {
+function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersService,eventsService,seasonsService,$mdToast) {
 	var vm = this;
 
 	vm.cancel = function() {
@@ -59,6 +59,12 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 			if(response.status) {
 				$mdDialog.hide(response);
 			}
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 		});
 	}
 }

@@ -70,6 +70,34 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		});
 	};
 
+	vm.deleteEvent = function() {
+		var data = {
+			season_id: vm.season.season_id,
+		};
+		var confirm = $mdDialog.confirm()
+					.title('Delete event '+vm.event.name)
+					.textContent('Are you sure you want to delete event '+vm.event.name+'?  This action is unreversable and any registration data will be removed.'	)
+					.ariaLabel('Delete Event')
+					.ok('Delete')
+					.cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+			eventsService.deleteEvent(data).then(function(response) {
+				if(response.status) {
+					$mdDialog.show(
+						$mdDialog.alert()
+							.title('Event Deleted')
+							.textContent('Event  '+vm.event.name+' has been deleted.  You will now be redirected to the season list.')
+							.ariaLabel('Event Deleted')
+							.ok('OK')
+					).then(function() {
+						$scope.admin.clickBack();
+						$state.go('main.admin.events');
+					}, function() {});
+				}
+			});
+		}, function() {});
+	}
+
 	vm.showRoomListModal = function(ev) {
     $mdDialog.show({
       controller: roomListModalController,

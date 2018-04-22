@@ -60,5 +60,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		deleteEvent: function (formData) {
+			return $http.post('site/deleteEvent.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

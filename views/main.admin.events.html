@@ -37,7 +37,7 @@
 					<th md-column md-order-by="num_days"><span># Days</span></th>
 					<th md-column md-order-by="type"><span>Event Type</span></th>
 					<th md-column md-order-by="game_name"><span>Season</span></th>
-
+					<th md-column></th>
 				</tr>
 			</thead>
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
@@ -62,9 +62,6 @@
 					<td md-cell>
 						<md-button class="md-icon-button" ui-sref="main.admin.event({'event_id':event.event_id})" ng-click="admin.slideLeft()">
 							<md-icon>open_in_new</md-icon>
-						</md-button>
-						<md-button class="md-icon-button" ng-click="">
-							<md-icon>delete_forever</md-icon>
 						</md-button>
 					</td>
 				</tr>
