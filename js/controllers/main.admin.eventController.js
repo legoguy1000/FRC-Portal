@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','$mdDialog','usersService',
+.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast'
 	mainAdminEventController
 ]);
-function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,$mdDialog,usersService) {
+function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast) {
     var vm = this;
 
 	vm.filter = {
@@ -55,6 +55,12 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		eventsService.syncGoogleCalEvent(data).then(function(response){
 			vm.event = response.data;
 			vm.event.requirements = reqs;
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 		});
 	};
 
@@ -67,6 +73,12 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		eventsService.updateEvent(data).then(function(response){
 			vm.event = response.data;
 			vm.event.requirements = reqs;
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 		});
 	};
 
