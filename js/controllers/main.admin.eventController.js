@@ -8,6 +8,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.filter = {
 		show: false,
 	};
+	vm.loading = false;
 	vm.showFilter = function () {
 		vm.filter.show = true;
 		vm.query.filter = '';
@@ -25,9 +26,11 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.event = {};
 	var reqs = [];
 	vm.getEvent = function () {
+		vm.loading = true;
 		vm.promise = eventsService.getEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
 			reqs = vm.event.requirements;
+			vm.loading = false;
 		});
 	};
 	vm.selectedUsers = [];
@@ -49,10 +52,11 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	};
 
 	vm.syncGoogleCalEvent = function () {
+		vm.loading = true;
 		var data = {
 			'event_id': vm.event_id
 		};
-		eventsService.syncGoogleCalEvent(data).then(function(response){
+		vm.promise = eventsService.syncGoogleCalEvent(data).then(function(response){
 			vm.event = response.data;
 			vm.event.requirements = reqs;
 			$mdToast.show(
@@ -62,15 +66,17 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	        .hideDelay(3000)
 	    );
 		});
+		vm.loading = false;
 	};
 
 	vm.updateEvent = function () {
+		vm.loading = true;
 		var data = {
 			'event_id': vm.event_id,
 			'pocInfo': vm.event.pocInfo,
 			'type': vm.event.type,
 		};
-		eventsService.updateEvent(data).then(function(response){
+		vm.promise = eventsService.updateEvent(data).then(function(response){
 			vm.event = response.data;
 			vm.event.requirements = reqs;
 			$mdToast.show(
@@ -80,6 +86,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	        .hideDelay(3000)
 	    );
 		});
+		vm.loading = false;
 	};
 
 	vm.deleteEvent = function() {
@@ -93,12 +100,13 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 					.ok('Delete')
 					.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
+			vm.loading = true;
 			eventsService.deleteEvent(data).then(function(response) {
 				if(response.status) {
 					$mdDialog.show(
 						$mdDialog.alert()
 							.title('Event Deleted')
-							.textContent('Event  '+vm.event.name+' has been deleted.  You will now be redirected to the season list.')
+							.textContent('Event  '+vm.event.name+' has been deleted.  You will now be redirected to the event list.')
 							.ariaLabel('Event Deleted')
 							.ok('OK')
 					).then(function() {
@@ -106,6 +114,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 						$state.go('main.admin.events');
 					}, function() {});
 				}
+				vm.loading = false;
 			});
 		}, function() {});
 	}
@@ -135,6 +144,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
   };
 
 	vm.toggleEventReqs = function (req) {
+		vm.loading = true;
 		var data = {
 			'event_id': vm.event_id,
 			'users': vm.selectedUsers,
@@ -144,7 +154,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			if(response.status && response.data) {
 				vm.event.requirements.data = response.data;
 			}
-
+			vm.loading = false;
 		});
 	};
 

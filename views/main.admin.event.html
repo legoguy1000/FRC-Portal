@@ -165,7 +165,7 @@
 				</div>
 			</md-toolbar>
 			<md-table-container>
-				<table md-table md-row-select multiple ng-model="vm.selectedUsers">
+				<table md-table md-row-select multiple ng-model="vm.selectedUsers" md-progress="vm.promise">
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
 							<th md-column md-order-by="full_name"><span>Name</span></th>
