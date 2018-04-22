@@ -7,7 +7,7 @@
 			</md-button>
 			Season Information
 		</h1>
-		<form class="md-margin" flex>
+		<form class="md-margin" flex ng-submit="vm.updateSeason()">
 			<md-input-container flex class="md-icon-float md-block">
 				<label>Year</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
@@ -76,7 +76,7 @@
 			<img ng-src="{{vm.season.game_logo}}" class="md-avatar" alt="" ng-if="vm.season.game_logo" style="max-width: 100%; max-height: 200px;"/>
 			<div flex layout="row">
 				<span flex></span>
-				<md-button type="submit" class="md-raised">
+				<md-button type="submit" class="md-raised md-primary">
 					Submit
 				</md-button>
 			</div>
