@@ -605,16 +605,6 @@ function verifyTeamPrivs($userId, $requiredPrivs, $die = true)
 	}
 }
 
-function getNotifiationEndpointsByUser($user_id) {
-	$query = 'SELECT ne.*, UNIX_TIMESTAMP(ne.last_updated) AS last_updated_unix  FROM notification_endpoints ne WHERE user_id='.db_quote($user_id);
-	$result = db_select($query);
-	if(count($result) > 0) {
-		return $result;
-	} else {
-		return array();
-	}
-}
-
 function getLinkedAccountsByUser($user_id) {
 	$query = 'SELECT la.*, UNIX_TIMESTAMP(la.timestamp) AS timestamp_unix FROM oauth_ids la WHERE user_id='.db_quote($user_id);
 	$result = db_select($query);

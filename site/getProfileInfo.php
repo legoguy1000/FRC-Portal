@@ -34,12 +34,9 @@ foreach($season_info as $req) {
 }
 $eventInfo = userEventInfo($user_id, $year = date('Y'), $event = null);
 
-$endpoints = getNotifiationEndpointsByUser($user_id);
 $linkedAccounts = getLinkedAccountsByUser($user_id);
 $notificationPreferences = getNotificationPreferencesByUser($user_id);
 
-
-$data['endpoints'] = $endpoints;
 $data['seasonInfo'] = $seasonInfo;
 $data['eventInfo'] = $eventInfo;
 $data['linkedAccounts'] = $linkedAccounts;
