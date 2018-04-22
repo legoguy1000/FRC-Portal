@@ -30,7 +30,7 @@ $result = db_select_single($query);
 if(!is_null($result)) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Season for '.$formData['year'].' already exists')));
 } else {
-	$spreadsheetId = getSeasonMembershipForm($year);
+	$spreadsheetId = getSeasonMembershipForm($formData['year']);
 	$spreadsheetId = $spreadsheetId==false ? '':$spreadsheetId;
 	$seasons_id = uniqid();
 
