@@ -26,9 +26,9 @@ function formatSeasonData($season) {
 	$data = array();
 	if(isset($season) && is_array($season)) {
 		$data = $season;
-		$data['start_date_unix'] = new DateTime($data['start_date'])->format('U');
-		$data['bag_day_unix'] = new DateTime($data['bag_day'])->format('U');
-		$data['end_date_unix'] = new DateTime($data['end_date'])->format('U');
+		$data['start_date_unix'] = (new DateTime($data['start_date']))->format('U');
+		$data['bag_day_unix'] = (new DateTime($data['bag_day']))->format('U');
+		$data['end_date_unix'] = (new DateTime($data['end_date']))->format('U');
 		$date['start_date_formatted'] = date('F j, Y', $data['start_date_unix']);
 		$date['bag_day_formatted'] = date('F j, Y', $data['bag_day_unix']);
 		$date['end_date_formatted'] = date('F j, Y', $data['end_date_unix']);
