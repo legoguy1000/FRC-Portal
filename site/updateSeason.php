@@ -42,7 +42,7 @@ $query = 'UPDATE seasons SET  year='.db_quote($formData['year']).',
 							WHERE season_id = '.db_quote($formData['season_id']);
 $result = db_query($query);
 if($result) {
-	$season = getSeason($formData['season_id'], $reqs = false)
+	$season = getSeason($formData['season_id'], $reqs = false);
 	$msg = 'Season updated.';
 	die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'data'=>$season)));
 } else {
