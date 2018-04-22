@@ -339,13 +339,28 @@ function formatUserData($user) {
 	$data = array();
 	if(isset($user) && is_array($user)) {
 		$data = $user;
-		$data['admin'] = (bool) $data['admin'];
-		$data['newUser'] = (bool) $data['first_login'];
-		$data['first_login'] = (bool) $data['first_login'];
-		$data['former_student'] = (bool) $data['former_student'];
-		$data['status'] = (bool) $data['status'];
-		$data['slackEnabled'] = (bool) isset($data['slack_id']) && $data['slack_id'] != '';
+		if(isset($data['admin'])) {
+			$data['admin'] = (bool) $data['admin'];
+		}
+		if(isset($data['first_login'])) {
+			$data['newUser'] = (bool) $data['first_login'];
+			$data['first_login'] = (bool) $data['first_login'];
+		}
+		if(isset($data['former_student'])) {
+			$data['former_student'] = (bool) $data['former_student'];
+		}
+		if(isset($data['status'])) {
+			$data['status'] = (bool) $data['status'];
+		}
+		if(isset($data['status'])) {
+			$data['status'] = (bool) $data['status'];
+		}
+		if(isset($data['slack_id'])) {
+			$data['slackEnabled'] = (bool) isset($data['slack_id']) && $data['slack_id'] != '';
+		}
+		if(isset($data['user_type']) && isset($data['gender']) ) {
 		$data['roomType'] = $data['user_type'] == 'Student' ? $data['user_type'].'.'.$data['gender'] : $data['user_type'];
+		}
 		//Annual Requirements
 		if(isset($data['join_team'])) {
 			$data['join_team'] = (bool) $data['join_team'];
@@ -384,7 +399,6 @@ function formatUserData($user) {
 		if(isset($data['food'])) {
 			$data['food'] = (bool) $data['food'];
 		}
-		$data['room_bool'] = false;
 		if(isset($data['room_id'])) {
 			$data['room_bool'] = (bool) $data['room_id'];
 		}
