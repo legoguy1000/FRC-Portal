@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.seasonController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log','$stateParams',
+.controller('main.admin.seasonController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log','$stateParams','$mdToast',
 	mainAdminSeasonController
 ]);
-function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log,$stateParams) {
+function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log,$stateParams,$mdToast) {
     var vm = this;
 
 	vm.loading = false;
@@ -84,10 +84,16 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		};
 		vm.promise = seasonsService.updateSeason(data).then(function(response){
 			if(response.status) {
-				var reqs = vm.season.requirements
-				vm.season = response.data;
-				vm.season.requirements = reqs;
+				//var reqs = vm.season.requirements
+				//vm.season = response.data;
+				//vm.season.requirements = reqs;
 			}
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 			vm.loading = false;
 		});
 	};
