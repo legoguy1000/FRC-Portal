@@ -26,6 +26,9 @@ function formatSeasonData($season) {
 	$data = array();
 	if(isset($season) && is_array($season)) {
 		$data = $season;
+		$date['start_date_formatted'] = date('F j, Y', $data['start_date_unix']);
+		$date['bag_day_formatted'] = date('F j, Y', $data['bag_day_unix']);
+		$date['end_date_formatted'] = date('F j, Y', $data['end_date_unix']);
 		$data['hour_requirement'] = (integer) $data['hour_requirement'];
 		$data['requirements'] = array();
 	}
@@ -137,7 +140,7 @@ function getAllSeasonsFilter($filter = '', $limit = 10, $order = '-year', $page 
 	$result = db_select($query);
 	if(count($result) > 0) {
 		foreach($result as $seas) {
-			$seasons[] = $seas;
+			$seasons[] = formatSeasonData($seas);
 		}
 	}
 	$data['data'] = $seasons;
