@@ -53,6 +53,12 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			if(response.status && response.data) {
 				vm.season.requirements.data = response.data;
 			}
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 		});
 	};
 
@@ -66,6 +72,12 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 				vm.season.join_spreadsheet = response.data.join_spreadsheet;
 			}
 			vm.loading = false;
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 		});
 	};
 
