@@ -24,9 +24,7 @@ if(!isset($formData['bag_day']) || $formData['bag_day'] == '') {
 if(!isset($formData['end_date']) || $formData['end_date'] == '') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'End Date cannot be blank!')));
 }
-if(!isset($formData['game_logo']) || $formData['game_logo'] == '') {
-	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Game Logo URL cannot be blank!')));
-}
+
 $query = 'SELECT * FROM seasons WHERE year='.db_quote($formData['year']);
 $result = db_select_single($query);
 if(!is_null($result)) {
@@ -35,8 +33,13 @@ if(!is_null($result)) {
 	$spreadsheetId = getSeasonMembershipForm($year);
 	$spreadsheetId = $spreadsheetId==false ? '':$spreadsheetId;
 	$seasons_id = uniqid();
+
+	$start_date = new DateTime($formData['start_date']);
+	$bag_day = new DateTime($formData['bag_day']);
+	$end_date = new DateTime($formData['end_date']);
+
 	$query = 'INSERT INTO seasons (season_id, year, game_name, game_logo, start_date, bag_day, end_date, join_spreadsheet) VALUES
-			('.db_quote($seasons_id).', '.db_quote($formData['year']).', '.db_quote($formData['game_name']).', '.db_quote($formData['game_logo']).', '.db_quote($formData['start_date']).', '.db_quote($formData['bag_day']).', '.db_quote($formData['end_date']).','.db_quote($spreadsheetId).')';
+			('.db_quote($seasons_id).', '.db_quote($formData['year']).', '.db_quote($formData['game_name']).', '.db_quote($formData['game_logo']).', '.db_quote($start_date->format('Y-m-d')).', '.db_quote($bag_day->format('Y-m-d')." 23:59:59").', '.db_quote($end_date->format('Y-m-d')." 23:59:59").','.db_quote($spreadsheetId).')';
 	//die($query);
 	$result = db_query($query);
 	if($result) {

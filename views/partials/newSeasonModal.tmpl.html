@@ -32,7 +32,7 @@
 					<label>Start Date</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
 					<input moment-picker="vm.data.start_date" required
-						 format="YYYY-MM-DD"
+						 format="LL"
 						 min-view="year"
 						 max-view="day"
 						 ng-model="vm.data.start_date_full">
@@ -42,7 +42,7 @@
 					<label>Bag Date</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
 					<input moment-picker="vm.data.bag_day" required
-						 format="YYYY-MM-DD"
+						 format="LL"
 						 min-view="year"
 						 max-view="day"
 						 ng-model="vm.data.bag_day_full">
@@ -52,7 +52,7 @@
 					<label>End Date</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
 					<input moment-picker="vm.data.end_date" required
-						 format="YYYY-MM-DD"
+						 format="LL"
 						 min-view="year"
 						 max-view="day"
 						 ng-model="vm.data.end_date_full">
@@ -62,7 +62,7 @@
 			<div layout="column" layout-gt-xs="row">
 				<md-input-container flex>
 					<label>Game Logo URL</label>
-					<input ng-model="vm.data.game_logo" type="url" required>
+					<input ng-model="vm.data.game_logo" type="url">
 				</md-input-container>
 			</div>
 			<div layout="column" layout-gt-xs="row">
