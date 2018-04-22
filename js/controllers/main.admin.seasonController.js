@@ -28,7 +28,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		vm.loading = true;
 		vm.promise = seasonsService.getSeason(vm.season_id).then(function(response){
 			vm.season = response.data;
-			vm.promise = false;
+			vm.loading = false;
 		});
 	};
 	vm.selectedUsers = [];
