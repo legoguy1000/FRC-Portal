@@ -32,5 +32,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		updateSeasonMembershipForm: function (formData) {
+			return $http.post('site/updateSeasonMembershipForm.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

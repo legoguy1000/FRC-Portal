@@ -32,25 +32,8 @@ $result = db_select_single($query);
 if(!is_null($result)) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Season for '.$formData['year'].' already exists')));
 } else {
-	$spreadsheetId = '';
-	$client = new Google_Client();
-	$client->setAuthConfigFile('./includes/secured/team-2363-portal-0c12aca54f1c.json');
-	$client->setScopes(['https://www.googleapis.com/auth/drive.readonly']);
-	$service = new Google_Service_Drive($client);
-	$parameters = array(
-		'corpora' => 'teamDrive',
-		'q' => 'name contains "'.$formData['year'].'" and name contains "Membership" and name contains "(Responses)" and mimeType = "application/vnd.google-apps.spreadsheet"',
-		'includeTeamDriveItems' => 'true',
-		'supportsTeamDrives' => 'true',
-		'teamDriveId' => '0AI0WovuxnF1zUk9PVA',
-		'pageSize' => '1'
-	);
-	$files = $service->files->listFiles($parameters);
-	$result = $files->getFiles();
-	if(count($result) > 0) {
-		$spreadsheetId = $result[0]['id'];
-	}
-
+	$spreadsheetId = getSeasonMembershipForm($year);
+	$spreadsheetId = $spreadsheetId==false ? '':$spreadsheetId;
 	$seasons_id = uniqid();
 	$query = 'INSERT INTO seasons (season_id, year, game_name, game_logo, start_date, bag_day, end_date, join_spreadsheet) VALUES
 			('.db_quote($seasons_id).', '.db_quote($formData['year']).', '.db_quote($formData['game_name']).', '.db_quote($formData['game_logo']).', '.db_quote($formData['start_date']).', '.db_quote($formData['bag_day']).', '.db_quote($formData['end_date']).','.db_quote($spreadsheetId).')';

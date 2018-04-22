@@ -57,11 +57,17 @@
 				<md-icon md-font-library="material-icons">access_time</md-icon>
 				<input ng-model="vm.season.hour_requirement" type="number" min="0" required>
 			</md-input-container>
-			<md-input-container flex class="md-icon-float md-block">
-				<label>Google Sheets Membership Form Responses </label>
-				<md-icon md-font-library="material-icons">insert_drive_file</md-icon>
-				<input ng-model="vm.season.join_spreadsheet" type="text" required>
-			</md-input-container>
+			<div flex layout="row">
+				<md-input-container flex class="md-icon-float md-icon-right md-block md-icon-left">
+					<label>Google Sheets Membership Form Responses </label>
+					<md-icon md-font-library="material-icons">insert_drive_file</md-icon>
+					<input ng-model="vm.season.join_spreadsheet" type="text" required>
+					<md-button class="md-icon-button" ng-click="vm.updateSeasonMembershipForm()">
+						<md-tooltip md-direction="top">Find form within Google Drive</md-tooltip>
+							<md-icon md-font-library="material-icons">create_new_folder</md-icon>
+					</md-button>
+				</md-input-container>
+			</div>
 			<md-input-container flex class="md-icon-float md-block">
 				<label>Game Logo URL</label>
 				<md-icon md-font-library="material-icons">photo</md-icon>
