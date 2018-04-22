@@ -44,5 +44,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		deleteSeason: function (formData) {
+			return $http.post('site/deleteSeason.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

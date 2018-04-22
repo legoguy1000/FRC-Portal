@@ -109,4 +109,32 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			vm.loading = false;
 		});
 	};
+
+	vm.deleteSeason = function() {
+		var data = {
+			season_id: vm.season.season_id,
+		};
+		var confirm = $mdDialog.confirm()
+					.title('Delete season '+vm.season.game_name+' '+'('+vm.season.year+')')
+					.textContent('Are you sure you want to delete season '+vm.season.game_name+' '+'('+vm.season.year+')?  This action is unreversable and any events and registration data will be removed.'	)
+					.ariaLabel('Delete Season')
+					.ok('Delete')
+					.cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+			seasonsService.deleteSeason(data).then(function(response) {
+				if(response.status) {
+					$mdDialog.show(
+						$mdDialog.alert()
+							.title('Season Deleted')
+							.textContent('Season  '+vm.season.game_name+' '+'('+vm.season.year+') has been deleted.  You will now be redirected to the season list.')
+							.ariaLabel('Season Deleted')
+							.ok('OK')
+					).then(function() {
+						$scope.admin.clickBack();
+						$state.go('main.admin.seasons');
+					}, function() {});
+				}
+			});
+		}, function() {});
+	}
 }
