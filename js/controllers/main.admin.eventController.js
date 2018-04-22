@@ -84,7 +84,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 	vm.deleteEvent = function() {
 		var data = {
-			season_id: vm.season.season_id,
+			event_id: vm.event.event_id,
 		};
 		var confirm = $mdDialog.confirm()
 					.title('Delete event '+vm.event.name)
