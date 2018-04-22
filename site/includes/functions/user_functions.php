@@ -163,12 +163,25 @@ function userSignInList() {
 	return $data;
 }
 
-function userSeasonInfo($user_id = null, $year = null) {
+function userSeasonInfo($user_id = null, $year = null, $return=array()) {
 	$data = array();
 	//$reqsQuery = userHoursAnnualRequirementsQueryArr($b = 'b', $l = 'e', $c = 'c', $d = 'd');
 	$reqsQuery = userHoursAnnualRequirementsQueryArr($b = 'b', $l = 'e', $c = 'c');
-/* 	$reqsQuery = annualRequirementsQueryArr($l = 'e');
-	$hoursQuery = userHoursQueryArr($l = 'c', $q = 'd'); */
+
+	$defaultFilterilterArr = array(
+		'join_team',
+		'stims',
+		'dues',
+		'min_hours',
+		'user_type',
+		'user_id',
+		'full_name',
+		'build_season_hours',
+		'competition_season_hours',
+		'off_season_hours',
+		'total_hours'
+	);
+	$filterArr = array_unique(array_merge($defaultFilterilterArr, $return));
 	$where = '';
 	$whereArr = array('(users.status = "1" OR e.req_id IS NOT NULL)');
 	$sel = $reqsQuery['selects'];
@@ -185,17 +198,18 @@ function userSeasonInfo($user_id = null, $year = null) {
 	$order = 'ORDER BY users.lname ASC, b.year DESC';
 	$query = userQuery($sel, $joins, $where, $order);
 
-	$result = db_select_user($query);
+	$result = db_select($query);
 	if(count($result > 0)) {
 		foreach($result as $id=>$user) {
-			$jt = $user['join_team'];
-			$stims = $user['stims'];
-			$dues = $user['dues'];
-			$mh = $user['min_hours'];
-			$stu = (bool) $user['user_type'] == 'Student';
-			$men = (bool) $user['user_type'] == 'Mentor';
-			$user['reqs_complete'] = $jt && $stims && (($stu && $dues) || $men) && $mh;
-			$data[] = $user;
+			$temp = filterArrayData ($user, $filterArr);
+			$jt = (bool) $temp['join_team'];
+			$stims = (bool) $temp['stims'];
+			$dues = (bool) $temp['dues'];
+			$mh = (integer) $temp['min_hours'];
+			$stu = (bool) $temp['user_type'] == 'Student';
+			$men = (bool) $temp['user_type'] == 'Mentor';
+			$temp['reqs_complete'] = $jt && $stims && (($stu && $dues) || $men) && $mh;
+			$data[] = formatUserData($temp);
 		}
 	}
 	return $data;
