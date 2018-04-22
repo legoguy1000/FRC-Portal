@@ -606,7 +606,7 @@ function getLinkedAccountsByUser($user_id) {
 
 
 
-function getAllUsersFilter($filter = '', $limit = 10, $order = 'full_name', $page = 1) {
+function getAllUsersFilter($filter = '', $limit = 10, $order = 'full_name', $page = 1, $return=array()) {
 
 	/* if(isset($filter) && $filter != '') {
 		$filter = $filter;
@@ -674,7 +674,8 @@ function getAllUsersFilter($filter = '', $limit = 10, $order = 'full_name', $pag
 	$result = db_select($query);
 	if(count($result) > 0) {
 		foreach($result as $user) {
-			$temp = formatUserData($user);
+			$temp = filterArrayData($user, $return);
+			$temp = formatUserData($temp);
 			$users[] = $temp;
 		}
 	}

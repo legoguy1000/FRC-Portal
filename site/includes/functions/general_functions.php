@@ -218,4 +218,12 @@ function metricsCreateCsvData($data, $timeInc, $series) {
 		'header' => $csvHeader
 	);
 }
+
+function filterArrayData ($inputArray, $filter) {
+	return !empty($filter) ?  array_filter($inputArray,
+														function ($var) use ($filter) {
+															return in_array($var,$filter, true);
+													},
+													ARRAY_FILTER_USE_KEY) : $inputArray;
+}
 ?>

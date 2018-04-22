@@ -165,6 +165,12 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			order: 'full_name',
 			page: 1,
 			listOnly: true,
+			return: [
+				'fname',
+				'lname'
+				'full_name',
+				'user_id',
+			]
 		};
 		return usersService.getAllUsersFilter($.param(data));
 	};

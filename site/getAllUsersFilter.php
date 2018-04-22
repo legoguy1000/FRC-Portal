@@ -8,6 +8,7 @@ $limit = null;
 $order = null;
 $page = null;
 $listOnly = false;
+$return = array();
 if(isset($_GET['filter']) && $_GET['filter'] != '') {
 	$filter = $_GET['filter'];
 }
@@ -23,7 +24,9 @@ if(isset($_GET['page']) && $_GET['page'] != '') {
 if(isset($_GET['listOnly']) && $_GET['listOnly'] != '' && $_GET['listOnly']==true) {
 	$listOnly = true;
 }
-
+if(isset($_GET['return']) && is_array($_GET['return'])) {
+	$return = $_GET['return'];
+}
 $users = getAllUsersFilter($filter, $limit, $order, $page);
 if(!empty($users)) {
 	if($listOnly) {
