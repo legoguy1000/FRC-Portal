@@ -31,8 +31,7 @@ if(!isset($formData['hour_requirement'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Hour Requirement is required')));
 }
 
-$query = 'UPDATE seasons SET  year='.db_quote($formData['year']).',
-							game_name='.db_quote($formData['game_name']).',
+$query = 'UPDATE seasons SET game_name='.db_quote($formData['game_name']).',
 							game_logo='.db_quote($formData['game_logo']).',
 							start_date='.db_quote($formData['start_date']).',
 							bag_day='.db_quote($formData['bag_day']).',
