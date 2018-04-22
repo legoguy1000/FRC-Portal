@@ -30,9 +30,9 @@ if(!isset($formData['bag_day'])) {
 if(!isset($formData['hour_requirement'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Hour Requirement is required')));
 }
-$start_date = new DateTime($data['start_date']);
-$bag_day = new DateTime($data['bag_day']);
-$end_date = new DateTime($data['end_date']);
+$start_date = new DateTime($formData['start_date']);
+$bag_day = new DateTime($formData['bag_day']);
+$end_date = new DateTime($formData['end_date']);
 
 $query = 'UPDATE seasons SET game_name='.db_quote($formData['game_name']).',
 							game_logo='.db_quote($formData['game_logo']).',
