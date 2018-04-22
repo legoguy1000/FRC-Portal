@@ -17,7 +17,7 @@ function getAllSeasons() {
 	$query = seasonQuery($sel='',$joins='', $where = '', $order = '');
 	$seasons = db_select($query);
 	foreach($seasons as $seas) {
-		$data[] = $seas;
+		$data[] = formatSeasonData($seas);
 	}
 	return $data;
 }
@@ -26,12 +26,16 @@ function formatSeasonData($season) {
 	$data = array();
 	if(isset($season) && is_array($season)) {
 		$data = $season;
-		$data['start_date_unix'] = (new DateTime($data['start_date']))->format('U');
-		$data['bag_day_unix'] = (new DateTime($data['bag_day']))->format('U');
-		$data['end_date_unix'] = (new DateTime($data['end_date']))->format('U');
-		$date['start_date_formatted'] = date('F j, Y', $data['start_date_unix']);
-		$date['bag_day_formatted'] = date('F j, Y', $data['bag_day_unix']);
-		$date['end_date_formatted'] = date('F j, Y', $data['end_date_unix']);
+		$start_date = new DateTime($data['start_date']);
+		$bag_day = new DateTime($data['bag_day']);
+		$end_date = new DateTime($data['end_date']);
+
+		$data['start_date_unix'] = $start_date->format('U');
+		$data['bag_day_unix'] = $bag_day->format('U');
+		$data['end_date_unix'] = $end_date->format('U');
+		$data['start_date_formatted'] = $start_date->format('F j, Y');
+		$data['bag_day_formatted'] = $bag_day->format('F j, Y');
+		$data['end_date_formatted'] = $end_date->format('F j, Y');
 		$data['hour_requirement'] = (integer) $data['hour_requirement'];
 		$data['requirements'] = array();
 	}
