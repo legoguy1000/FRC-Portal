@@ -36,6 +36,7 @@ function formatSeasonData($season) {
 		$data['start_date_formatted'] = $start_date->format('F j, Y');
 		$data['bag_day_formatted'] = $bag_day->format('F j, Y');
 		$data['end_date_formatted'] = $end_date->format('F j, Y');
+		$data['year'] = (integer) $data['year'];
 		$data['hour_requirement'] = (integer) $data['hour_requirement'];
 		$data['requirements'] = array();
 	}

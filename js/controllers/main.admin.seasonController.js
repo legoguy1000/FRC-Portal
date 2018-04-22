@@ -34,7 +34,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
 		filter: '',
-		limit: 5,
+		limit: 10,
 		order: 'full_name',
 		page: 1
 	};

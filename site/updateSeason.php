@@ -18,24 +18,27 @@ if(!isset($formData['year']) || $formData['year'] == '') {
 if(!isset($formData['game_name'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Game Name is required')));
 }
-if(!isset($formData['start_date'])) {
+if(!isset($formData['start_date_formatted'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Start Date is required')));
 }
-if(!isset($formData['end_date'])) {
+if(!isset($formData['end_date_formatted'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'End Date is required')));
 }
-if(!isset($formData['bag_day'])) {
+if(!isset($formData['bag_day_formatted'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Bag Date is required')));
 }
 if(!isset($formData['hour_requirement'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Hour Requirement is required')));
 }
+$start_date = new DateTime($data['start_date_formatted']);
+$bag_day = new DateTime($data['bag_day_formatted']);
+$end_date = new DateTime($data['end_date_formatted']);
 
 $query = 'UPDATE seasons SET game_name='.db_quote($formData['game_name']).',
 							game_logo='.db_quote($formData['game_logo']).',
-							start_date='.db_quote($formData['start_date']).',
-							bag_day='.db_quote($formData['bag_day']).',
-							end_date='.db_quote($formData['end_date']).',
+							start_date='.db_quote($start_date->format('Y-m-d')).',
+							bag_day='.db_quote($bag_day->format('Y-m-d')).',
+							end_date='.db_quote($end_date->format('Y-m-d')).',
 							hour_requirement='.db_quote($formData['hour_requirement']).',
 							join_spreadsheet='.db_quote($formData['join_spreadsheet']).'
 							WHERE season_id = '.db_quote($formData['season_id']);
