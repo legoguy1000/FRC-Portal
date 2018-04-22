@@ -124,17 +124,6 @@ function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements')
 		$sel .= ', '.$l.'_car.*';
 		$joins .= ' LEFT JOIN event_cars '.$l.'_car USING (event_id,car_id)';
 	}
-	/* if($c != false) {
-		$sel .= ', IFNULL('.$c.'.off_season_hours,0) AS off_season_hours';
-		$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id,year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS off_season_hours, seasons.* FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>seasons.end_date GROUP BY meeting_hours.user_id,seasons.year) '.$c.' USING (user_id,year)';
-	}
-	if($d != false) {
-		$sel .= ', IFNULL('.$d.'.season_hours,0) AS season_hours, IFNULL('.$d.'.season_hours >= '.$b.'.hour_requirement,0) AS min_hours';
-		$joins .= ' LEFT JOIN (SELECT meeting_hours.user_id,year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS season_hours, seasons.* FROM meeting_hours LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in) WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.end_date GROUP BY meeting_hours.user_id,seasons.year) '.$d.' USING (user_id,year)';
-	}
-	if($c != false && $d != false) {
-		$sel .= ', (IFNULL('.$c.'.off_season_hours,0)+IFNULL('.$d.'.season_hours,0)) AS total';
-	} */
 	$data = array(
 		'selects' => $sel,
 		'joins' => $joins
@@ -179,7 +168,11 @@ function userSeasonInfo($user_id = null, $year = null, $return=array()) {
 		'build_season_hours',
 		'competition_season_hours',
 		'off_season_hours',
-		'total_hours'
+		'total_hours',
+		'min_hours',
+		'year',
+		'game_logo',
+		'game_name'
 	);
 	$filterArr = array_unique(array_merge($defaultFilterilterArr, $return));
 	$where = '';
