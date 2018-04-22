@@ -15,7 +15,7 @@ if(!isset($formData['season_id']) || $formData['season_id'] == '') {
 if(!isset($formData['year']) || $formData['year'] == '') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Year is required')));
 }
-if(!isset($formData['name'])) {
+if(!isset($formData['gmae_name'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Game Name is required')));
 }
 if(!isset($formData['start_date'])) {

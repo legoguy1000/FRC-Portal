@@ -76,9 +76,11 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			'join_spreadsheet': vm.season.join_spreadsheet,
 		};
 		vm.promise = seasonsService.updateSeason(data).then(function(response){
-			var reqs = vm.season.requirements
-			vm.season = response.data;
-			vm.season.requirements = reqs;
+			if(response.status) {
+				var reqs = vm.season.requirements
+				vm.season = response.data;
+				vm.season.requirements = reqs;
+			}
 		});
 	};
 }
