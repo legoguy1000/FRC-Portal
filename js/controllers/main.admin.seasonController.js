@@ -59,7 +59,10 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			'year': vm.season.year
 		};
 		seasonsService.updateSeasonMembershipForm(data).then(function(response){
-			vm.season.join_spreadsheet = response.data.join_spreadsheet;
+			if(response.status) {
+				vm.season.join_spreadsheet = response.data.join_spreadsheet;
+			}
+
 		});
 	};
 
