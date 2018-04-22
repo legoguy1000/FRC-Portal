@@ -18,21 +18,21 @@ if(!isset($formData['year']) || $formData['year'] == '') {
 if(!isset($formData['game_name'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Game Name is required')));
 }
-if(!isset($formData['start_date_formatted'])) {
+if(!isset($formData['start_date'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Start Date is required')));
 }
-if(!isset($formData['end_date_formatted'])) {
+if(!isset($formData['end_date'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'End Date is required')));
 }
-if(!isset($formData['bag_day_formatted'])) {
+if(!isset($formData['bag_day'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Bag Date is required')));
 }
 if(!isset($formData['hour_requirement'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Hour Requirement is required')));
 }
-$start_date = new DateTime($data['start_date_formatted']);
-$bag_day = new DateTime($data['bag_day_formatted']);
-$end_date = new DateTime($data['end_date_formatted']);
+$start_date = new DateTime($data['start_date']);
+$bag_day = new DateTime($data['bag_day']);
+$end_date = new DateTime($data['end_date']);
 
 $query = 'UPDATE seasons SET game_name='.db_quote($formData['game_name']).',
 							game_logo='.db_quote($formData['game_logo']).',

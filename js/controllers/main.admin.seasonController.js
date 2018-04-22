@@ -5,6 +5,7 @@ angular.module('FrcPortal')
 function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log,$stateParams) {
     var vm = this;
 
+	vm.loading = false;
 	vm.filter = {
 		show: false,
 	};
@@ -24,8 +25,10 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	vm.season_id = $stateParams.season_id;
 	vm.season = {};
 	vm.getSeason = function () {
+		vm.loading = true;
 		vm.promise = seasonsService.getSeason(vm.season_id).then(function(response){
 			vm.season = response.data;
+			vm.promise = false;
 		});
 	};
 	vm.selectedUsers = [];
@@ -50,11 +53,11 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			if(response.status && response.data) {
 				vm.season.requirements.data = response.data;
 			}
-
 		});
 	};
 
 	vm.updateSeasonMembershipForm = function () {
+		vm.loading = true;
 		var data = {
 			'year': vm.season.year
 		};
@@ -62,17 +65,18 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			if(response.status) {
 				vm.season.join_spreadsheet = response.data.join_spreadsheet;
 			}
-
+			vm.loading = false;
 		});
 	};
 
 	vm.updateSeason = function () {
+		vm.loading = true;
 		var data = {
 			'year': vm.season.year,
 			'season_id': vm.season.season_id,
-			'start_date': vm.season.start_date,
-			'bag_day': vm.season.bag_day,
-			'end_date': vm.season.end_date,
+			'start_date': vm.season.start_date_formatted,
+			'bag_day': vm.season.bag_day_formatted,
+			'end_date': vm.season.end_date_formatted,
 			'game_logo': vm.season.game_logo,
 			'game_name': vm.season.game_name,
 			'hour_requirement': vm.season.hour_requirement,
@@ -84,6 +88,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 				vm.season = response.data;
 				vm.season.requirements = reqs;
 			}
+			vm.loading = false;
 		});
 	};
 }
