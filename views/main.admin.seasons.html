@@ -48,9 +48,12 @@
 							{{season.game_name}}
 						</md-list-item>
 					</td>
-					<td md-cell>{{season.start_date_unix*1000 | date:'longDate'}}</td>
+<!--					<td md-cell>{{season.start_date_unix*1000 | date:'longDate'}}</td>
 					<td md-cell>{{season.bag_day_unix*1000 | date:'longDate'}}</td>
-					<td md-cell>{{season.end_date_unix*1000 | date:'longDate'}}</td>
+					<td md-cell>{{season.end_date_unix*1000 | date:'longDate'}}</td> -->
+					<td md-cell>{{season.start_date_formatted}}</td>
+					<td md-cell>{{season.bag_day_formatted}}</td>
+					<td md-cell>{{season.end_date_formatted}}</td>
 					<td md-cell>
 						<md-button class="md-icon-button" ui-sref="main.admin.season({'season_id':season.season_id})" ng-click="admin.slideLeft()">
 							<md-icon>open_in_new</md-icon>
