@@ -5,7 +5,7 @@ function seasonQuery($sel='',$joins='', $where = '', $order = '') {
 	$joinStr = isset($joins) && $joins !='' ? ' '.$joins : '';
 	$orderStr = isset($order) && $order !='' ? ' '.$order : '';
 	$whereStr = isset($where) && $where !='' ? ' '.$where : '';
-	$query = 'SELECT seasons.* '.$selStr.'
+	$query = 'SELECT seasons.*,UNIX_TIMESTAMP(seasons.start_date) AS start_date_unix, UNIX_TIMESTAMP(events.bag_day) AS bag_day_unix, UNIX_TIMESTAMP(events.end_date) AS end_date_unix '.$selStr.'
 			  FROM seasons
 			  '.$joinStr.' '.$whereStr.' '.$orderStr;
 	return $query;
