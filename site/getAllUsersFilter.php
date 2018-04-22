@@ -27,7 +27,7 @@ if(isset($_GET['listOnly']) && $_GET['listOnly'] != '' && $_GET['listOnly']==tru
 if(isset($_GET['return']) && is_array($_GET['return'])) {
 	$return = $_GET['return'];
 }
-$users = getAllUsersFilter($filter, $limit, $order, $page);
+$users = getAllUsersFilter($filter, $limit, $order, $page, $return);
 if(!empty($users)) {
 	if($listOnly) {
 		die(json_encode($users['data']));
