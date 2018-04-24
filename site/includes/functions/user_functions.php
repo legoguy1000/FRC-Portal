@@ -121,8 +121,8 @@ function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements')
 		$joins .= ' LEFT JOIN event_requirements '.$l.' USING (user_id,event_id)';
 		$sel .= ', '.$l.'_room.room_title';
 		$joins .= ' LEFT JOIN event_rooms '.$l.'_room USING (event_id,room_id)';
-		$sel .= ', '.$l.'_car.*';
-		$joins .= ' LEFT JOIN event_cars '.$l.'_car USING (event_id,car_id)';
+//		$sel .= ', '.$l.'_car.*';
+//		$joins .= ' LEFT JOIN event_cars '.$l.'_car USING (event_id,car_id)';
 	}
 	$data = array(
 		'selects' => $sel,
