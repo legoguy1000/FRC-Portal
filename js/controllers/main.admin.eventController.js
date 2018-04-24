@@ -143,6 +143,29 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
     });
   };
 
+	vm.showCarListModal = function(ev) {
+	    $mdDialog.show({
+	      controller: carListModalController,
+				controllerAs: 'vm',
+	      templateUrl: 'views/partials/carListModal.tmpl.html',
+	      parent: angular.element(document.body),
+	      targetEvent: ev,
+	      clickOutsideToClose:true,
+	      fullscreen: true, // Only for -xs, -sm breakpoints.
+				locals: {
+					eventInfo: {
+						'event_id': vm.event_id,
+						'name':vm.event.name,
+						//'room_info': vm.event.room_list
+					},
+				}
+	    })
+	    .then(function(answer) {
+
+	    }, function() {
+
+	    });
+	  };
 	vm.toggleEventReqs = function (req) {
 		vm.loading = true;
 		var data = {
