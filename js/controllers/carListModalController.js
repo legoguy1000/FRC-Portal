@@ -19,5 +19,5 @@ function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersSe
 			vm.loading = false;
 		});
 	};
-	vm.getEventRoomList();
+	vm.getEventCarList();
 }
