@@ -124,7 +124,7 @@ function getEventCarList($event_id) {
 			$carInfo[] = $temp;
 			$car_id = $car['car_id'];
 			$joins = ' RIGHT JOIN event_requirements USING (user_id)';
-			$where = ' WHERE event_requirements.car_id = '.db_quote($room_id);
+			$where = ' WHERE event_requirements.car_id = '.db_quote($car_id);
 			$uq = userQuery($sel='', $joins, $where, $order='');
 			$uqr = db_select_user($uq);
 			$cars[$car_id] = $uqr;
