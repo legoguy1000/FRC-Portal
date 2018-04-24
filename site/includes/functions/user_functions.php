@@ -208,7 +208,7 @@ function userSeasonInfo($user_id = null, $year = null, $return=array()) {
 	return $data;
 }
 
-function userEventInfo($user_id = null, $year = null, $event = null, $return=array()) {) {
+function userEventInfo($user_id = null, $year = null, $event = null, $return=array()) {
 	$data = array();
 	$reqsQuery = userEventRequirementsQueryArr($b = 'b', $l = 'e');
 
