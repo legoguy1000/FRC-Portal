@@ -220,10 +220,10 @@
 							</td>
 							<td md-cell ng-show="vm.event.drivers">
 								<span ng-hide="user.user_type == 'Student'">
-									<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.can_drive"></i> ({{user.car_space}})
+									<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.can_drive"></i> ({{user.car_space}} Seats)
 									<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.can_drive"></i>
 								</span>
-								<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type == 'Student'"></i>
+								<i class="mdi mdi-minus-box mdi-24px" ng-show="user.user_type == 'Student'"></i>
 							</td>
 							<td md-cell ng-show="vm.event.drivers">
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.car_bool"></i>

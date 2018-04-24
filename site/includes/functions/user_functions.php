@@ -208,9 +208,29 @@ function userSeasonInfo($user_id = null, $year = null, $return=array()) {
 	return $data;
 }
 
-function userEventInfo($user_id = null, $year = null, $event = null) {
+function userEventInfo($user_id = null, $year = null, $event = null, $return=array()) {) {
 	$data = array();
 	$reqsQuery = userEventRequirementsQueryArr($b = 'b', $l = 'e');
+
+	$defaultFilterilterArr = array(
+		'user_id',
+		'full_name',
+		'user_type',
+		'event_id',
+		'name',
+		'dues',
+		'min_hours',
+		'build_season_hours',
+		'competition_season_hours',
+		'off_season_hours',
+		'total_hours',
+		'min_hours',
+		'year',
+		'game_logo',
+		'game_name'
+	);
+	$filterArr = array_unique(array_merge($defaultFilterilterArr, $return));
+
 	$where = '';
 	$whereArr = array('(users.status = "1" OR e.ereq_id IS NOT NULL)');
 	$sel = $reqsQuery['selects'];
@@ -232,7 +252,8 @@ function userEventInfo($user_id = null, $year = null, $event = null) {
 	$result = db_select_user($query);
 	if(count($result > 0)) {
 		foreach($result as $event) {
-			$data[] = formatEventData($event);
+			$temp = formatEventData($event);
+			$data[]= filterArrayData($temp, $filterArr);
 		}
 	}
 	return $data;
@@ -366,7 +387,7 @@ function formatUserData($user) {
 			$data['slackEnabled'] = (bool) isset($data['slack_id']) && $data['slack_id'] != '';
 		}
 		if(isset($data['user_type']) && isset($data['gender']) ) {
-		$data['roomType'] = $data['user_type'] == 'Student' ? $data['user_type'].'.'.$data['gender'] : $data['user_type'];
+			$data['roomType'] = $data['user_type'] == 'Student' ? $data['user_type'].'.'.$data['gender'] : $data['user_type'];
 		}
 		//Annual Requirements
 		if(isset($data['join_team'])) {
