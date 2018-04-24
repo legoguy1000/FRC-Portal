@@ -120,6 +120,7 @@ function getEventCarList($event_id) {
 		$roomTypeCount = array();
 		foreach($result as $car) {
 			$temp = $car;
+			$temp['car_space'] = (integer) $temp['car_space'];
 			$temp['car_title'] = $temp['fname'].' '.$temp['lname'].' ('.$temp['car_space'].')';
 			$carInfo[] = $temp;
 			$car_id = $car['car_id'];
