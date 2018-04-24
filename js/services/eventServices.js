@@ -27,6 +27,13 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getEventCarList: function (event_id) {
+			var eid = event_id != undefined ? event_id: '';
+			return $http.get('site/getEventCarList.php?event_id='+eid)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		getGoogleCalendarEvents: function (q,timeMin,timeMax) {
 		/*	var q = q != undefined ? q: '';
 			var timeMax = timeMax != undefined ? timeMax: '';

@@ -1,0 +1,74 @@
+<md-dialog aria-label="New Event" style="" flex="50" >
+		<md-toolbar layout="row">
+		  <div class="md-toolbar-tools">
+			<h2><span class="noprint">View/Edit </span>Driver/Passenger List for {{vm.eventInfo.name}}</h2>
+			<span flex></span>
+			<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
+			  <md-icon class=""> close </md-icon>
+			</md-button>
+		  </div>
+		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
+		<md-dialog-content class="md-margin">
+			<div layout="row" ng-repeat="car in vm.car_list.cars" style="border-top: solid;border-left: solid;border-right: solid;">
+				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
+					{{car.car_title}}
+				</div>
+				<div flex class="dndList">
+					<md-list ng-cloak
+						dnd-list="vm.car_list.car_selection[car.car_id]"
+						dnd-disable-if="vm.car_list.car_selection[car.car_id].length >= vm.car_list.car_selection[car.car_id].car_space"
+						style="min-height:20px;">
+					    <md-list-item ng-repeat="user in vm.car_list.car_selection[car.car_id]"
+					        dnd-draggable="user"
+					        dnd-moved="vm.car_list.car_selection[car.car_id].splice($index, 1)"
+					        dnd-effect-allowed="move"
+					        dnd-selected="models.selected = user"
+					        ng-class="{'selected': models.selected === user}"
+									class="min-height-reset"
+					        >
+									<dnd-nodrag layout="row" layout-align="start center">
+	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
+						        <div>{{user.full_name}}</div>
+								</dnd-nodrag>
+					    </md-list-item>
+					</md-list>
+				</div>
+			</div>
+			<div layout="row" style="border: solid;">
+				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
+					No car Selected
+				</div>
+				<div flex class="dndList">
+					<md-list ng-cloak
+						dnd-list="vm.car_list.car_selection['non_select']"
+						style="min-height:20px;">
+					    <md-list-item ng-repeat="user in vm.car_list.car_selection['non_select']"
+					        dnd-draggable="user"
+					        dnd-moved="vm.car_list.car_selection['non_select'].splice($index, 1)"
+					        dnd-effect-allowed="move"
+					        dnd-selected="models.selected = user"
+									dnd-type="user.carType"
+					        ng-class="{'selected': models.selected === user}"
+									class="min-height-reset"
+					        >
+									<dnd-nodrag layout="row" layout-align="start center">
+	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
+						        <div>{{user.full_name}}</div>
+								</dnd-nodrag>
+					    </md-list-item>
+					</md-list>
+				</div>
+			</div>
+		</md-dialog-content>
+		<md-dialog-actions layout="row" class="noprint">
+			<md-button type="button" ng-click="window.print();" class="md-icon-button">
+					<md-tooltip md-direction="top">Print car list</md-tooltip>
+					<md-icon class=""> print </md-icon>
+			</md-button>
+			<span flex></span>
+			<md-button type="submit">
+				Submit
+			</md-button>
+		</md-dialog-actions>
+</md-dialog>

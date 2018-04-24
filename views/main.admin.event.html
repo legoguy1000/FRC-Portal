@@ -148,6 +148,10 @@
 						<md-tooltip md-direction="top">View/Edit hotel room list</md-tooltip>
 						<md-icon>hotel</md-icon>
 					</md-button>
+					<md-button class="md-icon-button" ng-click="vm.showCarListModal($event)" ng-show="vm.event.drivers">
+						<md-tooltip md-direction="top">View/Edit Driver/Passenger list</md-tooltip>
+						<md-icon>directions_car</md-icon>
+					</md-button>
 					<md-button class="md-icon-button" ng-click="vm.getUsers()">
 						<md-icon>refresh</md-icon>
 					</md-button>

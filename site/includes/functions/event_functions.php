@@ -110,6 +110,38 @@ function getEventRoomList($event_id) {
 	return $data;
 }
 
+function getEventCarList($event_id) {
+	$data = array();
+	$rooms = array();
+	$roomInfo = array();
+	if(isset($event_id) && $event_id != '') {
+		$query = 'SELECT event_cars.*, users.fname, users.lname FROM event_cars RIGHT JOIN users USING (user_id) WHERE event_id='.db_quote($event_id);
+		$result = db_select($query);
+		$roomTypeCount = array();
+		foreach($result as $car) {
+			$temp = $car;
+			$temp['car_title'] = $temp['fname'].' '.$temp['lname'].' ('.$temp['car_space'].')';
+			$carInfo[] = $temp;
+			$car_id = $car['car_id'];
+			$joins = ' RIGHT JOIN event_requirements USING (user_id)';
+			$where = ' WHERE event_requirements.car_id = '.db_quote($room_id);
+			$uq = userQuery($sel='', $joins, $where, $order='');
+			$uqr = db_select_user($uq);
+			$cars[$car_id] = $uqr;
+		}
+		//no user yet users
+		$joins = ' RIGHT JOIN event_requirements USING (user_id)';
+		$where = ' WHERE event_requirements.car_id IS NULL AND event_id='.db_quote($event_id);
+		$uq = userQuery($sel='', $joins, $where, $order='');
+		$uqr = db_select_user($uq);
+		$cars['non_select'] = $uqr;
+		$data = array('cars'=>$carInfo, 'total'=>count($result), 'car_selection'=>$cars);
+	} else {
+		return false;
+	}
+	return $data;
+}
+
 function getAllEventsFilter($filter = '', $limit = 10, $order = '-event_start', $page = 1) {
 
 	/* if(isset($filter) && $filter != '') {
