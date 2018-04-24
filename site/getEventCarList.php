@@ -1,7 +1,7 @@
 <?php
 include('includes.php');
 
-$authToken = checkToken();
+$authToken = checkToken($die=true,$die401=true);
 
 $event_id = null;
 if(isset($_GET['event_id']) && $_GET['event_id'] != '') {
