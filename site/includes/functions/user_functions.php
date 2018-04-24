@@ -250,7 +250,7 @@ function userEventInfo($user_id = null, $year = null, $event = null, $return=arr
 	$query = userQuery($sel, $joins, $where, $order);
 	//die($query);
 	$result = db_select_user($query);
-	if(count($result > 0)) {
+	if(count($result) > 0) {
 		foreach($result as $event) {
 			$temp = formatEventData($event);
 			$data[]= filterArrayData($temp, $filterArr);
