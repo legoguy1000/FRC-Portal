@@ -9,7 +9,7 @@ function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersSe
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-	vm.room_list = {};
+	vm.car_list = {};
 	vm.loading = false;
 	//function get room list
 	vm.getEventCarList = function () {
