@@ -217,17 +217,14 @@ function userEventInfo($user_id = null, $year = null, $event = null, $return=arr
 		'full_name',
 		'user_type',
 		'event_id',
-		'name',
-		'dues',
-		'min_hours',
-		'build_season_hours',
-		'competition_season_hours',
-		'off_season_hours',
-		'total_hours',
-		'min_hours',
-		'year',
-		'game_logo',
-		'game_name'
+		'registration',
+		'payment',
+		'permission_slip',
+		'food',
+		'room_id',
+		'can_drive',
+		'car_id',
+		'comments'
 	);
 	$filterArr = array_unique(array_merge($defaultFilterilterArr, $return));
 
