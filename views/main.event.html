@@ -29,21 +29,37 @@
 					<button class="md-button md-raised md-primary" ng-click="vm.showRegistrationForm()">Register Now</button>
 				</div>
 				<div layout="column" flex layout-align="center center" ng-show="vm.registrationFormVisible">
-					<div layout="row" flex  layout-align="start center">
+					<div layout="row" flex  layout-align="space-between center">
 						<div>Are you attending the event? </div>
-						<div>
+						<md-select ng-model="vm.registrationForm.registration" placeholder="" class="md-no-underline">
+		          <md-option value="true">Yes</md-option>
+		          <md-option value="false">No</md-option>
+		        </md-select>
+						<!--<div>
 							<md-switch ng-model="vm.registrationForm.registration" class="md-warn"></md-switch>
-						</div>
+						</div>-->
 					</div>
-					<div layout="row" flex  layout-align="start center" ng-if="vm.event.drivers && main.userInfo.user_type=='Mentor'">
-						<div>Can you drive? </div>
-						<div>
-							<md-switch ng-model="vm.registrationForm.can_drive" class="md-warn"></md-switch>
+					<div layout="column" flex layout-align="start start" ng-if="vm.event.drivers && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
+						<div layout="row" flex  layout-align="space-between center">
+							<div>Can you drive? </div>
+							<md-select ng-model="vm.registrationForm.can_drive" placeholder="" class="md-no-underline">
+			          <md-option value="true">Yes</md-option>
+			          <md-option value="false">No</md-option>
+			        </md-select>
 						</div>
-						<md-input-container class="md-block" ng-show="vm.registrationForm.can_drive">
+						<div layout="row" flex  layout-align="space-between center" ng-show="vm.registrationForm.can_drive">
+							<div>How many including yourself can you drive? </div>
+							<md-select ng-model="vm.registrationForm.car_space" placeholder="" class="md-no-underline">
+			          <md-option ng-value="{{n}}" ng-repeat="n in vm.range(0,10)">{{n}}</md-option>
+			        </md-select>
+						</div>
+						<!--<div>
+							<md-switch ng-model="vm.registrationForm.can_drive" class="md-warn"></md-switch>
+						</div>-->
+						<!--<md-input-container class="md-block" ng-show="vm.registrationForm.can_drive">
 							<label>How many including yourself can you drive?</label>
 							<input ng-model="vm.registrationForm.car_space" type="number" step="1" min="0">
-						</md-input-container>
+						</md-input-container>-->
 					</div>
 				</div>
 		</div>
