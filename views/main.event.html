@@ -1,34 +1,35 @@
 <div flex layout="column" class="md-padding" layout-align="center center">
 	<div layout="row" layout-align="center center" style="width:100%">
 		<div layout="column" flex-gt-md="60" flex layout-align="center center" style="background:white;padding: 45px 25px;">
-				<!--Counter-->
-				<div id="countdown" class="countdown font-pink mb-25">
-					<timer end-time="vm.event.event_start_unix*1000">{{days}} day{{daysS}} : {{hours}} hour{{hoursS}} : {{minutes}} minute{{minutesS}} : {{seconds}} second{{secondsS}}</timer>
-				</div>
-				<!--Counter-->
-				<div style="text-align: center;">
-					<h1>{{vm.event.name}}</h1>
-				</div>
-				<div>
-					<h5 class="mt-20">
-						<span ng-show="vm.event.single_day">
-							<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'longDate'}} {{vm.event.event_start_unix*1000 | date:'h:mm a'}} - {{vm.event.event_end_unix*1000 | date:'h:mm a'}}
-						</span>
-						<span ng-hide="vm.event.single_day">
-							<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}
-						</span>
-					</h5>
-				</div>
-				<div>
-					<h5 class="mt-20">
-						{{vm.event.location}}
-					</h5>
-				</div>
-				<div flex layout="row" layout-align="center center">
-					<!--<button class="md-button md-raised md-primary" ng-click="vm.registerForEvent()">Register Now</button>-->
-					<button class="md-button md-raised md-primary" ng-click="vm.showRegistrationForm()">Register Now</button>
-				</div>
-				<div layout="column" flex layout-align="center center" ng-show="vm.registrationFormVisible">
+			<!--Counter-->
+			<div id="countdown" class="countdown font-pink mb-25">
+				<timer end-time="vm.event.event_start_unix*1000">{{days}} day{{daysS}} : {{hours}} hour{{hoursS}} : {{minutes}} minute{{minutesS}} : {{seconds}} second{{secondsS}}</timer>
+			</div>
+			<!--Counter-->
+			<div style="text-align: center;">
+				<h1>{{vm.event.name}}</h1>
+			</div>
+			<div>
+				<h5 class="mt-20">
+					<span ng-show="vm.event.single_day">
+						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'longDate'}} {{vm.event.event_start_unix*1000 | date:'h:mm a'}} - {{vm.event.event_end_unix*1000 | date:'h:mm a'}}
+					</span>
+					<span ng-hide="vm.event.single_day">
+						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}
+					</span>
+				</h5>
+			</div>
+			<div>
+				<h5 class="mt-20">
+					{{vm.event.location}}
+				</h5>
+			</div>
+			<div flex layout="row" layout-align="center center">
+				<!--<button class="md-button md-raised md-primary" ng-click="vm.registerForEvent()">Register Now</button>-->
+				<button class="md-button md-raised md-primary" ng-click="vm.showRegistrationForm()">Register Now</button>
+			</div>
+			<div layout="row" flex ng-show="vm.registrationFormVisible">
+				<div layout="column" flex-gt-md="50" layout-align="center center">
 					<div layout="row" flex  layout-align="space-between center">
 						<div>Are you attending the event? </div>
 						<md-select ng-model="vm.registrationForm.registration" placeholder="" class="md-no-underline">
@@ -39,7 +40,7 @@
 							<md-switch ng-model="vm.registrationForm.registration" class="md-warn"></md-switch>
 						</div>-->
 					</div>
-					<div layout="column" flex layout-align="start start" ng-if="vm.event.drivers && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
+					<div layout="column" flex  ng-if="vm.event.drivers && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
 						<div layout="row" flex  layout-align="space-between center">
 							<div>Can you drive? </div>
 							<md-select ng-model="vm.registrationForm.can_drive" placeholder="" class="md-no-underline">
@@ -62,6 +63,7 @@
 						</md-input-container>-->
 					</div>
 				</div>
+			</div>
 		</div>
 	</div>
 	<div layout="row" layout-align="center center" style="width:100%">
