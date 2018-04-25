@@ -32,8 +32,8 @@
 					<div layout="row" flex  layout-align="space-between center">
 						<div>Are you attending the event? </div>
 						<md-select ng-model="vm.registrationForm.registration" placeholder="" class="md-no-underline">
-		          <md-option value="true">Yes</md-option>
-		          <md-option value="false">No</md-option>
+		          <md-option ng-value="true">Yes</md-option>
+		          <md-option ng-value="false">No</md-option>
 		        </md-select>
 						<!--<div>
 							<md-switch ng-model="vm.registrationForm.registration" class="md-warn"></md-switch>
@@ -43,8 +43,8 @@
 						<div layout="row" flex  layout-align="space-between center">
 							<div>Can you drive? </div>
 							<md-select ng-model="vm.registrationForm.can_drive" placeholder="" class="md-no-underline">
-			          <md-option value="true">Yes</md-option>
-			          <md-option value="false">No</md-option>
+			          <md-option ng-value="true">Yes</md-option>
+			          <md-option ng-value="false">No</md-option>
 			        </md-select>
 						</div>
 						<div layout="row" flex  layout-align="space-between center" ng-show="vm.registrationForm.can_drive">
