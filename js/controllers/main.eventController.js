@@ -10,8 +10,8 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 
 		vm.showRegistrationForm = function() {
 			vm.registrationFormVisible = !vm.registrationFormVisible;
-			if(vm.filter.form.$dirty) {
-				vm.filter.form.$setPristine();
+			if(vm.registrationForm1.$dirty) {
+				vm.registrationForm1.$setPristine();
 			}
 		}
 

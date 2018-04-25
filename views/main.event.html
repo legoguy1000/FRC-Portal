@@ -28,8 +28,8 @@
 				<!--<button class="md-button md-raised md-primary" ng-click="vm.registerForEvent()">Register Now</button>-->
 				<button class="md-button md-raised md-primary" ng-click="vm.showRegistrationForm()">Register Now</button>
 			</div>
-			<div layout="row" flex ng-show="vm.registrationFormVisible">
-				<div layout="column" flex-gt-md="50" layout-align="center center">
+			<form layout="row" flex ng-show="vm.registrationFormVisible" style="width:100%;" layout-align="center center" name="vm.registrationForm1">
+				<div layout="column" flex flex-gt-md="50" layout-align="center center">
 					<div layout="row" flex  layout-align="space-between center">
 						<div>Are you attending the event? </div>
 						<md-select ng-model="vm.registrationForm.registration" placeholder="" class="md-no-underline">
@@ -63,7 +63,7 @@
 						</md-input-container>-->
 					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 	<div layout="row" layout-align="center center" style="width:100%">
