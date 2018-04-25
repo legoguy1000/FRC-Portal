@@ -25,9 +25,7 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 		};
 
 		vm.registerForEvent = function () {
-			var data = {
-				'event_id': vm.event_id,
-			};
+			var data = vm.registrationForm;
 			eventsService.registerForEvent(data).then(function(response){
 				//vm.event = response.data;
 			});

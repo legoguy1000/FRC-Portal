@@ -21,7 +21,7 @@ if(!is_null($result)) {
 	$result1 = db_query($query);
 }
 if($result1) {
-	$user_type = $formData['user_type'];
+	$user_type = $authToken['data']['user_type'];
 	$can_drive = (bool) $formData['can_drive'];
 	if($user_type == 'Mentor' && $can_drive) {
 		$query = 'SELECT * FROM event_cars WHERE event_id='.db_quote($formData['event_id']).' AND user_id='.db_quote($userId);
@@ -41,6 +41,9 @@ if($result1) {
 			$msg = 'Something went wrong';
 			die(json_encode(array('status'=>false, 'type'=>'error', 'msg'=>$msg)));
 		}
+	} else {
+		$query = 'DELETE FROM event_cars WHERE event_id='.db_quote($formData['event_id']).' AND user_id='.db_quote($userId);
+		$result2= db_query($query);
 	}
 	$msg = 'Registered';
 	die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg)));

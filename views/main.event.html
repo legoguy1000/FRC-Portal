@@ -28,8 +28,8 @@
 				<!--<button class="md-button md-raised md-primary" ng-click="vm.registerForEvent()">Register Now</button>-->
 				<button class="md-button md-raised md-primary" ng-click="vm.showRegistrationForm()">Register Now</button>
 			</div>
-			<form layout="row" flex ng-show="vm.registrationFormVisible" style="width:100%;" layout-align="center center" name="vm.registrationForm1">
-				<div layout="column" flex flex-gt-md="50" layout-align="center center">
+			<form layout="row" flex ng-show="vm.registrationFormVisible" style="width:100%;" layout-align="center center" name="vm.registrationForm1" ng-submit="vm.registerForEvent()">
+				<div layout="column" flex flex-gt-md="50" layout-align="space-between center">
 					<div layout="row" flex  layout-align="space-between center">
 						<div>Are you attending the event? </div>
 						<md-select ng-model="vm.registrationForm.registration" placeholder="" class="md-no-underline">
@@ -54,13 +54,17 @@
 			          <md-option ng-value="{{n}}" ng-repeat="n in vm.range(0,10)">{{n}}</md-option>
 			        </md-select>
 						</div>
-						<!--<div>
-							<md-switch ng-model="vm.registrationForm.can_drive" class="md-warn"></md-switch>
-						</div>-->
-						<!--<md-input-container class="md-block" ng-show="vm.registrationForm.can_drive">
-							<label>How many including yourself can you drive?</label>
-							<input ng-model="vm.registrationForm.car_space" type="number" step="1" min="0">
-						</md-input-container>-->
+					</div>
+					<div layout="column" flex  ng-if="vm.event.room">
+						<div>Please select hotel room? </div>
+						<md-select ng-model="vm.registrationForm.room_id" placeholder="" class="md-no-underline">
+							<md-option ng-value="true">Yes</md-option>
+							<md-option ng-value="false">No</md-option>
+						</md-select>
+					</div>
+					<div flex layout="row" layout-align="center center">
+						<!--<button class="md-button md-raised md-primary" ng-click="vm.registerForEvent()">Register Now</button>-->
+						<button class="md-button md-raised md-primary" type="submit">Complete Registration</button>
 					</div>
 				</div>
 			</form>
