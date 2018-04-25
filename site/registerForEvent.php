@@ -31,7 +31,7 @@ if($result1) {
 			$query = 'INSERT INTO event_cars (car_id, event_id, user_id, car_space) VALUES ('.db_quote($car_id).', '.db_quote($formData['event_id']).', '.db_quote($userId).', '.db_quote($formData['car_space']).')';
 			$result2 = db_query($query);
 			if($result2) {
-				$query = 'UPDATE event_requirements SET car_id="'.db_quote($car_id).'" WHERE event_id='.db_quote($formData['event_id']).' AND user_id='.db_quote($userId);
+				$query = 'UPDATE event_requirements SET car_id='.db_quote($car_id).' WHERE event_id='.db_quote($formData['event_id']).' AND user_id='.db_quote($userId);
 				$result3= db_query($query);
 			} else {
 				$msg = 'Something went wrong';
