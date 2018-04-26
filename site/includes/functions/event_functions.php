@@ -21,6 +21,9 @@ function formatEventData($event) {
 		$data['payment'] = (bool) $data['payment'];
 		$data['permission_slip'] = (bool) $data['permission_slip'];
 		$data['room'] = (bool) $data['room'];
+		if(isset($data['car_space'])) {
+			$data['car_space'] = (integer) $data['car_space'];
+		}
 		$data['single_day'] = (bool) (date('Y-m-d',$data['event_start_unix']) == date('Y-m-d',$data['event_end_unix']));
 		$data['pocInfo'] = !is_null($data['poc']) ? getUserDataFromParam('user_id',$data['poc']) : json_decode($data['poc_other']);
 	}
