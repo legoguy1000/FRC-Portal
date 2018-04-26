@@ -121,8 +121,8 @@ function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements')
 		$joins .= ' LEFT JOIN event_requirements '.$l.' USING (user_id,event_id)';
 		$sel .= ', '.$l.'_room.room_title';
 		$joins .= ' LEFT JOIN event_rooms '.$l.'_room USING (event_id,room_id)';
-//		$sel .= ', '.$l.'_car.*';
-//		$joins .= ' LEFT JOIN event_cars '.$l.'_car USING (event_id,car_id)';
+		$sel .= ', '.$l.'_car.car_space';
+		$joins .= ' LEFT JOIN event_cars '.$l.'_car USING (car_id)';
 	}
 	$data = array(
 		'selects' => $sel,
@@ -224,7 +224,8 @@ function userEventInfo($user_id = null, $year = null, $event = null, $return=arr
 		'room_id',
 		'can_drive',
 		'car_id',
-		'comments'
+		'comments',
+		'car_space'
 	);
 	$filterArr = array_unique(array_merge($defaultFilterilterArr, $return));
 
@@ -232,6 +233,7 @@ function userEventInfo($user_id = null, $year = null, $event = null, $return=arr
 	$whereArr = array('(users.status = "1" OR e.ereq_id IS NOT NULL)');
 	$sel = $reqsQuery['selects'];
 	$joins = $reqsQuery['joins'];
+
 	if($user_id != null) {
 		$whereArr[] = 'users.user_id = '.db_quote($user_id);
 	}
