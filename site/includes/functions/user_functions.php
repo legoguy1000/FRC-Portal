@@ -117,7 +117,7 @@ function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements')
 	$sel =  $b.'.*, year('.$b.'.event_start) as year, UNIX_TIMESTAMP('.$b.'.event_start) AS event_start_unix, UNIX_TIMESTAMP('.$b.'.event_end) AS event_end_unix, datediff('.$b.'.event_end,'.$b.'.event_start)+1 as num_days';
 	$joins = 'CROSS JOIN events '.$b;
 	if($l != false) {
-		$sel .= ', IFNULL('.$l.'.registration,0) AS registration, IFNULL('.$l.'.payment,0) AS payment, IFNULL('.$l.'.permission_slip,0) AS permission_slip, IFNULL('.$l.'.food,0) AS food, '.$l.'.room_id, IFNULL('.$l.'.can_drive,0) AS can_drive, '.$l.'.car_id';
+		$sel .= ', IFNULL('.$l.'.registration,0) AS registration, IFNULL('.$l.'.payment,0) AS payment, IFNULL('.$l.'.permission_slip,0) AS permission_slip, IFNULL('.$l.'.food,0) AS food, '.$l.'.room_id, IFNULL('.$l.'.can_drive,0) AS can_drive, '.$l.'.car_id, IF('.$l.'.car_id IS NULL,0,1) as car_bool';
 		$joins .= ' LEFT JOIN event_requirements '.$l.' USING (user_id,event_id)';
 		$sel .= ', '.$l.'_room.room_title, IF('.$l.'_room.room_title IS NULL,0,1) as room_bool';
 		$joins .= ' LEFT JOIN event_rooms '.$l.'_room USING (event_id,room_id)';
@@ -225,6 +225,7 @@ function userEventInfo($user_id = null, $year = null, $event = null, $return=arr
 		'room_bool',
 		'can_drive',
 		'car_id',
+		'car_bool',
 		'comments',
 		'car_space'
 	);

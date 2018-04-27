@@ -179,7 +179,7 @@
 							<th md-column md-order-by="food" ng-show="vm.event.food_required"><span>Food Order</span></th>
 							<th md-column md-order-by="room_id" ng-show="vm.event.room_required"><span>Room Selected</span></th>
 							<th md-column md-order-by="can_drive" ng-show="vm.event.drivers_required"><span>Driver</span></th>
-							<th md-column md-order-by="" ng-show="vm.event.drivers_required"><span>Car</span></th><!--
+							<th md-column md-order-by="car_id" ng-show="vm.event.drivers_required"><span>Car</span></th><!--
 							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
 							<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
@@ -224,16 +224,20 @@
 							</td>
 							<td md-cell ng-show="vm.event.drivers_required">
 								<div ng-show="user.user_type == 'Mentor' && user.can_drive" layout="row" layout-align="start center">
-									<div><i><i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;"></i></div>
-									<div>({{user.car_space}} Seats)</div>
+									<div><i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;"></i></div>
+									<div style="margin-left:10px;">({{user.car_space}} Seats)</div>
 									<!--<div><i class="mdi mdi-minus-box mdi-24px" ng-hide="user.can_drive"></i></div>-->
 								</div>
 								<i class="mdi mdi-minus-box mdi-24px" ng-show="user.user_type != 'Mentor' || (user.user_type == 'Mentor' && !user.can_drive)"></i>
 							</td>
 							<td md-cell ng-show="vm.event.drivers_required">
-								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.car_bool"></i>
-								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.car_bool"></i>
-								<span style="margin-left:10px;">{{user.car_title}}</span>
+								<div layout="row" layout-align="start center">
+									<div>
+										<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.car_bool"></i>
+										<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.car_bool"></i>
+									</div>
+									<div style="margin-left:10px;">{{user.car_title}}</div>
+								</div>
 							</td>
 							<!-- <td md-cell>
 								{{user.season_hours}}
