@@ -10,6 +10,15 @@ $formData = json_decode($json,true);
 if(!isset($formData['event_id']) || $formData['event_id'] == '') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid Request.')));
 }
+
+$eventInfo = getEvent($formData['event_id'], $reqs = false);
+
+if(time() > $eventInfo['event_start_unix']) {
+	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Registration is closed.  Event has already started.')));
+} elseif((bool) $eventInfo['registration_date_unix'] != false && (time() > $eventInfo['registration_date_unix'])) {
+	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Registration is closed.  Registration deadline was '.date('F j, Y g:m A',$eventInfo['registration_date_unix']).'.')));
+}
+
 $query = 'SELECT * FROM event_requirements WHERE event_id='.db_quote($formData['event_id']).' AND user_id='.db_quote($userId);
 $result = db_select_single($query);
 if(!is_null($result)) {
