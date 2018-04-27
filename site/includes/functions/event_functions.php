@@ -16,11 +16,11 @@ function formatEventData($event) {
 	$data = array();
 	if(isset($event) && is_array($event)) {
 		$data = $event;
-		$data['drivers'] = (bool) $data['drivers'];
-		$data['food'] = (bool) $data['food'];
-		$data['payment'] = (bool) $data['payment'];
-		$data['permission_slip'] = (bool) $data['permission_slip'];
-		$data['room'] = (bool) $data['room'];
+		$data['drivers_required'] = (bool) $data['drivers_required'];
+		$data['food_required'] = (bool) $data['food_required'];
+		$data['payment_required'] = (bool) $data['payment_required'];
+		$data['permission_slip_required'] = (bool) $data['permission_slip_required'];
+		$data['room_required'] = (bool) $data['room_required'];
 		if(isset($data['car_space'])) {
 			$data['car_space'] = (integer) $data['car_space'];
 		}

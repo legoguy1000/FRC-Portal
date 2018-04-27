@@ -34,7 +34,7 @@ if(!is_null($result)) {
 }
 
 $event_id = uniqid();
-$query = 'INSERT INTO events (event_id, google_cal_id, name, type, event_start, event_end, details, location, payment, permission_slip, food, room, drivers) VALUES
+$query = 'INSERT INTO events (event_id, google_cal_id, name, type, event_start, event_end, details, location, payment_required, permission_slip_required, food_required, room_required, drivers_required) VALUES
 		('.db_quote($event_id).',
 		 '.db_quote($formData['google_cal_id']).',
 		 '.db_quote($formData['name']).',
