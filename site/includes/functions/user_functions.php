@@ -119,7 +119,7 @@ function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements')
 	if($l != false) {
 		$sel .= ', IFNULL('.$l.'.registration,0) AS registration, IFNULL('.$l.'.payment,0) AS payment, IFNULL('.$l.'.permission_slip,0) AS permission_slip, IFNULL('.$l.'.food,0) AS food, '.$l.'.room_id, IFNULL('.$l.'.can_drive,0) AS can_drive, '.$l.'.car_id';
 		$joins .= ' LEFT JOIN event_requirements '.$l.' USING (user_id,event_id)';
-		$sel .= ', '.$l.'_room.room_title';
+		$sel .= ', '.$l.'_room.room_title, IF('.$l.'_room.room_title IS NULL,0,1) as room_bool';
 		$joins .= ' LEFT JOIN event_rooms '.$l.'_room USING (event_id,room_id)';
 		$sel .= ', '.$l.'_car.car_space';
 		$joins .= ' LEFT JOIN event_cars '.$l.'_car USING (car_id)';
@@ -222,6 +222,7 @@ function userEventInfo($user_id = null, $year = null, $event = null, $return=arr
 		'permission_slip',
 		'food',
 		'room_id',
+		'room_bool',
 		'can_drive',
 		'car_id',
 		'comments',
@@ -426,7 +427,7 @@ function formatUserData($user) {
 		if(isset($data['food'])) {
 			$data['food'] = (bool) $data['food'];
 		}
-		if(isset($data['room_id'])) {
+		if(isset($data['room_bool'])) {
 			$data['room_bool'] = (bool) $data['room_id'];
 		}
 		if(isset($data['can_drive'])) {
