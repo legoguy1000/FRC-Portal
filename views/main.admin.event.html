@@ -228,7 +228,7 @@
 									<div>({{user.car_space}} Seats)</div>
 									<!--<div><i class="mdi mdi-minus-box mdi-24px" ng-hide="user.can_drive"></i></div>-->
 								</div>
-								<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type != 'Mentor' || (user.user_type == 'Mentor' && !user.can_drive)"></i>
+								<i class="mdi mdi-minus-box mdi-24px" ng-show="user.user_type != 'Mentor' || (user.user_type == 'Mentor' && !user.can_drive)"></i>
 							</td>
 							<td md-cell ng-show="vm.event.drivers_required">
 								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.car_bool"></i>
