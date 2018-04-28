@@ -28,7 +28,7 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 			page: 1
 		};
 
-		vm.showRegistrationForm = function() {
+		vm.showRegistrationForm = function(ev) {
 			var eventInfo = vm.event;
 			delete eventInfo.requirements;
 			$mdDialog.show({
