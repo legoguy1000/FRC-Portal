@@ -26,6 +26,7 @@ foreach($result as $re) {
 	$car_id = $re['car_id'];
 	$carArr = $formData['cars'][$car_id];
 	$userArr = array();
+	$userStr = '';
 	foreach($carArr as $car) {
 		$userArr[] = db_quote($car['user_id']);
 	}
@@ -39,10 +40,11 @@ foreach($result as $re) {
 //Not Assigned a car
 $carArr = $formData['cars']['non_select'];
 $userArr = array();
+$userStr = '';
 foreach($carArr as $car) {
 	$userArr[] = db_quote($car['user_id']);
 }
-if(!empty($userArr) && count($userArr) <= $re['car_space']) {
+if(!empty($userArr)) {
 	$userStr = implode(', '.$userArr);
 	$query = 'UPDATE event_requirements SET car_id=NULL WHERE event_id='.db_quote($formData['event_id']).' AND user_id IN ('.$userStr.')';
 	$result = db_query($query);

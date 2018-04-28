@@ -26,6 +26,7 @@ foreach($result as $re) {
 	$room_id = $re['room_id'];
 	$roomArr = $formData['rooms'][$room_id];
 	$userArr = array();
+	$userStr = '';
 	foreach($roomArr as $room) {
 		$userArr[] = db_quote($room['user_id']);
 	}
@@ -39,6 +40,7 @@ foreach($result as $re) {
 //Not Assigned a room
 $roomArr = $formData['rooms']['non_select'];
 $userArr = array();
+$userStr = '';
 foreach($roomArr as $room) {
 	$userArr[] = db_quote($room['user_id']);
 }
