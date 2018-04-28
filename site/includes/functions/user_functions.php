@@ -434,6 +434,9 @@ function formatUserData($user) {
 		if(isset($data['can_drive'])) {
 			$data['can_drive'] = (bool) $data['can_drive'];
 		}
+		if(isset($data['car_bool'])) {
+			$data['car_bool'] = (integer) $data['car_bool'];
+		}
 		if(isset($data['car_space'])) {
 			$data['car_space'] = (integer) $data['car_space'];
 		}
