@@ -10,6 +10,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		$mdDialog.cancel();
 	}
 
+	vm.registrationForm = {};
 	vm.registerForEvent = function () {
 		var data = vm.registrationForm;
 		data.event_id = vm.event.event_id;

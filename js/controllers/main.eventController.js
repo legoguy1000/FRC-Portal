@@ -10,7 +10,7 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 
 
 
-		vm.registrationForm = {};
+
 		vm.event_id = $stateParams.event_id;
 		vm.event = {};
 		vm.getEvent = function () {
