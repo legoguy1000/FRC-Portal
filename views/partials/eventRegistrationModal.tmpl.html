@@ -1,0 +1,59 @@
+<md-dialog aria-label="Event Registration" style="" flex="50" >
+		<md-toolbar layout="row">
+		  <div class="md-toolbar-tools">
+			<h2>Register for {{vm.eventInfo.name}}</h2>
+			<span flex></span>
+			<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
+			  <md-icon class=""> close </md-icon>
+			</md-button>
+		  </div>
+		</md-toolbar>
+		<form layout="row" flex ng-show="vm.registrationFormVisible" style="width:100%;" layout-align="center center" name="vm.registrationForm1" ng-submit="vm.registerForEvent()">
+			<md-dialog-content class="md-margin">
+				<div layout="column" flex flex-gt-md="50">
+					<div layout="row" flex layout-align="space-between center">
+						<div>Are you attending the event? </div>
+						<md-select ng-model="vm.registrationForm.registration" placeholder="" class="md-no-underline" required>
+		          <md-option ng-value="true">Yes</md-option>
+		          <md-option ng-value="false">No</md-option>
+		        </md-select>
+						<!--<div>
+							<md-switch ng-model="vm.registrationForm.registration" class="md-warn"></md-switch>
+						</div>-->
+					</div>
+					<div layout="column" flex ng-if="vm.event.drivers && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
+						<div layout="row" flex layout-align="space-between center">
+							<div>Can you drive? </div>
+							<md-select ng-model="vm.registrationForm.can_drive" placeholder="" class="md-no-underline" ng-required="vm.event.drivers && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
+			          <md-option ng-value="true">Yes</md-option>
+			          <md-option ng-value="false">No</md-option>
+			        </md-select>
+						</div>
+						<div layout="row" flex layout-align="space-between center" ng-show="vm.registrationForm.can_drive">
+							<div>How many including yourself can you drive? </div>
+							<md-select ng-model="vm.registrationForm.car_space" placeholder="" class="md-no-underline" ng-required="vm.registrationForm.can_drive">
+			          <md-option ng-value="{{n}}" ng-repeat="n in vm.range(0,10)">{{n}}</md-option>
+			        </md-select>
+						</div>
+					</div>
+					<div layout="row" flex layout-align="space-between center" ng-if="vm.event.room && vm.registrationForm.registration">
+						<div>Please select hotel room? </div>
+						<md-select ng-model="vm.registrationForm.room_id" placeholder="" class="md-no-underline" ng-required="vm.event.room && vm.registrationForm.registration">
+							<md-option ng-value="true">Yes</md-option>
+							<md-option ng-value="false">No</md-option>
+						</md-select>
+					</div>
+					<div flex layout="row" layout-align="center center">
+						<!--<button class="md-button md-raised md-primary" ng-click="vm.registerForEvent()">Register Now</button>-->
+						<!--<button class="md-button md-raised md-primary" type="submit">Complete Registration</button>-->
+					</div>
+				</div>
+			</md-dialog-content>
+			<md-dialog-actions layout="row" class="noprint">
+				<span flex></span>
+				<md-button type="submit" class="md-raised md-primary">
+					Submit
+				</md-button>
+			</md-dialog-actions>
+		</form>
+</md-dialog>

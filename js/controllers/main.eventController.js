@@ -8,12 +8,7 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 		vm.registrationFormVisible = false;
 		vm.state = $state.current.name;
 
-		vm.showRegistrationForm = function() {
-			vm.registrationFormVisible = !vm.registrationFormVisible;
-			if(vm.registrationForm1.$dirty) {
-				vm.registrationForm1.$setPristine();
-			}
-		}
+
 
 		vm.registrationForm = {};
 		vm.event_id = $stateParams.event_id;
@@ -21,14 +16,6 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 		vm.getEvent = function () {
 			vm.promise = eventsService.getEvent(vm.event_id).then(function(response){
 				vm.event = response.data;
-			});
-		};
-
-		vm.registerForEvent = function () {
-			var data = vm.registrationForm;
-			data.event_id = vm.event.event_id;
-			eventsService.registerForEvent(data).then(function(response){
-				//vm.event = response.data;
 			});
 		};
 
@@ -41,12 +28,25 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 			page: 1
 		};
 
-	vm.range = function(min, max, step) {
-	    step = step || 1;
-	    var input = [];
-	    for (var i = min; i <= max; i += step) {
-	        input.push(i);
-	    }
-	    return input;
-	};
+		vm.showRegistrationForm = function() {
+			var eventInfo = vm.event;
+			delete eventInfo.requirements;
+			$mdDialog.show({
+	      controller: eventRegistrationController,
+				controllerAs: 'vm',
+	      templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
+	      parent: angular.element(document.body),
+	      targetEvent: ev,
+	      clickOutsideToClose:true,
+	      fullscreen: true, // Only for -xs, -sm breakpoints.
+				locals: {
+					'eventInfo': eventInfo
+				}
+	    })
+	    .then(function(answer) {
+
+	    }, function() {
+
+	    });
+		}
 }
