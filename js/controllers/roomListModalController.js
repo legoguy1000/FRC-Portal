@@ -17,4 +17,16 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 		});
 	};
 	vm.getEventRoomList();
+
+	vm.updateEventRoomList = function () {
+		vm.loading = true;
+		var data = {
+			event_id: vm.eventInfo.event_id,
+			rooms: vm.room_list.room_selection
+		};
+		eventsService.updateEventRoomList(data).then(function(response){
+			vm.car_list = response.data;
+			vm.loading = false;
+		});
+	};
 }

@@ -20,4 +20,16 @@ function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersSe
 		});
 	};
 	vm.getEventCarList();
+
+	vm.updateEventCarList = function () {
+		vm.loading = true;
+		var data = {
+			event_id: vm.eventInfo.event_id,
+			cars: vm.car_list.car_selection
+		};
+		eventsService.updateEventCarList(data).then(function(response){
+			vm.car_list = response.data;
+			vm.loading = false;
+		});
+	};
 }

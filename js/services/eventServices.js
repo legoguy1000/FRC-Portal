@@ -7,9 +7,10 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		getEvent: function (event_id) {
+		getEvent: function (event_id,reqs) {
 			var eid = event_id != undefined ? event_id: '';
-			return $http.get('site/getEvent.php?event_id='+eid)
+			var reqs_str = reqs == true ? '&reqs=true': false;
+			return $http.get('site/getEvent.php?event_id='+eid+reqs_str)
 			.then(function(response) {
 				return response.data;
 			});
@@ -69,6 +70,18 @@ angular.module('FrcPortal')
 		},
 		deleteEvent: function (formData) {
 			return $http.post('site/deleteEvent.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		updateEventRoomList: function (formData) {
+			return $http.post('site/updateEventRoomList.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		updateEventCarList: function (formData) {
+			return $http.post('site/updateEventCarList.php',formData)
 			.then(function(response) {
 				return response.data;
 			});
