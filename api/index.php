@@ -59,8 +59,11 @@ $container['db'] = function ($c) {
 
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
     $name = $args['name'];
-    $response->getBody()->write("Hello, $name");
-    echo $this->db;
+
+    $db = $this->db;
+    $result = $db->query('SELECT * FROM users WHERE fname = "'.$name.'" LIMIT 1');
+    $row = $result->fetch_assoc();
+    $response->withJson($row);
     return $response;
 });
 $app->run();
