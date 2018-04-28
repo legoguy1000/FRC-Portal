@@ -15,7 +15,7 @@ if(!isset($formData['event_id']) || $formData['event_id'] == '') {
 if(!isset($formData['user_type']) || $formData['user_type'] == '') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'User type cannot be blank!')));
 }
-if(!isset($formData['gender']) || $formData['gender'] == '') {
+if(!isset($formData['gender']) || $formData['gender'] == '' && $formData['user_type'] != 'Mentor') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Gender cannot be blank!')));
 }
 
