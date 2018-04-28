@@ -86,5 +86,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		addEventRoom: function (formData) {
+			return $http.post('site/addEventRoom.php',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

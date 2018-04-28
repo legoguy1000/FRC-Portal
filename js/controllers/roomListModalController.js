@@ -31,4 +31,15 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 			}
 		});
 	};
+
+	vm.addEventRoom = function (close) {
+		vm.loading = true;
+		var data = {
+			event_id: vm.eventInfo.event_id,
+		};
+		eventsService.addEventRoom(data).then(function(response) {
+			vm.loading = false;
+			vm.room_list = response.data;
+		});
+	};
 }
