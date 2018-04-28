@@ -10,7 +10,7 @@ $formData = json_decode($json,true);
 if(!isset($formData['event_id']) || $formData['event_id'] == '') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid Request.')));
 }
-if(!isset($formData['registration']) || $formData['registration'] == '') {
+if(!is_null($formData['registration']) || !is_bool($formData['registration'])) {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid Request, no registration option.')));
 }
 $registrationBool = (bool) $formData['registration'];
