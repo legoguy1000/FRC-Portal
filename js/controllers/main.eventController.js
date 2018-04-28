@@ -40,7 +40,8 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 	      clickOutsideToClose:true,
 	      fullscreen: true, // Only for -xs, -sm breakpoints.
 				locals: {
-					'eventInfo': eventInfo
+					'eventInfo': eventInfo,
+					'userInfo': $scope.main.userInfo
 				}
 	    })
 	    .then(function(answer) {

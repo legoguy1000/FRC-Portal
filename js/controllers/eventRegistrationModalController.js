@@ -1,11 +1,12 @@
 angular.module('FrcPortal')
-.controller('eventRegistrationController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService','eventInfo',
+.controller('eventRegistrationController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService','eventInfo','userInfo',
 	eventRegistrationController
 ]);
-function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,eventInfo) {
+function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,eventInfo,userInfo) {
 	var vm = this;
 
 	vm.eventInfo = eventInfo;
+	vm.userInfo = userInfo;
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
