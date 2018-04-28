@@ -122,7 +122,7 @@ function userEventRequirementsQueryArr($b = 'events', $l = 'event_requirements')
 		$sel .= ', '.$l.'_room.room_title, IF('.$l.'_room.room_title IS NULL,0,1) as room_bool';
 		$joins .= ' LEFT JOIN event_rooms '.$l.'_room USING (event_id,room_id)';
 		$sel .= ', '.$l.'_car.car_space';
-		$joins .= ' LEFT JOIN event_cars '.$l.'_car USING (car_id)';
+		$joins .= ' LEFT JOIN event_cars '.$l.'_car USING (user_id)';
 	}
 	$data = array(
 		'selects' => $sel,
