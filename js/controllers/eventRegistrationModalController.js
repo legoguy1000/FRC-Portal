@@ -5,7 +5,7 @@ angular.module('FrcPortal')
 function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,eventInfo,userInfo) {
 	var vm = this;
 
-	vm.eventInfo = eventInfo;
+	vm.event = eventInfo;
 	vm.userInfo = userInfo;
 	vm.cancel = function() {
 		$mdDialog.cancel();
