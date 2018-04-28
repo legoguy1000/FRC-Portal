@@ -63,7 +63,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     $db = $this->db;
     $result = $db->query('SELECT * FROM users WHERE fname = "'.$name.'" LIMIT 1');
     $row = $result->fetch_assoc();
-    $response->withJson($row);
+    $response->withJson(array('asdf','asdfasdf','adsasdfasd'));
     return $response;
 });
 $app->run();
