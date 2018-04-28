@@ -39,7 +39,9 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 		};
 		eventsService.addEventRoom(data).then(function(response) {
 			vm.loading = false;
-			vm.room_list = response.data;
+			if(response.status) {
+				vm.room_list = response.data;
+			}
 		});
 	};
 }
