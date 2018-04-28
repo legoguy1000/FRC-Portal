@@ -136,8 +136,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				},
 			}
     })
-    .then(function(answer) {
-
+    .then(function(response) {
+			vm.event.requirements = response.userInfo;
     }, function() {
 
     });
@@ -160,8 +160,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 					},
 				}
 	    })
-	    .then(function(answer) {
-
+			.then(function(response) {
+				vm.event.requirements = response.userInfo;
 	    }, function() {
 
 	    });

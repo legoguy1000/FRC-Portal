@@ -50,8 +50,9 @@ if(!empty($userArr) && count($userArr) <= 4) {
 
 $result = db_commit();
 if($result) {
+	$userInfo = userEventInfo($user_id = null, $year = null, $event = $formData['event_id'], $return=array());
 	$msg = 'Event room list updated.';
-	die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg)));
+	die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'userInfo'=>$userInfo)));
 } else {
 	$msg = 'Something went wrong';
 	die(json_encode(array('status'=>false, 'type'=>'error', 'msg'=>$msg)));

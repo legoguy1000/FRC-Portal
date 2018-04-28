@@ -51,7 +51,8 @@ if(!empty($userArr) && count($userArr) <= $re['car_space']) {
 $result = db_commit();
 if($result) {
 	$msg = 'Event car list updated.';
-	die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg)));
+	$userInfo = userEventInfo($user_id = null, $year = null, $event = $formData['event_id'], $return=array());
+	die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'userInfo'=>$userInfo)));
 } else {
 	$msg = 'Something went wrong';
 	die(json_encode(array('status'=>false, 'type'=>'error', 'msg'=>$msg)));

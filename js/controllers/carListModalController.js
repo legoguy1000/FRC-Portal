@@ -21,7 +21,7 @@ function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersSe
 	};
 	vm.getEventCarList();
 
-	vm.updateEventCarList = function () {
+	vm.updateEventCarList = function (close) {
 		vm.loading = true;
 		var data = {
 			event_id: vm.eventInfo.event_id,
@@ -29,6 +29,9 @@ function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersSe
 		};
 		eventsService.updateEventCarList(data).then(function(response){
 			vm.loading = false;
+			if(close) {
+				$mdDialog.hide(response);
+			}
 		});
 	};
 }
