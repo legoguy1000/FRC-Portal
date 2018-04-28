@@ -21,11 +21,46 @@ include($root.'/site/includes/functions/time_functions.php');
 include($root.'/site/includes/functions/email_functions.php');
 
 
-$app = new \Slim\App;
+
+$config['displayErrorDetails'] = true;
+$config['addContentLengthHeader'] = false;
+
+$config['db']['host']   = getIniProp('db_host'); //your mysql server
+$config['db']['user']   = getIniProp('db_user'); //your mysql server username
+$config['db']['pass']   = getIniProp('db_pass'); //your mysql server password
+$config['db']['dbname'] = getIniProp('db_name'); //the mysql database to use
+
+$app = new \Slim\App(['settings' => $config]);
+$container = $app->getContainer();
+$container['db'] = function ($c) {
+    $dbConfig = $c['settings']['db'];
+
+    $db = mysqli_init();
+      // Try and connect to the database, if a connection has not been established yet
+  	if (!$db) {
+  		//die('mysqli_init failed');
+  	}
+  	if (!$db->options(MYSQLI_INIT_COMMAND, 'SET time_zone = "America/New_York"')) {
+  		//die('Setting MYSQLI_INIT_COMMAND failed');
+  	}
+  	if (!$db->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5)) {
+  		//die('Setting MYSQLI_OPT_CONNECT_TIMEOUT failed');
+  	}
+    if (!$db->real_connect($dbConfig['host'], $dbConfig['user'], $dbConfig['pass'], $dbConfig['dbname'])) {
+      return $db->connect_error;
+    }
+    return $db;
+/*    $pdo = new PDO('mysql:host=' . $db['host'] . ';dbname=' . $db['dbname'],
+        $db['user'], $db['pass']);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    return $pdo;*/
+};
+
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
     $name = $args['name'];
     $response->getBody()->write("Hello, $name");
-
+    echo $this->db;
     return $response;
 });
 $app->run();
