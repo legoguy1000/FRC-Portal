@@ -9,7 +9,7 @@ angular.module('FrcPortal')
 		},
 		getEvent: function (event_id,reqs) {
 			var eid = event_id != undefined ? event_id: '';
-			var reqs_str = reqs == true ? '&reqs=true': false;
+			var reqs_str = reqs == true ? '&reqs=true': '';
 			return $http.get('site/getEvent.php?event_id='+eid+reqs_str)
 			.then(function(response) {
 				return response.data;
