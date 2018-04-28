@@ -11,7 +11,7 @@ if(!isset($formData['event_id']) || $formData['event_id'] == '') {
 	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid Request.')));
 }
 if(!isset($formData['registration']) || $formData['registration'] == '') {
-	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid Request.')));
+	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid Request, no registration option.')));
 }
 $registrationBool = (bool) $formData['registration'];
 
