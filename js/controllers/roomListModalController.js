@@ -25,7 +25,6 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 			rooms: vm.room_list.room_selection
 		};
 		eventsService.updateEventRoomList(data).then(function(response){
-			vm.car_list = response.data;
 			vm.loading = false;
 		});
 	};

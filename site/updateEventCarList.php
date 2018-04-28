@@ -30,7 +30,7 @@ foreach($result as $re) {
 		$userArr[] = db_quote($car['user_id']);
 	}
 	if(!empty($userArr) && count($userArr) <= $re['car_space']) {
-		$userStr = implode(', '.$userArr);
+		$userStr = implode(', ',$userArr);
 		$query = 'UPDATE event_requirements SET car_id='.db_quote($car_id).' WHERE event_id='.db_quote($formData['event_id']).' AND user_id IN ('.$userStr.')';
 		$result = db_query($query);
 	}

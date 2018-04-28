@@ -28,7 +28,6 @@ function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersSe
 			cars: vm.car_list.car_selection
 		};
 		eventsService.updateEventCarList(data).then(function(response){
-			vm.car_list = response.data;
 			vm.loading = false;
 		});
 	};

@@ -43,7 +43,7 @@ foreach($roomArr as $room) {
 	$userArr[] = db_quote($room['user_id']);
 }
 if(!empty($userArr) && count($userArr) <= 4) {
-	$userStr = implode(', '.$userArr);
+	$userStr = implode(', ',$userArr);
 	$query = 'UPDATE event_requirements SET room_id=NULL WHERE event_id='.db_quote($formData['event_id']).' AND user_id IN ('.$userStr.')';
 	$result = db_query($query);
 }
