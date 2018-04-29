@@ -40,9 +40,14 @@
 				<input ng-model="vm.event.location" readonly/>
 			</md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
-				<label>Type</label>
+				<label>Event Type</label>
 				<md-icon md-font-library="material-icons">info_outline</md-icon>
-				<input ng-model="vm.event.type" required/>
+				<md-select ng-model="vm.event.type" style="min-width:150px;" required>
+					<md-option><em>None</em></md-option>
+					<md-option ng-repeat="type in vm.eventTypes" ng-value="type">
+						{{type}}
+					</md-option>
+				</md-select>
 			</md-input-container>
 			<div layout="row" flex>
 				<md-input-container  class="md-icon-float md-block">

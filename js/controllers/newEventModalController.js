@@ -29,6 +29,14 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 		page: 1
 	};
 
+	vm.eventTypes = [
+		'Demo',
+		'Community Serivce',
+		'Season Event',
+		'Off Season Event',
+		'Other'
+	];
+
 	vm.searchGoogleFunc = function() {
 		var data = vm.searchGoogle;
 		vm.loading.searchGoogle = eventsService.getGoogleCalendarEvents(data.q, vm.searchGoogle.timeMin, vm.searchGoogle.timeMax).then(function(response) {

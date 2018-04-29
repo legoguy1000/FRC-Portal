@@ -22,6 +22,14 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		}
 	};
 
+	vm.eventTypes = [
+		'Demo',
+		'Community Serivce',
+		'Season Event',
+		'Off Season Event',
+		'Other'
+	];
+
 	vm.event_id = $stateParams.event_id;
 	vm.event = {};
 	var reqs = [];

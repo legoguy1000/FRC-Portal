@@ -96,10 +96,15 @@
 									<div class="hint">This is autopopulated from the Google Calendar.  Update the Google calendar for changes.</div>
 								</md-input-container>
 								<md-input-container flex class="md-icon-float md-block">
-									<label>Event Type</label>
+					        <label>Event Type</label>
 									<md-icon md-font-library="material-icons">info_outline</md-icon>
-									<input ng-model="vm.data.type" required></input>
-								</md-input-container>
+					        <md-select ng-model="vm.data.type" style="min-width:150px;" required>
+					          <md-option><em>None</em></md-option>
+					          <md-option ng-repeat="type in vm.eventTypes" ng-value="type">
+					            {{type}}
+					          </md-option>
+					        </md-select>
+					      </md-input-container>
 							</div>
 							<div layout="row">
 								<md-input-container flex class="md-icon-float md-block">
