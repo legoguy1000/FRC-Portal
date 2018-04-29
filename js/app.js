@@ -273,6 +273,14 @@ angular.module('FrcPortal', [
 		.accentPalette('tripplehelixyellow');
 	//	.warnPalette('tripplehelixyellow');
 })
+.config( [
+    '$compileProvider',
+    function( $compileProvider )
+    {
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|slack):/);
+        // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
+    }
+])
 .config(function($httpProvider) {
 	$httpProvider.interceptors.push(function authInterceptor($q, $injector) {
 		return {
