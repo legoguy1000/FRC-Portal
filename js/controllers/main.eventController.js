@@ -14,7 +14,7 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 		vm.event_id = $stateParams.event_id;
 		vm.event = {};
 		vm.getEvent = function () {
-			vm.promise = eventsService.getEvent(vm.event_id).then(function(response){
+			vm.promise = eventsService.getEvent(vm.event_id, false).then(function(response){
 				vm.event = response.data;
 			});
 		};
