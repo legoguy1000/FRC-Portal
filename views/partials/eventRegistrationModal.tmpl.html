@@ -45,10 +45,12 @@
 						<md-option ng-value="false">No</md-option>
 					</md-select>
 				</div>
-				<md-input-container class="md-block" ng-if="vm.registrationForm.registration">
-          <label>Comments</label>
-          <textarea ng-model="vm.registrationForm.comments" rows="5" md-select-on-focus></textarea>
-        </md-input-container>
+				<div layout="row" flex layout-align="start center" ng-if="vm.registrationForm.registration">
+					<md-input-container class="md-block">
+	          <label>Comments</label>
+	          <textarea ng-model="vm.registrationForm.comments" rows="5" md-select-on-focus></textarea>
+	        </md-input-container>
+				</div>
 				<div flex layout="row" layout-align="center center">
 					<!--<button class="md-button md-raised md-primary" ng-click="vm.registerForEvent()">Register Now</button>-->
 					<!--<button class="md-button md-raised md-primary" type="submit">Complete Registration</button>-->
