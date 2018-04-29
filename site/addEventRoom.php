@@ -25,7 +25,7 @@ $query = 'INSERT INTO event_roooms (room_id, event_id, user_type, gender) VALUES
 		 '.db_quote($formData['event_id']).',
 		 '.db_quote($formData['user_type']).',
 		 '.db_quote($formData['gender']).')';
-//die($query);
+die($query);
 $result = db_query($query);
 if($result) {
 	$rooms = getEventRoomList($formData['event_id']);
