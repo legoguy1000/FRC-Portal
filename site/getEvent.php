@@ -4,11 +4,11 @@ include('includes.php');
 $authToken = checkToken();
 
 $event_id = null;
-$reqs = true;
+$reqs = false;
 if(isset($_GET['event_id']) && $_GET['event_id'] != '') {
 	$event_id = $_GET['event_id'];
 }
-if(isset($_GET['reqs']) && ($_GET['reqs'] == 'true' || $_GET['reqs'] == 'false')) {
+if(isset($_GET['reqs']) && ($_GET['reqs'] == 'true' || $_GET['reqs'] == 'true')) {
 	$reqs = $_GET['reqs'];
 }
 
