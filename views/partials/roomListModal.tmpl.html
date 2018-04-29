@@ -71,7 +71,7 @@
 			</md-button>
 			<md-input-container>
         <label>Add New Room</label>
-        <md-select ng-model="vm.newRoom">
+        <md-select ng-model="vm.newRoom" style="min-width:150px;">
           <md-option><em>None</em></md-option>
           <md-option ng-repeat="room in vm.newRoomOpts" ng-value="room">
             {{room.user_type}}<span ng-show="room.gender != ''"> - {{room.gender}}</span>
