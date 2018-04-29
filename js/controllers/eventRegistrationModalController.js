@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('eventRegistrationController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService','eventInfo','userInfo',
+.controller('eventRegistrationController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService','eventInfo','userInfo','$mdToast',
 	eventRegistrationController
 ]);
-function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,eventInfo,userInfo) {
+function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,eventInfo,userInfo,$mdToast) {
 	var vm = this;
 
 	vm.event = eventInfo;
@@ -16,7 +16,15 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		var data = vm.registrationForm;
 		data.event_id = vm.event.event_id;
 		eventsService.registerForEvent(data).then(function(response){
-			//vm.event = response.data;
+			if(response.status) {
+				$mdDialog.hide(response);
+			}
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 		});
 	};
 
