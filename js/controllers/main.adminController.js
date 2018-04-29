@@ -11,15 +11,18 @@ function mainAdminController($log,$timeout, $q, $scope, $state, eventsService, $
       {
         name: 'Users',
         icon: 'dashboard',
-        sref: 'main.admin.users'
+        sref: 'main.admin.users',
+				alt: 'main.admin.user'
       }, {
         name: 'Seasons',
         icon: 'dashboard',
-        sref: 'main.admin.seasons'
+        sref: 'main.admin.seasons',
+				alt: 'main.admin.season'
       }, {
         name: 'Events',
         icon: 'dashboard',
-        sref: 'main.admin.events'
+        sref: 'main.admin.events',
+				alt: 'main.admin.event'
       }, {
         name: 'Schools',
         icon: 'dashboard',
