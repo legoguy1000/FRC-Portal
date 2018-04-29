@@ -40,7 +40,7 @@ if($registrationBool) {
 		db_query($query);
 	} else {
 		$ereq_id = uniqid();
-		$query = 'INSERT INTO event_requirements (ereq_id, event_id, user_id, registration) VALUES ('.db_quote($ereq_id).', '.db_quote($formData['event_id']).', '.db_quote($userId).', "1")';
+		$query = 'INSERT INTO event_requirements (ereq_id, event_id, user_id, registration, comments) VALUES ('.db_quote($ereq_id).', '.db_quote($formData['event_id']).', '.db_quote($userId).', "1", '.db_quote($formData['comments']).')';
 		db_query($query);
 	}
 	$user_type = $authToken['data']['user_type'];
