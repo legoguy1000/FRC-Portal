@@ -180,21 +180,17 @@ angular.module('FrcPortal', [
  		templateUrl: 'views/main.event.html',
  		controller: 'main.eventController',
  		controllerAs: 'vm',
-		abstract: true,
 		authenticate: true,
-		default: 'main.event.info',
-		//admin: true,
  		data: {
  		  title: 'Events'
  		}
  	  })
 	 .state('main.event.info', {
 	 url: '/info',
-	 templateUrl: 'views/main.event.info.html',
-	 controller: 'main.event.infoController',
-	 controllerAs: 'vmi',
+	 templateUrl: 'views/main.event.html',
+	 controller: 'main.eventController',
+	 controllerAs: 'vm',
 	 authenticate: true,
-	 //admin: true,
 	 data: {
 		 title: 'Events'
 	 }
