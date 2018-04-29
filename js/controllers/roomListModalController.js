@@ -55,6 +55,7 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 			vm.loading = false;
 			if(response.status) {
 				vm.room_list = response.data;
+				vm.newRoom = {};
 			}
 		});
 	};
