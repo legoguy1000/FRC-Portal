@@ -37,7 +37,11 @@ if(!empty($result)) {
 	foreach($result as $re) {
 		$cur = $re[$req];
 		$new = !$cur;
-		$query = 'UPDATE event_requirements SET '.db_escape($req).'='.db_quote($new).' WHERE event_id='.db_quote($formData['event_id']).' AND user_id='.db_quote($re['user_id']);
+		if($req == 'registration' && $new == false) {
+			$query = 'DELETE FROM event_requirements WHERE event_id='.db_quote($formData['event_id']).' AND user_id='.db_quote($re['user_id']);
+		} else {
+			$query = 'UPDATE event_requirements SET '.db_escape($req).'='.db_quote($new).' WHERE event_id='.db_quote($formData['event_id']).' AND user_id='.db_quote($re['user_id']);
+		}
 		$result = db_query($query);
 		$needInsert[$re['user_id']] = false;
 		$array[] = $query;

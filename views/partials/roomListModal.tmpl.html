@@ -9,6 +9,7 @@
 			</md-button>
 		  </div>
 		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 		<md-dialog-content class="md-margin">
 			<div layout="row" ng-repeat="room in vm.room_list.rooms" style="border-top: solid;border-left: solid;border-right: solid;">
 				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
@@ -68,6 +69,15 @@
 					<md-tooltip md-direction="top">Print room list</md-tooltip>
 					<md-icon class=""> print </md-icon>
 			</md-button>
+			<md-input-container>
+        <label>Add New Room</label>
+        <md-select ng-model="vm.newRoom">
+          <md-option><em>None</em></md-option>
+          <md-option ng-repeat="room in vm.newRoomOpts" ng-value="room">
+            {{room.user_type}}<span ng-show="room.gender != ''"> - {{room.gender}}</span>
+          </md-option>
+        </md-select>
+      </md-input-container>
 			<md-button class="md-icon-button noprint" ng-click="vm.addEventRoom()">
 				<md-tooltip md-direction="top">Add room</md-tooltip>
 			  <md-icon class=""> add </md-icon>

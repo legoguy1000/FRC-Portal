@@ -10,6 +10,20 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 		$mdDialog.cancel();
 	}
 	vm.room_list = {};
+	vm.newRoomOpts = [
+		{
+			'user_type':'Student',
+			'gender':'Male'
+		},
+		{
+			'user_type':'Student',
+			'gender':'Female'
+		},
+		{
+			'user_type':'Mentor',
+			'gender':''
+		}
+	];
 	//function get room list
 	vm.getEventRoomList = function () {
 		vm.promise = eventsService.getEventRoomList(vm.eventInfo.event_id).then(function(response) {
