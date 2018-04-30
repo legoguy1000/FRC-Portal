@@ -35,7 +35,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	var reqs = [];
 	vm.getEvent = function () {
 		vm.loading = true;
-		vm.promise = eventsService.getEvent(vm.event_id,true).then(function(response){
+		vm.promise = eventsService.getEvent(vm.event_id,true,'all').then(function(response){
 			vm.event = response.data;
 			reqs = vm.event.requirements;
 			vm.loading = false;
