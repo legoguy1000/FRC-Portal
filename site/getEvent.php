@@ -12,9 +12,12 @@ if(isset($_GET['event_id']) && $_GET['event_id'] != '') {
 if(isset($_GET['reqs']) && ($_GET['reqs'] == 'true' || $_GET['reqs'] == 'false')) {
 	$reqs = $_GET['reqs'];
 }
+$admin = checkAdmin($loggedInUser, $die = false);
 $userId = $loggedInUser;
-if(isset($_GET['user_id']) && checkAdmin($loggedInUser, $die = false)) {
+if(isset($_GET['user_id']) && $admin) {
 	$userId = $_GET['user_id'];
+} elseif($admin) {
+	$userId = null;
 }
 
 $event = getEvent($event_id, $reqs, $userId);
