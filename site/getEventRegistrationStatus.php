@@ -1,7 +1,7 @@
 <?php
 include('includes.php');
 
-$authToken = checkToken(false,false);
+$authToken = checkToken(true,true);
 $loggedInUser = $authToken['data']['user_id'];
 
 $event_id = null;
