@@ -7,19 +7,22 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 
 	vm.event = eventInfo;
 	vm.userInfo = userInfo;
+	vm.registrationForm = {};
+	vm.loading = false;
 
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-
-	vm.registrationForm = {};
+	
 	vm.registerForEvent = function () {
+		vm.loading = true;
 		var data = vm.registrationForm;
 		data.event_id = vm.event.event_id;
 		eventsService.registerForEvent(data).then(function(response){
 			if(response.status) {
 				$mdDialog.hide(response);
 			}
+			vm.loading = false;
 			$mdToast.show(
 	      $mdToast.simple()
 	        .textContent(response.msg)
@@ -30,10 +33,12 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	};
 
 	vm.getEventRegistrationStatus = function () {
+		vm.loading = true;
 		eventsService.getEventRegistrationStatus(vm.event.event_id,vm.userInfo.user_id).then(function(response){
 			if(response.status) {
 				vm.registrationForm = response.data[0];
 			}
+			vm.loading = false;
 		});
 	};
 	vm.getEventRegistrationStatus();

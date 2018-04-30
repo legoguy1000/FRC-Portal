@@ -58,8 +58,9 @@ if($registrationBool) {
 	}
 	$result = db_commit();
 	if($result) {
+		$event = userEventInfo($userId, $year = null, $formData['event_id'], $return=array());
 		$msg = 'Registered';
-		die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg)));
+		die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'data'=>$event)));
 	} else {
 		$msg = 'Something went wrong';
 		die(json_encode(array('status'=>false, 'type'=>'error', 'msg'=>$msg)));
@@ -68,8 +69,9 @@ if($registrationBool) {
 	$query = 'DELETE FROM event_requirements WHERE event_id='.db_quote($formData['event_id']).' AND user_id='.db_quote($userId);
 	$result = db_query($query);
 	if($result) {
+		$event = userEventInfo($userId, $year = null, $formData['event_id'], $return=array());
 		$msg = 'Unregistered';
-		die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg)));
+		die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'data'=>$event)));
 	} else {
 		$msg = 'Something went wrong';
 		die(json_encode(array('status'=>false, 'type'=>'error', 'msg'=>$msg)));
