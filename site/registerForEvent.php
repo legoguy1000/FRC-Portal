@@ -55,6 +55,8 @@ if($registrationBool) {
 	} else {
 		$query = 'DELETE FROM event_cars WHERE event_id='.db_quote($formData['event_id']).' AND user_id='.db_quote($userId);
 		db_query($query);
+		$query = 'UPDATE event_requirements SET can_drive="1" WHERE event_id='.db_quote($formData['event_id']).' AND user_id='.db_quote($userId);
+		db_query($query);
 	}
 	$result = db_commit();
 	if($result) {
