@@ -206,4 +206,27 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		return usersService.getAllUsersFilter($.param(data));
 	};
 
+	vm.showRegistrationForm = function(ev,userInfo) {
+		var eventInfo = vm.event;
+		delete eventInfo.requirements;
+		$mdDialog.show({
+			controller: eventRegistrationController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				'eventInfo': eventInfo,
+				'userInfo': userInfo
+			}
+		})
+		.then(function(answer) {
+
+		}, function() {
+
+		});
+	}
+
 }

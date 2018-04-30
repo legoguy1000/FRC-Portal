@@ -184,9 +184,9 @@
 							<th md-column md-order-by="food" ng-show="vm.event.food_required"><span>Food Order</span></th>
 							<th md-column md-order-by="room_id" ng-show="vm.event.room_required"><span>Room Selected</span></th>
 							<th md-column md-order-by="can_drive" ng-show="vm.event.drivers_required"><span>Driver</span></th>
-							<th md-column md-order-by="car_id" ng-show="vm.event.drivers_required"><span>Car</span></th><!--
-							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
-							<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
+							<th md-column md-order-by="car_id" ng-show="vm.event.drivers_required"><span>Car</span></th>
+							<th md-column><span>Edit Registration</span></th>
+							<!--<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
 					</thead>
 					<tbody md-body>
@@ -244,9 +244,12 @@
 									<div style="margin-left:10px;">{{user.car_title}}</div>
 								</div>
 							</td>
-							<!-- <td md-cell>
-								{{user.season_hours}}
-							</td> -->
+							<td md-cell>
+								<md-button class="md-icon-button md-primary" ng-click="vm.showRegistrationForm($event,user)">
+									<md-tooltip md-direction="top">Edit Registration information for {{user.full_name}}</md-tooltip>
+									<md-icon class="material-icons">edit</md-icon>
+								</md-button>
+							</td>
 							<!-- <td md-cell>
 								{{user.off_season_hours}}
 							</td>
