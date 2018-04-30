@@ -61,7 +61,7 @@ if($registrationBool) {
 	$result = db_commit();
 	if($result) {
 		$event = userEventInfo($userId, $year = null, $formData['event_id'], $return=array());
-		$msg = 'Registered';
+		$msg = ($userId != $loggedInUser ? $formData['full_name'].' ':'').'Registered';
 		die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'data'=>$event)));
 	} else {
 		$msg = 'Something went wrong';
@@ -72,7 +72,7 @@ if($registrationBool) {
 	$result = db_query($query);
 	if($result) {
 		$event = userEventInfo($userId, $year = null, $formData['event_id'], $return=array());
-		$msg = 'Unregistered';
+		$msg = ($userId != $loggedInUser ? $formData['full_name'].' ':'').'Unregistered';
 		die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'data'=>$event)));
 	} else {
 		$msg = 'Something went wrong';
