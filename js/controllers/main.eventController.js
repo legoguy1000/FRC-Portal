@@ -29,8 +29,7 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 		};
 
 		vm.showRegistrationForm = function(ev) {
-			var eventInfo = angular.copy(vm.event);
-			delete eventInfo.requirements;
+			var eventInfo = vm.event;
 			$mdDialog.show({
 	      controller: eventRegistrationController,
 				controllerAs: 'vm',

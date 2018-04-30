@@ -7,6 +7,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 
 	vm.event = eventInfo;
 	vm.userInfo = userInfo;
+
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
@@ -31,7 +32,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	vm.getEventRegistrationStatus = function () {
 		eventsService.getEventRegistrationStatus(vm.event.event_id,vm.userInfo.user_id).then(function(response){
 			if(response.status) {
-
+				vm.registrationForm = response.data[0];
 			}
 		});
 	};
