@@ -15,6 +15,14 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getEventRegistrationStatus: function (event_id,user_id) {
+			var eid = event_id != undefined ? event_id: '';
+			var uid = user_id != undefined ? '&user_id='+user_id : '';
+			return $http.get('site/getEventRegistrationStatus.php?event_id='+eid+uid)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		addEvent: function (formData) {
 			return $http.post('site/addEvent.php',formData)
 			.then(function(response) {

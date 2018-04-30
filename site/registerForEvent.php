@@ -1,7 +1,7 @@
 <?php
 include('includes.php');
 
-$authToken = checkToken(true,true);
+$authToken = checkToken(false,false);
 $loggedInUser = $authToken['data']['user_id'];
 
 $json = file_get_contents('php://input');
