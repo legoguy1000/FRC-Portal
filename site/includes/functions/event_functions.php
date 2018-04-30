@@ -55,7 +55,7 @@ function getUpcommingEvents() {
 	return $events;
 }
 
-function getEvent($event_id = null, $reqs = false) {
+function getEvent($event_id = null, $reqs = false, $user_id = null) {
 	$data = array();
 
 	if(isset($event_id) && $event_id != '') {
@@ -66,7 +66,7 @@ function getEvent($event_id = null, $reqs = false) {
 			$data = formatEventData($result);
 			$data['requirements'] = array();
 			if($reqs) {
-				$reqs = userEventInfo($user_id = null, $year = null, $event_id);
+				$reqs = userEventInfo($user_id, $year = null, $event_id);
 				$data['requirements'] = array('data'=>$reqs, 'total'=>count($reqs));
 				//$data['room_list'] = $data['room'] ? getEventRoomList($event_id): array();
 			}

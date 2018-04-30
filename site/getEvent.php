@@ -17,7 +17,7 @@ if(isset($_GET['user_id']) && checkAdmin($loggedInUser, $die = false)) {
 	$userId = $_GET['user_id'];
 }
 
-$event = getEvent($event_id, $reqs);
+$event = getEvent($event_id, $reqs, $userId);
 if($event) {
 	die(json_encode(array('status'=>true, 'msg'=>'', 'data'=>$event)));
 } else {
