@@ -29,7 +29,7 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 		};
 
 		vm.showRegistrationForm = function(ev) {
-			var eventInfo = vm.event;
+			var eventInfo = angular.copy(vm.event);
 			delete eventInfo.requirements;
 			$mdDialog.show({
 	      controller: eventRegistrationController,

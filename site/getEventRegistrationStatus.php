@@ -12,6 +12,9 @@ if(isset($_GET['event_id']) && $_GET['event_id'] != '') {
 $userId = $loggedInUser;
 if(isset($_GET['user_id']) && checkAdmin($loggedInUser, $die = false)) {
 	$userId = $_GET['user_id'];
+	if($userId == 'null' || $userId == 'all') {
+		$userId = null;
+	}
 }
 
 $event = userEventInfo($userId, $year = null, $event_id, $return=array());

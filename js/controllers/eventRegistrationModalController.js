@@ -29,7 +29,6 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	};
 
 	vm.getEventRegistrationStatus = function () {
-		data.event_id = vm.event.event_id;
 		eventsService.getEventRegistrationStatus(vm.event.event_id,vm.userInfo.user_id).then(function(response){
 			if(response.status) {
 
@@ -37,7 +36,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		});
 	};
 	vm.getEventRegistrationStatus();
-	
+
 	vm.range = function(min, max, step) {
 			step = step || 1;
 			var input = [];
