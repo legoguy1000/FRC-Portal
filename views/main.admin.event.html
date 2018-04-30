@@ -197,49 +197,60 @@
 								</md-list-item>
 							</td>
 							<td md-cell>
-								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.registration"></i>
-								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.registration"></i>
+								<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.registration"></i>
+								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.registration"></i> -->
+								<i class="material-icons" style="color:green;" ng-show="user.registration">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.registration">remove_circle</i>
 							</td>
 							<td md-cell ng-show="vm.event.payment_required">
 								<span ng-hide="user.user_type == 'Mentor'">
-									<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.payment"></i>
-									<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.payment"></i>
+									<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.payment"></i>
+									<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.payment"></i>-->
+									<i class="material-icons" style="color:green;" ng-show="user.payment">check_circle</i>
+									<i class="material-icons" style="color:red;" ng-hide="user.payment">remove_circle</i>
 								</span>
-								<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type == 'Student'"></i>
+								<!--<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type == 'Student'"></i>-->
+								<i class="material-icons" style="" ng-hide="user.user_type == 'Student'">remove_circle_outline</i>
 							</td>
 							<td md-cell ng-show="vm.event.permission_slip_required">
 								<span ng-hide="user.user_type == 'Mentor'">
-									<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.permission_slip"></i>
-									<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.permission_slip"></i>
+									<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.permission_slip"></i>
+									<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.permission_slip"></i>-->
+									<i class="material-icons" style="color:green;" ng-show="user.permission_slip">check_circle</i>
+									<i class="material-icons" style="color:red;" ng-hide="user.permission_slip">remove_circle</i>
 								</span>
-								<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type == 'Student'"></i>
+								<!--<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type == 'Student'"></i>-->
+								<i class="material-icons" style="" ng-hide="user.user_type == 'Student'">remove_circle_outline</i>
 							</td>
 							<td md-cell ng-show="vm.event.food_required">
-								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.food"></i>
-								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.food"></i>
+								<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.food"></i>
+								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.food"></i>-->
+								<i class="material-icons" style="color:green;" ng-show="user.food">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.food">remove_circle</i>
 							</td>
-							<td md-cell ng-show="vm.event.room_required" >
-								<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.room_bool"></i>
-								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.room_bool"></i>
+							<td md-cell ng-show="vm.event.room_required">
+								<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.room_bool"></i>
+								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.room_bool"></i>-->
+								<i class="material-icons" style="color:green;" ng-show="user.room_bool">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.room_bool">remove_circle</i>
 								<span style="margin-left:10px;">{{user.room_title}}</span>
-							<!--	layout="row" layout-align="start center" style="height:49px;" <md-select ng-model="user.room_id" flex style="margin-left:10px;">
-									<md-option value=""></md-option>
-									<md-option value="{{room.room_id}}" ng-repeat="room in vm.event.room_list.data">{{room.room_title}}</md-option>
-								</md-select> -->
 							</td>
 							<td md-cell ng-show="vm.event.drivers_required">
 								<div ng-show="user.user_type == 'Mentor' && user.can_drive" layout="row" layout-align="start center">
-									<div><i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;"></i></div>
+									<!--<div><i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;"></i></div>-->
+									<div><i class="material-icons" style="color:green;">check_circle</i></div>
 									<div style="margin-left:10px;">({{user.car_space}} Seats)</div>
-									<!--<div><i class="mdi mdi-minus-box mdi-24px" ng-hide="user.can_drive"></i></div>-->
 								</div>
-								<i class="mdi mdi-minus-box mdi-24px" ng-show="user.user_type != 'Mentor' || (user.user_type == 'Mentor' && !user.can_drive)"></i>
+								<i class="material-icons" style="" ng-show="user.user_type != 'Mentor' || (user.user_type == 'Mentor' && !user.can_drive)">remove_circle_outline</i>
+								<!--<i class="mdi mdi-minus-box mdi-24px" ng-show="user.user_type != 'Mentor' || (user.user_type == 'Mentor' && !user.can_drive)"></i>-->
 							</td>
 							<td md-cell ng-show="vm.event.drivers_required">
 								<div layout="row" layout-align="start center">
 									<div>
-										<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.car_bool"></i>
-										<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.car_bool"></i>
+										<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.car_bool"></i>
+										<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.car_bool"></i>-->
+										<i class="material-icons" style="color:green;" ng-show="user.car_bool">check_circle</i>
+										<i class="material-icons" style="color:red;" ng-hide="user.car_bool">remove_circle</i>
 									</div>
 									<div style="margin-left:10px;">{{user.car_title}}</div>
 								</div>
