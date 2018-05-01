@@ -67,21 +67,80 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     return $response;
 });
 $app->group('/users', function () {
-    $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-      $user_id = $args['user_id'];
-      $response->getBody()->write(json_encode('Get User '.$user_id));
-      return $response;
-    });
-    $this->put('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-      $user_id = $args['user_id'];
-      $response->getBody()->write(json_encode('Update User '.$user_id));
-      return $response;
-    });
-    $this->delete('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-      $user_id = $args['user_id'];
-      $response->getBody()->write(json_encode('Delete User '.$user_id));
-      return $response;
-    });
+  $this->get('', function ($request, $response, $args) {
+
+    $response->getBody()->write(json_encode('Get all Users '));
+    return $response;
+  });
+  $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $user_id = $args['user_id'];
+    $response->getBody()->write(json_encode('Get User '.$user_id));
+    return $response;
+  });
+  $this->put('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $user_id = $args['user_id'];
+    $response->getBody()->write(json_encode('Update User '.$user_id));
+    return $response;
+  });
+  $this->delete('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $user_id = $args['user_id'];
+    $response->getBody()->write(json_encode('Delete User '.$user_id));
+    return $response;
+  });
+});
+$app->group('/seasons', function () {
+  $this->get('', function ($request, $response, $args) {
+
+    $response->getBody()->write(json_encode('Get all Seasons '));
+    return $response;
+  });
+  $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $season_id = $args['season_id'];
+    $response->getBody()->write(json_encode('Get Season '.$season_id));
+    return $response;
+  });
+  $this->post('', function ($request, $response, $args) {
+
+    $response->getBody()->write(json_encode('New Season');
+    return $response;
+  });
+  $this->put('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $season_id = $args['season_id'];
+    $response->getBody()->write(json_encode('Update Season '.$season_id));
+    return $response;
+  });
+  $this->delete('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $season_id = $args['season_id'];
+    $response->getBody()->write(json_encode('Delete Season '.$season_id));
+    return $response;
+  });
+});
+$app->group('/events', function () {
+  $this->get('', function ($request, $response, $args) {
+
+    $response->getBody()->write(json_encode('Get all Events '));
+    return $response;
+  });
+  $this->get('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $event_id = $args['event_id'];
+    $response->getBody()->write(json_encode('Get Event '.$event_id));
+    return $response;
+  });
+  $this->post('', function ($request, $response, $args) {
+
+    $response->getBody()->write(json_encode('New Event');
+    return $response;
+  });
+  $this->put('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $event_id = $args['event_id'];
+    $response->getBody()->write(json_encode('Update Event '.$event_id));
+    return $response;
+  });
+  $this->delete('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $event_id = $args['event_id'];
+    $response->getBody()->write(json_encode('Delete Event '.$event_id));
+    return $response;
+  });
 });
 $app->run();
 
