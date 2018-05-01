@@ -20,7 +20,9 @@ include($root.'/site/includes/functions/email_functions.php');
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 $capsule = new Capsule;
-$dbInfo = array();
+$dbInfo = array(
+   'driver' => 'mysql',
+);
 $capsule->addConnection($dbInfo);
 
 $capsule->setAsGlobal();
