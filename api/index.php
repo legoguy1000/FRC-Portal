@@ -1,5 +1,11 @@
 <?php
-require './app/bootstrap.php';
+ini_set("error_reporting", E_ALL);
+ini_set("expose_php", false);
+date_default_timezone_set('America/New_York');
+
+$root = '/home/team2363_admin/portal.team2363.org';
+require $root.'/site/includes/vendor/autoload.php';
+include($root.'/site/includes/functions/getConfigFile.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -63,7 +69,7 @@ $app->group('/users', function () {
     return $response;
   });
   $this->post('', function ($request, $response, $args) {
-    $user = User::Create(['fname' => "Ahmed", 'lname' => "Ahmed", 'email' => "ahmed.khan@lbs.com"]);
+    $user = new User;
     $response->getBody()->write(json_encode('Add new user'));
     return $response;
   });
