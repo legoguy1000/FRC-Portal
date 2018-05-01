@@ -20,7 +20,13 @@ include($root.'/site/includes/functions/email_functions.php');
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 $capsule = new Capsule;
-$dbInfo = array();
+$dbInfo = array(
+   'driver' => 'mysql',
+   'host' => '',
+   'database' => 'team2363_portal_test',
+   'username' => '',
+   'password' => ''
+);
 $capsule->addConnection($dbInfo);
 
 $capsule->setAsGlobal();
