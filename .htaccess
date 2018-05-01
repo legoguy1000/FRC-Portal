@@ -1,9 +1,9 @@
-AddHandler fcgid-script .php 
+AddHandler fcgid-script .php
 FCGIWrapper "/dh/cgi-system/php71.cgi" .php
 
 RewriteEngine on
 
-RewriteCond %{SERVER_PORT} 80 
+RewriteCond %{SERVER_PORT} 80
 RewriteRule ^(.*)$ https://portal.team2363.org/$1 [R,L]
 
 RewriteCond %{REQUEST_FILENAME} -f [OR]
