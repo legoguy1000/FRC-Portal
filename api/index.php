@@ -67,7 +67,11 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     return $response;
 });
 $app->group('/users', function () {
+  $this->get('', function ($request, $response, $args) {
 
+    $response->getBody()->write(json_encode('Get all Users '));
+    return $response;
+  });
   $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $user_id = $args['user_id'];
     $response->getBody()->write(json_encode('Get User '.$user_id));
@@ -97,7 +101,7 @@ $app->group('/seasons', function () {
   });
   $this->post('', function ($request, $response, $args) {
 
-    $response->getBody()->write(json_encode('New Season');
+    $response->getBody()->write(json_encode('New Season'));
     return $response;
   });
   $this->put('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
@@ -124,7 +128,7 @@ $app->group('/events', function () {
   });
   $this->post('', function ($request, $response, $args) {
 
-    $response->getBody()->write(json_encode('New Event');
+    $response->getBody()->write(json_encode('New Event'));
     return $response;
   });
   $this->put('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
