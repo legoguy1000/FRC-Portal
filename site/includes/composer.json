@@ -8,6 +8,7 @@
         "microsoft/microsoft-graph": "^1.1",
         "pelago/emogrifier": "^2.0",
         "slim/slim": "^3.0",
-        "monolog/monolog": "^1.23"
+        "monolog/monolog": "^1.23",
+        "illuminate/database": "^5.4"
     }
 }
