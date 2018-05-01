@@ -10,5 +10,10 @@
         "slim/slim": "^3.0",
         "monolog/monolog": "^1.23",
         "illuminate/database": "^5.4"
-    }
+    },
+    "autoload": {
+       "classmap": [
+           "/home/team2363_admin/portal.team2363.org/api/app/classes"
+       ]
+   }
 }

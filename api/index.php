@@ -1,26 +1,8 @@
 <?php
+require './app/bootstrap.php';
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-
-ini_set("error_reporting", E_ALL);
-ini_set("expose_php", false);
-date_default_timezone_set('America/New_York');
-
-$root = '/home/team2363_admin/portal.team2363.org';
-require $root.'/site/includes/vendor/autoload.php';
-include($root.'/site/includes/functions/getConfigFile.php');
-//
-include($root.'/site/includes/functions/db_functions.php');
-include($root.'/site/includes/functions/user_functions.php');
-include($root.'/site/includes/functions/general_functions.php');
-include($root.'/site/includes/functions/school_functions.php');
-include($root.'/site/includes/functions/report_functions.php');
-include($root.'/site/includes/functions/season_functions.php');
-include($root.'/site/includes/functions/event_functions.php');
-include($root.'/site/includes/functions/time_functions.php');
-include($root.'/site/includes/functions/email_functions.php');
-
-
 
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
@@ -28,7 +10,7 @@ $config['addContentLengthHeader'] = false;
 $config['db']['host']   = getIniProp('db_host'); //your mysql server
 $config['db']['user']   = getIniProp('db_user'); //your mysql server username
 $config['db']['pass']   = getIniProp('db_pass'); //your mysql server password
-$config['db']['dbname'] = getIniProp('db_name'); //the mysql database to use
+$config['db']['dbname'] = getIniProp('db_name').'_test'; //the mysql database to use
 
 $app = new \Slim\App(['settings' => $config]);
 $container = $app->getContainer();
@@ -70,6 +52,11 @@ $app->group('/users', function () {
   $this->get('', function ($request, $response, $args) {
 
     $response->getBody()->write(json_encode('Get all Users '));
+    return $response;
+  });
+  $this->post('', function ($request, $response, $args) {
+    user = User::Create(['fname' => "Ahmed", 'lname' => "Ahmed", 'email' => "ahmed.khan@lbs.com"]);
+    $response->getBody()->write(json_encode('Add new user'));
     return $response;
   });
   $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
