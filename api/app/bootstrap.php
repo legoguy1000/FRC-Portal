@@ -21,7 +21,6 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 $capsule = new Capsule;
 $dbInfo = array(
-   'driver' => 'mysql',
    'host' => '',
    'database' => '_test',
    'username' => '',
