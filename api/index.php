@@ -68,7 +68,18 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
 });
 $app->group('/users', function () {
     $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-      $response->getBody()->write(json_encode('asdfasda'));
+      $user_id = $args['user_id'];
+      $response->getBody()->write(json_encode('Get User '.$user_id));
+      return $response;
+    });
+    $this->put('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+      $user_id = $args['user_id'];
+      $response->getBody()->write(json_encode('Update User '.$user_id));
+      return $response;
+    });
+    $this->delete('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+      $user_id = $args['user_id'];
+      $response->getBody()->write(json_encode('Delete User '.$user_id));
       return $response;
     });
 });
