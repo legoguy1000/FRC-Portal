@@ -66,6 +66,12 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     $response->getBody()->write(json_encode($row));
     return $response;
 });
+$app->group('/users', function () {
+    $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+      $response->getBody()->write(json_encode('asdfasda'));
+      return $response;
+    });
+});
 $app->run();
 
 ?>
