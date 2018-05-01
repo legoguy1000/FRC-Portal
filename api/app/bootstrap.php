@@ -21,7 +21,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 $capsule = new Capsule;
 $dbInfo = array(
-   'driver' => 'mysql',
+   'driver' => 'mysql'
 );
 $capsule->addConnection($dbInfo);
 
