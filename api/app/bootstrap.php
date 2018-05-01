@@ -17,12 +17,12 @@ include($root.'/site/includes/functions/event_functions.php');
 include($root.'/site/includes/functions/time_functions.php');
 include($root.'/site/includes/functions/email_functions.php');
 */
-use Illuminate\Database\Capsule\Manager as Capsule;
+/*use Illuminate\Database\Capsule\Manager as Capsule;
 
 $capsule = new Capsule;
 $capsule->addConnection(array("driver" => "mysql", "host" =>getIniProp('db_host'), "database" => getIniProp('db_name').'_test', "username" => getIniProp('db_user'), "password" => getIniProp('db_pass')));
 
 $capsule->setAsGlobal();
-$capsule->bootEloquent();
+$capsule->bootEloquent();*/
 
 ?>

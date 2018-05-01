@@ -7,14 +7,18 @@ use \Psr\Http\Message\ResponseInterface as Response;
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
 
+$config['db']['driver']   = 'mysql'; //your mysql server
 $config['db']['host']   = getIniProp('db_host'); //your mysql server
 $config['db']['user']   = getIniProp('db_user'); //your mysql server username
 $config['db']['pass']   = getIniProp('db_pass'); //your mysql server password
 $config['db']['dbname'] = getIniProp('db_name').'_test'; //the mysql database to use
+$config['db']['charset'] = 'utf8';
+$config['db']['collation'] = 'utf8_unicode_ci';
+$config['db']['prefix'] = '';
 
 $app = new \Slim\App(['settings' => $config]);
 $container = $app->getContainer();
-$container['db'] = function ($c) {
+/* $container['db'] = function ($c) {
     $dbConfig = $c['settings']['db'];
 
     $db = mysqli_init();
@@ -32,13 +36,17 @@ $container['db'] = function ($c) {
       return $db->connect_error;
     }
     return $db;
-/*    $pdo = new PDO('mysql:host=' . $db['host'] . ';dbname=' . $db['dbname'],
-        $db['user'], $db['pass']);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    return $pdo;*/
-};
+}; */
+// Service factory for the ORM
+$container['db'] = function ($container) {
+    $capsule = new \Illuminate\Database\Capsule\Manager;
+    $capsule->addConnection($container['settings']['db']);
 
+    $capsule->setAsGlobal();
+    $capsule->bootEloquent();
+
+    return $capsule;
+};
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
     $name = $args['name'];
 
