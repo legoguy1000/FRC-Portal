@@ -55,7 +55,7 @@ $app->group('/users', function () {
     return $response;
   });
   $this->post('', function ($request, $response, $args) {
-    user = User::Create(['fname' => "Ahmed", 'lname' => "Ahmed", 'email' => "ahmed.khan@lbs.com"]);
+    $user = User::Create(['fname' => "Ahmed", 'lname' => "Ahmed", 'email' => "ahmed.khan@lbs.com"]);
     $response->getBody()->write(json_encode('Add new user'));
     return $response;
   });
