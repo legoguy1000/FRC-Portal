@@ -75,7 +75,7 @@ $app->group('/users', function () {
     return $response;
   });
   $this->post('', function ($request, $response, $args) {
-    $user = \User::Create(['user_id'=>uniqid(),'fname' => "Ahmed", 'lname' => "Ahmed", 'email' => "ahmed.khan@lbs.com"]);
+    $user = FrcPortal\User::Create(['user_id'=>uniqid(),'fname' => "Ahmed", 'lname' => "Ahmed", 'email' => "ahmed.khan@lbs.com"]);
     $response->getBody()->write(json_encode('Add new user'));
     return $response;
   });
