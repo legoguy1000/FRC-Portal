@@ -73,9 +73,12 @@ class User extends Eloquent {
       } else if($num_months > 48) {
         $return = 'Pre-Freshman';
       }
+      $this->attributes['student_grade'] = $return;
+      $this->attributes['grad_year'] = $value;
+    } else {
+      $this->attributes['student_grade'] = null;
+      $this->attributes['grad_year'] = null;
     }
-    $this->attributes['student_grade'] = $return;
-    $this->attributes['grad_year'] = $value;
   }
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
