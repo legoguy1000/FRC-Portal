@@ -37,7 +37,7 @@ class School extends Eloquent {
    */
   public function user()
   {
-      return $this->belongsTo('FrcPortal\User', 'school_id', 'school_id');
+      return $this->hasMany('FrcPortal\User', 'school_id', 'school_id');
   }
 
 }
