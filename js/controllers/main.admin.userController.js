@@ -33,6 +33,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 		vm.loadingDevices = true;
 		usersService.getProfileInfo($stateParams.user_id).then(function(response){
 			vm.userInfo = response.data;
+			$scope.main.title += ' - '+vm.userInfo.full_name;
 			if(vm.userInfo.school_id != null) {
 				vm.userInfo.schoolData = {
 					school_id: vm.userInfo.school_id,

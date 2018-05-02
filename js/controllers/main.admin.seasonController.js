@@ -28,6 +28,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		vm.loading = true;
 		vm.promise = seasonsService.getSeason(vm.season_id).then(function(response){
 			vm.season = response.data;
+			$scope.main.title += ' - '+vm.season.game_name;
 			vm.loading = false;
 		});
 	};

@@ -82,7 +82,7 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		data: {
-		  title: 'Users'
+		  title: 'Admin | Users'
 		}
 	  })
 	  .state('main.admin.seasons', {
@@ -92,7 +92,7 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		data: {
-		  title: 'Seasons'
+		  title: 'Admin | Seasons'
 		}
 	  })
 	  .state('main.admin.season', {
@@ -102,7 +102,7 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		data: {
-		  title: 'Seasons'
+		  title: 'Admin | Seasons'
 		}
 	  })
 	  .state('main.admin.events', {
@@ -112,7 +112,7 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		data: {
-		  title: 'Events'
+		  title: 'Admin | Events'
 		}
 	  })
 	  .state('main.admin.event', {
@@ -122,7 +122,7 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		data: {
-		  title: 'Seasons'
+		  title: 'Admin | Event'
 		}
 	  })
 	  .state('main.admin.user', {
@@ -132,7 +132,7 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		data: {
-		  title: 'Users'
+		  title: 'Admin | Users'
 		}
 	  })
 	  .state('main.admin.time', {
@@ -142,7 +142,7 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		data: {
-		  title: 'Events'
+		  title: 'Admin | Time'
 		}
 	  })
 	  .state('main.admin.schools', {
@@ -152,7 +152,7 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		data: {
-		  title: 'Events'
+		  title: 'Admin | Schools'
 		}
 	  })
 	  .state('main.admin.metrics', {
@@ -162,7 +162,7 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		data: {
-		  title: 'Metrics'
+		  title: 'Admin | Metrics'
 		}
 	  })
 		.state('main.admin.exemptHours', {
@@ -172,7 +172,7 @@ angular.module('FrcPortal', [
 		 controllerAs: 'vm',
 		 authenticate: true,
 		 data: {
-			 title: 'Metrics'
+			 title: 'Admin | Eempt Hours'
 		 }
 		 })
  	  .state('main.event', {
