@@ -10,6 +10,7 @@ include($root.'/site/includes/functions/getConfigFile.php');
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
+$config = array();
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
 
@@ -54,13 +55,10 @@ $container['db'] = function ($container) {
     return $capsule;
 };*/
 use Illuminate\Database\Capsule\Manager as Capsule;
-
 $capsule = new Capsule;
-$capsule->addConnection(array("driver" => "mysql", "host" =>getIniProp('db_host'), "database" => getIniProp('db_name').'_test', "username" => getIniProp('db_user'), "password" => getIniProp('db_pass')));
-
+$capsule->addConnection($config['db']);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
-
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
     $name = $args['name'];
 
