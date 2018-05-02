@@ -16,7 +16,7 @@ class User extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'user_id', 'fname', 'lname', 'email', 'full_name', 'student_grade'
+    'user_id', 'fname', 'lname', 'email', 'full_name', 'student_grade', 'grad_year'
   ];
 
   protected $appends = ['full_name','slack_enabled','room_type'];
