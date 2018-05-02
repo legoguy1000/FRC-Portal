@@ -3,6 +3,8 @@
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class User extends Eloquent {
+  //table name
+  protected $table = 'users';
   //Use Custom Primary Key
   protected $primaryKey = 'user_id'; // or null
   public $incrementing = false;
@@ -26,7 +28,7 @@ class User extends Eloquent {
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
-      $instance->user_id = uniqid();
+      $instance->user_id = (string) uniqid();
     });
   }
 
