@@ -19,7 +19,7 @@ class User extends Eloquent {
     'user_id', 'fname', 'lname', 'email'
   ];
 
-  protected $appends = ['full_name','student_grade','slack_enabled','room_type'];
+  protected $appends = ['student_grade','slack_enabled','room_type'];
   /**
   * The attributes that should be hidden for arrays.
   *

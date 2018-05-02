@@ -68,14 +68,14 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
 
 $app->group('/users', function () {
   $this->get('', function ($request, $response, $args) {
-    $users = FrcPortal\User::all();
+    $users = FrcPortal\User::with('school')->all();
     $response = $response->withJson($users);
     return $response;
   });
   $this->post('', function ($request, $response, $args) {
-    $user = FrcPortal\User::Create(['user_id'=>uniqid(),'fname' => "Ahmed", 'lname' => "Ahmed", 'email' => "ahmed.khan@lbs.com"]);
-    $response->getBody()->write(json_encode('Add new user'));
-    return $response;
+    //$user = FrcPortal\User::Create(['user_id'=>uniqid(),'fname' => "Ahmed", 'lname' => "Ahmed", 'email' => "ahmed.khan@lbs.com"]);
+    //$response->getBody()->write(json_encode('Add new user'));
+    //return $response;
   });
   $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $user_id = $args['user_id'];
