@@ -14,7 +14,9 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 		vm.event_id = $stateParams.event_id;
 		vm.event = {};
 		vm.getEvent = function () {
-			vm.promise = eventsService.getEvent(vm.event_id, true, $scope.main.userInfo.user_id).then(function(response){
+			var user_id = $scope.main.isAuthed ? $scope.main.userInfo.user_id : null;
+			var reqs = $scope.main.isAuthed ? true : false;
+			vm.promise = eventsService.getEvent(vm.event_id, reqs, user_id).then(function(response){
 				vm.event = response.data;
 			});
 		};
@@ -30,6 +32,9 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 
 		vm.showRegistrationForm = function(ev) {
 			var eventInfo = vm.event;
+			if(!$scope.main.isAuthed) {
+				return;
+			}
 			$mdDialog.show({
 	      controller: eventRegistrationController,
 				controllerAs: 'vm',

@@ -180,12 +180,12 @@ angular.module('FrcPortal', [
  		templateUrl: 'views/main.event.html',
  		controller: 'main.eventController',
  		controllerAs: 'vm',
-		authenticate: true,
+		//authenticate: true,
  		data: {
  		  title: 'Events'
  		}
- 	  })
-	 .state('main.event.info', {
+	});
+/*	 .state('main.event.info', {
 	 url: '/info',
 	 templateUrl: 'views/main.event.html',
 	 controller: 'main.eventController',
@@ -194,7 +194,7 @@ angular.module('FrcPortal', [
 	 data: {
 		 title: 'Events'
 	 }
-	 });
+ });8?
 
 	$urlRouterProvider.otherwise('/home');
 
