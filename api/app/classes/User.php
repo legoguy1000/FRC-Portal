@@ -48,7 +48,7 @@ class User extends Eloquent {
   }
 
   public function setFnameAttribute($value) {
-    $this->attributes['full_name'] = $value.' '$this->attributes['lname'];
+    $this->attributes['full_name'] = $value.' '.$this->attributes['lname'];
   }
 
   public function setGradYearAttribute($value) {
