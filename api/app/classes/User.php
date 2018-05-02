@@ -21,14 +21,12 @@ class User extends Eloquent {
   *
   * @var array
   */
-  protected $hidden = [
-    'password', 'remember_token',
-  ];
+  protected $hidden = [];
 
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
-      $instance->user_id = (string) uniqid();
+      $instance->id = (string) uniqid();
     });
   }
 
