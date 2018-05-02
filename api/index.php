@@ -61,10 +61,6 @@ $capsule->setAsGlobal();
 $capsule->bootEloquent();
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
     $name = $args['name'];
-
-    $db = $this->db;
-    $result = $db->query('SELECT * FROM users WHERE fname = "'.$name.'" LIMIT 1');
-    $row = $result->fetch_assoc();
     $response->getBody()->write(json_encode($row));
     return $response;
 });
@@ -72,8 +68,8 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
 
 $app->group('/users', function () {
   $this->get('', function ($request, $response, $args) {
-
-    $response->getBody()->write(json_encode('Get all Users '));
+    $users = FrcPortal\User::all();
+    $response = $response->withJson($users);
     return $response;
   });
   $this->post('', function ($request, $response, $args) {
@@ -83,7 +79,8 @@ $app->group('/users', function () {
   });
   $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $user_id = $args['user_id'];
-    $response->getBody()->write(json_encode('Get User '.$user_id));
+    $user = FrcPortal\User::find($user_id);
+    $response = $response->withJson($user);
     return $response;
   });
   $this->put('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
