@@ -54,7 +54,7 @@ $container['db'] = function ($container) {
     return $capsule;
 };*/
 $capsule = new \Illuminate\Database\Capsule\Manager;
-$capsule->addConnection($container['settings']['db']);
+$capsule->addConnection($config['db']);
 
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
