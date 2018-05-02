@@ -62,6 +62,18 @@ class Season extends Eloquent {
     $date = new DateTime($this->attributes['bag_day']);
     return $date->format('U');
   }
+  public function getStartDateFormattedAttribute() {
+    $date = new DateTime($this->attributes['start_date']);
+    return $date->format('F j, Y');
+  }
+  public function getEndDateFormattedAttribute() {
+    $date = new DateTime($this->attributes['end_date']);
+    return $date->format('F j, Y');
+  }
+  public function getBagDayFormattedAttribute() {
+    $date = new DateTime($this->attributes['bag_day']);
+    return $date->format('F j, Y');
+  }
 
 
 
