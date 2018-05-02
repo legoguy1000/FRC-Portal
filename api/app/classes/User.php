@@ -75,6 +75,7 @@ class User extends Eloquent {
       }
     }
     $this->attributes['student_grade'] = $return;
+    $this->attributes['grad_year'] = $value;
   }
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
