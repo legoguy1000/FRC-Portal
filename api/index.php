@@ -42,7 +42,7 @@ $container = $app->getContainer();
       return $db->connect_error;
     }
     return $db;
-}; */
+};
 // Service factory for the ORM
 $container['db'] = function ($container) {
     $capsule = new \Illuminate\Database\Capsule\Manager;
@@ -52,7 +52,12 @@ $container['db'] = function ($container) {
     $capsule->bootEloquent();
 
     return $capsule;
-};
+};*/
+$capsule = new \Illuminate\Database\Capsule\Manager;
+$capsule->addConnection($container['settings']['db']);
+
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
     $name = $args['name'];
 
