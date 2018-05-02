@@ -12,6 +12,8 @@
         "illuminate/database": "^5.4"
     },
 	"autoload": {
-        "classmap": ["/home/team2363_admin/portal.team2363.org/api/app/classes"]
+        "psr-4": {
+          "FrcPortal\\":"/home/team2363_admin/portal.team2363.org/api/app/classes/"
+        }
     }
 }
