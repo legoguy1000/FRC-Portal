@@ -40,8 +40,8 @@ class User extends Eloquent {
     $return = null;
     if($this->attributes['user_type'] == 'Student') {
       $grad_year = $this->attributes['grad_year'];
-      $curren_date = new DateTime();
-      $grad_date = new DateTime($grad_year.'-07-01');
+      $curren_date = new \DateTime();
+      $grad_date = new \DateTime($grad_year.'-07-01');
       $interval = $grad_date->diff($curren_date);
       $num_months = $interval->m + 12*$interval->y;
       if($num_months <= 0) {
