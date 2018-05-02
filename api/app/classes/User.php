@@ -26,7 +26,7 @@ class User extends Eloquent {
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
-      $instance->id = (string) uniqid();
+      $instance->user_id = (string) uniqid();
     });
   }
 
