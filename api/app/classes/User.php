@@ -23,10 +23,10 @@ class User extends Eloquent {
     'password', 'remember_token',
   ];
 
-  protected static function boot() {
+  public static function boot() {
     parent::boot();
-    static::creating(function ($model) {
-      $model->{$model->getKeyName()} = (string) uniqid();
+    static::creating(function ($instance) {
+      $instance->user_id = uniqid();
     });
   }
 
