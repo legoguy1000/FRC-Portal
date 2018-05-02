@@ -26,7 +26,7 @@ class Season extends Eloquent {
 //  $data['bag_day_formatted'] = $bag_day->format('F j, Y');
 //  $data['end_date_formatted'] = $end_date->format('F j, Y');
 
-  $data['requirements'] = array();
+  //$data['requirements'] = array();
   /**
   * The attributes that should be hidden for arrays.
   *
