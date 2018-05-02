@@ -2,6 +2,7 @@
 namespace FrcPortal;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use \DateTime;
 
 class User extends Eloquent {
   //table name
@@ -18,7 +19,7 @@ class User extends Eloquent {
     'user_id', 'fname', 'lname', 'email'
   ];
 
-  protected $appends = ['full_name','student_grade'];
+  protected $appends = ['full_name','student_grade','slack_enabled','room_type'];
   /**
   * The attributes that should be hidden for arrays.
   *
@@ -40,8 +41,8 @@ class User extends Eloquent {
     $return = null;
     if($this->attributes['user_type'] == 'Student') {
       $grad_year = $this->attributes['grad_year'];
-      $curren_date = new \DateTime();
-      $grad_date = new \DateTime($grad_year.'-07-01');
+      $curren_date = new DateTime();
+      $grad_date = new DateTime($grad_year.'-07-01');
       $interval = $grad_date->diff($curren_date);
       $num_months = $interval->m + 12*$interval->y;
       if($num_months <= 0) {
@@ -68,6 +69,12 @@ class User extends Eloquent {
   }
   public function getFirstLoginAttribute() {
     return (bool) $this->attributes['first_login'];
+  }
+  public function getSlackEnabledAttribute() {
+    return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
+  }
+  public function getRoomTypeAttribute() {
+    return $this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : $this->attributes['user_type'];
   }
 
   /**
