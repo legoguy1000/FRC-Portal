@@ -16,10 +16,10 @@ class User extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'user_id', 'fname', 'lname', 'email', 'full_name'
+    'user_id', 'fname', 'lname', 'email', 'full_name', 'student_grade'
   ];
 
-  protected $appends = ['full_name','student_grade','slack_enabled','room_type'];
+  protected $appends = ['full_name','slack_enabled','room_type'];
   /**
   * The attributes that should be hidden for arrays.
   *
@@ -50,7 +50,7 @@ class User extends Eloquent {
   public function getFullNameAttribute() {
     return $this->attributes['fname'].' '.$this->attributes['lname'];
   }
-  public function getStudentGradeAttribute() {
+/*  public function getStudentGradeAttribute() {
     $return = null;
     if($this->attributes['user_type'] == 'Student') {
       $grad_year = $this->attributes['grad_year'];
@@ -73,9 +73,30 @@ class User extends Eloquent {
       }
     }
     return $return;
-  }
+  } */
   public function setGradYearAttribute($value) {
-    $this->attributes['student_grade'] = $this->getStudentGradeAttribute();
+    $return = null;
+    if($value != null) {
+      $grad_year = $value;
+      $curren_date = new DateTime();
+      $grad_date = new DateTime($grad_year.'-07-01');
+      $interval = $grad_date->diff($curren_date);
+      $num_months = $interval->m + 12*$interval->y;
+      if($num_months <= 0) {
+        $return = 'Graduated';
+      } else if($num_months <= 12) {
+        $return = 'Senior';
+      } else if($num_months <= 24) {
+        $return = 'Junior';
+      } else if($num_months <= 36) {
+        $return = 'Sophmore';
+      } else if($num_months <= 48) {
+        $return = 'Freshman';
+      } else if($num_months > 48) {
+        $return = 'Pre-Freshman';
+      }
+    }
+    $this->attributes['student_grade'] = $return;
   }
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
