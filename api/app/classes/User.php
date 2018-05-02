@@ -12,7 +12,7 @@ class User extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'fname', 'lname', 'email'
+    'user_id', 'fname', 'lname', 'email'
   ];
   /**
   * The attributes that should be hidden for arrays.
