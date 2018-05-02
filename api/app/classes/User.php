@@ -16,7 +16,7 @@ class User extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'user_id', 'fname', 'lname', 'email'
+    'user_id', 'fname', 'lname', 'email', 'full_name'
   ];
 
   protected $appends = ['student_grade','slack_enabled','room_type'];
@@ -35,7 +35,7 @@ class User extends Eloquent {
   }
 
   public function getFullNameAttribute() {
-    return $this->attributes['fname'].' '.$this->attributes['lname'];
+    $this->attributes['full_name'] = $this->attributes['fname'].' '.$this->attributes['lname'];
   }
   public function getStudentGradeAttribute() {
     $return = null;
