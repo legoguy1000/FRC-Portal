@@ -1,4 +1,5 @@
 <?php
+namespace FrcPortal;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
