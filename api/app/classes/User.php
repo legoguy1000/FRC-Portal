@@ -47,8 +47,8 @@ class User extends Eloquent {
     });
   }
 
-  public function setFnameAttribute($value) {
-    $this->attributes['full_name'] = $value.' '.$this->attributes['lname'];
+  public function setLnameAttribute($value) {
+    $this->attributes['full_name'] = $this->attributes['fname'].' '.$value;
   }
 
   public function setGradYearAttribute($value) {
@@ -79,7 +79,11 @@ class User extends Eloquent {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
   }
   public function getRoomTypeAttribute() {
-    return isset($this->attributes['user_type']) && $this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : $this->attributes['user_type'];
+    $return = null;
+    if(isset($this->attributes['user_type']) && isset($this->attributes['gender'])) {
+      $return = $this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : $this->attributes['user_type'];
+    }
+    return $return;
   }
 
   /**
