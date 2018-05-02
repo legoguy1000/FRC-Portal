@@ -48,6 +48,7 @@ class User extends Eloquent {
   }
 
   public function setLnameAttribute($value) {
+    $this->attributes['lname'] = $value;
     $this->attributes['full_name'] = $this->attributes['fname'].' '.$value;
   }
 
