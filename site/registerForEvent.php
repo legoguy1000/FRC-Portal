@@ -66,7 +66,7 @@ if($registrationBool) {
 		if(!is_null($eventInfo['poc'])){
 			$msg = $formData['full_name'].' registered for '.$eventInfo['name'];
 			if($userId != $loggedInUser) {
-				$msg = $userFullName.' registered '$formData['full_name'].' for '.$eventInfo['name'];
+				$msg = $userFullName.' registered '.$formData['full_name'].' for '.$eventInfo['name'];
 			}
 			slackMessageToUser($eventInfo['poc'], $msg);
 		}
