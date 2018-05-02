@@ -17,6 +17,8 @@ class User extends Eloquent {
   protected $fillable = [
     'user_id', 'fname', 'lname', 'email'
   ];
+
+  protected $appends = ['full_name'];
   /**
   * The attributes that should be hidden for arrays.
   *
