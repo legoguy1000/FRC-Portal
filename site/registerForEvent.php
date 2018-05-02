@@ -3,7 +3,7 @@ include('includes.php');
 
 $authToken = checkToken(true,true);
 $loggedInUser = $authToken['data']['user_id'];
-
+$userFullName = $authToken['data']['full_name'];
 $json = file_get_contents('php://input');
 $formData = json_decode($json,true);
 
@@ -65,6 +65,9 @@ if($registrationBool) {
 		//notify event POC
 		if(!is_null($eventInfo['poc'])){
 			$msg = $formData['full_name'].' registered for '.$eventInfo['name'];
+			if($userId != $loggedInUser) {
+				$msg = $userFullName.' registered '$formData['full_name'].' for '.$eventInfo['name'];
+			}
 			slackMessageToUser($eventInfo['poc'], $msg);
 		}
 		die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'data'=>$event)));
