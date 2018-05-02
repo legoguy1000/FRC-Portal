@@ -102,7 +102,7 @@ $app->group('/seasons', function () {
   });
   $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $season_id = $args['season_id'];
-    $season = FrcPortal\User::find($season_id);
+    $season = FrcPortal\Season::find($season_id);
     $response = $response->withJson($season);
     return $response;
   });
