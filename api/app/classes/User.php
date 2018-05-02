@@ -52,7 +52,7 @@ class User extends Eloquent {
   }*/
   public function setFnameAttribute($value) {
     $this->attributes['fname'] = $value;
-    $this->attributes['full_name'] = $value.' '.\Request::input('lname');
+    $this->attributes['full_name'] = $value.' '.Eloquent\Request::input('lname');
   }
   public function getStudentGradeAttribute() {
     $return = null;
