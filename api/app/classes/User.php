@@ -50,8 +50,9 @@ class User extends Eloquent {
   /*public function getFullNameAttribute() {
     return $this->attributes['fname'].' '.$this->attributes['lname'];
   }*/
-  public function setFullNameAttribute($value) {
-    $this->attributes['full_name'] = $this->attributes['fname'].' '.$this->attributes['lname'];
+  public function setFnameAttribute($value) {
+    $this->attributes['fname'] = $value;
+    $this->attributes['full_name'] = $value.' '.$this->attributes['lname'];
   }
   public function getStudentGradeAttribute() {
     $return = null;
