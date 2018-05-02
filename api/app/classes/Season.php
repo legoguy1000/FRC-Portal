@@ -54,7 +54,7 @@ class Season extends Eloquent {
     $date = new DateTime($this->attributes['start_date']);
     return $date->format('U');
   }
-  public function getEndtDateUnixAttribute() {
+  public function getEndDateUnixAttribute() {
     $date = new DateTime($this->attributes['end_date']);
     return $date->format('U');
   }
