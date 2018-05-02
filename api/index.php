@@ -102,7 +102,8 @@ $app->group('/seasons', function () {
   });
   $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $season_id = $args['season_id'];
-    $response->getBody()->write(json_encode('Get Season '.$season_id));
+    $season = FrcPortal\User::find($season_id);
+    $response = $response->withJson($season);
     return $response;
   });
   $this->post('', function ($request, $response, $args) {
