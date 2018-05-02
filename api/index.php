@@ -79,7 +79,7 @@ $app->group('/users', function () {
   });
   $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $user_id = $args['user_id'];
-    $user = FrcPortal\User::find($user_id);
+    $user = FrcPortal\User::find($user_id)->with('school')->get();
     $response = $response->withJson($user);
     return $response;
   });
