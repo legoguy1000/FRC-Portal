@@ -56,7 +56,7 @@ $container['db'] = function ($container) {
 };*/
 use Illuminate\Database\Capsule\Manager as Capsule;
 $capsule = new Capsule;
-$capsule->addConnection($config['db']);
+$capsule->addConnection(array("driver" => "mysql", "host" =>getIniProp('db_host'), "database" => getIniProp('db_name').'_test', "username" => getIniProp('db_user'), "password" => getIniProp('db_pass')));
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
