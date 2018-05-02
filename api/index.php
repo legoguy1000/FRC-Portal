@@ -68,6 +68,8 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     $response->getBody()->write(json_encode($row));
     return $response;
 });
+
+
 $app->group('/users', function () {
   $this->get('', function ($request, $response, $args) {
 

@@ -31,4 +31,8 @@ class User extends Eloquent {
     });
   }
 
+  public function getFullNameAttribute() {
+    return $this->attributes['fname'].' '.$this->attributes['lname'];
+  }
+
 }
