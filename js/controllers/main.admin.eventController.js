@@ -37,7 +37,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		vm.promise = eventsService.getEvent(vm.event_id,true,'all').then(function(response){
 			vm.event = response.data;
-			$scope.main.title += ' - '+vm.event.name;
+			//$scope.main.title += ' - '+vm.event.name;
 			reqs = vm.event.requirements;
 			vm.loading = false;
 		});
