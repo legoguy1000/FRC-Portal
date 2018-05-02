@@ -194,7 +194,7 @@ angular.module('FrcPortal', [
 	 data: {
 		 title: 'Events'
 	 }
- });8?
+ });*/
 
 	$urlRouterProvider.otherwise('/home');
 
