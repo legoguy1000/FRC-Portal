@@ -189,9 +189,8 @@ function endOfDayHoursToSlack($date = null) {
 function slackMessageToUser($user_id, $msg) {
 	$userData = false;
 	$userData = getUserDataFromParam('user_id', $user_id);
-	if($userData) {
-		$channel = $userData['slack_id'];
-		postToSlack($msg, $channel);
+	if($userData && $userData['slack_id'] != '') {
+		postToSlack($msg, $userData['slack_id']);
 	}
 }
 

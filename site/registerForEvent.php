@@ -62,6 +62,11 @@ if($registrationBool) {
 	if($result) {
 		$event = userEventInfo($userId, $year = null, $formData['event_id'], $return=array());
 		$msg = ($userId != $loggedInUser ? $formData['full_name'].' ':'').'Registered';
+		//notify event POC
+		if(!is_null($eventInfo['poc'])){
+			$msg = $formData['full_name'].' registered for '.$eventInfo['name'];
+			slackMessageToUser($eventInfo['poc'], $msg);
+		}
 		die(json_encode(array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'data'=>$event)));
 	} else {
 		$msg = 'Something went wrong';
