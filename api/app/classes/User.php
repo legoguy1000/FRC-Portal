@@ -16,10 +16,10 @@ class User extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'user_id', 'fname', 'lname', 'email'
+    'user_id', 'fname', 'lname', 'email', 'full_name'
   ];
 
-  protected $appends = ['student_grade','slack_enabled','room_type'];
+  protected $appends = ['full_name','student_grade','slack_enabled','room_type'];
   /**
   * The attributes that should be hidden for arrays.
   *
@@ -47,12 +47,8 @@ class User extends Eloquent {
     });
   }
 
-  /*public function getFullNameAttribute() {
+  public function getFullNameAttribute() {
     return $this->attributes['fname'].' '.$this->attributes['lname'];
-  }*/
-  public function setFnameAttribute($value) {
-    $this->attributes['fname'] = $value;
-    $this->attributes['full_name'] = $value.' '.Eloquent\Request::input('lname');
   }
   public function getStudentGradeAttribute() {
     $return = null;
@@ -77,6 +73,9 @@ class User extends Eloquent {
       }
     }
     return $return;
+  }
+  public function setGradYearAttribute($value) {
+    $this->attributes['student_grade'] = $this->getStudentGradeAttribute();
   }
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
