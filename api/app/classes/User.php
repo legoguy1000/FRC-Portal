@@ -37,4 +37,20 @@ class User extends Eloquent {
     return $this->attributes['fname'].' '.$this->attributes['lname'];
   }
 
+  public function getAdminAttribute() {
+    return (bool) $this->attributes['admin'];
+  }
+  public function getStatusAttribute() {
+    return (bool) $this->attributes['status'];
+  }
+  public function getFirstLoginAttribute() {
+    return (bool) $this->attributes['first_login'];
+  }
+
+  /**
+  * Get the School.
+  */
+  public function school() {
+    return $this->hasOne('FrcPortal\School', 'school_id', 'school_id');
+  }
 }
