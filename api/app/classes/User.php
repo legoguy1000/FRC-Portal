@@ -27,6 +27,19 @@ class User extends Eloquent {
   */
   protected $hidden = [];
 
+  /**
+   * The attributes that should be cast to native types.
+   *
+   * @var array
+   */
+  protected $casts = [
+    'admin' => 'boolean',
+    'status' => 'boolean',
+    'first_login' => 'boolean',
+    'admin' => 'boolean',
+    'admin' => 'boolean',
+  ];
+
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
@@ -37,7 +50,7 @@ class User extends Eloquent {
   /*public function getFullNameAttribute() {
     return $this->attributes['fname'].' '.$this->attributes['lname'];
   }*/
-  public function getFnameAttribute($value) {
+  public function setFnameAttribute($value) {
     $this->attributes['full_name'] = $this->attributes['fname'].' '.$this->attributes['lname'];
   }
   public function getStudentGradeAttribute() {
@@ -63,15 +76,6 @@ class User extends Eloquent {
       }
     }
     return $return;
-  }
-  public function getAdminAttribute() {
-    return (bool) $this->attributes['admin'];
-  }
-  public function getStatusAttribute() {
-    return (bool) $this->attributes['status'];
-  }
-  public function getFirstLoginAttribute() {
-    return (bool) $this->attributes['first_login'];
   }
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
