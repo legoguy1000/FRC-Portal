@@ -76,7 +76,7 @@ class EventRequirement extends Eloquent {
   /**
   * Get the School.
   */
-  public function school() {
+  public function event_room() {
     return $this->belongsTo('FrcPortal\EventRoom', 'room_id', 'room_id');
   }
 
