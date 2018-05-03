@@ -70,11 +70,11 @@ class AnnualRequirements extends Eloquent {
     //WHERE meeting_hours.time_in>seasons.end_date
     //GROUP BY meeting_hours.user_id,seasons.year
     return DB::table('meeting_hours')
-            ->join('seasons', function ($join) {
+            ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', 'YEAR(meeting_hours.time_in)');
             })->where('meeting_hours.time_in', '>', 'seasons.end_date')
               ->where('seasons.season_id', '=', $this->attributes['season_id'])
               ->where('meeting_hours.user_id', '=', $this->attributes['user_id'])
-              ->select('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600)')->groupBy('meeting_hours.user_id')->get();
+              ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as off_season_hours'))->groupBy('meeting_hours.user_id')->get();
   }
 }
