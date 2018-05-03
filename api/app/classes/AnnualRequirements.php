@@ -21,7 +21,7 @@ class AnnualRequirements extends Eloquent {
   ];
 
 
-  protected $appends = ['off_season_hours','build_season_hours'];
+  protected $appends = ['off_season_hours','build_season_hours','competition_season_hours'];
 
   //$data['requirements'] = array();
   /**
@@ -80,6 +80,20 @@ class AnnualRequirements extends Eloquent {
               ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
               ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as build_season_hours'))->groupBy('meeting_hours.user_id')->get();
     return !is_null($hours) && isset($hours[0])? $hours[0]->build_season_hours : null;
+  }
+  public function getCompetitionSeasonHoursAttribute() {
+    //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS competition_season_hours, seasons.*
+    //FROM meeting_hours
+    //LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in)
+    //WHERE meeting_hours.time_in>seasons.bag_day AND meeting_hours.time_in<=seasons.end_date
+    //GROUP BY meeting_hours.user_id,seasons.year
+    $hours = DB::table('meeting_hours')
+            ->leftJoin('seasons', function ($join) {
+                $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'))->on('meeting_hours.time_in', '>', 'seasons.bag_day')->on('meeting_hours.time_in', '<=', 'seasons.end_date');
+            })->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
+              ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
+              ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS competition_season_hours'))->groupBy('meeting_hours.user_id')->get();
+    return !is_null($hours) && isset($hours[0])? $hours[0]->off_season_hours : null;
   }
   public function getOffSeasonHoursAttribute() {
     //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS off_season_hours, seasons.*
