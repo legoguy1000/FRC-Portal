@@ -80,7 +80,7 @@ class AnnualRequirements extends Eloquent {
               ->whereNull('exempt_hours.exempt_id')
               ->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
               ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
-              ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as build_season_hours'))->groupBy('meeting_hours.user_i')->get();
+              ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as build_season_hours'))->groupBy('meeting_hours.user_id')->get()[0];
   }
   public function getOffSeasonHoursAttribute() {
     //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS off_season_hours, seasons.*
@@ -92,8 +92,8 @@ class AnnualRequirements extends Eloquent {
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'));
             })->where('meeting_hours.time_in', '>', 'seasons.end_date')
-              ->where('seasons.season_id', '=', $this->attributes['season_id'])
-              ->where('meeting_hours.user_id', '=', $this->attributes['user_id'])
+              ->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
+              ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
               ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as off_season_hours'))->groupBy('meeting_hours.user_id')->get()[0];
   }
 }
