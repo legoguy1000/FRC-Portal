@@ -106,7 +106,7 @@ class User extends Eloquent {
   /**
   * Get the Event requirements.
   */
-  public function annual_requirements() {
+  public function event_requirements() {
     return $this->hasMany('FrcPortal\EventRequirements', 'user_id', 'user_id');
   }
 }
