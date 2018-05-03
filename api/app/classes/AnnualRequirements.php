@@ -78,8 +78,8 @@ class AnnualRequirements extends Eloquent {
             })->where('meeting_hours.time_in', '>=', 'seasons.start_date')
               ->where('meeting_hours.time_in', '<=', 'seasons.bag_day')
               ->whereNull('exempt_hours.exempt_id')
-              ->whereRaw('seasons.season_id = ?', $this->attributes['season_id'])
-              ->whereRaw('meeting_hours.user_id = ?', $this->attributes['user_id'])
+              ->whereRaw('seasons.season_id = ?', [$this->attributes['season_id']])
+              ->whereRaw('meeting_hours.user_id = ?', [$this->attributes['user_id']])
               ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as build_season_hours'))->groupBy('meeting_hours.user_id')->get();
   }
   public function getOffSeasonHoursAttribute() {
