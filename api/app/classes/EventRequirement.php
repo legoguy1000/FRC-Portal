@@ -52,8 +52,11 @@ class EventRequirement extends Eloquent {
     });
   }
 
+  public function getCarBoolAttribute() {
+      return isset($this->attributes['car_id']) && !is_null($this->attributes['car_id']);
+    }
   /**
-   * Get the Season.
+   * Get the Event.
    */
   public function event() {
       return $this->belongsTo('FrcPortal\Event', 'event_id', 'event_id');
@@ -64,9 +67,12 @@ class EventRequirement extends Eloquent {
   public function user() {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
   }
-
-  public function getCarBoolAttribute() {
-    return isset($this->attributes['car_id']) && !is_null($this->attributes['car_id']);
+  /**
+   * Get the User.
+   */
+  public function car() {
+      return $this->belongsTo('FrcPortal\EventCar', 'car_id', 'car_id');
   }
+
 
 }
