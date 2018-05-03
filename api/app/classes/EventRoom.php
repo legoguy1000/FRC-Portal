@@ -61,7 +61,6 @@ class EventRoom extends Eloquent {
     return isset($this->attributes['room_id']) && !is_null($this->attributes['room_id']);
   }
 
-  //$room['user_type'] == 'Student' ? str_replace('Male',"Boys",str_replace('Female',"Girls",$room['gender'])).' '.$c[$roomType] : $room['user_type'].' '.$c[$roomType];
   public function getRoomTypeAttribute() {
   	$roomType = $this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : $this->attributes['user_type'];
     return  array($roomType);

@@ -21,7 +21,7 @@ class EventRequirement extends Eloquent {
   ];
 
 
-  protected $appends = ['car_bool'];
+  protected $appends = ['car_bool','room_bool'];
 
   //$data['requirements'] = array();
   /**
@@ -53,8 +53,11 @@ class EventRequirement extends Eloquent {
   }
 
   public function getCarBoolAttribute() {
-      return isset($this->attributes['car_id']) && !is_null($this->attributes['car_id']);
-    }
+    return isset($this->attributes['car_id']) && !is_null($this->attributes['car_id']);
+  }
+  public function getRoomBoolAttribute() {
+    return isset($this->attributes['room_bool']) && !is_null($this->attributes['room_bool']);
+  }
   /**
    * Get the Event.
    */
