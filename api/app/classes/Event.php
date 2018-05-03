@@ -22,7 +22,7 @@ class Event extends Eloquent {
   ];
 
 
-  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_date_unix'];
+  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_date_unix','season'];
 
   //$data['requirements'] = array();
   /**
@@ -73,8 +73,7 @@ class Event extends Eloquent {
     return $date->format('U');
   }
 
-  public function season() {
-
+  public function getSeasonAttribute() {
     return DB::table('seasons')
             ->join('events', function ($join) {
                 $join->on('events.event_start', '>=', 'seasons.start_date')->on('events.event_end', '<=', 'seasons.end_date');
