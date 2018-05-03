@@ -53,7 +53,7 @@ class AnnualRequirements extends Eloquent {
    * Get the Season.
    */
   public function season() {
-      return $this->hasMany('FrcPortal\Season', 'season_id', 'season_id');
+      return $this->belongsTo('FrcPortal\Season', 'season_id', 'season_id');
   }
 
 }
