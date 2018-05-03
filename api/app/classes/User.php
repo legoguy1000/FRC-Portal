@@ -100,5 +100,8 @@ class User extends Eloquent {
   /**
   * Get the Annual requirements.
   */
+  public function annual_requirements() {
+    return $this->hasMany('FrcPortal\AnnualRequirements', 'user_id', 'user_id');
+  }
 
 }
