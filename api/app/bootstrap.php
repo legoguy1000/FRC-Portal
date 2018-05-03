@@ -3,7 +3,7 @@ ini_set("error_reporting", E_ALL);
 ini_set("expose_php", false);
 date_default_timezone_set('America/New_York');
 
-$root = '/home/team2363_admin/portal.team2363.org';
+$root = '/home/team2363_portal/portal.team2363.org';
 require $root.'/site/includes/vendor/autoload.php';
 include($root.'/site/includes/functions/getConfigFile.php');
 /*
