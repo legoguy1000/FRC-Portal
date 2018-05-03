@@ -58,7 +58,7 @@ class Event extends Eloquent {
     return (bool) ($start->format('Y-m-d') == $end->format('Y-m-d'));
   }
   public function getYearAttribute() {
-    return date('Y',$this->attributes['event_start']);
+    return date('Y',strtotime($this->attributes['event_start']));
   }
   public function getEventStartUnixAttribute() {
     $date = new DateTime($this->attributes['event_start']);
