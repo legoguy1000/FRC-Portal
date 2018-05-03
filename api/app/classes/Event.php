@@ -75,7 +75,7 @@ class Event extends Eloquent {
 
     return DB::table('seasons')
             ->join('events', function ($join) {
-                $join->on('events.event_start', '>=', 'seasons.start_date')->on('events.event_end', '<=', 'seasons.end_date')
+                $join->on('events.event_start', '>=', 'seasons.start_date')->on('events.event_end', '<=', 'seasons.end_date');
             })->where('events.event_id', '=', $this->attributes['event_id'])->select('seasons.*')->get();
   }
 
