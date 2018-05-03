@@ -75,6 +75,6 @@ class AnnualRequirements extends Eloquent {
             })->where('meeting_hours.time_in', '>', 'seasons.end_date')
               ->where('seasons.season_id', '=', $this->attributes['season_id'])
               ->where('meeting_hours.user_id', '=', $this->attributes['user_id'])
-              ->select('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600)')->groupBy('account_id')->get();
+              ->select('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600)')->groupBy('meeting_hours.user_id')->get();
   }
 }
