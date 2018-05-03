@@ -55,7 +55,7 @@ class Event extends Eloquent {
   public function getSingleDayAttribute() {
     $start = new DateTime($this->attributes['event_start']);
     $end = new DateTime($this->attributes['event_end']);
-    return (bool) ($start->format('Y-m-d') == $end);
+    return (bool) ($start->format('Y-m-d') == $end->format('Y-m-d'));
   }
   public function getYearAttribute() {
     return date('Y',$this->attributes['event_start']);
