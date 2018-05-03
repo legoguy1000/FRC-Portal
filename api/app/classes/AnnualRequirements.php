@@ -2,6 +2,7 @@
 namespace FrcPortal;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
 
 class AnnualRequirements extends Eloquent {
@@ -20,7 +21,7 @@ class AnnualRequirements extends Eloquent {
   ];
 
 
-  protected $appends = [];
+  protected $appends = ['off_season_hours'];
 
   //$data['requirements'] = array();
   /**
@@ -62,5 +63,18 @@ class AnnualRequirements extends Eloquent {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
   }
 
-
+  public function getOffSeasonHoursAttribute() {
+    //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS off_season_hours, seasons.*
+    //FROM meeting_hours
+    //LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in)
+    //WHERE meeting_hours.time_in>seasons.end_date
+    //GROUP BY meeting_hours.user_id,seasons.year
+    return DB::table('meeting_hours')
+            ->join('seasons', function ($join) {
+                $join->on('seasons.year', '=', 'YEAR(meeting_hours.time_in)');
+            })->where('meeting_hours.time_in', '>', 'seasons.end_date')
+              ->where('seasons.season_id', '=', $this->attributes['season_id'])
+              ->where('meeting_hours.user_id', '=', $this->attributes['user_id'])
+              ->select('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600)')->groupBy('account_id')->get();
+  }
 }
