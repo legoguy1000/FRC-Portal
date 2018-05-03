@@ -79,4 +79,10 @@ class Event extends Eloquent {
             })->where('events.event_id', '=', $this->attributes['event_id'])->select('seasons.*')->limit(1)->get()[0];
   }
 
+  /**
+  * Get the Event requirements.
+  */
+  public function annual_requirements() {
+    return $this->hasMany('FrcPortal\EventRequirements', 'event_id', 'event_id');
+  }
 }
