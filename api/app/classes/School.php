@@ -35,8 +35,7 @@ class School extends Eloquent {
   /**
    * Get the user.
    */
-  public function user()
-  {
+  public function user() {
       return $this->hasMany('FrcPortal\User', 'school_id', 'school_id');
   }
 

@@ -71,6 +71,12 @@ class Season extends Eloquent {
     return $date->format('F j, Y');
   }
 
+  /**
+  * Get the Annual requirements.
+  */
+  public function annual_requirements() {
+    return $this->belongsTo('FrcPortal\AnnualRequirements', 'season_id', 'season_id');
+  }
 
 
 }

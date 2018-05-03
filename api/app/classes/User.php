@@ -97,4 +97,10 @@ class User extends Eloquent {
   public function school() {
     return $this->belongsTo('FrcPortal\School', 'school_id', 'school_id');
   }
+  /**
+  * Get the Annual requirements.
+  */
+  public function annual_requirements() {
+    return $this->belongsTo('FrcPortal\AnnualRequirements', 'user_id', 'user_id');
+  }
 }
