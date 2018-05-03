@@ -70,7 +70,7 @@ class EventRequirement extends Eloquent {
   /**
    * Get the User.
    */
-  public function car() {
+  public function event_car() {
       return $this->belongsTo('FrcPortal\EventCar', 'car_id', 'car_id');
   }
 

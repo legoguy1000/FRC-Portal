@@ -82,13 +82,13 @@ class Event extends Eloquent {
   /**
   * Get the Event requirements.
   */
-  public function event_requirements() {
+  public function event_requirement() {
     return $this->hasMany('FrcPortal\EventRequirement', 'event_id', 'event_id');
   }
   /**
   * Get the Event Cars.
   */
-  public function event_cars() {
+  public function event_car() {
     return $this->hasMany('FrcPortal\EventCar', 'event_id', 'event_id');
   }
 }
