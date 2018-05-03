@@ -130,7 +130,8 @@ $app->group('/events', function () {
   });
   $this->get('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $event_id = $args['event_id'];
-    $response->getBody()->write(json_encode('Get Event '.$event_id));
+    $event = FrcPortal\Event::with('season')->find($event_id);
+    $response = $response->withJson($event);
     return $response;
   });
   $this->post('', function ($request, $response, $args) {

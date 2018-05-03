@@ -22,10 +22,6 @@ class Season extends Eloquent {
 
   protected $appends = ['start_date_unix','bag_day_unix','end_date_unix','start_date_formatted','bag_day_formatted','end_date_formatted','start_date_formatted','start_date_formatted'];
 
-//  $data['start_date_formatted'] = $start_date->format('F j, Y');
-//  $data['bag_day_formatted'] = $bag_day->format('F j, Y');
-//  $data['end_date_formatted'] = $end_date->format('F j, Y');
-
   //$data['requirements'] = array();
   /**
   * The attributes that should be hidden for arrays.
