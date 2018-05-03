@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
 
-class AnnualRequirements extends Eloquent {
+class AnnualRequirement extends Eloquent {
   //table name
   protected $table = 'annual_requirements';
   //Use Custom Primary Key

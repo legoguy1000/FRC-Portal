@@ -101,12 +101,18 @@ class User extends Eloquent {
   * Get the Annual requirements.
   */
   public function annual_requirements() {
-    return $this->hasMany('FrcPortal\AnnualRequirements', 'user_id', 'user_id');
+    return $this->hasMany('FrcPortal\AnnualRequirement', 'user_id', 'user_id');
   }
   /**
   * Get the Event requirements.
   */
   public function event_requirements() {
-    return $this->hasMany('FrcPortal\EventRequirements', 'user_id', 'user_id');
+    return $this->hasMany('FrcPortal\EventRequirement', 'user_id', 'user_id');
+  }
+  /**
+  * Get the Event Cars.
+  */
+  public function event_cars() {
+    return $this->hasMany('FrcPortal\EventCar', 'user_id', 'user_id');
   }
 }

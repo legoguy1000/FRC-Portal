@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
 
-class EventRequirements extends Eloquent {
+class EventRequirement extends Eloquent {
   //table name
   protected $table = 'event_requirements';
   //Use Custom Primary Key
@@ -48,7 +48,7 @@ class EventRequirements extends Eloquent {
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
-      $instance->req_id = (string) uniqid();
+      $instance->ereq_id = (string) uniqid();
     });
   }
 
