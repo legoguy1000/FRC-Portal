@@ -71,7 +71,7 @@ class AnnualRequirements extends Eloquent {
     //GROUP BY meeting_hours.user_id,seasons.year
     return DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
-                $join->on('seasons.year', '=', 'YEAR(meeting_hours.time_in)');
+                $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'));
             })->where('meeting_hours.time_in', '>', 'seasons.end_date')
               ->where('seasons.season_id', '=', $this->attributes['season_id'])
               ->where('meeting_hours.user_id', '=', $this->attributes['user_id'])
