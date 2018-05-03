@@ -82,7 +82,7 @@ class Event extends Eloquent {
   /**
   * Get the Event requirements.
   */
-  public function annual_requirements() {
+  public function event_requirements() {
     return $this->hasMany('FrcPortal\EventRequirements', 'event_id', 'event_id');
   }
 }
