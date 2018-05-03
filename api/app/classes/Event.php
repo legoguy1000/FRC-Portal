@@ -2,6 +2,7 @@
 namespace FrcPortal;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Support\Facades\DB;
 use \DateTime;
 
 class Event extends Eloquent {
