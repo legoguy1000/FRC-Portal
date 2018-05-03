@@ -50,12 +50,6 @@ class AnnualRequirements extends Eloquent {
   }
 
   /**
-   * Get the user.
-   */
-  public function user() {
-      return $this->hasMany('FrcPortal\User', 'user_id', 'user_id');
-  }
-  /**
    * Get the Season.
    */
   public function season() {
