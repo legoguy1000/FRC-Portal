@@ -132,7 +132,7 @@ class AnnualRequirement extends Eloquent {
     return !is_null($hours) && isset($hours[0])? $hours[0]->total_hours : null;
   }
   public function getMinHoursAttribute() {
-    $hours = $this->attributes['build_season_hours'];
+    $hours = $this->build_season_hours;
     $sid = $this->attributes['season_id'];
     if(isset($hours) && isset($sid)) {
       $hours_req = Season::find($sid)->hour_requirement;
