@@ -27,9 +27,9 @@ class AnnualRequirement extends Eloquent {
     'join_team' => false,
     'stims' => false,
     'dues' => false,
-    'off_season_hours' => 0,
-    'build_season_hours' => 0,
-    'competition_season_hours' => 0,
+//    'off_season_hours' => 0,
+//    'build_season_hours' => 0,
+//    'competition_season_hours' => 0,
   ];
 
   //$data['requirements'] = array();
