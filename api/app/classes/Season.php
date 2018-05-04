@@ -87,7 +87,7 @@ class Season extends Eloquent {
 						$join->on('annual_requirements.user_id', '=', 'users.user_id')->on('annual_requirements.season_id', '=', 'seasons.season_id');
 					})->where(function ($query) {
 						$query->where('users.status', '=', true)->orWhereNotNull('annual_requirements.req_id');
-					})->where('seasons.season_id','=',$this->attributes['season_id'])->select('annual_requirements.join_team,annual_requirements.stims,annual_requirements.dues')->get();
+					})->where('seasons.season_id','=',$this->attributes['season_id'])->select('annual_requirements.join_team','annual_requirements.stims','annual_requirements.dues')->get();
   }
 
 }
