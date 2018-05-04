@@ -81,8 +81,8 @@ class Season extends Eloquent {
   /**
   * Get the Annual requirements.
   */
-  public function users() {
+  /*public function users() {
     return DB::table('seasons')->crossJoin('users')->where('seasons.season_id', '=', $this->attributes['season_id'])->select('user_id')->get();
-  }
+  }*/
 
 }
