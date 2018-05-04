@@ -13,7 +13,7 @@
     },
 	"autoload": {
         "psr-4": {
-          "FrcPortal\\":"/home/team2363_admin/portal.team2363.org/api/app/classes/"
+          "FrcPortal\\":"/home/team2363_portal/portal.team2363.org/api/app/classes/"
         }
     }
 }
