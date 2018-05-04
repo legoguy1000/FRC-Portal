@@ -121,4 +121,10 @@ class User extends Eloquent {
   public function meeting_hours() {
     return $this->hasMany('FrcPortal\MeetingHour', 'user_id', 'user_id');
   }
+  /**
+  * Get the OAuth IDs
+  */
+  public function oauth() {
+    return $this->hasMany('FrcPortal\Oauth', 'user_id', 'user_id');
+  }
 }
