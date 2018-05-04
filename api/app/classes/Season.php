@@ -77,6 +77,11 @@ class Season extends Eloquent {
   public function annual_requirements() {
     return $this->hasMany('FrcPortal\AnnualRequirement', 'season_id', 'season_id');
   }
-
+  /**
+  * Get the Annual requirements.
+  */
+  public function users() {
+    return DB::table('seasons')->crossJoin('users')->where('seasons.season_id', '=', $this->attributes['season_id'])->select('user_id')->get();
+  }
 
 }
