@@ -48,8 +48,8 @@ class MeetingHour extends Eloquent {
   /**
    * Get the User.
    */
-  public function user() {
+  public function users() {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
   }
-  
+
 }

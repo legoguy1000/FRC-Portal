@@ -94,25 +94,25 @@ class User extends Eloquent {
   /**
   * Get the School.
   */
-  public function school() {
+  public function schools() {
     return $this->belongsTo('FrcPortal\School', 'school_id', 'school_id');
   }
   /**
   * Get the Annual requirements.
   */
-  public function annual_requirement() {
+  public function annual_requirements() {
     return $this->hasMany('FrcPortal\AnnualRequirement', 'user_id', 'user_id');
   }
   /**
   * Get the Event requirements.
   */
-  public function event_requirement() {
+  public function event_requirements() {
     return $this->hasMany('FrcPortal\EventRequirement', 'user_id', 'user_id');
   }
   /**
   * Get the Event Cars.
   */
-  public function event_car() {
+  public function event_cars() {
     return $this->hasMany('FrcPortal\EventCar', 'user_id', 'user_id');
   }
   /**

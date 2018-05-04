@@ -48,13 +48,13 @@ class EventRoom extends Eloquent {
   /**
    * Get the Season.
    */
-  public function event() {
+  public function events() {
       return $this->belongsTo('FrcPortal\Event', 'event_id', 'event_id');
   }
   /**
    * Get the room.
    */
-  public function event_requirement() {
+  public function event_requirements() {
       return $this->hasMany('FrcPortal\EventRequirement', 'room_id', 'room_id');
   }
   public function getroomBoolAttribute() {

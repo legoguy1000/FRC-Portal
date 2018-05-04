@@ -50,19 +50,19 @@ class EventCar extends Eloquent {
   /**
    * Get the Season.
    */
-  public function event() {
+  public function events() {
       return $this->belongsTo('FrcPortal\Event', 'event_id', 'event_id');
   }
   /**
    * Get the User.
    */
-  public function user() {
+  public function users() {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
   }
   /**
    * Get the Car.
    */
-  public function event_requirement() {
+  public function event_requirements() {
       return $this->belongsTo('FrcPortal\EventRequirement', 'car_id', 'car_id');
   }
   public function getCarBoolAttribute() {
