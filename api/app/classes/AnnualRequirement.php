@@ -21,7 +21,7 @@ class AnnualRequirement extends Eloquent {
   ];
 
 
-  protected $appends = ['off_season_hours','build_season_hours','competition_season_hours','total_hours','min_hours'];
+  protected $appends = ['off_season_hours','build_season_hours','competition_season_hours','total_hours','min_hours','reqs_complete'];
 
   protected $attributes = [
     'join_team' => false,
@@ -137,6 +137,22 @@ class AnnualRequirement extends Eloquent {
     if(isset($hours) && isset($sid)) {
       $hours_req = Season::find($sid)->hour_requirement;
       return $hours >= $hours_req;
+    } else {
+      return false;
+    }
+  }
+  //$temp['reqs_complete'] = $jt && $stims && (($stu && $dues) || $men) && $mh;
+  public function getReqsCompleteAttribute() {
+    $jt = $this->join_team;
+    $stims = $this->stims;
+    $dues = $this->dues;
+    $mh = $this->min_hours;
+    $user = $this->attributes['user_id'];
+    if(isset($user)) {
+      $userInfo = User::find($user);
+      $stu = (bool) $userInfo->user_type == 'Student';
+      $men = (bool) $userInfo->user_type == 'Mentor';
+      return $jt && $stims && (($stu && $dues) || $men) && $mh;
     } else {
       return false;
     }
