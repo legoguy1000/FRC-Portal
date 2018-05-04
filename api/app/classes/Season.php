@@ -2,6 +2,7 @@
 namespace FrcPortal;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
 
 class Season extends Eloquent {
