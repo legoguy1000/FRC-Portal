@@ -53,13 +53,13 @@ class AnnualRequirement extends Eloquent {
   /**
    * Get the Season.
    */
-  public function season() {
+  public function seasons() {
       return $this->belongsTo('FrcPortal\Season', 'season_id', 'season_id');
   }
   /**
    * Get the User.
    */
-  public function user() {
+  public function users() {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
   }
 
