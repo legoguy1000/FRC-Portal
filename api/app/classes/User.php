@@ -127,4 +127,10 @@ class User extends Eloquent {
   public function oauth() {
     return $this->hasMany('FrcPortal\Oauth', 'user_id', 'user_id');
   }
+  /**
+  * Get the Notification Preferences
+  */
+  public function oauth() {
+    return $this->hasMany('FrcPortal\NotificationPreferences', 'user_id', 'user_id');
+  }
 }
