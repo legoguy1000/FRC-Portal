@@ -21,7 +21,7 @@ class Season extends Eloquent {
   ];
 
 
-  protected $appends = ['start_date_unix','bag_day_unix','end_date_unix','start_date_formatted','bag_day_formatted','end_date_formatted','start_date_formatted','start_date_formatted'];
+  protected $appends = ['all_annual_requirements','start_date_unix','bag_day_unix','end_date_unix','start_date_formatted','bag_day_formatted','end_date_formatted','start_date_formatted','start_date_formatted'];
 
   //$data['requirements'] = array();
   /**
@@ -81,8 +81,13 @@ class Season extends Eloquent {
   /**
   * Get the Annual requirements.
   */
-  /*public function users() {
-    return DB::table('seasons')->crossJoin('users')->where('seasons.season_id', '=', $this->attributes['season_id'])->select('user_id')->get();
-  }*/
+  public function getAllAnnualRequirementsAttribute() {
+    FrcPortal\User::crossJoin('seasons')
+					->leftJoin('annual_requirements', function ($join) {
+						$join->on('annual_requirements.user_id', '=', 'users.user_id');
+					})->where(function ($query) {
+						$query->where('users.status', '=', true)->orWhereNotNull('annual_requirements.req_id');
+					})->where('seasons.season_id','=',$this->attributes['season_id'])->select('annual_requirements.join_team,annual_requirements.stims,annual_requirements.dues')->get();
+  }
 
 }
