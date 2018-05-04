@@ -1,5 +1,5 @@
 AddHandler fcgid-script .php
-FCGIWrapper "/dh/cgi-system/php71.cgi" .php
+FCGIWrapper "/dh/cgi-system/php72.cgi" .php
 
 RewriteEngine on
 
