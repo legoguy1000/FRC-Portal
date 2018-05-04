@@ -82,7 +82,7 @@ class Season extends Eloquent {
   * Get the Annual requirements.
   */
   public function getAllAnnualRequirementsAttribute() {
-    FrcPortal\User::crossJoin('seasons')
+    User::crossJoin('seasons')
 					->leftJoin('annual_requirements', function ($join) {
 						$join->on('annual_requirements.user_id', '=', 'users.user_id');
 					})->where(function ($query) {
