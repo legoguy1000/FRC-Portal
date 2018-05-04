@@ -23,6 +23,15 @@ class AnnualRequirement extends Eloquent {
 
   protected $appends = ['off_season_hours','build_season_hours','competition_season_hours'];
 
+  protected $attributes = [
+    'join_team' => false,
+    'stims' => false,
+    'dues' => false,
+    'off_season_hours' => 0,
+    'build_season_hours' => 0,
+    'competition_season_hours' => 0,
+  ];
+
   //$data['requirements'] = array();
   /**
   * The attributes that should be hidden for arrays.
