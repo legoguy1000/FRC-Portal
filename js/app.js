@@ -470,7 +470,7 @@ angular.module('FrcPortal', [
 .config(function($authProvider) {
 	$authProvider.google({
 		clientId: '1094835789171-3hss4dvsp904prfjilpade224tajlibh.apps.googleusercontent.com',
-		url: '/site/auth_google.php',
+		url: '/api/auth/google',
 	//	url: '/api/v1/login/google',
 		authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
 		redirectUri: window.location.origin,

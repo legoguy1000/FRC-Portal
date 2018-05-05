@@ -65,6 +65,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     return $response;
 });
 
+include('./routes/auth.php');
 
 $app->group('/users', function () {
   $this->get('', function ($request, $response, $args) {
@@ -96,8 +97,8 @@ $app->group('/users', function () {
 });
 $app->group('/seasons', function () {
   $this->get('', function ($request, $response, $args) {
-
-    $response->getBody()->write(json_encode('Get all Seasons '));
+    $seasons = FrcPortal\Season::all();
+    $response = $response->withJson($seasons);
     return $response;
   });
   $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
