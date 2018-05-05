@@ -4,7 +4,7 @@ $app->group('/auth', function () {
   $this->post('/google', function ($request, $response, $args) {
     $provider = 'google';
     $client = new Google_Client();
-    $client->setAuthConfigFile('./includes/secured/google_client_secret.json');
+    $client->setAuthConfigFile($_SERVER['DOCUMENT_ROOT'].'/site/includes/secured/google_client_secret.json');
     $plus = new Google_Service_Plus($client);
     $data = array();
     if(isset($args['code'])) {
