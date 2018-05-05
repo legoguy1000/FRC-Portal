@@ -66,7 +66,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
 });
 
 include('./app/routes/auth.php');
-
+include('./app/routes/seasons.php');
 $app->group('/users', function () {
   $this->get('', function ($request, $response, $args) {
     $users = FrcPortal\User::with('schools')->get();
@@ -95,34 +95,7 @@ $app->group('/users', function () {
     return $response;
   });
 });
-$app->group('/seasons', function () {
-  $this->get('', function ($request, $response, $args) {
-    $seasons = FrcPortal\Season::all();
-    $response = $response->withJson($seasons);
-    return $response;
-  });
-  $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $season_id = $args['season_id'];
-    $season = FrcPortal\Season::find($season_id);
-    $response = $response->withJson($season);
-    return $response;
-  });
-  $this->post('', function ($request, $response, $args) {
 
-    $response->getBody()->write(json_encode('New Season'));
-    return $response;
-  });
-  $this->put('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $season_id = $args['season_id'];
-    $response->getBody()->write(json_encode('Update Season '.$season_id));
-    return $response;
-  });
-  $this->delete('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $season_id = $args['season_id'];
-    $response->getBody()->write(json_encode('Delete Season '.$season_id));
-    return $response;
-  });
-});
 $app->group('/events', function () {
   $this->get('', function ($request, $response, $args) {
 

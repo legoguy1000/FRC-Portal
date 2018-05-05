@@ -49,6 +49,9 @@ class AnnualRequirement extends Eloquent {
     'join_team' => 'boolean',
     'stims' => 'boolean',
     'dues' => 'boolean',
+    'off_season_hours' => 'integer',
+    'build_season_hours' => 'integer',
+    'competition_season_hours' => 'integer',
 //    'min_hours' => 'boolean',
   ];
 
