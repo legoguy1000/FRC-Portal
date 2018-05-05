@@ -65,7 +65,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     return $response;
 });
 
-include('./routes/auth.php');
+include('./app/routes/auth.php');
 
 $app->group('/users', function () {
   $this->get('', function ($request, $response, $args) {
