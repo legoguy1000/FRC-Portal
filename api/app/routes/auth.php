@@ -54,7 +54,7 @@ $app->group('/auth', function () {
         }
       }
       if($user != false) {
-        die('asdf');
+
         $queryArr = array();
         if($user->profile_image == '') {
           $queryArr['profile_image'] = $userData['profile_image'];
@@ -67,7 +67,7 @@ $app->group('/auth', function () {
         if(count($queryArr) > 0) {
           FrcPortal\User::where('user_id',  $user->user_id)->update($queryArr);
         }
-
+        die('asdf');
         $key = getIniProp('jwt_key');
   			$token = array(
   				"iss" => "https://portal-dev.team2363.org",
