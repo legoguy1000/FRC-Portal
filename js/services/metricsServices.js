@@ -14,7 +14,11 @@ angular.module('FrcPortal')
 			});
 		},
 		topHourUsers: function (year) {
-			return $http.get('site/topHourUsers.php?year='+year)
+			if(year == '' || year == undefined) {
+				var d = new Date();
+				year = d.getFullYear();
+			}
+			return $http.get('api/seasons/'+year+'/topHourUsers')
 			.then(function(response) {
 				return response.data;
 			});
