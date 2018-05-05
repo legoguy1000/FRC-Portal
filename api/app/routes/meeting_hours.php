@@ -1,5 +1,5 @@
 <?php
-$app->group('/meeeting_hours', function () {
+$app->group('/meeting_hours', function () {
   $this->get('/signInList', function ($request, $response, $args) {
     $season = FrcPortal\Season::where('year',2018)->get();
     $users = FrcPortal\User::with(['annual_requirements' => function ($query) {
