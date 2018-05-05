@@ -53,8 +53,8 @@ $app->group('/auth', function () {
           );
         }
       }
-      die((bool) $user != false);
       if($user != false) {
+        die('asdf');
         $queryArr = array();
         if($user->profile_image == '') {
           $queryArr['profile_image'] = $userData['profile_image'];
