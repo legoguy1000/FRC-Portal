@@ -42,7 +42,6 @@ class User extends Eloquent {
 
   public function newQuery() {
       return parent::newQuery()->select('users.*', \DB::raw('CONCAT(users.fname," ",users.lname) AS full_name,
-      schools.*,
       CASE
        WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=0  THEN "Graduated"
        WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=12 THEN "Senior"
