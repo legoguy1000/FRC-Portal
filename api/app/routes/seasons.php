@@ -14,11 +14,10 @@ $app->group('/seasons', function () {
   $this->group('/{year:[0-9]{4}}', function ($request, $response, $args) {
     $this->get('/topHourUsers', function ($request, $response, $args) {
       $year = $args['year'];
-      $season = FrcPortal\Season::where('year',$year);
-
-
-
-      $response = $response->withJson($season);
+      $season = FrcPortal\Season::where('year',$year)->get();
+      $users = FrcPortal\AnnualRequirement::with('users')->where('season_id',$season[0]->season_id)->get();
+      $users = $$users->sortByDesc('total_hours')->values()->slice(0,5);
+      $response = $response->withJson($users);
       return $response;
     });
   });
