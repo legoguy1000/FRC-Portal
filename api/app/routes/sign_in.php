@@ -1,4 +1,5 @@
 <?php
+use \Firebase\JWT\JWT;
 $app->group('/sign_in', function () {
   //Get the list of users and their last sign/out and hours
   $this->get('/list', function ($request, $response, $args) {
@@ -11,7 +12,7 @@ $app->group('/sign_in', function () {
   });
   //Create a new signin token
   $this->post('/authorize', function ($request, $response, $args) {
-    use \Firebase\JWT\JWT;
+
     $args = $request->getParsedBody();
     $user = false;
     if(isset($args['auth_token'])) {
@@ -55,7 +56,6 @@ $app->group('/sign_in', function () {
   });
   //Clock in and Out
   $this->post('', function ($request, $response, $args) {
-    use \Firebase\JWT\JWT;
     $args = $request->getParsedBody();
     if(isset($args['token'])) {
       $key = getIniProp('jwt_signin_key');
