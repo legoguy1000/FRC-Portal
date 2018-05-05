@@ -19,6 +19,15 @@ class Notification extends Eloquent {
   ];
 
   /**
+   * The attributes that should be cast to native types.
+   *
+   * @var array
+   */
+  protected $casts = [
+    'acknowledge' => 'boolean',
+  ];
+
+  /**
   * The attributes that should be hidden for arrays.
   *
   * @var array
