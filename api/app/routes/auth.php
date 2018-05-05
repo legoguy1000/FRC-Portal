@@ -44,10 +44,8 @@ $app->group('/auth', function () {
                 ->where('email', $userData['email'])
                 ->orWhere('team_email', $userData['email'])
                 ->limit(1)->get();
-        if($data-count() > 0) {
-          $user = $data;
-        } else {
-
+        if($data->count() > 0) {
+          $user = $data[0]->users;
         }
         if($user != false) {
           $oauth = FrcPortal\Oauth::firstOrNew(
@@ -80,7 +78,7 @@ $app->group('/auth', function () {
   			$jwt = JWT::encode($token, $key);
         $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'me' => $me);
       }
-      $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.');
+      $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
     }
     $response = $response->withJson($responseData);
     return $response;
