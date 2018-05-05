@@ -11,7 +11,7 @@ $app->group('/seasons', function () {
     $response = $response->withJson($season);
     return $response;
   });
-  $this->group('/{year:[0-9]{4}}', function ($request, $response, $args) {
+  $this->group('/{year:[0-9]{4}}', function () {
     $this->get('/topHourUsers', function ($request, $response, $args) {
       $year = $args['year'];
       $season = FrcPortal\Season::where('year',$year)->get();
