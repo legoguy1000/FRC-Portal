@@ -3,16 +3,16 @@ include('./includes.php');
 
 use \Firebase\JWT\JWT;
 
-$json = file_get_contents('php://input'); 
+$json = file_get_contents('php://input');
 $formData = json_decode($json,true);
 $provider = 'facebook';
-
-$accessTokenArr = file_get_contents('https://graph.facebook.com/v2.11/oauth/access_token?client_id='.$formData['clientId'].'&redirect_uri='.$formData['redirectUri'].'&client_secret=c01575cecdcb97558d1dbe6909fa797a&code='.$formData['code']);
+$secret = getIniProp('facebook_client_secret');
+$accessTokenArr = file_get_contents('https://graph.facebook.com/v2.11/oauth/access_token?client_id='.$formData['clientId'].'&redirect_uri='.$formData['redirectUri'].'&client_secret='.$secret.'&code='.$formData['code']);
 $accessTokenArr = json_decode($accessTokenArr, true);
 
 $fb = new Facebook\Facebook([
     'app_id'  => '1347987445311447',
-    'app_secret' => 'c01575cecdcb97558d1dbe6909fa797a',
+    'app_secret' => $secret,
 	'default_graph_version' => 'v2.11',
 	'default_access_token' => $accessTokenArr['access_token']
 ]);
@@ -21,7 +21,7 @@ try {
 	// If you provided a 'default_access_token', the '{access-token}' is optional.
 	$response = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,gender,picture,age_range');
 	$me = $response->getDecodedBody();
-	
+
 	if(!isset($me['email']) || $me['email'] == '') {
 	//	insertLogs('', 'login', 'error', 'No email address provided by Facebook OAuth2');
 		die(json_encode(array('status'=>false, 'type'=>'error', 'msg'=>'No email address provided by Facebook OAuth2')));
@@ -33,7 +33,7 @@ try {
 	$gender = $me['gender'];
 	$age_min = $me['age_range']['min'];
 	$id = $me['id'];
-	
+
 	$userData = array(
 		'id' => $id,
 		'provider' => $provider,
@@ -44,7 +44,7 @@ try {
 		'gender' => $gender,
 		'age_min' => $age_min
 	);
-	
+
 	$data = array();
 	$data = checkUserLogin($userData);
 	if(!isset($formData['link_account']) || (isset($formData['link_account']) && !$formData['link_account'])) {
