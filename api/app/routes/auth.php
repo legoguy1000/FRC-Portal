@@ -54,7 +54,6 @@ $app->group('/auth', function () {
         }
       }
       if($user != false) {
-
         $queryArr = array();
         if($user->profile_image == '') {
           $queryArr['profile_image'] = $userData['profile_image'];
@@ -67,7 +66,6 @@ $app->group('/auth', function () {
         if(count($queryArr) > 0) {
           FrcPortal\User::where('user_id',  $user->user_id)->update($queryArr);
         }
-        die('asdf');
         $key = getIniProp('jwt_key');
   			$token = array(
   				"iss" => "https://portal-dev.team2363.org",
@@ -78,8 +76,9 @@ $app->group('/auth', function () {
   			);
   			$jwt = JWT::encode($token, $key);
         $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'me' => $me);
+      } else {
+        $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
       }
-      $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
     }
     $response = $response->withJson($responseData);
     return $response;
