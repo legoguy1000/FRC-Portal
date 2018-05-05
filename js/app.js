@@ -487,7 +487,7 @@ angular.module('FrcPortal', [
  	$authProvider.facebook({
 		clientId: '1347987445311447',
 		name: 'facebook',
-		url: '/site/auth_facebook.php',
+		url: '/api/auth/facebook',
 	//	url: '/api/v1/login/facebook',
 		authorizationEndpoint: 'https://www.facebook.com/v2.11/dialog/oauth',
 		redirectUri: window.location.origin+'/',
@@ -499,7 +499,7 @@ angular.module('FrcPortal', [
 		popupOptions: { width: 580, height: 400 }
 	});
 	$authProvider.live({
-		url: '/site/auth_live.php',
+		url: '/api/auth/live.php',
 	//	url: '/api/v1/login/live',
 		clientId: '027f5fe4-87bb-4731-8284-6d44da287677',
 		authorizationEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
