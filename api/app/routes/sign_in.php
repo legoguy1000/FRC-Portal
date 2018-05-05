@@ -123,7 +123,7 @@ $app->group('/sign_in', function () {
             $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'User ID and/or PIN number cannot be blank!');
           }
         } else {
-          $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.')
+          $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
         }
       } catch(\Firebase\JWT\ExpiredException $e){
       	$responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
