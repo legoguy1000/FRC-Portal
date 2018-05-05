@@ -36,7 +36,7 @@ $app->group('/auth', function () {
       }])->where('oauth_id', $id)->where('oauth_provider', $provider)->limit(1)->get();
     }
 
-    $response = $response->withJson($data);
+    $response = $response->withJson($args);
     return $response;
   });
 });
