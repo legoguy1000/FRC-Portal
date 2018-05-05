@@ -19,7 +19,7 @@
 		</md-toolbar>
 		<md-table-container>
 			<table md-table md-row-select ng-model="vm.selected_user" md-progress="vm.promise">
-				<thead md-head md-order="vm.query.order" md-on-reorder="vm.getUsers">
+				<thead md-head md-order="vm.query.order">
 					<tr md-row>
 						<th md-column md-order-by="lname"><span>Name</span></th>
 						<!-- <th md-column md-order-by="user_type"><span>Type</span></th>	 -->
@@ -39,8 +39,8 @@
 							</md-list-item>
 						</td>
 						<!-- <td md-cell>{{user.user_type}}</td> -->
-						<td md-cell><span ng-if="user.time_in">{{user.last_sign_in.time_in_unix*1000 | date:'medium'}}</span></td>
-						<td md-cell><span ng-if="user.time_out">{{user.last_sign_in.time_out_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span ng-if="user.last_sign_in.time_in">{{user.last_sign_in.time_in_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span ng-if="user.last_sign_in.time_out">{{user.last_sign_in.time_out_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell>
 							<span ng-if="user.build_season">{{user.annual_requirements.build_season_hours}}</span>
 							<span ng-if="user.competition_season">{{user.annual_requirements.competition_season_hours}}</span>
