@@ -22,7 +22,7 @@ $config['db']['dbname'] = getIniProp('db_name'); //the mysql database to use
 $config['db']['charset'] = 'utf8';
 $config['db']['collation'] = 'utf8_unicode_ci';
 $config['db']['prefix'] = '';
- 
+ //asdf
 $app = new \Slim\App(['settings' => $config]);
 $container = $app->getContainer();
 /* $container['db'] = function ($c) {
