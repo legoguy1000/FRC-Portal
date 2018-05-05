@@ -175,7 +175,8 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'microsoft';
-    $secret = getIniProp('microsoft_client_secret');
+    //$secret = getIniProp('microsoft_client_secret');
+    $secret = 'ojQO097_}pdsyfCITIU15[(';
     $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
 
     if(isset($args['code'])) {
