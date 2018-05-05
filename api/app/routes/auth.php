@@ -1,7 +1,8 @@
 <?php
 use \Firebase\JWT\JWT;
 $app->group('/auth', function () {
-  $this->post('/google', function ($request, $response, $args) {
+  $this->post('/google', function ($request, $response) {
+    $args = $request->getParsedBody();
     $provider = 'google';
     $client = new Google_Client();
     $client->setAuthConfigFile($_SERVER['DOCUMENT_ROOT'].'/site/includes/secured/google_client_secret.json');
@@ -36,7 +37,7 @@ $app->group('/auth', function () {
       }])->where('oauth_id', $id)->where('oauth_provider', $provider)->limit(1)->get();
     }
 
-    $response = $response->withJson($args);
+    $response = $response->withJson($data);
     return $response;
   });
 });
