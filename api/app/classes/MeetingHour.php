@@ -31,6 +31,10 @@ class MeetingHour extends Eloquent {
   */
   protected $hidden = [];
 
+  protected $attributes = [
+    'time_out' => null,
+  ];
+
   /**
    * The attributes that should be cast to native types.
    *

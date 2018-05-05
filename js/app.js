@@ -284,34 +284,12 @@ angular.module('FrcPortal', [
 .config(function($httpProvider) {
 	$httpProvider.interceptors.push(function authInterceptor($q, $injector) {
 		return {
-			// automatically attach Authorization header
-			request: function(config) {
-				var signinService = $injector.get('signinService');
-				var urlArr = config.url.split('/');
-				if(urlArr[urlArr.length  - 1] == 'signInOut.php') {
-					var token = signinService.getToken();
-					if(token) {
-						config.headers.Authorization = 'Bearer ' + token;
-					}
-					return config;
-				}else {
-					return config;
-				}
-			},
 			// If a token was sent back, save it
 			response: function(res) {
 				var $auth = $injector.get('$auth');
-				var signinService = $injector.get('signinService');
 				var $rootScope = $injector.get('$rootScope');
 				if(res.data.token) {
 					$auth.setToken(res.data.token);
-				} else if (res.data.signin_token) {
-					signinService.saveToken(res.data.signin_token);
-					var data = {
-						'response': res.data,
-						'logout': true
-					}
-					$rootScope.$broadcast('updateSigninStatus',data);
 				}
 				return res;
 			},
@@ -322,44 +300,11 @@ angular.module('FrcPortal', [
 					var $auth = $injector.get('$auth');
 					var $rootScope = $injector.get('$rootScope');
 					console.log(rejection);
-					var fullLogin = true;
-					var urlArr = rejection.config.url.split('/');
-					if(urlArr[urlArr.length  - 1] == 'authorizeSignIn.php') {
-						fullLogin = false;
-					}
 					$mdDialog.show({
 						controller: loginModalController,
 						controllerAs: 'vm',
 						templateUrl: 'views/partials/loginModal.tmpl.html',
 						parent: angular.element(document.body),
-						clickOutsideToClose:true,
-						fullscreen: true // Only for -xs, -sm breakpoints.
-					})
-					.then(function(data) {
-						if(data.auth) {
-							var data = {
-								'allActions': fullLogin,
-							}
-							$rootScope.$broadcast('afterLoginAction',data);
-							return $injector.get('$http')(rejection.config);
-						}
-					}, function() {
-						$log.info('Dialog dismissed at: ' + new Date());
-						$log.error('Authentication Required');
-					});
-				}
-				/* else if (rejection.status === 500) {
-					// Return a new promise
-					var $uibModal = $injector.get('$mdDialog');
-					var $auth = $injector.get('$auth');
-					var $rootScope = $injector.get('$rootScope');
-
-					$mdDialog.show({
-						controller: loginModalController,
-						controllerAs: 'vm',
-						templateUrl: 'views/partials/loginModal.tmpl.html',
-						parent: angular.element(document.body),
-						targetEvent: ev,
 						clickOutsideToClose:true,
 						fullscreen: true // Only for -xs, -sm breakpoints.
 					})
@@ -372,29 +317,7 @@ angular.module('FrcPortal', [
 						$log.info('Dialog dismissed at: ' + new Date());
 						$log.error('Authentication Required');
 					});
-
-
-
-
-					var openLoginModal = function () {
-						var modalInstance = $uibModal.open({
-							animation: true,
-							templateUrl: './views/modals/500ErrorModal.html',
-							controller: '500ErrorModal-ctrl',
-							resolve: {
-								'data':rejection.data
-							}
-						});
-						modalInstance.result.then(function (data) {
-							}, function () {
-								//$log.info('Modal dismissed at: ' + new Date());
-						});
-					};
-					openLoginModal();
-				} */
-				/* If not a 401, do nothing with this error.
-				* This is necessary to make a `responseError`
-				* interceptor a no-op. */
+				}
 				return $q.reject(rejection);
 			}
 		}

@@ -68,7 +68,7 @@ $app->group('/auth', function () {
         }
         $key = getIniProp('jwt_key');
   			$token = array(
-  				"iss" => "https://portal-dev.team2363.org",
+  				"iss" => getIniProp('env_url'),
   				"iat" => time(),
   				"exp" => time()+60*60,
   				"jti" => bin2hex(random_bytes(10)),
@@ -154,7 +154,7 @@ $app->group('/auth', function () {
           }
           $key = getIniProp('jwt_key');
           $token = array(
-            "iss" => "https://portal-dev.team2363.org",
+            "iss" => getIniProp('env_url'),
             "iat" => time(),
             "exp" => time()+60*60,
             "jti" => bin2hex(random_bytes(10)),
@@ -265,7 +265,7 @@ $app->group('/auth', function () {
         }
         $key = getIniProp('jwt_key');
         $token = array(
-          "iss" => "https://portal-dev.team2363.org",
+          "iss" => getIniProp('env_url'),
           "iat" => time(),
           "exp" => time()+60*60,
           "jti" => bin2hex(random_bytes(10)),

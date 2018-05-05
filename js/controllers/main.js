@@ -99,10 +99,7 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 		.then(function(data) {
 			main.isAuthed = data.auth;
 			if(data.auth) {
-				var data = {
-					'allActions': true,
-				}
-				$rootScope.$broadcast('afterLoginAction',data);
+				$rootScope.$broadcast('afterLoginAction');
 			}
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
@@ -230,9 +227,6 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 
 	if(main.isAuthed) {
 		console.info('I\'m Authed');
-		var data = {
-			'allActions': true,
-		}
 		loginActions();
 	}
 
@@ -244,11 +238,9 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 		$auth.logout();
 	}
 
-	$rootScope.$on('afterLoginAction', function(event, data) {
+	$rootScope.$on('afterLoginAction', function(event) {
 		console.info('Login Initiated');
-		if(data.allActions) {
-			loginActions();
-		}
+		loginActions();
 	});
 
 
@@ -263,12 +255,6 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 			$rootScope.$broadcast('logOutAction',data);
 		}
 	});
-	$rootScope.$on('updateSigninStatus', function(event, data) {
-		console.info('LogOut Initiated');
-		main.signInAuthed = signinService.isAuthed();
-		if(data.response.status && data.logout) {
-			main.logout();
-		}
-	});
+
 
 }

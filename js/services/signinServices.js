@@ -27,7 +27,7 @@ angular.module('FrcPortal')
 			if(token) {
 				var params = this.parseJwt(token);
 				return Math.round(new Date().getTime() / 1000) <= params.exp;
-			} 
+			}
 			else {
 				return false;
 			}
@@ -35,9 +35,15 @@ angular.module('FrcPortal')
 		logout: function() {
 			$window.localStorage.removeItem('signin_token');
 		},
-		authorizeSignIn: function () {
+		signInUserList: function () {
+			return $http.get('api/sign_in/list')
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		authorizeSignIn: function (formData) {
 			this.logout();
-			return $http.post('site/authorizeSignIn.php')
+			return $http.post('site/authorizeSignIn.php',formData)
 			.then(function(response) {
 				return response.data;
 			});

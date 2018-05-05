@@ -19,12 +19,6 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		signInUserList: function () {
-			return $http.get('api/meeting_hours/signInList')
-			.then(function(response) {
-				return response.data;
-			});
-		},
 		/* getUserById: function (id) {
 			return $http.get('api/v1/users/'+id)
 			.then(function(response) {

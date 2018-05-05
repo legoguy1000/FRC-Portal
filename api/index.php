@@ -67,7 +67,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
 
 include('./app/routes/auth.php');
 include('./app/routes/seasons.php');
-include('./app/routes/meeting_hours.php');
+include('./app/routes/sign_in.php');
 
 
 
