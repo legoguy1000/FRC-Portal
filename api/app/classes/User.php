@@ -94,7 +94,7 @@ class User extends Eloquent {
   /**
   * Get the School.
   */
-  public function schools() {
+  public function school() {
     return $this->belongsTo('FrcPortal\School', 'school_id', 'school_id');
   }
   /**

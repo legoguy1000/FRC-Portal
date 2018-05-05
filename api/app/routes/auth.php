@@ -31,12 +31,12 @@ $app->group('/auth', function () {
     		'age_min' => $age_min
     	);
 
-      $data = FrcPortal\User::with(['schools','oauth' => function($q){
-        $q->where('oauth_id', $id)->where('oauth_provider', $provider);
-      }])->where('status','=',true)->limit(1)->get();
+      $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
+        $q->where('status','=','1');
+      }])->where('oauth_id', $id)->where('oauth_provider', $provider)->limit(1)->get();
     }
 
-    $response->getBody()->write(json_encode($data));
+    $response = $response->withJson($data);
     return $response;
   });
 });
