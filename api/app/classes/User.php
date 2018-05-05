@@ -136,7 +136,7 @@ class User extends Eloquent {
   /**
   * Get the Notification Preferences
   */
-  public function notificatios() {
+  public function notifications() {
     return $this->hasMany('FrcPortal\Notification', 'user_id', 'user_id');
   }
 }
