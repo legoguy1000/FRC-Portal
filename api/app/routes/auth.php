@@ -37,7 +37,7 @@ $app->group('/auth', function () {
       $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
         $q->where('status','=','1');
       }])->where('oauth_id', $id)->where('oauth_provider', $provider)->limit(1)->get();
-      if($data-count() > 0) {
+      if($data->count() > 0) {
         $user = $data['users'];
       } else {
         $data = FrcPortal\User::with(['school'])
