@@ -20,7 +20,7 @@ angular.module('FrcPortal')
 			});
 		},
 		signInUserList: function () {
-			return $http.get('site/signInUserList.php')
+			return $http.get('api/meeting_hours/signInList')
 			.then(function(response) {
 				return response.data;
 			});

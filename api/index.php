@@ -67,6 +67,10 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
 
 include('./app/routes/auth.php');
 include('./app/routes/seasons.php');
+include('./app/routes/meeting_hours.php');
+
+
+
 $app->group('/users', function () {
   $this->get('', function ($request, $response, $args) {
     $users = FrcPortal\User::with('schools')->get();
