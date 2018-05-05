@@ -3,7 +3,7 @@ namespace FrcPortal;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class NotificationPreferences extends Eloquent {
+class NotificationPreference extends Eloquent {
   //table name
   protected $table = 'notification_preferences';
   //Use Custom Primary Key
