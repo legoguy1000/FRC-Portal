@@ -168,6 +168,10 @@ $app->group('/auth', function () {
     	} else {
         $responseData = array('status'=>false, 'msg'=>'No email address provided by Facebook OAuth2');
       }
+    } catch(Facebook\Exceptions\FacebookResponseException $e) {
+      $responseData = array('status'=>false, 'type'=>'error', 'msg'=>'Facebook Login Error', 'error'=>$e->getMessage());
+    } catch(Facebook\Exceptions\FacebookSDKException $e) {
+      $responseData = array('status'=>false, 'type'=>'error', 'msg'=>'Facebook Login Error', 'error'=>$e->getMessage());
     }
     $response = $response->withJson($responseData);
     return $response;
