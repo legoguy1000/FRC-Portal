@@ -135,6 +135,9 @@ class User extends Eloquent {
   public function meeting_hours() {
     return $this->hasMany('FrcPortal\MeetingHour', 'user_id', 'user_id');
   }
+  public function last_sign_in() {
+    return $this->hasOne('FrcPortal\MeetingHour', 'user_id', 'user_id')->orderBy('time_in', 'DESC');
+  }
   /**
   * Get the OAuth IDs
   */
