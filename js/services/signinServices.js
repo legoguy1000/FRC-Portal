@@ -43,7 +43,7 @@ angular.module('FrcPortal')
 		},
 		authorizeSignIn: function (formData) {
 			this.logout();
-			return $http.post('site/authorizeSignIn.php',formData)
+			return $http.post('api/sign_in/authorize',formData)
 			.then(function(response) {
 				return response.data;
 			});
