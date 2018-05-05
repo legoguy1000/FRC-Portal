@@ -5,7 +5,7 @@ $app->group('/meeting_hours', function () {
     $users = FrcPortal\User::with(['annual_requirements' => function ($query) {
       $query->where('season_id', $season[0]->season_id); // fields from comments table,
     }, 'last_sign_in'])->where('status','1')->get();
-    $response = $response->withJson($users);
+    $response = $response->withJson($season);
     return $response;
   });
 });
