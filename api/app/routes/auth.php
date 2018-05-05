@@ -98,8 +98,8 @@ $app->group('/auth', function () {
     ]);
     try {
       $data = array();
-      $response = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,gender,picture,age_range');
-    	$me = $response->getDecodedBody();
+      $FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,gender,picture,age_range');
+    	$me = $FBresponse->getDecodedBody();
       if(isset($me['email']) || $me['email'] != '') {
         $email = $me['email'];
       	$fname = $me['first_name'];
