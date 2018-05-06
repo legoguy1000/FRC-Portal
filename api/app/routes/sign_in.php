@@ -80,10 +80,10 @@ $app->group('/sign_in', function () {
               if($hours->count() > 0) {
                 $hour = $hours[0];
                 $hours_id = $hour->hours_id;
-                $hour->time_out = $date;
+                $hour->time_out = date('Y-m-d H:i:s',$date);
                 if($hour->save()) {
             			/*$emailData = array(
-            				'signin_time' => date('M d, Y H:i:s A', $date),
+            				'signin_time' => date('M d, Y H:i A', $date),
             				'signin_out' => 'sign_out'
             			);
             			$emailInfo = emailSignInOut($user_id,$emailData);
@@ -104,20 +104,20 @@ $app->group('/sign_in', function () {
                     $query->where('season_id', $season[0]->season_id); // fields from comments table,
                   }, 'last_sign_in'])->where('status','1')->get();
 
-            			$responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i:s A', $date), 'signInList'=>$users);
+            			$responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
             		} else {
             		$responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out');
             		}
               } else {
                 $hours_id = uniqid();
-                $hours = FrcPortal\MeetingHour::create(['hours_id' => $hours_id, 'user_id' => $user_id, 'time_in' => $date]);
+                $hours = FrcPortal\MeetingHour::create(['hours_id' => $hours_id, 'user_id' => $user_id, 'time_in' => date('Y-m-d H:i:s',$date)]);
                 if($hours) {
                   $season = FrcPortal\Season::where('year',date('Y'))->get();
                   $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
                     $query->where('season_id', $season[0]->season_id); // fields from comments table,
                   }, 'last_sign_in'])->where('status','1')->get();
 
-            			$responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i:s A', $date), 'signInList'=>$users);
+            			$responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
             		} else {
                   $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing out');
             		}
