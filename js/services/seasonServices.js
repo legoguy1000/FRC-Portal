@@ -40,7 +40,7 @@ angular.module('FrcPortal')
 			});
 		},
 		updateSeasonMembershipForm: function (season_id) {
-			return $http.put('api/season/'+season_id+/'updateMembershipForm')
+			return $http.put('api/season/'+season_id+'/updateMembershipForm')
 			.then(function(response) {
 				return response.data;
 			});
