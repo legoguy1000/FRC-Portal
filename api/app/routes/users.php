@@ -21,13 +21,13 @@ $app->group('/users', function () {
   		} else {
   		//	$queryArr[] = '(users.fname LIKE '.db_quote('%'.$filter.'%').')';
   		//	$queryArr[] = '(users.lname LIKE '.db_quote('%'.$filter.'%').')';
-  			$queryArr[] = '(users.email LIKE % '.$filter.'%)';
-  			$queryArr[] = '(users.user_type LIKE %'.$filter.'%)';
-  			$queryArr[] = '(users.gender LIKE %'.$filter.'%)';
-  			$queryArr[] = '(full_name LIKE %'.$filter.'%)';
+  			$queryArr[] = '(users.email LIKE "%'.$filter.'%")';
+  			$queryArr[] = '(users.user_type LIKE "%'.$filter.'%")';
+  			$queryArr[] = '(users.gender LIKE "%'.$filter.'%")';
+  			$queryArr[] = '(full_name LIKE "%'.$filter.'%")';
   			//$queryArr[] = '(school_name LIKE '.db_quote('%'.$filter.'%').')';
   			//$queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
-  			$queryArr[] = '(student_grade LIKE %'.$filter.'%)';
+  			$queryArr[] = '(student_grade LIKE "%'.$filter.'%")';
   		}
   	}
 
