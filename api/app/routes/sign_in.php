@@ -66,7 +66,7 @@ $app->group('/sign_in', function () {
     if(isset($args['token'])) {
       $key = getIniProp('jwt_signin_key');
       try{
-      	$decoded = JWT::decode($jwt, $key, array('HS256'));
+      	$decoded = JWT::decode($args['token'], $key, array('HS256'));
         $data = (array) $decoded;
         if(isset($data['jti']) || $data['jti'] != '') {
           $jti = $data['jti'];
