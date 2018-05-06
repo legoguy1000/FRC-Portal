@@ -82,7 +82,7 @@ $app->group('/users', function () {
   $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $user_id = $args['user_id'];
     $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
-    $user = FrcPortal\User::with('schools')->find($user_id);
+    $user = FrcPortal\User::with('school')->find($user_id);
     if($reqsBool) {
       $user->annual_requirements = FrcPortal\Season::with(['annual_requirements' => function ($query) {
             		$query->where('user_id','=',$user_id); // fields from comments table,
