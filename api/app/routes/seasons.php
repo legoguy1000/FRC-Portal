@@ -99,8 +99,6 @@ $app->group('/seasons', function () {
       return $response;
     }
     $spreadsheetId = getSeasonMembershipForm($formData['year']);
-  	$spreadsheetId = $spreadsheetId==false ? '':$spreadsheetId;
-
     $start_date = new DateTime($formData['start_date']);
     $bag_day = new DateTime($formData['bag_day']);
     $end_date = new DateTime($formData['end_date']);
@@ -113,8 +111,8 @@ $app->group('/seasons', function () {
       $newSeason->start_date = $start_date->format('Y-m-d');
       $newSeason->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
       $newSeason->end_date = $end_date->format('Y-m-d'." 23:59:59");
-      $newSeason->join_spreadsheet = $spreadsheetId;
-      $newSeason->game_logo = $formData['game_logo'];
+      $newSeason->join_spreadsheet = $spreadsheetId==false ? '':$spreadsheetId;
+      $newSeason->game_logo = !is_null($formData['game_logo']) ? $formData['game_logo']:'';
       if($newSeason->save()) {
         $seasons = FrcPortal\Season::all();
         $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$seasons);
