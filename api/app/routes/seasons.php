@@ -51,11 +51,29 @@ $app->group('/seasons', function () {
     $response = $response->withJson($data);
     return $response;
   });
-  $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $season_id = $args['season_id'];
-    $season = FrcPortal\Season::find($season_id);
-    $response = $response->withJson($season);
+  $this->group('/{season_id:[a-z0-9]{13}}', function () {
+    $this->get('', function ($request, $response, $args) {
+      $season_id = $args['season_id'];
+      $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
+      $season = FrcPortal\Season::find($season_id);
+      if($reqsBool) {
+        $season->users = FrcPortal\Users::with(['annual_requirements' => function ($query) use ($season_id) {
+                        		$query->where('season_id','=',$season_id);
+                          }])->get();
+      }
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->get('/annual_requirements', function ($request, $response, $args) {
+      $season_id = $args['season_id'];
+      $season = FrcPortal\Users::with(['annual_requirements' => function ($query) use ($season_id) {
+                          $query->where('season_id','=',$season_id);
+                        }])->get();
+    $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+    $response = $response->withJson($responseArr);
     return $response;
+    });
   });
   $this->group('/{year:[0-9]{4}}', function () {
     $this->get('/topHourUsers', function ($request, $response, $args) {

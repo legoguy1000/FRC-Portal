@@ -21,20 +21,6 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			vm.filter.form.$setPristine();
 		}
 	};
-
-	vm.season_id = $stateParams.season_id;
-	vm.season = {};
-	vm.getSeason = function () {
-		vm.loading = true;
-		vm.promise = seasonsService.getSeason(vm.season_id).then(function(response){
-			vm.season = response.data;
-			//$scope.main.title += ' - '+vm.season.game_name;
-			vm.loading = false;
-		});
-	};
-	vm.selectedUsers = [];
-
-	vm.getSeason();
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
 		filter: '',
@@ -43,6 +29,27 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		page: 1
 	};
 	vm.fabOpen = false;
+	vm.selectedUsers = [];
+	vm.season_id = $stateParams.season_id;
+	vm.season = {};
+	vm.users = null;
+	vm.getSeason = function () {
+		vm.loading = true;
+		vm.promise = seasonsService.getSeason(vm.season_id).then(function(response){
+			vm.season = response.data;
+			//$scope.main.title += ' - '+vm.season.game_name;
+			vm.loading = false;
+		});
+	};
+	vm.getSeason();
+
+	vm.getUserAnnualRequirements = function() {
+		vm.loadingReqs = seasonsService.getSeasonAnnualRequirements(vm.season_id).then(function(response){
+			vm.users = response.data;
+		});
+	}
+	vm.getUserAnnualRequirements();
+
 
 	vm.toggleAnnualReqs = function (req) {
 		var data = {

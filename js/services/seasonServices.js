@@ -14,8 +14,15 @@ angular.module('FrcPortal')
 			});
 		},
 		getSeason: function (season_id) {
-			var sid = season_id != undefined ? season_id: '';
-			return $http.get('site/getSeason.php?season_id='+sid)
+			var season_id = season_id != undefined && season_id != null ? season_id: '';
+			return $http.get('api/seasons/'+season_id)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		getSeasonAnnualRequirements: function (season_id) {
+			var season_id = season_id != undefined && season_id != null ? season_id:'';
+			return $http.get('api/seasons/'+season_id+'/annual_requirements')
 			.then(function(response) {
 				return response.data;
 			});

@@ -96,7 +96,7 @@
 					<md-button class="md-icon-button" ng-click="vm.showFilter()">
 						<md-icon>filter_list</md-icon>
 					</md-button>
-					<md-button class="md-icon-button" ng-click="vm.getUsers()">
+					<md-button class="md-icon-button" ng-click="vm.getUserAnnualRequirements()">
 						<md-icon>refresh</md-icon>
 					</md-button>
 					</div>
@@ -127,7 +127,7 @@
 						</tr>
 					</thead>
 					<tbody md-body>
-						<tr md-row md-select="user" md-select-id="user_id" md-auto-select  ng-repeat="user in vm.season.requirements.data | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered">
+						<tr md-row md-select="user" md-select-id="user_id" md-auto-select  ng-repeat="user in vm.users | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered">
 							<td md-cell>
 								<md-list-item style="padding: 0px;">
 									{{user.full_name}}
@@ -166,7 +166,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.season.requirements.data | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
+				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.users | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
 			</md-table-container>
 			<md-fab-speed-dial md-open="vm.fabOpen" md-direction="up" class="md-scale md-fab-bottom-right">
 				<md-fab-trigger>
