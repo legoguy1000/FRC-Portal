@@ -1,4 +1,5 @@
 <?php
+use \DateTime;
 $app->group('/seasons', function () {
   $this->get('', function ($request, $response, $args) {
     $seasons = array();
@@ -89,14 +90,21 @@ $app->group('/seasons', function () {
     }
     $spreadsheetId = getSeasonMembershipForm($formData['year']);
   	$spreadsheetId = $spreadsheetId==false ? '':$spreadsheetId;
+
+    $start_date = new DateTime($formData['start_date']);
+    $bag_day = new DateTime($formData['bag_day']);
+    $end_date = new DateTime($formData['end_date']);
+
     $season = FrcPortal\Season::firstOrCreate(
       ['year' => $formData['year']],
-      ['season_id' => uniqid(), 'game_name' => $formData['game_name'], 'start_date' => $formData['start_date'], 'bag_day' => $formData['bag_day'], 'end_date' => $formData['end_date'], 'game_logo' => $formData['game_logo'], 'join_spreadsheet' => $spreadsheetId]
+      ['season_id' => uniqid(), 'game_name' => $formData['game_name'], 'start_date' => $start_date->format('Y-m-d'), 'bag_day' => $bag_day->format('Y-m-d'." 23:59:59"), 'end_date' => $end_date->format('Y-m-d'." 23:59:59"), 'game_logo' => $formData['game_logo'], 'join_spreadsheet' => $spreadsheetId]
     );
-
-
-
-
+    if($season) {
+      $seasons = FrcPortal\Season::all();
+      $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$seasons);
+    }
+    $response = $response->withJson($responseArr);
+    return $response;
   });
   $this->put('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $season_id = $args['season_id'];
