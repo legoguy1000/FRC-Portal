@@ -155,7 +155,7 @@
 			</md-table-container>
 		</div>
 		<div>
-			<pre>{{vm.seasonInfo | json}}
+			<pre>{{vm.seasonInfo | orderBy: '-year' | json}}
 		</div>
 	</md-content>
 </div>
