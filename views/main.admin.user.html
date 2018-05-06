@@ -114,7 +114,7 @@
 						</tr>
 					</thead>
 					<tbody md-body>
-						<tr md-row ng-repeat="season in vm.seasonInfo  | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+						<tr md-row ng-repeat="season in vm.seasonInfo | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 							<td md-cell>
 								<md-list-item style="padding: 0px;">
 									<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
@@ -154,8 +154,8 @@
 				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.seasonInfo.length}}" md-page-select md-boundary-links></md-table-pagination></md-content>
 			</md-table-container>
 		</div>
-		<div>
+	<!--	<div>
 			<pre>{{vm.seasonInfo | orderBy: '-year' | json}}
-		</div>
+		</div> -->
 	</md-content>
 </div>
