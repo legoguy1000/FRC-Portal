@@ -21,7 +21,7 @@ $app->group('/sign_in', function () {
       try {
   			$decoded = JWT::decode($jwt, $key, array('HS256'));
         $user = $decoded->data;
-  		} catch(\Firebase\JWT\ExpiredException $e){elseif($die) {
+  		} catch(\Firebase\JWT\ExpiredException $e) {
   			$responseArr = array('status'=>false, 'msg'=>'Authorization Error. '.$e->getMessage());
   		} catch(\Firebase\JWT\SignatureInvalidException $e){
   			$responseArr = array('status'=>false, 'msg'=>'Authorization Error. '.$e->getMessage())
