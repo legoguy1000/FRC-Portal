@@ -33,9 +33,9 @@ $app->group('/seasons', function () {
     }
 
     if($filter != '' ) {
-      $seasons = FrcPortal\User::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $seasons = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     } else {
-      $seasons = FrcPortal\User::orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $seasons = FrcPortal\Season::orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     }
 
 
