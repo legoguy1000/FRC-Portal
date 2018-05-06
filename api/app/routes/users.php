@@ -33,10 +33,12 @@ $app->group('/users', function () {
 
   	if(count($queryArr) > 0) {
   		$queryStr = implode(' OR ',$queryArr);
-  	}
+      $users = FrcPortal\User::havingRaw($queryStr)->get();
+      $totalNum = count($users);
+  	} else {
+      $totalNum = FrcPortal\User::count();
+    }
 
-    $users = FrcPortal\User::havingRaw($queryStr)->get();
-    $totalNum = count($users);
 
 
     $orderBy = '';
@@ -54,7 +56,11 @@ $app->group('/users', function () {
       $limit = $totalNum;
     }
 
-    $users = FrcPortal\User::with('school')->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+    if($filter != '' ) {
+      $users = FrcPortal\User::with('school')->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+    } else {
+      $users = FrcPortal\User::with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+    }
 
 
     $data['data'] = $users;
