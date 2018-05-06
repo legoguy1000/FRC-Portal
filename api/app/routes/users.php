@@ -137,7 +137,11 @@ $app->group('/users', function () {
   $this->delete('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $user_id = $args['user_id'];
     $user = FrcPortal\User::destroy($user_id);
-    $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $user);
+    if($user) {
+      $responseArr = array('status'=>true, 'msg'=>'User Deleted', 'data' => $user);
+    } else {
+      $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $user);
+    }
     $response = $response->withJson($responseArr);
     return $response;
   });
