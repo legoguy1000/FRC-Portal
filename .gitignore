@@ -12,4 +12,3 @@ config.ini
 deploy.log
 test.php
 secured/
-/.htaccess
