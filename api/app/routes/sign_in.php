@@ -76,7 +76,7 @@ $app->group('/sign_in', function () {
               $user_id = $user[0]->user_id;
               $name = $user[0]->full_name;
               $date = time();
-              $hours = FrcPortal\MeeetingHour::where('user_id',$user_id)->whereNotNull('time_in')->whereNull('time_out')->orderBy('time_in','DESC')->limit(1)->get();
+              $hours = FrcPortal\MeetingHour::where('user_id',$user_id)->whereNotNull('time_in')->whereNull('time_out')->orderBy('time_in','DESC')->limit(1)->get();
               if($hours->count() > 0) {
                 $hours_id = $hours->hours_id;
                 $hour = $hours[0];
@@ -110,7 +110,7 @@ $app->group('/sign_in', function () {
             		}
               } else {
                 $hours_id = uniqid();
-                $hours = FrcPortal\MeeetingHour::create(['hours_id' => $hours_id, 'user_id' => $user_id, 'time_in' => $date]);
+                $hours = FrcPortal\MeetingHour::create(['hours_id' => $hours_id, 'user_id' => $user_id, 'time_in' => $date]);
                 if($hours) {
                   $season = FrcPortal\Season::where('year',date('Y'))->get();
                   $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
