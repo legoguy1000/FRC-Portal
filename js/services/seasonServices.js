@@ -40,21 +40,21 @@ angular.module('FrcPortal')
 			});
 		},
 		updateSeasonMembershipForm: function (season_id) {
-			return $http.put('api/season/'+season_id+'/updateMembershipForm')
+			return $http.put('api/seasons/'+season_id+'/updateMembershipForm')
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		updateSeason: function (formData) {
 			var season_id = formData.season_id != undefined && formData.season_id != null ? formData.season_id:'';
-			return $http.put('api/season/'+season_id,formData)
+			return $http.put('api/seasons/'+season_id,formData)
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		deleteSeason: function (formData) {
 			var season_id = formData.season_id != undefined && formData.season_id != null ? formData.season_id:'';
-			return $http.delete('api/season/'+season_id)
+			return $http.delete('api/seasons/'+season_id)
 			.then(function(response) {
 				return response.data;
 			});
