@@ -1,5 +1,4 @@
 <?php
-use \DateTime;
 $app->group('/seasons', function () {
   $this->get('', function ($request, $response, $args) {
     $seasons = array();
