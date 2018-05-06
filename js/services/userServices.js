@@ -88,8 +88,9 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		deleteUser: function (formData) {
-			return $http.post('site/deleteUser.php',formData)
+		deleteUser: function (user_id) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			return $http.delete('api/users/'+user_id)
 			.then(function(response) {
 				return response.data;
 			});

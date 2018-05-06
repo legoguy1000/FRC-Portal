@@ -75,11 +75,7 @@ $app->group('/users', function () {
     $response = $response->withJson($data);
     return $response;
   });
-  $this->post('', function ($request, $response, $args) {
-    //$user = FrcPortal\User::Create(['user_id'=>uniqid(),'fname' => "Ahmed", 'lname' => "Ahmed", 'email' => "ahmed.khan@lbs.com"]);
-    //$response->getBody()->write(json_encode('Add new user'));
-    //return $response;
-  });
+  //$this->post('', function ($request, $response, $args) { });
   $this->group('/{user_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
       $user_id = $args['user_id'];
@@ -140,7 +136,9 @@ $app->group('/users', function () {
   });
   $this->delete('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $user_id = $args['user_id'];
-    $response->getBody()->write(json_encode('Delete User '.$user_id));
+    $user = FrcPortal\User::::destroy($user_id);
+    $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $user);
+    $response = $response->withJson($responseArr);
     return $response;
   });
 });

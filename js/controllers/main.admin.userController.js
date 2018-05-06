@@ -69,7 +69,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 		usersService.updateUserPersonalInfo(data).then(function(response) {
 			vm.loadingUser = false;
 			if(response.status) {
-				$scope.main.userInfo = vm.userInfo;
+
 			}
 			$mdToast.show(
 	      $mdToast.simple()
@@ -91,7 +91,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
           .ok('Delete')
           .cancel('Cancel');
     $mdDialog.show(confirm).then(function() {
-			usersService.deleteUser(data).then(function(response) {
+			usersService.deleteUser(vm.userInfo.user_id).then(function(response) {
 				if(response.status) {
 					$mdDialog.show(
 			      $mdDialog.alert()
