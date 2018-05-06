@@ -39,6 +39,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		};
 		if($auth.isAuthenticated()) {
 			data.auth_token = $auth.getToken();
+			sendAuth(data);
 		} else {
 			var confirm = $mdDialog.prompt()
 	      .title('Please enter your code to authorize sign in.')
@@ -51,8 +52,11 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	      .cancel('Cancel');
 				$mdDialog.show(confirm).then(function(result) {
 		      data.auth_code = result;
+					sendAuth(data);
 		    }, function() {});
 		}
+	}
+	function sendAuth(data) {
 		signinService.authorizeSignIn(data).then(function(response) {
 			var dialog = $mdDialog.alert()
 									.clickOutsideToClose(true)
