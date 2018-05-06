@@ -43,7 +43,7 @@ $app->group('/users', function () {
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
-  	if(in_array($orderCol,array('full_name','fname','lname','email','user_type','gender','schoool_name'))) {
+  	if(in_array($orderCol,array('full_name','fname','lname','email','user_type','gender','school_name'))) {
   		$orderBy = 'ASC';
   		if($order[0] == '-') {
   			$orderBy = 'DESC';
@@ -59,7 +59,7 @@ $app->group('/users', function () {
     if($filter != '' ) {
       $users = FrcPortal\User::with('school')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     } else {
-      $users = FrcPortal\User::with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $users = FrcPortal\User::with('school')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     }
 
 
