@@ -49,7 +49,7 @@ angular.module('FrcPortal')
 			});
 		},
 		deauthorizeSignIn: function (formData) {
-			return $http.post('site/deauthorizeSignIn.php',formData)
+			return $http.post('api/sign_in/deauthorize',formData)
 			.then(function(response) {
 				return response.data;
 			});

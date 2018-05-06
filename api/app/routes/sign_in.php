@@ -56,8 +56,8 @@ $app->group('/sign_in', function () {
   });
   //Deauthorize the current signin token
   $this->post('/deauthorize', function ($request, $response, $args) {
-
-    $response = $response->withJson($users);
+    $responseArr = array();
+    $response = $response->withJson($responseArr);
     return $response;
   });
   //Clock in and Out
