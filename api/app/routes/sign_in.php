@@ -78,8 +78,8 @@ $app->group('/sign_in', function () {
               $date = time();
               $hours = FrcPortal\MeetingHour::where('user_id',$user_id)->whereNotNull('time_in')->whereNull('time_out')->orderBy('time_in','DESC')->limit(1)->get();
               if($hours->count() > 0) {
-                $hours_id = $hours->hours_id;
                 $hour = $hours[0];
+                $hours_id = $hour->hours_id;
                 $hour->time_out = $date;
                 if($hour->save()) {
             			/*$emailData = array(
