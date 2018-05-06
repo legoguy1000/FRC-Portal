@@ -104,17 +104,17 @@
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
 							<th md-column md-order-by="year"><span>Season</span></th>
-							<th md-column><span>Join Team</span></th>
-							<th md-column><span>STIMS/TIMS</span></th>
-							<th md-column><span>Pay Dues</span></th>
-							<th md-column><span>Build Season Hours</span></th>
-							<th md-column><span>Competition Season Hours</span></th>
-							<th md-column><span>Off Season Hours</span></th>
-							<th md-column><span>Total Annual Hours</span></th>
+							<th md-column md-order-by="annual_requirements[0].join_team"><span>Join Team</span></th>
+							<th md-column md-order-by="annual_requirements[0].stims"><span>STIMS/TIMS</span></th>
+							<th md-column md-order-by="annual_requirements[0].dues"><span>Pay Dues</span></th>
+							<th md-column md-order-by="annual_requirements[0].build_season_hours"><span>Build Season Hours</span></th>
+							<th md-column md-order-by="annual_requirements[0].competition_season_hours"><span>Competition Season Hours</span></th>
+							<th md-column md-order-by="annual_requirements[0].off_season_hours"><span>Off Season Hours</span></th>
+							<th md-column md-order-by="annual_requirements[0].total_hours"><span>Total Annual Hours</span></th>
 						</tr>
 					</thead>
 					<tbody md-body>
-						<tr md-row ng-repeat="season in vm.seasonInfo | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+						<tr md-row ng-repeat="season in vm.seasonInfo | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 							<td md-cell>
 								<md-list-item style="padding: 0px;">
 									<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
