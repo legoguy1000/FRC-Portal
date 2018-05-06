@@ -97,7 +97,9 @@ $app->group('/users', function () {
     $this->group('/annual_requirements', function () {
       $this->get('', function ($request, $response, $args) {
         $user_id = $args['user_id'];
-        $user = FrcPortal\Season::all();
+        $user = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
+                  $query->where('user_id','=',$user_id); // fields from comments table,
+                }])->get();
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
