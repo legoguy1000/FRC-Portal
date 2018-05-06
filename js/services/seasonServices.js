@@ -21,7 +21,7 @@ angular.module('FrcPortal')
 			});
 		},
 		addSeason: function (formData) {
-			return $http.post('site/addSeason.php',formData)
+			return $http.post('api/seasons',formData)
 			.then(function(response) {
 				return response.data;
 			});
