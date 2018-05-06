@@ -57,7 +57,6 @@ $app->group('/users', function () {
     $users->get();
 
     $data['data'] = $users;
-    $data['query'] = $query;
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
 
