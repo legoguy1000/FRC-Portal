@@ -33,7 +33,7 @@ $app->group('/users', function () {
 
   	if(count($queryArr) > 0) {
   		$queryStr = implode(' OR ',$queryArr);
-      $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->select('users.*', 'schools.school_name', 'schools.abv')->havingRaw($queryStr)->get();
+      $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->select(newQuery(), 'schools.school_name', 'schools.abv')->havingRaw($queryStr)->get();
       $totalNum = count($users);
   	} else {
       $totalNum = FrcPortal\User::count();
