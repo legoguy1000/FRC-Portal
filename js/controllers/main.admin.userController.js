@@ -7,7 +7,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 
 	vm.user_id = $stateParams.user_id;
 	vm.userInfo = {};
-	vm.seasonInfo = undefined;
+	vm.seasonInfo = null;
 	vm.loadingUser = false;
 
   vm.selectedItem  = null;
@@ -15,7 +15,6 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
   vm.querySearch   = querySearch;
 	vm.notificationEndpoints = [];
 	vm.linkedAccounts = [];
-	vm.seasonInfo = {};
 	vm.loadingDevices = false;
 	vm.showPastReqs = false;
 	vm.query = {
