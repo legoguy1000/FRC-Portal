@@ -25,7 +25,7 @@ $app->group('/users', function () {
       }
     }
 */
-    $totalNum = FrcPortal\User::with('schools')->count();
+    $totalNum = FrcPortal\User::count();
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
   	if(in_array($orderCol,array('full_name','fname','lname','email','user_type','gender','schoool_name'))) {
@@ -40,7 +40,7 @@ $app->group('/users', function () {
   	} elseif($limit == 0) {
       $limit = $totalNum;
     }
-    $users = FrcPortal\User::with('schools')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+    $users = FrcPortal\User::with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
     $data['data'] = $users;
     $data['query'] = $query;
