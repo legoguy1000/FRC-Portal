@@ -118,7 +118,24 @@ $app->group('/users', function () {
   });
   $this->put('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $user_id = $args['user_id'];
-    $response->getBody()->write(json_encode('Update User '.$user_id));
+    $formData = $request->getParsedBody();
+    $user = FrcPortal\User::find($user_id);
+    $user->fname = $formData['fname'];
+    $user->lname = $formData['lname'];
+    $user->email = $formData['email'];
+    $user->team_email = $formData['team_email'];
+    $user->phone = $formData['phone'];
+    $user->user_type = $formData['user_type'];
+    $user->gender = $formData['gender'];
+    if($formData['user_type'] == 'Student') {
+      $user->school_id = $formData['school_id'];
+      $user->grad_year = $formData['grad_year'];
+    }
+    $user->admin = $formData['admin'];
+    $user->status = $formData['status'];
+    $user->save();
+    $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
+    $response = $response->withJson($responseArr);
     return $response;
   });
   $this->delete('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {

@@ -26,7 +26,8 @@ angular.module('FrcPortal')
 			});
 		}, */
 		updateUserPersonalInfo: function (formData) {
-			return $http.post('site/updateUserPersonalInfo.php',formData)
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			return $http.put('api/users/'+user_id,formData)
 			.then(function(response) {
 				return response.data;
 			});

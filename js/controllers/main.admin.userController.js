@@ -13,10 +13,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
   vm.selectedItem  = null;
   vm.searchText    = null;
   vm.querySearch   = querySearch;
-	vm.notificationEndpoints = [];
-	vm.linkedAccounts = [];
-	vm.loadingDevices = false;
-	vm.showPastReqs = false;
+
 	vm.query = {
 		filter: '',
 		limit: 1,
@@ -55,10 +52,23 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 
 	vm.updateUser = function() {
 		vm.loadingUser = true;
-		usersService.updateUserPersonalInfo(vm.userInfo).then(function(response) {
+		var data = {
+			fname: vm.userInfo.fname,
+			lname: vm.userInfo.lname,
+			email: vm.userInfo.email,
+			team_email: vm.userInfo.team_email,
+			phone: vm.userInfo.phone,
+			user_type: vm.userInfo.user_type,
+			gender: vm.userInfo.gender,
+			school_id: vm.userInfo.school.school_id,
+			grad_year: vm.userInfo.school.grad_year,
+			admin: vm.userInfo.school.admin,
+			status: vm.userInfo.school.status,
+		}
+		usersService.updateUserPersonalInfo(data).then(function(response) {
 			vm.loadingUser = false;
 			if(response.status) {
-
+				$scope.main.userInfo = vm.userInfo;
 			}
 			$mdToast.show(
 	      $mdToast.simple()
