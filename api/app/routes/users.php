@@ -55,7 +55,7 @@ $app->group('/users', function () {
     }
 
     if($filter != '' ) {
-      $users = $users->with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $users = FrcPortal\User::with('school')->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     } else {
       $users = FrcPortal\User::with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     }
