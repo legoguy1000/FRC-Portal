@@ -21,8 +21,8 @@ $app->group('/users', function () {
         $users = FrcPortal\User::where('users.email','like','%'.$filter.'%');
         $users->orWhere('users.user_type','like','%'.$filter.'%');
         $users->orWhere('users.gender','like','%'.$filter.'%');
-        $users->orHaving('full_name','like','%'.$filter.'%');
-        $users->orHaving('student_grade','like','%'.$filter.'%');
+        $users->orHavingRaw('full_name LIKE %'.$filter.'%');
+        $users->orHavingRaw('student_grade LIKE %'.$filter.'%');
   //      $queryArr[] = '(school_name LIKE '.db_quote('%'.$filter.'%').')';
     //    $queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
       }
