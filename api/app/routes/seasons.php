@@ -57,7 +57,7 @@ $app->group('/seasons', function () {
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
       $season = FrcPortal\Season::find($season_id);
       if($reqsBool) {
-        $season->users = FrcPortal\Users::with(['annual_requirements' => function ($query) use ($season_id) {
+        $season->users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
                         		$query->where('season_id','=',$season_id);
                           }])->get();
       }
@@ -67,7 +67,7 @@ $app->group('/seasons', function () {
     });
     $this->get('/annual_requirements', function ($request, $response, $args) {
       $season_id = $args['season_id'];
-      $season = FrcPortal\Users::with(['annual_requirements' => function ($query) use ($season_id) {
+      $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
                           $query->where('season_id','=',$season_id);
                         }])->get();
     $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
