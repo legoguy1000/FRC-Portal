@@ -71,7 +71,7 @@ $app->group('/sign_in', function () {
         if(isset($data['jti']) || $data['jti'] != '') {
           $jti = $data['jti'];
           if(isset($args['pin']) && isset($args['user_id']) && $args['pin'] != '' && $args['user_id'] != '') {
-            $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['pin']))->where('user_id',$args['user_id'])->where('status','=','1');
+            $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['pin']))->where('user_id',$args['user_id'])->where('status','=','1')->get();
             if($user->count() > 0) {
               $user_id = $user[0]->user_id;
               $name = $user[0]->full_name;
