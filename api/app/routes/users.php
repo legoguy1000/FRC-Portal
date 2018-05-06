@@ -97,9 +97,7 @@ $app->group('/users', function () {
     $this->group('/annual_requirements', function () {
       $this->get('', function ($request, $response, $args) {
         $user_id = $args['user_id'];
-        $user = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
-                  $query->where('user_id','=',$user_id); // fields from comments table,
-                }])->get();
+        $user = FrcPortal\Season::all();
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
@@ -107,7 +105,9 @@ $app->group('/users', function () {
       $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $user_id = $args['user_id'];
         $season_id = $args['season_id'];
-        $user = FrcPortal\Season::where('season_id','=',$season_id)->get();
+        $user = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
+                  $query->where('user_id','=',$user_id); // fields from comments table,
+                }])->where('season_id','=',$season_id)->get();
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
