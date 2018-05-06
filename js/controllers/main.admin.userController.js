@@ -8,6 +8,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 	vm.user_id = $stateParams.user_id;
 	vm.userInfo = {};
 	vm.seasonInfo = {};
+	vm.loadingUser = false;	
 
   vm.selectedItem  = null;
   vm.searchText    = null;
@@ -31,9 +32,10 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 	}
 
 	vm.getProfileInfo = function() {
-		vm.loadingDevices = true;
+		vm.loadingUser = true;
 		usersService.getProfileInfo($stateParams.user_id).then(function(response){
 			vm.userInfo = response.data;
+			vm.loadingUser = false;
 			if(vm.userInfo.school_id != null) {
 			/*	vm.userInfo.schoolData = {
 					school_id: vm.userInfo.school_id,
@@ -45,14 +47,13 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 	vm.getProfileInfo();
 
 	vm.getUserAnnualRequirements = function() {
-		vm.loadingDevices = true;
-		usersService.getUserAnnualRequirements($stateParams.user_id).then(function(response){
+		vm.loadingReqs = usersService.getUserAnnualRequirements($stateParams.user_id).then(function(response){
 			vm.seasonInfo = response.data;
 		});
 	}
 	vm.getUserAnnualRequirements();
 
-	
+
 	vm.updateUser = function() {
 		vm.loadingDevices = true;
 		usersService.updateUserPersonalInfo(vm.userInfo).then(function(response) {
