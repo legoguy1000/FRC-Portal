@@ -27,7 +27,7 @@ $app->group('/users', function () {
   			$queryArr[] = '(full_name LIKE %'.$filter.'%)';
   			//$queryArr[] = '(school_name LIKE '.db_quote('%'.$filter.'%').')';
   			//$queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
-  			$queryArr[] = '(student_grade LIKE '.db_quote('%'.$filter.'%').')';
+  			$queryArr[] = '(student_grade LIKE %'.$filter.'%)';
   		}
   	}
 
