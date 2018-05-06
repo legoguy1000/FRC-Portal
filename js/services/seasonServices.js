@@ -22,7 +22,7 @@ angular.module('FrcPortal')
 		},
 		getSeasonAnnualRequirements: function (season_id) {
 			var season_id = season_id != undefined && season_id != null ? season_id:'';
-			return $http.get('api/seasons/'+season_id+'/annual_requirements')
+			return $http.get('api/seasons/'+season_id+'/annualRequirements')
 			.then(function(response) {
 				return response.data;
 			});
@@ -39,20 +39,22 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		updateSeasonMembershipForm: function (formData) {
-			return $http.post('site/updateSeasonMembershipForm.php',formData)
+		updateSeasonMembershipForm: function (season_id) {
+			return $http.put('api/season/'+season_id+/'updateMembershipForm')
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		updateSeason: function (formData) {
-			return $http.post('site/updateSeason.php',formData)
+			var season_id = formData.season_id != undefined && formData.season_id != null ? formData.season_id:'';
+			return $http.put('api/season/'+season_id,formData)
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		deleteSeason: function (formData) {
-			return $http.post('site/deleteSeason.php',formData)
+			var season_id = formData.season_id != undefined && formData.season_id != null ? formData.season_id:'';
+			return $http.delete('api/season/'+season_id)
 			.then(function(response) {
 				return response.data;
 			});

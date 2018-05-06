@@ -72,10 +72,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 
 	vm.updateSeasonMembershipForm = function () {
 		vm.loading = true;
-		var data = {
-			'year': vm.season.year
-		};
-		seasonsService.updateSeasonMembershipForm(data).then(function(response){
+		seasonsService.updateSeasonMembershipForm(vm.season.year).then(function(response){
 			if(response.status) {
 				vm.season.join_spreadsheet = response.data.join_spreadsheet;
 			}
@@ -103,11 +100,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			'join_spreadsheet': vm.season.join_spreadsheet,
 		};
 		vm.promise = seasonsService.updateSeason(data).then(function(response){
-			if(response.status) {
-				//var reqs = vm.season.requirements
-				//vm.season = response.data;
-				//vm.season.requirements = reqs;
-			}
+			if(response.status) {	}
 			$mdToast.show(
 	      $mdToast.simple()
 	        .textContent(response.msg)
@@ -119,9 +112,6 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	};
 
 	vm.deleteSeason = function() {
-		var data = {
-			season_id: vm.season.season_id,
-		};
 		var confirm = $mdDialog.confirm()
 					.title('Delete season '+vm.season.game_name+' '+'('+vm.season.year+')')
 					.textContent('Are you sure you want to delete season '+vm.season.game_name+' '+'('+vm.season.year+')?  This action is unreversable and any events and registration data will be removed.'	)
@@ -129,7 +119,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 					.ok('Delete')
 					.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
-			seasonsService.deleteSeason(data).then(function(response) {
+			seasonsService.deleteSeason(vm.season.season_id).then(function(response) {
 				if(response.status) {
 					$mdDialog.show(
 						$mdDialog.alert()

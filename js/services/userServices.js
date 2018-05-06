@@ -59,7 +59,7 @@ angular.module('FrcPortal')
 		},
 		getUserAnnualRequirements: function (user_id) {
 			var user_id = user_id != undefined && user_id != null ? user_id:'';
-			return $http.get('api/users/'+user_id+'/annual_requirements')
+			return $http.get('api/users/'+user_id+'/annualRequirements')
 			.then(function(response) {
 				return response.data;
 			});

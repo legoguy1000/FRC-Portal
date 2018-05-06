@@ -90,7 +90,7 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->group('/annual_requirements', function () {
+    $this->group('/annualRequirements', function () {
       $this->get('', function ($request, $response, $args) {
         $user_id = $args['user_id'];
         $user = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {

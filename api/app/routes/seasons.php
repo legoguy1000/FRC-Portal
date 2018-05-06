@@ -65,7 +65,7 @@ $app->group('/seasons', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->get('/annual_requirements', function ($request, $response, $args) {
+    $this->get('/annualRequirements', function ($request, $response, $args) {
       $season_id = $args['season_id'];
       $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
                           $query->where('season_id','=',$season_id);
@@ -73,6 +73,26 @@ $app->group('/seasons', function () {
     $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
     $response = $response->withJson($responseArr);
     return $response;
+    });
+    $this->put('', function ($request, $response, $args) {
+      $season_id = $args['season_id'];
+
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+      $response = $response->withJson($responseArr);
+    return $response;
+    });
+    $this->put('/updateMembershipForm', function ($request, $response, $args) {
+      $season_id = $args['season_id'];
+
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+      $response = $response->withJson($responseArr);
+    return $response;
+    });
+    $this->delete('', function ($request, $response, $args) {
+      $season_id = $args['season_id'];
+      
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+      $response = $response->withJson($responseArr);
     });
   });
   $this->group('/{year:[0-9]{4}}', function () {
@@ -147,16 +167,6 @@ $app->group('/seasons', function () {
       $responseArr = array('status'=>false, 'msg'=>'Season for '.$formData['year'].' already exists');
     }
     $response = $response->withJson($responseArr);
-    return $response;
-  });
-  $this->put('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $season_id = $args['season_id'];
-
-    return $response;
-  });
-  $this->delete('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $season_id = $args['season_id'];
-
     return $response;
   });
 });
