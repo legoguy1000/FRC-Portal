@@ -7,10 +7,11 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 
 	vm.user_id = $stateParams.user_id;
 	vm.userInfo = {};
+	vm.seasonInfo = {};
 
-    vm.selectedItem  = null;
-    vm.searchText    = null;
-    vm.querySearch   = querySearch;
+  vm.selectedItem  = null;
+  vm.searchText    = null;
+  vm.querySearch   = querySearch;
 	vm.notificationEndpoints = [];
 	vm.linkedAccounts = [];
 	vm.seasonInfo = {};
@@ -18,11 +19,11 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 	vm.showPastReqs = false;
 	vm.query = {
 		filter: '',
-		limit: 5,
+		limit: 1,
 		order: '-year',
 		page: 1
 	};
-
+	vm.limitOptions = [1,5,10];
 
 
 	function querySearch (query) {
@@ -33,16 +34,22 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 		vm.loadingDevices = true;
 		usersService.getProfileInfo($stateParams.user_id).then(function(response){
 			vm.userInfo = response.data;
-			//$scope.main.title += ' - '+vm.userInfo.full_name;
 			if(vm.userInfo.school_id != null) {
-				vm.userInfo.schoolData = {
+			/*	vm.userInfo.schoolData = {
 					school_id: vm.userInfo.school_id,
 					school_name: vm.userInfo.school_name,
-				}
+				} */
 			}
 		});
 	}
 	vm.getProfileInfo();
+
+	vm.getUserAnnualRequirements = function() {
+		vm.loadingDevices = true;
+		usersService.getUserAnnualRequirements($stateParams.user_id).then(function(response){
+			vm.seasonInfo = response.data;
+		});
+	}
 
 	vm.updateUser = function() {
 		vm.loadingDevices = true;
@@ -100,39 +107,4 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 		})
 		.then(function(answer) {}, function() {});
 	}
-
-	vm.showDeviceEdit = function(ev, device) {
-		// Appending dialog to document.body to cover sidenav in docs app
-		var confirm = $mdDialog.prompt()
-			.title('Edit Device')
-			.textContent('Input a label for the device below.')
-			.placeholder('Device Label')
-			.ariaLabel('Device Label')
-			.initialValue(device.label)
-			.targetEvent(ev)
-			.required(true)
-			.ok('Submit')
-			.cancel('Cancel');
-		$mdDialog.show(confirm).then(function(result) {
-
-		}, function() {
-
-		});
-	};
-
-	vm.showDeviceDelete = function(ev, device) {
-	// Appending dialog to document.body to cover sidenav in docs app
-		var confirm = $mdDialog.confirm()
-		.title('Device Deletetion Confirmation')
-		.textContent('Please confirm that you would like to delete device '+device.label+'.  If you can readd the device again later.')
-		.ariaLabel('Delete Device')
-		.targetEvent(ev)
-		.ok('Delete')
-		.cancel('Cancel');
-		$mdDialog.show(confirm).then(function() {
-
-		}, function() {
-
-		});
-	};
 }

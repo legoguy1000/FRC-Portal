@@ -31,30 +31,6 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		deviceNotificationSubscribe: function (formData) {
-			return $http.post('site/deviceNotificationSubscribe.php',formData)
-			.then(function(response) {
-				return response.data;
-			});
-		},
-		deviceNotificationUnsubscribe: function (formData) {
-			return $http.post('site/deviceNotificationUnsubscribe.php',formData)
-			.then(function(response) {
-				return response.data;
-			});
-		},
-		deviceNotificationUpdateEndpoint: function (formData) {
-			return $http.post('site/deviceNotificationUpdateEndpoint.php',formData)
-			.then(function(response) {
-				return response.data;
-			});
-		},
-		editDeviceLabel: function (formData) {
-			return $http.post('site/editDeviceLabel.php',formData)
-			.then(function(response) {
-				return response.data;
-			});
-		},
 		checkPin: function (formData) {
 			return $http.post('site/checkPin.php',formData)
 			.then(function(response) {
@@ -74,8 +50,15 @@ angular.module('FrcPortal')
 			});
 		},
 		getProfileInfo: function (user_id) {
-			var a = user_id != undefined && user_id != null ? user_id:'';
-			return $http.get('site/getProfileInfo.php?user_id='+a)
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			return $http.get('api/users/'+user_id)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		getUserAnnualRequirements: function (user_id) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			return $http.get('api/users/'+user_id+'/annual_requirements')
 			.then(function(response) {
 				return response.data;
 			});
