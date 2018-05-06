@@ -35,7 +35,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	vm.users = null;
 	vm.getSeason = function () {
 		vm.loading = true;
-		vm.promise = seasonsService.getSeason(vm.season_id).then(function(response){
+		seasonsService.getSeason(vm.season_id).then(function(response){
 			vm.season = response.data;
 			//$scope.main.title += ' - '+vm.season.game_name;
 			vm.loading = false;
@@ -44,7 +44,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	vm.getSeason();
 
 	vm.getUserAnnualRequirements = function() {
-		vm.loadingReqs = seasonsService.getSeasonAnnualRequirements(vm.season_id).then(function(response){
+		vm.promise = seasonsService.getSeasonAnnualRequirements(vm.season_id).then(function(response){
 			vm.users = response.data;
 		});
 	}
