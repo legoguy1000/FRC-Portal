@@ -113,7 +113,7 @@ $app->group('/seasons', function () {
       $newSeason->start_date = $start_date->format('Y-m-d');
       $newSeason->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
       $newSeason->end_date = $end_date->format('Y-m-d'." 23:59:59");
-      $newSeason->join_spreadsheet = $formData['join_spreadsheet'];
+      $newSeason->join_spreadsheet = $spreadsheetId;
       $newSeason->game_logo = $formData['game_logo'];
       if($newSeason->save()) {
         $seasons = FrcPortal\Season::all();
