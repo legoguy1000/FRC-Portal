@@ -25,8 +25,11 @@ $app->group('/users', function () {
   //      $queryArr[] = '(school_name LIKE '.db_quote('%'.$filter.'%').')';
     //    $queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
       }
+      $totalNum = count($totalNum->get());
+    } else {
+      $totalNum = FrcPortal\User::count();
     }
-    $totalNum = count($totalNum->get());
+
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
