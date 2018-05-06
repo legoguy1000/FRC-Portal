@@ -53,6 +53,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 	vm.updateUser = function() {
 		vm.loadingUser = true;
 		var data = {
+			user_id: vm.userInfo.user_id,
 			fname: vm.userInfo.fname,
 			lname: vm.userInfo.lname,
 			email: vm.userInfo.email,
