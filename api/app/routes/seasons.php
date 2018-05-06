@@ -106,6 +106,7 @@ $app->group('/seasons', function () {
     $season = FrcPortal\Season::where('year', $formData['year'])->count();
     if($season == 0) {
       $newSeason = new FrcPortal\Season();
+      $newSeason->season_id = uniqid();
       $newSeason->year = $formData['year'];
       $newSeason->game_name = $formData['game_name'];
       $newSeason->start_date = $start_date->format('Y-m-d');
@@ -115,7 +116,13 @@ $app->group('/seasons', function () {
       $newSeason->game_logo = !is_null($formData['game_logo']) ? $formData['game_logo']:'';
       if($newSeason->save()) {
         $seasons = FrcPortal\Season::all();
-        $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$seasons);
+        $totalNum = count($seasons);
+        $limit = 10;
+        $data = array();
+        $data['data'] = $seasons;
+        $data['total'] = $totalNum;
+        $data['maxPage'] = ceil($totalNum/$limit);
+        $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$data);
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Something went wrong');
       }
