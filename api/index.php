@@ -68,37 +68,11 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
 include('./app/routes/auth.php');
 include('./app/routes/seasons.php');
 include('./app/routes/sign_in.php');
+include('./app/routes/users.php');
 
 
 
-$app->group('/users', function () {
-  $this->get('', function ($request, $response, $args) {
-    $users = FrcPortal\User::with('schools')->get();
-    $response = $response->withJson($users);
-    return $response;
-  });
-  $this->post('', function ($request, $response, $args) {
-    //$user = FrcPortal\User::Create(['user_id'=>uniqid(),'fname' => "Ahmed", 'lname' => "Ahmed", 'email' => "ahmed.khan@lbs.com"]);
-    //$response->getBody()->write(json_encode('Add new user'));
-    //return $response;
-  });
-  $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $user_id = $args['user_id'];
-    $user = FrcPortal\User::with('schools')->find($user_id);
-    $response = $response->withJson($user);
-    return $response;
-  });
-  $this->put('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $user_id = $args['user_id'];
-    $response->getBody()->write(json_encode('Update User '.$user_id));
-    return $response;
-  });
-  $this->delete('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $user_id = $args['user_id'];
-    $response->getBody()->write(json_encode('Delete User '.$user_id));
-    return $response;
-  });
-});
+
 
 $app->group('/events', function () {
   $this->get('', function ($request, $response, $args) {
