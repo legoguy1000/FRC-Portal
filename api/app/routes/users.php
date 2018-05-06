@@ -111,42 +111,42 @@ $app->group('/users', function () {
         return $response;
       });
     });
-  });
-  $this->put('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $user_id = $args['user_id'];
-    $formData = $request->getParsedBody();
-    $user = FrcPortal\User::find($user_id);
-    $user->fname = $formData['fname'];
-    $user->lname = $formData['lname'];
-    $user->email = $formData['email'];
-    $user->team_email = $formData['team_email'];
-    $user->phone = $formData['phone'];
-    $user->user_type = $formData['user_type'];
-    $user->gender = $formData['gender'];
-    if($formData['user_type'] == 'Student') {
-      $user->school_id = $formData['school_id'];
-      $user->grad_year = $formData['grad_year'];
-    }
-    $user->admin = $formData['admin'];
-    $user->status = $formData['status'];
-    if($user->save()) {
-      $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $user);
-    } else {
-      $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $user);
-    }
-    $response = $response->withJson($responseArr);
-    return $response;
-  });
-  $this->delete('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $user_id = $args['user_id'];
-    $user = FrcPortal\User::destroy($user_id);
-    if($user) {
-      $responseArr = array('status'=>true, 'msg'=>'User Deleted', 'data' => $user);
-    } else {
-      $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $user);
-    }
-    $response = $response->withJson($responseArr);
-    return $response;
+    $this->put('', function ($request, $response, $args) {
+      $user_id = $args['user_id'];
+      $formData = $request->getParsedBody();
+      $user = FrcPortal\User::find($user_id);
+      $user->fname = $formData['fname'];
+      $user->lname = $formData['lname'];
+      $user->email = $formData['email'];
+      $user->team_email = $formData['team_email'];
+      $user->phone = $formData['phone'];
+      $user->user_type = $formData['user_type'];
+      $user->gender = $formData['gender'];
+      if($formData['user_type'] == 'Student') {
+        $user->school_id = $formData['school_id'];
+        $user->grad_year = $formData['grad_year'];
+      }
+      $user->admin = $formData['admin'];
+      $user->status = $formData['status'];
+      if($user->save()) {
+        $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $user);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $user);
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->delete('', function ($request, $response, $args) {
+      $user_id = $args['user_id'];
+      $user = FrcPortal\User::destroy($user_id);
+      if($user) {
+        $responseArr = array('status'=>true, 'msg'=>'User Deleted', 'data' => $user);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $user);
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
   });
 });
 
