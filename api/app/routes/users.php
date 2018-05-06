@@ -26,7 +26,7 @@ $app->group('/users', function () {
   //      $queryArr[] = '(school_name LIKE '.db_quote('%'.$filter.'%').')';
     //    $queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
       }
-      $totalNum = count($totalNum->get());
+      $totalNum = $totalNum->get();
       die(json_encode(DB::getQueryLog()));
     } else {
       $totalNum = FrcPortal\User::count();
