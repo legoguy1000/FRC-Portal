@@ -84,7 +84,7 @@ $app->group('/users', function () {
     $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
     $user = FrcPortal\User::with('school')->find($user_id);
     if($reqsBool) {
-      $user->annual_requirements = FrcPortal\Season::with(['annual_requirements' => function ($query) {
+      $user->seasons = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
             		$query->where('user_id','=',$user_id); // fields from comments table,
             	}])->get();
     }
