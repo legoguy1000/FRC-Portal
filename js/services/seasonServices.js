@@ -34,7 +34,8 @@ angular.module('FrcPortal')
 			});
 		},
 		toggleAnnualReqs: function (formData) {
-			return $http.post('site/toggleAnnualReqs.php',formData)
+			var season_id = formData.season_id != undefined && formData.season_id != null ? formData.season_id:'';
+			return $http.put('api/seasons/'+season_id+'/toggleAnnualReqs',formData)
 			.then(function(response) {
 				return response.data;
 			});

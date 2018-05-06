@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/seasons', function () {
   $this->get('', function ($request, $response, $args) {
     $seasons = array();
@@ -119,6 +120,32 @@ $app->group('/seasons', function () {
       	}
       } else {
       		$responseArr = array('status'=>false, 'msg'=>'No form found');
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->put('/toggleAnnualReqs', function ($request, $response, $args) {
+      //$authToken = checkToken(true,true);
+      //$user_id = $authToken['data']['user_id'];
+      //checkAdmin($user_id, $die = true);
+      $season_id = $args['season_id'];
+      $formData = $request->getParsedBody();
+      if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid user array');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('join_team','stims','dues'))) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid requirement');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      $season = FrcPortal\Season::find($season_id);
+      $array = array();
+      $req = $formData['requirement'];
+      $users = array_column($formData['users'],'user_id');
+      foreach($users as $user_id) {
+        $reqUpdate = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['req_id' => uniqid(), $req => DB::raw('NOT '.$req)]);
       }
       $response = $response->withJson($responseArr);
       return $response;
