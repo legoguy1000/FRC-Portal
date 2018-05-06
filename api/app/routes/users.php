@@ -47,11 +47,8 @@ $app->group('/users', function () {
       $limit = $totalNum;
     }
 
-    if(count($whereArr) > 0) {
-      $users = FrcPortal\User::with('school')->orHaving($whereArr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    } else {
-      $users = FrcPortal\User::with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    }
+    $users = $users->with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+
     $data['data'] = $users;
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
