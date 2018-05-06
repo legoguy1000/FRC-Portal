@@ -97,7 +97,7 @@ $app->group('/seasons', function () {
 
     $season = FrcPortal\Season::firstOrCreate(
       ['year' => $formData['year']],
-      ['season_id' => uniqid(), 'game_name' => $formData['game_name'], 'start_date' => $start_date->format('Y-m-d'), 'bag_day' => $bag_day->format('Y-m-d'." 23:59:59"), 'end_date' => $end_date->format('Y-m-d'." 23:59:59"), 'game_logo' => $formData['game_logo'], 'join_spreadsheet' => $spreadsheetId]
+      ['season_id' => uniqid(), 'game_name' => $formData['game_name']]
     );
     if($season) {
       $seasons = FrcPortal\Season::all();
