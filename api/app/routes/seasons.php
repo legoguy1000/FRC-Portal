@@ -95,15 +95,24 @@ $app->group('/seasons', function () {
     $bag_day = new DateTime($formData['bag_day']);
     $end_date = new DateTime($formData['end_date']);
 
-    $season = FrcPortal\Season::firstOrCreate(
-      ['year' => $formData['year']],
-      ['season_id' => uniqid(), 'game_name' => $formData['game_name'], 'start_date' => $start_date->format('Y-m-d'),
-       'bag_day' => $bag_day->format('Y-m-d'." 23:59:59"), 'end_date' => $end_date->format('Y-m-d'." 23:59:59"),
-       'join_spreadsheet' => $spreadsheetId, 'game_logo' => $formData['game_logo']]
-    );
-    if($season) {
-      $seasons = FrcPortal\Season::all();
-      $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$season);
+    $season = FrcPortal\Season::where('year', $formData['year'])->count();
+    if($season == 0) {
+      $newSeason = new FrcPortal\Season();
+      $newSeason->year = $formData['year'];
+      $newSeason->game_name = $formData['game_name'];
+      $newSeason->start_date = $start_date->format('Y-m-d');
+      $newSeason->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
+      $newSeason->end_date = $end_date->format('Y-m-d'." 23:59:59");
+      $newSeason->join_spreadsheet = $formData['join_spreadsheet'];
+      $newSeason->game_logo = $formData['game_logo'];
+      if($newSeason->save()) {
+        $seasons = FrcPortal\Season::all();
+        $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$seasons);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong');
+      }
+    } else {
+      $responseArr = array('status'=>false, 'msg'=>'Season for '.$formData['year'].' already exists');
     }
     $response = $response->withJson($responseArr);
     return $response;
