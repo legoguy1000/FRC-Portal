@@ -72,7 +72,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 
 	vm.updateSeasonMembershipForm = function () {
 		vm.loading = true;
-		seasonsService.updateSeasonMembershipForm(vm.season.year).then(function(response){
+		seasonsService.updateSeasonMembershipForm(vm.season.season_id).then(function(response){
 			if(response.status) {
 				vm.season.join_spreadsheet = response.data.join_spreadsheet;
 			}
