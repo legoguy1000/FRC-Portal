@@ -5,12 +5,12 @@ use \Firebase\JWT\JWT;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
 
-$json = file_get_contents('php://input'); 
+$json = file_get_contents('php://input');
 $formData = json_decode($json,true);
 $provider = 'microsoft';
 
 $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
-$clientSecret ='ojQO097_}pdsyfCITIU15[(';
+$secret = getIniProp('microsoft_client_secret');
 
 if(isset($formData['code'])) {
 	$data = array(
@@ -19,7 +19,7 @@ if(isset($formData['code'])) {
 		'code'=>$formData['code'],
 		'redirect_uri'=>$formData['redirectUri'],
 		'grant_type'=>'authorization_code',
-		'client_secret'=>$clientSecret,
+		'client_secret'=>$secret,
 	);
 	$url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
 	$options = array(
@@ -29,7 +29,7 @@ if(isset($formData['code'])) {
 			'content' => http_build_query($data)
 		)
 	);
-	
+
 	$result = file_get_contents($url, false, stream_context_create($options));
 	$accessTokenArr = json_decode($result, true);
 	$accessToken = $accessTokenArr['access_token'];
@@ -37,10 +37,10 @@ if(isset($formData['code'])) {
 	$graph->setApiVersion('beta');
 	$graph->setAccessToken($accessToken); //=mail,aboutMe,birthday,photo
 	$me = $graph->createRequest('GET', '/me')->setReturnType(Model\User::class)->execute();
-	
-	
+
+
 	$me = json_decode(json_encode($me), true);
-	//die(json_encode($me));	
+	//die(json_encode($me));
 	$email = $me['userPrincipalName'];
 	$fname = $me['givenName'];
 	$lname = $me['surname'];
@@ -48,7 +48,7 @@ if(isset($formData['code'])) {
 	$gender = ''; //$me['gender'];
 	$id = $me['id'];
 	$age_min = ''; //$me['ageRange']['min'];
-	
+
 	$userData = array(
 		'id' => $id,
 		'provider' => $provider,
@@ -59,7 +59,7 @@ if(isset($formData['code'])) {
 		'gender' => $gender,
 		'age_min' => $age_min
 	);
-	
+
 	$data = array();
 	$data = checkUserLogin($userData);
 	if(!isset($formData['link_account']) || (isset($formData['link_account']) && !$formData['link_account'])) {
@@ -103,7 +103,7 @@ if(isset($formData['code'])) {
 			die(json_encode(array('status'=>false, 'type'=>'error', 'msg'=>'Something went wrong.')));
 		}
 	}
-	
+
 } else {
 	//insertLogs('', 'login', 'error', $provider);
 	die(json_encode(array('status'=>false, 'type'=>'error', 'msg'=>'Microsoft Login Error')));
