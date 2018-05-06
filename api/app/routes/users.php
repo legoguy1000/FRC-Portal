@@ -33,7 +33,7 @@ $app->group('/users', function () {
 
   	if(count($queryArr) > 0) {
   		$queryStr = implode(' OR ',$queryArr);
-      $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->havingRaw($queryStr)->get();
+      $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->select('users.*', 'schools.school_name', 'schools.abv')->havingRaw($queryStr)->get();
       $totalNum = count($users);
   	} else {
       $totalNum = FrcPortal\User::count();
@@ -57,7 +57,7 @@ $app->group('/users', function () {
     }
 
     if($filter != '' ) {
-      $users = FrcPortal\User::with('school')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $users = FrcPortal\User::with('school')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->select('users.*', 'schools.school_name', 'schools.abv')->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     } else {
       $users = FrcPortal\User::with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     }
