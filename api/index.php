@@ -6,6 +6,7 @@ date_default_timezone_set('America/New_York');
 $root = $_SERVER['DOCUMENT_ROOT'];
 require $root.'/site/includes/vendor/autoload.php';
 include($root.'/site/includes/functions/getConfigFile.php');
+include($root.'/site/includes/functions/season_functions.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;

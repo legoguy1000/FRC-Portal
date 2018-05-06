@@ -68,6 +68,30 @@ $app->group('/seasons', function () {
     });
   });
   $this->post('', function ($request, $response, $args) {
+    //$authToken = checkToken(true,true);
+    //$user_id = $authToken['data']['user_id'];
+    //checkAdmin($user_id, $die = true);
+    $formData = $request->getParsedBody();
+    if(!isset($formData['year']) || $formData['year'] == '') {
+    	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Year cannot be blank!')));
+    }
+    if(!isset($formData['game_name']) || $formData['game_name'] == '') {
+    //	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Name cannot be blank!')));
+    }
+    if(!isset($formData['start_date']) || $formData['start_date'] == '') {
+    //	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Start Date cannot be blank!')));
+    }
+    if(!isset($formData['bag_day']) || $formData['bag_day'] == '') {
+    //	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Bag Date cannot be blank!')));
+    }
+    if(!isset($formData['end_date']) || $formData['end_date'] == '') {
+    //	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'End Date cannot be blank!')));
+    }
+    $season = FrcPortal\Season::firstOrCreate(
+      ['year' => $formData['year']], ['season_id' => uniqid(), 'game_name' => $formData['game_name'], 'start_date' => $formData['start_date'], 'bag_day' => $formData['bag_day'], 'end_date' => $formData['end_date'], 'join_spreadsheet' => getSeasonMembershipForm($formData['year']);]
+    );
+
+
 
 
   });
