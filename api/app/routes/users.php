@@ -10,23 +10,30 @@ $app->group('/users', function () {
     $order = $request->getParam('page') !== null ? $request->getParam('page'):1;
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
-/*    if($filter != '') {
+    $whereArr = array();
+    if($filter != '') {
       if($filter == strtolower('active')) {
-        $queryArr[] = '(users.status = "1")';
+        $whereArr[] = array('users.status','=','1');
       } elseif($filter == strtolower('inactive')) {
-        $queryArr[] = '(users.status = "0")';
+        $whereArr[] = array('users.status','=','0');
       } else {
-        $queryArr[] = '(users.email LIKE '.db_quote('%'.$filter.'%').')';
-        $queryArr[] = '(users.user_type LIKE '.db_quote('%'.$filter.'%').')';
-        $queryArr[] = '(users.gender LIKE '.db_quote('%'.$filter.'%').')';
-        $queryArr[] = '(full_name LIKE '.db_quote('%'.$filter.'%').')';
-        $queryArr[] = '(school_name LIKE '.db_quote('%'.$filter.'%').')';
-        $queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
-        $queryArr[] = '(student_grade LIKE '.db_quote('%'.$filter.'%').')';
+        $whereArr[] = array('users.email','like','%'.$filter.'%');
+        $whereArr[] = array('users.user_type','like','%'.$filter.'%');
+        $whereArr[] = array('users.gender','like','%'.$filter.'%');
+        $whereArr[] = array('full_name','like','%'.$filter.'%');
+        $whereArr[] = array('student_grade','like','%'.$filter.'%');
+
+  //      $queryArr[] = '(school_name LIKE '.db_quote('%'.$filter.'%').')';
+    //    $queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
+
       }
     }
-*/
-    $totalNum = FrcPortal\User::count();
+    if(count($whereArr) > 0) {
+        $totalNum = FrcPortal\User::orHaving($whereArr)->count();
+    } else {
+      $totalNum = FrcPortal\User::count();
+    }
+
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
   	if(in_array($orderCol,array('full_name','fname','lname','email','user_type','gender','schoool_name'))) {
@@ -41,7 +48,13 @@ $app->group('/users', function () {
   	} elseif($limit == 0) {
       $limit = $totalNum;
     }
-    $users = FrcPortal\User::with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+
+    if(count($whereArr) > 0) {
+      $users = FrcPortal\User::with('school')->orHaving($whereArr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit);
+    } else {
+      $users = FrcPortal\User::with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit);
+    }
+    $users->get();
 
     $data['data'] = $users;
     $data['query'] = $query;
