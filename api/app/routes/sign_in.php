@@ -139,7 +139,7 @@ $app->group('/sign_in', function () {
     } else {
       $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Sign in is not authorized at this time and/or on this device. Please see a mentor.');
     }
-    $response = $response->withJson($users);
+    $response = $response->withJson($responseArr);
     return $response;
   });
 });
