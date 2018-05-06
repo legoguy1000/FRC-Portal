@@ -79,17 +79,38 @@ $app->group('/users', function () {
     //$response->getBody()->write(json_encode('Add new user'));
     //return $response;
   });
-  $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $user_id = $args['user_id'];
-    $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
-    $user = FrcPortal\User::with('school')->find($user_id);
-    if($reqsBool) {
-      $user->seasons = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
-            		$query->where('user_id','=',$user_id); // fields from comments table,
-            	}])->get();
-    }
-    $response = $response->withJson($user);
-    return $response;
+  $this->group('/{user_id:[a-z0-9]{13}}', function () {
+    $this->get('', function ($request, $response, $args) {
+      $user_id = $args['user_id'];
+      $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
+      $user = FrcPortal\User::with('school')->find($user_id);
+      if($reqsBool) {
+        $user->seasons = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
+              		$query->where('user_id','=',$user_id); // fields from comments table,
+              	}])->get();
+      }
+      $response = $response->withJson($user);
+      return $response;
+    });
+    $this->group('/annual_requirements', function () {
+      $this->get('', function ($request, $response, $args) {
+        $user_id = $args['user_id'];
+        $user = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
+                  $query->where('user_id','=',$user_id); // fields from comments table,
+                }])->get();
+        $response = $response->withJson($user);
+        return $response;
+      });
+      $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $user_id = $args['user_id'];
+        $season_id = $args['season_id'];
+        $user = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
+                  $query->where('user_id','=',$user_id)->where('season_id','=',$season_id); // fields from comments table,
+                }])->get();
+        $response = $response->withJson($user);
+        return $response;
+      });
+    });
   });
   $this->put('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $user_id = $args['user_id'];
