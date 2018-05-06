@@ -114,9 +114,9 @@ $app->group('/seasons', function () {
       $newSeason->join_spreadsheet = $spreadsheetId==false ? '':$spreadsheetId;
       $newSeason->game_logo = !is_null($formData['game_logo']) ? $formData['game_logo']:'';
       if($newSeason->save()) {
-        $seasons = FrcPortal\Season::all();
-        $totalNum = count($seasons);
         $limit = 10;
+        $totalNum = FrcPortal\Season::count();
+        $seasons = FrcPortal\Season::orderBy('year','DESC')->limit($limit)->get();
         $data = array();
         $data['data'] = $seasons;
         $data['total'] = $totalNum;
