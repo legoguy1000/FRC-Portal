@@ -25,7 +25,7 @@ $app->group('/users', function () {
   			$queryArr[] = '(users.user_type LIKE "%'.$filter.'%")';
   			$queryArr[] = '(users.gender LIKE "%'.$filter.'%")';
   			$queryArr[] = '(full_name LIKE "%'.$filter.'%")';
-  			$queryArr[] = '(schools.chool_name LIKE "%'.$filter.'%")';
+  			$queryArr[] = '(schools.school_name LIKE "%'.$filter.'%")';
   			$queryArr[] = '(schools.abv LIKE "%'.$filter.'%")';
   			$queryArr[] = '(student_grade LIKE "%'.$filter.'%")';
   		}
