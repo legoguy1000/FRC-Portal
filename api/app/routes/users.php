@@ -104,7 +104,7 @@ $app->group('/users', function () {
       $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $user_id = $args['user_id'];
         $season_id = $args['season_id'];
-        $user = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
+        $user = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id, $season_id) {
                   $query->where('user_id','=',$user_id)->where('season_id','=',$season_id); // fields from comments table,
                 }])->get();
         $response = $response->withJson($user);
