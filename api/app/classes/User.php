@@ -61,39 +61,6 @@ class User extends Eloquent {
     });
   }
 
-  public function setLnameAttribute($value) {
-    $this->attributes['lname'] = $value;
-    $this->attributes['full_name'] = $this->attributes['fname'].' '.$value;
-  }
-
-  public function setGradYearAttribute($value) {
-    $return = null;
-    if(isset($this->attributes['user_type']) && $this->attributes['user_type'] == 'Student' && $value != null) {
-      $grad_year = $value;
-      $curren_date = new DateTime();
-      $grad_date = new DateTime($grad_year.'-07-01');
-      $interval = $grad_date->diff($curren_date);
-      $num_months = $interval->m + 12*$interval->y;
-      if($num_months <= 0) {
-        $return = 'Graduated';
-      } else if($num_months <= 12) {
-        $return = 'Senior';
-      } else if($num_months <= 24) {
-        $return = 'Junior';
-      } else if($num_months <= 36) {
-        $return = 'Sophmore';
-      } else if($num_months <= 48) {
-        $return = 'Freshman';
-      } else if($num_months > 48) {
-        $return = 'Pre-Freshman';
-      }
-      $this->attributes['student_grade'] = $return;
-      $this->attributes['grad_year'] = $value;
-    } else {
-      $this->attributes['student_grade'] = null;
-      $this->attributes['grad_year'] = null;
-    }
-  }
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
   }

@@ -62,9 +62,9 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 			user_type: vm.userInfo.user_type,
 			gender: vm.userInfo.gender,
 			school_id: vm.userInfo.school.school_id,
-			grad_year: vm.userInfo.school.grad_year,
-			admin: vm.userInfo.school.admin,
-			status: vm.userInfo.school.status,
+			grad_year: vm.userInfo.grad_year,
+			admin: vm.userInfo.admin,
+			status: vm.userInfo.status,
 		}
 		usersService.updateUserPersonalInfo(data).then(function(response) {
 			vm.loadingUser = false;
