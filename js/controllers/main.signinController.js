@@ -90,7 +90,8 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			}
 			var data = {
 				'user_id': vm.user_id,
-				'pin':vm.pin
+				'pin':vm.pin,
+				'token': signinService.getToken()
 			};
 			signinService.signInOut(data).then(function(response) {
 				vm.pin = '';

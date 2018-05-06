@@ -29,7 +29,7 @@ $app->group('/sign_in', function () {
     } elseif(isset($args['auth_code'])) {
       $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status','=','1')->where('admin','=','1')->limit(1)->get();
       if($user->count() > 0) {
-        $user = $user[0];        
+        $user = $user[0];
       }
     } else {
       $responseArr = array('status'=>false, 'msg'=>'Invalid request');

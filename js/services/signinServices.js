@@ -55,7 +55,7 @@ angular.module('FrcPortal')
 			});
 		},
 		signInOut: function (formData) {
-			return $http.post('site/signInOut.php',formData,{skipAuthorization: true})
+			return $http.post('api/sign_in',formData,{skipAuthorization: true})
 			.then(function(response) {
 				return response.data;
 			});
