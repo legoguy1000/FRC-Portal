@@ -12,38 +12,42 @@ $app->group('/sign_in', function () {
   });
   //Create a new signin token
   $this->post('/authorize', function ($request, $response, $args) {
-
     $args = $request->getParsedBody();
+    $responseArr = array();
     $user = false;
     if(isset($args['auth_token'])) {
-      //$authToken = checkToken(false,false);
-      //$user_id = $authToken['data']['user_id'];
+      $key = getIniProp('jwt_key');
+      $jwt = $args['auth_token'];
+      try {
+  			$decoded = JWT::decode($jwt, $key, array('HS256'));
+        $user = $decoded->data;
+  		} catch(\Firebase\JWT\ExpiredException $e){elseif($die) {
+  			$responseArr = array('status'=>false, 'msg'=>'Authorization Error. '.$e->getMessage());
+  		} catch(\Firebase\JWT\SignatureInvalidException $e){
+  			$responseArr = array('status'=>false, 'msg'=>'Authorization Error. '.$e->getMessage())
+  		}
     } elseif(isset($args['auth_code'])) {
-      //check code for a user
+      $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status','=','1')->where('admin','=','1');
+      $user = $user[0];
     } else {
-      $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+      $responseArr = array('status'=>false, 'msg'=>'Invalid request');
     }
     if($user != false) {
-      $userPrivs = false;
-      //checkAdmin($user_id, $die = false);
-      if($userPrivs != false) {
-        $jti = md5(random_bytes(20));
-        $key = getIniProp('jwt_signin_key');
-        $token = array(
-          "iss" => getIniProp('env_url'),
-          "iat" => time(),
-          "exp" => time()+60*60*12, //12 hours liftime
-          "jti" => $jti,
-          'data' => array(
-            'signin' => true
-          )
-        );
-        $jwt = JWT::encode($token, $key);
-        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$jwt);
-      }
-      else {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-      }
+      $jti = md5(random_bytes(20));
+      $key = getIniProp('jwt_signin_key');
+      $token = array(
+        "iss" => getIniProp('env_url'),
+        "iat" => time(),
+        "exp" => time()+60*60*12, //12 hours liftime
+        "jti" => $jti,
+        'data' => array(
+          'signin' => true
+        )
+      );
+      $jwt = JWT::encode($token, $key);
+      $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$jwt);
+    } else {
+      $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
     }
     $response = $response->withJson($responseArr);
     return $response;
