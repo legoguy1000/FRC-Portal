@@ -47,7 +47,12 @@ $app->group('/users', function () {
       $limit = $totalNum;
     }
 
-    $users = $users->with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+    if($filter != '' ) {
+      $users = $users->with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+    } else {
+      $users = FrcPortal\User::with('school')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+    }
+
 
     $data['data'] = $users;
     $data['total'] = $totalNum;
