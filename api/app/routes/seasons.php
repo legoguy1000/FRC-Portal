@@ -74,19 +74,29 @@ $app->group('/seasons', function () {
     //checkAdmin($user_id, $die = true);
     $formData = $request->getParsedBody();
     if(!isset($formData['year']) || $formData['year'] == '') {
-    	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Year cannot be blank!')));
+      $responseArr = array('status'=>false, 'msg'=>'Year cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
     }
     if(!isset($formData['game_name']) || $formData['game_name'] == '') {
-    //	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Name cannot be blank!')));
+      $responseArr = array('status'=>false, 'msg'=>'Name cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
     }
     if(!isset($formData['start_date']) || $formData['start_date'] == '') {
-    //	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Start Date cannot be blank!')));
+      $responseArr = array('status'=>false, 'msg'=>'Start Date cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
     }
     if(!isset($formData['bag_day']) || $formData['bag_day'] == '') {
-    //	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Bag Date cannot be blank!')));
+      $responseArr = array('status'=>false, 'msg'=>'Bag Date cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
     }
     if(!isset($formData['end_date']) || $formData['end_date'] == '') {
-    //	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'End Date cannot be blank!')));
+      $responseArr = array('status'=>false, 'msg'=>'End Date cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
     }
     $spreadsheetId = getSeasonMembershipForm($formData['year']);
   	$spreadsheetId = $spreadsheetId==false ? '':$spreadsheetId;
