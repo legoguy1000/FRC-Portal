@@ -52,8 +52,8 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		deleteSeason: function (formData) {
-			var season_id = formData.season_id != undefined && formData.season_id != null ? formData.season_id:'';
+		deleteSeason: function (season_id) {
+			var season_id = season_id != undefined && season_id != null ? season_id:'';
 			return $http.delete('api/seasons/'+season_id)
 			.then(function(response) {
 				return response.data;
