@@ -97,11 +97,13 @@ $app->group('/seasons', function () {
 
     $season = FrcPortal\Season::firstOrCreate(
       ['year' => $formData['year']],
-      ['season_id' => uniqid(), 'game_name' => $formData['game_name']]
+      ['season_id' => uniqid(), 'game_name' => $formData['game_name'], 'start_date' => $start_date->format('Y-m-d'),
+       'bag_day' => $bag_day->format('Y-m-d'." 23:59:59"), 'end_date' => $end_date->format('Y-m-d'." 23:59:59"),
+       'join_spreadsheet' => $spreadsheetId, 'game_logo' => $formData['game_logo']]
     );
     if($season) {
       $seasons = FrcPortal\Season::all();
-      $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$seasons);
+      $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$season);
     }
     $response = $response->withJson($responseArr);
     return $response;
