@@ -7,6 +7,7 @@ $app->group('/users', function () {
     $filter = $request->getParam('filter') !== null ? $request->getParam('filter'):'';
     $limit = $request->getParam('limit') !== null ? $request->getParam('limit'):10;
     $order = $request->getParam('order') !== null ? $request->getParam('order'):'full_name';
+    $order = $request->getParam('page') !== null ? $request->getParam('page'):1;
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
 /*    if($filter != '') {
