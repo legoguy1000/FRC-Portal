@@ -54,6 +54,12 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		    }, function() {});
 		}
 		signinService.authorizeSignIn(data).then(function(response) {
+			var dialog = $mdDialog.alert()
+									.clickOutsideToClose(true)
+									.textContent(response.msg)
+									.ariaLabel('Time In/Out')
+									.ok('OK');
+			$mdDialog.show(dialog);
 			signinService.saveToken(response.signin_token);
 			vm.signInAuthed = signinService.isAuthed();
 		});
