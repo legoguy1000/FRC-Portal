@@ -60,7 +60,9 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 									.ariaLabel('Time In/Out')
 									.ok('OK');
 			$mdDialog.show(dialog);
-			signinService.saveToken(response.signin_token);
+			if(response.status && response.signin_token != undefined) {
+				signinService.saveToken(response.signin_token);
+			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
 	}
