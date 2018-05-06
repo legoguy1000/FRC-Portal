@@ -7,7 +7,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 
 	vm.user_id = $stateParams.user_id;
 	vm.userInfo = {};
-	vm.seasonInfo = {};
+	vm.seasonInfo = null;
 	vm.loadingUser = false;
 
   vm.selectedItem  = null;
