@@ -93,7 +93,7 @@ $app->group('/seasons', function () {
       $season->hour_requirement = $formData['hour_requirement'];
       $season->game_logo = $formData['game_logo'];
       if($season->save()) {
-        $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $season);
+        $responseArr = array('status'=>true, 'msg'=>'Season Information Saved', 'data' => $season);
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $season);
       }
