@@ -79,18 +79,34 @@ $app->group('/seasons', function () {
 
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
       $response = $response->withJson($responseArr);
-    return $response;
+      return $response;
     });
     $this->put('/updateMembershipForm', function ($request, $response, $args) {
+      //$authToken = checkToken(true,true);
+      //$user_id = $authToken['data']['user_id'];
+      //checkAdmin($user_id, $die = true);
       $season_id = $args['season_id'];
-
-      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+      $season = FrcPortal\Season::find($season_id);
+      $spreadsheetId = getSeasonMembershipForm($season->year);
+      if($spreadsheetId != false) {
+        $season->join_spreadsheet = $spreadsheetId;
+      	if($season->save()) {
+      		$data = array(
+      			'join_spreadsheet' => $spreadsheetId
+      		);
+      		$responseArr = array('status'=>true, 'msg'=>'Form added', 'data'=>$data);
+      	} else {
+      		$responseArr = array('status'=>false, 'msg'=>'Something went wrong');
+      	}
+      } else {
+      		$responseArr = array('status'=>false, 'msg'=>'No form found');
+      }
       $response = $response->withJson($responseArr);
-    return $response;
+      return $response;
     });
     $this->delete('', function ($request, $response, $args) {
       $season_id = $args['season_id'];
-      
+
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
       $response = $response->withJson($responseArr);
     });
