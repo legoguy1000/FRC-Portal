@@ -8,11 +8,11 @@
 					<md-tooltip md-direction="top">Refresh List</md-tooltip>
 					<md-icon>refresh</md-icon>
 				</md-button>
-				<md-button class="md-accent md-hue-3" ng-click="vm.authorizeSignIn()" ng-hide="main.signInAuthed">
+				<md-button class="md-accent md-hue-3" ng-click="vm.authorizeSignIn()" ng-hide="vm.signInAuthed">
 					<md-tooltip md-direction="top">Admin permissions required</md-tooltip>
 					Authorize Sign In
 				</md-button>
-				<md-button class="md-warn" ng-click="vm.deauthorizeSignIn()" ng-show="main.signInAuthed">
+				<md-button class="md-warn" ng-click="vm.deauthorizeSignIn()" ng-show="vm.signInAuthed">
 					Deauthorize Sign In
 				</md-button>
 			</div>

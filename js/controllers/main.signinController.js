@@ -23,6 +23,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	tick();
 	$interval(tick, 1000);
 
+	vm.signInAuthed = signinService.isAuthed();
 	vm.getUsers = function() {
 		signinService.signInUserList().then(function(response) {
 			vm.users = response;
