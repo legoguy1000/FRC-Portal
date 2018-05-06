@@ -87,8 +87,11 @@ $app->group('/seasons', function () {
     if(!isset($formData['end_date']) || $formData['end_date'] == '') {
     //	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'End Date cannot be blank!')));
     }
+    $spreadsheetId = getSeasonMembershipForm($formData['year']);
+  	$spreadsheetId = $spreadsheetId==false ? '':$spreadsheetId;
     $season = FrcPortal\Season::firstOrCreate(
-      ['year' => $formData['year']], ['season_id' => uniqid(), 'game_name' => $formData['game_name'], 'start_date' => $formData['start_date'], 'bag_day' => $formData['bag_day'], 'end_date' => $formData['end_date'], 'join_spreadsheet' => getSeasonMembershipForm($formData['year']);]
+      ['year' => $formData['year']],
+      ['season_id' => uniqid(), 'game_name' => $formData['game_name'], 'start_date' => $formData['start_date'], 'bag_day' => $formData['bag_day'], 'end_date' => $formData['end_date'], 'game_logo' => $formData['game_logo'], 'join_spreadsheet' => $spreadsheetId]
     );
 
 
