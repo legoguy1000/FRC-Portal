@@ -4,10 +4,10 @@ $app->group('/users', function () {
     $users = array();
   	$data = array();
 
-    $filter = isset($req->getParam('filter')) ? $req->getParam('listOnly'):'';
-    $limit = isset($req->getParam('limit')) ? $req->getParam('listOnly'):10;
-    $order = isset($req->getParam('order')) ? $req->getParam('listOnly'):'full_name';
-    $listOnly = isset($req->getParam('listOnly')) && $req->getParam('listOnly')==true ? true:false;
+    $filter = $req->getParam('filter') !== null ? $req->getParam('filter'):'';
+    $limit = $req->getParam('limit') !== null ? $req->getParam('limit'):10;
+    $order = $req->getParam('order') !== null ? $req->getParam('order'):'full_name';
+    $listOnly = $req->getParam('listOnly') !== null && $req->getParam('listOnly')==true ? true:false;
 
 /*    if($filter != '') {
       if($filter == strtolower('active')) {
