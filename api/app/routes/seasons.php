@@ -75,9 +75,28 @@ $app->group('/seasons', function () {
     return $response;
     });
     $this->put('', function ($request, $response, $args) {
+      //$authToken = checkToken(true,true);
+      //$user_id = $authToken['data']['user_id'];
+      //checkAdmin($user_id, $die = true);
       $season_id = $args['season_id'];
+      $formData = $request->getParsedBody();
+      $season = FrcPortal\Season::find($season_id);
+      $start_date = new DateTime($formData['start_date']);
+      $bag_day = new DateTime($formData['bag_day']);
+      $end_date = new DateTime($formData['end_date']);
 
-      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+      $season->start_date = $start_date->format('Y-m-d');
+      $season->bag_day = $bag_day->format('Y-m-d');
+      $season->end_date = $end_date->format('Y-m-d');
+      $season->game_logo = $formData['game_logo'];
+      $season->game_name = $formData['game_name'];
+      $season->hour_requirement = $formData['hour_requirement'];
+      $season->game_logo = $formData['game_logo'];
+      if($season->save()) {
+        $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $season);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $season);
+      }
       $response = $response->withJson($responseArr);
       return $response;
     });

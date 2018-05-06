@@ -129,8 +129,11 @@ $app->group('/users', function () {
     }
     $user->admin = $formData['admin'];
     $user->status = $formData['status'];
-    $user->save();
-    $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $user);
+    if($user->save()) {
+      $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $user);
+    } else {
+      $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $user);
+    }
     $response = $response->withJson($responseArr);
     return $response;
   });
