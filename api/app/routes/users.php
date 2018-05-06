@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/users', function () {
   $this->get('', function ($request, $response, $args) {
     $users = array();
@@ -26,6 +27,7 @@ $app->group('/users', function () {
     //    $queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
       }
       $totalNum = count($totalNum->get());
+      die(json_encode(DB::getQueryLog()));
     } else {
       $totalNum = FrcPortal\User::count();
     }
