@@ -11,25 +11,32 @@ $app->group('/users', function () {
     $page = $request->getParam('page') !== null ? $request->getParam('page'):1;
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
-    $whereArr = array();
-    if($filter != '') {
-      if($filter == strtolower('active')) {
-        $users = FrcPortal\User::where('users.status','=','1');
-      } elseif($filter == strtolower('inactive')) {
-        $users = FrcPortal\User::where('users.status','=','0');
-      } else {
-        $users = FrcPortal\User::where('users.email','like','%'.$filter.'%');
-        $users->orWhere('users.user_type','like','%'.$filter.'%');
-        $users->orWhere('users.gender','like','%'.$filter.'%');
-        $users->orHavingRaw('full_name LIKE %'.$filter.'%');
-        $users->orHavingRaw('student_grade LIKE %'.$filter.'%');
-  //      $queryArr[] = '(school_name LIKE '.db_quote('%'.$filter.'%').')';
-    //    $queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
-      }
-      $totalNum = count($users->get());
-    } else {
-      $totalNum = FrcPortal\User::count();
-    }
+    $queryArr = array();
+  	$queryStr = '';
+  	if($filter != '') {
+  		if($filter == strtolower('active')) {
+  			$queryArr[] = '(users.status = "1")';
+  		} elseif($filter == strtolower('inactive')) {
+  			$queryArr[] = '(users.status = "0")';
+  		} else {
+  		//	$queryArr[] = '(users.fname LIKE '.db_quote('%'.$filter.'%').')';
+  		//	$queryArr[] = '(users.lname LIKE '.db_quote('%'.$filter.'%').')';
+  			$queryArr[] = '(users.email LIKE % '.$filter.'%)';
+  			$queryArr[] = '(users.user_type LIKE %'.$filter.'%)';
+  			$queryArr[] = '(users.gender LIKE %'.$filter.'%)';
+  			$queryArr[] = '(full_name LIKE %'.$filter.'%)';
+  			//$queryArr[] = '(school_name LIKE '.db_quote('%'.$filter.'%').')';
+  			//$queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
+  			$queryArr[] = '(student_grade LIKE '.db_quote('%'.$filter.'%').')';
+  		}
+  	}
+
+  	if(count($queryArr) > 0) {
+  		$queryStr = implode(' OR ',$queryArr);
+  	}
+
+    $users = FrcPortal\User::havingRaw($queryStr)->get();
+    $totalNum = count($users);
 
 
     $orderBy = '';
