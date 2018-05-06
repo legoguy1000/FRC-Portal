@@ -47,7 +47,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 	vm.getProfileInfo();
 
 	vm.getUserAnnualRequirements = function() {
-		vm.loadingReqs = usersService.getUserAnnualRequirements($stateParams.user_id).then(function(response){
+		usersService.getUserAnnualRequirements($stateParams.user_id).then(function(response){
 			//vm.seasonInfo = response.data;
 		});
 	}
