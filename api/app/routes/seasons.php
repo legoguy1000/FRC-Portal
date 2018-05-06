@@ -1,8 +1,54 @@
 <?php
 $app->group('/seasons', function () {
   $this->get('', function ($request, $response, $args) {
-    $seasons = FrcPortal\Season::all();
-    $response = $response->withJson($seasons);
+    $seasons = array();
+  	$data = array();
+
+    $filter = $request->getParam('filter') !== null ? $request->getParam('filter'):'';
+    $limit = $request->getParam('limit') !== null ? $request->getParam('limit'):10;
+    $order = $request->getParam('order') !== null ? $request->getParam('order'):'-year';
+    $page = $request->getParam('page') !== null ? $request->getParam('page'):1;
+    $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
+
+    $totalNum = 0;
+  	if($filter != '') {
+      $seasons = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->count();
+  	} else {
+      $totalNum = FrcPortal\Season::count();
+    }
+
+    $orderBy = '';
+  	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
+  	if(in_array($orderCol,array('game_name','year','start_date','bag_day','end_date'))) {
+  		$orderBy = 'ASC';
+  		if($order[0] == '-') {
+  			$orderBy = 'DESC';
+  		}
+  	}
+
+  	if($limit > 0) {
+  		$offset	= ($page - 1) * $limit;
+  	} elseif($limit == 0) {
+      $limit = $totalNum;
+    }
+
+    if($filter != '' ) {
+      $seasons = FrcPortal\User::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+    } else {
+      $seasons = FrcPortal\User::orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+    }
+
+
+    $data['data'] = $seasons;
+    $data['total'] = $totalNum;
+    $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
+    $data['status'] =true;
+    $data['msg'] = '';
+    if($listOnly) {
+      $data = $seasons;
+    }
+
+    $response = $response->withJson($data);
     return $response;
   });
   $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
@@ -15,9 +61,9 @@ $app->group('/seasons', function () {
     $this->get('/topHourUsers', function ($request, $response, $args) {
       $year = $args['year'];
       $season = FrcPortal\Season::where('year',$year)->get();
-      $users = FrcPortal\AnnualRequirement::with('users')->where('season_id',$season[0]->season_id)->get();
-      $users = $users->sortByDesc('total_hours')->values()->slice(0,5);
-      $response = $response->withJson($users);
+      $seasons = FrcPortal\AnnualRequirement::with('users')->where('season_id',$season[0]->season_id)->get();
+      $seasons = $seasons->sortByDesc('total_hours')->values()->slice(0,5);
+      $response = $response->withJson($seasons);
       return $response;
     });
   });

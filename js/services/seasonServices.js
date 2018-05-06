@@ -2,7 +2,7 @@ angular.module('FrcPortal')
 .service('seasonsService', function ($http) {
 	return {
 		getAllSeasonsFilter: function (params) {
-			return $http.get('site/getAllSeasonsFilter.php?'+params)
+			return $http.get('api/seasons?'+params)
 			.then(function(response) {
 				return response.data;
 			});
