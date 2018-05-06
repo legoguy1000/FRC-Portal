@@ -1,14 +1,14 @@
 angular.module('FrcPortal')
-.controller('main.admin.userController', ['$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog','$stateParams',
+.controller('main.admin.userController', ['$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog','$stateParams','$mdToast',
 	mainAdminUserController
 ]);
-function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $stateParams) {
+function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $stateParams,$mdToast) {
     var vm = this;
 
 	vm.user_id = $stateParams.user_id;
 	vm.userInfo = {};
 	vm.seasonInfo = {};
-	vm.loadingUser = false;	
+	vm.loadingUser = false;
 
   vm.selectedItem  = null;
   vm.searchText    = null;
@@ -55,12 +55,18 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 
 
 	vm.updateUser = function() {
-		vm.loadingDevices = true;
+		vm.loadingUser = true;
 		usersService.updateUserPersonalInfo(vm.userInfo).then(function(response) {
-			vm.loadingDevices = false;
+			vm.loadingUser = false;
 			if(response.status) {
 
 			}
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 		});
 	}
 
