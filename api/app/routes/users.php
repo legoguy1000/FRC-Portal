@@ -26,7 +26,7 @@ $app->group('/users', function () {
     //    $queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
       }
     }
-    $totalNum = $totalNum->count();
+    $totalNum = count($totalNum->get());
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
