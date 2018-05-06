@@ -73,8 +73,8 @@ $app->group('/sign_in', function () {
           if(isset($args['pin']) && isset($args['user_id']) && $args['pin'] != '' && $args['user_id'] != '') {
             $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['pin']))->where('user_id',$args['user_id'])->where('status','=','1');
             if($user->count() > 0) {
-              $user_id = $user->user_id;
-              $name = $user->full_name;
+              $user_id = $user[0]->user_id;
+              $name = $user[0]->full_name;
               $date = time();
               $hours = FrcPortal\MeeetingHour::where('user_id',$user_id)->whereNotNull('time_in')->whereNull('time_out')->orderBy('time_in','DESC')->limit(1)->get();
               if($hours->count() > 0) {
