@@ -14,19 +14,19 @@ $app->group('/users', function () {
     $whereArr = array();
     if($filter != '') {
       if($filter == strtolower('active')) {
-        $totalNum = FrcPortal\User::where('users.status','=','1');
+        $users = FrcPortal\User::where('users.status','=','1');
       } elseif($filter == strtolower('inactive')) {
-        $totalNum = FrcPortal\User::where('users.status','=','0');
+        $users = FrcPortal\User::where('users.status','=','0');
       } else {
-        $totalNum = FrcPortal\User::where('users.email','like','%'.$filter.'%');
-        $totalNum->orWhere('users.user_type','like','%'.$filter.'%');
-        $totalNum->orWhere('users.gender','like','%'.$filter.'%');
-        $totalNum->orHaving('full_name','like','%'.$filter.'%');
-        $totalNum->orHaving('student_grade','like','%'.$filter.'%');
+        $users = FrcPortal\User::where('users.email','like','%'.$filter.'%');
+        $users->orWhere('users.user_type','like','%'.$filter.'%');
+        $users->orWhere('users.gender','like','%'.$filter.'%');
+        $users->orHaving('full_name','like','%'.$filter.'%');
+        $users->orHaving('student_grade','like','%'.$filter.'%');
   //      $queryArr[] = '(school_name LIKE '.db_quote('%'.$filter.'%').')';
     //    $queryArr[] = '(abv LIKE '.db_quote('%'.$filter.'%').')';
       }
-      $totalNum = $totalNum->get();
+      $totalNum = $users->get();
       die(json_encode(DB::getQueryLog()));
     } else {
       $totalNum = FrcPortal\User::count();
