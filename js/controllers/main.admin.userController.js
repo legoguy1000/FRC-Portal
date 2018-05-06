@@ -50,7 +50,9 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 			vm.seasonInfo = response.data;
 		});
 	}
+	vm.getUserAnnualRequirements();
 
+	
 	vm.updateUser = function() {
 		vm.loadingDevices = true;
 		usersService.updateUserPersonalInfo(vm.userInfo).then(function(response) {
