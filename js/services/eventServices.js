@@ -61,13 +61,14 @@ angular.module('FrcPortal')
 		},
 		syncGoogleCalEvent: function (event_id) {
 			var event_id = event_id != undefined && event_id != null ? event_id:'';
-			return $http.post('api/events/'+event_id+'/syncGoogleCalEvent')
+			return $http.put('api/events/'+event_id+'/syncGoogleCalEvent')
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		updateEvent: function (formData) {
-			return $http.post('site/updateEvent.php',formData)
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			return $http.put('api/events/'+event_id, formData)
 			.then(function(response) {
 				return response.data;
 			});
