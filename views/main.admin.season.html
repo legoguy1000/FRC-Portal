@@ -103,7 +103,15 @@
 						<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdMenu.open()">
 							<md-icon md-menu-origin>menu</md-icon>
 						</md-button>
-
+						<md-menu-content width="4">
+							<md-menu-item>
+								<md-button aria-label="Join Team Toggle" ng-click="vm.toggleAnnualReqs('join_team')" ng-disabled="vm.selectedUsers.length = 0">
+									<md-icon class="material-icons">group</md-icon>
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Team Join Status</md-tooltip>
+									Toggle Team Join
+								</md-button>
+							</md-menu-item>
+						</md-menu-content>
 					</md-menu>
 				</div>
 			</md-toolbar>
