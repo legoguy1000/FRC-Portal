@@ -16,15 +16,15 @@ $app->group('/events', function () {
     $queryArr = array();
   	$queryStr = '';
   	if($filter != '') {
-      $queryArr[] = '(events.name LIKE %'.$filter.'%)';
-      $queryArr[] = '(events.type LIKE %'.$filter.'%)';
-      $queryArr[] = '(events.event_start LIKE %'.$filter.'%)';
-      $queryArr[] = '(events.event_end LIKE %'.$filter.'%)';
-      $queryArr[] = '(seasons.game_name LIKE %'.$filter.'%)';
-      $queryArr[] = '(seasons.year LIKE %'.$filter.'%)';
+      $queryArr[] = '(events.name LIKE "%'.$filter.'%")';
+      $queryArr[] = '(events.type LIKE "%'.$filter.'%")';
+      $queryArr[] = '(events.event_start LIKE "%'.$filter.'%")';
+      $queryArr[] = '(events.event_end LIKE "%'.$filter.'%")';
+      $queryArr[] = '(seasons.game_name LIKE "%'.$filter.'%")';
+      $queryArr[] = '(seasons.year LIKE "%'.$filter.'%")';
       //Date Filters
-      $queryArr[] = '(MONTHNAME(events.event_start) LIKE %'.$filter.'%)';
-      $queryArr[] = '(MONTHNAME(events.event_end) LIKE %'.$filter.'%)';
+      $queryArr[] = '(MONTHNAME(events.event_start) LIKE "%'.$filter.'%")';
+      $queryArr[] = '(MONTHNAME(events.event_end) LIKE "%'.$filter.'%")';
   	}
 
   	if(count($queryArr) > 0) {
