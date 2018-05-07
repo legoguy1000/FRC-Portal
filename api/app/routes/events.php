@@ -53,7 +53,7 @@ $app->group('/events', function () {
     if($filter != '' ) {
       $events = FrcPortal\Event::havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     } else {
-      $events = FFrcPortal\Event::orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $events = FrcPortal\Event::orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     }
 
     $data['data'] = $events;
