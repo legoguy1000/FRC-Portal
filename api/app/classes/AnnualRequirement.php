@@ -25,6 +25,7 @@ class AnnualRequirement extends Eloquent {
   protected $appends = ['off_season_hours','build_season_hours','competition_season_hours','total_hours','min_hours','reqs_complete'];
 
   protected $attributes = [
+    'req_id' => uniqid(),
     'join_team' => false,
     'stims' => false,
     'dues' => false,
