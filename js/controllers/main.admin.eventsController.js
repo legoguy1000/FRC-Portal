@@ -18,7 +18,7 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 	};
 	vm.events = [];
 	vm.limitOptions = [10,25,50,100];
-	
+
 	vm.showFilter = function () {
 		vm.filter.show = true;
 		vm.query.filter = '';
@@ -31,7 +31,7 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 			vm.filter.form.$setPristine();
 		}
 	};
-	
+
 	var timeoutPromise;
 	$scope.$watch('vm.query.filter', function (newValue, oldValue) {
 		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
@@ -47,9 +47,9 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 		timeoutPromise = $timeout(function(){   //Set timeout
 			vm.getEvents();
 		},500);
-		
+
 	});
-	
+
 	vm.getEvents = function () {
 		vm.promise = eventsService.getAllEventsFilter($.param(vm.query)).then(function(response){
 			vm.events = response.data;
@@ -80,5 +80,5 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
 	}
-	
+
 }

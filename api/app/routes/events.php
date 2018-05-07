@@ -68,6 +68,90 @@ $app->group('/events', function () {
     $response = $response->withJson($data);
     return $response;
   });
+  $this->get('/searchGoogleCalendar', function ($request, $response, $args) {
+    $calendar = getIniProp('google_calendar_id');
+    $api_key = getIniProp('google_api_key');
+    $optParams = array();
+    if($request->getParam('q') != null && $request->getParam('q') != '' && $request->getParam('q') != 'null' && $request->getParam('q') != 'undefined') {
+    	$q = trim($request->getParam('q'));
+    	$optParams['q'] = $q;
+    }
+    if($request->getParam('timeMax') != null && $request->getParam('timeMax') != '' && $request->getParam('timeMax') != 'null' && $request->getParam('timeMax') != 'undefined') {
+    	$timeMax = date('c', strtotime($request->getParam('timeMax')));
+    	if(is_numeric($request->getParam('timeMax'))) {
+    		$timeMax = date('c',$request->getParam('timeMax')/1000);
+    	}
+    	$optParams['timeMax'] = $timeMax;
+    }
+    $optParams['timeMin'] = date('c',strtotime('-6 months'));
+    if($request->getParam('timeMin') != null && $request->getParam('timeMin') != '' && $request->getParam('timeMin') != 'null' && $request->getParam('timeMin') != 'undefined') {
+    	$timeMin = date('c', strtotime($request->getParam('timeMin')));
+    	if(is_numeric($request->getParam('timeMin'))) {
+    		$timeMin = date('c',$request->getParam('timeMin')/1000);
+    	}
+    	$optParams['timeMin'] = $timeMin;
+    }
+    $optParams['maxResults'] = 2500;
+    $optParams['orderBy'] = 'startTime';
+    $optParams['singleEvents'] = true;
+    $allEvents = array();
+    try {
+      $client = new Google_Client();
+      $client->setDeveloperKey($api_key);
+      $service = new Google_Service_Calendar($client);
+      $events = $service->events->listEvents($calendar, $optParams);
+      while(true) {
+        foreach ($events->getItems() as $event) {
+      		if($event->status == 'confirmed') {
+      			$temp = array(
+      				'google_event' => $event,
+      				'name' => $event->summary,
+      				'location' => $event->location,
+      				'google_cal_id' => $event->id,
+      				'allDay' => false,
+      				'event_start' => null,
+      				'event_end' => null,
+      				'event_start_unix' => null,
+      				'event_end_unix' => null,
+      				'event_start_iso' => null,
+      				'event_end_iso' => null,
+      				'details' => $event->description,
+      			);
+      			if(empty($event->start->dateTime)) {
+      				$temp['allDay'] = true;
+      				$temp['event_start'] = $event->start->date.' 00:00:00';
+      				$temp['event_end'] = $event->end->date.' 23:59:59';
+      			} else {
+      				$temp['event_start'] = date('Y-m-d H:i:s', strtotime($event->start->dateTime));
+      				$temp['event_end'] =date('Y-m-d H:i:s', strtotime($event->end->dateTime));
+      			}
+      			$temp['event_start_unix'] = strtotime($temp['event_start']);
+      			$temp['event_end_unix'] = strtotime($temp['event_end']);
+      			$temp['event_start_iso'] = date('c',strtotime($temp['event_start']));
+      			$temp['event_end_iso'] = date('c',strtotime($temp['event_end']));
+          	$allEvents[] = $temp;
+      		}
+        }
+        $pageToken = $events->getNextPageToken();
+        if ($pageToken) {
+          $optParams = array('pageToken' => $pageToken);
+          $events = $service->events->listEvents($calendar, $optParams);
+        } else {
+          break;
+        }
+      }
+    } catch (Exception $e) {
+      $result['msg'] = 'Something went wrong searching Google Calendar';
+    }
+    $data = array(
+    	'data'=>$allEvents,
+    	'count'=>count($allEvents),
+    	'status'=>true
+    );
+    $responseArr = array('status'=>true, 'msg'=>'', 'data' => $data);
+    $response = $response->withJson($responseArr);
+    return $response;
+  }):
   $this->group('/{event_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
       $event_id = $args['event_id'];
@@ -89,7 +173,7 @@ $app->group('/events', function () {
                         }])->get();
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
-    return $response;
+      return $response;
     });
     $this->put('', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
