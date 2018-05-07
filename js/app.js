@@ -323,7 +323,7 @@ angular.module('FrcPortal', [
 				} else if (rejection.status === 400) {
 					// Return a new promise
 					var $mdToast = $injector.get('$mdToast');
-					console.log(rejection);
+					//console.log(rejection);
 					$mdToast.show(
 			      $mdToast.simple()
 			        .textContent(rejection.data.msg)
