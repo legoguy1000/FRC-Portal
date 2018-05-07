@@ -317,6 +317,11 @@ angular.module('FrcPortal', [
 						$log.info('Dialog dismissed at: ' + new Date());
 						$log.error('Authentication Required');
 					});
+				} else if (rejection.status === 400) {
+					// Return a new promise
+					var $mdDialog = $injector.get('$mdToast');
+					console.log(rejection);
+					
 				}
 				return $q.reject(rejection);
 			}
