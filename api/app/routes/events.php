@@ -262,60 +262,70 @@ $app->group('/events', function () {
     //$user_id = $authToken['data']['user_id'];
     //checkAdmin($user_id, $die = true);
     $formData = $request->getParsedBody();
-    if(!isset($formData['year']) || $formData['year'] == '') {
-      $responseArr = array('status'=>false, 'msg'=>'Year cannot be blank!');
+    $responseArr = array(
+      'status'=>false,
+      'msg'=> ''
+      'data' => null
+    );
+    if(!isset($formData['name']) || $formData['name'] == '') {
+      $responseArr['msg'] = 'Name cannot be blank';
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    if(!isset($formData['game_name']) || $formData['game_name'] == '') {
-      $responseArr = array('status'=>false, 'msg'=>'Name cannot be blank!');
+    if(!isset($formData['type']) || $formData['type'] == '') {
+      $responseArr['msg'] = 'Event type cannot be blank';
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    if(!isset($formData['start_date']) || $formData['start_date'] == '') {
-      $responseArr = array('status'=>false, 'msg'=>'Start Date cannot be blank!');
+    if(!isset($formData['event_start']) || $formData['event_start'] == '') {
+      $responseArr['msg'] = 'Start Date cannot be blank';
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    if(!isset($formData['bag_day']) || $formData['bag_day'] == '') {
-      $responseArr = array('status'=>false, 'msg'=>'Bag Date cannot be blank!');
+    if(!isset($formData['event_end']) || $formData['event_end'] == '') {
+      $responseArr['msg'] = 'End Date cannot be blank';
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    if(!isset($formData['end_date']) || $formData['end_date'] == '') {
-      $responseArr = array('status'=>false, 'msg'=>'End Date cannot be blank!');
+    if(strtotime($formData['event_start']) >= strtotime($formData['event_end'])) {
+      $$responseArr['msg'] = 'msg'=>'Start Date must be before End Date';
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    $spreadsheetId = getSeasonMembershipForm($formData['year']);
-    $start_date = new DateTime($formData['start_date']);
-    $bag_day = new DateTime($formData['bag_day']);
-    $end_date = new DateTime($formData['end_date']);
-
-    $season = FrcPortal\Season::where('year', $formData['year'])->count();
-    if($season == 0) {
-      $newSeason = new FrcPortal\Season();
-      $newSeason->year = $formData['year'];
-      $newSeason->game_name = $formData['game_name'];
-      $newSeason->start_date = $start_date->format('Y-m-d');
-      $newSeason->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
-      $newSeason->end_date = $end_date->format('Y-m-d'." 23:59:59");
-      $newSeason->join_spreadsheet = $spreadsheetId==false ? '':$spreadsheetId;
-      $newSeason->game_logo = !is_null($formData['game_logo']) ? $formData['game_logo']:'';
-      if($newSeason->save()) {
+    if(strtotime($formData['google_cal_id']) >= strtotime($formData['google_cal_id'])) {
+      $responseArr['msg'] = 'Invalid Google calendar ID';
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
+    $events = FrcPortal\Event::where('google_cal_id', $formData['google_cal_id'])->count();
+    if($events == 0) {
+      $event = new FrcPortal\Event();
+      $event->google_cal_id = $formData['google_cal_id'];
+      $event->name = $formData['name'];
+      $event->type = $formData['type'];
+      $event->event_start = $formData['event_start'];
+      $event->event_end = $formData['event_end'];
+      $event->details = $formData['details'];
+      $event->location = $formData['location'];
+      $event->payment_required = isset($formData['requirements']['payment']) && $formData['requirements']['payment'] ? true:false;
+      $event->permission_slip_required = isset($formData['requirements']['permission_slip']) && $formData['requirements']['permission_slip'] ? true:false;
+      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
+      $event->room_required = isset($formData['requirements']['room']) && $formData['requirements']['room'] ? true:false;
+      $event->drivers_required = isset($formData['requirements']['drivers']) && $formData['requirements']['drivers'] ? true:false;
+      if($event->save()) {
         $limit = 10;
-        $totalNum = FrcPortal\Season::count();
-        $seasons = FrcPortal\Season::orderBy('year','DESC')->limit($limit)->get();
+        $totalNum = FrcPortal\Event::count();
+        $events = FrcPortal\Event::orderBy('event_start','DESC')->limit($limit)->get();
         $data = array();
-        $data['data'] = $seasons;
+        $data['results'] = $events;
         $data['total'] = $totalNum;
         $data['maxPage'] = ceil($totalNum/$limit);
-        $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$data);
+        $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$data);
       } else {
-        $responseArr = array('status'=>false, 'msg'=>'Something went wrong');
+        $responseArr['msg'] = 'Something went wrong';
       }
     } else {
-      $responseArr = array('status'=>false, 'msg'=>'Season for '.$formData['year'].' already exists');
+      $responseArr['msg'] = $event->name.' already exists';
     }
     $response = $response->withJson($responseArr);
     return $response;

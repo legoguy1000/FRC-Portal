@@ -106,7 +106,7 @@ $app->group('/seasons', function () {
       //$user_id = $authToken['data']['user_id'];
       //checkAdmin($user_id, $die = true);
       $season_id = $args['season_id'];
-      $responseArr = getSeasonMembershipForm($season_id);
+      $responseArr = updateSeasonMembershipForm($season_id);
       $response = $response->withJson($responseArr);
       return $response;
     });
@@ -199,6 +199,7 @@ $app->group('/seasons', function () {
       return $response;
     }
     $spreadsheetId = getSeasonMembershipForm($formData['year']);
+    $spreadsheetId = $spreadsheetId['data']['join_spreadsheet'];
     $start_date = new DateTime($formData['start_date']);
     $bag_day = new DateTime($formData['bag_day']);
     $end_date = new DateTime($formData['end_date']);
@@ -218,7 +219,7 @@ $app->group('/seasons', function () {
         $totalNum = FrcPortal\Season::count();
         $seasons = FrcPortal\Season::orderBy('year','DESC')->limit($limit)->get();
         $data = array();
-        $data['data'] = $seasons;
+        $data['results'] = $seasons;
         $data['total'] = $totalNum;
         $data['maxPage'] = ceil($totalNum/$limit);
         $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$data);

@@ -72,7 +72,7 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 			}
 		})
 		.then(function(response) {
-			vm.events = response.data.data;
+			vm.events = response.data.results;
 			vm.total = response.data.total;
 			vm.maxPage = response.data.maxPage;
 			$log.info('asdf');

@@ -1,13 +1,11 @@
 <?php
-function getSeasonMembershipForm($season_id) {
+function getSeasonMembershipForm($year) {
 	$result = array(
 		'status' => false,
 		'msg' => '',
 		'data' => null
 	);
-	$season = FrcPortal\Season::find($season_id);
-	if(!is_null($season)) {
-		$year = $season->year;
+	if(!is_null($year)) {
 		try {
 			$client = new Google_Client();
 			$client->setAuthConfigFile($_SERVER['DOCUMENT_ROOT'].'/site/includes/secured/team-2363-portal-0c12aca54f1c.json');
@@ -24,14 +22,8 @@ function getSeasonMembershipForm($season_id) {
 			$files = $service->files->listFiles($parameters);
 			$result = $files->getFiles();
 			if(count($result) > 0) {
-				$season->join_spreadsheet = $result[0]['id'];
-				if($season->save()) {
-					$result['status'] = true;
-					$result['msg'] = $season->year.' membership form added';
-					$result['data'] = $season;
-				} else {
-					$result['msg'] = 'Something went wrong adding the membership form';
-				}
+				$result['status'] = true;
+				$result['data'] = array('join_spreadsheet' => $result[0]['id']);
 			} else {
 				$result['msg'] = 'No membership form found for '.$year;
 			}
@@ -42,6 +34,32 @@ function getSeasonMembershipForm($season_id) {
 			//} else {
 					$result['msg'] = 'Something went wrong searching Google Drive';
 			//	}
+		}
+	}
+	return $result;
+}
+
+function updateSeasonMembershipForm($season_id) {
+	$result = array(
+		'status' => false,
+		'msg' => '',
+		'data' => null
+	);
+	$season = FrcPortal\Season::find($season_id);
+	if(!is_null($season)) {
+		$year = $season->year;
+		$searchResult = getSeasonMembershipForm($year);
+		if($searchResult['status'] != false) {
+			$season->join_spreadsheet = $searchResult['join_spreadsheet'];
+			if($season->save()) {
+				$result['status'] = true;
+				$result['msg'] = $season->year.' membership form added';
+				$result['data'] = $season;
+			} else {
+				$result['msg'] = 'Something went wrong adding the membership form';
+			}
+		} else {
+			$result['msg'] = 'No membership form found for '.$year;
 		}
 	}
 	return $result;
