@@ -143,7 +143,7 @@ $app->group('/seasons', function () {
       $season = FrcPortal\Season::find($season_id);
       $array = array();
       $req = $formData['requirement'];
-      $users = $formData['users']
+      $users = $formData['users'];
       foreach($users as $user) {
         $user_id = $user['user_id'];
         $cur = isset($user['annual_requirements'][0][$req]) ? $user['annual_requirements'][0][$req] : false;
