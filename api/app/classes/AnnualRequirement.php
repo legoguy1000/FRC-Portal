@@ -11,6 +11,7 @@ class AnnualRequirement extends Eloquent {
   //Use Custom Primary Key
   protected $primaryKey = 'req_id'; // or null
   public $incrementing = false;
+  protected $keyType = 'string';
   /**
   * The attributes that are mass assignable.
   *
