@@ -136,4 +136,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		}, function() {});
 	}
 
+	vm.openMenu = function() {
+		$mdMenu.open();
+	}
 }
