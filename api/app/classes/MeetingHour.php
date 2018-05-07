@@ -42,12 +42,12 @@ class MeetingHour extends Eloquent {
    * @var array
    */
   protected $casts = [];
-  
+
   public function save($options = array()) {
     if(is_null($this->hours_id)) {
       $this->hours_id = uniqid();
     }
-    parent::save();
+    return parent::save();
   } /*
   public static function boot() {
     parent::boot();
