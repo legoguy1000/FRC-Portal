@@ -264,7 +264,7 @@ $app->group('/events', function () {
     $formData = $request->getParsedBody();
     $responseArr = array(
       'status'=>false,
-      'msg'=> ''
+      'msg'=> '',
       'data' => null
     );
     if(!isset($formData['name']) || $formData['name'] == '') {
