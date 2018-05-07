@@ -105,16 +105,25 @@
 						</md-button>
 						<md-menu-content width="4">
 							<md-menu-item>
-								<md-button>
-									<md-icon md-menu-align-target>dialpad</md-icon>
-									Redial
+								<md-button aria-label="Join Team Toggle" ng-click="vm.toggleAnnualReqs('join_team')">
+									<md-icon class="material-icons">group</md-icon>
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Team Join Status</md-tooltip>
+									Toggle Team Join
 								</md-button>
 							</md-menu-item>
 							<md-menu-divider></md-menu-divider>
 							<md-menu-item>
-								<md-button disabled="disabled">
-									<md-icon>voicemail</md-icon>
-									Check voicemail
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleAnnualReqs('stims')">
+									<md-tooltip md-direction="left" md-autohide="false">Toggle STIMS/TIMS Status</md-tooltip>
+									<md-icon class="material-icons">assignment</md-icon>
+									Toggle STIMS/TIMS
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleAnnualReqs('dues')">
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Dues Status</md-tooltip>
+									<md-icon class="material-icons">attach_money</md-icon>
+									Toggle Dues
 								</md-button>
 							</md-menu-item>
 						</md-menu-content>
@@ -189,7 +198,7 @@
 				</table>
 				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.users | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
 			</md-table-container>
-			<md-fab-speed-dial md-open="vm.fabOpen" md-direction="up" class="md-scale md-fab-bottom-right">
+			<!--<md-fab-speed-dial md-open="vm.fabOpen" md-direction="up" class="md-scale md-fab-bottom-right">
 				<md-fab-trigger>
 					<md-button aria-label="menu" class="md-fab md-warn">
 						<md-icon class="material-icons">menu</md-icon>
@@ -209,7 +218,7 @@
 						<md-icon class="material-icons">attach_money</md-icon>
 					</md-button>
 				</md-fab-actions>
-			</md-fab-speed-dial>
+			</md-fab-speed-dial>-->
 		</div>
 	</md-content>
 </div>
