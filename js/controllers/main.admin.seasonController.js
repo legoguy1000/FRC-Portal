@@ -59,7 +59,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		}
 		vm.promise = seasonsService.toggleAnnualReqs(data).then(function(response){
 			if(response.status && response.data) {
-				vm.season.requirements.data = response.data;
+				vm.users = response.data;
 			}
 			$mdToast.show(
 	      $mdToast.simple()

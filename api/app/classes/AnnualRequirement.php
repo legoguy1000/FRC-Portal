@@ -56,6 +56,7 @@ class AnnualRequirement extends Eloquent {
     'total_hours' => 'float',
 //    'min_hours' => 'boolean',
   ];
+  
   public function save($options = array()) {
     if(is_null($this->req_id)) {
       $this->req_id = uniqid();

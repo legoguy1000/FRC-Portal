@@ -53,13 +53,19 @@ class User extends Eloquent {
        ELSE ""
       END AS student_grade'));
   }
-
-  public static function boot() {
+  
+  public function save($options = array()) {
+    if(is_null($this->user_id)) {
+      $this->user_id = uniqid();
+    }
+    parent::save();
+  }
+/*  public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->user_id = (string) uniqid();
     });
-  }
+  } */
 
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';

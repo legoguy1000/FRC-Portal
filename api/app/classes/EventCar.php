@@ -39,13 +39,19 @@ class EventCar extends Eloquent {
   protected $casts = [
     'car_space' => 'integer',
   ];
-
+  
+  public function save($options = array()) {
+    if(is_null($this->car_id)) {
+      $this->car_id = uniqid();
+    }
+    parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->car_id = (string) uniqid();
     });
-  }
+  } */
 
   /**
    * Get the Season.

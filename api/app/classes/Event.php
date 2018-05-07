@@ -45,12 +45,19 @@ class Event extends Eloquent {
     'single_day' => 'boolean',
   ];
 
+  public function save($options = array()) {
+    if(is_null($this->event_id)) {
+      $this->event_id = uniqid();
+    }
+    parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
-      $instance->season_id = (string) uniqid();
+      $instance->event_id = (string) uniqid();
     });
-  }
+  } */
+
   public function getSingleDayAttribute() {
     $start = new DateTime($this->attributes['event_start']);
     $end = new DateTime($this->attributes['event_end']);

@@ -49,7 +49,7 @@ $app->group('/auth', function () {
         }
         if($user != false) {
           $oauth = FrcPortal\Oauth::firstOrNew(
-              ['oauth_id' => $id, 'oauth_provider' => $provider], ['auth_id' => uniqid(), 'user_id' => $user->user_id, 'oauth_user' => $email]
+              ['oauth_id' => $id, 'oauth_provider' => $provider], ['user_id' => $user->user_id, 'oauth_user' => $email]
           );
         }
       }
@@ -135,7 +135,7 @@ $app->group('/auth', function () {
           }
           if($user != false) {
             $oauth = FrcPortal\Oauth::firstOrNew(
-                ['oauth_id' => $id, 'oauth_provider' => $provider], ['auth_id' => uniqid(), 'user_id' => $user->user_id, 'oauth_user' => $email]
+                ['oauth_id' => $id, 'oauth_provider' => $provider], ['user_id' => $user->user_id, 'oauth_user' => $email]
             );
           }
         }
@@ -246,7 +246,7 @@ $app->group('/auth', function () {
         }
         if($user != false) {
           $oauth = FrcPortal\Oauth::firstOrNew(
-              ['oauth_id' => $id, 'oauth_provider' => $provider], ['auth_id' => uniqid(), 'user_id' => $user->user_id, 'oauth_user' => $email]
+              ['oauth_id' => $id, 'oauth_provider' => $provider], ['user_id' => $user->user_id, 'oauth_user' => $email]
           );
         }
       }

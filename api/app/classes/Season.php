@@ -40,13 +40,20 @@ class Season extends Eloquent {
     'year' => 'integer',
     'hour_requirement' => 'integer',
   ];
-
+  
+  public function save($options = array()) {
+    if(is_null($this->season_id)) {
+      $this->season_id = uniqid();
+    }
+    parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->season_id = (string) uniqid();
     });
-  }
+  }*/
+
   public function getStartDateUnixAttribute() {
     $date = new DateTime($this->attributes['start_date']);
     return $date->format('U');

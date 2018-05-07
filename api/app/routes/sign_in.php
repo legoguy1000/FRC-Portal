@@ -109,8 +109,7 @@ $app->group('/sign_in', function () {
             		$responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out');
             		}
               } else {
-                $hours_id = uniqid();
-                $hours = FrcPortal\MeetingHour::create(['hours_id' => $hours_id, 'user_id' => $user_id, 'time_in' => date('Y-m-d H:i:s',$date)]);
+                $hours = FrcPortal\MeetingHour::create(['user_id' => $user_id, 'time_in' => date('Y-m-d H:i:s',$date)]);
                 if($hours) {
                   $season = FrcPortal\Season::where('year',date('Y'))->get();
                   $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {

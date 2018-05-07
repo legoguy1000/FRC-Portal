@@ -145,7 +145,7 @@ $app->group('/seasons', function () {
       $req = $formData['requirement'];
       $users = array_column($formData['users'],'user_id');
       foreach($users as $user_id) {
-        $reqUpdate = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], [$req => 0]);
+        $reqUpdate = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], [$req => DB::raw('NOT '.$req)]);
       }
       $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
                           $query->where('season_id','=',$season_id);
@@ -217,7 +217,6 @@ $app->group('/seasons', function () {
     $season = FrcPortal\Season::where('year', $formData['year'])->count();
     if($season == 0) {
       $newSeason = new FrcPortal\Season();
-      $newSeason->season_id = uniqid();
       $newSeason->year = $formData['year'];
       $newSeason->game_name = $formData['game_name'];
       $newSeason->start_date = $start_date->format('Y-m-d');

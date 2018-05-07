@@ -45,12 +45,18 @@ class EventRequirement extends Eloquent {
     'car_bool' => 'boolean',
   ];
 
+  public function save($options = array()) {
+    if(is_null($this->ereq_id)) {
+      $this->ereq_id = uniqid();
+    }
+    parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->ereq_id = (string) uniqid();
     });
-  }
+  } */
 
   public function getCarBoolAttribute() {
     return isset($this->attributes['car_id']) && !is_null($this->attributes['car_id']);

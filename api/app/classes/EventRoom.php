@@ -37,13 +37,19 @@ class EventRoom extends Eloquent {
    * @var array
    */
   protected $casts = [];
-
+  
+  public function save($options = array()) {
+    if(is_null($this->room_id)) {
+      $this->room_id = uniqid();
+    }
+    parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->room_id = (string) uniqid();
     });
-  }
+  } **/
 
   /**
    * Get the Season.
