@@ -59,8 +59,9 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		syncGoogleCalEvent: function (formData) {
-			return $http.post('site/syncGoogleCalEvent.php',formData)
+		syncGoogleCalEvent: function (event_id) {
+			var event_id = event_id != undefined && event_id != null ? event_id:'';
+			return $http.post('api/events/'+event_id+'/syncGoogleCalEvent')
 			.then(function(response) {
 				return response.data;
 			});

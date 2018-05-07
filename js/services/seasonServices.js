@@ -7,12 +7,6 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		getAllSeasons: function () {
-			return $http.get('site/getAllSeasons.php')
-			.then(function(response) {
-				return response.data;
-			});
-		},
 		getSeason: function (season_id) {
 			var season_id = season_id != undefined && season_id != null ? season_id: '';
 			return $http.get('api/seasons/'+season_id)

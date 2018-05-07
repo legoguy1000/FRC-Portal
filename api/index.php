@@ -5,8 +5,9 @@ date_default_timezone_set('America/New_York');
 
 $root = $_SERVER['DOCUMENT_ROOT'];
 require $root.'/site/includes/vendor/autoload.php';
-include($root.'/site/includes/functions/getConfigFile.php');
-include($root.'/site/includes/functions/season_functions.php');
+include($root.'/api/app/functions/getConfigFile.php');
+include($root.'/api/app//functions/season_functions.php');
+include($root.'/api/app//functions/event_functions.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -71,38 +72,6 @@ include('./app/routes/seasons.php');
 include('./app/routes/sign_in.php');
 include('./app/routes/users.php');
 
-
-
-
-
-$app->group('/events', function () {
-  $this->get('', function ($request, $response, $args) {
-
-    $response->getBody()->write(json_encode('Get all Events '));
-    return $response;
-  });
-  $this->get('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $event_id = $args['event_id'];
-    $event = FrcPortal\Event::with('season')->find($event_id);
-    $response = $response->withJson($event);
-    return $response;
-  });
-  $this->post('', function ($request, $response, $args) {
-
-    $response->getBody()->write(json_encode('New Event'));
-    return $response;
-  });
-  $this->put('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $event_id = $args['event_id'];
-    $response->getBody()->write(json_encode('Update Event '.$event_id));
-    return $response;
-  });
-  $this->delete('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $event_id = $args['event_id'];
-    $response->getBody()->write(json_encode('Delete Event '.$event_id));
-    return $response;
-  });
-});
 $app->run();
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
-$app->group('/seasons', function () {
+$app->group('/events', function () {
   $this->get('', function ($request, $response, $args) {
     $seasons = array();
   	$data = array();
@@ -52,9 +52,9 @@ $app->group('/seasons', function () {
     $response = $response->withJson($data);
     return $response;
   });
-  $this->group('/{season_id:[a-z0-9]{13}}', function () {
+  $this->group('/{event_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
-      $season_id = $args['season_id'];
+      $event_id = $args['event_id'];
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
       $season = FrcPortal\Season::find($season_id);
       if($reqsBool) {
@@ -66,8 +66,8 @@ $app->group('/seasons', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->get('/annualRequirements', function ($request, $response, $args) {
-      $season_id = $args['season_id'];
+    $this->get('/eventRequirements', function ($request, $response, $args) {
+      $event_id = $args['event_id'];
       $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
                           $query->where('season_id','=',$season_id);
                         }])->get();
@@ -79,7 +79,7 @@ $app->group('/seasons', function () {
       //$authToken = checkToken(true,true);
       //$user_id = $authToken['data']['user_id'];
       //checkAdmin($user_id, $die = true);
-      $season_id = $args['season_id'];
+      $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
       $season = FrcPortal\Season::find($season_id);
       $start_date = new DateTime($formData['start_date']);
@@ -101,16 +101,16 @@ $app->group('/seasons', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->put('/updateMembershipForm', function ($request, $response, $args) {
+    $this->put('/syncGoogleCalEvent', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
       //$user_id = $authToken['data']['user_id'];
       //checkAdmin($user_id, $die = true);
-      $season_id = $args['season_id'];
-      $responseArr = getSeasonMembershipForm($season_id);
+      $event_id = $args['event_id'];
+      $responseArr = syncGoogleCalendarEvent($cal_id, $event_id);
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->put('/toggleAnnualReqs', function ($request, $response, $args) {
+    $this->put('/toggleEventReqs', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
       //$user_id = $authToken['data']['user_id'];
       //checkAdmin($user_id, $die = true);
@@ -155,16 +155,6 @@ $app->group('/seasons', function () {
         $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $season);
       }
       $response = $response->withJson($responseArr);
-      return $response;
-    });
-  });
-  $this->group('/{year:[0-9]{4}}', function () {
-    $this->get('/topHourUsers', function ($request, $response, $args) {
-      $year = $args['year'];
-      $season = FrcPortal\Season::where('year',$year)->get();
-      $seasons = FrcPortal\AnnualRequirement::with('users')->where('season_id',$season[0]->season_id)->get();
-      $seasons = $seasons->sortByDesc('total_hours')->values()->slice(0,5);
-      $response = $response->withJson($seasons);
       return $response;
     });
   });
