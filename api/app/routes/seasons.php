@@ -148,7 +148,7 @@ $app->group('/seasons', function () {
         $user_id = $user['user_id'];
         $cur = isset($user['annual_requirements'][0][$req]) ? $user['annual_requirements'][0][$req] : false;
         $new = !$cur;
-        $reqUpdate = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], [$req => $new)]);
+        $reqUpdate = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], [$req => $new]);
       }
       $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
                           $query->where('season_id','=',$season_id);
