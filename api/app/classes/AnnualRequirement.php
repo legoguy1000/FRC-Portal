@@ -61,6 +61,7 @@ class AnnualRequirement extends Eloquent {
     parent::boot();
     static::creating(function ($instance) {
       $instance->req_id = (string) uniqid();
+      die('adsfadsf');
     });
   }
 
