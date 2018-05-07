@@ -2,7 +2,7 @@
 use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/events', function () {
   $this->get('', function ($request, $response, $args) {
-    $seasons = array();
+    $events = array();
   	$data = array();
 
     $filter = $request->getParam('filter') !== null ? $request->getParam('filter'):'';
@@ -11,16 +11,34 @@ $app->group('/events', function () {
     $page = $request->getParam('page') !== null ? $request->getParam('page'):1;
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
+
     $totalNum = 0;
+    $queryArr = array();
+  	$queryStr = '';
   	if($filter != '') {
-      $seasons = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->count();
+      $queryArr[] = '(events.name LIKE '.db_quote('%'.$filter.'%').')';
+      $queryArr[] = '(events.type LIKE '.db_quote('%'.$filter.'%').')';
+      $queryArr[] = '(events.event_start LIKE '.db_quote('%'.$filter.'%').')';
+      $queryArr[] = '(events.event_end LIKE '.db_quote('%'.$filter.'%').')';
+      $queryArr[] = '(seasons.game_name LIKE '.db_quote('%'.$filter.'%').')';
+      $queryArr[] = '(seasons.year LIKE '.db_quote('%'.$filter.'%').')';
+      //Date Filters
+      $queryArr[] = '(MONTHNAME(events.event_start) LIKE '.db_quote('%'.$filter.'%').')';
+      $queryArr[] = '(MONTHNAME(events.event_end) LIKE '.db_quote('%'.$filter.'%').')';
+  		}
+  	}
+
+  	if(count($queryArr) > 0) {
+  		$queryStr = implode(' OR ',$queryArr);
+      $events = FrcPortal\Event::havingRaw($queryStr)->get();
+      $totalNum = count($events);
   	} else {
-      $totalNum = FrcPortal\Season::count();
+      $totalNum = FrcPortal\Event::count();
     }
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
-  	if(in_array($orderCol,array('game_name','year','start_date','bag_day','end_date'))) {
+  	if(in_array($orderCol,array('game_name','year','event_start','event_end', 'name', 'type'))) {
   		$orderBy = 'ASC';
   		if($order[0] == '-') {
   			$orderBy = 'DESC';
@@ -34,21 +52,19 @@ $app->group('/events', function () {
     }
 
     if($filter != '' ) {
-      $seasons = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $events = FrcPortal\Event::havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     } else {
-      $seasons = FrcPortal\Season::orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $events = FFrcPortal\Event::orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     }
 
-
-    $data['data'] = $seasons;
+    $data['data'] = $events;
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
     $data['status'] =true;
     $data['msg'] = '';
     if($listOnly) {
-      $data = $seasons;
+      $data = $events;
     }
-
     $response = $response->withJson($data);
     return $response;
   });
@@ -56,23 +72,23 @@ $app->group('/events', function () {
     $this->get('', function ($request, $response, $args) {
       $event_id = $args['event_id'];
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
-      $season = FrcPortal\Season::find($season_id);
+      $event = FrcPortal\Event::find($event_id);
       if($reqsBool) {
-        $season->users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
-                        		$query->where('season_id','=',$season_id);
+        $event->users = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+                        		$query->where('event_id','=',$event_id);
                           }])->get();
       }
-      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
       return $response;
     });
     $this->get('/eventRequirements', function ($request, $response, $args) {
       $event_id = $args['event_id'];
-      $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
-                          $query->where('season_id','=',$season_id);
+      $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+                          $query->where('event_id','=',$event_id);
                         }])->get();
-    $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
-    $response = $response->withJson($responseArr);
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
+      $response = $response->withJson($responseArr);
     return $response;
     });
     $this->put('', function ($request, $response, $args) {

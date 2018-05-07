@@ -30,7 +30,7 @@ $app->group('/users', function () {
   			$queryArr[] = '(student_grade LIKE "%'.$filter.'%")';
   		}
   	}
-
+    $totalNum = 0;
   	if(count($queryArr) > 0) {
   		$queryStr = implode(' OR ',$queryArr);
       $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->havingRaw($queryStr)->get();
@@ -106,6 +106,27 @@ $app->group('/users', function () {
         $user = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
                   $query->where('user_id','=',$user_id); // fields from comments table,
                 }])->where('season_id','=',$season_id)->get();
+        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+    });
+    $this->group('/eventRequirements', function () {
+      $this->get('', function ($request, $response, $args) {
+        $user_id = $args['user_id'];
+        $user = FrcPortal\Event::with(['event_requirements' => function ($query) use ($user_id) {
+                  $query->where('user_id','=',$user_id); // fields from comments table,
+                }])->get();
+        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->get('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $user_id = $args['user_id'];
+        $event_id = $args['event_id'];
+        $user = FrcPortal\Event::with(['event_requirements' => function ($query) use ($user_id) {
+                  $query->where('user_id','=',$user_id); // fields from comments table,
+                }])->where('event_id','=',$event_id)->get();
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;

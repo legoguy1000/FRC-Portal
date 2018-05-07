@@ -57,9 +57,18 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		getUserAnnualRequirements: function (user_id) {
+		getUserAnnualRequirements: function (user_id, season_id = null) {
 			var user_id = user_id != undefined && user_id != null ? user_id:'';
-			return $http.get('api/users/'+user_id+'/annualRequirements')
+			var season = season_id != undefined && season_id != null ? '/'+season_id:'';
+			return $http.get('api/users/'+user_id+'/annualRequirements'+season)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		getUserEventRequirements: function (user_id, event_id = null) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			var event = event_id != undefined && event_id != null ? '/'+event_id:'';
+			return $http.get('api/users/'+user_id+'/eventRequirements'+event)
 			.then(function(response) {
 				return response.data;
 			});
