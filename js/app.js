@@ -281,6 +281,9 @@ angular.module('FrcPortal', [
         // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
     }
 ])
+.config(function ($qProvider) {
+    $qProvider.errorOnUnhandledRejections(false);
+})
 .config(function($httpProvider) {
 	$httpProvider.interceptors.push(function authInterceptor($q, $injector) {
 		return {
