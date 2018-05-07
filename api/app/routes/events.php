@@ -144,9 +144,8 @@ $app->group('/events', function () {
       $result['msg'] = 'Something went wrong searching Google Calendar';
     }
     $data = array(
-    	'data'=>$allEvents,
-    	'count'=>count($allEvents),
-    	'status'=>true
+    	'results'=>$allEvents,
+    	'count'=>count($allEvents)
     );
     $responseArr = array('status'=>true, 'msg'=>'', 'data' => $data);
     $response = $response->withJson($responseArr);
