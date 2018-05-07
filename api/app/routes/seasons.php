@@ -43,7 +43,7 @@ $app->group('/seasons', function () {
     $data['data'] = $seasons;
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
-    $data['status'] =true;
+    $data['status'] = true;
     $data['msg'] = '';
     if($listOnly) {
       $data = $seasons;
@@ -199,7 +199,7 @@ $app->group('/seasons', function () {
       return $response;
     }
     $spreadsheetId = getSeasonMembershipForm($formData['year']);
-    $spreadsheetId = $spreadsheetId['data']['join_spreadsheet'];
+    $spreadsheetId = $spreadsheetId['status'] != false ? $spreadsheetId['data']['join_spreadsheet']:'';
     $start_date = new DateTime($formData['start_date']);
     $bag_day = new DateTime($formData['bag_day']);
     $end_date = new DateTime($formData['end_date']);
@@ -212,8 +212,8 @@ $app->group('/seasons', function () {
       $newSeason->start_date = $start_date->format('Y-m-d');
       $newSeason->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
       $newSeason->end_date = $end_date->format('Y-m-d'." 23:59:59");
-      $newSeason->join_spreadsheet = $spreadsheetId==false ? '':$spreadsheetId;
-      $newSeason->game_logo = !is_null($formData['game_logo']) ? $formData['game_logo']:'';
+      $newSeason->join_spreadsheet = $spreadsheetId;
+      $newSeason->game_logo = !isset($formData['game_logo']) && !is_null($formData['game_logo']) ? $formData['game_logo']:'';
       if($newSeason->save()) {
         $limit = 10;
         $totalNum = FrcPortal\Season::count();
