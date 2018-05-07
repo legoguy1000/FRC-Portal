@@ -71,6 +71,7 @@ include('./app/routes/auth.php');
 include('./app/routes/seasons.php');
 include('./app/routes/sign_in.php');
 include('./app/routes/users.php');
+include('./app/routes/events.php');
 
 $app->run();
 
