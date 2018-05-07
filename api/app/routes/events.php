@@ -20,9 +20,10 @@ $app->group('/events', function () {
       $queryArr[] = '(events.type LIKE "%'.$filter.'%")';
       $queryArr[] = '(events.event_start LIKE "%'.$filter.'%")';
       $queryArr[] = '(events.event_end LIKE "%'.$filter.'%")';
-      $queryArr[] = '(seasons.game_name LIKE "%'.$filter.'%")';
-      $queryArr[] = '(seasons.year LIKE "%'.$filter.'%")';
+      //$queryArr[] = '(seasons.game_name LIKE "%'.$filter.'%")';
+      //$queryArr[] = '(seasons.year LIKE "%'.$filter.'%")';
       //Date Filters
+      $queryArr[] = '(YEAR(events.event_start) LIKE "%'.$filter.'%")';
       $queryArr[] = '(MONTHNAME(events.event_start) LIKE "%'.$filter.'%")';
       $queryArr[] = '(MONTHNAME(events.event_end) LIKE "%'.$filter.'%")';
   	}
