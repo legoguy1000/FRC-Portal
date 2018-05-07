@@ -131,7 +131,7 @@ $app->group('/seasons', function () {
       $season_id = $args['season_id'];
       $formData = $request->getParsedBody();
       if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid user array');
+        $responseArr = array('status'=>false, 'msg'=>'Please select at least 1 user');
         $response = $response->withJson($responseArr,400);
         return $response;
       }
