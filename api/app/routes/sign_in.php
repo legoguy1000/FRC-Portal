@@ -81,7 +81,8 @@ $app->group('/sign_in', function () {
                 $hour = $hours[0];
                 $hours_id = $hour->hours_id;
                 $hour->time_out = date('Y-m-d H:i:s',$date);
-                if($hour->save()) {
+                $save = $hour->save();
+                if($save) {
             			/*$emailData = array(
             				'signin_time' => date('M d, Y H:i A', $date),
             				'signin_out' => 'sign_out'
@@ -106,7 +107,7 @@ $app->group('/sign_in', function () {
 
             			$responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
             		} else {
-            		$responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out');
+            		$responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out', '$save'=>$save);
             		}
               } else {
                 $hours = FrcPortal\MeetingHour::create(['user_id' => $user_id, 'time_in' => date('Y-m-d H:i:s',$date)]);
