@@ -151,7 +151,7 @@ $app->group('/events', function () {
     $responseArr = array('status'=>true, 'msg'=>'', 'data' => $data);
     $response = $response->withJson($responseArr);
     return $response;
-  }):
+  });
   $this->group('/{event_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
       $event_id = $args['event_id'];
