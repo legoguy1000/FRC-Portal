@@ -37,12 +37,12 @@ class EventRoom extends Eloquent {
    * @var array
    */
   protected $casts = [];
-  
+
   public function save($options = array()) {
     if(is_null($this->room_id)) {
       $this->room_id = uniqid();
     }
-    parent::save();
+    return parent::save();
   } /*
   public static function boot() {
     parent::boot();

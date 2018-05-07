@@ -24,12 +24,12 @@ class Oauth extends Eloquent {
   * @var array
   */
   protected $hidden = [];
-  
+
   public function save($options = array()) {
     if(is_null($this->auth_id)) {
       $this->auth_id = uniqid();
     }
-    parent::save();
+    return parent::save();
   } /*
   public static function boot() {
     parent::boot();

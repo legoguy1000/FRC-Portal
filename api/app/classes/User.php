@@ -53,15 +53,15 @@ class User extends Eloquent {
        ELSE ""
       END AS student_grade'));
   }
-  
+
   public function save($options = array()) {
     if(is_null($this->user_id)) {
       $this->user_id = uniqid();
     }
-    parent::save();
+    return parent::save();
   }
 /*  public static function boot() {
-    parent::boot();
+    parent::boot();``
     static::creating(function ($instance) {
       $instance->user_id = (string) uniqid();
     });

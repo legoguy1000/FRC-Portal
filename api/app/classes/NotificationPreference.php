@@ -24,12 +24,12 @@ class NotificationPreference extends Eloquent {
   * @var array
   */
   protected $hidden = [];
-  
+
   public function save($options = array()) {
     if(is_null($this->pref_id)) {
       $this->pref_id = uniqid();
     }
-    parent::save();
+    return parent::save();
   } /*
   public static function boot() {
     parent::boot();

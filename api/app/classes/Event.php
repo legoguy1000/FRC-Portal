@@ -49,7 +49,7 @@ class Event extends Eloquent {
     if(is_null($this->event_id)) {
       $this->event_id = uniqid();
     }
-    parent::save();
+    return parent::save();
   } /*
   public static function boot() {
     parent::boot();

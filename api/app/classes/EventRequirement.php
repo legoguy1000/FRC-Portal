@@ -49,7 +49,7 @@ class EventRequirement extends Eloquent {
     if(is_null($this->ereq_id)) {
       $this->ereq_id = uniqid();
     }
-    parent::save();
+    return parent::save();
   } /*
   public static function boot() {
     parent::boot();
