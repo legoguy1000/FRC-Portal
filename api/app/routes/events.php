@@ -25,7 +25,6 @@ $app->group('/events', function () {
       //Date Filters
       $queryArr[] = '(MONTHNAME(events.event_start) LIKE '.db_quote('%'.$filter.'%').')';
       $queryArr[] = '(MONTHNAME(events.event_end) LIKE '.db_quote('%'.$filter.'%').')';
-  		}
   	}
 
   	if(count($queryArr) > 0) {
