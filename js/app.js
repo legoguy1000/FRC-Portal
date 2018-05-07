@@ -321,7 +321,12 @@ angular.module('FrcPortal', [
 					// Return a new promise
 					var $mdDialog = $injector.get('$mdToast');
 					console.log(rejection);
-					
+					$mdToast.show(
+			      $mdToast.simple()
+			        .textContent(rejection.data.msg)
+			        .position('top right')
+			        .hideDelay(3000)
+			    );
 				}
 				return $q.reject(rejection);
 			}
