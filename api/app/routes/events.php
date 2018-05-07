@@ -288,7 +288,7 @@ $app->group('/events', function () {
       return $response;
     }
     if(strtotime($formData['event_start']) >= strtotime($formData['event_end'])) {
-      $$responseArr['msg'] = 'msg'=>'Start Date must be before End Date';
+      $$responseArr['msg'] = 'Start Date must be before End Date';
       $response = $response->withJson($responseArr,400);
       return $response;
     }
