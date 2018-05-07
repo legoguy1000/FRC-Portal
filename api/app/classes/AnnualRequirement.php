@@ -56,9 +56,9 @@ class AnnualRequirement extends Eloquent {
     'total_hours' => 'float',
 //    'min_hours' => 'boolean',
   ];
-  public function updateOrCreate() {
+  public function save() {
       $this->req_id = uniqid();
-      parent::updateOrCreate();
+      parent::save();
   }
 /*  public static function boot() {
     parent::boot();
