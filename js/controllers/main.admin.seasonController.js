@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.seasonController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log','$stateParams','$mdToast','$mdMenu',
+.controller('main.admin.seasonController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log','$stateParams','$mdToast','$mdOpenMenu',
 	mainAdminSeasonController
 ]);
-function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log,$stateParams,$mdToast,$mdMenu) {
+function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log,$stateParams,$mdToast,$mdOpenMenu) {
     var vm = this;
 
 	vm.loading = false;
@@ -136,7 +136,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		}, function() {});
 	}
 
-	vm.openMenu = function(ev) {
-      $mdMenu.open(ev);
+	vm.openMenu = function($mdOpenMenu,ev) {
+      $mdOpenMenu(ev);
     };
 }
