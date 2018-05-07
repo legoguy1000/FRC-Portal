@@ -118,7 +118,7 @@ $app->group('/sign_in', function () {
 
             			$responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
             		} else {
-                  $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing out');
+                  $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');
             		}
               }
             }  else {
