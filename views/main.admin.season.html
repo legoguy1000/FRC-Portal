@@ -99,7 +99,12 @@
 					<md-button class="md-icon-button" ng-click="vm.getUserAnnualRequirements()">
 						<md-icon>refresh</md-icon>
 					</md-button>
-					
+					<md-menu>
+						<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdMenu.open()">
+							<md-icon md-menu-origin>menu</md-icon>
+						</md-button>
+
+					</md-menu>
 				</div>
 			</md-toolbar>
 			<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
