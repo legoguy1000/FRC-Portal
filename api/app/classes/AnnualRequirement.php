@@ -56,15 +56,18 @@ class AnnualRequirement extends Eloquent {
     'total_hours' => 'float',
 //    'min_hours' => 'boolean',
   ];
-
-  public static function boot() {
+  public function create() {
+      $this->req_id = uniqid();
+      parent::create();
+  }
+/*  public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->req_id = (string) uniqid();
       die('adsfadsf');
       return true;
     });
-  }
+  } */
 
   /**
    * Get the Season.
