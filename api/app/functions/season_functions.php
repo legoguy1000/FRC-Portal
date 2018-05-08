@@ -49,6 +49,7 @@ function updateSeasonMembershipForm($season_id) {
 	if(!is_null($season)) {
 		$year = $season->year;
 		$searchResult = getSeasonMembershipForm($year);
+		die(json_encode($searchResult));
 		if($searchResult['status'] != false) {
 			$season->join_spreadsheet = $searchResult['data']['join_spreadsheet'];
 			if($season->save()) {
