@@ -88,13 +88,13 @@ class User extends Eloquent {
   * Get the Annual requirements.
   */
   public function annual_requirements() {
-    return $this->hasOne('FrcPortal\AnnualRequirement', 'user_id', 'user_id');
+    return $this->hasOne('FrcPortal\AnnualRequirement', 'user_id', 'user_id')->withDefault();;
   }
   /**
   * Get the Event requirements.
   */
   public function event_requirements() {
-    return $this->hasOne('FrcPortal\EventRequirement', 'user_id', 'user_id');
+    return $this->hasOne('FrcPortal\EventRequirement', 'user_id', 'user_id')->withDefault();;
   }
   /**
   * Get the Event Cars.
@@ -106,7 +106,7 @@ class User extends Eloquent {
    * Get the POC.
    */
   public function event_pocs() {
-      return $this->hasMany('FrcPortal\Event', 'user_id', 'poc');
+      return $this->belongsTo('FrcPortal\Event', 'user_id', 'poc_id');
   }
   /**
   * Get the Meeting Hours.

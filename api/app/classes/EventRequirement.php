@@ -23,6 +23,12 @@ class EventRequirement extends Eloquent {
 
   protected $appends = ['car_bool','room_bool'];
 
+  protected $attributes = [
+    'join_team' => false,
+    'stims' => false,
+    'dues' => false,
+  ];
+
   //$data['requirements'] = array();
   /**
   * The attributes that should be hidden for arrays.
