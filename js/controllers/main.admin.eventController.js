@@ -70,8 +70,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
+			vm.loading = false;
 		});
-		vm.loading = false;
 	};
 
 	vm.updateEvent = function () {

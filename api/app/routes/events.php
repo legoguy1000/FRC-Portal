@@ -248,7 +248,7 @@ $app->group('/events', function () {
       //$user_id = $authToken['data']['user_id'];
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
-      $event = FrcPortal\Season::destroy($event_id);
+      $event = FrcPortal\Event::destroy($event_id);
       if($event) {
         $responseArr = array('status'=>true, 'msg'=>'Event Deleted', 'data' => $event);
       } else {
