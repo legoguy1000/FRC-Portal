@@ -11,6 +11,7 @@ class EventCar extends Eloquent {
   //Use Custom Primary Key
   protected $primaryKey = 'car_id'; // or null
   public $incrementing = false;
+  public $timestamps = false;
   /**
   * The attributes that are mass assignable.
   *

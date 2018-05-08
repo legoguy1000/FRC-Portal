@@ -11,6 +11,7 @@ class EventRoom extends Eloquent {
   //Use Custom Primary Key
   protected $primaryKey = 'room_id'; // or null
   public $incrementing = false;
+  public $timestamps = false;
   /**
   * The attributes that are mass assignable.
   *
