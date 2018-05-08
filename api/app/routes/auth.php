@@ -36,16 +36,16 @@ $app->group('/auth', function () {
       $user = false;
       $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
         $q->where('status','=','1');
-      }])->where('oauth_id', $id)->where('oauth_provider', $provider)->limit(1)->get();
-      if($data->count() > 0) {
-        $user = $data[0]->users;
+      }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
+      if($data != null {
+        $user = $data->users;
       } else {
         $data = FrcPortal\User::with(['school'])
                 ->where('email', $userData['email'])
                 ->orWhere('team_email', $userData['email'])
-                ->limit(1)->get();
-        if($data->count() > 0) {
-          $user = $data[0]->users;
+                ->first();
+        if($data != null) {
+          $user = $data->users;
         }
         if($user != false) {
           $oauth = FrcPortal\Oauth::firstOrNew(
@@ -122,16 +122,16 @@ $app->group('/auth', function () {
         $user = false;
         $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
           $q->where('status','=','1');
-        }])->where('oauth_id', $id)->where('oauth_provider', $provider)->limit(1)->get();
-        if($data->count() > 0) {
-          $user = $data[0]->users;
+        }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
+        if($data != null) {
+          $user = $data->users;
         } else {
           $data = FrcPortal\User::with(['school'])
                   ->where('email', $userData['email'])
                   ->orWhere('team_email', $userData['email'])
-                  ->limit(1)->get();
-          if($data->count() > 0) {
-            $user = $data[0]->users;
+                  ->first();
+          if($data != null) {
+            $user = $data->users;
           }
           if($user != false) {
             $oauth = FrcPortal\Oauth::firstOrNew(
@@ -233,16 +233,16 @@ $app->group('/auth', function () {
       $data = array();
       $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
         $q->where('status','=','1');
-      }])->where('oauth_id', $id)->where('oauth_provider', $provider)->limit(1)->get();
-      if($data->count() > 0) {
-        $user = $data[0]->users;
+      }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
+      if($data != null) {
+        $user = $data->users;
       } else {
         $data = FrcPortal\User::with(['school'])
                 ->where('email', $userData['email'])
                 ->orWhere('team_email', $userData['email'])
-                ->limit(1)->get();
-        if($data->count() > 0) {
-          $user = $data[0]->users;
+                ->first();
+        if($data != null) {
+          $user = $data->users;
         }
         if($user != false) {
           $oauth = FrcPortal\Oauth::firstOrNew(

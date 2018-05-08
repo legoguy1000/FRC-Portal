@@ -3,9 +3,9 @@ use \Firebase\JWT\JWT;
 $app->group('/sign_in', function () {
   //Get the list of users and their last sign/out and hours
   $this->get('/list', function ($request, $response, $args) {
-    $season = FrcPortal\Season::where('year',date('Y'))->get();
+    $season = FrcPortal\Season::where('year',date('Y'))->first();
     $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
-      $query->where('season_id', $season[0]->season_id); // fields from comments table,
+      $query->where('season_id', $season->season_id); // fields from comments table,
     }, 'last_sign_in'])->where('status','1')->get();
     $response = $response->withJson($users);
     return $response;
@@ -27,10 +27,7 @@ $app->group('/sign_in', function () {
   			$responseArr = array('status'=>false, 'msg'=>'Authorization Error. '.$e->getMessage());
   		}
     } elseif(isset($args['auth_code'])) {
-      $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status','=','1')->where('admin','=','1')->limit(1)->get();
-      if($user->count() > 0) {
-        $user = $user[0];
-      }
+      $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status','=','1')->where('admin','=','1')->first();
     } else {
       $responseArr = array('status'=>false, 'msg'=>'Invalid request');
     }
@@ -71,16 +68,15 @@ $app->group('/sign_in', function () {
         if(isset($data['jti']) || $data['jti'] != '') {
           $jti = $data['jti'];
           if(isset($args['pin']) && isset($args['user_id']) && $args['pin'] != '' && $args['user_id'] != '') {
-            $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['pin']))->where('user_id',$args['user_id'])->where('status','=','1')->get();
-            if($user->count() > 0) {
-              $user_id = $user[0]->user_id;
-              $name = $user[0]->full_name;
+            $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['pin']))->where('user_id',$args['user_id'])->where('status','=','1')->first();
+            if($user != null) {
+              $user_id = $user->user_id;
+              $name = $user->full_name;
               $date = time();
-              $hours = FrcPortal\MeetingHour::where('user_id',$user_id)->whereNotNull('time_in')->whereNull('time_out')->orderBy('time_in','DESC')->limit(1)->get();
-              if($hours->count() > 0) {
-                $hour = $hours[0];
-                $hours_id = $hour->hours_id;
-                $hour->time_out = date('Y-m-d H:i:s',$date);
+              $hours = FrcPortal\MeetingHour::where('user_id',$user_id)->whereNotNull('time_in')->whereNull('time_out')->orderBy('time_in','DESC')->first();
+              if($hours != null) {
+                $hours_id = $hours->hours_id;
+                $hours->time_out = date('Y-m-d H:i:s',$date);
                 if($hour->save()) {
             			/*$emailData = array(
             				'signin_time' => date('M d, Y H:i A', $date),

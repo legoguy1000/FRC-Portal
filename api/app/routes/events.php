@@ -156,7 +156,7 @@ $app->group('/events', function () {
     $this->get('', function ($request, $response, $args) {
       $event_id = $args['event_id'];
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
-      $event = FrcPortal\Event::with('event_poc')->find($event_id);
+      $event = FrcPortal\Event::with('poc')->find($event_id);
       if($reqsBool) {
         $event->users = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                         		$query->where('event_id','=',$event_id);
@@ -224,10 +224,10 @@ $app->group('/events', function () {
       $event = FrcPortal\Event::find($event_id);
 
       $event->type = $formData['type'];
-      $event->poc = isset($formData['event_poc']['user_id']) && $formData['event_poc']['user_id'] != '' ? $formData['event_poc']['user_id']:null;
+      $event->poc = isset($formData['poc']['user_id']) && $formData['poc']['user_id'] != '' ? $formData['poc']['user_id']:null;
 
       if($event->save()) {
-        $event->load('event_poc');
+        $event->load('poc');
         $responseArr = array('status'=>true, 'msg'=>'Event Information Saved', 'data' => $event);
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Event went wrong', 'data' => $event);
