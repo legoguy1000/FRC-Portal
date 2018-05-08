@@ -9,7 +9,7 @@ function syncGoogleCalendarEvent($event_id) {
 	);
 	$event = FrcPortal\Event::find($event_id);
 	if(!is_null($event)) {
-		$cal_id = $event->google_cal_id;
+		$google_cal_id = $event->google_cal_id;
 		if(isset($google_cal_id) && $google_cal_id != '') {
 			try {
 				$client = new Google_Client();
