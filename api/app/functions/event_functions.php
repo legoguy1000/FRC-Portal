@@ -51,4 +51,33 @@ function syncGoogleCalendarEvent($event_id) {
 	}
 	return $result;
 }
+
+function getEventCarList($event_id) {
+	$result = array(
+		'status' => false,
+		'msg' => '',
+		'data' => null
+	);
+	$cars = array();
+	$carInfo = array();
+	if(isset($event_id) && $event_id != '') {
+		$cars = FrcPortal\EventCar::with('users')->find($event_id)->get();
+		if(count($cars) > 0) {
+			foreach($result as $car) {
+				$carInfo[] = $car;
+				$car_id = $car->car_id;
+				$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->where('car_id','=',$car_id)->get();
+				$cars[$car_id] = $users;
+			}
+		}
+		//no user yet users
+		$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->whereIsNull('car_id')->get();
+		$cars['non_select'] = $users;
+		$result['status'] = true;
+		$result['data'] = array('cars'=>$carInfo, 'total'=>count($result), 'car_selection'=>$cars);
+	} else {
+		$result['msg'] = 'Event ID cannot be blank';
+	}
+	return $result;
+}
 ?>

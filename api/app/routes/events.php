@@ -175,6 +175,12 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    $this->get('/carList', function ($request, $response, $args) {
+      $event_id = $args['event_id'];
+      $responseArr =getEventCarList($event_id)
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
     $this->put('', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
       //$user_id = $authToken['data']['user_id'];
