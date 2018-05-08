@@ -108,6 +108,6 @@ class Event extends Eloquent {
   * Get the POC.
   */
   public function event_poc() {
-    return $this->belongsTo('FrcPortal\User', 'user_id', 'poc');
+    return $this->belongsTo('FrcPortal\User', 'poc', 'user_id');
   }
 }
