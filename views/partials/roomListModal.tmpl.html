@@ -18,7 +18,7 @@
 				<div flex class="dndList">
 					<md-list ng-cloak
 						dnd-list="vm.room_list.room_selection[room.room_id]"
-						dnd-allowed-types="room.roomType"
+						dnd-allowed-types="room.room_type"
 						dnd-disable-if="(room.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length >= 4) || (room.user_type == 'Mentor' && vm.room_list.room_selection[room.room_id].length >= 2)"
 						style="min-height:20px;">
 					    <md-list-item ng-repeat="user in vm.room_list.room_selection[room.room_id]"
@@ -27,7 +27,7 @@
 					        dnd-effect-allowed="move"
 					        dnd-selected="models.selected = user"
 					        ng-class="{'selected': models.selected === user}"
-									dnd-type="user.roomType"
+									dnd-type="user.users.room_type"
 									class="min-height-reset"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
@@ -51,7 +51,7 @@
 					        dnd-moved="vm.room_list.room_selection['non_select'].splice($index, 1)"
 					        dnd-effect-allowed="move"
 					        dnd-selected="models.selected = user"
-									dnd-type="user.roomType"
+									dnd-type="user.users.room_type"
 					        ng-class="{'selected': models.selected === user}"
 									class="min-height-reset"
 					        >
