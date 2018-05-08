@@ -164,29 +164,29 @@
 								</md-list-item>
 							</td>
 							<td md-cell>
-								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements[0].join_team">check_circle</i>
-								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements[0].join_team">remove_circle</i>
+								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.join_team">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements.join_team">remove_circle</i>
 							</td>
 							<td md-cell>
-								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements[0].stims">check_circle</i>
-								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements[0].stims">remove_circle</i>
+								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.stims">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements.stims">remove_circle</i>
 							</td>
 							<td md-cell>
 								<span ng-hide="user.user_type == 'Mentor'">
-									<i class="material-icons" style="color:green;" ng-show="user.annual_requirements[0].dues">check_circle</i>
-									<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements[0].dues">remove_circle</i>
+									<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.dues">check_circle</i>
+									<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements.dues">remove_circle</i>
 								</span>
 								<md-icon class="material-icons" ng-hide="user.user_type == 'Student'">remove_circle_outline</md-icon>
 							</td>
 							<td md-cell  style="text-align: left;">
-								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements[0].min_hours">check_circle</i>
-								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements[0].min_hours">remove_circle</i>
-								<span ng-show="user.annual_requirements[0].build_season_hours">{{user.annual_requirements[0].build_season_hours}}</span>
-								<span ng-hide="user.annual_requirements[0].build_season_hours">0</span>
+								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.min_hours">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements.min_hours">remove_circle</i>
+								<span ng-show="user.annual_requirements.build_season_hours">{{user.annual_requirements.build_season_hours}}</span>
+								<span ng-hide="user.annual_requirements.build_season_hours">0</span>
 							</td>
 							<td md-cell>
-								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements[0].reqs_complete">check_circle</i>
-								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements[0].reqs_complete">remove_circle</i>
+								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.reqs_complete">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements.reqs_complete">remove_circle</i>
 							</td>
 							<!-- <td md-cell>
 								{{user.off_season_hours}}
