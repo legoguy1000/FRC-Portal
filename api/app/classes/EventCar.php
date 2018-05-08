@@ -21,7 +21,7 @@ class EventCar extends Eloquent {
   ];
 
 
-  protected $appends = [];
+  protected $appends = ['car_title'];
 
   //$data['requirements'] = array();
   /**
@@ -71,8 +71,8 @@ class EventCar extends Eloquent {
   public function event_requirements() {
       return $this->belongsTo('FrcPortal\EventRequirement', 'car_id', 'car_id');
   }
-  public function getCarBoolAttribute() {
-    return isset($this->attributes['car_id']) && !is_null($this->attributes['car_id']);
+  public function getCarTitleAttribute() {
+    return $this->users->full_name.' ('.$this->car_space.')';
   }
 
 }
