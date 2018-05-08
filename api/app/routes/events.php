@@ -156,7 +156,7 @@ $app->group('/events', function () {
     $this->get('', function ($request, $response, $args) {
       $event_id = $args['event_id'];
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
-      $event = FrcPortal\Event::find($event_id);
+      $event = FrcPortal\Event::with('event_poc')->find($event_id);
       if($reqsBool) {
         $event->users = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                         		$query->where('event_id','=',$event_id);
@@ -181,22 +181,15 @@ $app->group('/events', function () {
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
-      $season = FrcPortal\Season::find($season_id);
-      $start_date = new DateTime($formData['start_date']);
-      $bag_day = new DateTime($formData['bag_day']);
-      $end_date = new DateTime($formData['end_date']);
+      $event = FrcPortal\Event::find($season_id);
 
-      $season->start_date = $start_date->format('Y-m-d');
-      $season->bag_day = $bag_day->format('Y-m-d');
-      $season->end_date = $end_date->format('Y-m-d');
-      $season->game_logo = $formData['game_logo'];
-      $season->game_name = $formData['game_name'];
-      $season->hour_requirement = $formData['hour_requirement'];
-      $season->game_logo = $formData['game_logo'];
-      if($season->save()) {
-        $responseArr = array('status'=>true, 'msg'=>'Season Information Saved', 'data' => $season);
+      $event->type = $formData['type'];
+      $event->poc = isset($formData['pocInfo']['user_id']) && $formData['pocInfo']['user_id'] != '' ? $formData['pocInfo']['user_id']:null;
+
+      if($event->save()) {
+        $responseArr = array('status'=>true, 'msg'=>'Event Information Saved', 'data' => $event);
       } else {
-        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $season);
+        $responseArr = array('status'=>false, 'msg'=>'Event went wrong', 'data' => $event);
       }
       $response = $response->withJson($responseArr);
       return $response;

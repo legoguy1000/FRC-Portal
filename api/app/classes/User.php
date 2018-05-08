@@ -103,6 +103,12 @@ class User extends Eloquent {
     return $this->hasMany('FrcPortal\EventCar', 'user_id', 'user_id');
   }
   /**
+   * Get the POC.
+   */
+  public function event_pocs() {
+      return $this->hasMany('FrcPortal\Event', 'poc', 'user_id');
+  }
+  /**
   * Get the Meeting Hours.
   */
   public function meeting_hours() {

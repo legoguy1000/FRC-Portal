@@ -101,7 +101,13 @@ class Event extends Eloquent {
   /**
    * Get the Room.
    */
-  public function users() {
+  public function event_rooms() {
       return $this->hasMany('FrcPortal\EventRoom', 'event_id', 'event_id');
+  }
+  /**
+  * Get the POC.
+  */
+  public function event_poc() {
+    return $this->belongsTo('FrcPortal\User', 'user_id', 'poc');
   }
 }
