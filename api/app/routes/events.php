@@ -177,7 +177,7 @@ $app->group('/events', function () {
     });
     $this->get('/carList', function ($request, $response, $args) {
       $event_id = $args['event_id'];
-      $responseArr =getEventCarList($event_id)
+      $responseArr = getEventCarList($event_id);
       $response = $response->withJson($responseArr);
       return $response;
     });
