@@ -37,7 +37,7 @@ angular.module('FrcPortal')
 		},
 		getEventRoomList: function (event_id) {
 			var event_id = event_id != undefined && event_id != null ? event_id:'';
-			return $http.get('api/events/'+event_id+'/roomList')
+			return $http.get('api/events/'+event_id+'/rooms')
 			.then(function(response) {
 				return response.data;
 			});
@@ -92,7 +92,7 @@ angular.module('FrcPortal')
 		},
 		updateEventRoomList: function (formData) {
 			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
-			return $http.put('api/events/'+event_id+'/roomList',formData)
+			return $http.put('api/events/'+event_id+'/rooms',formData)
 			.then(function(response) {
 				return response.data;
 			});
@@ -106,7 +106,7 @@ angular.module('FrcPortal')
 		},
 		addEventRoom: function (formData) {
 			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
-			return $http.post('api/events'+event_id+'/room',formData)
+			return $http.post('api/events/'+event_id+'/rooms',formData)
 			.then(function(response) {
 				return response.data;
 			});

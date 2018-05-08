@@ -215,14 +215,38 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->get('/roomList', function ($request, $response, $args) {
+    $this->get('/rooms', function ($request, $response, $args) {
       $event_id = $args['event_id'];
       $responseArr = getEventRoomList($event_id);
       $response = $response->withJson($responseArr);
       return $response;
     });
-
-    $this->put('/roomList', function ($request, $response, $args) {
+    $this->post('/rooms', function ($request, $response, $args) {
+      $event_id = $args['event_id'];
+      $formData = $request->getParsedBody();
+      if(!isset($formData['event_id']) || $formData['event_id'] == '') {
+      	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Event ID cannot be blank!')));
+      }
+      if(!isset($formData['user_type']) || $formData['user_type'] == '') {
+      	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'User type cannot be blank!')));
+      }
+      if(!isset($formData['gender']) || $formData['gender'] == '' && $formData['user_type'] != 'Mentor') {
+      	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Gender cannot be blank!')));
+      }
+      $room = new FrcPortal\EventRoom();
+      $room->event_id = $formData['event_id'];
+      $room->user_type = $formData['user_type'];
+      $room->gender = $formData['gender'];
+      if($room->save()) {
+        $rooms = getEventRoomList($event_id);
+        $responseArr = array('status'=>true, 'msg'=>'Event Information Saved', 'data' => $rooms);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Event went wrong', 'data' => null);
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->put('/rooms', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
       //$user_id = $authToken['data']['user_id'];
       //checkAdmin($user_id, $die = true);
