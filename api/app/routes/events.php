@@ -181,12 +181,13 @@ $app->group('/events', function () {
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
-      $event = FrcPortal\Event::with('event_poc')->find($event_id);
+      $event = FrcPortal\Event::find($event_id);
 
       $event->type = $formData['type'];
       $event->poc = isset($formData['event_poc']['user_id']) && $formData['event_poc']['user_id'] != '' ? $formData['event_poc']['user_id']:null;
 
       if($event->save()) {
+        $event->load('event_poc');
         $responseArr = array('status'=>true, 'msg'=>'Event Information Saved', 'data' => $event);
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Event went wrong', 'data' => $event);
