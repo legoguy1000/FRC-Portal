@@ -181,7 +181,7 @@ $app->group('/events', function () {
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
-      $event = FrcPortal\Event::find($season_id);
+      $event = FrcPortal\Event::find($event_id);
 
       $event->type = $formData['type'];
       $event->poc = isset($formData['pocInfo']['user_id']) && $formData['pocInfo']['user_id'] != '' ? $formData['pocInfo']['user_id']:null;
