@@ -210,7 +210,7 @@ $app->group('/events', function () {
       }
       $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id','=',$event_id);
-                        }])->get();
+                        },'event_requirements.event_cars'])->get();
       $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>$event);
       $response = $response->withJson($responseArr);
       return $response;
