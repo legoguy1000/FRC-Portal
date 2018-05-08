@@ -61,10 +61,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 	vm.syncGoogleCalEvent = function () {
 		vm.loading = true;
-		var data = {
-			'event_id': vm.event_id
-		};
-		vm.promise = eventsService.syncGoogleCalEvent(data).then(function(response){
+		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
 			vm.event.requirements = reqs;
 			$mdToast.show(
@@ -84,7 +81,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'pocInfo': vm.event.pocInfo,
 			'type': vm.event.type,
 		};
-		vm.promise = eventsService.updateEvent(data).then(function(response){
+		eventsService.updateEvent(data).then(function(response){
 			vm.event = response.data;
 			vm.event.requirements = reqs;
 			$mdToast.show(
