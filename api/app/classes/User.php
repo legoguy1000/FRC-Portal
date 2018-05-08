@@ -82,7 +82,7 @@ class User extends Eloquent {
   * Get the School.
   */
   public function school() {
-    return $this->belongsTo('FrcPortal\School', 'school_id', 'school_id');
+    return $this->hasOne('FrcPortal\School', 'school_id', 'school_id');
   }
   /**
   * Get the Annual requirements.
