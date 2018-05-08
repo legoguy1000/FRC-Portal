@@ -175,14 +175,14 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->get('/carList', function ($request, $response, $args) {
+    $this->get('/cars', function ($request, $response, $args) {
       $event_id = $args['event_id'];
       $responseArr = getEventCarList($event_id);
       $response = $response->withJson($responseArr);
       return $response;
     });
 
-    $this->put('/carList', function ($request, $response, $args) {
+    $this->put('/cars', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
       //$user_id = $authToken['data']['user_id'];
       //checkAdmin($user_id, $die = true);
@@ -276,6 +276,21 @@ $app->group('/events', function () {
                           $query->where('event_id','=',$event_id);
                         },'event_requirements.event_rooms'])->get();
       $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>$event);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->delete('/rooms/{room_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+      //$authToken = checkToken(true,true);
+      //$user_id = $authToken['data']['user_id'];
+      //checkAdmin($user_id, $die = true);
+      $event_id = $args['event_id'];
+      $room_id = $args['room_id'];
+      $event = FrcPortal\EventRoom::where('event_id',$event_id)->where('room_id',$room_id)->delete();
+      if($event) {
+        $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $event);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
+      }
       $response = $response->withJson($responseArr);
       return $response;
     });

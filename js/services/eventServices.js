@@ -44,7 +44,7 @@ angular.module('FrcPortal')
 		},
 		getEventCarList: function (event_id) {
 			var event_id = event_id != undefined && event_id != null ? event_id:'';
-			return $http.get('api/events/'+event_id+'/carList')
+			return $http.get('api/events/'+event_id+'/cars')
 			.then(function(response) {
 				return response.data;
 			});
@@ -99,7 +99,7 @@ angular.module('FrcPortal')
 		},
 		updateEventCarList: function (formData) {
 			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
-			return $http.put('api/events/'+event_id+'/carList',formData)
+			return $http.put('api/events/'+event_id+'/cars',formData)
 			.then(function(response) {
 				return response.data;
 			});
@@ -107,6 +107,14 @@ angular.module('FrcPortal')
 		addEventRoom: function (formData) {
 			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
 			return $http.post('api/events/'+event_id+'/rooms',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		deleteEventRoom: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			var room_id = formData.room_id != undefined && formData.room_id != null ? formData.room_id:'';
+			return $http.delete('api/events/'+event_id+'/rooms/'+room_id,formData)
 			.then(function(response) {
 				return response.data;
 			});

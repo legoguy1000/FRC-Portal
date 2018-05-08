@@ -13,7 +13,11 @@
 		<md-dialog-content class="md-margin">
 			<div layout="row" ng-repeat="room in vm.room_list.rooms" style="border-top: solid;border-left: solid;border-right: solid;">
 				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
-					{{room.room_title}}
+					<md-button class="md-icon-button noprint" ng-click="vm.deleteEventRoom(room.room_id)">
+						<md-tooltip md-direction="top">Delete Room</md-tooltip>
+					  <md-icon class=""> close </md-icon>
+					</md-button>
+					<span>{{room.room_title}}</span>
 				</div>
 				<div flex class="dndList">
 					<md-list ng-cloak

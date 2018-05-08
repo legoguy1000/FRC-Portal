@@ -59,4 +59,17 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 			}
 		});
 	};
+	vm.deleteEventRoom = function (room_id) {
+		var data = {
+			'room_id': room_id,
+			'event_id': vm.eventInfo.event_id,
+		}
+		vm.loading = true;
+		eventsService.deleteEventRoom(data).then(function(response) {
+			vm.loading = false;
+			if(response.status) {
+				vm.room_list = response.data;
+			}
+		});
+	};
 }
