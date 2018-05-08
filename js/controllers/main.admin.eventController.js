@@ -63,14 +63,13 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
-			vm.event.requirements = reqs;
+			vm.loading = false;
 			$mdToast.show(
 	      $mdToast.simple()
 	        .textContent(response.msg)
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
-			vm.loading = false;
 		});
 	};
 
