@@ -71,7 +71,7 @@ function getEventCarList($event_id) {
 			}
 		}
 		//no user yet users
-		$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->whereIsNull('car_id')->get();
+		$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->whereNull('car_id')->get();
 		$cars['non_select'] = $users;
 		$result['status'] = true;
 		$result['data'] = array('cars'=>$carInfo, 'total'=>count($result), 'car_selection'=>$cars);
