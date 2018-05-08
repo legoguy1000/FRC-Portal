@@ -89,7 +89,7 @@ function getEventRoomList($event_id) {
 	$rooms = array();
 	$roomInfo = array();
 	if(isset($event_id) && $event_id != '') {
-		$roomInfo = FrcPortal\EventRoom::with('users')->where('event_id',$event_id)->get();
+		$roomInfo = FrcPortal\EventRoom::where('event_id',$event_id)->get();
 		if(count($roomInfo) > 0) {
 			foreach($roomInfo as $room) {
 				$room_id = $room->room_id;
