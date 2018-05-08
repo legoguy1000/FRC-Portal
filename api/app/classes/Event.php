@@ -21,7 +21,7 @@ class Event extends Eloquent {
   ];
 
 
-  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_date_unix','season'];
+  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_date_unix','season','num_days'];
 
   //$data['requirements'] = array();
   /**
@@ -77,6 +77,11 @@ class Event extends Eloquent {
   public function getRegistrationDateUnixAttribute() {
     $date = new DateTime($this->attributes['registration_date']);
     return $date->format('U');
+  }
+  public function getNumDaysAttribute() {
+    $start = new DateTime($this->attributes['event_start']);
+    $end = new DateTime($this->attributes['event_end']);
+    return (integer) $end->diff($start)->format("%a");
   }
 
   public function getSeasonAttribute() {
