@@ -17,16 +17,21 @@ class EventRequirement extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'ereq_id', 'user_id', 'event_id', 'registration', 'payment','permission_slip','food','room_id','can_drive','car_id','comments'
+    'user_id', 'event_id', 'registration', 'payment','permission_slip','food','room_id','can_drive','car_id','comments'
   ];
 
 
   protected $appends = ['car_bool','room_bool'];
 
   protected $attributes = [
-    'join_team' => false,
-    'stims' => false,
-    'dues' => false,
+    'registration' => false,
+    'payment' => false,
+    'permission_slip' => false,
+    'food' => false,
+    'room_id' => null,
+    'can_drive' => false,
+    'car_id' => null,
+    'comments' => '',
   ];
 
   //$data['requirements'] = array();
