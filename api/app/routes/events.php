@@ -287,7 +287,12 @@ $app->group('/events', function () {
       $room_id = $args['room_id'];
       $event = FrcPortal\EventRoom::where('event_id',$event_id)->where('room_id',$room_id)->delete();
       if($event) {
-        $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $event);
+        $rooms = getEventRoomList($event_id);
+        if($rooms['status'] != false) {
+          $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms['data']);
+        } else {
+          $responseArr = $rooms;
+        }
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
       }
