@@ -206,7 +206,7 @@ $app->group('/events', function () {
       //$user_id = $authToken['data']['user_id'];
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
-      $responseArr = syncGoogleCalendarEvent($cal_id, $event_id);
+      $responseArr = syncGoogleCalendarEvent($event_id);
       $response = $response->withJson($responseArr);
       return $response;
     });

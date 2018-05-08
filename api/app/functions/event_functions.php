@@ -1,5 +1,5 @@
 <?php
-function syncGoogleCalendarEvent($google_cal_id, $event_id) {
+function syncGoogleCalendarEvent($event_id) {
 	$calendar = getIniProp('google_calendar_id');
 	$api_key = getIniProp('google_api_key');
 	$result = array(
@@ -16,7 +16,7 @@ function syncGoogleCalendarEvent($google_cal_id, $event_id) {
 				$client->setDeveloperKey($api_key);
 				$service = new Google_Service_Calendar($client);
 				$gevent = $service->events->get($calendar, $google_cal_id);
-				
+
 				$event->name = $gevent->summary;
 				$event->details = $gevent->description;
 				$event->location = $gevent->location;
