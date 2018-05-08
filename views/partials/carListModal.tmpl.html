@@ -30,7 +30,7 @@
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
-						        <div><span ng-show="user.user_id == car.user_id"><md-icon class="material-icons"> star </md-icon> </span>{{user.full_name}}</div>
+						        <div><span ng-show="user.user_id == car.user_id"><md-icon class="material-icons"> star </md-icon> </span>{{user.users.full_name}}</div>
 								</dnd-nodrag>
 					    </md-list-item>
 					</md-list>
@@ -54,7 +54,7 @@
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
-						        <div>{{user.full_name}}</div>
+						        <div>{{user.users.full_name}}</div>
 								</dnd-nodrag>
 					    </md-list-item>
 					</md-list>

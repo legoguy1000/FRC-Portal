@@ -73,7 +73,7 @@ function getEventCarList($event_id) {
 		$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->whereNull('car_id')->get();
 		$cars['non_select'] = $users;
 		$result['status'] = true;
-		$result['data'] = array('cars'=>$carInfo, 'total'=>count($result), 'car_selection'=>$cars);
+		$result['data'] = array('cars'=>$carInfo, 'total'=>count($carInfo), 'car_selection'=>$cars);
 	} else {
 		$result['msg'] = 'Event ID cannot be blank';
 	}
