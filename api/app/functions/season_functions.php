@@ -20,10 +20,10 @@ function getSeasonMembershipForm($year) {
 				'pageSize' => '1'
 			);
 			$files = $service->files->listFiles($parameters);
-			$result = $files->getFiles();
-			if(count($result) > 0) {
+			$fileList = $files->getFiles();
+			if(count($fileList) > 0) {
 				$result['status'] = true;
-				$result['data'] = array('join_spreadsheet' => $result[0]['id']);
+				$result['data'] = array('join_spreadsheet' => $fileList[0]['id']);
 			} else {
 				$result['msg'] = 'No membership form found for '.$year;
 			}
@@ -49,7 +49,6 @@ function updateSeasonMembershipForm($season_id) {
 	if(!is_null($season)) {
 		$year = $season->year;
 		$searchResult = getSeasonMembershipForm($year);
-		die(json_encode($searchResult));
 		if($searchResult['status'] != false) {
 			$season->join_spreadsheet = $searchResult['data']['join_spreadsheet'];
 			if($season->save()) {
