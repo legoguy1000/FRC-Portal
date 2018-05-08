@@ -170,7 +170,7 @@ $app->group('/events', function () {
       $event_id = $args['event_id'];
       $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id','=',$event_id);
-                        },'event_requirements.event_cars'])->get();
+                        },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
       return $response;
@@ -210,7 +210,7 @@ $app->group('/events', function () {
       }
       $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id','=',$event_id);
-                        },'event_requirements.event_cars'])->get();
+                        },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
       $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>$event);
       $response = $response->withJson($responseArr);
       return $response;
@@ -274,7 +274,7 @@ $app->group('/events', function () {
       }
       $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id','=',$event_id);
-                        },'event_requirements.event_rooms'])->get();
+                        },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
       $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>$event);
       $response = $response->withJson($responseArr);
       return $response;
