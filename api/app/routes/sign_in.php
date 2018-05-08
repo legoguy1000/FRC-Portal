@@ -77,7 +77,7 @@ $app->group('/sign_in', function () {
               if($hours != null) {
                 $hours_id = $hours->hours_id;
                 $hours->time_out = date('Y-m-d H:i:s',$date);
-                if($hour->save()) {
+                if($hours->save()) {
             			/*$emailData = array(
             				'signin_time' => date('M d, Y H:i A', $date),
             				'signin_out' => 'sign_out'
@@ -95,9 +95,9 @@ $app->group('/sign_in', function () {
             				)
             			);
             			sendUserNotification($user_id, 'sign_in_out', $msgData);*/
-                  $season = FrcPortal\Season::where('year',date('Y'))->get();
+                  $season = FrcPortal\Season::where('year',date('Y'))->first();
                   $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
-                    $query->where('season_id', $season[0]->season_id); // fields from comments table,
+                    $query->where('season_id', $season->season_id); // fields from comments table,
                   }, 'last_sign_in'])->where('status','1')->get();
 
             			$responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
@@ -107,9 +107,9 @@ $app->group('/sign_in', function () {
               } else {
                 $hours = FrcPortal\MeetingHour::create(['user_id' => $user_id, 'time_in' => date('Y-m-d H:i:s',$date)]);
                 if($hours) {
-                  $season = FrcPortal\Season::where('year',date('Y'))->get();
+                  $season = FrcPortal\Season::where('year',date('Y'))->first();
                   $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
-                    $query->where('season_id', $season[0]->season_id); // fields from comments table,
+                    $query->where('season_id', $season->season_id); // fields from comments table,
                   }, 'last_sign_in'])->where('status','1')->get();
 
             			$responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date), 'signInList'=>$users);

@@ -266,7 +266,7 @@ $app->group('/events', function () {
       $users = $formData['users'];
       foreach($users as $user) {
         $user_id = $user['user_id'];
-        $cur = isset($user['annual_requirements'][0][$req]) ? $user['annual_requirements'][0][$req] : false;
+        $cur = isset($user['event_requirements'][$req]) ? $user['event_requirements'][$req] : false;
         $new = !$cur;
         $reqUpdate = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], [$req => $new]);
       }

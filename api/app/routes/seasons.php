@@ -132,7 +132,7 @@ $app->group('/seasons', function () {
       $users = $formData['users'];
       foreach($users as $user) {
         $user_id = $user['user_id'];
-        $cur = isset($user['annual_requirements'][0][$req]) ? $user['annual_requirements'][0][$req] : false;
+        $cur = isset($user['annual_requirements'][$req]) ? $user['annual_requirements'][$req] : false;
         $new = !$cur;
         $reqUpdate = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], [$req => $new]);
       }
@@ -161,8 +161,8 @@ $app->group('/seasons', function () {
   $this->group('/{year:[0-9]{4}}', function () {
     $this->get('/topHourUsers', function ($request, $response, $args) {
       $year = $args['year'];
-      $season = FrcPortal\Season::where('year',$year)->get();
-      $seasons = FrcPortal\AnnualRequirement::with('users')->where('season_id',$season[0]->season_id)->get();
+      $season = FrcPortal\Season::where('year',$year)->first();
+      $seasons = FrcPortal\AnnualRequirement::with('users')->where('season_id',$season->season_id)->get();
       $seasons = $seasons->sortByDesc('total_hours')->values()->slice(0,5);
       $response = $response->withJson($seasons);
       return $response;
