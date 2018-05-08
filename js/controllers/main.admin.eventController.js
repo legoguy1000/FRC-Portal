@@ -55,7 +55,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			vm.users = response.data;
 		});
 	}
-	vm.getUserAnnualRequirements();
+	vm.getUserEventRequirements();
 
 
 
