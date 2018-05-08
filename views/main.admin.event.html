@@ -209,13 +209,13 @@
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
 							<th md-column md-order-by="full_name"><span>Name</span></th>
-							<th md-column md-order-by="registration"><span>Registration</span></th>
-							<th md-column md-order-by="payment" ng-show="vm.event.payment_required"><span>Payment</span></th>
-							<th md-column md-order-by="permission_slip" ng-show="vm.event.permission_slip_required"><span>Permission Slip</span></th>
-							<th md-column md-order-by="food" ng-show="vm.event.food_required"><span>Food Order</span></th>
-							<th md-column md-order-by="room_id" ng-show="vm.event.room_required"><span>Room Selected</span></th>
-							<th md-column md-order-by="can_drive" ng-show="vm.event.drivers_required"><span>Driver</span></th>
-							<th md-column md-order-by="car_id" ng-show="vm.event.drivers_required"><span>Car</span></th>
+							<th md-column md-order-by="event_requirements[0].registration"><span>Registration</span></th>
+							<th md-column md-order-by="event_requirements[0].payment" ng-show="vm.event.payment_required"><span>Payment</span></th>
+							<th md-column md-order-by="event_requirements[0].permission_slip" ng-show="vm.event.permission_slip_required"><span>Permission Slip</span></th>
+							<th md-column md-order-by="event_requirements[0].food" ng-show="vm.event.food_required"><span>Food Order</span></th>
+							<th md-column md-order-by="event_requirements[0].room_id" ng-show="vm.event.room_required"><span>Room Selected</span></th>
+							<th md-column md-order-by="event_requirements[0].can_drive" ng-show="vm.event.drivers_required"><span>Driver</span></th>
+							<th md-column md-order-by="event_requirements[0].car_id" ng-show="vm.event.drivers_required"><span>Car</span></th>
 							<th md-column><span>Edit Registration</span></th>
 							<!--<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
