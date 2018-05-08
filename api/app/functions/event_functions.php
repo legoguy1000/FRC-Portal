@@ -61,10 +61,9 @@ function getEventCarList($event_id) {
 	$cars = array();
 	$carInfo = array();
 	if(isset($event_id) && $event_id != '') {
-		$cars = FrcPortal\EventCar::with('users')->where('event_id',$event_id)->get();
-		if(count($cars) > 0) {
-			foreach($result as $car) {
-				$carInfo[] = $car;
+		$carInfo = FrcPortal\EventCar::with('users')->where('event_id',$event_id)->get();
+		if(count($carInfo) > 0) {
+			foreach($carInfo as $car) {
 				$car_id = $car->car_id;
 				$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->where('car_id','=',$car_id)->get();
 				$cars[$car_id] = $users;
