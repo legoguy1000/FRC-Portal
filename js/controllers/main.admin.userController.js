@@ -61,7 +61,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 			phone: vm.userInfo.phone,
 			user_type: vm.userInfo.user_type,
 			gender: vm.userInfo.gender,
-			school_id: vm.userInfo.school.school_id,
+			school_id: vm.userInfo.school != null ? vm.userInfo.school.school_id : null,
 			grad_year: vm.userInfo.grad_year,
 			admin: vm.userInfo.admin,
 			status: vm.userInfo.status,
