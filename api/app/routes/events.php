@@ -293,7 +293,7 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    if(strtotime($formData['google_cal_id']) >= strtotime($formData['google_cal_id'])) {
+    if(!isset($formData['google_cal_id']) || $formData['google_cal_id'] == '') {
       $responseArr['msg'] = 'Invalid Google calendar ID';
       $response = $response->withJson($responseArr,400);
       return $response;
