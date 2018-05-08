@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast',
+.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast','$mdMenu',
 	mainAdminEventController
 ]);
-function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast) {
+function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast,$mdMenu) {
     var vm = this;
 
 	vm.filter = {
@@ -50,12 +50,12 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.getEvent();
 
 
-	vm.getUserEventRequirements = function() {
-		vm.promise = eventsService.getUserEventRequirements(vm.event_id).then(function(response){
+	vm.getEventRequirements = function() {
+		vm.promise = eventsService.getEventRequirements(vm.event_id).then(function(response){
 			vm.users = response.data;
 		});
 	}
-	vm.getUserEventRequirements();
+	vm.getEventRequirements();
 
 
 

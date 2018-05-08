@@ -14,6 +14,13 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getEventRequirements: function (season_id) {
+			var event_id = event_id != undefined && event_id != null ? event_id:'';
+			return $http.get('api/events/'+event_id+'/eventRequirements')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		getEventRegistrationStatus: function (event_id,user_id) {
 			var eid = event_id != undefined ? event_id: '';
 			var uid = user_id != undefined ? '&user_id='+user_id : '';

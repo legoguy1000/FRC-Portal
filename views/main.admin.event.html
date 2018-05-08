@@ -161,7 +161,36 @@
 					<md-button class="md-icon-button" ng-click="vm.getUsers()">
 						<md-icon>refresh</md-icon>
 					</md-button>
-					</div>
+					<md-menu>
+						<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
+							<md-icon md-menu-origin>menu</md-icon>
+						</md-button>
+						<md-menu-content>
+							<md-menu-item>
+								<md-button aria-label="Join Team Toggle" ng-click="vm.toggleAnnualReqs('join_team')" ng-disabled="vm.selectedUsers.length == 0">
+									<md-icon class="material-icons">group</md-icon>
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Team Join Status</md-tooltip>
+									Toggle Team Join
+								</md-button>
+							</md-menu-item>
+							<md-menu-divider></md-menu-divider>
+							<md-menu-item>
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleAnnualReqs('stims')" ng-disabled="vm.selectedUsers.length == 0">
+									<md-tooltip md-direction="left" md-autohide="false">Toggle STIMS/TIMS Status</md-tooltip>
+									<md-icon class="material-icons">assignment</md-icon>
+									Toggle STIMS/TIMS
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleAnnualReqs('dues')" ng-disabled="vm.selectedUsers.length == 0">
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Dues Status</md-tooltip>
+									<md-icon class="material-icons">attach_money</md-icon>
+									Toggle Dues
+								</md-button>
+							</md-menu-item>
+						</md-menu-content>
+					</md-menu>
+				</div>
 			</md-toolbar>
 			<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
 				<div class="md-toolbar-tools">
