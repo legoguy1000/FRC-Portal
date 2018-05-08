@@ -215,6 +215,46 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    $this->get('/roomList', function ($request, $response, $args) {
+      $event_id = $args['event_id'];
+      $responseArr = getEventRoomList($event_id);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+
+    $this->put('/roomList', function ($request, $response, $args) {
+      //$authToken = checkToken(true,true);
+      //$user_id = $authToken['data']['user_id'];
+      //checkAdmin($user_id, $die = true);
+      $event_id = $args['event_id'];
+      $formData = $request->getParsedBody();
+      if(!isset($formData['rooms']) || !is_array($formData['rooms']) || empty($formData['rooms'])) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid request');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      $rooms = FrcPortal\EventRoom::where('event_id',$event_id)->get();
+      foreach($rooms as $room) {
+        $room_id = $room->room_id;
+        $roomArr = $formData['rooms'][$room_id];
+        $userArr = array_column($roomArr, 'user_id');
+        if(!empty($userArr) && count($userArr) <= 4) {
+          $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
+        }
+      }
+      //Not Assigned a car
+      $roomArr = $formData['rooms']['non_select'];
+      $userArr = array_column($roomArr, 'user_id');
+      if(!empty($userArr)) {
+        $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
+      }
+      $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+                          $query->where('event_id','=',$event_id);
+                        },'event_requirements.event_rooms'])->get();
+      $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>$event);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
     $this->put('', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
       //$user_id = $authToken['data']['user_id'];

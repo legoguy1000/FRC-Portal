@@ -79,4 +79,32 @@ function getEventCarList($event_id) {
 	}
 	return $result;
 }
+
+function getEventRoomList($event_id) {
+	$result = array(
+		'status' => false,
+		'msg' => '',
+		'data' => null
+	);
+	$rooms = array();
+	$roomInfo = array();
+	if(isset($event_id) && $event_id != '') {
+		$roomInfo = FrcPortal\EventCar::with('users')->where('event_id',$event_id)->get();
+		if(count($roomInfo) > 0) {
+			foreach($roomInfo as $room) {
+				$room_id = $room->room_id;
+				$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->where('room_id','=',$room_id)->get();
+				$rooms[$room_id] = $users;
+			}
+		}
+		//no user yet users
+		$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->whereNull('car_id')->get();
+		$rooms['non_select'] = $users;
+		$result['status'] = true;
+		$result['data'] = array('rooms'=>$roomInfo, 'total'=>count($roomInfo), 'room_selection'=>$rooms);
+	} else {
+		$result['msg'] = 'Event ID cannot be blank';
+	}
+	return $result;
+}
 ?>
