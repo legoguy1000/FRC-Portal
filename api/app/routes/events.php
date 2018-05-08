@@ -45,6 +45,7 @@ $app->group('/events', function () {
   		}
   	}
 
+    $offset = 0;
   	if($limit > 0) {
   		$offset	= ($page - 1) * $limit;
   	} elseif($limit == 0) {
@@ -60,7 +61,7 @@ $app->group('/events', function () {
     $data['data'] = $events;
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
-    $data['status'] =true;
+    $data['status'] = true;
     $data['msg'] = '';
     if($listOnly) {
       $data = $events;
