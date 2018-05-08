@@ -108,6 +108,6 @@ class Event extends Eloquent {
   * Get the POC.
   */
   public function poc() {
-    return $this->hasOne('FrcPortal\User', 'poc_id', 'user_id');
+    return $this->hasOne('FrcPortal\User', 'user_id', 'poc_id');
   }
 }

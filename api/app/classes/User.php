@@ -106,7 +106,7 @@ class User extends Eloquent {
    * Get the POC.
    */
   public function event_pocs() {
-      return $this->belongsTo('FrcPortal\Event', 'user_id', 'poc_id');
+      return $this->belongsTo('FrcPortal\Event', 'poc_id', 'user_id');
   }
   /**
   * Get the Meeting Hours.
