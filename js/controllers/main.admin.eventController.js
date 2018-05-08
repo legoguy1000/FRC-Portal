@@ -21,7 +21,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			vm.filter.form.$setPristine();
 		}
 	};
-
+	vm.selectedUsers = [];
 	vm.eventTypes = [
 		'Demo',
 		'Community Serivce',
@@ -29,29 +29,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		'Off Season Event',
 		'Other'
 	];
-
-	vm.event_id = $stateParams.event_id;
-	vm.event = {};
-	var reqs = [];
-	vm.getEvent = function () {
-		vm.loading = true;
-		vm.promise = eventsService.getEvent(vm.event_id,true,'all').then(function(response){
-			vm.event = response.data;
-			//$scope.main.title += ' - '+vm.event.name;
-			reqs = vm.event.requirements;
-			vm.loading = false;
-		});
-	};
-	vm.selectedUsers = [];
-
-	vm.getSeasons = function () {
-		vm.promise = seasonsService.getAllSeasons().then(function(response){
-			vm.seasons = response.data;
-		});
-	};
-	vm.getSeasons();
-
-	vm.getEvent();
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
 		filter: '',
@@ -59,6 +36,28 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		order: 'full_name',
 		page: 1
 	};
+
+	vm.event_id = $stateParams.event_id;
+	vm.event = {};
+	vm.users = null;
+	vm.getEvent = function () {
+		vm.loading = true;
+		eventsService.getEvent(vm.event_id).then(function(response){
+			vm.event = response.data;
+			vm.loading = false;
+		});
+	};
+	vm.getEvent();
+
+
+	vm.getUserEventRequirements = function() {
+		vm.promise = eventsService.getUserEventRequirements(vm.event_id).then(function(response){
+			vm.users = response.data;
+		});
+	}
+	vm.getUserAnnualRequirements();
+
+
 
 	vm.syncGoogleCalEvent = function () {
 		vm.loading = true;
