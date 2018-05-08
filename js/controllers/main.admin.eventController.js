@@ -77,7 +77,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		var data = {
 			'event_id': vm.event_id,
-			'pocInfo': vm.event.pocInfo,
+			'event_poc': vm.event.event_poc,
 			'type': vm.event.type,
 		};
 		eventsService.updateEvent(data).then(function(response){
