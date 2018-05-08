@@ -95,9 +95,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	};
 
 	vm.deleteEvent = function() {
-		var data = {
-			event_id: vm.event.event_id,
-		};
 		var confirm = $mdDialog.confirm()
 					.title('Delete event '+vm.event.name)
 					.textContent('Are you sure you want to delete event '+vm.event.name+'?  This action is unreversable and any registration data will be removed.'	)
@@ -106,7 +103,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 					.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
 			vm.loading = true;
-			eventsService.deleteEvent(data).then(function(response) {
+			eventsService.deleteEvent(vm.event.event_id).then(function(response) {
 				if(response.status) {
 					$mdDialog.show(
 						$mdDialog.alert()
