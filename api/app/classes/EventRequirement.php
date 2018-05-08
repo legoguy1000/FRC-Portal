@@ -54,6 +54,7 @@ class EventRequirement extends Eloquent {
     'food' => 'boolean',
     'can_drive' => 'boolean',
     'car_bool' => 'boolean',
+    'room_bool' => 'boolean',
   ];
 
   public function save($options = array()) {
@@ -73,7 +74,7 @@ class EventRequirement extends Eloquent {
     return isset($this->attributes['car_id']) && !is_null($this->attributes['car_id']);
   }
   public function getRoomBoolAttribute() {
-    return isset($this->attributes['room_bool']) && !is_null($this->attributes['room_bool']);
+    return isset($this->attributes['room_id']) && !is_null($this->attributes['room_id']);
   }
   /**
    * Get the Event.
