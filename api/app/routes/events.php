@@ -247,12 +247,12 @@ $app->group('/events', function () {
       //$authToken = checkToken(true,true);
       //$user_id = $authToken['data']['user_id'];
       //checkAdmin($user_id, $die = true);
-      $season_id = $args['season_id'];
-      $season = FrcPortal\Season::destroy($season_id);
-      if($season) {
-        $responseArr = array('status'=>true, 'msg'=>'Season Deleted', 'data' => $season);
+      $event_id = $args['event_id'];
+      $event = FrcPortal\Season::destroy($event_id);
+      if($event) {
+        $responseArr = array('status'=>true, 'msg'=>'Event Deleted', 'data' => $event);
       } else {
-        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $season);
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
       }
       $response = $response->withJson($responseArr);
       return $response;
