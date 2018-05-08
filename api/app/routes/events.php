@@ -306,8 +306,8 @@ $app->group('/events', function () {
       $event->type = $formData['type'];
       $event->event_start = $formData['event_start'];
       $event->event_end = $formData['event_end'];
-      $event->details = $formData['details'];
-      $event->location = $formData['location'];
+      $event->details = isset($formData['details']) && !is_null($formData['details']) ? $formData['details']:'';
+      $event->location = isset($formData['location']) && !is_null($formData['location']) ? $formData['location']:'';
       $event->payment_required = isset($formData['requirements']['payment']) && $formData['requirements']['payment'] ? true:false;
       $event->permission_slip_required = isset($formData['requirements']['permission_slip']) && $formData['requirements']['permission_slip'] ? true:false;
       $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
