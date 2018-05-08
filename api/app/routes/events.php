@@ -238,8 +238,8 @@ $app->group('/events', function () {
       $room->user_type = $formData['user_type'];
       $room->gender = $formData['gender'];
       if($room->save()) {
-        $rooms = getEventRoomList($event_id);
-        $responseArr = array('status'=>true, 'msg'=>'Event Information Saved', 'data' => $rooms);
+        $responseArr = getEventRoomList($event_id);
+        $responseArr['msg'] = 'New room added';
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Event went wrong', 'data' => null);
       }
