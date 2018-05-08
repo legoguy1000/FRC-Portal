@@ -59,8 +59,10 @@ function updateSeasonMembershipForm($season_id) {
 				$result['msg'] = 'Something went wrong adding the membership form';
 			}
 		} else {
-			$result['msg'] = 'No membership form found for '.$year;
+			$result = $searchResult;
 		}
+	} else {
+		$result['msg'] = 'Season not found';
 	}
 	return $result;
 }
