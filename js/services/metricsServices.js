@@ -30,7 +30,7 @@ angular.module('FrcPortal')
 			});
 		},
 		reportsHoursPerEventPerYear: function (year) {
-			return $http.get('site/reportsHoursPerEventPerYear.php?year='+year)
+			return $http.get('api/reports/hoursPerEventPerYear?year='+year)
 			.then(function(response) {
 				return response.data;
 			});
