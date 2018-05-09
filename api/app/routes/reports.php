@@ -327,7 +327,7 @@ $app->group('/reports', function () {
       $date = new DateTime();
     	$date->setISODate($year,$re->week);
       $labels[] = $date->format('m/d/Y');
-      $data[0][] = (double) $re['sum'];
+      $data[0][] = (double) $re->sum;
     }
     $allData = array(
     	'labels' => $years,
