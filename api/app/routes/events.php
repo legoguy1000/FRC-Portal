@@ -332,19 +332,19 @@ $app->group('/events', function () {
       //$authToken = checkToken(true,true);
       //$user_id = $authToken['data']['user_id'];
       //checkAdmin($user_id, $die = true);
-      $season_id = $args['season_id'];
+      $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
       if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
         $responseArr = array('status'=>false, 'msg'=>'Please select at least 1 user');
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('join_team','stims','dues'))) {
+      if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('registration','permission_slip','payment','food'))) {
         $responseArr = array('status'=>false, 'msg'=>'Invalid requirement');
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      $season = FrcPortal\Season::find($season_id);
+      $event = FrcPortal\Event::find($event_id);
       $array = array();
       $req = $formData['requirement'];
       $users = $formData['users'];
@@ -352,12 +352,12 @@ $app->group('/events', function () {
         $user_id = $user['user_id'];
         $cur = isset($user['event_requirements'][$req]) ? $user['event_requirements'][$req] : false;
         $new = !$cur;
-        $reqUpdate = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], [$req => $new]);
+        $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], [$req => $new]);
       }
-      $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
-                          $query->where('season_id','=',$season_id);
+      $season = FrcPortal\User::with(['event_requirements' => function ($query) use ($season_id) {
+                          $query->where('event_id',$event_id);
                         }])->get();
-      $responseArr = array('status'=>true, 'msg'=>'Annual Requirements Updated', 'data' => $season);
+      $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $season);
       $response = $response->withJson($responseArr);
       return $response;
     });
