@@ -26,6 +26,11 @@ $config['db']['collation'] = 'utf8_unicode_ci';
 $config['db']['prefix'] = '';
  //asdf
 $app = new \Slim\App(['settings' => $config]);
+$app->add(new \Slim\Middleware\JwtAuthentication([
+    "secret" => getIniProp('jwt_key'),
+    "path" => ['/api'],
+    "passthrough" => ['/api/auth'],
+]));
 $container = $app->getContainer();
 /* $container['db'] = function ($c) {
     $dbConfig = $c['settings']['db'];
