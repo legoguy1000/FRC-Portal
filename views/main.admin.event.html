@@ -176,21 +176,21 @@
 							</md-menu-item>
 							<md-menu-divider></md-menu-divider>
 							<md-menu-item>
-								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleEventReqs('payment')" ng-disabled="vm.selectedUsers.length == 0">
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleEventReqs('payment')" ng-disabled="vm.selectedUsers.length == 0 || !vm.event.payment_required">
 									<md-tooltip md-direction="left" md-autohide="false">Toggle Payment Status</md-tooltip>
 									<md-icon class="material-icons">attach_money</md-icon>
 									Toggle Payment
 								</md-button>
 							</md-menu-item>
 							<md-menu-item>
-								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleEventReqs('permission_slip')" ng-disabled="vm.selectedUsers.length == 0">
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleEventReqs('permission_slip')" ng-disabled="vm.selectedUsers.length == 0 || !vm.event.permission_slip_required">
 									<md-tooltip md-direction="left" md-autohide="false">Toggle Permission Slip Status</md-tooltip>
 									<md-icon class="material-icons">assignment</md-icon>
 									Toggle Permission Slip
 								</md-button>
 							</md-menu-item>
 							<md-menu-item>
-								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleEventReqs('food')" ng-disabled="vm.selectedUsers.length == 0">
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleEventReqs('food')" ng-disabled="vm.selectedUsers.length == 0 || !vm.event.food_required">
 									<md-tooltip md-direction="left" md-autohide="false">Toggle Food Status</md-tooltip>
 									<md-icon class="material-icons">local_dining</md-icon>
 									Toggle Food
