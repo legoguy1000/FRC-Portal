@@ -352,7 +352,12 @@ $app->group('/events', function () {
         $user_id = $user['user_id'];
         $cur = isset($user['event_requirements'][$req]) ? $user['event_requirements'][$req] : false;
         $new = !$cur;
-        $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], [$req => $new]);
+        if($req == 'registration' && $new == false) {
+          $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->delete();
+          $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
+        } else {
+          $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], [$req => $new]);
+        }
       }
       $season = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id',$event_id);
