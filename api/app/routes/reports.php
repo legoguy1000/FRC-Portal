@@ -279,7 +279,7 @@ $app->group('/reports', function () {
      ));
 
     foreach($result as $re) {
-      $gender = (integer) $re->gender;
+      $gender =  $re->gender;
       $year = (integer) $re->year;
     	$sum = (double) $re->sum;
     	$avg = (double) $re->avg;
