@@ -32,14 +32,16 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 	vm.start_date1 = new Date().getFullYear()-2;
 	vm.end_date1 = new Date().getFullYear();
 	vm.reportsAvgHrsPerPersonPerYear = function () {
-		metricsService.reportsAvgHrsPerPersonPerYear(vm.start_date1, vm.end_date1).then(function(response){
-			vm.labels = response.labels;
-			vm.series = response.series;
-			vm.data = response.data;
-			vm.csvData = response.csvData;
-		});
+		if(vm.start_date1 != null and vm.end_date1 != null) {
+			metricsService.reportsAvgHrsPerPersonPerYear(vm.start_date1, vm.end_date1).then(function(response){
+				vm.labels = response.labels;
+				vm.series = response.series;
+				vm.data = response.data;
+				vm.csvData = response.csvData;
+			});
+		}
 	};
-	vm.reportsAvgHrsPerPersonPerYear();
+	//vm.reportsAvgHrsPerPersonPerYear();
 
 
 	vm.labels2 = [];
