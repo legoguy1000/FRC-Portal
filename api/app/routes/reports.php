@@ -37,9 +37,9 @@ $app->group('/reports', function () {
      ));
 
     foreach($result as $re) {
-    	$year = (integer) $re['year'];
-    	$sum = (double) $re['sum'];
-    	$avg = (double) $re['avg'];
+    	$year = (integer) $re->year;
+    	$sum = (double) $re->sum;
+    	$avg = (double) $re->avg;
 
     	$data['sum'][$year] = $sum;
     	$data['avg'][$year] = $avg;
