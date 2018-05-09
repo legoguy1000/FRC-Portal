@@ -419,7 +419,7 @@ $app->group('/events', function () {
           if($user_id != $loggedInUser) {
             $responseArr['msg'] = $userFullName.' registered '.$user->full_name.' for '.$event->name;
           }
-          slackMessageToUser($event->poc_id, $msg);
+          //slackMessageToUser($event->poc_id, $msg);
           $eventRequirements = array();
         }
       } else {
