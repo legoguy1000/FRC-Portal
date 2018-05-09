@@ -157,9 +157,9 @@ $app->group('/reports', function () {
     return $response;
   });
     /**
-    * Hours per Grade per Year
+    * Total Hours per Grade per Year
     **/
-    $this->get('/HrsPerGradePerYear', function ($request, $response, $args) {
+    $this->get('/totalHrsPerGradePerYear', function ($request, $response, $args) {
 
       if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
           $responseArr = array('status'=>false, 'msg'=>'Invalid Start Date.');
