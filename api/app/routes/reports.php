@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Support\Facades\Input as Input;
 $app->group('/reports', function () {
   $this->get('/avgHrsPerPersonPerYear', function ($request, $response, $args) {
 
