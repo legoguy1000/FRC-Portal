@@ -243,7 +243,6 @@ $app->group('/reports', function () {
   * Total & average Hours per Gender per Year
   **/
   $this->get('/hoursPerGenderPerYear', function ($request, $response, $args) {
-
     if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
         $responseArr = array('status'=>false, 'msg'=>'Invalid Start Date.');
         $response = $response->withJson($responseArr,400);
@@ -329,6 +328,65 @@ $app->group('/reports', function () {
       $labels[] = $date->format('m/d/Y');
       $data[0][] = (double) $re->sum;
     }
+    $allData = array(
+    	'labels' => $labels,
+    	'series' => $series,
+    	'data' => array_values($data),
+    	//'csvData' => metricsCreateCsvData($data, $years, $series)
+    );
+    $response = $response->withJson($allData);
+    return $response;
+  });
+  /**
+  * Hours per Event per Year
+  **/
+  $this->get('/hoursPerEventPerYear', function ($request, $response, $args) {
+    if($request->getParam('year') == null|| $request->getParam('year') == '' || !is_numeric($request->getParam('year'))) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid Year');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+    }
+    $year = $request->getParam('year');
+
+    $series = array('Total Hours'); //,'Total'
+    $data = array(array());
+    $labels = array();
+
+    $query = 'SELECT IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, year(e.event_start) as year, e.*
+              FROM meeting_hours mh
+              LEFT JOIN events e ON mh.time_in >=DATE_SUB(e.event_start, INTERVAL 1.5 HOUR)  AND mh.time_out < DATE_ADD(e.event_end, INTERVAL 1.5 HOUR)
+              GROUP BY e.event_id HAVING year = :year
+              ORDER BY e.event_start';
+
+    $result = DB::select( DB::raw($query), array(
+        'year' => $year
+     ));
+
+     foreach($result as $re) {
+     	$name = $re->name;
+     	$sa = explode('-',$re->event_start);
+     	$ea = explode('-',$re->event_end);
+   		$event_start = new DateTime($re->event_start);
+   		$event_end = new DateTime($re->event_end);
+
+     	if($event_end->diff($event_start)->format('%a') == 0) {
+     		$date = new DateTime($re->event_start);
+     		$name .= ' ('.$date->format('M j').')';
+     	} elseif($sa[1] == $ea[1]) {
+     		$date = new DateTime($re->event_start);
+     		$name .= ' ('.$date->format('M j');
+     		$date = new DateTime($re->event_end);
+     		$name .= '-'.$date->format('j').')';
+     	} else {
+     		$date = new DateTime($re->event_start);
+     		$name .= ' ('.$date->format('M j');
+     		$date = new DateTime($re->event_end);
+     		$name .= '-'.$date->format('M j').')';
+     	}
+     	$labels[] = $name;
+     	$data[0][] = (double) $re->hours;
+     }
+
     $allData = array(
     	'labels' => $labels,
     	'series' => $series,
