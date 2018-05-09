@@ -369,10 +369,10 @@ $app->group('/reports', function () {
    		$event_start = new DateTime($re->event_start);
    		$event_end = new DateTime($re->event_end);
 
-     	if($start_date->format('Y-m-d') == $end_date->format('Y-m-d')) {
+     	if($event_start->format('Y-m-d') == $event_end->format('Y-m-d')) {
      		$date = new DateTime($re->event_start);
      		$name .= ' ('.$date->format('M j').')';
-     	} elseif($start_date->format('Y-m') == $end_date->format('Y-m')) {
+     	} elseif($event_start->format('Y-m') == $event_end->format('Y-m')) {
      		$date = new DateTime($re->event_start);
      		$name .= ' ('.$date->format('M j');
      		$date = new DateTime($re->event_end);
