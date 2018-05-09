@@ -361,6 +361,79 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    $this->post('/register', function ($request, $response, $args) {
+      //$authToken = checkToken(true,true);
+      //$loggedInUser = $authToken['data']['user_id'];
+      //$userFullName = $authToken['data']['full_name'];
+      //checkAdmin($user_id, $die = true);
+      $responseArr = array(
+    		'status' => false,
+    		'msg' => '',
+    		'data' => null
+    	);
+
+      $event_id = $args['event_id'];
+      $formData = $request->getParsedBody();
+      if(!is_bool($formData['registration'])) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid Request, no registration option.');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      //$user_id = $loggedInUser;
+      //if(isset($formData['user_id']) && checkAdmin($loggedInUser, $die = false)) {
+      	$user_id = $formData['user_id'];
+      //}
+      $user =  FrcPortal\User::find($user_id);
+      $user_type = $user->user_type;
+
+      $registrationBool = (bool) $formData['registration'];
+      $event = FrcPortal\Event::find($event_id);
+      if($registrationBool) {
+        if(time() > $eventInfo['event_start_unix']) {
+          $responseArr = array('status'=>false, 'msg'=>'Registration is closed. Event has already started.');
+          $response = $response->withJson($responseArr,400);
+          return $response;
+      	} elseif($event->registration_date_unix != null && (time() > $event->registration_date_unix)) {
+            $responseArr = array('status'=>false, 'msg'=>'Registration is closed. Registration deadline was '.date('F j, Y g:m A',$event->registration_date_unix).'.');
+            $response = $response->withJson($responseArr,400);
+            return $response;
+      	}
+        $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['registration' => true, 'comments' => $formData['comments']]);
+        $can_drive = (bool) $formData['can_drive'];
+        $drivers_req = (bool) $event->drivers_required;
+      	if($user_type == 'Mentor' && $can_drive && $drivers_req) {
+          $eventCarUpdate = FrcPortal\EventCar::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['car_space' => $formData['car_space']]);
+          $reqUpdate->can_drive = true;
+          $reqUpdate->car_id = $eventCarUpdate->car_id;
+          $reqUpdate->save();
+        } else {
+          $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
+          $reqUpdate->can_drive = false;
+          $reqUpdate->car_id = null;
+          $reqUpdate->save();
+        }
+        $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Registered';
+        //notify event POC
+        if(!is_null($event->poc_id)){
+          $responseArr['msg'] = $user->full_name.' registered for '.$event->name;
+          if($user_id != $loggedInUser) {
+            $responseArr['msg'] = $userFullName.' registered '.$user->full_name.' for '.$event->name;
+          }
+          slackMessageToUser($event->poc_id, $msg);
+          $eventRequirements = array();
+        }
+      } else {
+        $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->delete();
+        $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
+        $responseArr['msg'] = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Unregistered';
+      }
+      $eventReqs = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+                          $query->where('event_id','=',$event_id);
+                        },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
+      $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'data'=>$eventReqs);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
     $this->delete('', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
       //$user_id = $authToken['data']['user_id'];

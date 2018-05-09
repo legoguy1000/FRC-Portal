@@ -75,8 +75,12 @@ class Event extends Eloquent {
     return $date->format('U');
   }
   public function getRegistrationDateUnixAttribute() {
-    $date = new DateTime($this->attributes['registration_date']);
-    return $date->format('U');
+    $return = null;
+    if(!is_null($this->attributes['registration_date'])) {
+      $date = new DateTime($this->attributes['registration_date']);
+      $return = $date->format('U');
+    }
+    return $return;
   }
   public function getNumDaysAttribute() {
     $start = strtotime($this->attributes['event_start']);
