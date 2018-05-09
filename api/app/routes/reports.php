@@ -3,12 +3,12 @@ use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/reports', function () {
   $this->get('/avgHrsPerPersonPerYear', function ($request, $response, $args) {
 
-    if($request->getParam('start_date') != null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
+    if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
         $responseArr = array('status'=>false, 'msg'=>'Invalid Start Date.');
         $response = $response->withJson($responseArr,400);
         return $response;
     }
-    if($request->getParam('end_date') != null || $request->getParam('end_date') == '' || !is_numeric($request->getParam('end_date'))) {
+    if($request->getParam('end_date') == null || $request->getParam('end_date') == '' || !is_numeric($request->getParam('end_date'))) {
         $responseArr = array('status'=>false, 'msg'=>'Invalid End Date.');
         $response = $response->withJson($responseArr,400);
         return $response;
