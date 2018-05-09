@@ -29,11 +29,11 @@ $app->group('/reports', function () {
     $query = 'SELECT SUM(d.hours) as sum, AVG(d.hours) as avg, d.year
               from (SELECT a.user_id, SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600) as hours, year(a.time_in) as year from meeting_hours a WHERE year(a.time_in) BETWEEN :sd AND :ed GROUP BY user_id,year) d
               GROUP BY year';
-    $sd = Input::get($start_date);
-    $ed = Input::get($end_date);
+    //$sd = Input::get($start_date);
+    //$ed = Input::get($end_date);
     $result = DB::select( DB::raw($query), array(
-        'sd' => $sd,
-        'ed' => $ed,
+        'sd' => $start_date,
+        'ed' => $end_date,
      ));
 
     foreach($result as $re) {
