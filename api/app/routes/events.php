@@ -429,7 +429,7 @@ $app->group('/events', function () {
       }
       $eventReqs = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id','=',$event_id);
-                        },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
+                        },'event_requirements.event_rooms','event_requirements.event_cars'])->where('user_id',$user_id)->first();
       $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'data'=>$eventReqs);
       $response = $response->withJson($responseArr);
       return $response;

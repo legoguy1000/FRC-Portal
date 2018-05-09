@@ -214,17 +214,17 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		})
 		.then(function(answer) {
-			var user_id = answer.data[0].user_id;
+			var user_id = answer.data.user_id;
 			var index = null;
-			var len = vm.event.requirements.data.length;
+			var len = vm.users.length;
 			for (var i = 0; i < len; i++) {
-			  if(vm.event.requirements.data[i].user_id == user_id) {
+			  if(vm.users[i].user_id == user_id) {
 					index = i;
 			    break;
 			  }
 			}
 			if(index != null) {
-				vm.event.requirements.data[index] = answer.data[0];
+				vm.users[index] = answer.data;
 			}
 		}, function() {
 
