@@ -81,7 +81,8 @@ class Event extends Eloquent {
   public function getNumDaysAttribute() {
     $start = new DateTime($this->attributes['event_start']);
     $end = new DateTime($this->attributes['event_end']);
-    return (integer) $end->diff($start)->format("%a");
+    $diff = $end->diff($start)->format("%h");
+    return ceil($diff / 24);
   }
 
   public function getSeasonAttribute() {
