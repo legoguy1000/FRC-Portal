@@ -330,7 +330,7 @@ $app->group('/reports', function () {
       $data[0][] = (double) $re->sum;
     }
     $allData = array(
-    	'labels' => $years,
+    	'labels' => $labels,
     	'series' => $series,
     	'data' => array_values($data),
     	//'csvData' => metricsCreateCsvData($data, $years, $series)
