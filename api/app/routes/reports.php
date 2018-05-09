@@ -156,78 +156,139 @@ $app->group('/reports', function () {
     $response = $response->withJson($allData);
     return $response;
   });
-    /**
-    * Total Hours per Grade per Year
-    **/
-    $this->get('/totalHrsPerGradePerYear', function ($request, $response, $args) {
+  /**
+  * Total Hours per Grade per Year
+  **/
+  $this->get('/totalHrsPerGradePerYear', function ($request, $response, $args) {
 
-      if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
-          $responseArr = array('status'=>false, 'msg'=>'Invalid Start Date.');
-          $response = $response->withJson($responseArr,400);
-          return $response;
-      }
-      if($request->getParam('end_date') == null || $request->getParam('end_date') == '' || !is_numeric($request->getParam('end_date'))) {
-          $responseArr = array('status'=>false, 'msg'=>'Invalid End Date.');
-          $response = $response->withJson($responseArr,400);
-          return $response;
-      }
-      $start_date = $request->getParam('start_date');
-      $end_date = $request->getParam('end_date');
+    if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid Start Date.');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+    }
+    if($request->getParam('end_date') == null || $request->getParam('end_date') == '' || !is_numeric($request->getParam('end_date'))) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid End Date.');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+    }
+    $start_date = $request->getParam('start_date');
+    $end_date = $request->getParam('end_date');
 
-      $years = array();
-      for($i = $start_date; $i <= $end_date; $i++) {
-      	$years[] = (integer) $i;
-      }
+    $years = array();
+    for($i = $start_date; $i <= $end_date; $i++) {
+    	$years[] = (integer) $i;
+    }
 
-      $series = array('Senior','Junior','Sophmore','Freshman','Pre-Freshman','Mentor');
-      $data = array();
-      foreach($series as $se) {
-      	$data[$se] = array_fill_keys($years,0);
-      }
-      $query = 'SELECT CASE
-       WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=0  THEN "Graduated"
-       WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=12 THEN "Senior"
-       WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=24 THEN "Junior"
-       WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=36 THEN "Sophmore"
-       WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=48 THEN "Freshman"
-       WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) >48 THEN "Pre-Freshman"
-       ELSE ""
-      END AS student_grade,
-      IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as sum, year(a.time_in) as year
-      FROM meeting_hours a
-      LEFT JOIN users b USING (user_id)
-      WHERE year(a.time_in)
-      BETWEEN :sd AND :ed
-      GROUP BY year,student_grade';
+    $series = array('Senior','Junior','Sophmore','Freshman','Pre-Freshman','Mentor');
+    $data = array();
+    foreach($series as $se) {
+    	$data[$se] = array_fill_keys($years,0);
+    }
+    $query = 'SELECT CASE
+     WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=0  THEN "Graduated"
+     WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=12 THEN "Senior"
+     WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=24 THEN "Junior"
+     WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=36 THEN "Sophmore"
+     WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=48 THEN "Freshman"
+     WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) >48 THEN "Pre-Freshman"
+     ELSE ""
+    END AS student_grade,
+    IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as sum, year(a.time_in) as year
+    FROM meeting_hours a
+    LEFT JOIN users b USING (user_id)
+    WHERE year(a.time_in)
+    BETWEEN :sd AND :ed
+    GROUP BY year,student_grade';
 
-      $result = DB::select( DB::raw($query), array(
-          'sd' => $start_date,
-          'ed' => $end_date,
-       ));
+    $result = DB::select( DB::raw($query), array(
+        'sd' => $start_date,
+        'ed' => $end_date,
+     ));
 
-      foreach($result as $re) {
-        $year = (integer) $re->year;
-        $student_grade = $re->student_grade;
-      	$sum = (double) $re->sum;
-        if($student_grade == '') {
-          $data['Mentor'][$year] = $sum;
-        } else {
-          $data[$student_grade][$year] = $sum;
-        }
+    foreach($result as $re) {
+      $year = (integer) $re->year;
+      $student_grade = $re->student_grade;
+    	$sum = (double) $re->sum;
+      if($student_grade == '') {
+        $data['Mentor'][$year] = $sum;
+      } else {
+        $data[$student_grade][$year] = $sum;
       }
-      foreach($series as $se) {
-      	$data[$se] = array_values($data[$se]);
-      }
+    }
+    foreach($series as $se) {
+    	$data[$se] = array_values($data[$se]);
+    }
 
-      $allData = array(
-      	'labels' => $years,
-      	'series' => $series,
-      	'data' => array_values($data),
-      	//'csvData' => metricsCreateCsvData($data, $years, $series)
-      );
-      $response = $response->withJson($allData);
-      return $response;
-    });
+    $allData = array(
+    	'labels' => $years,
+    	'series' => $series,
+    	'data' => array_values($data),
+    	//'csvData' => metricsCreateCsvData($data, $years, $series)
+    );
+    $response = $response->withJson($allData);
+    return $response;
+  });
+  /**
+  * Total & average Hours per Gender per Year
+  **/
+  $this->get('/avgHoursPerGenderPerYear', function ($request, $response, $args) {
+
+    if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid Start Date.');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+    }
+    if($request->getParam('end_date') == null || $request->getParam('end_date') == '' || !is_numeric($request->getParam('end_date'))) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid End Date.');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+    }
+    $start_date = $request->getParam('start_date');
+    $end_date = $request->getParam('end_date');
+
+    $years = array();
+    for($i = $start_date; $i <= $end_date; $i++) {
+    	$years[] = (integer) $i;
+    }
+
+    $series = array('Male - Sum','Male - Avg','Female - Sum','Female - Avg');
+    $data = array();
+    foreach($series as $se) {
+    	$data[$se] = array_fill_keys($years,0);
+    }
+    $query = 'SELECT b.gender, SUM(d.hours) as sum, AVG(d.hours) as avg, d.year FROM
+    (SELECT a.user_id, IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours, year(a.time_in) as year FROM meeting_hours a WHERE year(a.time_in) BETWEEN :sd AND :ed GROUP BY user_id,year) d
+    LEFT JOIN users b USING (user_id)
+    WHERE gender <> ""
+    GROUP BY year,gender';
+
+    $result = DB::select( DB::raw($query), array(
+        'sd' => $start_date,
+        'ed' => $end_date,
+     ));
+
+    foreach($result as $re) {
+      $gender = (integer) $re->gender;
+      $year = (integer) $re->year;
+    	$sum = (double) $re->sum;
+    	$avg = (double) $re->avg;
+
+    	$data[$gender.' - Sum'][$year] = $sum;
+    	$data[$gender.' - Avg'][$year] = $avg;
+    }
+    foreach($series as $se) {
+    	$data[$se] = array_values($data[$se]);
+    }
+
+    $allData = array(
+    	'labels' => $years,
+    	'series' => $series,
+    	'data' => array_values($data),
+    	//'csvData' => metricsCreateCsvData($data, $years, $series)
+    );
+    $response = $response->withJson($allData);
+    return $response;
+  });
 });
 
 
