@@ -361,7 +361,7 @@ $app->group('/events', function () {
       }
       $season = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id',$event_id);
-                        }])->get();
+                        },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
       $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $season);
       $response = $response->withJson($responseArr);
       return $response;
