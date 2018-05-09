@@ -158,16 +158,6 @@ $app->group('/seasons', function () {
       return $response;
     });
   });
-  $this->group('/{year:[0-9]{4}}', function () {
-    $this->get('/topHourUsers', function ($request, $response, $args) {
-      $year = $args['year'];
-      $season = FrcPortal\Season::where('year',$year)->first();
-      $seasons = FrcPortal\AnnualRequirement::with('users')->where('season_id',$season->season_id)->get();
-      $seasons = $seasons->sortByDesc('total_hours')->values()->slice(0,5);
-      $response = $response->withJson($seasons);
-      return $response;
-    });
-  });
   $this->post('', function ($request, $response, $args) {
     //$authToken = checkToken(true,true);
     //$user_id = $authToken['data']['user_id'];

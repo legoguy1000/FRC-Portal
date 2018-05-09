@@ -28,8 +28,8 @@ $config['db']['prefix'] = '';
 $app = new \Slim\App(['settings' => $config]);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
     "secret" => getIniProp('jwt_key'),
-    "path" => ['/users', '/seasons', '/events', '/reports'],
-    "passthrough" => ['/auth'],
+    "path" => ['/users', '/seasons', '/events'],
+    "passthrough" => ['/auth','/reports'],
 ]));
 $container = $app->getContainer();
 /* $container['db'] = function ($c) {

@@ -18,7 +18,7 @@ angular.module('FrcPortal')
 				var d = new Date();
 				year = d.getFullYear();
 			}
-			return $http.get('api/seasons/'+year+'/topHourUsers')
+			return $http.get('api/reports/topHourUsers/'+year)
 			.then(function(response) {
 				return response.data;
 			});

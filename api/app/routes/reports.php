@@ -3,6 +3,17 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Support\Facades\Input as Input;
 $app->group('/reports', function () {
   /**
+  * Top Hours per Year
+  **/
+  $this->get('/topHourUsers/{year:[0-9]{4}}', function ($request, $response, $args) {
+    $year = $args['year'];
+    $season = FrcPortal\Season::where('year',$year)->first();
+    $seasons = FrcPortal\AnnualRequirement::with('users')->where('season_id',$season->season_id)->get();
+    $seasons = $seasons->sortByDesc('total_hours')->values()->slice(0,5);
+    $response = $response->withJson($seasons);
+    return $response;
+  });
+  /**
   * Average Hours per Person per Year
   **/
   $this->get('/avgHrsPerPersonPerYear', function ($request, $response, $args) {
