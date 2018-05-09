@@ -389,7 +389,7 @@ $app->group('/events', function () {
       $registrationBool = (bool) $formData['registration'];
       $event = FrcPortal\Event::find($event_id);
       if($registrationBool) {
-        if(time() > $eventInfo['event_start_unix']) {
+        if(time() > $event->event_start_unix) {
           $responseArr = array('status'=>false, 'msg'=>'Registration is closed. Event has already started.');
           $response = $response->withJson($responseArr,400);
           return $response;
