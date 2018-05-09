@@ -364,6 +364,7 @@ $app->group('/events', function () {
     $this->post('/register', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
       //$loggedInUser = $authToken['data']['user_id'];
+      $loggedInUser = '5a11bd670484e';
       //$userFullName = $authToken['data']['full_name'];
       //checkAdmin($user_id, $die = true);
       $responseArr = array(
