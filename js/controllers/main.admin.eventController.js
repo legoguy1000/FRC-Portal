@@ -168,7 +168,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	    });
 	  };
 	vm.toggleEventReqs = function (req) {
-		vm.loading = true;
 		var data = {
 			'event_id': vm.event_id,
 			'users': vm.selectedUsers,
@@ -176,9 +175,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		}
 		vm.promise = eventsService.toggleEventReqs(data).then(function(response){
 			if(response.status && response.data) {
-				vm.event.requirements.data = response.data;
+				vm.users = response.data;
 			}
-			vm.loading = false;
 		});
 	};
 
