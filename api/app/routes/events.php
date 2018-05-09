@@ -354,7 +354,7 @@ $app->group('/events', function () {
         $new = !$cur;
         $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], [$req => $new]);
       }
-      $season = FrcPortal\User::with(['event_requirements' => function ($query) use ($season_id) {
+      $season = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id',$event_id);
                         }])->get();
       $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $season);
