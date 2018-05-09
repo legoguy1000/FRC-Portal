@@ -29,7 +29,7 @@ $app = new \Slim\App(['settings' => $config]);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
     "secret" => getIniProp('jwt_key'),
     "path" => '/',
-    "passthrough" => '/auth/google',
+    "passthrough" => '/auth',
 ]));
 $container = $app->getContainer();
 /* $container['db'] = function ($c) {
