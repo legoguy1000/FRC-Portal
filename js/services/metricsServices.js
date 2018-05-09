@@ -2,7 +2,7 @@ angular.module('FrcPortal')
 .service('metricsService', function ($http) {
 	return {
 		reportsAvgHrsPerPersonPerYear: function (start,end) {
-			return $http.get('site/reportsAvgHrsPerPersonPerYear.php?start_date='+start+'&end_date='+end)
+			return $http.get('api/reports/hoursPerPersonPerYear?start_date='+start+'&end_date='+end)
 			.then(function(response) {
 				return response.data;
 			});
@@ -24,7 +24,7 @@ angular.module('FrcPortal')
 			});
 		},
 		reportsActiveUsersPerYear: function (start,end) {
-			return $http.get('site/reportsActiveUsersPerYear.php?start_date='+start+'&end_date='+end)
+			return $http.get('api/reports/activeUsersPerYear?start_date='+start+'&end_date='+end)
 			.then(function(response) {
 				return response.data;
 			});
@@ -36,19 +36,19 @@ angular.module('FrcPortal')
 			});
 		},
 		reportsAvgHrsPerGenderPerYear: function (start,end) {
-			return $http.get('site/reportsAvgHrsPerGenderPerYear.php?start_date='+start+'&end_date='+end)
+			return $http.get('api/reports/hoursPerGenderPerYear?start_date='+start+'&end_date='+end)
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		reportsHoursPerGradePerYear: function (start,end) {
-			return $http.get('site/reportsHoursPerGradePerYear.php?start_date='+start+'&end_date='+end)
+			return $http.get('api/reports/hoursPerGradePerYear?start_date='+start+'&end_date='+end)
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		reportsHoursPerWeek: function (year) {
-			return $http.get('site/reportsHoursPerWeek.php?year='+year)
+			return $http.get('api/reports/hoursPerWeek?year='+year)
 			.then(function(response) {
 				return response.data;
 			});
