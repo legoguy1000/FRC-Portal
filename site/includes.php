@@ -9,7 +9,7 @@ require __DIR__.'/includes/vendor/autoload.php';
 include(__DIR__.'/includes/functions/getConfigFile.php');
 
 
-//
+// 
 include(__DIR__.'/includes/functions/db_functions.php');
 include(__DIR__.'/includes/functions/user_functions.php');
 include(__DIR__.'/includes/functions/general_functions.php');
