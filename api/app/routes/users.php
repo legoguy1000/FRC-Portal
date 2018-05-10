@@ -168,7 +168,7 @@ $app->group('/users', function () {
         if($currentPIN != hash('SHA256', $formData['pin'])) {
           $user->signin_pin = hash('SHA256', $formData['pin']);
           if($user->save()) {
-            $user->load('schools');
+            //$user->load('school');
             $responseArr = array('status'=>true, 'msg'=>'PIN has been changed', 'data' => $user);
           }
         } else {
