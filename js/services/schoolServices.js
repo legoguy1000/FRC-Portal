@@ -8,7 +8,7 @@ angular.module('FrcPortal')
 			});
 		},
 		getAllSchoolsFilter: function (params) {
-			return $http.get('site/getAllSchoolsFilter.php?'+params)
+			return $http.get('api/schools?'+params)
 			.then(function(response) {
 				return response.data;
 			});
