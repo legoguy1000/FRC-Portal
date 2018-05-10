@@ -21,7 +21,7 @@ $app->group('/schools', function () {
     $totalNum = 0;
     if(count($queryArr) > 0) {
       $queryStr = implode(' OR ',$queryArr);
-      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'sc.school_id', '=', 'schools.school_id')->addSelect('schools.*',DB::raw('IFNULL(sc.student_count,0) as student_count'))->havingRaw($queryStr)->count();
+      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'sc.school_id', '=', 'schools.school_id')->addSelect('schools.*',DB::raw('IFNULL(sc.student_count,0) as student_count'))->havingRaw($queryStr)->get();
       $totalNum = count($schools);
     } else {
       $totalNum = FrcPortal\School::count();
