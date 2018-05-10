@@ -14,12 +14,6 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		checkPin: function (formData) {
-			return $http.post('site/checkPin.php',formData)
-			.then(function(response) {
-				return response.data;
-			});
-		},
 		changePin: function (formData) {
 			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
 			return $http.put('api/users/'+user_id+'/pin',formData)

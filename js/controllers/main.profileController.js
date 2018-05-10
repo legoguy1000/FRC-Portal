@@ -106,13 +106,14 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		usersService.updateUserPersonalInfo($scope.main.userInfo).then(function(response) {
 			vm.loading.profile = false;
 			if(response.status) {
-				$mdToast.show(
-		      $mdToast.simple()
-		        .textContent(response.msg)
-		        .position('top right')
-		        .hideDelay(3000)
-		    );
+
 			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 		});
 	}
 
@@ -140,6 +141,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		vm.loadingDevices = true;
 		vm.changePinMsg = '';
 		var data = {
+			user_id: $scope.main.userInfo.user_id,
 			pin: vm.changePinNum
 		}
 		usersService.changePin(data).then(function(response){
@@ -149,6 +151,12 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 				vm.changePinForm.$setPristine();
 				vm.changePinForm.$setUntouched();
 			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 		});
 	}
 
