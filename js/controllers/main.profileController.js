@@ -12,13 +12,20 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.linkedAccounts = [];
 	vm.seasonInfo = [];
 	vm.eventInfo = [];
+	vm.limitOptions = [1,5,10];
 	vm.rmhData = {};
 	vm.showPastReqs = false;
 	vm.checkPinNum = null;
 	vm.checkPinMsg = '';
 	vm.changePinNum = null;
 	vm.changePinMsg = '';
-	vm.query = {
+	vm.querySeasons = {
+		filter: '',
+		limit: 1,
+		order: '-year',
+		page: 1
+	};
+	vm.queryEvents = {
 		filter: '',
 		limit: 5,
 		order: '-year',

@@ -84,7 +84,7 @@
 				<md-content  flex layout="column">
 					<md-toolbar class="md-table-toolbar md-default">
 						<div class="md-toolbar-tools">
-							<span>Season Requirements</span>
+							<span>Seasons</span>
 							<div flex></div>
 						</div>
 					</md-toolbar>
@@ -103,7 +103,7 @@
 								</tr>
 							</thead>
 							<tbody md-body>
-								<tr md-row ng-repeat="season in vm.seasonInfo | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered">
+								<tr md-row ng-repeat="season in vm.seasonInfo | filter: vm.querySeasons.filter | orderBy: vm.querySeasons.order | limitTo: vm.querySeasons.limit : (vm.querySeasons.page -1) * vm.querySeasons.limit as filtered">
 									<td md-cell>
 										<md-list-item style="padding: 0px;">
 											<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
@@ -140,13 +140,16 @@
 								</tr>
 							</tbody>
 						</table>
-						<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.seasonInfo | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
+						<md-table-pagination md-limit="vm.querySeasons.limit" md-limit-options="vm.limitOptions" md-page="vm.querySeasons.page" md-total="{{(vm.seasonInfo | filter: vm.querySeasons.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
 					</md-table-container>
 				</md-content>
 				<md-content  flex layout="column">
-					<h1 class="md-headline">
-						Current Event Information
-					</h1>
+					<md-toolbar class="md-table-toolbar md-default">
+						<div class="md-toolbar-tools">
+							<span>Events</span>
+							<div flex></div>
+						</div>
+					</md-toolbar>
 					<md-table-container>
 						<table md-table>
 							<thead md-head md-order="vm.query.order">

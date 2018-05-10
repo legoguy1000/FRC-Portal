@@ -75,64 +75,6 @@
 				<md-icon md-font-library="material-icons">event_note</md-icon>
         <div ng-bind-html="vm.event.details | linky:'_blank'" style="margin-top: 30px; white-space: pre-wrap;"></div>
       </md-input-container>
-<!--			<md-input-container flex class="md-icon-float md-block">
-				<label>FRC Season</label>
-				<md-icon md-font-library="material-icons">event</md-icon>
-				<md-select ng-model="vm.event.season_id"
-						   md-on-close="vm.clearSearchSeason()"
-						   data-md-container-class="selectdemoSelectHeader">
-					<md-select-header class="demo-select-header">
-						<input ng-model="vm.searchSeason"
-						type="search"
-						placeholder="Search for a Season.."
-						class="demo-header-searchbox md-text">
-					</md-select-header>
-					<md-optgroup label="Seasons">
-						<md-option value=""></md-option>
-						<md-option ng-value="season.season_id" ng-repeat="season in vm.seasons | filter:vm.searchSeason">
-							<md-list-item style="padding: 0px;">
-							<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
-							{{season.year}} - {{season.game_name}}
-							</md-list-item>
-						</md-option>
-					</md-optgroup>
-				</md-select>
-			</md-input-container>
-			<div layout="row">
-				<div flex>
-					<md-input-container flex class="md-icon-float md-block">
-						<label>Start Time</label>
-						<md-icon md-font-library="material-icons">today</md-icon>
-						<input moment-picker="vm.event.event_start" required
-							 format="YYYY-MM-DD"
-							 min-view="year"
-							 max-view="day"
-							 ng-model="vm.event.event_start_full">
-						</input>
-					</md-input-container>
-				</div>
-				<div>
-					<md-checkbox ng-model="vm.event.single_day" aria-label="Single Day" ng-click="vm.checkSingle()">
-						Single Day
-					</md-checkbox>
-				</div>
-			</div>
-			<md-input-container flex class="md-icon-float md-block">
-				<label>End Date</label>
-				<md-icon md-font-library="material-icons">today</md-icon>
-				<input moment-picker="vm.event.event_end" required
-					 format="YYYY-MM-DD"
-					 min-view="year"
-					 max-view="day"
-					 ng-model="vm.event.event_end_full"
-					 disable="vm.event.single_day">
-				</input>
-			</md-input-container> -->
-	<!--		<div>
-				<md-checkbox ng-model="vm.event.exempt_hours" aria-label="Exempt Hours">
-					Exempt Hours from counting to season total
-				</md-checkbox>
-			</div> -->
 			<div flex layout="row">
 				<span flex></span>
 				<md-button type="submit" class="md-raised">

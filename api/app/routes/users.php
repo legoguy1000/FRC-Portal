@@ -114,7 +114,9 @@ $app->group('/users', function () {
     $this->group('/eventRequirements', function () {
       $this->get('', function ($request, $response, $args) {
         $user_id = $args['user_id'];
-        $user = FrcPortal\User::with(['event_requirements'])->where('user_id',$user_id)->get();
+        $user = FrcPortal\Event::with(['event_requirements' => function ($query) use ($user_id) {
+                  $query->where('user_id','=',$user_id); // fields from comments table,
+                }])->get();
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
@@ -122,9 +124,9 @@ $app->group('/users', function () {
       $this->get('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $user_id = $args['user_id'];
         $event_id = $args['event_id'];
-        $user = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
-                  $query->where('event_id',$event_id); // fields from comments table,
-                }])->where('user_id',$user_id)->first();
+        $user = FrcPortal\Event::with(['event_requirements' => function ($query) use ($event_id) {
+                  $query->where('user_id',$user_id)w; // fields from comments table,
+                }])->here('event_id',$event_id)->first();
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
