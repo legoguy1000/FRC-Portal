@@ -28,7 +28,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.queryEvents = {
 		filter: '',
 		limit: 5,
-		order: '-year',
+		order: '-event_start',
 		page: 1
 	};
 	vm.loading = {
