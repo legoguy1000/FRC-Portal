@@ -76,11 +76,21 @@ $app->group('/seasons', function () {
     return $response;
     });
     $this->put('', function ($request, $response, $args) {
-      //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']['user_id'];
-      //checkAdmin($user_id, $die = true);
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']['user_id'];
       $season_id = $args['season_id'];
       $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
       $season = FrcPortal\Season::find($season_id);
       $start_date = new DateTime($formData['start_date']);
       $bag_day = new DateTime($formData['bag_day']);
@@ -102,20 +112,41 @@ $app->group('/seasons', function () {
       return $response;
     });
     $this->put('/updateMembershipForm', function ($request, $response, $args) {
-      //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']['user_id'];
-      //checkAdmin($user_id, $die = true);
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']['user_id'];
       $season_id = $args['season_id'];
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
       $responseArr = updateSeasonMembershipForm($season_id);
       $response = $response->withJson($responseArr);
       return $response;
     });
     $this->put('/toggleAnnualReqs', function ($request, $response, $args) {
-      //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']['user_id'];
-      //checkAdmin($user_id, $die = true);
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']['user_id'];
       $season_id = $args['season_id'];
       $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
       if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
         $responseArr = array('status'=>false, 'msg'=>'Please select at least 1 user');
         $response = $response->withJson($responseArr,400);
@@ -159,10 +190,20 @@ $app->group('/seasons', function () {
     });
   });
   $this->post('', function ($request, $response, $args) {
-    //$authToken = checkToken(true,true);
-    //$user_id = $authToken['data']['user_id'];
-    //checkAdmin($user_id, $die = true);
+    $authToken = $request->getAttribute("token");
+    $userId = $authToken['data']['user_id'];
     $formData = $request->getParsedBody();
+    $responseArr = array(
+      'status' => false,
+      'msg' => 'Something went wrong',
+      'data' => null
+    );
+    if(!checkAdmin($userId)) {
+      $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+      $response = $response->withJson($responseArr,403);
+      return $response;
+    }
+
     if(!isset($formData['year']) || $formData['year'] == '') {
       $responseArr = array('status'=>false, 'msg'=>'Year cannot be blank!');
       $response = $response->withJson($responseArr,400);

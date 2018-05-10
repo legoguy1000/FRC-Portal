@@ -222,8 +222,21 @@ $app->group('/events', function () {
       return $response;
     });
     $this->post('/rooms', function ($request, $response, $args) {
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']['user_id'];
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
       if(!isset($formData['event_id']) || $formData['event_id'] == '') {
       	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Event ID cannot be blank!')));
       }
@@ -367,28 +380,31 @@ $app->group('/events', function () {
       return $response;
     });
     $this->post('/register', function ($request, $response, $args) {
-      //$authToken = checkToken(true,true);
-      //$loggedInUser = $authToken['data']['user_id'];
-      $loggedInUser = '5a11bd670484e';
-      //$userFullName = $authToken['data']['full_name'];
-      //checkAdmin($user_id, $die = true);
-      $responseArr = array(
-    		'status' => false,
-    		'msg' => '',
-    		'data' => null
-    	);
-
+      $authToken = $request->getAttribute("token");
+      $loggedInUser = $authToken['data']['user_id'];
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      $user_id = $loggedInUser;
+      if(isset($formData['user_id']) && $formData['user_id'] != $loggedInUser && !checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      } else if(isset($formData['user_id']) && checkAdmin($loggedInUser)) {
+      	$user_id = $formData['user_id'];
+      }
+      $userFullName = $authToken['data']['full_name'];
+
       if(!is_bool($formData['registration'])) {
         $responseArr = array('status'=>false, 'msg'=>'Invalid Request, no registration option.');
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      //$user_id = $loggedInUser;
-      //if(isset($formData['user_id']) && checkAdmin($loggedInUser, $die = false)) {
-      	$user_id = $formData['user_id'];
-      //}
+
       $user =  FrcPortal\User::find($user_id);
       $user_type = $user->user_type;
 
@@ -456,15 +472,19 @@ $app->group('/events', function () {
     });
   });
   $this->post('', function ($request, $response, $args) {
-    //$authToken = checkToken(true,true);
-    //$user_id = $authToken['data']['user_id'];
-    //checkAdmin($user_id, $die = true);
+    $authToken = $request->getAttribute("token");
+    $loggedInUser = $authToken['data']['user_id'];
     $formData = $request->getParsedBody();
     $responseArr = array(
-      'status'=>false,
-      'msg'=> '',
+      'status' => false,
+      'msg' => 'Something went wrong',
       'data' => null
     );
+    if(!checkAdmin($userId)) {
+      $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+      $response = $response->withJson($responseArr,403);
+      return $response;
+    }
     if(!isset($formData['name']) || $formData['name'] == '') {
       $responseArr['msg'] = 'Name cannot be blank';
       $response = $response->withJson($responseArr,400);

@@ -131,6 +131,8 @@ $app->group('/users', function () {
       });
     });
     $this->put('/pin', function ($request, $response, $args) {
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']['user_id'];
       $user_id = $args['user_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
@@ -138,6 +140,11 @@ $app->group('/users', function () {
     		'msg' => 'Something went wrong',
     		'data' => null
     	);
+      if($user_id != $userId && !checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
       if(!isset($formData['pin']) || $formData['pin'] == '') {
         $responseArr = array('status'=>false, 'msg'=>'PIN cannot be blank');
         $response = $response->withJson($responseArr,400);
@@ -148,7 +155,7 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      if(strlen($formData['pin']) < 4 || strlen($formData['pin']) > 8) {
+      if(strlen($formData['pin']) < 4 || strlen($formData['pin']) > 8)) {
         $responseArr = array('status'=>false, 'msg'=>'PIN must be between 4 to 8 numbers');
         $response = $response->withJson($responseArr,400);
         return $response;
@@ -169,15 +176,21 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-
     $this->put('/notificationPreferences', function ($request, $response, $args) {
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']['user_id'];
       $user_id = $args['user_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
-    		'status' => false,
-    		'msg' => 'Something went wrong',
-    		'data' => null
-    	);
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if($user_id != $userId && !checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
       if(!isset($formData['method']) || $formData['method'] == '') {
         $responseArr = array('status'=>false, 'msg'=>'Notification method is required');
         $response = $response->withJson($responseArr,400);
@@ -194,31 +207,40 @@ $app->group('/users', function () {
         return $response;
       }
       if($formData['value'] == true) {
-        $user = FrcPortal\User::find($user_id);
-      	$query = 'INSERT INTO notification_preferences (pref_id,user_id,method,type) VALUES ('.db_quote($pref_id).','.db_quote($userId).','.db_quote($formData['method']).','.db_quote($formData['type']).')';
-
-      	if($result) {
-
-      	} else {
-      		//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Something went wrong')));
-      	}
+        $pref = new FrcPortal\NotificationPreference();
+        $pref->user_id = $user_id;
+        $pref->method = $formData['method'];
+        $pref->type = $formData['type'];
+        if($pref->save()) {
+          $responseArr['status'] = true;
+          $responseArr['msg'] ='Notification Preferences updated';
+        }
+      } else if($formData['value'] == false) {
+        $pref = new FrcPortal\NotificationPreference::where('user_id',$user_id)->where('method',$formData['method'])->where('type',$formData['type'])->delete();
+        if($pref) {
+          $responseArr['status'] = true;
+          $responseArr['msg'] ='Notification Preferences updated';
+        }
       }
-      else if($formData['value'] == false) {
-      	$query = 'DELETE FROM notification_preferences WHERE user_id = '.db_quote($userId).' AND method = '.db_quote($formData['method']).' AND type = '.db_quote($formData['type']);
-      //	$result = db_query($query);
-      	if($result) {
-
-      	} else {
-      	//	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Something went wrong')));
-      	}
-      }
-
       $response = $response->withJson($responseArr);
       return $response;
     });
     $this->put('', function ($request, $response, $args) {
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']['user_id'];
       $user_id = $args['user_id'];
       $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if($user_id != $userId && !checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
       $user = FrcPortal\User::find($user_id);
       $user->fname = $formData['fname'];
       $user->lname = $formData['lname'];
@@ -242,7 +264,20 @@ $app->group('/users', function () {
       return $response;
     });
     $this->delete('', function ($request, $response, $args) {
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']['user_id'];
       $user_id = $args['user_id'];
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
       $user = FrcPortal\User::destroy($user_id);
       if($user) {
         $responseArr = array('status'=>true, 'msg'=>'User Deleted', 'data' => $user);
