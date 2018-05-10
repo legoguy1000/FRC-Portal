@@ -51,9 +51,8 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			//vm.user = response.data;
 			//vm.notificationEndpoints = response.data.endpoints;
 			//vm.linkedAccounts = response.data.linkedAccounts;
-			//
 			//vm.notificationPreferences = response.data.notificationPreferences;
-			//vm.eventInfo = response.data.eventInfo;
+
 			vm.loading.note_devices = false;
 		});
 	}
@@ -71,7 +70,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.getUserEventRequirements = function() {
 		vm.loading.note_devices = true;
 		usersService.getUserEventRequirements($scope.main.userInfo.user_id).then(function(response) {
-			vm.seasonInfo = response.data;
+			vm.eventInfo = response.data;
 			vm.loading.note_devices = false;
 		});
 	}
