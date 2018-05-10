@@ -9,6 +9,7 @@ include($root.'/api/app/functions/getConfigFile.php');
 include($root.'/api/app//functions/season_functions.php');
 include($root.'/api/app//functions/event_functions.php');
 include($root.'/api/app//functions/user_functions.php');
+include($root.'/api/app//functions/notification_functions.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
