@@ -2,6 +2,7 @@
 namespace FrcPortal;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use \DateTime;
 
 class Oauth extends Eloquent {
   //table name
