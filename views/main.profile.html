@@ -2,7 +2,7 @@
 	<md-content flex flex-gt-sm="50" flex-gt-md="33" layout="column" class="md-margin">
 		<h1 class="md-headline" layout="row" layout-align="center center">
 			<md-button class="md-icon-button profile" ng-click="alert('asdf')">
-				<img class="" ng-src="{{main.userInfo.profile_image}}">
+				<img class="" ng-src="{{vm.user.profile_image}}">
 				<md-tooltip md-direction="bottom">Click to clear profile picture</md-tooltip>
 			</md-button>
 			My Profile
@@ -11,41 +11,41 @@
 		<form class="md-margin" flex layout="column" ng-submit="vm.updateUser()">
 			<md-input-container flex required>
 				<label>First Name</label>
-				<input ng-model="main.userInfo.fname">
+				<input ng-model="vm.user.fname">
 			</md-input-container>
 			<md-input-container flex required>
 				<label>Last Name</label>
-				<input ng-model="main.userInfo.lname">
+				<input ng-model="vm.user.lname">
 			</md-input-container>
 			<md-input-container flex required>
 				<label>Alt Email</label>
-				<input ng-model="main.userInfo.email">
+				<input ng-model="vm.user.email">
 			</md-input-container>
 			<md-input-container flex required>
 				<label>Team Email</label>
-				<input ng-model="main.userInfo.team_email">
+				<input ng-model="vm.user.team_email">
 			</md-input-container>
 			<div layout="row">
 				<md-input-container flex required>
 					<label>Phone</label>
-					<input ng-model="main.userInfo.phone" phone-input type='text'/>
+					<input ng-model="vm.user.phone" phone-input type='text'/>
 				</md-input-container>
 				<md-input-container flex required>
 					<label>Slack User</label>
-					<input ng-model="main.userInfo.slack_id" type='text' readonly disabled/>
+					<input ng-model="vm.user.slack_id" type='text' readonly disabled/>
 				</md-input-container>
 			</div>
 			<div layout="row">
 			<md-input-container flex>
 				<label>User Type</label>
-				<md-select ng-model="main.userInfo.user_type">
+				<md-select ng-model="vm.user.user_type">
 					<md-option ng-value="'Student'">Student</md-option>
 					<md-option ng-value="'Mentor'">Mentor</md-option>
 				</md-select>
 			</md-input-container>
 			<md-input-container flex>
 				<label>Gender</label>
-				<md-select ng-model="main.userInfo.gender" required>
+				<md-select ng-model="vm.user.gender" required>
 					<md-option value=""><em>Not Set</em></md-option>
 					<md-option value="Male">Male</md-option>
 					<md-option value="Female">Female</md-option>
@@ -53,10 +53,10 @@
 			</md-input-container>
 			</div>
 			<div layout="row">
-				<md-autocomplete flex ng-required="main.userInfo.user_type=='Student'"  ng-disabled="main.userInfo.user_type!='Student'"
+				<md-autocomplete flex ng-required="vm.user.user_type=='Student'"  ng-disabled="vm.user.user_type!='Student'"
 					md-input-name="autocompleteField"
 					md-no-cache="false"
-					md-selected-item="main.userInfo.schoolData"
+					md-selected-item="vm.user.school"
 					md-search-text="vm.searchText"
 					md-items="item in vm.querySearch(vm.searchText)"
 					md-item-text="item.school_name"
@@ -67,7 +67,7 @@
 				</md-autocomplete>
 				<md-input-container flex="33">
 					<label>Graduation Year</label>
-					<input ng-model="main.userInfo.grad_year" ng-required="main.userInfo.user_type=='Student'" ng-disabled="main.userInfo.user_type!='Student'"/>
+					<input ng-model="vm.user.grad_year" ng-required="vm.user.user_type=='Student'" ng-disabled="vm.user.user_type!='Student'"/>
 				</md-input-container>
 			</div>
 			<div flex layout="row">
@@ -122,11 +122,11 @@
 										<md-icon class="material-icons" style="color:red;" ng-hide="season.stims">remove_circle</md-icon>
 									</td>
 									<td md-cell>
-										<span ng-hide="main.userInfo.user_type == 'Mentor'">
+										<span ng-hide="vm.user.user_type == 'Mentor'">
 											<md-icon class="material-icons" style="color:green;" ng-show="season.dues">check_circle</md-icon>
 											<md-icon class="material-icons" style="color:red;" ng-hide="season.dues">remove_circle</md-icon>
 										</span>
-										<md-icon class="material-icons" ng-hide="main.userInfo.user_type == 'Student'">indeterminate_check_box</md-icon>
+										<md-icon class="material-icons" ng-hide="vm.user.user_type == 'Student'">indeterminate_check_box</md-icon>
 									</td>
 									<td md-cell>
 										{{season.build_season_hours}}
@@ -182,11 +182,11 @@
 										<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="event.registration"></i>
 									</td>
 									<td md-cell>
-										<span ng-hide="main.userInfo.user_type == 'Mentor'">
+										<span ng-hide="vm.user.user_type == 'Mentor'">
 											<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="event.payment"></i>
 											<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="event.payment"></i>
 										</span>
-										<i class="mdi mdi-minus-box mdi-24px" ng-hide="main.userInfo.user_type == 'Student'"></i>
+										<i class="mdi mdi-minus-box mdi-24px" ng-hide="vm.user.user_type == 'Student'"></i>
 									</td>
 									<td md-cell>
 										<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="event.permission_slip"></i>
@@ -273,7 +273,7 @@
 								</md-icon>
 							</div>
 						</md-list-item>
-						<div ng-show="main.userInfo.notificationEndpoints.length == 0 && !vm.loadingDevices" layout="row" layout-align="center center">
+						<div ng-show="vm.user.notificationEndpoints.length == 0 && !vm.loadingDevices" layout="row" layout-align="center center">
 							<h4>No Devices</h4>
 						</div>
 					</md-list>
@@ -281,44 +281,6 @@
 			</md-tab>
 			<md-tab label="Notification Preferences">
 				<div flex layout="column" layout-gt-sm="row" style="min-height:100%;">
-		<!--			<md-content  flex layout="column">
-						<h1 class="md-headline" layout="row">
-							<span flex></span>
-							<span>Notification Devices</span>
-							<span flex></span>
-						</h1>
-						<md-progress-linear md-mode="indeterminate" ng-show="vm.loading.note_devices"></md-progress-linear>
-						<md-list>
-							<md-list-item class="md-2-line" ng-repeat = "device in vm.notificationEndpoints track by $index" ng-click="null">
-								<div style="margin-right:10px">
-									<i class="mdi mdi-36px md-icon-avatar" ng-class="{'mdi-google-chrome': device.endpoint.includes('google'),'mdi-firefox': device.endpoint.includes('mozilla'),'this-device': device.endpoint == main.browserData.endpoint}">
-										<md-tooltip md-direction="left">Google Chrome</md-tooltip>
-									</i>
-								</div>
-								<div class="md-list-item-text" flex layout="row">
-									<div>
-										<p>Device label</p>
-										<h3>{{device.label}}</h3>
-									</div>
-									<div flex></div>
-									<div>
-										<p>Last Updated</p>
-										<h3>{{device.last_updated_unix*1000 | date:'medium'}}</h3>
-									</div>
-									<md-icon class="md-secondary" md-font-set="material-icons" ng-click="vm.showDeviceEdit($event,device)" aria-label="Edit">mode_edit
-										<md-tooltip md-direction="top">Edit</md-tooltip>
-									</md-icon>
-									<md-icon class="md-secondary" md-font-set="material-icons" ng-click="vm.showDeviceDelete($event,device)" aria-label="Delete">delete
-										<md-tooltip md-direction="top">Delete</md-tooltip>
-									</md-icon>
-								</div>
-							</md-list-item>
-							<div ng-show="main.userInfo.notificationEndpoints.length == 0 && !vm.loadingDevices" layout="row" layout-align="center center">
-								<h4>No Devices</h4>
-							</div>
-						</md-list>
-						<md-button ng-click="vm.subscribePush()" ng-hide="main.enablePush.status">Subscribe this device</md-button>
-					</md-content> -->
 					<md-content  flex layout="column">
 						<h1 class="md-headline" layout="row">
 							<span flex></span>
@@ -329,7 +291,7 @@
 						<div class="md-margin">
 							<div layout="row" flex  layout-align="start center" ng-repeat="(key,title) in vm.notificationOptions track by $index">
 								<span flex="50">{{title}}</span>
-								<md-switch ng-model="vm.notificationPreferences.slack[key]" class="md-warn" flex ng-change="vm.updateNotePrefs('slack',key,vm.notificationPreferences.slack[key])" ng-disabled="!main.userInfo.slackEnabled">
+								<md-switch ng-model="vm.notificationPreferences.slack[key]" class="md-warn" flex ng-change="vm.updateNotePrefs('slack',key,vm.notificationPreferences.slack[key])" ng-disabled="!vm.user.slackEnabled">
 									Slack
 								</md-switch>
 								<md-switch ng-model="vm.notificationPreferences.email[key]" class="md-warn" flex ng-change="vm.updateNotePrefs('email',key,vm.notificationPreferences.email[key])">
