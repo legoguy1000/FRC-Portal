@@ -20,8 +20,7 @@ function getNotificationOptions() {
 
 function getNotificationPreferencesByUser($user_id) {
 	$data = getNotificationOptions();
-	$query = 'SELECT np.* FROM notification_preferences np WHERE user_id='.db_quote($user_id);
-	$result = db_select($query);
+	$result = FrcPortal\NotificationPreference::where('user_id',$user_id)->get();
 	if(count($result) > 0) {
 		foreach($result as $re) {
 			$m = $re['method'];
@@ -48,50 +47,6 @@ function setDefaultNotifications($user_id) {
 	$query = 'INSERT INTO notification_preferences (pref_id, user_id, method, type) VALUES '.$queryStr;
 	$result = db_query($query);
 }
-
-/*
-use Minishlink\WebPush\WebPush;
-function sendPushNotificationByUser($user, $title='', $body='', $tag='') {
-	$db = db_connect();
-
-	$ti = '';
-	$tagInit = uniqid();
-	if(isset($title) && $title!='') {
-		$ti = ' | '.$title;
-	}
-	if(isset($tag) && $tag!='') {
-		$tagInit = $tag;
-	}
-	$apiKeys = array(
-		'GCM' => getIniProp('fcm_key'),
-	);
-	$webPush = new WebPush($apiKeys);
-
-	$endpoints = getNotifiationEndpointsByUser($user);
-	$payload = array(
-		'title'=>'Team 2363 Portal'.$ti,
-		'body'=>$body,
-		'tag'=>$tagInit,
-	);
-	foreach($endpoints as $ep) {
-		$notification = array(
-			'endpoint' => $ep['endpoint'],
-			'userPublicKey' => $ep['public_key'],
-			'userAuthToken' => $ep['auth_secret'],
-			'payload' => json_encode($payload)
-		);
-		$webPush->sendNotification(
-			$notification['endpoint'],
-			$notification['payload'], // optional (defaults null)
-			$notification['userPublicKey'], // optional (defaults null)
-			$notification['userAuthToken'], // optional (defaults null)
-			true,
-			$options = array(
-				'TTL' => 60
-			)
-		);
-	}
-} */
 
 function sendUserNotification($user_id, $type, $msgData)
 {

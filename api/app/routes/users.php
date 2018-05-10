@@ -187,7 +187,7 @@ $app->group('/users', function () {
     });
     $this->get('/notificationPreferences', function ($request, $response, $args) {
       $user_id = $args['user_id'];
-      $user = FrcPortal\NotificationPreference::where('user_id',$user_id)->get();
+      $user = getNotificationPreferencesByUser($user_id)
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
       $response = $response->withJson($responseArr);
       return $response;
