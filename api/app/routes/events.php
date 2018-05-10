@@ -184,7 +184,7 @@ $app->group('/events', function () {
 
     $this->put('/cars', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']['user_id'];
+      //$user_id = $authToken['data']->user_id;
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
@@ -223,7 +223,7 @@ $app->group('/events', function () {
     });
     $this->post('/rooms', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']['user_id'];
+      $userId = $authToken['data']->user_id;
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
@@ -261,7 +261,7 @@ $app->group('/events', function () {
     });
     $this->put('/rooms', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']['user_id'];
+      //$user_id = $authToken['data']->user_id;
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
@@ -294,7 +294,7 @@ $app->group('/events', function () {
     });
     $this->delete('/rooms/{room_id:[a-z0-9]{13}}', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']['user_id'];
+      //$user_id = $authToken['data']->user_id;
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
       $room_id = $args['room_id'];
@@ -314,7 +314,7 @@ $app->group('/events', function () {
     });
     $this->put('', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']['user_id'];
+      //$user_id = $authToken['data']->user_id;
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
@@ -334,7 +334,7 @@ $app->group('/events', function () {
     });
     $this->put('/syncGoogleCalEvent', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']['user_id'];
+      //$user_id = $authToken['data']->user_id;
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
       $responseArr = syncGoogleCalendarEvent($event_id);
@@ -343,7 +343,7 @@ $app->group('/events', function () {
     });
     $this->put('/toggleEventReqs', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']['user_id'];
+      //$user_id = $authToken['data']->user_id;
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
@@ -381,7 +381,7 @@ $app->group('/events', function () {
     });
     $this->post('/register', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
-      $loggedInUser = $authToken['data']['user_id'];
+      $loggedInUser = $authToken['data']->user_id;
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
@@ -458,7 +458,7 @@ $app->group('/events', function () {
     });
     $this->delete('', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']['user_id'];
+      //$user_id = $authToken['data']->user_id;
       //checkAdmin($user_id, $die = true);
       $event_id = $args['event_id'];
       $event = FrcPortal\Event::destroy($event_id);
@@ -473,7 +473,7 @@ $app->group('/events', function () {
   });
   $this->post('', function ($request, $response, $args) {
     $authToken = $request->getAttribute("token");
-    $loggedInUser = $authToken['data']['user_id'];
+    $loggedInUser = $authToken['data']->user_id;
     $formData = $request->getParsedBody();
     $responseArr = array(
       'status' => false,

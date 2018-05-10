@@ -77,7 +77,7 @@ $app->group('/seasons', function () {
     });
     $this->put('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']['user_id'];
+      $userId = $authToken['data']->user_id;
       $season_id = $args['season_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
@@ -113,7 +113,7 @@ $app->group('/seasons', function () {
     });
     $this->put('/updateMembershipForm', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']['user_id'];
+      $userId = $authToken['data']->user_id;
       $season_id = $args['season_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
@@ -133,7 +133,7 @@ $app->group('/seasons', function () {
     });
     $this->put('/toggleAnnualReqs', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']['user_id'];
+      $userId = $authToken['data']->user_id;
       $season_id = $args['season_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
@@ -176,7 +176,7 @@ $app->group('/seasons', function () {
     });
     $this->delete('', function ($request, $response, $args) {
       //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']['user_id'];
+      //$user_id = $authToken['data']->user_id;
       //checkAdmin($user_id, $die = true);
       $season_id = $args['season_id'];
       $season = FrcPortal\Season::destroy($season_id);
@@ -191,7 +191,7 @@ $app->group('/seasons', function () {
   });
   $this->post('', function ($request, $response, $args) {
     $authToken = $request->getAttribute("token");
-    $userId = $authToken['data']['user_id'];
+    $userId = $authToken['data']->user_id;
     $formData = $request->getParsedBody();
     $responseArr = array(
       'status' => false,
