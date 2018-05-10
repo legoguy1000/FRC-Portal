@@ -29,7 +29,7 @@ $app = new \Slim\App(['settings' => $config]);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
     "secret" => getIniProp('jwt_key'),
     "path" => ['/users', '/seasons', '/events', '/schools'],
-    "passthrough" => ['/auth','/reports'],
+    "passthrough" => ['/auth','/reports','/slack'],
 ]));
 $container = $app->getContainer();
 /* $container['db'] = function ($c) {
@@ -79,6 +79,7 @@ include('./app/routes/users.php');
 include('./app/routes/events.php');
 include('./app/routes/reports.php');
 include('./app/routes/schools.php');
+include('./app/routes/slack.php');
 
 $app->run();
 
