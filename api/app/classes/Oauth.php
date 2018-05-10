@@ -47,7 +47,7 @@ class Oauth extends Eloquent {
      return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
    }
 
-   public function getTimestamptUnixAttribute() {
+   public function getTimestampUnixAttribute() {
      $date = new DateTime($this->attributes['timestamp']);
      return $date->format('U');
    }
