@@ -5,8 +5,8 @@ angular.module('FrcPortal')
 function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService, $mdDialog, $log) {
      var vm = this;
 
-	
-	
+
+
 	vm.selected = [];
 	vm.filter = {
 		show: false,
@@ -15,12 +15,12 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 	vm.query = {
 		filter: '',
 		limit: 10,
-		order: 'school_name',
+		order: '-student_count',
 		page: 1
 	};
 	vm.schools = [];
 	vm.limitOptions = [10,25,50,100];
-	
+
 	vm.showFilter = function () {
 		vm.filter.show = true;
 		vm.query.filter = '';
@@ -33,7 +33,7 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 			vm.filter.form.$setPristine();
 		}
 	};
-	
+
 	var timeoutPromise;
 	$scope.$watch('vm.query.filter', function (newValue, oldValue) {
 		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
@@ -49,9 +49,9 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 		timeoutPromise = $timeout(function(){   //Set timeout
 			vm.getSchools();
 		},500);
-		
+
 	});
-	
+
 	vm.getSchools = function () {
 		vm.promise = schoolsService.getAllSchoolsFilter($.param(vm.query)).then(function(response){
 			vm.schools = response.data;
@@ -82,5 +82,5 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
 	} */
-	
+
 }
