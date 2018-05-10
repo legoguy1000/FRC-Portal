@@ -1,30 +1,12 @@
 angular.module('FrcPortal')
 .service('usersService', function ($http) {
 	return {
-		getAllUsers: function () {
-			return $http.get('site/getAllUsers.php')
-			.then(function(response) {
-				return response.data;
-			});
-		},
 		getAllUsersFilter: function (params) {
 			return $http.get('/api/users?'+params)
 			.then(function(response) {
 				return response.data;
 			});
 		},
-		getNotificationEndpoints: function () {
-			return $http.get('site/getNotificationEndpoints.php')
-			.then(function(response) {
-				return response.data;
-			});
-		},
-		/* getUserById: function (id) {
-			return $http.get('api/v1/users/'+id)
-			.then(function(response) {
-				return response.data;
-			});
-		}, */
 		updateUserPersonalInfo: function (formData) {
 			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
 			return $http.put('api/users/'+user_id,formData)
@@ -39,7 +21,8 @@ angular.module('FrcPortal')
 			});
 		},
 		changePin: function (formData) {
-			return $http.post('site/changePin.php',formData)
+			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
+			return $http.put('api/users/'+user_id+'/pin',formData)
 			.then(function(response) {
 				return response.data;
 			});

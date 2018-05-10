@@ -148,7 +148,7 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      if(strlen($formData['pin']) < 4 || strlen($formData['pin']) > 8)) {
+      if(strlen($formData['pin']) < 4 || strlen($formData['pin']) > 8) {
         $responseArr = array('status'=>false, 'msg'=>'PIN must be between 4 to 8 numbers');
         $response = $response->withJson($responseArr,400);
         return $response;
@@ -166,6 +166,53 @@ $app->group('/users', function () {
           $responseArr['msg'] = 'PIN must be changed to a different number';
         }
       }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+
+    $this->put('/notificationPreferences', function ($request, $response, $args) {
+      $user_id = $args['user_id'];
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+    		'status' => false,
+    		'msg' => 'Something went wrong',
+    		'data' => null
+    	);
+      if(!isset($formData['method']) || $formData['method'] == '') {
+        $responseArr = array('status'=>false, 'msg'=>'Notification method is required');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if(!isset($formData['type']) || $formData['type'] == '') {
+        $responseArr = array('status'=>false, 'msg'=>'Notification type is required');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if(!isset($formData['value']) || $formData['value'] == '') {
+        $responseArr = array('status'=>false, 'msg'=>'Value is required');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if($formData['value'] == true) {
+        $user = FrcPortal\User::find($user_id);
+      	$query = 'INSERT INTO notification_preferences (pref_id,user_id,method,type) VALUES ('.db_quote($pref_id).','.db_quote($userId).','.db_quote($formData['method']).','.db_quote($formData['type']).')';
+
+      	if($result) {
+
+      	} else {
+      		//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Something went wrong')));
+      	}
+      }
+      else if($formData['value'] == false) {
+      	$query = 'DELETE FROM notification_preferences WHERE user_id = '.db_quote($userId).' AND method = '.db_quote($formData['method']).' AND type = '.db_quote($formData['type']);
+      //	$result = db_query($query);
+      	if($result) {
+
+      	} else {
+      	//	die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Something went wrong')));
+      	}
+      }
+
       $response = $response->withJson($responseArr);
       return $response;
     });
