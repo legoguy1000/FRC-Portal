@@ -82,68 +82,64 @@
 		<md-tabs md-border-bottom md-autoselect md-swipe-content md-dynamic-height style="margin-bottom: 10px;" flex>
 			<md-tab label="Season Info">
 				<md-content  flex layout="column">
-					<h1 class="md-headline">
-						<md-button class="md-icon-button" ng-click="vm.showPastReqs = !vm.showPastReqs">
-							<md-tooltip md-direction="top">Show past season requirements</md-tooltip>
-							<i class="material-icons">history</i>
-						</md-button>
-						<span ng-hide="vm.showPastReqs">{{vm.seasonInfo.upcomming.year}} {{vm.seasonInfo.upcomming.game_name}}</span>
-						<span ng-show="vm.showPastReqs">All</span>
-						Season Information
-					</h1>
+					<md-toolbar class="md-table-toolbar md-default">
+						<div class="md-toolbar-tools">
+							<span>Season Requirements</span>
+							<div flex></div>
+						</div>
+					</md-toolbar>
 					<md-table-container>
-						<table md-table>
+						<table md-table md-progress="vm.promise">
 							<thead md-head md-order="vm.query.order">
 								<tr md-row>
-									<th md-column md-order-by="year"><span>Season</span></th>
+									<th md-column md-order-by="year"><span>Name</span></th>
 									<th md-column md-order-by="join_team"><span>Join Team</span></th>
 									<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>
 									<th md-column md-order-by="dues"><span>Pay Dues</span></th>
-									<th md-column md-order-by="build_season_hours"><span>Build Season Hours</span></th>
-									<th md-column md-order-by="competition_season_hours"><span>Competition Season Hours</span></th>
+									<th md-column md-order-by="build_season_hours" style="text-align: left;"><span>Build Season Hours</span></th>
+									<th md-column md-order-by="reqs_complete"><span>Requirements Complete</span></th><!--
 									<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
-									<th md-column md-order-by="total_hours"><span>Total Annual Hours</span></th>
+									<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 								</tr>
 							</thead>
 							<tbody md-body>
-								<tr md-row ng-repeat="season in vm.seasonInfo.all | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" ng-show="vm.showPastReqs || $first">
+								<tr md-row ng-repeat="season in vm.seasonInfo | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered">
 									<td md-cell>
 										<md-list-item style="padding: 0px;">
-											<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
-											{{season.year}} - {{season.game_name}}
+											{{user.full_name}}
 										</md-list-item>
 									</td>
 									<td md-cell>
-										<md-icon class="material-icons" style="color:green;" ng-show="season.join_team">check_circle</md-icon>
-										<md-icon class="material-icons" style="color:red;" ng-hide="season.join_team">remove_circle</md-icon>
+										<i class="material-icons" style="color:green;" ng-show="season.annual_requirements.join_team">check_circle</i>
+										<i class="material-icons" style="color:red;" ng-hide="season.annual_requirements.join_team">remove_circle</i>
 									</td>
 									<td md-cell>
-										<md-icon class="material-icons" style="color:green;" ng-show="season.stims">check_circle</md-icon>
-										<md-icon class="material-icons" style="color:red;" ng-hide="season.stims">remove_circle</md-icon>
+										<i class="material-icons" style="color:green;" ng-show="season.annual_requirements.stims">check_circle</i>
+										<i class="material-icons" style="color:red;" ng-hide="season.annual_requirements.stims">remove_circle</i>
 									</td>
 									<td md-cell>
-										<span ng-hide="vm.user.user_type == 'Mentor'">
-											<md-icon class="material-icons" style="color:green;" ng-show="season.dues">check_circle</md-icon>
-											<md-icon class="material-icons" style="color:red;" ng-hide="season.dues">remove_circle</md-icon>
+										<span ng-hide="vm.user_type == 'Mentor'">
+											<i class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</i>
+											<i class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</i>
 										</span>
-										<md-icon class="material-icons" ng-hide="vm.user.user_type == 'Student'">indeterminate_check_box</md-icon>
+										<md-icon class="material-icons" ng-hide="vm.user_type == 'Student'">remove_circle_outline</md-icon>
 									</td>
 									<td md-cell>
-										{{season.build_season_hours}}
+										{{season.annual_requirements.build_season_hours}}
 									</td>
 									<td md-cell>
-										{{season.competition_season_hours}}
+										{{season.annual_requirements.competition_season_hours}}
 									</td>
 									<td md-cell>
-										{{season.off_season_hours}}
+										{{season.annual_requirements.off_season_hours}}
 									</td>
 									<td md-cell>
-										<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.total_hours}}</md-button>
+										<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.annual_requirements.total_hours}}</md-button>
 									</td>
 								</tr>
 							</tbody>
 						</table>
-						<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.seasonInfo.all.length}}" md-page-select md-boundary-links md-on-paginate="vm.getSeasons"></md-table-pagination>
+						<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.seasonInfo | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
 					</md-table-container>
 				</md-content>
 				<md-content  flex layout="column">
