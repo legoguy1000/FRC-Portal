@@ -91,16 +91,19 @@ class AnnualRequirement extends Eloquent {
     //LEFT JOIN exempt_hours ON meeting_hours.time_in >= DATE_SUB(exempt_hours.time_start, INTERVAL 1 HOUR) AND meeting_hours.time_out < DATE_ADD(exempt_hours.time_end, INTERVAL 1 HOUR)
     //LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in)
     //WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.bag_day  AND exempt_hours.exempt_id IS NULL GROUP BY meeting_hours.user_id,seasons.year
-    $hours = DB::table('meeting_hours')
-            ->leftJoin('exempt_hours', function ($join) {
-                $join->on('meeting_hours.time_in', '>=', DB::raw('DATE_SUB(exempt_hours.time_start, INTERVAL 1 HOUR)'))->on('meeting_hours.time_out', '<=', DB::raw('DATE_ADD(exempt_hours.time_end, INTERVAL 1 HOUR)'));
-            })
-            ->leftJoin('seasons', function ($join) {
-                $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))->on('meeting_hours.time_in', '>=', 'seasons.start_date')->on('meeting_hours.time_in', '<=', 'seasons.bag_day');
-            })->whereNull('exempt_hours.exempt_id')
-              ->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
-              ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
-              ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as build_season_hours'))->groupBy('meeting_hours.user_id')->get();
+    $hours = null;
+    if($this->attributes['user_id'] != null && $this->attributes['season_id'] != null) {
+      $hours = DB::table('meeting_hours')
+              ->leftJoin('exempt_hours', function ($join) {
+                  $join->on('meeting_hours.time_in', '>=', DB::raw('DATE_SUB(exempt_hours.time_start, INTERVAL 1 HOUR)'))->on('meeting_hours.time_out', '<=', DB::raw('DATE_ADD(exempt_hours.time_end, INTERVAL 1 HOUR)'));
+              })
+              ->leftJoin('seasons', function ($join) {
+                  $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))->on('meeting_hours.time_in', '>=', 'seasons.start_date')->on('meeting_hours.time_in', '<=', 'seasons.bag_day');
+              })->whereNull('exempt_hours.exempt_id')
+                ->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
+                ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
+                ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as build_season_hours'))->groupBy('meeting_hours.user_id')->get();
+    }
     return !is_null($hours) && isset($hours[0])? (float) $hours[0]->build_season_hours : 0;
   }
   public function getCompetitionSeasonHoursAttribute() {
@@ -109,12 +112,15 @@ class AnnualRequirement extends Eloquent {
     //LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in)
     //WHERE meeting_hours.time_in>seasons.bag_day AND meeting_hours.time_in<=seasons.end_date
     //GROUP BY meeting_hours.user_id,seasons.year
+    $hours = null;
+    if($this->attributes['user_id'] != null && $this->attributes['season_id'] != null) {
     $hours = DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'))->on('meeting_hours.time_in', '>', 'seasons.bag_day')->on('meeting_hours.time_in', '<=', 'seasons.end_date');
             })->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
               ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
               ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS competition_season_hours'))->groupBy('meeting_hours.user_id')->get();
+    }
     return !is_null($hours) && isset($hours[0])? (float) $hours[0]->competition_season_hours : 0;
   }
   public function getOffSeasonHoursAttribute() {
@@ -123,12 +129,15 @@ class AnnualRequirement extends Eloquent {
     //LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in)
     //WHERE meeting_hours.time_in>seasons.end_date
     //GROUP BY meeting_hours.user_id,seasons.year
+    $hours = null;
+    if($this->attributes['user_id'] != null && $this->attributes['season_id'] != null) {
     $hours = DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'))->on('meeting_hours.time_in', '>', 'seasons.end_date');
             })->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
               ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
               ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as off_season_hours'))->groupBy('meeting_hours.user_id')->get();
+    }
     return !is_null($hours) && isset($hours[0])? (float) $hours[0]->off_season_hours : 0;
   }
   public function getTotalHoursAttribute() {
@@ -136,12 +145,15 @@ class AnnualRequirement extends Eloquent {
     //FROM meeting_hours
     //LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in)
     //GROUP BY meeting_hours.user_id,seasons.year
+    $hours = null;
+    if($this->attributes['user_id'] != null && $this->attributes['season_id'] != null) {
     $hours = DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'));
             })->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
               ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
               ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS total_hours'))->groupBy('meeting_hours.user_id')->get();
+    }
     return !is_null($hours) && isset($hours[0])? (float) $hours[0]->total_hours : 0;
   }
   public function getMinHoursAttribute() {
@@ -160,8 +172,7 @@ class AnnualRequirement extends Eloquent {
     $stims = $this->stims;
     $dues = $this->dues;
     $mh = $this->min_hours;
-    $user = $this->attributes['user_id'];
-    if(isset($user)) {
+    if($this->attributes['user_id'] != null) {
       $userInfo = User::find($user);
       $stu = (bool) $userInfo->user_type == 'Student';
       $men = (bool) $userInfo->user_type == 'Mentor';
