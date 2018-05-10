@@ -165,7 +165,7 @@
 								</tr>
 							</thead>
 							<tbody md-body>
-								<tr md-row ng-repeat="event in vm.eventInfo">
+								<tr md-row ng-repeat="season in vm.eventInfo | filter: vm.queryEvents.filter | orderBy: vm.queryEvents.order | limitTo: vm.queryEvents.limit : (vm.queryEvents.page -1) * vm.queryEvents.limit as filtered">
 									<td md-cell>{{event.name}}</td>
 									<td md-cell>
 										<span ng-show="event.single_day">
@@ -199,7 +199,7 @@
 								</tr>
 							</tbody>
 						</table>
-						<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.seasonInfo.all.length}}" md-page-select md-boundary-links md-on-paginate="vm.getSeasons"></md-table-pagination>
+						<md-table-pagination md-limit="vm.queryEvents.limit" md-limit-options="vm.limitOptions" md-page="vm.queryEvents.page" md-total="{{(vm.eventInfo | filter: vm.queryEvents.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
 					</md-table-container>
 				</md-content>
 			</md-tab>
