@@ -125,8 +125,8 @@ $app->group('/users', function () {
         $user_id = $args['user_id'];
         $event_id = $args['event_id'];
         $user = FrcPortal\Event::with(['event_requirements' => function ($query) use ($event_id) {
-                  $query->where('user_id',$user_id)w; // fields from comments table,
-                }])->here('event_id',$event_id)->first();
+                  $query->where('user_id',$user_id); // fields from comments table,
+                }])->where('event_id',$event_id)->first();
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
