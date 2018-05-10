@@ -43,7 +43,7 @@ $app->group('/schools', function () {
     }
 
     if($filter != '' ) {
-      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'sc.school_id', '=', 'schools.school_id')->addSelect('schools.*',(DB::raw('IFNULL(sc.student_count,0) as student_count'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'sc.school_id', '=', 'schools.school_id')->addSelect('schools.*',DB::raw('IFNULL(sc.student_count,0) as student_count'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     } else {
       $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'sc.school_id', '=', 'schools.school_id')->addSelect('schools.*',DB::raw('IFNULL(sc.student_count,0) as student_count'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     }
