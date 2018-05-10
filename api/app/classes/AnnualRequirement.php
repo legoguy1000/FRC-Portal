@@ -92,7 +92,7 @@ class AnnualRequirement extends Eloquent {
     //LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in)
     //WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.bag_day  AND exempt_hours.exempt_id IS NULL GROUP BY meeting_hours.user_id,seasons.year
     $hours = null;
-    if($this->attributes['user_id'] != null && $this->attributes['season_id'] != null) {
+    if(isset($this->attributes['user_id']) && $this->attributes['season_id'] != null) {
       $hours = DB::table('meeting_hours')
               ->leftJoin('exempt_hours', function ($join) {
                   $join->on('meeting_hours.time_in', '>=', DB::raw('DATE_SUB(exempt_hours.time_start, INTERVAL 1 HOUR)'))->on('meeting_hours.time_out', '<=', DB::raw('DATE_ADD(exempt_hours.time_end, INTERVAL 1 HOUR)'));
@@ -113,7 +113,7 @@ class AnnualRequirement extends Eloquent {
     //WHERE meeting_hours.time_in>seasons.bag_day AND meeting_hours.time_in<=seasons.end_date
     //GROUP BY meeting_hours.user_id,seasons.year
     $hours = null;
-    if($this->attributes['user_id'] != null && $this->attributes['season_id'] != null) {
+    if(isset($this->attributes['user_id']) && $this->attributes['season_id'] != null) {
     $hours = DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'))->on('meeting_hours.time_in', '>', 'seasons.bag_day')->on('meeting_hours.time_in', '<=', 'seasons.end_date');
@@ -130,7 +130,7 @@ class AnnualRequirement extends Eloquent {
     //WHERE meeting_hours.time_in>seasons.end_date
     //GROUP BY meeting_hours.user_id,seasons.year
     $hours = null;
-    if($this->attributes['user_id'] != null && $this->attributes['season_id'] != null) {
+    if(isset($this->attributes['user_id']) && $this->attributes['season_id'] != null) {
     $hours = DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'))->on('meeting_hours.time_in', '>', 'seasons.end_date');
@@ -146,7 +146,7 @@ class AnnualRequirement extends Eloquent {
     //LEFT JOIN seasons ON seasons.year=YEAR(meeting_hours.time_in)
     //GROUP BY meeting_hours.user_id,seasons.year
     $hours = null;
-    if($this->attributes['user_id'] != null && $this->attributes['season_id'] != null) {
+    if(isset($this->attributes['user_id']) && $this->attributes['season_id'] != null) {
     $hours = DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'));
@@ -172,7 +172,7 @@ class AnnualRequirement extends Eloquent {
     $stims = $this->stims;
     $dues = $this->dues;
     $mh = $this->min_hours;
-    if($this->attributes['user_id'] != null) {
+    if(isset($this->attributes['user_id'])) {
       $userInfo = User::find($user);
       $stu = (bool) $userInfo->user_type == 'Student';
       $men = (bool) $userInfo->user_type == 'Mentor';
