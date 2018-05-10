@@ -88,13 +88,13 @@ class User extends Eloquent {
   * Get the Annual requirements.
   */
   public function annual_requirements() {
-    return $this->hasOne('FrcPortal\AnnualRequirement', 'user_id', 'user_id')->withDefault();;
+    return $this->hasOne('FrcPortal\AnnualRequirement', 'user_id', 'user_id')->withDefault();
   }
   /**
   * Get the Event requirements.
   */
   public function event_requirements() {
-    return $this->hasOne('FrcPortal\EventRequirement', 'user_id', 'user_id')->withDefault();;
+    return $this->hasOne('FrcPortal\EventRequirement', 'user_id', 'user_id')->withDefault();
   }
   /**
   * Get the Event Cars.
