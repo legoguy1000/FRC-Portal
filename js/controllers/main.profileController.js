@@ -10,8 +10,8 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
   vm.querySearch   = querySearch;
 	vm.notificationEndpoints = [];
 	vm.linkedAccounts = [];
-	vm.seasonInfo = {};
-	vm.eventInfo = {};
+	vm.seasonInfo = [];
+	vm.eventInfo = [];
 	vm.rmhData = {};
 	vm.showPastReqs = false;
 	vm.checkPinNum = null;
