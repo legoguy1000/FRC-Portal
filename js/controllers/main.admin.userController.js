@@ -24,7 +24,14 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 
 
 	function querySearch (query) {
-		return schoolsService.searchAllSchools(query);
+		var data = {
+			filter: query,
+			limit: 0,
+			order: 'school_name',
+			page: 1,
+			listOnly: true
+		};
+		return schoolsService.getAllSchoolsFilter(data);
 	}
 
 	vm.getProfileInfo = function() {
