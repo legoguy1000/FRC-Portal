@@ -21,7 +21,7 @@ $app->group('/schools', function () {
     $totalNum = 0;
     if(count($queryArr) > 0) {
       $queryStr = implode(' OR ',$queryArr);
-      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'users.school_id', '=', 'schools.school_id')->addSelect(DB::raw('COUNT(*) as student_count'))->havingRaw($queryStr)->count();
+      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'users.school_id', '=', 'schools.school_id')->addSelect(DB::raw('IFNULL(sc.student_count,0) as student_count'))->havingRaw($queryStr)->count();
       $totalNum = count($schools);
     } else {
       $totalNum = FrcPortal\School::count();
@@ -43,9 +43,9 @@ $app->group('/schools', function () {
     }
 
     if($filter != '' ) {
-      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'users.school_id', '=', 'schools.school_id')->addSelect(DB::raw('COUNT(*) as student_count'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'users.school_id', '=', 'schools.school_id')->addSelect(DB::raw('IFNULL(sc.student_count,0) as student_count'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     } else {
-      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'users.school_id', '=', 'schools.school_id')->addSelect(DB::raw('COUNT(*) as student_count'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'users.school_id', '=', 'schools.school_id')->addSelect(DB::raw('IFNULL(sc.student_count,0) as student_count'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     }
 
 
