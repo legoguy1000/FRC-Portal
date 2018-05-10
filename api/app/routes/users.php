@@ -178,6 +178,20 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    $this->get('/linkedAccounts', function ($request, $response, $args) {
+      $user_id = $args['user_id'];
+      $user = FrcPortal\Oauth::where('user_id',$user_id)->get();
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->get('/notificationPreferences', function ($request, $response, $args) {
+      $user_id = $args['user_id'];
+      $user = FrcPortal\NotificationPreference::where('user_id',$user_id)->get();
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
     $this->put('/notificationPreferences', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;

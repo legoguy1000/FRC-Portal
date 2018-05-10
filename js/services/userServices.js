@@ -56,6 +56,20 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getUserLinkedAccounts: function (user_id) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			return $http.get('api/users/'+user_id+'/linkedAccounts')
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		getUserNotificationPreferences: function (user_id) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			return $http.get('api/users/'+user_id+'/notificationPreferences')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		userHoursbyDate: function (user,year) {
 			return $http.get('site/userHoursbyDate.php?user='+user+'&year='+year)
 			.then(function(response) {

@@ -76,6 +76,23 @@ class EventRequirement extends Eloquent {
   public function getRoomBoolAttribute() {
     return isset($this->attributes['room_id']) && !is_null($this->attributes['room_id']);
   }
+/*  public function getReqsCompleteAttribute() {
+    $registration = $this->registration;
+    $payment = $this->payment;
+    $permission_slip = $this->permission_slip;
+    $food = $this->food;
+    $car_bool = $this->car_bool;
+    $room_bool = $this->room_bool;
+
+    if(isset($this->attributes['user_id'])) {
+      $userInfo = User::find($this->attributes['user_id']);
+      $stu = (bool) $userInfo->user_type == 'Student';
+      $men = (bool) $userInfo->user_type == 'Mentor';
+      return $jt && $stims && (($stu && $dues) || $men) && $mh;
+    } else {
+      return false;
+    }
+  } */
   /**
    * Get the Event.
    */

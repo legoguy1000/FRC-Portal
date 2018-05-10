@@ -8,7 +8,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
   vm.selectedItem  = null;
   vm.searchText    = null;
   vm.querySearch   = querySearch;
-	vm.notificationEndpoints = [];
+	vm.notificationPreferences = [];
 	vm.linkedAccounts = [];
 	vm.seasonInfo = [];
 	vm.eventInfo = [];
@@ -82,6 +82,24 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		});
 	}
 	vm.getUserEventRequirements();
+
+	vm.getUserLinkedAccounts = function() {
+		vm.loading.note_devices = true;
+		usersService.getUserLinkedAccounts($scope.main.userInfo.user_id).then(function(response) {
+			vm.linkedAccounts = response.data;
+			vm.loading.note_devices = false;
+		});
+	}
+	vm.getUserLinkedAccounts();
+
+	vm.getUserNotificationPreferences = function() {
+		vm.loading.note_devices = true;
+		usersService.getUserNotificationPreferences($scope.main.userInfo.user_id).then(function(response) {
+			vm.notificationPreferences = response.data;
+			vm.loading.note_devices = false;
+		});
+	}
+	vm.getUserNotificationPreferences();
 
 	vm.updateUser = function() {
 		vm.loading.profile = true;
