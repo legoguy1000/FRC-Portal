@@ -130,6 +130,45 @@ $app->group('/users', function () {
         return $response;
       });
     });
+    $this->put('/pin', function ($request, $response, $args) {
+      $user_id = $args['user_id'];
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+    		'status' => false,
+    		'msg' => 'Something went wrong',
+    		'data' => null
+    	);
+      if(!isset($formData['pin']) || $formData['pin'] == '') {
+        $responseArr = array('status'=>false, 'msg'=>'PIN cannot be blank');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if(!is_numeric($formData['pin'])) {
+        $responseArr = array('status'=>false, 'msg'=>'PIN must bee numbers only 0-9');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if(strlen($formData['pin']) < 4 || strlen($formData['pin']) > 8)) {
+        $responseArr = array('status'=>false, 'msg'=>'PIN must be between 4 to 8 numbers');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      $user = FrcPortal\User::find($user_id);
+      if($user) {
+        $currentPIN = $user->signin_pin;
+        if($currentPIN != hash('SHA256', $formData['pin'])) {
+          $user->signin_pin = hash('SHA256', $formData['pin']);
+          if($user->save()) {
+            $user->load('schools');
+            $responseArr = array('status'=>true, 'msg'=>'PIN has been changed', 'data' => $user);
+          }
+        } else {
+          $responseArr['msg'] = 'PIN must be changed to a different number';
+        }
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
     $this->put('', function ($request, $response, $args) {
       $user_id = $args['user_id'];
       $formData = $request->getParsedBody();
