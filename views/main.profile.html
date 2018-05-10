@@ -92,7 +92,7 @@
 						<table md-table md-progress="vm.promise">
 							<thead md-head md-order="vm.query.order">
 								<tr md-row>
-									<th md-column md-order-by="year"><span>Name</span></th>
+									<th md-column md-order-by="year"><span>Season</span></th>
 									<th md-column md-order-by="join_team"><span>Join Team</span></th>
 									<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>
 									<th md-column md-order-by="dues"><span>Pay Dues</span></th>
@@ -106,7 +106,8 @@
 								<tr md-row ng-repeat="season in vm.seasonInfo | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered">
 									<td md-cell>
 										<md-list-item style="padding: 0px;">
-											{{user.full_name}}
+											<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
+											{{season.year}} - {{season.game_name}}
 										</md-list-item>
 									</td>
 									<td md-cell>
