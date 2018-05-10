@@ -152,16 +152,17 @@
 					</md-toolbar>
 					<md-table-container>
 						<table md-table>
-							<thead md-head md-order="vm.query.order">
+							<thead md-head md-order="vm.queryEvents.order">
 								<tr md-row>
 									<th md-column md-order-by="name"><span>Event</span></th>
 									<th md-column md-order-by="event_start"><span>Date</span></th>
 									<th md-column md-order-by="num_days"><span># Days</span></th>
 									<th md-column md-order-by="type"><span>Event Type</span></th>
-									<th md-column md-order-by="registration"><span>Registration</span></th>
-									<th md-column md-order-by="payment"><span>Payment</span></th>
-									<th md-column md-order-by="permission_slip"><span>Permission Slip</span></th>
-									<th md-column md-order-by="food"><span>Food Order</span></th>
+									<th md-column md-order-by="event_requirements.registration"><span>Registration</span></th>
+									<th md-column md-order-by="event_requirements.payment"><span>Payment</span></th>
+									<th md-column md-order-by="event_requirements.permission_slip"><span>Permission Slip</span></th>
+									<th md-column md-order-by="event_requirements.food"><span>Food Order</span></th>
+									<th md-column md-order-by="event_requirements.room_bool"><span>Room</span></th>
 								</tr>
 							</thead>
 							<tbody md-body>
