@@ -396,6 +396,66 @@ $app->group('/reports', function () {
     $response = $response->withJson($allData);
     return $response;
   });
+  /**
+  * Total & average Hours per User Type per Year
+  **/
+  $this->get('/hoursPerUserTypePerYear', function ($request, $response, $args) {
+    if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid Start Date.');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+    }
+    if($request->getParam('end_date') == null || $request->getParam('end_date') == '' || !is_numeric($request->getParam('end_date'))) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid End Date.');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+    }
+    $start_date = $request->getParam('start_date');
+    $end_date = $request->getParam('end_date');
+
+    $years = array();
+    for($i = $start_date; $i <= $end_date; $i++) {
+    	$years[] = (integer) $i;
+    }
+
+    $series = array('Mentor - Sum','Mentor - Avg','Student - Sum','Student - Avg');
+    $data = array();
+    foreach($series as $se) {
+    	$data[$se] = array_fill_keys($years,0);
+    }
+    $query = 'SELECT b.user_type, SUM(d.hours) as sum, AVG(d.hours) as avg, d.year
+              FROM (SELECT a.user_id, IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours, year(a.time_in) as year from meeting_hours a WHERE year(a.time_in) BETWEEN :sd AND :ed GROUP BY user_id,year) d
+              LEFT JOIN users b USING (user_id)
+              GROUP BY year,user_type';
+
+
+    $result = DB::select( DB::raw($query), array(
+        'sd' => $start_date,
+        'ed' => $end_date,
+     ));
+
+    foreach($result as $re) {
+      $user_type =  $re->user_type;
+      $year = (integer) $re->year;
+    	$sum = (double) $re->sum;
+    	$avg = (double) $re->avg;
+
+    	$data[$user_type.' - Sum'][$year] = $sum;
+    	$data[$user_type.' - Avg'][$year] = $avg;
+    }
+    foreach($series as $se) {
+    	$data[$se] = array_values($data[$se]);
+    }
+
+    $allData = array(
+    	'labels' => $years,
+    	'series' => $series,
+    	'data' => array_values($data),
+    	//'csvData' => metricsCreateCsvData($data, $years, $series)
+    );
+    $response = $response->withJson($allData);
+    return $response;
+  });
 });
 
 

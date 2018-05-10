@@ -8,7 +8,7 @@ angular.module('FrcPortal')
 			});
 		},
 		reportsAvgHrsPerUserTypePerYear: function (start,end) {
-			return $http.get('site/reportsAvgHrsPerUserTypePerYear.php?start_date='+start+'&end_date='+end)
+			return $http.get('api/reports/hoursPerUserTypePerYear?start_date='+start+'&end_date='+end)
 			.then(function(response) {
 				return response.data;
 			});
