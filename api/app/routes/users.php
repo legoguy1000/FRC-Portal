@@ -236,7 +236,7 @@ $app->group('/users', function () {
         'data' => null
       );
       if($user_id != $userId && !checkAdmin($userId)) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized', 'data'=>$authToken);
         $response = $response->withJson($responseArr,403);
         return $response;
       }
