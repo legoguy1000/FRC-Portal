@@ -227,7 +227,7 @@ $app->group('/users', function () {
     });
     $this->put('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']['user_id'];
+      $userId = $authToken['data'];
       $user_id = $args['user_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
