@@ -155,7 +155,7 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      if(strlen($formData['pin']) < 4 || strlen($formData['pin']) > 8)) {
+      if(strlen($formData['pin']) < 4 || strlen($formData['pin']) > 8) {
         $responseArr = array('status'=>false, 'msg'=>'PIN must be between 4 to 8 numbers');
         $response = $response->withJson($responseArr,400);
         return $response;
