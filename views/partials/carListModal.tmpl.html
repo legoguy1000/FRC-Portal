@@ -27,6 +27,7 @@
 					        dnd-selected="models.selected = user"
 					        ng-class="{'selected': models.selected === user}"
 									class="min-height-reset"
+									dnd-disable-if="user.user_id == car.user_id"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
