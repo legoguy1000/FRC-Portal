@@ -31,7 +31,7 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 			page: 1,
 			listOnly: true
 		};
-		return schoolsService.getAllSchoolsFilter(data);
+		return schoolsService.getAllSchoolsFilter($.param(data));
 	}
 
 	vm.getProfileInfo = function() {
