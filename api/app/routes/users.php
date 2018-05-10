@@ -216,7 +216,7 @@ $app->group('/users', function () {
           $responseArr['msg'] ='Notification Preferences updated';
         }
       } else if($formData['value'] == false) {
-        $pref = new FrcPortal\NotificationPreference::where('user_id',$user_id)->where('method',$formData['method'])->where('type',$formData['type'])->delete();
+        $pref = FrcPortal\NotificationPreference::where('user_id',$user_id)->where('method',$formData['method'])->where('type',$formData['type'])->delete();
         if($pref) {
           $responseArr['status'] = true;
           $responseArr['msg'] ='Notification Preferences updated';
