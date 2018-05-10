@@ -132,7 +132,7 @@ $app->group('/users', function () {
     });
     $this->put('/pin', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']['user_id'];
+      $userId = $authToken->data->user_id;
       $user_id = $args['user_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
@@ -178,7 +178,7 @@ $app->group('/users', function () {
     });
     $this->put('/notificationPreferences', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']['user_id'];
+      $userId = $authToken->data->user_id;
       $user_id = $args['user_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
@@ -227,7 +227,7 @@ $app->group('/users', function () {
     });
     $this->put('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']['user_id'];
+      $userId = $authToken->data->user_id;
       $user_id = $args['user_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
@@ -265,7 +265,7 @@ $app->group('/users', function () {
     });
     $this->delete('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']['user_id'];
+      $userId = $authToken->data->user_id;
       $user_id = $args['user_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
