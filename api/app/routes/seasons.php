@@ -13,7 +13,7 @@ $app->group('/seasons', function () {
 
     $totalNum = 0;
   	if($filter != '') {
-      $seasons = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->count();
+      $totalNum = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->count();
   	} else {
       $totalNum = FrcPortal\Season::count();
     }

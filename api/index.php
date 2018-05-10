@@ -78,6 +78,7 @@ include('./app/routes/sign_in.php');
 include('./app/routes/users.php');
 include('./app/routes/events.php');
 include('./app/routes/reports.php');
+include('./app/routes/schools.php');
 
 $app->run();
 
