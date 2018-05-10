@@ -25,6 +25,8 @@ class Oauth extends Eloquent {
   */
   protected $hidden = [];
 
+  protected $appends = ['timestamp_unix'];
+
   public function save($options = array()) {
     if(is_null($this->auth_id)) {
       $this->auth_id = uniqid();
@@ -45,4 +47,8 @@ class Oauth extends Eloquent {
      return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
    }
 
+   public function getTimestamptUnixAttribute() {
+     $date = new DateTime($this->attributes['timestamp']);
+     return $date->format('U');
+   }
 }
