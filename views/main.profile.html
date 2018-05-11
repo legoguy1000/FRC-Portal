@@ -99,6 +99,7 @@
 									<th md-column md-order-by="annual_requirements.build_season_hours" style="text-align: left;"><span>Build Season Hours</span></th>
 									<th md-column md-order-by="annual_requirements.competition_season_hours" style="text-align: left;"><span>Competetition Season Hours</span></th>
 									<th md-column md-order-by="annual_requirements.off_season_hours" style="text-align: left;"><span>Off Season Hours</span></th>
+									<th md-column md-order-by="annual_requirements.event_hours" style="text-align: left;"><span>Event Hours</span></th>
 									<th md-column md-order-by="annual_requirements.total_hours" style="text-align: left;"><span>Total Hours</span></th>
 								</tr>
 							</thead>
@@ -133,6 +134,9 @@
 									</td>
 									<td md-cell>
 										{{season.annual_requirements.off_season_hours}}
+									</td>
+									<td md-cell>
+										{{season.annual_requirements.event_hours}}
 									</td>
 									<td md-cell>
 										<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.annual_requirements.total_hours}}</md-button>
