@@ -176,6 +176,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		vm.loading.rmh = true;
 		vm.rmhMsg = '';
 		var data = vm.rmhData;
+		data.user_id = $scope.main.userInfo.user_id;
 		usersService.requestMissingHours(data).then(function(response){
 			vm.loading.rmh = false;
 			vm.rmhMsg = response.msg;
