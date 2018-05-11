@@ -89,7 +89,7 @@ $app->group('/auth', function () {
     $fb = new Facebook\Facebook([
       'app_id'  => '1347987445311447',
       'app_secret' => $secret,
-    	'default_graph_version' => 'v2.11',
+    	'default_graph_version' => 'v3.0',
     	'default_access_token' => $accessTokenArr['access_token']
     ]);
     try {
