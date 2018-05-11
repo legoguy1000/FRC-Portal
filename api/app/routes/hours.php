@@ -168,7 +168,7 @@ $app->group('/hours', function () {
              DB::rollback();
           }
         }
-        $response = $response->withJson($data);
+        $response = $response->withJson($responseArr);
         return $response;
       });
       $this->put('/deny', function ($request, $response, $args) {
@@ -196,7 +196,7 @@ $app->group('/hours', function () {
              $responseArr['msg'] = 'Missing hours request denied';
           }
         }
-        $response = $response->withJson($data);
+        $response = $response->withJson($responseArr);
         return $response;
       });
     });
