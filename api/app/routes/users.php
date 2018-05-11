@@ -202,7 +202,7 @@ $app->group('/users', function () {
       GROUP BY date
       ORDER BY date ASC';
 
-      $result = DB::select( DB::raw($query), array(
+      $dates = DB::select( DB::raw($query), array(
           'uid' => $user_id,
           'year' => $year,
        ));
