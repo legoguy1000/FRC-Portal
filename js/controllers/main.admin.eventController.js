@@ -231,4 +231,15 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		});
 	}
 
+	vm.showComments = function(ev,userInfo) {
+		$mdDialog.show(
+      $mdDialog.alert()
+        .clickOutsideToClose(true)
+        .title('Registration comments for '+userInfo.full_name)
+        .textContent(userInfo.event_requirements.comments)
+        .ariaLabel('Registration comments for '+userInfo.full_name)
+        .ok('close')
+        .targetEvent(ev)
+    );
+	}
 }
