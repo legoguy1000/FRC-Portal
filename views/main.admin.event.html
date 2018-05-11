@@ -169,7 +169,7 @@
 							<!--<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
 					</thead>
-					<tbody md-body> <!--  | emptyToEnd: vm.query.order -->
+					<tbody md-body>
 						<tr md-row md-select="user" md-select-id="user_id" ng-repeat="user in vm.users | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 							<td md-cell>
 								<md-list-item style="padding: 0px;">
