@@ -173,7 +173,7 @@ $app->group('/hours', function () {
       });
       $this->put('/deny', function ($request, $response, $args) {
         $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']['user_id'];
+        $userId = $authToken['data']->user_id;
         $request_id = $args['request_id'];
         $responseArr = array(
           'status' => false,
@@ -181,7 +181,7 @@ $app->group('/hours', function () {
           'data' => null
         );
         if(!checkAdmin($userId)) {
-          $responseArr = array('status'=>false, 'msg'=>'Unauthorized', $authToken);
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
         }
