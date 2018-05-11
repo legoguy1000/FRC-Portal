@@ -425,7 +425,7 @@ angular.module('FrcPortal', [
 		name: 'facebook',
 		url: '/api/auth/facebook',
 	//	url: '/api/v1/login/facebook ',
-		authorizationEndpoint: 'https://www.facebook.com/v	3.0/dialog/oauth',
+		authorizationEndpoint: 'https://www.facebook.com/v3.0/dialog/oauth',
 		redirectUri: window.location.origin+'/',
 		requiredUrlParams: ['display', 'scope'],
 		scope: ['public_profile','email'],
