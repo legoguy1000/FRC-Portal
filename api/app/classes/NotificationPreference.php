@@ -9,6 +9,7 @@ class NotificationPreference extends Eloquent {
   //Use Custom Primary Key
   protected $primaryKey = 'pref_id'; // or null
   public $incrementing = false;
+  public $timestamps = false;
   /**
   * The attributes that are mass assignable.
   *
