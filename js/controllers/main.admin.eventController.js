@@ -36,7 +36,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		order: 'full_name',
 		page: 1
 	};
-
+	vm.currentTime = new Date().getTime();
 	vm.event_id = $stateParams.event_id;
 	vm.event = {};
 	vm.users = null;
