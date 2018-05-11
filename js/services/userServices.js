@@ -22,7 +22,8 @@ angular.module('FrcPortal')
 			});
 		},
 		updateNotificationPreferences: function (formData) {
-			return $http.post('site/updateNotificationPreferences.php',formData)
+			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
+			return $http.put('api/users/'+user_id+'/notificationPreferences',formData)
 			.then(function(response) {
 				return response.data;
 			});
@@ -71,7 +72,8 @@ angular.module('FrcPortal')
 			});
 		},
 		requestMissingHours: function (formData) {
-			return $http.post('site/requestMissingHours.php',formData)
+			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
+			return $http.post('api/users/'+user_id+'/requestMissingHours',formData)
 			.then(function(response) {
 				return response.data;
 			});

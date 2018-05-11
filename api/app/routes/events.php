@@ -457,9 +457,18 @@ $app->group('/events', function () {
       return $response;
     });
     $this->delete('', function ($request, $response, $args) {
-      //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']->user_id;
-      //checkAdmin($user_id, $die = true);
+      $authToken = $request->getAttribute("token");
+      $loggedInUser = $authToken['data']->user_id;
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
       $event_id = $args['event_id'];
       $event = FrcPortal\Event::destroy($event_id);
       if($event) {

@@ -241,6 +241,53 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    $this->post('/requestMissingHours', function ($request, $response, $args) {
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']->user_id;
+      $user_id = $args['user_id'];
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+    		'status' => false,
+    		'msg' => 'Something went wrong',
+    		'data' => null
+    	);
+      if($user_id != $userId) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+      if(!isset($formData['start_time']) || $formData['start_time'] == '') {
+        $responseArr = array('status'=>false, 'msg'=>'Start Time cannot be blank');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if(!isset($formData['end_time']) || $formData['end_time'] == '') {
+        $responseArr = array('status'=>false, 'msg'=>'End Time cannot be blank');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if(!isset($formData['comment']) || $formData['comment'] == '') {
+        $responseArr = array('status'=>false, 'msg'=>'Comment cannot be blank');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      $start_time = date('Y-m-d H:i:s',strtotime($formData['start_time']));
+      $end_time = date('Y-m-d H:i:s',strtotime($formData['end_time']));;
+      $request_date = date('Y-m-d H:i:s');
+
+      $request = new FrcPortal\MeetingHourRequest();
+      $request->user_id = $user_id;
+      $request->time_in = $start_time;
+      $request->time_out = $end_time;
+      $request->comment = $formData['comment'];
+      $request->request_date = $request_date;
+      if($request->save()) {
+        $responseArr['status'] = true;
+        $responseArr['msg'] = 'Request submited';
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
     $this->put('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
