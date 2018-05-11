@@ -87,6 +87,7 @@ $app->group('/auth', function () {
     $accessTokenArr = file_get_contents('https://graph.facebook.com/v3.0/oauth/access_token?client_id='.$args['clientId'].'&redirect_uri='.$args['redirectUri'].'&client_secret='.$secret.'&code='.$args['code']);
     //die($accessTokenArr);
     $accessTokenArr = json_decode($accessTokenArr, true);
+    $accessToken = $accessTokenArr['access_token'];
     $fb = new Facebook\Facebook([
       'app_id'  => '1347987445311447',
       'app_secret' => $secret,
