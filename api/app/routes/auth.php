@@ -94,6 +94,7 @@ $app->group('/auth', function () {
     $helper = $fb->getRedirectLoginHelper();
     try {
       $accessToken = $helper->getAccessToken();
+      die(json_encode($accessToken = $helper->getAccessToken()));
       $data = array();
       //$FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,picture', $accessToken);
     	//$me = $response->getGraphUser();
