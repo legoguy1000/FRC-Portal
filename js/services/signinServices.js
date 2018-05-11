@@ -36,26 +36,26 @@ angular.module('FrcPortal')
 			$window.localStorage.removeItem('signin_token');
 		},
 		signInUserList: function () {
-			return $http.get('api/hours/signInList')
+			return $http.get('api/hours/signIn/list')
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		authorizeSignIn: function (formData) {
 			this.logout();
-			return $http.post('api/hours/authorize',formData)
+			return $http.post('api/hours/signIn/authorize',formData)
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		deauthorizeSignIn: function (formData) {
-			return $http.post('api/hours/deauthorize',formData)
+			return $http.post('api/hours/signIn/deauthorize',formData)
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		signInOut: function (formData) {
-			return $http.post('api/hours',formData,{skipAuthorization: true})
+			return $http.post('api/hours/signIn',formData,{skipAuthorization: true})
 			.then(function(response) {
 				return response.data;
 			});

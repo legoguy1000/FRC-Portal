@@ -2,7 +2,7 @@ angular.module('FrcPortal')
 .service('timeService', function ($http) {
 	return {
 		getAllSignInsFilter: function (params) {
-			return $http.get('api/hours/signInRecords?'+params)
+			return $http.get('api/hours/signIn/records?'+params)
 			.then(function(response) {
 				return response.data;
 			});
