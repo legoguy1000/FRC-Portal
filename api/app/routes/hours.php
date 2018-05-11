@@ -72,15 +72,6 @@ $app->group('/hours', function () {
     $response = $response->withJson($data);
     return $response;
   });
-  //Get the list of users and their last sign/out and hours
-  $this->get('/signInList', function ($request, $response, $args) {
-    $season = FrcPortal\Season::where('year',date('Y'))->first();
-    $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
-      $query->where('season_id', $season->season_id); // fields from comments table,
-    }, 'last_sign_in'])->where('status','1')->get();
-    $response = $response->withJson($users);
-    return $response;
-  });
   //Get the list of all sign in/out records
   $this->get('/missingHoursRequests', function ($request, $response, $args) {
     $users = array();
