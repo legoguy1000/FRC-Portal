@@ -245,7 +245,7 @@ $app->group('/hours', function () {
     });
     //Deauthorize the current signin token
     $this->post('/deauthorize', function ($request, $response, $args) {
-      $responseArr = array();
+      $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Deauthorized');
       $response = $response->withJson($responseArr);
       return $response;
     });
