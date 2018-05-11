@@ -397,7 +397,7 @@ $app->group('/events', function () {
       } else if(isset($formData['user_id']) && checkAdmin($loggedInUser)) {
       	$user_id = $formData['user_id'];
       }
-      $userFullName = $authToken['data']['full_name'];
+      $userFullName = $authToken['data']->full_name;
 
       if(!is_bool($formData['registration'])) {
         $responseArr = array('status'=>false, 'msg'=>'Invalid Request, no registration option.');
