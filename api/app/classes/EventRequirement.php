@@ -17,7 +17,7 @@ class EventRequirement extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'user_id', 'event_id', 'registration', 'payment','permission_slip','food','room_id','can_drive','car_id','comments'
+    'user_id', 'event_id', 'registration', 'payment','permission_slip','food','room_id','can_drive','car_id','comments','attendance_confirmed'
   ];
 
 
@@ -32,6 +32,7 @@ class EventRequirement extends Eloquent {
     'can_drive' => false,
     'car_id' => null,
     'comments' => '',
+    'attendance_confirmed' => false
   ];
 
   //$data['requirements'] = array();
