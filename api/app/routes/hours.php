@@ -1,5 +1,6 @@
 <?php
 use \Firebase\JWT\JWT;
+use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/hours', function () {
   //Get the list of users and their last sign/out and hours
   $this->get('/signInList', function ($request, $response, $args) {
