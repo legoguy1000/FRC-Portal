@@ -30,7 +30,7 @@ $config['db']['prefix'] = '';
 $app = new \Slim\App(['settings' => $config]);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
     "secret" => getIniProp('jwt_key'),
-    "path" => ['/users', '/seasons', '/events', '/schools','/hours/missingHoursRequests'],
+    "path" => ['/users', '/seasons', '/events', '/schools','/hours/missingHoursRequests','/hours/signIn/records'],
     "passthrough" => ['/auth','/reports','/slack','/hours/signIn'],
 ]));
 $container = $app->getContainer();
