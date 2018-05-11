@@ -18,9 +18,7 @@ $app->group('/auth', function () {
     	$fname = $me['name']['givenName'];
     	$lname = $me['name']['familyName'];
     	$image = $me['image']['url'];
-    	$gender = $me['gender'];
     	$id = $me['id'];
-    	$age_min = $me['ageRange']['min'];
 
       $userData = array(
     		'id' => $id,
@@ -29,8 +27,6 @@ $app->group('/auth', function () {
     		'fname' => $fname,
     		'lname' => $lname,
     		'profile_image' => $image,
-    		'gender' => $gender,
-    		'age_min' => $age_min
     	);
 
       $user = false;
@@ -88,7 +84,7 @@ $app->group('/auth', function () {
     $args = $request->getParsedBody();
     $provider = 'facebook';
     $secret = getIniProp('facebook_client_secret');
-    $accessTokenArr = file_get_contents('https://graph.facebook.com/v2.11/oauth/access_token?client_id='.$args['clientId'].'&redirect_uri='.$args['redirectUri'].'&client_secret='.$secret.'&code='.$args['code']);
+    $accessTokenArr = file_get_contents('https://graph.facebook.com/v3.0/oauth/access_token?client_id='.$args['clientId'].'&redirect_uri='.$args['redirectUri'].'&client_secret='.$secret.'&code='.$args['code']);
     $accessTokenArr = json_decode($accessTokenArr, true);
     $fb = new Facebook\Facebook([
       'app_id'  => '1347987445311447',
@@ -98,15 +94,13 @@ $app->group('/auth', function () {
     ]);
     try {
       $data = array();
-      $FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,gender,picture,age_range');
+      $FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,picture');
     	$me = $FBresponse->getDecodedBody();
       if(isset($me['email']) || $me['email'] != '') {
         $email = $me['email'];
       	$fname = $me['first_name'];
       	$lname = $me['last_name'];
       	$image = $me['picture']['data']['url'];
-      	$gender = $me['gender'];
-      	$age_min = $me['age_range']['min'];
       	$id = $me['id'];
 
         $userData = array(
@@ -116,8 +110,6 @@ $app->group('/auth', function () {
       		'fname' => $fname,
       		'lname' => $lname,
       		'profile_image' => $image,
-      		'gender' => $gender,
-      		'age_min' => $age_min
       	);
         $user = false;
         $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
@@ -213,10 +205,8 @@ $app->group('/auth', function () {
     	$email = $me['userPrincipalName'];
     	$fname = $me['givenName'];
     	$lname = $me['surname'];
-    	$image = ''; //$me['image']['url'];
-    	$gender = ''; //$me['gender'];
-    	$id = $me['id'];
-    	$age_min = ''; //$me['ageRange']['min'];
+    	$image = ''; //$me['image']['url'];\
+    	$id = $me['id'];\
 
     	$userData = array(
     		'id' => $id,
@@ -225,8 +215,6 @@ $app->group('/auth', function () {
     		'fname' => $fname,
     		'lname' => $lname,
     		'profile_image' => $image,
-    		'gender' => $gender,
-    		'age_min' => $age_min
     	);
 
       $user = false;
