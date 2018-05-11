@@ -71,7 +71,7 @@ class MissingHoursRequest extends Eloquent {
    * Get the Approver.
    */
   public function approver() {
-      return $this->belongsTo('FrcPortal\User', 'approved_by', 'user_id');
+      return $this->belongsTo('FrcPortal\User', 'user_id', 'approved_by');
   }
   public function getTimeInUnixAttribute() {
     $date = new DateTime($this->attributes['time_in']);
