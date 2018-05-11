@@ -138,6 +138,13 @@
 									Toggle Food
 								</md-button>
 							</md-menu-item>
+							<md-menu-item>
+								<md-button aria-label="Confirm Attendance" ng-click="" ng-disabled="vm.selectedUsers.length == 0 || !vm.event.food_required">
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Attendance Confirmation</md-tooltip>
+									<md-icon class="material-icons">timelapse</md-icon>
+									Confirm Attendance
+								</md-button>
+							</md-menu-item>
 						</md-menu-content>
 					</md-menu>
 				</div>
