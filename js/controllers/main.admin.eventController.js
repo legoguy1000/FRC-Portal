@@ -37,7 +37,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		page: 1
 	};
 	vm.currentTime = new Date().getTime();
-	console.log(vm.currentTime +' - '+ vm.event.event_end_unix*1000)
+
 	vm.event_id = $stateParams.event_id;
 	vm.event = {};
 	vm.users = null;
@@ -46,6 +46,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		eventsService.getEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
 			vm.loading = false;
+			console.log(vm.currentTime +' - '+ vm.event.event_end_unix*1000)
 		});
 	};
 	vm.getEvent();
