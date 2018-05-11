@@ -429,6 +429,7 @@ angular.module('FrcPortal', [
 		redirectUri: window.location.origin+'/',
 		requiredUrlParams: ['display', 'scope'],
 		scope: ['public_profile','email'],
+		auth_type: 'rerequest',
 		scopeDelimiter: ',',
 		display: 'popup',
 		type: '2.0',
