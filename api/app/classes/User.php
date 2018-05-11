@@ -135,4 +135,16 @@ class User extends Eloquent {
   public function notifications() {
     return $this->hasMany('FrcPortal\Notification', 'user_id', 'user_id');
   }
+  /**
+  * Get the Notification Preferences
+  */
+  public function missing_hours_requests() {
+    return $this->hasOne('FrcPortal\MissingHoursRequest', 'user_id', 'user_id');
+  }
+  /**
+  * Get the Notification Preferences
+  */
+  public function missing_hours_approvers() {
+    return $this->hasOne('FrcPortal\MissingHoursRequest', 'approved_by', 'user_id');
+  }
 }

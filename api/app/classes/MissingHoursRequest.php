@@ -64,10 +64,15 @@ class MissingHoursRequest extends Eloquent {
   /**
    * Get the User.
    */
-  public function users() {
+  public function user() {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
   }
-
+    /**
+   * Get the Approver.
+   */
+  public function approver() {
+      return $this->belongsTo('FrcPortal\User', 'approved_by', 'user_id');
+  }
   public function getTimeInUnixAttribute() {
     $date = new DateTime($this->attributes['time_in']);
     return $date->format('U');
