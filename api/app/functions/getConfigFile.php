@@ -2,7 +2,7 @@
 
 function getIniProp($prop) {
 	$value = '';
-	$ini = parse_ini_file($_SERVER['DOCUMENT_ROOT'].'/site/includes/config.ini');
+	$ini = parse_ini_file(__DIR__.'/../secured/config.ini');
 	if(isset($ini[$prop])) {
 		$value = $ini[$prop];
 	}
