@@ -1,5 +1,7 @@
 <?php
 use \Firebase\JWT\JWT;
+use Microsoft\Graph\Graph;
+use Microsoft\Graph\Model;
 $app->group('/auth', function () {
   $this->post('/google', function ($request, $response) {
     $responseData = false;
