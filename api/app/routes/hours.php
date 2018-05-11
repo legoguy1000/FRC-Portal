@@ -72,7 +72,7 @@ $app->group('/hours', function () {
     $response = $response->withJson($data);
     return $response;
   });
-  $app->group('/missingHoursRequests', function () {
+  $this->group('/missingHoursRequests', function () {
     $this->get('', function ($request, $response, $args) {
       $users = array();
     	$data = array();
@@ -131,7 +131,7 @@ $app->group('/hours', function () {
       $response = $response->withJson($data);
       return $response;
     });
-    $app->group('/{request_id:[a-z0-9]{13}}', function () {
+    $this->group('/{request_id:[a-z0-9]{13}}', function () {
       $this->put('/approve', function ($request, $response, $args) {
         $authToken = $request->getAttribute("token");
         $userId = $authToken['data']->user_id;
