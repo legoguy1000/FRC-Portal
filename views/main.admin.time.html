@@ -100,11 +100,11 @@
 							<span ng-switch-when="true"><md-icon class="material-icons" style="color:green;">check_circle</md-icon></span>
 							<span ng-switch-when="false"><md-icon class="material-icons" style="color:red;">remove_circle</md-icon></span>
 							<span ng-switch-default layout="row">
-								<md-button class="md-icon-button" ng-click="vm.approveDenyHoursRequest(req.request_id,'approve')">
+								<md-button class="md-icon-button" ng-click="vm.approveDenyHoursRequest(req.request_id)">
 									<md-icon class="material-icons" style="color:green;">check_circle</md-icon>
 									<md-tooltip md-direction="top">Approve Hours</md-tooltip>
 								</md-button>
-								<md-button class="md-icon-button" ng-click="vm.approveDenyHoursRequest(req.request_id,'deny')">
+								<md-button class="md-icon-button" ng-click="vm.denyMissingHoursRequest(req.request_id)">
 									<md-icon class="material-icons" style="color:red;">remove_circle</md-icon>
 									<md-tooltip md-direction="top">Deny Hours</md-tooltip>
 								</md-button>

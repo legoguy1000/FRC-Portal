@@ -13,8 +13,14 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		approveDenyHoursRequest: function (formData) {
-			return $http.post('site/approveDenyHoursRequest.php',formData)
+		approveMissingHoursRequest: function (request_id) {
+			return $http.put('api/hours/missingHoursRequests/'+request_id+'/approve')
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		denyMissingHoursRequest: function (request_id) {
+			return $http.put('api/hours/missingHoursRequests/'+request_id+'/deny')
 			.then(function(response) {
 				return response.data;
 			});

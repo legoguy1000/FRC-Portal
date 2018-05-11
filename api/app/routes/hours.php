@@ -72,64 +72,134 @@ $app->group('/hours', function () {
     $response = $response->withJson($data);
     return $response;
   });
-  //Get the list of all sign in/out records
-  $this->get('/missingHoursRequests', function ($request, $response, $args) {
-    $users = array();
-  	$data = array();
+  $app->group('/missingHoursRequests', function () {
+    $this->get('', function ($request, $response, $args) {
+      $users = array();
+    	$data = array();
 
-    $filter = $request->getParam('filter') !== null ? $request->getParam('filter'):'';
-    $limit = $request->getParam('limit') !== null ? $request->getParam('limit'):10;
-    $order = $request->getParam('order') !== null ? $request->getParam('order'):'full_name';
-    $page = $request->getParam('page') !== null ? $request->getParam('page'):1;
-    $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
+      $filter = $request->getParam('filter') !== null ? $request->getParam('filter'):'';
+      $limit = $request->getParam('limit') !== null ? $request->getParam('limit'):10;
+      $order = $request->getParam('order') !== null ? $request->getParam('order'):'full_name';
+      $page = $request->getParam('page') !== null ? $request->getParam('page'):1;
+      $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
-    $queryArr = array();
-  	$queryStr = '';
-  	if($filter != '') {
-      $queryArr[] = '(full_name LIKE "%'.$filter.'%")';
-  	}
-    $totalNum = 0;
-  	if(count($queryArr) > 0) {
-  		$queryStr = implode(' OR ',$queryArr);
-      $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->get();
-      $totalNum = count($users);
-  	} else {
-      $totalNum = FrcPortal\MissingHoursRequest::count();
-    }
+      $queryArr = array();
+    	$queryStr = '';
+    	if($filter != '') {
+        $queryArr[] = '(full_name LIKE "%'.$filter.'%")';
+    	}
+      $totalNum = 0;
+    	if(count($queryArr) > 0) {
+    		$queryStr = implode(' OR ',$queryArr);
+        $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->get();
+        $totalNum = count($users);
+    	} else {
+        $totalNum = FrcPortal\MissingHoursRequest::count();
+      }
 
-    $orderBy = '';
-  	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
-  	if(in_array($orderCol,array('full_name','time_in','time_out','hours'))) {
-  		$orderBy = 'ASC';
-  		if($order[0] == '-') {
-  			$orderBy = 'DESC';
-  		}
-  	}
+      $orderBy = '';
+    	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
+    	if(in_array($orderCol,array('full_name','time_in','time_out','hours'))) {
+    		$orderBy = 'ASC';
+    		if($order[0] == '-') {
+    			$orderBy = 'DESC';
+    		}
+    	}
 
-  	if($limit > 0) {
-  		$offset	= ($page - 1) * $limit;
-  	} elseif($limit == 0) {
-      $limit = $totalNum;
-    }
+    	if($limit > 0) {
+    		$offset	= ($page - 1) * $limit;
+    	} elseif($limit == 0) {
+        $limit = $totalNum;
+      }
 
-    if($filter != '' ) {
-      $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    } else {
-      $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    }
+      if($filter != '' ) {
+        $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      } else {
+        $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      }
 
 
-    $data['data'] = $users;
-    $data['total'] = $totalNum;
-    $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
-    $data['status'] =true;
-    $data['msg'] = '';
-    if($listOnly) {
-      $data = $users;
-    }
+      $data['data'] = $users;
+      $data['total'] = $totalNum;
+      $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
+      $data['status'] =true;
+      $data['msg'] = '';
+      if($listOnly) {
+        $data = $users;
+      }
 
-    $response = $response->withJson($data);
-    return $response;
+      $response = $response->withJson($data);
+      return $response;
+    });
+    $app->group('/{request_id:[a-z0-9]{13}}', function () {
+      $this->put('/approve', function ($request, $response, $args) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        $request_id = $args['request_id'];
+        $responseArr = array(
+      		'status' => false,
+      		'msg' => 'Something went wrong',
+      		'data' => null
+      	);
+        if(!checkAdmin($userId)) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+        $request = FrcPortal\MissingHoursRequest::find($request_id);
+        $mh = new FrcPortal\MeetingHour();
+      	$date = time();
+      	$user_id = $request['user_id'];
+        if(!is_null($request)) {
+          $request->approved = true;
+          $request->approved_date = date('Y-m-d H:i:s',$date);
+          $request->approved_by = date('Y-m-d H:i:s',$userId);
+          $mh->user_id = $user_id;
+          $mh->time_in = $request['time_in'];
+          $mh->time_out = $request['time_out'];
+          try {
+             DB::beginTransaction();
+             $request->save();
+             $mh->save();
+             DB::commit();
+             $responseArr['Status'] = true;
+             $responseArr['msg'] = 'Missing hours request approved';
+          } catch(\Exception $e){
+             DB::rollback();
+          }
+        }
+        $response = $response->withJson($data);
+        return $response;
+      });
+      $this->put('/deny', function ($request, $response, $args) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        $request_id = $args['request_id'];
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!checkAdmin($userId)) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+        $request = FrcPortal\MissingHoursRequest::find($request_id);
+        $date = time();
+        if(!is_null($request)) {
+          $request->approved = false;
+          $request->approved_date = date('Y-m-d H:i:s',$date);
+          $request->approved_by = date('Y-m-d H:i:s',$userId);
+          if($request->save()) {
+             $responseArr['Status'] = true;
+             $responseArr['msg'] = 'Missing hours request denied';
+          }
+        }
+        $response = $response->withJson($data);
+        return $response;
+      });
+    });
   });
   //Create a new signin token
   $this->post('/authorize', function ($request, $response, $args) {
