@@ -403,9 +403,9 @@ angular.module('FrcPortal', [
 		}
 	});
 })
-.config(function($authProvider) {
+.config(function($authProvider, google_oauth_clientId, facebook_oauth_clientId, live_oauth_clientId) {
 	$authProvider.google({
-		clientId: '1094835789171-3hss4dvsp904prfjilpade224tajlibh.apps.googleusercontent.com',
+		clientId: google_oauth_clientId,
 		url: '/api/auth/google',
 	//	url: '/api/v1/login/google',
 		authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
@@ -421,7 +421,7 @@ angular.module('FrcPortal', [
 		popupOptions: { width: 452, height: 633 }
 	});
  	$authProvider.facebook({
-		clientId: '1347987445311447',
+		clientId: facebook_oauth_clientId,
 		name: 'facebook',
 		url: '/api/auth/facebook',
 	//	url: '/api/v1/login/facebook ',
@@ -437,7 +437,7 @@ angular.module('FrcPortal', [
 	$authProvider.live({
 		url: '/api/auth/live.php',
 	//	url: '/api/v1/login/live',
-		clientId: '027f5fe4-87bb-4731-8284-6d44da287677',
+		clientId: live_oauth_clientId,
 		authorizationEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
 		redirectUri: window.location.origin,
 		requiredUrlParams: ['scope', 'response_mode', 'nonce'],
