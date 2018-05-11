@@ -95,8 +95,8 @@ $app->group('/auth', function () {
     try {
       $accessToken = $helper->getAccessToken();
       $data = array();
-      $FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,picture', $accessToken);
-    	$me = $response->getGraphUser();
+      //$FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,picture', $accessToken);
+    	//$me = $response->getGraphUser();
       if(isset($me['email']) || $me['email'] != '') {
         $email = $me['email'];
       	$fname = $me['first_name'];
