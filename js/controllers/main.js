@@ -1,11 +1,12 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService',
+	'$rootScope', 'team_number', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService',
 	mainController
 ]);
-function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService) {
+function mainController($rootScope, team_number, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService) {
 	var main = this;
 
+	main.team_number = team_number;
 	main.menuItems = [ ];
 	main.selectItem = selectItem;
 	main.toggleItemsList = toggleItemsList;
