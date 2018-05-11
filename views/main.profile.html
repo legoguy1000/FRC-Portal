@@ -167,6 +167,7 @@
 									<th md-column md-order-by="event_requirements.permission_slip"><span>Permission Slip</span></th>
 									<th md-column md-order-by="event_requirements.food"><span>Food Order</span></th>
 									<th md-column md-order-by="event_requirements.room_bool"><span>Room</span></th>
+									<th md-column md-order-by="event_requirements.attendance_confirmed"><span>Hours Credited</span></th>
 								</tr>
 							</thead>
 							<tbody md-body>
@@ -215,6 +216,10 @@
 											<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.room_bool">remove_circle</i>
 										</span>
 										<i class="material-icons" style="" ng-show="!event.room_required">remove_circle_outline</i>
+									</td>
+									<td md-cell>
+										<i class="material-icons" style="color:green;" ng-show="user.event_requirements.attendance_confirmed">check_circle</i>
+										<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.attendance_confirmed">remove_circle</i>
 									</td>
 								</tr>
 							</tbody>
