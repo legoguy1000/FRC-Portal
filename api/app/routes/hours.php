@@ -100,7 +100,7 @@ $app->group('/hours', function () {
     $totalNum = 0;
   	if(count($queryArr) > 0) {
   		$queryStr = implode(' OR ',$queryArr);
-      $users = FrcPortal\MissingHoursRequest::with(['user','approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->get();
+      $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->get();
       $totalNum = count($users);
   	} else {
       $totalNum = FrcPortal\MissingHoursRequest::count();
@@ -122,9 +122,9 @@ $app->group('/hours', function () {
     }
 
     if($filter != '' ) {
-      $users = FrcPortal\MissingHoursRequest::with(['user','approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     } else {
-      $users = FrcPortal\MissingHoursRequest::with(['user','approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+      $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
     }
 
 
