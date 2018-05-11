@@ -435,7 +435,7 @@ angular.module('FrcPortal', [
 		popupOptions: { width: 580, height: 400 }
 	});
 	$authProvider.live({
-		url: '/api/auth/live.php',
+		url: '/api/auth/live',
 	//	url: '/api/v1/login/live',
 		clientId: live_oauth_clientId,
 		authorizationEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
