@@ -168,7 +168,7 @@
 							<tbody md-body>
 								<tr md-row ng-repeat="event in vm.eventInfo | filter: vm.queryEvents.filter | orderBy: vm.queryEvents.order | limitTo: vm.queryEvents.limit : (vm.queryEvents.page -1) * vm.queryEvents.limit as filtered">
 									<td md-cell>
-										<a ui-sref="main.event({'event_id':event.name})">{{event.name}}</a>
+										<a ui-sref="main.event({'event_id':event.event_id})">{{event.name}}</a>
 									</td>
 									<td md-cell>
 										<span ng-show="event.single_day">
