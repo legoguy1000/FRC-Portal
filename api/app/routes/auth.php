@@ -206,7 +206,7 @@ $app->group('/auth', function () {
     	$fname = $me['givenName'];
     	$lname = $me['surname'];
     	$image = ''; //$me['image']['url'];\
-    	$id = $me['id'];\
+    	$id = $me['id'];
 
     	$userData = array(
     		'id' => $id,
