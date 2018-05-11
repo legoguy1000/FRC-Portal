@@ -217,7 +217,7 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      if(!isset($formData['value']) || $formData['value'] == '') {
+      if($formData['value'] != null) {
         $responseArr = array('status'=>false, 'msg'=>'Value is required');
         $response = $response->withJson($responseArr,400);
         return $response;
