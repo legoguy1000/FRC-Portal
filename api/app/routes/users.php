@@ -275,7 +275,7 @@ $app->group('/users', function () {
       $end_time = date('Y-m-d H:i:s',strtotime($formData['end_time']));;
       $request_date = date('Y-m-d H:i:s');
 
-      $request = new FrcPortal\MeetingHourRequest();
+      $request = new FrcPortal\MissingHoursRequest();
       $request->user_id = $user_id;
       $request->time_in = $start_time;
       $request->time_out = $end_time;

@@ -5,9 +5,9 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
 
-class MeetingHourRequest extends Eloquent {
+class MissingHoursRequest extends Eloquent {
   //table name
-  protected $table = 'meeting_hours_requests';
+  protected $table = 'missing_hours_requests';
   //Use Custom Primary Key
   protected $primaryKey = 'request_id'; // or null
   public $incrementing = false;
