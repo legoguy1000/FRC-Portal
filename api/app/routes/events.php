@@ -447,7 +447,7 @@ $app->group('/events', function () {
       } else {
         $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->delete();
         $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
-        $responseArr['msg'] = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Unregistered';
+        $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Unregistered';
       }
       $eventReqs = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id','=',$event_id);
