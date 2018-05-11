@@ -22,7 +22,7 @@ class MissingHoursRequest extends Eloquent {
   ];
 
 
-  protected $appends = ['time_in_unix','time_out_unix'];
+  protected $appends = ['time_in_unix','time_out_unix','hours','request_date_unix','approved_date_unix'];
 
   //$data['requirements'] = array();
   /**
@@ -79,6 +79,21 @@ class MissingHoursRequest extends Eloquent {
   }
   public function getTimeOutUnixAttribute() {
     $date = new DateTime($this->attributes['time_out']);
+    return $date->format('U');
+  }
+  public function getHoursAttribute() {
+    $in = new DateTime($this->attributes['time_in']);
+    $out = new DateTime($this->attributes['time_out']);
+    $in = $in->format('U');
+    $out = $out->format('U');
+    return ($out - $in) / 3600;
+  }
+  public function getRequestDateUnixAttribute() {
+    $date = new DateTime($this->attributes['request_date']);
+    return $date->format('U');
+  }
+  public function getApproveDateAttribute() {
+    $date = new DateTime($this->attributes['approved_date']);
     return $date->format('U');
   }
 

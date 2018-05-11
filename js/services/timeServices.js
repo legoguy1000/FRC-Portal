@@ -8,7 +8,7 @@ angular.module('FrcPortal')
 			});
 		},
 		getAllMissingHoursRequestsFilter: function (params) {
-			return $http.get('site/getAllMissingHoursRequestsFilter.php?'+params)
+			return $http.get('api/hours/missingHoursRequests?'+params)
 			.then(function(response) {
 				return response.data;
 			});
