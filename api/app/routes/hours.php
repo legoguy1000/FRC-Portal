@@ -181,7 +181,7 @@ $app->group('/hours', function () {
           'data' => null
         );
         if(!checkAdmin($userId)) {
-          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized', $authToken);
           $response = $response->withJson($responseArr,403);
           return $response;
         }
