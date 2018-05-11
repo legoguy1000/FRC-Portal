@@ -92,7 +92,7 @@ class MissingHoursRequest extends Eloquent {
     $date = new DateTime($this->attributes['request_date']);
     return $date->format('U');
   }
-  public function getApproveDateAttribute() {
+  public function getApprovedDateAttribute() {
     $date = new DateTime($this->attributes['approved_date']);
     return $date->format('U');
   }
