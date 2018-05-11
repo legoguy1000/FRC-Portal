@@ -46,7 +46,9 @@ class MissingHoursRequest extends Eloquent {
    *
    * @var array
    */
-  protected $casts = [];
+  protected $casts = [
+    'approved' => 'boolean'
+  ];
 
   public function save($options = array()) {
     if(is_null($this->request_id)) {
