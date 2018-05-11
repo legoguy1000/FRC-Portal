@@ -66,7 +66,9 @@ angular.module('FrcPortal')
 			});
 		},
 		userHoursbyDate: function (user,year) {
-			return $http.get('site/userHoursbyDate.php?user='+user+'&year='+year)
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			var year = year != undefined && year != null ? year:'';
+			return $http.get('api/users/'+user_id+'/userHoursbyDate/'+year)
 			.then(function(response) {
 				return response.data;
 			});

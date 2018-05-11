@@ -178,6 +178,57 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    $this->get('/hoursByDate/{year:[0-9]{4}}', function ($request, $response, $args) {
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']->user_id;
+      $user_id = $args['user_id'];
+      $year = $args['year'];
+      $responseArr = array(
+    		'status' => false,
+    		'msg' => 'Something went wrong',
+    		'data' => null
+    	);
+      if($user_id != $userId && !checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+      $data = array('sum'=>array());
+      $labels = array();
+      $series = array('Sum');
+
+      $query = 'SELECT year(a.time_in) as year, DATE(a.time_in) as date,  ROUND(SUM(time_to_sec(IFNULL(timediff(a.time_out, a.time_in),0)) / 3600),1) as hours FROM `meeting_hours` a
+      WHERE user_id = :uid AND year(a.time_in) = :year
+      GROUP BY date
+      ORDER BY date ASC';
+
+      $result = DB::select( DB::raw($query), array(
+          'uid' => $user_id,
+          'year' => $year,
+       ));
+
+      if(count($dates) > 0) {
+      	foreach($dates as $d) {
+
+      		$year = $d->year;
+      		$date = $d->date;
+      		$hours = $d->hours;
+      	//	$labels[] = $date;
+      		$labels[] = date('m/d',strtotime($date));
+      		$data['sum'][$date] = $hours;
+
+      	}
+      	$data['sum'] = array_values($data['sum']);
+      }
+      $allData = array(
+      	'labels' => $labels,
+      	'series' => $series,
+      	'data' => array_values($data),
+      );
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $allData);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
     $this->get('/linkedAccounts', function ($request, $response, $args) {
       $user_id = $args['user_id'];
       $user = FrcPortal\Oauth::where('user_id',$user_id)->get();
