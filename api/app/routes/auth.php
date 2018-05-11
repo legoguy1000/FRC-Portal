@@ -84,18 +84,19 @@ $app->group('/auth', function () {
     $args = $request->getParsedBody();
     $provider = 'facebook';
     $secret = getIniProp('facebook_client_secret');
-    $accessTokenArr = file_get_contents('https://graph.facebook.com/v3.0/oauth/access_token?client_id='.$args['clientId'].'&redirect_uri='.$args['redirectUri'].'&client_secret='.$secret.'&code='.$args['code']);
-    $accessTokenArr = json_decode($accessTokenArr, true);
+//    $accessTokenArr = file_get_contents('https://graph.facebook.com/v3.0/oauth/access_token?client_id='.$args['clientId'].'&redirect_uri='.$args['redirectUri'].'&client_secret='.$secret.'&code='.$args['code']);
+//    $accessTokenArr = json_decode($accessTokenArr, true);
     $fb = new Facebook\Facebook([
       'app_id'  => '1347987445311447',
       'app_secret' => $secret,
     	'default_graph_version' => 'v3.0',
-    	'default_access_token' => $accessTokenArr['access_token']
     ]);
+    $helper = $fb->getRedirectLoginHelper();
     try {
+      $accessToken = $helper->getAccessToken();
       $data = array();
-      $FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,picture');
-    	$me = $FBresponse->getDecodedBody();
+      $FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,picture', $accessToken);
+    	$me = $response->getGraphUser();
       if(isset($me['email']) || $me['email'] != '') {
         $email = $me['email'];
       	$fname = $me['first_name'];
