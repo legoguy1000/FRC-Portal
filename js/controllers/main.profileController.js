@@ -159,6 +159,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			'method': method,
 			'type': type,
 			'value': value,
+			'user_id': $scope.main.userInfo.user_id
 		}
 		usersService.updateNotificationPreferences(data).then(function(response){
 			vm.loading.note_types = false;
