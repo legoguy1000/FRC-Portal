@@ -14,11 +14,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.eventInfo = [];
 	vm.limitOptions = [1,5,10];
 	vm.rmhData = {};
-	vm.showPastReqs = false;
-	vm.checkPinNum = null;
-	vm.checkPinMsg = '';
 	vm.changePinNum = null;
-	vm.changePinMsg = '';
 	vm.querySeasons = {
 		filter: '',
 		limit: 1,
@@ -136,16 +132,13 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		.then(function(answer) {}, function() {});
 	}
 
-	vm.changePinMsg = '';
 	vm.changePin = function() {
 		vm.loadingDevices = true;
-		vm.changePinMsg = '';
 		var data = {
 			user_id: $scope.main.userInfo.user_id,
 			pin: vm.changePinNum
 		}
 		usersService.changePin(data).then(function(response){
-			vm.changePinMsg = response.msg;
 			if(response.status) {
 				vm.changePinNum = null;
 				vm.changePinForm.$setPristine();
@@ -174,17 +167,21 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 
 	vm.requestMissingHours = function(method,type,value) {
 		vm.loading.rmh = true;
-		vm.rmhMsg = '';
 		var data = vm.rmhData;
 		data.user_id = $scope.main.userInfo.user_id;
 		usersService.requestMissingHours(data).then(function(response){
 			vm.loading.rmh = false;
-			vm.rmhMsg = response.msg;
 			if(response.status) {
 				vm.rmhData = {};
 				vm.rmhForm.$setPristine();
 				vm.rmhForm.$setUntouched();
 			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 		});
 	}
 

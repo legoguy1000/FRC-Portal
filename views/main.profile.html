@@ -337,9 +337,6 @@
 											<div ng-message="md-maxlength" class="my-message">The PIN cannot be greater than 8 numbers long.</div>
 										</div> -->
 									</md-input-container>
-									<div>
-										{{vm.changePinMsg}}
-									</div>
 								</md-card-content>
 								<md-card-actions layout="row" layout-align="end center">
 									<md-button type="submit" ng-disabled="!vm.changePinForm.$valid">Submit</md-button>
@@ -386,9 +383,6 @@
 											<textarea ng-model="vm.rmhData.comment"  md-maxlength="200" required>
 											</textarea>
 										</md-input-container>
-									</div>
-									<div flex>
-										{{vm.rmhMsg}}
 									</div>
 								</md-card-content>
 								<md-card-actions layout="row" layout-align="end center">
