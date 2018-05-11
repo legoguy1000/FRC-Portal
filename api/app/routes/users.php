@@ -217,11 +217,12 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      if($formData['value'] != null) {
+      if(!array_key_exists('value',$formData)) {
         $responseArr = array('status'=>false, 'msg'=>'Value is required');
         $response = $response->withJson($responseArr,400);
         return $response;
       }
+
       if($formData['value'] == true) {
         $pref = new FrcPortal\NotificationPreference();
         $pref->user_id = $user_id;
