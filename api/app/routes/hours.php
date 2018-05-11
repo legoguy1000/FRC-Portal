@@ -153,7 +153,7 @@ $app->group('/hours', function () {
         if(!is_null($request)) {
           $request->approved = true;
           $request->approved_date = date('Y-m-d H:i:s',$date);
-          $request->approved_by = date('Y-m-d H:i:s',$userId);
+          $request->approved_by = $userId;
           $mh->user_id = $user_id;
           $mh->time_in = $request['time_in'];
           $mh->time_out = $request['time_out'];
@@ -190,7 +190,7 @@ $app->group('/hours', function () {
         if(!is_null($request)) {
           $request->approved = false;
           $request->approved_date = date('Y-m-d H:i:s',$date);
-          $request->approved_by = date('Y-m-d H:i:s',$userId);
+          $request->approved_by = $userId;
           if($request->save()) {
              $responseArr['Status'] = true;
              $responseArr['msg'] = 'Missing hours request denied';
