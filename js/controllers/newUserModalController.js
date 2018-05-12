@@ -29,7 +29,7 @@ function newUserModalController($rootScope,$mdDialog,$scope,userInfo,usersServic
 	vm.updateUser = function() {
 		usersService.updateUserPersonalInfo(vm.userInfo).then(function(response) {
 			if(response.status) {
-				$window.localStorage['userInfo'] = response.userInfo;
+				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);
 				$mdDialog.hide(response);
 			}
 		});

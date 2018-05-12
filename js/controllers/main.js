@@ -38,7 +38,6 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 
 	function selectItem (item) {
 	  main.title = item.name;
-	  main.toggleItemsList();
 	  main.showSimpleToast(main.title);
 	}
 
@@ -87,7 +86,6 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 		})
 		.then(function(response) {
 			if(response.status) {
-				main.userInfo = $window.localStorage['userInfo']
 				console.log('After Dialog')
 				console.log(response.userInfo);
 				$rootScope.$broadcast('afterLoginAction');
@@ -127,7 +125,7 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 	}
 
 	var loginActions = function() {
-		main.userInfo = $window.localStorage['userInfo'];
+		main.userInfo = angular.fromJson(window.localStorage['userInfo']);
 		main.checkServiceWorker();
 		//main.StartEventSource();
 		console.log(main.userInfo);
