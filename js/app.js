@@ -49,7 +49,7 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		params: {
-        selectedTab: 0
+        selectedTab: null
     },
 		data: {
 		  title: 'Profile'
