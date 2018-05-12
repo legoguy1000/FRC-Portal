@@ -52,17 +52,17 @@ $app->group('/auth', function () {
         }
       }
       if($user != false) {
-        $queryArr = array();
+        $update = false;
         if($user->profile_image == '') {
-          $queryArr['profile_image'] = $userData['profile_image'];
           $user->profile_image = $userData['profile_image'];
+          $update = true;
         }
         if($user->team_email == '' && strpos($userData['email'],'@team2363.org') !== false) {
-          $queryArr['team_email'] = $userData['email'];
           $user->team_email = $userData['email'];
+          $update = true;
         }
-        if(count($queryArr) > 0) {
-          FrcPortal\User::where('user_id',  $user->user_id)->update($queryArr);
+        if($update == true) {
+          $user = $user->save();
         }
         $key = getIniProp('jwt_key');
   			$token = array(
@@ -70,10 +70,17 @@ $app->group('/auth', function () {
   				"iat" => time(),
   				"exp" => time()+60*60,
   				"jti" => bin2hex(random_bytes(10)),
-  				'data' => $user
+  				'data' => array(
+            'user_id' => $user->user_id,
+            'full_name' => $user->full_name,
+            'admin' => $user->admin,
+            'status' => $user->status,
+            'user_type' => $user->user_type,
+            'email' => $user->email,
+          )
   			);
   			$jwt = JWT::encode($token, $key);
-        $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'me' => $me);
+        $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
       } else {
         $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.');
       }
@@ -137,28 +144,35 @@ $app->group('/auth', function () {
           }
         }
         if($user != false) {
-          $queryArr = array();
+          $update = false;
           if($user->profile_image == '') {
-            $queryArr['profile_image'] = $userData['profile_image'];
             $user->profile_image = $userData['profile_image'];
+            $update = true;
           }
           if($user->team_email == '' && strpos($userData['email'],'@team2363.org') !== false) {
-            $queryArr['team_email'] = $userData['email'];
             $user->team_email = $userData['email'];
+            $update = true;
           }
-          if(count($queryArr) > 0) {
-            FrcPortal\User::where('user_id',  $user->user_id)->update($queryArr);
+          if($update == true) {
+            $user = $user->save();
           }
           $key = getIniProp('jwt_key');
-          $token = array(
-            "iss" => getIniProp('env_url'),
-            "iat" => time(),
-            "exp" => time()+60*60,
-            "jti" => bin2hex(random_bytes(10)),
-            'data' => $user
-          );
-          $jwt = JWT::encode($token, $key);
-          $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'me' => $me);
+    			$token = array(
+    				"iss" => getIniProp('env_url'),
+    				"iat" => time(),
+    				"exp" => time()+60*60,
+    				"jti" => bin2hex(random_bytes(10)),
+    				'data' => array(
+              'user_id' => $user->user_id,
+              'full_name' => $user->full_name,
+              'admin' => $user->admin,
+              'status' => $user->status,
+              'user_type' => $user->user_type,
+              'email' => $user->email,
+            )
+    			);
+    			$jwt = JWT::encode($token, $key);
+          $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'userInfo' => $user);
         } else {
           $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
         }
@@ -244,28 +258,35 @@ $app->group('/auth', function () {
         }
       }
       if($user != false) {
-        $queryArr = array();
+        $update = false;
         if($user->profile_image == '') {
-          $queryArr['profile_image'] = $userData['profile_image'];
           $user->profile_image = $userData['profile_image'];
+          $update = true;
         }
         if($user->team_email == '' && strpos($userData['email'],'@team2363.org') !== false) {
-          $queryArr['team_email'] = $userData['email'];
           $user->team_email = $userData['email'];
+          $update = true;
         }
-        if(count($queryArr) > 0) {
-          FrcPortal\User::where('user_id',  $user->user_id)->update($queryArr);
+        if($update == true) {
+          $user = $user->save();
         }
         $key = getIniProp('jwt_key');
-        $token = array(
-          "iss" => getIniProp('env_url'),
-          "iat" => time(),
-          "exp" => time()+60*60,
-          "jti" => bin2hex(random_bytes(10)),
-          'data' => $user
-        );
-        $jwt = JWT::encode($token, $key);
-        $responseData = array('status'=>true, 'msg'=>'Login with Microsoft Account Successful', 'token'=>$jwt, 'me' => $me);
+  			$token = array(
+  				"iss" => getIniProp('env_url'),
+  				"iat" => time(),
+  				"exp" => time()+60*60,
+  				"jti" => bin2hex(random_bytes(10)),
+  				'data' => array(
+            'user_id' => $user->user_id,
+            'full_name' => $user->full_name,
+            'admin' => $user->admin,
+            'status' => $user->status,
+            'user_type' => $user->user_type,
+            'email' => $user->email,
+          )
+  			);
+  			$jwt = JWT::encode($token, $key);
+        $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
       } else {
         $responseData = array('status'=>false, 'msg'=>'Microsoft account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
       }

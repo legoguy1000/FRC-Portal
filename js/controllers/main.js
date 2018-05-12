@@ -97,9 +97,10 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 			clickOutsideToClose:true,
 			fullscreen: true // Only for -xs, -sm breakpoints.
 		})
-		.then(function(data) {
-			main.isAuthed = data.auth;
-			if(data.auth) {
+		.then(function(response) {
+			main.isAuthed = $auth.isAuthenticated();
+			if(response.auth) {
+				main.userInfo = response.userInfo;
 				$rootScope.$broadcast('afterLoginAction');
 			}
 		}, function() {
@@ -117,11 +118,14 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 			//clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
 			locals: {
-				userInfo: $auth.getPayload().data,
+				userInfo: main.userInfo,
 			}
 		})
-		.then(function(data) {
-
+		.then(function(response) {
+			if(response.status) {
+				main.userInfo = response.userInfo;
+				$rootScope.$broadcast('afterLoginAction');
+			}
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
@@ -130,71 +134,11 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 
 	main.initServiceWorkerState = function() {
 		console.log('Initializing');
-		// Are Notifications supported in the service worker?
-	/*	if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
-			console.warn('Notifications aren\'t supported.');
-			return false;
-		}
-
-		// Check the current Notification permission.
-		// If its denied, it's a permanent block until the
-		// user changes the permission
-		if (Notification.permission === 'denied') {
-			console.warn('The user has blocked notifications.');
-			return false;
-		}
-
-		// Check if push messaging is supported
-		if (!('PushManager' in window)) {
-			console.warn('Push messaging isn\'t supported.');
-			return false;
-		} */
-
-		// We need the service worker registration to check for a subscription
 		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 			console.log('Service Worker Ready');
-			// Do we already have a push message subscription?
-		/*	serviceWorkerRegistration.pushManager.getSubscription()
-			.then(function(subscription) {
-				console.log('Checkig Subscription');
-				// Enable any UI which subscribes / unsubscribes from
-				// push messages.
-			//	var pushButton = document.querySelector('.js-push-button');
-			//	pushButton.disabled = false;
-
-				if (!subscription) {
-					console.log('Not Scubscribed');
-					// We aren't subscribed to push, so set UI
-					// to allow the user to enable push
-					return false;
-				}
-
-				//console.log(subscription);
-				// Keep your server in sync with the latest subscriptionId
-				// sendSubscriptionToServer(subscription);
-				var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
-				var key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
-				var rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';
-				var authSecret = rawAuthSecret ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
-				var endpoint = subscription.endpoint;
-				var data = {'endpoint':endpoint, 'key':key, 'authSecret':authSecret};
-				main.browserData = data;
-				$scope.$apply( function () {
-					main.enablePush.subscription = subscription;
-					main.enablePush.status = true;
-					main.enablePush.disabled = false;
-					main.enablePush.endpoint = endpoint;
-				});
-				usersService.deviceNotificationUpdateEndpoint(data).then(function(response){
-					console.log('Endpoint Updated');
-				});
-				console.log(data); */
 				return true;
 			})
-			.catch(function(err) {
-				//console.warn('Error during getSubscription()', err);
-			});
-		//});
+			.catch(function(err) {	});
 	}
 
 	main.checkServiceWorker = function() {
@@ -217,8 +161,7 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 	}
 
 	var loginActions = function() {
-		main.isAuthed = $auth.isAuthenticated();
-		main.userInfo = $auth.getPayload().data;
+		//main.userInfo = $auth.getPayload().data;
 		main.checkServiceWorker();
 		//main.StartEventSource();
 		if(main.userInfo.first_login) {

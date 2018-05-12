@@ -10,18 +10,12 @@ function newUserModalController($rootScope,$mdDialog,$scope,userInfo,usersServic
 	}
 
 	vm.userInfo = userInfo;
-	if(vm.userInfo.school_id) {
-		vm.userInfo.schoolData = {
-			school_id: vm.userInfo.school_id,
-			school_name: vm.userInfo.school_name,
-		}
-	}
 
 	console.log(vm.userInfo.schoolData);
 	vm.selectedItem  = null;
     vm.searchText    = null;
     vm.querySearch   = querySearch;
-	
+
 	function querySearch (query) {
 		var data = {
 			filter: query,
@@ -36,8 +30,7 @@ function newUserModalController($rootScope,$mdDialog,$scope,userInfo,usersServic
 	vm.updateUser = function() {
 		usersService.updateUserPersonalInfo(vm.userInfo).then(function(response) {
 			if(response.status) {
-				vm.cancel();
-				$rootScope.$broadcast('afterLoginAction');
+				$mdDialog.hide(response);
 			}
 		});
 	}

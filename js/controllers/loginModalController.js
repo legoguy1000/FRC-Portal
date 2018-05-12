@@ -6,19 +6,20 @@ function loginModalController($auth,$mdDialog) {
 	var vm = this;
 
 	vm.authenticate = function(provider) {
-		$auth.authenticate(provider).then(function(response){ 
+		$auth.authenticate(provider).then(function(response){
 		//	toastr[response.data.type](response.data.msg, 'Login');
 			alert(response.data.msg)
 			var authed = $auth.isAuthenticated();
-			if(authed) { 
+			if(authed) {
 				var data = {
 					'auth': true,
+					'userInfo': response.data.userInfo,
 				}
 				$mdDialog.hide(data);
 			}
 		});
     };
-	
+
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
