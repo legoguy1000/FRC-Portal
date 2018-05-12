@@ -100,12 +100,7 @@ $app->group('/auth', function () {
       //$accessToken = $helper->getAccessToken();
       $data = array();
       $FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,picture', $accessToken);
-        } else {
-          $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
-        }
-    	} else {
-        $responseData = array('status'=>false, 'msg'=>'No email address provided by Facebook OAuth2');
-      }
+
     } catch(Facebook\Exceptions\FacebookResponseException $e) {
       $responseData = array('status'=>false, 'type'=>'error', 'msg'=>'Facebook Login Error', 'error'=>$e->getMessage());
     } catch(Facebook\Exceptions\FacebookSDKException $e) {
@@ -171,6 +166,12 @@ $app->group('/auth', function () {
         );
         $jwt = JWT::encode($token, $key);
         $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'me' => $me);
+      } else {
+        $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
+      }
+    } else {
+      $responseData = array('status'=>false, 'msg'=>'No email address provided by Facebook OAuth2');
+    }
     $response = $response->withJson($responseData);
     return $response;
   });
