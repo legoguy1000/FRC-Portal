@@ -130,7 +130,7 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 		//main.StartEventSource();
 		if(main.userInfo.first_login) {
 			//newUserModal();
-			$state.go('main.profile',{selectedtab: 3});
+			$state.go('main.profile',{'selectedTab': 3});
 		}
 	}
 
