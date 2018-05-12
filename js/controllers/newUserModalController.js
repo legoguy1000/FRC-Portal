@@ -29,6 +29,8 @@ function newUserModalController($rootScope,$mdDialog,$scope,userInfo,usersServic
 	vm.updateUser = function() {
 		usersService.updateUserPersonalInfo(vm.userInfo).then(function(response) {
 			if(response.status) {
+				console.log('After Dialog')
+				console.log(response.userInfo);
 				$mdDialog.hide(response);
 			}
 		});
