@@ -8,7 +8,7 @@ function getSeasonMembershipForm($year) {
 	if(!is_null($year)) {
 		try {
 			$client = new Google_Client();
-			$client->setAuthConfigFile($_SERVER['DOCUMENT_ROOT'].'/site/includes/secured/team-2363-portal-0c12aca54f1c.json');
+			$client->setAuthConfigFile(__DIR__.'/../secured/team-2363-portal-0c12aca54f1c.json');
 			$client->setScopes(['https://www.googleapis.com/auth/drive.readonly']);
 			$service = new Google_Service_Drive($client);
 			$parameters = array(
