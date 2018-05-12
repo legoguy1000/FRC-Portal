@@ -110,17 +110,29 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 
 	vm.updateUser = function() {
 		vm.loading.profile = true;
-		usersService.updateUserPersonalInfo($scope.main.userInfo).then(function(response) {
+		var data = {
+			user_id: vm.user.user_id,
+			fname: vm.user.fname,
+			lname: vm.user.lname,
+			email: vm.user.email,
+			team_email: vm.user.team_email,
+			phone: vm.user.phone,
+			user_type: vm.user.user_type,
+			gender: vm.user.gender,
+			school_id: vm.user.school != null ? vm.user.school.school_id : null,
+			grad_year: vm.user.grad_year,
+		}
+		usersService.updateUserPersonalInfo(data).then(function(response) {
 			vm.loading.profile = false;
 			if(response.status) {
 				$window.localStorage['userInfo'] = angular.toJson(response.data);
 			}
 			$mdToast.show(
-				$mdToast.simple()
-					.textContent(response.msg)
-					.position('top right')
-					.hideDelay(3000)
-			);
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 		});
 	}
 

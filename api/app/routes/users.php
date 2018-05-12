@@ -373,8 +373,10 @@ $app->group('/users', function () {
       if($selfUpdate) {
         $user->first_login = false;
       }
-      if($admin) {
+      if($admin && isset($formData['admin'])) {
         $user->admin = $formData['admin'];
+      }
+      if($admin && isset($formData['status'])) {
         $user->status = $formData['status'];
       }
       if($user->save()) {
