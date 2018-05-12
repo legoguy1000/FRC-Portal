@@ -35,6 +35,12 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		reportsHoursPerEventTypePerYear: function (year) {
+			return $http.get('api/reports/hoursPerEventTypePerYear?year='+year)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		reportsAvgHrsPerGenderPerYear: function (start,end) {
 			return $http.get('api/reports/hoursPerGenderPerYear?start_date='+start+'&end_date='+end)
 			.then(function(response) {

@@ -264,4 +264,31 @@
 			<canvas id="line" class="chart chart-bar" chart-data="vm.data4" chart-labels="vm.labels4" chart-series="vm.series4" chart-click="" chart-options="vm.options"></canvas>
 		</div>
 	</div>
+	<div flex layout="column" class="md-margin">
+		<div layout="row" layout-align="start center">
+			<div flex>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Year</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.year8" required
+						 format="YYYY"
+						 min-view="decade"
+						 max-view="decade"
+						 min-date="2015"
+						 ng-model="vm.year8_full">
+					</input>
+				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsHoursPerEventTypePerYear()"><i class="material-icons">arrow_forward</i></md-button>
+			</div>
+			<div>
+				<md-button type="button" class="" ng-csv="vm.csvData8.data" csv-header="vm.csvData8.header" filename="test.csv">Export</md-button>
+			</div>
+		</div>
+		<div layout="column">
+			<div>Hours per Event</div> <!-- chart-dataset-override="vm.datasetOverride3"  -->
+			<canvas id="line" class="chart chart-bar" chart-data="vm.data8" chart-labels="vm.labels8" chart-series="vm.series8" chart-click="" chart-options="vm.options"></canvas>
+		</div>
+	</div>
 </md-content>
