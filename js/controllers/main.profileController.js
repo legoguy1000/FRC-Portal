@@ -102,7 +102,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		usersService.updateUserPersonalInfo($scope.main.userInfo).then(function(response) {
 			vm.loading.profile = false;
 			if(response.status) {
-
+				$window.localStorage['userInfo'] = angular.toJson(response.data);
 			}
 			$mdToast.show(
 				$mdToast.simple()
