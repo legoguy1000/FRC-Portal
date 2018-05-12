@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.profileController', ['$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast',
+.controller('main.profileController', ['$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams',
 	mainProfileController
 ]);
-function mainProfileController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast) {
+function mainProfileController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams) {
     var vm = this;
 
   vm.selectedItem  = null;
@@ -15,6 +15,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.limitOptions = [1,5,10];
 	vm.rmhData = {};
 	vm.changePinNum = null;
+	vm.selectedtab = $stateParams.selectedtab;
 	vm.querySeasons = {
 		filter: '',
 		limit: 1,

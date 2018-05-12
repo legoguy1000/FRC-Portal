@@ -48,6 +48,9 @@ angular.module('FrcPortal', [
 		controller: 'main.profileController',
 		controllerAs: 'vm',
 		authenticate: true,
+		params: {
+        selectedTab: 0
+    },
 		data: {
 		  title: 'Profile'
 		}

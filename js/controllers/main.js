@@ -128,11 +128,9 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 		main.userInfo = angular.fromJson(window.localStorage['userInfo']);
 		main.checkServiceWorker();
 		//main.StartEventSource();
-		console.log(main.userInfo);
-		console.log('just before new user modal');
 		if(main.userInfo.first_login) {
-			console.log('launching new user modal');
-			newUserModal();
+			//newUserModal();
+			$state.go('main.profile',{selectedtab: 3});
 		}
 	}
 
@@ -159,6 +157,7 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 		console.info('LogOut Initiated');
 		main.isAuthed = false;
 		main.userInfo = null;
+		$window.localStorage.removeItem('userInfo');
 	});
 	$rootScope.$on('checkAuth', function(event, data) {
 		console.info('Chcking Auth');
