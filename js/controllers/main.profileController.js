@@ -16,6 +16,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.rmhData = {};
 	vm.changePinNum = null;
 	vm.selectedtab = $stateParams.selectedtab;
+	console.info($stateParams.selectedtab);
 	vm.querySeasons = {
 		filter: '',
 		limit: 1,
