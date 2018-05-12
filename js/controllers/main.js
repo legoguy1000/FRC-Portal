@@ -1,16 +1,14 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'team_number', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService',
+	'$rootScope', 'team_number', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window',
 	mainController
 ]);
-function mainController($rootScope, team_number, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService) {
+function mainController($rootScope, team_number, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window) {
 	var main = this;
 
 	main.team_number = team_number;
 	main.menuItems = [ ];
 	main.selectItem = selectItem;
-	main.toggleItemsList = toggleItemsList;
-	main.showActions = showActions;
 	main.title = $state.current.data.title;
 	main.showSimpleToast = showSimpleToast;
 	main.toggleRightSidebar = toggleRightSidebar;
@@ -38,45 +36,12 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 		$mdSidenav('right').toggle();
 	}
 
-	function toggleItemsList() {
-	  var pending = $mdBottomSheet.hide() || $q.when(true);
-
-	  pending.then(function(){
-		$mdSidenav('left').toggle();
-	  });
-	}
-
 	function selectItem (item) {
 	  main.title = item.name;
 	  main.toggleItemsList();
 	  main.showSimpleToast(main.title);
 	}
 
-	function showActions($event) {
-		$mdBottomSheet.show({
-		  parent: angular.element(document.getElementById('content')),
-		  templateUrl: 'views/partials/bottomSheet.html',
-		  controller: [ '$mdBottomSheet', SheetController],
-		  controllerAs: "main",
-		  bindToController : true,
-		  targetEvent: $event
-		}).then(function(clickedItem) {
-		  clickedItem && $log.debug( clickedItem.name + ' clicked!');
-		});
-
-		function SheetController( $mdBottomSheet ) {
-		  var main = this;
-
-		  main.actions = [
-			{ name: 'Share', icon: 'share', url: 'https://twitter.com/intent/tweet?text=Angular%20Material%20Dashboard%20https://github.com/flatlogic/angular-material-dashboard%20via%20@flatlogicinc' },
-			{ name: 'Star', icon: 'star', url: 'https://github.com/flatlogic/angular-material-dashboard/stargazers' }
-		  ];
-
-		  main.performAction = function(action) {
-			$mdBottomSheet.hide(action);
-		  };
-		}
-	}
 
 	function showSimpleToast(title) {
 	  $mdToast.show(
@@ -100,7 +65,6 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 		.then(function(response) {
 			main.isAuthed = $auth.isAuthenticated();
 			if(response.auth) {
-				main.userInfo = response.userInfo;
 				$rootScope.$broadcast('afterLoginAction');
 			}
 		}, function() {
@@ -123,7 +87,7 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 		})
 		.then(function(response) {
 			if(response.status) {
-				main.userInfo = response.userInfo;
+				main.userInfo = $window.localStorage['userInfo']
 				console.log('After Dialog')
 				console.log(response.userInfo);
 				$rootScope.$broadcast('afterLoginAction');
@@ -163,7 +127,7 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 	}
 
 	var loginActions = function() {
-		//main.userInfo = $auth.getPayload().data;
+		main.userInfo = $window.localStorage['userInfo']
 		main.checkServiceWorker();
 		//main.StartEventSource();
 		console.log('just before new user modal');

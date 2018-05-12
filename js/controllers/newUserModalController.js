@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('newUserModalController', ['$rootScope','$mdDialog', '$scope', 'userInfo', 'usersService', 'schoolsService',
+.controller('newUserModalController', ['$rootScope','$mdDialog', '$scope', 'userInfo', 'usersService', 'schoolsService', '$window',
 	newUserModalController
 ]);
-function newUserModalController($rootScope,$mdDialog,$scope,userInfo,usersService,schoolsService) {
+function newUserModalController($rootScope,$mdDialog,$scope,userInfo,usersService,schoolsService,$window) {
 	var vm = this;
 
 	vm.cancel = function() {
@@ -29,8 +29,7 @@ function newUserModalController($rootScope,$mdDialog,$scope,userInfo,usersServic
 	vm.updateUser = function() {
 		usersService.updateUserPersonalInfo(vm.userInfo).then(function(response) {
 			if(response.status) {
-				console.log('After Dialog')
-				console.log(response.userInfo);
+				$window.localStorage['userInfo'] = response.userInfo;
 				$mdDialog.hide(response);
 			}
 		});

@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('loginModalController', ['$auth', '$mdDialog',
+.controller('loginModalController', ['$auth', '$mdDialog', '$window',
 	loginModalController
 ]);
-function loginModalController($auth,$mdDialog) {
+function loginModalController($auth,$mdDialog,$window) {
 	var vm = this;
 
 	vm.authenticate = function(provider) {
@@ -11,6 +11,7 @@ function loginModalController($auth,$mdDialog) {
 			alert(response.data.msg)
 			var authed = $auth.isAuthenticated();
 			if(authed) {
+				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);
 				var data = {
 					'auth': true,
 					'userInfo': response.data.userInfo,
