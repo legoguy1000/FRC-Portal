@@ -11,7 +11,6 @@ function newUserModalController($rootScope,$mdDialog,$scope,userInfo,usersServic
 
 	vm.userInfo = userInfo;
 
-	console.log(vm.userInfo.schoolData);
 	vm.selectedItem  = null;
     vm.searchText    = null;
     vm.querySearch   = querySearch;

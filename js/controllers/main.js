@@ -124,6 +124,7 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 		.then(function(response) {
 			if(response.status) {
 				main.userInfo = response.userInfo;
+				$log.info(response.userInfo);
 				$rootScope.$broadcast('afterLoginAction');
 			}
 		}, function() {
