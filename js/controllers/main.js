@@ -164,7 +164,9 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 		//main.userInfo = $auth.getPayload().data;
 		main.checkServiceWorker();
 		//main.StartEventSource();
+		console.log('just before new user modal');
 		if(main.userInfo.first_login) {
+			console.log('launching new user modal');
 			newUserModal();
 		}
 	}
