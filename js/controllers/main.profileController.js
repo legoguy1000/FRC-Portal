@@ -56,7 +56,14 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	}
 
 	function querySearch (query) {
-		return schoolsService.searchAllSchools(query);
+		var data = {
+			filter: query,
+			limit: 0,
+			order: 'school_name',
+			page: 1,
+			listOnly: true
+		};
+		return schoolsService.getAllSchoolsFilter($.param(data));
 	}
 
 	vm.getProfileInfo = function() {
