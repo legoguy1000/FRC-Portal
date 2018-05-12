@@ -101,7 +101,6 @@ $app->group('/auth', function () {
       $data = array();
       $FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,picture', $accessToken);
     	$me = $FBresponse->getGraphUser();
-      die(json_encode($me['email']));
       if(isset($me['email']) || $me['email'] != '') {
         $email = $me['email'];
       	$fname = $me['first_name'];
