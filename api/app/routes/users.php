@@ -350,7 +350,9 @@ $app->group('/users', function () {
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if($user_id != $userId && !checkAdmin($userId)) {
+      $selfUpdate = $user_id == $userId;
+      $admin = checkAdmin($userId);
+      if( !$selfUpdate && !$admin) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
@@ -368,8 +370,13 @@ $app->group('/users', function () {
         $user->school_id = $formData['school_id'];
         $user->grad_year = $formData['grad_year'];
       }
-      $user->admin = $formData['admin'];
-      $user->status = $formData['status'];
+      if($selfUpdate) {
+        $user->first_login = false;
+      }
+      if($admin) {
+        $user->admin = $formData['admin'];
+        $user->status = $formData['status'];
+      }
       if($user->save()) {
         $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $user);
       } else {
