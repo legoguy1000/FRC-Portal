@@ -127,9 +127,10 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 	}
 
 	var loginActions = function() {
-		main.userInfo = $window.localStorage['userInfo']
+		main.userInfo = $window.localStorage['userInfo'];
 		main.checkServiceWorker();
 		//main.StartEventSource();
+		console.log(main.userInfo);
 		console.log('just before new user modal');
 		if(main.userInfo.first_login) {
 			console.log('launching new user modal');
