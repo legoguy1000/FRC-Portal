@@ -1,15 +1,5 @@
 <?php
-ini_set("error_reporting", E_ALL);
-ini_set("expose_php", false);
-date_default_timezone_set('America/New_York');
-
-$root = $_SERVER['DOCUMENT_ROOT'];
-require $root.'/site/includes/vendor/autoload.php';
-include($root.'/api/app/functions/getConfigFile.php');
-include($root.'/api/app//functions/season_functions.php');
-include($root.'/api/app//functions/event_functions.php');
-include($root.'/api/app//functions/user_functions.php');
-include($root.'/api/app//functions/notification_functions.php');
+include('app\includes.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
