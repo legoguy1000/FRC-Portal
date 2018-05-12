@@ -352,7 +352,17 @@ $app->group('/reports', function () {
     $data = array(array());
     $labels = array();
 
-    $query = 'SELECT IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, year(e.event_start) as year, e.*
+    $result =  DB::table('event_requirements')
+    ->leftJoin('events', function ($join) {
+      $join->on('events.event_id', 'event_requirements.event_id');
+    })->leftJoin('seasons', function ($join) {
+      $join->on('seasons.year', '=', DB::raw('YEAR(events.event_start)'));
+    })->where('seasons.season_id',$year)
+      ->where('event_requirements.registration',true)
+      ->where('event_requirements.attendance_confirmed',true)
+      ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(events.event_end, events.event_start),0)) / 3600) as hours'))->groupBy('event_requirements.user_id')->first();
+    }
+/*    $query = 'SELECT IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, year(e.event_start) as year, e.*
               FROM meeting_hours mh
               LEFT JOIN events e ON mh.time_in >=DATE_SUB(e.event_start, INTERVAL 1.5 HOUR)  AND mh.time_out < DATE_ADD(e.event_end, INTERVAL 1.5 HOUR)
               GROUP BY e.event_id HAVING year = :year
@@ -360,7 +370,7 @@ $app->group('/reports', function () {
 
     $result = DB::select( DB::raw($query), array(
         'year' => $year
-     ));
+     )); */
 
      foreach($result as $re) {
      	$name = $re->name;
@@ -392,6 +402,46 @@ $app->group('/reports', function () {
     	'series' => $series,
     	'data' => array_values($data),
     	//'csvData' => metricsCreateCsvData($data, $years, $series)
+    );
+    $response = $response->withJson($allData);
+    return $response;
+  });
+  /**
+  * Hours per Event Type per Year
+  **/
+  $this->get('/hoursPerEventTypePerYear', function ($request, $response, $args) {
+    if($request->getParam('year') == null|| $request->getParam('year') == '' || !is_numeric($request->getParam('year'))) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid Year');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+    }
+    $year = $request->getParam('year');
+
+    $series = array('Total Hours'); //,'Total'
+    $data = array(array());
+    $labels = array();
+
+    $result = DB::table('event_requirements')
+    ->leftJoin('events', function ($join) {
+      $join->on('events.event_id', 'event_requirements.event_id');
+    })->leftJoin('seasons', function ($join) {
+      $join->on('seasons.year', '=', DB::raw('YEAR(events.event_start)'));
+    })->where('seasons.year',2018)
+      ->where('event_requirements.registration',true)
+      ->where('event_requirements.attendance_confirmed',true)
+      ->select(DB::raw('events.type, SUM(time_to_sec(IFNULL(timediff(events.event_end, events.event_start),0)) / 3600) as hours'))->groupBy('events.type')->get();
+
+     foreach($result as $re) {
+      $type = $re->type;
+      $labels[] = $type;
+      $data[0][] = (double) $re->hours;
+     }
+
+    $allData = array(
+      'labels' => $labels,
+      'series' => $series,
+      'data' => array_values($data),
+      //'csvData' => metricsCreateCsvData($data, $years, $series)
     );
     $response = $response->withJson($allData);
     return $response;
