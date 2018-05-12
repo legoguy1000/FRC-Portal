@@ -100,66 +100,6 @@ $app->group('/auth', function () {
       //$accessToken = $helper->getAccessToken();
       $data = array();
       $FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,picture', $accessToken);
-    	$me = $FBresponse->getGraphUser();
-      die(json_encode($me));
-      if(isset($me['email']) || $me['email'] != '') {
-        $email = $me['email'];
-      	$fname = $me['first_name'];
-      	$lname = $me['last_name'];
-      	$image = $me['picture']['data']['url'];
-      	$id = $me['id'];
-
-        $userData = array(
-      		'id' => $id,
-      		'provider' => $provider,
-      		'email' => $email,
-      		'fname' => $fname,
-      		'lname' => $lname,
-      		'profile_image' => $image,
-      	);
-        $user = false;
-        $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
-          $q->where('status','=','1');
-        }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
-        if($data != null) {
-          $user = $data->users;
-        } else {
-          $data = FrcPortal\User::with(['school'])
-                  ->where('email', $userData['email'])
-                  ->orWhere('team_email', $userData['email'])
-                  ->first();
-          if($data != null) {
-            $user = $data->users;
-          }
-          if($user != false) {
-            $oauth = FrcPortal\Oauth::firstOrNew(
-                ['oauth_id' => $id, 'oauth_provider' => $provider], ['user_id' => $user->user_id, 'oauth_user' => $email]
-            );
-          }
-        }
-        if($user != false) {
-          $queryArr = array();
-          if($user->profile_image == '') {
-            $queryArr['profile_image'] = $userData['profile_image'];
-            $user->profile_image = $userData['profile_image'];
-          }
-          if($user->team_email == '' && strpos($userData['email'],'@team2363.org') !== false) {
-            $queryArr['team_email'] = $userData['email'];
-            $user->team_email = $userData['email'];
-          }
-          if(count($queryArr) > 0) {
-            FrcPortal\User::where('user_id',  $user->user_id)->update($queryArr);
-          }
-          $key = getIniProp('jwt_key');
-          $token = array(
-            "iss" => getIniProp('env_url'),
-            "iat" => time(),
-            "exp" => time()+60*60,
-            "jti" => bin2hex(random_bytes(10)),
-            'data' => $user
-          );
-          $jwt = JWT::encode($token, $key);
-          $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'me' => $me);
         } else {
           $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
         }
@@ -171,6 +111,66 @@ $app->group('/auth', function () {
     } catch(Facebook\Exceptions\FacebookSDKException $e) {
       $responseData = array('status'=>false, 'type'=>'error', 'msg'=>'Facebook Login Error', 'error'=>$e->getMessage());
     }
+    $me = $FBresponse->getGraphUser();
+    die(json_encode($me));
+    if(isset($me['email']) || $me['email'] != '') {
+      $email = $me['email'];
+      $fname = $me['first_name'];
+      $lname = $me['last_name'];
+      $image = $me['picture']['data']['url'];
+      $id = $me['id'];
+
+      $userData = array(
+        'id' => $id,
+        'provider' => $provider,
+        'email' => $email,
+        'fname' => $fname,
+        'lname' => $lname,
+        'profile_image' => $image,
+      );
+      $user = false;
+      $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
+        $q->where('status','=','1');
+      }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
+      if($data != null) {
+        $user = $data->users;
+      } else {
+        $data = FrcPortal\User::with(['school'])
+                ->where('email', $userData['email'])
+                ->orWhere('team_email', $userData['email'])
+                ->first();
+        if($data != null) {
+          $user = $data->users;
+        }
+        if($user != false) {
+          $oauth = FrcPortal\Oauth::firstOrNew(
+              ['oauth_id' => $id, 'oauth_provider' => $provider], ['user_id' => $user->user_id, 'oauth_user' => $email]
+          );
+        }
+      }
+      if($user != false) {
+        $queryArr = array();
+        if($user->profile_image == '') {
+          $queryArr['profile_image'] = $userData['profile_image'];
+          $user->profile_image = $userData['profile_image'];
+        }
+        if($user->team_email == '' && strpos($userData['email'],'@team2363.org') !== false) {
+          $queryArr['team_email'] = $userData['email'];
+          $user->team_email = $userData['email'];
+        }
+        if(count($queryArr) > 0) {
+          FrcPortal\User::where('user_id',  $user->user_id)->update($queryArr);
+        }
+        $key = getIniProp('jwt_key');
+        $token = array(
+          "iss" => getIniProp('env_url'),
+          "iat" => time(),
+          "exp" => time()+60*60,
+          "jti" => bin2hex(random_bytes(10)),
+          'data' => $user
+        );
+        $jwt = JWT::encode($token, $key);
+        $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'me' => $me);
     $response = $response->withJson($responseData);
     return $response;
   });
