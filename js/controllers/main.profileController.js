@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.profileController', ['$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams',
+.controller('main.profileController', ['$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams', '$window'
 	mainProfileController
 ]);
-function mainProfileController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams) {
+function mainProfileController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams, $window) {
     var vm = this;
 
   vm.selectedItem  = null;
