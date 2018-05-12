@@ -15,7 +15,16 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.limitOptions = [1,5,10];
 	vm.rmhData = {};
 	vm.changePinNum = null;
-	vm.selectedTab = $stateParams.selectedTab != null ? $stateParams.selectedTab : 0;
+	vm.selectedTab = 0;
+	if($stateParams.firstLogin) {
+		vm.selectedTab = 3;
+		var dialog = $mdDialog.alert()
+								.clickOutsideToClose(false)
+								.textContent('Please fill in the missing items of your profile.  Students, please check that your student ID number has been set as your PIN by using the change PIN form.  You should receive an "error".  Mentors (and students who want to change their PIN), please use this form to set up a new PIN.')
+								.ariaLabel('First Login')
+								.ok('OK');
+		$mdDialog.show(dialog);
+	}
 	console.info($stateParams.selectedTab);
 	vm.querySeasons = {
 		filter: '',
