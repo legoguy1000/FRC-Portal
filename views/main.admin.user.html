@@ -104,13 +104,13 @@
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
 							<th md-column md-order-by="year"><span>Season</span></th>
-							<th md-column md-order-by="annual_requirements[0].join_team"><span>Join Team</span></th>
-							<th md-column md-order-by="annual_requirements[0].stims"><span>STIMS/TIMS</span></th>
-							<th md-column md-order-by="annual_requirements[0].dues"><span>Pay Dues</span></th>
-							<th md-column md-order-by="annual_requirements[0].build_season_hours"><span>Build Season Hours</span></th>
-							<th md-column md-order-by="annual_requirements[0].competition_season_hours"><span>Competition Season Hours</span></th>
-							<th md-column md-order-by="annual_requirements[0].off_season_hours"><span>Off Season Hours</span></th>
-							<th md-column md-order-by="annual_requirements[0].total_hours"><span>Total Annual Hours</span></th>
+							<th md-column md-order-by="annual_requirements.join_team"><span>Join Team</span></th>
+							<th md-column md-order-by="annual_requirements.stims"><span>STIMS/TIMS</span></th>
+							<th md-column md-order-by="annual_requirements.dues"><span>Pay Dues</span></th>
+							<th md-column md-order-by="annual_requirements.build_season_hours"><span>Build Season Hours</span></th>
+							<th md-column md-order-by="annual_requirements.competition_season_hours"><span>Competition Season Hours</span></th>
+							<th md-column md-order-by="annual_requirements.off_season_hours"><span>Off Season Hours</span></th>
+							<th md-column md-order-by="annual_requirements.total_hours"><span>Total Annual Hours</span></th>
 						</tr>
 					</thead>
 					<tbody md-body>
@@ -122,31 +122,31 @@
 								</md-list-item>
 							</td>
 							<td md-cell>
-								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements[0].join_team">check_circle</md-icon>
-								<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements[0].join_team">remove_circle</md-icon>
+								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.join_team">check_circle</md-icon>
+								<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.join_team">remove_circle</md-icon>
 							</td>
 							<td md-cell>
-								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements[0].stims">check_circle</md-icon>
-								<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements[0].stims">remove_circle</md-icon>
+								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.stims">check_circle</md-icon>
+								<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.stims">remove_circle</md-icon>
 							</td>
 							<td md-cell>
 								<span ng-hide="vm.userInfo.user_type == 'Mentor'">
-									<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements[0].dues">check_circle</md-icon>
-									<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements[0].dues">remove_circle</md-icon>
+									<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</md-icon>
+									<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</md-icon>
 								</span>
 								<md-icon class="material-icons" ng-hide="vm.userInfo.user_type == 'Student'">indeterminate_check_box</md-icon>
 							</td>
 							<td md-cell>
-								{{season.annual_requirements[0].build_season_hours}}
+								{{season.annual_requirements.build_season_hours}}
 							</td>
 							<td md-cell>
-								{{season.annual_requirements[0].competition_season_hours}}
+								{{season.annual_requirements.competition_season_hours}}
 							</td>
 							<td md-cell>
-								{{season.annual_requirements[0].off_season_hours}}
+								{{season.annual_requirements.off_season_hours}}
 							</td>
 							<td md-cell>
-								<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.annual_requirements[0].total_hours}}</md-button>
+								<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.annual_requirements.total_hours}}</md-button>
 							</td>
 						</tr>
 					</tbody>
