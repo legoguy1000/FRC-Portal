@@ -221,7 +221,7 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 		main.userInfo = $auth.getPayload().data;
 		main.checkServiceWorker();
 		//main.StartEventSource();
-		if(main.userInfo.newUser) {
+		if(main.userInfo.first_login) {
 			newUserModal();
 		}
 	}
