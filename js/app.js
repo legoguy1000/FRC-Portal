@@ -168,7 +168,7 @@ angular.module('FrcPortal', [
 		  title: 'Admin | Metrics'
 		}
 	  })
-		.state('main.admin.exemptHours', {
+	/*	.state('main.admin.exemptHours', {
 		 url: '/exemptHours',
 		 templateUrl: 'views/main.admin.exemptHours.html',
 		 controller: 'main.admin.exemptHoursController',
@@ -177,7 +177,7 @@ angular.module('FrcPortal', [
 		 data: {
 			 title: 'Admin | Eempt Hours'
 		 }
-		 })
+	 }) */
  	  .state('main.event', {
  		url: '/events/{event_id}',
  		templateUrl: 'views/main.event.html',
