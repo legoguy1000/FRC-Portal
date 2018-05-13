@@ -110,13 +110,22 @@ function endOfDayHoursToSlack($date = null) {
 		$date = date('Y-m-d');
 	}
 	$msg = 'Congratulations on another hard day of work.#new_line#';
-	$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE DATE(a.time_in)='.db_quote($date).' AND DATE(a.time_out)=DATE(a.time_in) GROUP BY DATE(a.time_in)';
-	$result = db_select_single($query);
+	$result = DB::table('meeting_hours')
+						->whereRaw('DATE(meeting_hours.time_in) = "'.$date.'"'))
+						->whereRaw('DATE(meeting_hours.time_out)=DATE(meeting_hours.time_in)'))
+						->select(DB::raw('IFNULL(SUM(time_to_sec(timediff(meeting_hours.time_out, meeting_hours.time_in)) / 3600),0) as hours'))->groupBy(DB::raw('DATE(a.time_in)'))->first();
+
+	//$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE DATE(a.time_in)='.db_quote($date).' AND DATE(a.time_out)=DATE(a.time_in) GROUP BY DATE(a.time_in)';
+	//$result = db_select_single($query);
 	if(!is_null($result)) {
-		$hours = $result['hours'];
-		$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE year(a.time_in)='.db_quote(date('Y',strtotime($date))).' GROUP BY year(a.time_in)';
-		$result = db_select_single($query);
-		$total = !is_null($result) ? $result['hours'] : 0;
+		$hours = $result->hours;
+		$result = DB::table('meeting_hours')
+							->whereRaw('year(meeting_hours.time_in) = "'.date('Y',strtotime($date)).'"'))
+							->whereRaw('DATE(meeting_hours.time_out)=DATE(meeting_hours.time_in)'))
+							->select(DB::raw('IFNULL(SUM(time_to_sec(timediff(meeting_hours.time_out, meeting_hours.time_in)) / 3600),0) as hours'))->groupBy(DB::raw('year(a.time_in)'))->first();
+		//$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE year(a.time_in)='.db_quote(date('Y',strtotime($date))).' GROUP BY year(a.time_in)';
+		//$result = db_select_single($query);
+		$total = !is_null($result) ? $result->hours; : 0;
 		$msg .= 'Triple Helix completed another '.round($hours,1).' hours of work for an annual total of '.round($total,1).'.#new_line#Keep up the amazing work!!';
 		postToSlack($msg, $channel = null);
 	}
