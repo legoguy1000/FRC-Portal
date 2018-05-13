@@ -361,7 +361,7 @@ $app->group('/reports', function () {
       ->where('event_requirements.registration',true)
       ->where('event_requirements.attendance_confirmed',true)
       ->select(DB::raw('events.*, SUM(time_to_sec(IFNULL(timediff(events.event_end, events.event_start),0)) / 3600) as hours'))->groupBy('event_requirements.user_id')->get();
-    
+
 /*    $query = 'SELECT IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, year(e.event_start) as year, e.*
               FROM meeting_hours mh
               LEFT JOIN events e ON mh.time_in >=DATE_SUB(e.event_start, INTERVAL 1.5 HOUR)  AND mh.time_out < DATE_ADD(e.event_end, INTERVAL 1.5 HOUR)
