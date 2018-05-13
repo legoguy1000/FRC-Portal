@@ -1,5 +1,5 @@
 angular.module('FrcPortal')
-.service('schoolsService', function ($http) {
+.service('settingsService', function ($http) {
 	return {
 		getAllSettings: function (params) {
 			return $http.get('api/settings?'+params)
