@@ -14,7 +14,7 @@
     },
 	"autoload": {
         "psr-4": {
-          "FrcPortal\\":"./api/app/classes/"
+          "FrcPortal\\":"./classes/"
         }
     }
 }
