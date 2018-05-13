@@ -70,6 +70,7 @@ include('./app/routes/events.php');
 include('./app/routes/reports.php');
 include('./app/routes/schools.php');
 include('./app/routes/slack.php');
+include('./app/routes/setting.php');
 
 $app->run();
 
