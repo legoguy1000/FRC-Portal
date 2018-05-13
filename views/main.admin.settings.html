@@ -18,6 +18,12 @@
 	</md-content>
 	<md-content flex="grow" class="md-margin" layout="column">
 		<div layout="column" ng-show="vm.currentMenu == 'team';">
+			<md-toolbar class="md-default">
+				<div class="md-toolbar-tools">
+					<span>Team Settings</span>
+					<div flex></div>
+				</div>
+			</md-toolbar>
 			<md-input-container flex required>
 				<label>Team Number</label>
 				<input ng-model="vm.settings.team_number">
@@ -32,7 +38,12 @@
 			</md-input-container>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'login';">
-			login settings
+			<md-toolbar class="md-default">
+				<div class="md-toolbar-tools">
+					<span>Login Settings</span>
+					<div flex></div>
+				</div>
+			</md-toolbar>
 			<md-input-container flex>
 				<label>Facebook Client Secret</label>
 				<input ng-model="vm.settings.facebook_client_secret">
@@ -50,8 +61,13 @@
 				<input ng-model="vm.settings.jwt_signin_key">
 			</md-input-container>
 		</div>
-		<div layout="column" ng-show="vm.currentMenu == 'login';">
-			Notification Settings
+		<div layout="column" ng-show="vm.currentMenu == 'notification'">
+			<md-toolbar class="md-default">
+				<div class="md-toolbar-tools">
+					<span>Notification Settings</span>
+					<div flex></div>
+				</div>
+			</md-toolbar>
 			<md-input-container flex>
 				<label>Slack Team ID</label>
 				<input ng-model="vm.settings.slack_team_id">
