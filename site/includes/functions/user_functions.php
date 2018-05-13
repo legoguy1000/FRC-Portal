@@ -192,7 +192,7 @@ function userSeasonInfo($user_id = null, $year = null, $return=array()) {
 	$query = userQuery($sel, $joins, $where, $order);
 
 	$result = db_select($query);
-	if(count($result > 0)) {
+	if(count($result) > 0) {
 		foreach($result as $id=>$user) {
 			$temp = filterArrayData ($user, $filterArr);
 			$jt = (bool) $temp['join_team'];
