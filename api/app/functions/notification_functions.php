@@ -111,7 +111,7 @@ function endOfDayHoursToSlack($date = null) {
 	}
 	$msg = 'Congratulations on another hard day of work.#new_line#';
 	$result = DB::table('meeting_hours')
-						->whereRaw('DATE(meeting_hours.time_in) = "'.$date.'"'))
+						->whereRaw('DATE(meeting_hours.time_in) = "'.$date.'"')
 						->whereRaw('DATE(meeting_hours.time_out)=DATE(meeting_hours.time_in)')
 						->select(DB::raw('IFNULL(SUM(time_to_sec(timediff(meeting_hours.time_out, meeting_hours.time_in)) / 3600),0) as hours'))->groupBy(DB::raw('DATE(a.time_in)'))->first();
 
