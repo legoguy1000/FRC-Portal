@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.settingsController', ['$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog','$stateParams','$mdToast',
+.controller('main.admin.settingsController', ['$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'settingsService', '$mdDialog','$stateParams','$mdToast',
 	mainAdminSettingsController
 ]);
-function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $stateParams,$mdToast) {
+function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsService, usersService, settingsService, $mdDialog, $stateParams,$mdToast) {
 	var vm = this;
 
 	vm.userInfo = {};
@@ -23,6 +23,14 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 	vm.selectSettingMenu = function(menu) {
 		vm.currentMenu = menu;
 	}
+
+	vm.getAllSettings = function () {
+		vm.loading = true;
+		settingsService.getAllSettings().then(function(response){
+			vm.loading = false;
+		});
+	};
+	vm.getAllSettings();
 
 
 }
