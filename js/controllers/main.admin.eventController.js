@@ -82,8 +82,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'type': vm.event.type,
 		};
 		eventsService.updateEvent(data).then(function(response){
-			vm.event = response.data;
-			vm.event.requirements = reqs;
+			if(response.status) {
+				vm.event = response.data;
+			}
 			$mdToast.show(
 	      $mdToast.simple()
 	        .textContent(response.msg)
