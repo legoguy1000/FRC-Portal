@@ -89,7 +89,7 @@ $app->group('/settings', function () {
         return $response;
       }
       $setting_id = $args['setting_id'];
-      $setting = FrcPortal\Setting:destroy($setting_id);
+      $setting = FrcPortal\Setting::destroy($setting_id);
       if($setting) {
         $responseArr['status'] = true;
         $responseArr['msg'] = 'Setting removed';
