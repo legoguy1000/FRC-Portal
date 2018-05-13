@@ -50,66 +50,16 @@
             </md-button>
 		</section>
     </md-toolbar>
-	<!-- <md-toolbar class="search-bar" layout="row" layout-align="center center" ng-show="main.showSearch">
-		<div class="md-toolbar-tools">
-        <md-icon class="material-icons">search</md-icon>
-		<form flex name="filter.form" >
-			<input type="text" ng-model="vm.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">
-		</form>
-		<md-button class="md-icon-button" ng-click="vm.showSearchOptions = !vm.showSearchOptions">
-			<md-icon class="material-icons">arrow_drop_down</md-icon>
-		</md-button>
-		<md-button class="md-icon-button" ng-click="main.removeFilter()">
-			<md-icon class="material-icons">close</md-icon>
-		</md-button>
-		</div>
-    </md-toolbar>
-	<md-content layout="column" ng-show="vm.showSearchOptions" class="md-padding" style="background-color: #fff; position: absolute; margin-top: 3px;width: 750px; z-index: 60; top:64px;">
-		<md-input-container class="md-icon-float md-block">
-			<label>Name</label>
-			<md-icon class="material-icons">person</md-icon>
-			<input ng-model="user.name" type="text">
-		</md-input-container>
-		<md-input-container md-no-float class="md-block">
-			<label>Phone Number</label>
-			<md-icon class="material-icons">phone</md-icon>
-			<input ng-model="user.phone" type="text">
-		</md-input-container>
-		<md-input-container class="md-block">
-			<label>Email</label>
-			<md-icon class="material-icons">email</md-icon>
-			<input ng-model="user.email" type="email">
-		</md-input-container>
-		<md-input-container class="md-block">
-			<label>User Type</label>
-			<md-icon class="material-icons">person</md-icon>
-			<md-select ng-model="user.statusa">
-				<md-option value="" ></md-option>
-				<md-option value="Mentor" >Mentor</md-option>
-				<md-option value="Student" >Student</md-option>
-			</md-select>
-		</md-input-container>
-		<md-input-container class="md-block">
-			<label>User Type</label>
-			<md-icon class="material-icons">person</md-icon>
-			<md-select ng-model="user.stsatus" >
-				<md-option value="" ></md-option>
-				<md-option value="1" >Active</md-option>
-				<md-option value="0" >Inactive</md-option>
-			</md-select>
-		</md-input-container>
-		<div layout="row">
-			<md-button ng-click="vm.showSearchOptions = false">Close</md-button>
-			<div flex></div>
-			<md-button>Reset</md-button>
-			<md-button class="md-raised md-primary">Search</md-button>
-		</div>
-	</md-content> -->
-
-
     <md-content flex layout="roww" class="md-padding page-content">
         <div ui-view flex></div>
     </md-content>
+	<!--	<footer>
+      <md-toolbar class="md-scroll-shrink">
+        <div layout="row" layout-align="center center" flex>
+          FOOTER INFO
+        </div>
+      </md-toolbar>
+    </footer> -->
 </div>
 
 <md-sidenav md-component-id="right" class="md-whiteframe-z2 md-sidenav-right">
