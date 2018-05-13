@@ -14,7 +14,7 @@
 						change="vm.topHourUsers()"
 						ng-model="vm.momentDate"
 						ng-model-options="{ updateOn: 'blur' }"/>
-					</md-input-container>	
+					</md-input-container>
 				</div>
 			</div>
 		</md-toolbar>
@@ -27,12 +27,12 @@
 		</md-toolbar>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingTopUsers"></md-progress-linear>
 		<md-list flex>
-			<md-list-item class="md-1-line" ng-repeat = "user in vm.topUsers track by $index" ng-click="null">
-				<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
+			<md-list-item class="md-1-line" ng-repeat = "u in vm.topUsers track by $index" ng-click="null">
+				<img ng-src="{{u.users.profile_image}}" class="md-avatar" alt="" ng-if="u.users.profile_image"/>
 				<div class="md-list-item-text" flex layout="row">
-					<div><h3> {{ user.full_name }} </h3></div>
+					<div><h3> {{ u.users.full_name }} </h3></div>
 					<div flex></div>
-					<div><h3> {{ user.hours }} </h3></div>
+					<div><h3> {{ u.total_hours }} </h3></div>
 				</div>
 			</md-list-item>
 			<div ng-show="vm.topUsers.length == 0 && !vm.loadingTopUsers" layout="row" layout-align="center center">

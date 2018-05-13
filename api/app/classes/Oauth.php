@@ -2,6 +2,7 @@
 namespace FrcPortal;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use \DateTime;
 
 class Oauth extends Eloquent {
   //table name
@@ -25,12 +26,20 @@ class Oauth extends Eloquent {
   */
   protected $hidden = [];
 
+  protected $appends = ['timestamp_unix'];
+
+  public function save($options = array()) {
+    if(is_null($this->auth_id)) {
+      $this->auth_id = uniqid();
+    }
+    return parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->auth_id = (string) uniqid();
     });
-  }
+  }*/
 
   /**
    * Get the user.
@@ -39,4 +48,8 @@ class Oauth extends Eloquent {
      return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
    }
 
+   public function getTimestampUnixAttribute() {
+     $date = new DateTime($this->attributes['created_at']);
+     return $date->format('U');
+   }
 }

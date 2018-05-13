@@ -11,7 +11,6 @@
 						 max-view="decade"
 						 min-date="2015"
 						 max-date="vm.end_date1"
-						 change="vm.reportsAvgHrsPerPersonPerYear()"
 						 ng-model="vm.start_date1_full">
 					</input>
 				</md-input-container>
@@ -25,10 +24,12 @@
 						 min-view="decade"
 						 max-view="decade"
 						 min-date="vm.start_date1"
-						 change="vm.reportsAvgHrsPerPersonPerYear();"
 						 ng-model="vm.end_date1_full">
 					</input>
 				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsAvgHrsPerPersonPerYear()"><i class="material-icons">arrow_forward</i></md-button>
 			</div>
 			<div>
 				<md-button type="button" class="" ng-csv="vm.csvData.data" csv-header="vm.csvData.header" filename="test.csv">Export</md-button>
@@ -51,7 +52,6 @@
 						 max-view="decade"
 						 min-date="2015"
 						 max-date="vm.end_date2"
-						 change="vm.reportsAvgHrsPerUserTypePerYear();"
 						 ng-model="vm.start_date2_full">
 					</input>
 				</md-input-container>
@@ -65,10 +65,12 @@
 						 min-view="decade"
 						 max-view="decade"
 						 min-date="vm.start_date2"
-						 change="vm.reportsAvgHrsPerUserTypePerYear();"
 						 ng-model="vm.end_date2_full">
 					</input>
 				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsAvgHrsPerUserTypePerYear()"><i class="material-icons">arrow_forward</i></md-button>
 			</div>
 			<div>
 				<md-button type="button" class="" ng-csv="vm.csvData2.data" csv-header="vm.csvData2.header" filename="test.csv">Export</md-button>
@@ -93,7 +95,6 @@
 						 max-view="decade"
 						 min-date="2015"
 						 max-date="vm.end_date3"
-						 change="vm.reportsActiveUsersPerYear();"
 						 ng-model="vm.start_date3_full">
 					</input>
 				</md-input-container>
@@ -107,10 +108,12 @@
 						 min-view="decade"
 						 max-view="decade"
 						 min-date="vm.start_date3"
-						 change="vm.reportsActiveUsersPerYear();"
 						 ng-model="vm.end_date3_full">
 					</input>
 				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsActiveUsersPerYear()"><i class="material-icons">arrow_forward</i></md-button>
 			</div>
 			<div>
 				<md-button type="button" class="" ng-csv="vm.csvData3.data" csv-header="vm.csvData3.header" filename="test.csv">Export</md-button>
@@ -133,7 +136,6 @@
 						 max-view="decade"
 						 min-date="2015"
 						 max-date="vm.end_date7"
-						 change="vm.reportsHoursPerGradePerYear();"
 						 ng-model="vm.start_date7_full">
 					</input>
 				</md-input-container>
@@ -147,10 +149,12 @@
 						 min-view="decade"
 						 max-view="decade"
 						 min-date="vm.start_date7"
-						 change="vm.reportsHoursPerGradePerYear();"
 						 ng-model="vm.end_date7_full">
 					</input>
 				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsHoursPerGradePerYear()"><i class="material-icons">arrow_forward</i></md-button>
 			</div>
 			<div>
 				<md-button type="button" class="" ng-csv="vm.csvData7.data" csv-header="vm.csvData7.header" filename="test.csv">Export</md-button>
@@ -175,7 +179,6 @@
 						 max-view="decade"
 						 min-date="2015"
 						 max-date="vm.end_date5"
-						 change="vm.reportsAvgHrsPerGenderPerYear()"
 						 ng-model="vm.start_date5_full">
 					</input>
 				</md-input-container>
@@ -189,10 +192,12 @@
 						 min-view="decade"
 						 max-view="decade"
 						 min-date="vm.start_date5"
-						 change="vm.reportsAvgHrsPerGenderPerYear();"
 						 ng-model="vm.end_date5_full">
 					</input>
 				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsAvgHrsPerGenderPerYear()"><i class="material-icons">arrow_forward</i></md-button>
 			</div>
 			<div>
 				<md-button type="button" class="" ng-csv="vm.csvData5.data" csv-header="vm.csvData5.header" filename="test.csv">Export</md-button>
@@ -214,10 +219,12 @@
 						 min-view="decade"
 						 max-view="decade"
 						 min-date="2015"
-						 change="vm.reportsHoursPerWeek();"
 						 ng-model="vm.year6_full">
 					</input>
 				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsHoursPerWeek()"><i class="material-icons">arrow_forward</i></md-button>
 			</div>
 			<div>
 				<md-button type="button" class="" ng-csv="vm.csvData6.data" csv-header="vm.csvData6.header" filename="test.csv">Export</md-button>
@@ -241,10 +248,12 @@
 						 min-view="decade"
 						 max-view="decade"
 						 min-date="2015"
-						 change="vm.reportsHoursPerEventPerYear();"
 						 ng-model="vm.year4_full">
 					</input>
 				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsHoursPerEventPerYear()"><i class="material-icons">arrow_forward</i></md-button>
 			</div>
 			<div>
 				<md-button type="button" class="" ng-csv="vm.csvData4.data" csv-header="vm.csvData4.header" filename="test.csv">Export</md-button>
@@ -253,6 +262,33 @@
 		<div layout="column">
 			<div>Hours per Event</div> <!-- chart-dataset-override="vm.datasetOverride3"  -->
 			<canvas id="line" class="chart chart-bar" chart-data="vm.data4" chart-labels="vm.labels4" chart-series="vm.series4" chart-click="" chart-options="vm.options"></canvas>
+		</div>
+	</div>
+	<div flex layout="column" class="md-margin">
+		<div layout="row" layout-align="start center">
+			<div flex>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Year</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.year8" required
+						 format="YYYY"
+						 min-view="decade"
+						 max-view="decade"
+						 min-date="2015"
+						 ng-model="vm.year8_full">
+					</input>
+				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsHoursPerEventTypePerYear()"><i class="material-icons">arrow_forward</i></md-button>
+			</div>
+			<div>
+				<md-button type="button" class="" ng-csv="vm.csvData8.data" csv-header="vm.csvData8.header" filename="test.csv">Export</md-button>
+			</div>
+		</div>
+		<div layout="column">
+			<div>Hours per Event Type</div> <!-- chart-dataset-override="vm.datasetOverride3"  -->
+			<canvas id="line" class="chart chart-bar" chart-data="vm.data8" chart-labels="vm.labels8" chart-series="vm.series8" chart-click="" chart-options="vm.options"></canvas>
 		</div>
 	</div>
 </md-content>

@@ -175,4 +175,20 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metr
 		});
 	};
 	vm.reportsHoursPerGradePerYear();
+
+	vm.labels8 = [];
+	vm.series8 = [];
+	vm.data8 = [];
+	vm.csvData8 = [];
+	vm.year8 = new Date().getFullYear();
+
+	vm.reportsHoursPerEventTypePerYear = function () {
+		metricsService.reportsHoursPerEventTypePerYear(vm.year8).then(function(response){
+			vm.labels8 = response.labels;
+			vm.series8 = response.series;
+			vm.data8 = response.data;
+			vm.csvData8 = response.csvData;
+		});
+	};
+	vm.reportsHoursPerEventTypePerYear();
 }

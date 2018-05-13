@@ -2,6 +2,7 @@
 namespace FrcPortal;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
 
 class User extends Eloquent {
@@ -40,46 +41,32 @@ class User extends Eloquent {
     'admin' => 'boolean',
   ];
 
-  public static function boot() {
-    parent::boot();
+  public function newQuery() {
+      return parent::newQuery()->select('users.*', DB::raw('CONCAT(users.fname," ",users.lname) AS full_name,
+      CASE
+       WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=0  THEN "Graduated"
+       WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=12 THEN "Senior"
+       WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=24 THEN "Junior"
+       WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=36 THEN "Sophmore"
+       WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) <=48 THEN "Freshman"
+       WHEN users.user_type="student" AND TIMESTAMPDIFF(MONTH,curdate(),CONCAT(users.grad_year,"-07-01")) >48 THEN "Pre-Freshman"
+       ELSE ""
+      END AS student_grade'));
+  }
+
+  public function save($options = array()) {
+    if(is_null($this->user_id)) {
+      $this->user_id = uniqid();
+    }
+    return parent::save();
+  }
+/*  public static function boot() {
+    parent::boot();``
     static::creating(function ($instance) {
       $instance->user_id = (string) uniqid();
     });
-  }
+  } */
 
-  public function setLnameAttribute($value) {
-    $this->attributes['lname'] = $value;
-    $this->attributes['full_name'] = $this->attributes['fname'].' '.$value;
-  }
-
-  public function setGradYearAttribute($value) {
-    $return = null;
-    if(isset($this->attributes['user_type']) && $this->attributes['user_type'] == 'Student' && $value != null) {
-      $grad_year = $value;
-      $curren_date = new DateTime();
-      $grad_date = new DateTime($grad_year.'-07-01');
-      $interval = $grad_date->diff($curren_date);
-      $num_months = $interval->m + 12*$interval->y;
-      if($num_months <= 0) {
-        $return = 'Graduated';
-      } else if($num_months <= 12) {
-        $return = 'Senior';
-      } else if($num_months <= 24) {
-        $return = 'Junior';
-      } else if($num_months <= 36) {
-        $return = 'Sophmore';
-      } else if($num_months <= 48) {
-        $return = 'Freshman';
-      } else if($num_months > 48) {
-        $return = 'Pre-Freshman';
-      }
-      $this->attributes['student_grade'] = $return;
-      $this->attributes['grad_year'] = $value;
-    } else {
-      $this->attributes['student_grade'] = null;
-      $this->attributes['grad_year'] = null;
-    }
-  }
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
   }
@@ -94,20 +81,20 @@ class User extends Eloquent {
   /**
   * Get the School.
   */
-  public function schools() {
-    return $this->belongsTo('FrcPortal\School', 'school_id', 'school_id');
+  public function school() {
+    return $this->hasOne('FrcPortal\School', 'school_id', 'school_id');
   }
   /**
   * Get the Annual requirements.
   */
   public function annual_requirements() {
-    return $this->hasMany('FrcPortal\AnnualRequirement', 'user_id', 'user_id');
+    return $this->hasOne('FrcPortal\AnnualRequirement', 'user_id', 'user_id')->withDefault();
   }
   /**
   * Get the Event requirements.
   */
   public function event_requirements() {
-    return $this->hasMany('FrcPortal\EventRequirement', 'user_id', 'user_id');
+    return $this->hasOne('FrcPortal\EventRequirement', 'user_id', 'user_id')->withDefault();
   }
   /**
   * Get the Event Cars.
@@ -116,10 +103,19 @@ class User extends Eloquent {
     return $this->hasMany('FrcPortal\EventCar', 'user_id', 'user_id');
   }
   /**
+   * Get the POC.
+   */
+  public function event_pocs() {
+      return $this->belongsTo('FrcPortal\Event', 'poc_id', 'user_id');
+  }
+  /**
   * Get the Meeting Hours.
   */
   public function meeting_hours() {
     return $this->hasMany('FrcPortal\MeetingHour', 'user_id', 'user_id');
+  }
+  public function last_sign_in() {
+    return $this->hasOne('FrcPortal\MeetingHour', 'user_id', 'user_id')->orderBy('time_in', 'DESC');
   }
   /**
   * Get the OAuth IDs
@@ -138,5 +134,17 @@ class User extends Eloquent {
   */
   public function notifications() {
     return $this->hasMany('FrcPortal\Notification', 'user_id', 'user_id');
+  }
+  /**
+  * Get the Notification Preferences
+  */
+  public function missing_hours_requests() {
+    return $this->hasOne('FrcPortal\MissingHoursRequest', 'user_id', 'user_id');
+  }
+  /**
+  * Get the Notification Preferences
+  */
+  public function missing_hours_approvers() {
+    return $this->hasOne('FrcPortal\MissingHoursRequest', 'approved_by', 'user_id');
   }
 }

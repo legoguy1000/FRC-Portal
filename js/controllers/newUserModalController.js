@@ -1,37 +1,36 @@
 angular.module('FrcPortal')
-.controller('newUserModalController', ['$rootScope','$mdDialog', '$scope', 'userInfo', 'usersService', 'schoolsService',
+.controller('newUserModalController', ['$rootScope','$mdDialog', '$scope', 'userInfo', 'usersService', 'schoolsService', '$window',
 	newUserModalController
 ]);
-function newUserModalController($rootScope,$mdDialog,$scope,userInfo,usersService,schoolsService) {
+function newUserModalController($rootScope,$mdDialog,$scope,userInfo,usersService,schoolsService,$window) {
 	var vm = this;
 
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-	
-	vm.userInfo = userInfo;
-	if(vm.userInfo.school_id) {
-		vm.userInfo.schoolData = {
-			school_id: vm.userInfo.school_id,
-			school_name: vm.userInfo.school_name,
-		}
-	}
 
-	console.log(vm.userInfo.schoolData);
-	vm.selectedItem  = null; 
+	vm.userInfo = userInfo;
+
+	vm.selectedItem  = null;
     vm.searchText    = null;
     vm.querySearch   = querySearch;
-	
+
 	function querySearch (query) {
-		return schoolsService.searchAllSchools(query);
+		var data = {
+			filter: query,
+			limit: 0,
+			order: 'school_name',
+			page: 1,
+			listOnly: true
+		};
+		return schoolsService.getAllSchoolsFilter($.param(data));
 	}
-	
-	
+
 	vm.updateUser = function() {
 		usersService.updateUserPersonalInfo(vm.userInfo).then(function(response) {
 			if(response.status) {
-				vm.cancel();
-				$rootScope.$broadcast('afterLoginAction');
+				$window.localStorage['userInfo'] = angular.toJson(response.data);
+				$mdDialog.hide(response);
 			}
 		});
 	}

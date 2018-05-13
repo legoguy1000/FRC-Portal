@@ -22,9 +22,6 @@
 				<form flex name="vm.sil.filter.form" >
 					<input type="text" ng-model="vm.sil.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">
 				</form>
-				<md-button class="md-icon-button" ng-click="vm.showSearchOptions = !vm.showSearchOptions">
-					<md-icon class="material-icons">arrow_drop_down</md-icon>
-				</md-button>
 				<md-button class="md-icon-button" ng-click="vm.removeFilter('sil')">
 					<md-icon class="material-icons">close</md-icon>
 				</md-button>
@@ -74,9 +71,6 @@
 				<form flex name="vm.mhrl.filter.form" >
 					<input type="text" ng-model="vm.mhrl.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">
 				</form>
-				<md-button class="md-icon-button" ng-click="vm.showSearchOptions = !vm.showSearchOptions">
-					<md-icon class="material-icons">arrow_drop_down</md-icon>
-				</md-button>
 				<md-button class="md-icon-button" ng-click="vm.removeFilter('mhrl')">
 					<md-icon class="material-icons">close</md-icon>
 				</md-button>
@@ -89,8 +83,8 @@
 						<th md-column md-order-by="full_name"><span>Name</span></th>
 						<th md-column md-order-by="time_in"><span>Time In</span></th>
 						<th md-column md-order-by="time_out"><span>Time Out</span></th>
-						<th md-column md-order-by="hours"><span>Hours</span></th>
-						<th md-column md-order-by="approved"><span>Status</span></th>
+						<th md-column><span>Hours</span></th>
+						<th md-column><span>Status</span></th>
 						<th md-column></th>
 					</tr>
 				</thead>
@@ -106,11 +100,11 @@
 							<span ng-switch-when="true"><md-icon class="material-icons" style="color:green;">check_circle</md-icon></span>
 							<span ng-switch-when="false"><md-icon class="material-icons" style="color:red;">remove_circle</md-icon></span>
 							<span ng-switch-default layout="row">
-								<md-button class="md-icon-button" ng-click="vm.approveDenyHoursRequest(req.request_id,'approve')">
+								<md-button class="md-icon-button" ng-click="vm.approveDenyHoursRequest(req.request_id)">
 									<md-icon class="material-icons" style="color:green;">check_circle</md-icon>
 									<md-tooltip md-direction="top">Approve Hours</md-tooltip>
 								</md-button>
-								<md-button class="md-icon-button" ng-click="vm.approveDenyHoursRequest(req.request_id,'deny')">
+								<md-button class="md-icon-button" ng-click="vm.denyMissingHoursRequest(req.request_id)">
 									<md-icon class="material-icons" style="color:red;">remove_circle</md-icon>
 									<md-tooltip md-direction="top">Deny Hours</md-tooltip>
 								</md-button>
@@ -132,7 +126,7 @@
 							</td>
 							<td md-cell style="border-top:0px;" colspan="2">
 								<div>Decision By: </div>
-								<div>{{req.approved_by_full_name}}</div>
+								<div>{{req.approver.full_name}}</div>
 							</td>
 							<td md-cell style="border-top:0px;" colspan="2">
 								<div>Decision Date: </div>

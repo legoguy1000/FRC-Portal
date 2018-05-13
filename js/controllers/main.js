@@ -1,15 +1,14 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService',
+	'$rootScope', 'team_number', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window',
 	mainController
 ]);
-function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService) {
+function mainController($rootScope, team_number, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window) {
 	var main = this;
 
+	main.team_number = team_number;
 	main.menuItems = [ ];
 	main.selectItem = selectItem;
-	main.toggleItemsList = toggleItemsList;
-	main.showActions = showActions;
 	main.title = $state.current.data.title;
 	main.showSimpleToast = showSimpleToast;
 	main.toggleRightSidebar = toggleRightSidebar;
@@ -37,45 +36,11 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 		$mdSidenav('right').toggle();
 	}
 
-	function toggleItemsList() {
-	  var pending = $mdBottomSheet.hide() || $q.when(true);
-
-	  pending.then(function(){
-		$mdSidenav('left').toggle();
-	  });
-	}
-
 	function selectItem (item) {
 	  main.title = item.name;
-	  main.toggleItemsList();
 	  main.showSimpleToast(main.title);
 	}
 
-	function showActions($event) {
-		$mdBottomSheet.show({
-		  parent: angular.element(document.getElementById('content')),
-		  templateUrl: 'views/partials/bottomSheet.html',
-		  controller: [ '$mdBottomSheet', SheetController],
-		  controllerAs: "main",
-		  bindToController : true,
-		  targetEvent: $event
-		}).then(function(clickedItem) {
-		  clickedItem && $log.debug( clickedItem.name + ' clicked!');
-		});
-
-		function SheetController( $mdBottomSheet ) {
-		  var main = this;
-
-		  main.actions = [
-			{ name: 'Share', icon: 'share', url: 'https://twitter.com/intent/tweet?text=Angular%20Material%20Dashboard%20https://github.com/flatlogic/angular-material-dashboard%20via%20@flatlogicinc' },
-			{ name: 'Star', icon: 'star', url: 'https://github.com/flatlogic/angular-material-dashboard/stargazers' }
-		  ];
-
-		  main.performAction = function(action) {
-			$mdBottomSheet.hide(action);
-		  };
-		}
-	}
 
 	function showSimpleToast(title) {
 	  $mdToast.show(
@@ -96,13 +61,10 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 			clickOutsideToClose:true,
 			fullscreen: true // Only for -xs, -sm breakpoints.
 		})
-		.then(function(data) {
-			main.isAuthed = data.auth;
-			if(data.auth) {
-				var data = {
-					'allActions': true,
-				}
-				$rootScope.$broadcast('afterLoginAction',data);
+		.then(function(response) {
+			main.isAuthed = $auth.isAuthenticated();
+			if(response.auth) {
+				$rootScope.$broadcast('afterLoginAction');
 			}
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
@@ -119,11 +81,15 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 			//clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
 			locals: {
-				userInfo: $auth.getPayload().data,
+				userInfo: main.userInfo,
 			}
 		})
-		.then(function(data) {
-
+		.then(function(response) {
+			if(response.status) {
+				console.log('After Dialog')
+				console.log(response.userInfo);
+				$rootScope.$broadcast('afterLoginAction');
+			}
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
@@ -132,71 +98,11 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 
 	main.initServiceWorkerState = function() {
 		console.log('Initializing');
-		// Are Notifications supported in the service worker?
-	/*	if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
-			console.warn('Notifications aren\'t supported.');
-			return false;
-		}
-
-		// Check the current Notification permission.
-		// If its denied, it's a permanent block until the
-		// user changes the permission
-		if (Notification.permission === 'denied') {
-			console.warn('The user has blocked notifications.');
-			return false;
-		}
-
-		// Check if push messaging is supported
-		if (!('PushManager' in window)) {
-			console.warn('Push messaging isn\'t supported.');
-			return false;
-		} */
-
-		// We need the service worker registration to check for a subscription
 		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 			console.log('Service Worker Ready');
-			// Do we already have a push message subscription?
-		/*	serviceWorkerRegistration.pushManager.getSubscription()
-			.then(function(subscription) {
-				console.log('Checkig Subscription');
-				// Enable any UI which subscribes / unsubscribes from
-				// push messages.
-			//	var pushButton = document.querySelector('.js-push-button');
-			//	pushButton.disabled = false;
-
-				if (!subscription) {
-					console.log('Not Scubscribed');
-					// We aren't subscribed to push, so set UI
-					// to allow the user to enable push
-					return false;
-				}
-
-				//console.log(subscription);
-				// Keep your server in sync with the latest subscriptionId
-				// sendSubscriptionToServer(subscription);
-				var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
-				var key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
-				var rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';
-				var authSecret = rawAuthSecret ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
-				var endpoint = subscription.endpoint;
-				var data = {'endpoint':endpoint, 'key':key, 'authSecret':authSecret};
-				main.browserData = data;
-				$scope.$apply( function () {
-					main.enablePush.subscription = subscription;
-					main.enablePush.status = true;
-					main.enablePush.disabled = false;
-					main.enablePush.endpoint = endpoint;
-				});
-				usersService.deviceNotificationUpdateEndpoint(data).then(function(response){
-					console.log('Endpoint Updated');
-				});
-				console.log(data); */
 				return true;
 			})
-			.catch(function(err) {
-				//console.warn('Error during getSubscription()', err);
-			});
-		//});
+			.catch(function(err) {	});
 	}
 
 	main.checkServiceWorker = function() {
@@ -219,20 +125,17 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 	}
 
 	var loginActions = function() {
-		main.isAuthed = $auth.isAuthenticated();
-		main.userInfo = $auth.getPayload().data;
+		main.userInfo = angular.fromJson(window.localStorage['userInfo']);
 		main.checkServiceWorker();
 		//main.StartEventSource();
-		if(main.userInfo.newUser) {
-			newUserModal();
+		if(main.userInfo.first_login) {
+			//newUserModal();
+			$state.go('main.profile',{'firstLogin': true});
 		}
 	}
 
 	if(main.isAuthed) {
 		console.info('I\'m Authed');
-		var data = {
-			'allActions': true,
-		}
 		loginActions();
 	}
 
@@ -244,11 +147,9 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 		$auth.logout();
 	}
 
-	$rootScope.$on('afterLoginAction', function(event, data) {
+	$rootScope.$on('afterLoginAction', function(event) {
 		console.info('Login Initiated');
-		if(data.allActions) {
-			loginActions();
-		}
+		loginActions();
 	});
 
 
@@ -256,6 +157,7 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 		console.info('LogOut Initiated');
 		main.isAuthed = false;
 		main.userInfo = null;
+		$window.localStorage.removeItem('userInfo');
 	});
 	$rootScope.$on('checkAuth', function(event, data) {
 		console.info('Chcking Auth');
@@ -263,12 +165,6 @@ function mainController($rootScope, $auth, navService, $mdSidenav, $mdBottomShee
 			$rootScope.$broadcast('logOutAction',data);
 		}
 	});
-	$rootScope.$on('updateSigninStatus', function(event, data) {
-		console.info('LogOut Initiated');
-		main.signInAuthed = signinService.isAuthed();
-		if(data.response.status && data.logout) {
-			main.logout();
-		}
-	});
+
 
 }

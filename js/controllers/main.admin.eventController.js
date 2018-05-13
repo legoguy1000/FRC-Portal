@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast',
+.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast','$mdMenu',
 	mainAdminEventController
 ]);
-function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast) {
+function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast,$mdMenu) {
     var vm = this;
 
 	vm.filter = {
@@ -21,7 +21,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			vm.filter.form.$setPristine();
 		}
 	};
-
+	vm.selectedUsers = [];
 	vm.eventTypes = [
 		'Demo',
 		'Community Serivce',
@@ -29,29 +29,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		'Off Season Event',
 		'Other'
 	];
-
-	vm.event_id = $stateParams.event_id;
-	vm.event = {};
-	var reqs = [];
-	vm.getEvent = function () {
-		vm.loading = true;
-		vm.promise = eventsService.getEvent(vm.event_id,true,'all').then(function(response){
-			vm.event = response.data;
-			//$scope.main.title += ' - '+vm.event.name;
-			reqs = vm.event.requirements;
-			vm.loading = false;
-		});
-	};
-	vm.selectedUsers = [];
-
-	vm.getSeasons = function () {
-		vm.promise = seasonsService.getAllSeasons().then(function(response){
-			vm.seasons = response.data;
-		});
-	};
-	vm.getSeasons();
-
-	vm.getEvent();
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
 		filter: '',
@@ -59,15 +36,35 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		order: 'full_name',
 		page: 1
 	};
+	vm.currentTime = new Date().getTime();
+
+	vm.event_id = $stateParams.event_id;
+	vm.event = {};
+	vm.users = null;
+	vm.getEvent = function () {
+		vm.loading = true;
+		eventsService.getEvent(vm.event_id).then(function(response){
+			vm.event = response.data;
+			vm.loading = false;
+		});
+	};
+	vm.getEvent();
+
+
+	vm.getEventRequirements = function() {
+		vm.promise = eventsService.getEventRequirements(vm.event_id).then(function(response){
+			vm.users = response.data;
+		});
+	}
+	vm.getEventRequirements();
+
+
 
 	vm.syncGoogleCalEvent = function () {
 		vm.loading = true;
-		var data = {
-			'event_id': vm.event_id
-		};
-		vm.promise = eventsService.syncGoogleCalEvent(data).then(function(response){
+		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
-			vm.event.requirements = reqs;
+			vm.loading = false;
 			$mdToast.show(
 	      $mdToast.simple()
 	        .textContent(response.msg)
@@ -75,17 +72,16 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	        .hideDelay(3000)
 	    );
 		});
-		vm.loading = false;
 	};
 
 	vm.updateEvent = function () {
 		vm.loading = true;
 		var data = {
 			'event_id': vm.event_id,
-			'pocInfo': vm.event.pocInfo,
+			'event_poc': vm.event.event_poc,
 			'type': vm.event.type,
 		};
-		vm.promise = eventsService.updateEvent(data).then(function(response){
+		eventsService.updateEvent(data).then(function(response){
 			vm.event = response.data;
 			vm.event.requirements = reqs;
 			$mdToast.show(
@@ -99,9 +95,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	};
 
 	vm.deleteEvent = function() {
-		var data = {
-			event_id: vm.event.event_id,
-		};
 		var confirm = $mdDialog.confirm()
 					.title('Delete event '+vm.event.name)
 					.textContent('Are you sure you want to delete event '+vm.event.name+'?  This action is unreversable and any registration data will be removed.'	)
@@ -110,7 +103,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 					.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
 			vm.loading = true;
-			eventsService.deleteEvent(data).then(function(response) {
+			eventsService.deleteEvent(vm.event.event_id).then(function(response) {
 				if(response.status) {
 					$mdDialog.show(
 						$mdDialog.alert()
@@ -146,7 +139,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
     })
     .then(function(response) {
-			vm.event.requirements.data = response.userInfo;
+			vm.users = response.data;
     }, function() {
 
     });
@@ -170,13 +163,12 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				}
 	    })
 			.then(function(response) {
-				vm.event.requirements.data = response.userInfo;
+				vm.users = response.data;
 	    }, function() {
 
 	    });
 	  };
 	vm.toggleEventReqs = function (req) {
-		vm.loading = true;
 		var data = {
 			'event_id': vm.event_id,
 			'users': vm.selectedUsers,
@@ -184,9 +176,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		}
 		vm.promise = eventsService.toggleEventReqs(data).then(function(response){
 			if(response.status && response.data) {
-				vm.event.requirements.data = response.data;
+				vm.users = response.data;
 			}
-			vm.loading = false;
 		});
 	};
 
@@ -224,21 +215,32 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		})
 		.then(function(answer) {
-			var user_id = answer.data[0].user_id;
+			var user_id = answer.data.user_id;
 			var index = null;
-			var len = vm.event.requirements.data.length;
+			var len = vm.users.length;
 			for (var i = 0; i < len; i++) {
-			  if(vm.event.requirements.data[i].user_id == user_id) {
+			  if(vm.users[i].user_id == user_id) {
 					index = i;
 			    break;
 			  }
 			}
 			if(index != null) {
-				vm.event.requirements.data[index] = answer.data[0];
+				vm.users[index] = answer.data;
 			}
 		}, function() {
 
 		});
 	}
 
+	vm.showComments = function(ev,userInfo) {
+		$mdDialog.show(
+      $mdDialog.alert()
+        .clickOutsideToClose(true)
+        .title('Registration comments for '+userInfo.full_name)
+        .textContent(userInfo.event_requirements.comments)
+        .ariaLabel('Registration comments for '+userInfo.full_name)
+        .ok('close')
+        .targetEvent(ev)
+    );
+	}
 }

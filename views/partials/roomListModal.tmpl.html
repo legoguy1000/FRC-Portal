@@ -13,12 +13,16 @@
 		<md-dialog-content class="md-margin">
 			<div layout="row" ng-repeat="room in vm.room_list.rooms" style="border-top: solid;border-left: solid;border-right: solid;">
 				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
-					{{room.room_title}}
+					<md-button class="md-icon-button noprint" ng-click="vm.deleteEventRoom(room.room_id)">
+						<md-tooltip md-direction="top">Delete Room</md-tooltip>
+					  <md-icon class=""> close </md-icon>
+					</md-button>
+					<span>{{room.room_title}}</span>
 				</div>
 				<div flex class="dndList">
 					<md-list ng-cloak
 						dnd-list="vm.room_list.room_selection[room.room_id]"
-						dnd-allowed-types="room.roomType"
+						dnd-allowed-types="room.room_type"
 						dnd-disable-if="(room.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length >= 4) || (room.user_type == 'Mentor' && vm.room_list.room_selection[room.room_id].length >= 2)"
 						style="min-height:20px;">
 					    <md-list-item ng-repeat="user in vm.room_list.room_selection[room.room_id]"
@@ -27,12 +31,12 @@
 					        dnd-effect-allowed="move"
 					        dnd-selected="models.selected = user"
 					        ng-class="{'selected': models.selected === user}"
-									dnd-type="user.roomType"
+									dnd-type="user.users.room_type"
 									class="min-height-reset"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
-						        <div>{{user.full_name}}</div>
+						        <div>{{user.users.full_name}}</div>
 								</dnd-nodrag>
 					    </md-list-item>
 					</md-list>
@@ -51,13 +55,13 @@
 					        dnd-moved="vm.room_list.room_selection['non_select'].splice($index, 1)"
 					        dnd-effect-allowed="move"
 					        dnd-selected="models.selected = user"
-									dnd-type="user.roomType"
+									dnd-type="user.users.room_type"
 					        ng-class="{'selected': models.selected === user}"
 									class="min-height-reset"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
-						        <div>{{user.full_name}}</div>
+						        <div>{{user.users.full_name}}</div>
 								</dnd-nodrag>
 					    </md-list-item>
 					</md-list>

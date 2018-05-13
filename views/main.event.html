@@ -73,11 +73,11 @@
 			<h2 class="mb-30">POC & Venue</h2>
 			<div layout-gt-sm="row" style="width:100%;" layout-align-gt-sm="start stretch">
 				<md-content layout="column" layout-align="start start" class="md-padding" flex style="margin-right:15px">
-					<div>{{vm.event.pocInfo.full_name}}</div>
-					<div><a ng-href="mailto:{{vm.event.pocInfo.email}}" target="_blank">{{vm.event.pocInfo.email}}</div>
-					<div ng-show="vm.event.pocInfo.slackEnabled">
-						<a ng-href="slack://user?team=T0AP1HT4G&id={{vm.event.pocInfo.slack_id}}">Slack App</a><br/>
-						<a ng-href="https://triple-helix.slack.com/messages/{{vm.event.pocInfo.slack_id}}" target="_blank">Slack Web</a>
+					<div>{{vm.event.poc.full_name}}</div>
+					<div><a ng-href="mailto:{{vm.event.poc.email}}" target="_blank">{{vm.event.poc.email}}</div>
+					<div ng-show="vm.event.poc.slackEnabled">
+						<a ng-href="slack://user?team=T0AP1HT4G&id={{vm.event.poc.slack_id}}">Slack App</a><br/>
+						<a ng-href="https://triple-helix.slack.com/messages/{{vm.event.poc.slack_id}}" target="_blank">Slack Web</a>
 					</div>
 				</md-content>
 			 	<div flex style="margin-left:15px">

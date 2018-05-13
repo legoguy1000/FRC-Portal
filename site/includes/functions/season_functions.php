@@ -162,7 +162,7 @@ function getAllSeasonsFilter($filter = '', $limit = 10, $order = '-year', $page 
 function getSeasonMembershipForm($year) {
 	$spreadsheetId = false;
 	$client = new Google_Client();
-	$client->setAuthConfigFile('./includes/secured/team-2363-portal-0c12aca54f1c.json');
+	$client->setAuthConfigFile($_SERVER['DOCUMENT_ROOT'].'/site/includes/secured/team-2363-portal-0c12aca54f1c.json');
 	$client->setScopes(['https://www.googleapis.com/auth/drive.readonly']);
 	$service = new Google_Service_Drive($client);
 	$parameters = array(

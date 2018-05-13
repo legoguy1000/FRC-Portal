@@ -2,18 +2,7 @@
 
 function getAllSignInsFilter($filter = '', $limit = 10, $order = '-time_in', $page = 1) {
 
-	/* if(isset($filter) && $filter != '') {
-		$filter = $filter;
-	}
-	if(isset($limit) && $limit != '') {
-		$limit = $limit;
-	}
-	if(isset($order) && $order != '') {
-		$order = $order;
-	}
-	if(isset($page) && $page != '') {
-		$page = $page;
-	} */
+
 
 	$users = array();
 	$data = array();

@@ -8,18 +8,18 @@
 					<md-tooltip md-direction="top">Refresh List</md-tooltip>
 					<md-icon>refresh</md-icon>
 				</md-button>
-				<md-button class="md-accent md-hue-3" ng-click="vm.authorizeSignIn()" ng-hide="main.signInAuthed">
+				<md-button class="md-accent md-hue-3" ng-click="vm.authorizeSignIn()" ng-hide="vm.signInAuthed">
 					<md-tooltip md-direction="top">Admin permissions required</md-tooltip>
 					Authorize Sign In
 				</md-button>
-				<md-button class="md-warn" ng-click="vm.deauthorizeSignIn()" ng-show="main.signInAuthed">
+				<md-button class="md-warn" ng-click="vm.deauthorizeSignIn()" ng-show="vm.signInAuthed">
 					Deauthorize Sign In
 				</md-button>
 			</div>
 		</md-toolbar>
 		<md-table-container>
 			<table md-table md-row-select ng-model="vm.selected_user" md-progress="vm.promise">
-				<thead md-head md-order="vm.query.order" md-on-reorder="vm.getUsers">
+				<thead md-head md-order="vm.query.order">
 					<tr md-row>
 						<th md-column md-order-by="lname"><span>Name</span></th>
 						<!-- <th md-column md-order-by="user_type"><span>Type</span></th>	 -->
@@ -39,12 +39,12 @@
 							</md-list-item>
 						</td>
 						<!-- <td md-cell>{{user.user_type}}</td> -->
-						<td md-cell><span ng-if="user.time_in">{{user.time_in_unix*1000 | date:'medium'}}</span></td>
-						<td md-cell><span ng-if="user.time_out">{{user.time_out_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span ng-if="user.last_sign_in.time_in">{{user.last_sign_in.time_in_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span ng-if="user.last_sign_in.time_out">{{user.last_sign_in.time_out_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell>
-							<span ng-if="user.build_season">{{user.build_season_hours}}</span>
-							<span ng-if="user.competition_season">{{user.competition_season_hours}}</span>
-							<span ng-if="user.off_season">{{user.off_season_hours}}</span>
+							<span ng-if="user.build_season">{{user.annual_requirements.build_season_hours}}</span>
+							<span ng-if="user.competition_season">{{user.annual_requirements.competition_season_hours}}</span>
+							<span ng-if="user.off_season">{{user.annual_requirements.off_season_hours}}</span>
 						</td>
 					</tr>
 				</tbody>

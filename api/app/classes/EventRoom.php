@@ -11,6 +11,7 @@ class EventRoom extends Eloquent {
   //Use Custom Primary Key
   protected $primaryKey = 'room_id'; // or null
   public $incrementing = false;
+  public $timestamps = false;
   /**
   * The attributes that are mass assignable.
   *
@@ -21,7 +22,7 @@ class EventRoom extends Eloquent {
   ];
 
 
-  protected $appends = ['room_type'];
+  protected $appends = ['room_type', 'room_title'];
 
   //$data['requirements'] = array();
   /**
@@ -38,12 +39,18 @@ class EventRoom extends Eloquent {
    */
   protected $casts = [];
 
+  public function save($options = array()) {
+    if(is_null($this->room_id)) {
+      $this->room_id = uniqid();
+    }
+    return parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->room_id = (string) uniqid();
     });
-  }
+  } **/
 
   /**
    * Get the Season.
@@ -65,4 +72,9 @@ class EventRoom extends Eloquent {
   	$roomType = $this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : $this->attributes['user_type'];
     return  array($roomType);
   }
+  //$room['user_type'] == 'Student' ? str_replace('Male',"Boys",str_replace('Female',"Girls",$room['gender'])).' '.$c[$roomType] : $room['user_type'].' '.$c[$roomType];
+
+    public function getRoomTitleAttribute() {
+      return $this->attributes['user_type'] == 'Student' ? str_replace('Male',"Boys",str_replace('Female',"Girls",$this->attributes['gender'])) : $this->attributes['user_type'];
+    }
 }

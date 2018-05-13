@@ -17,11 +17,23 @@ class EventRequirement extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'ereq_id', 'user_id', 'event_id', 'registration', 'payment','permission_slip','food','room_id','can_drive','car_id','comments'
+    'user_id', 'event_id', 'registration', 'payment','permission_slip','food','room_id','can_drive','car_id','comments','attendance_confirmed'
   ];
 
 
   protected $appends = ['car_bool','room_bool'];
+
+  protected $attributes = [
+    'registration' => false,
+    'payment' => false,
+    'permission_slip' => false,
+    'food' => false,
+    'room_id' => null,
+    'can_drive' => false,
+    'car_id' => null,
+    'comments' => '',
+    'attendance_confirmed' => false
+  ];
 
   //$data['requirements'] = array();
   /**
@@ -43,21 +55,45 @@ class EventRequirement extends Eloquent {
     'food' => 'boolean',
     'can_drive' => 'boolean',
     'car_bool' => 'boolean',
+    'room_bool' => 'boolean',
   ];
 
+  public function save($options = array()) {
+    if(is_null($this->ereq_id)) {
+      $this->ereq_id = uniqid();
+    }
+    return parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->ereq_id = (string) uniqid();
     });
-  }
+  } */
 
   public function getCarBoolAttribute() {
     return isset($this->attributes['car_id']) && !is_null($this->attributes['car_id']);
   }
   public function getRoomBoolAttribute() {
-    return isset($this->attributes['room_bool']) && !is_null($this->attributes['room_bool']);
+    return isset($this->attributes['room_id']) && !is_null($this->attributes['room_id']);
   }
+/*  public function getReqsCompleteAttribute() {
+    $registration = $this->registration;
+    $payment = $this->payment;
+    $permission_slip = $this->permission_slip;
+    $food = $this->food;
+    $car_bool = $this->car_bool;
+    $room_bool = $this->room_bool;
+
+    if(isset($this->attributes['user_id'])) {
+      $userInfo = User::find($this->attributes['user_id']);
+      $stu = (bool) $userInfo->user_type == 'Student';
+      $men = (bool) $userInfo->user_type == 'Mentor';
+      return $jt && $stims && (($stu && $dues) || $men) && $mh;
+    } else {
+      return false;
+    }
+  } */
   /**
    * Get the Event.
    */
@@ -74,13 +110,13 @@ class EventRequirement extends Eloquent {
    * Get the Event Car.
    */
   public function event_cars() {
-      return $this->belongsTo('FrcPortal\EventCar', 'car_id', 'car_id');
+      return $this->hasOne('FrcPortal\EventCar', 'car_id', 'car_id');
   }
   /**
   * Get the Event Room.
   */
   public function event_rooms() {
-    return $this->belongsTo('FrcPortal\EventRoom', 'room_id', 'room_id');
+    return $this->hasOne('FrcPortal\EventRoom', 'room_id', 'room_id');
   }
 
 }
