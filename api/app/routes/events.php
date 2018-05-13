@@ -390,7 +390,7 @@ $app->group('/events', function () {
         'data' => null
       );
       $user_id = $loggedInUser;
-      if(isset($formData['user_id']) && $formData['user_id'] != $loggedInUser && !checkAdmin($userId)) {
+      if(isset($formData['user_id']) && $formData['user_id'] != $loggedInUser && !checkAdmin($loggedInUser)) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
