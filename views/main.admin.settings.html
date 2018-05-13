@@ -5,14 +5,65 @@
 		</h1>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingUser"></md-progress-linear>
 		<md-list>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('team')">
+		    <p>Team Settings</p>
+		  </md-list-item>
 			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('login')">
 		    <p>Login Settings</p>
 		  </md-list-item>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('notification')">
+		    <p>Notification Settings</p>
+		  </md-list-item>
 		</md-list>
 	</md-content>
-	<md-content flex="grow" class="md-margin" layout="column" ng-show="vm.currentMenu == 'login';">
-		<div>
+	<md-content flex="grow" class="md-margin" layout="column">
+		<div layout="column" ng-show="vm.currentMenu == 'team';">
+			<md-input-container flex required>
+				<label>Team Number</label>
+				<input ng-model="vm.settings.team_number">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Team Name</label>
+				<input ng-model="vm.settings.team_name">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Site URL</label>
+				<input ng-model="vm.settings.env_url">
+			</md-input-container>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'login';">
 			login settings
+			<md-input-container flex>
+				<label>Facebook Client Secret</label>
+				<input ng-model="vm.settings.facebook_client_secret">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Microsoft Live Client Secret</label>
+				<input ng-model="vm.settings.microsoft_client_secret">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>JSON Web Token Secret Key</label>
+				<input ng-model="vm.settings.jwt_key">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>JSON Web Token Time Secret Key</label>
+				<input ng-model="vm.settings.jwt_signin_key">
+			</md-input-container>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'login';">
+			Notification Settings
+			<md-input-container flex>
+				<label>Slack Team ID</label>
+				<input ng-model="vm.settings.slack_team_id">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Slack API Token</label>
+				<input ng-model="vm.settings.slack_api_token">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Site Email</label>
+				<input ng-model="vm.settings.notification_email">
+			</md-input-container>
 		</div>
 	</md-content>
 </div>

@@ -28,6 +28,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		vm.loading = true;
 		settingsService.getAllSettings().then(function(response){
 			vm.loading = false;
+			vm.settings = response.data.normalized;
 		});
 	};
 	vm.getAllSettings();
