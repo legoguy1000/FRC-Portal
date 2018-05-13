@@ -27,6 +27,7 @@ $app->group('/seasons', function () {
   		}
   	}
 
+    $offset = 0;
   	if($limit > 0) {
   		$offset	= ($page - 1) * $limit;
   	} elseif($limit == 0) {
