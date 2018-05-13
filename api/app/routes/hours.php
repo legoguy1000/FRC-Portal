@@ -209,7 +209,7 @@ $app->group('/hours', function () {
       $responseArr = array();
       $user = false;
       if(isset($args['auth_token'])) {
-        $key = getIniProp('jwt_key');
+        $key = getSettingsProp('jwt_key');
         $jwt = $args['auth_token'];
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
@@ -226,9 +226,9 @@ $app->group('/hours', function () {
       }
       if($user != false) {
         $jti = md5(random_bytes(20));
-        $key = getIniProp('jwt_signin_key');
+        $key = getSettingsProp('jwt_signin_key');
         $token = array(
-          "iss" => getIniProp('env_url'),
+          "iss" => getSettingsProp('env_url'),
           "iat" => time(),
           "exp" => time()+60*60*12, //12 hours liftime
           "jti" => $jti,
@@ -254,7 +254,7 @@ $app->group('/hours', function () {
     $this->post('', function ($request, $response, $args) {
       $args = $request->getParsedBody();
       if(isset($args['token'])) {
-        $key = getIniProp('jwt_signin_key');
+        $key = getSettingsProp('jwt_signin_key');
         try{
           $decoded = JWT::decode($args['token'], $key, array('HS256'));
           $data = (array) $decoded;

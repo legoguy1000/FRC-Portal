@@ -26,7 +26,7 @@ function checkTokenManually($token,$die=true,$die401=false) {
 	$data = array();
 	if(isset($token) && $token != '' && $token != false && $token != null) {
 		$jwt = $token;
-		$key = getIniProp('jwt_key');
+		$key = getSettingsProp('jwt_key');
 		try{
 			$decoded = JWT::decode($jwt, $key, array('HS256'));
 		}catch(\Firebase\JWT\ExpiredException $e){
@@ -70,7 +70,7 @@ function verifyToken($token,$die=true,$die401=false)
 	if(isset($token) && $token != '' && $token != false && $token != null)
 	{
 		$jwt = $token;
-		$key = getIniProp('jwt_key');
+		$key = getSettingsProp('jwt_key');
 		$decoded = JWT::decode($jwt, $key, array('HS256'));
 		$decoded_array = json_encode($decoded);
 		$data = json_decode($decoded_array,true);
