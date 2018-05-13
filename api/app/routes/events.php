@@ -434,7 +434,7 @@ $app->group('/events', function () {
           $reqUpdate->car_id = null;
           $reqUpdate->save();
         }
-        $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Registered';
+        $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Registered for '.$event->name;
         //notify event POC
         if(!is_null($event->poc_id)){
           $responseArr['msg'] = $user->full_name.' registered for '.$event->name;

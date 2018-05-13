@@ -18,6 +18,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		vm.loading = true;
 		var data = vm.registrationForm;
 		data.event_id = vm.event.event_id;
+		data.user_id = vm.userInfo.user_id;
 		eventsService.registerForEvent(data).then(function(response){
 			if(response.status) {
 				$mdDialog.hide(response);
