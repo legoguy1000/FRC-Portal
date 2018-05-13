@@ -43,7 +43,7 @@ $app->group('/auth', function () {
                 ->orWhere('team_email', $userData['email'])
                 ->first();
         if($data != null) {
-          $user = $data->users;
+          $user = $data;
         }
         if($user != false) {
           $oauth = FrcPortal\Oauth::firstOrNew(
@@ -135,7 +135,7 @@ $app->group('/auth', function () {
                   ->orWhere('team_email', $userData['email'])
                   ->first();
           if($data != null) {
-            $user = $data->users;
+            $user = $data;
           }
           if($user != false) {
             $oauth = FrcPortal\Oauth::firstOrNew(
@@ -249,7 +249,7 @@ $app->group('/auth', function () {
                 ->orWhere('team_email', $userData['email'])
                 ->first();
         if($data != null) {
-          $user = $data->users;
+          $user = $data;
         }
         if($user != false) {
           $oauth = FrcPortal\Oauth::firstOrNew(
