@@ -390,7 +390,7 @@ $app->group('/events', function () {
         'data' => null
       );
       $user_id = $loggedInUser;
-      if(isset($formData['user_id']) && $formData['user_id'] != $loggedInUser && !checkAdmin($userId)) {
+      if(isset($formData['user_id']) && $formData['user_id'] != $loggedInUser && !checkAdmin($loggedInUser)) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
@@ -434,14 +434,14 @@ $app->group('/events', function () {
           $reqUpdate->car_id = null;
           $reqUpdate->save();
         }
-        $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Registered';
+        $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Registered for '.$event->name;
         //notify event POC
         if(!is_null($event->poc_id)){
           $responseArr['msg'] = $user->full_name.' registered for '.$event->name;
           if($user_id != $loggedInUser) {
             $responseArr['msg'] = $userFullName.' registered '.$user->full_name.' for '.$event->name;
           }
-          //slackMessageToUser($event->poc_id, $msg);
+          slackMessageToUser($event->poc_id, $msg);
           $eventRequirements = array();
         }
       } else {

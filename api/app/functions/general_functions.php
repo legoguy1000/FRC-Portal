@@ -141,59 +141,6 @@ function defaultTableParams() {
 	return $params;
 }
 
-function postToSlack($msg = '', $channel = null) {
-	$data = array(
-		'text'=>$msg
-		//'username'=> 'Team 2363 Portal',
-		//'icon_url'=> '',
-		//'icon_emoji'=>':taco:'
-	);
-	if($channel != null) {
-		$data["channel"] = $channel;
-	}
-	$content = str_replace('#new_line#','\n',json_encode($data));
-	$slack_webhook_url = getIniProp('slack_webhook_url');
-	//$url = 'https://hooks.slack.com/services/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';
-	$ch = curl_init();
-	//set the url, number of POST vars, POST data
-	curl_setopt($ch,CURLOPT_URL, $slack_webhook_url);
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-	    'Content-Type: application/json',
-	    'Content-Length: ' . strlen($content))
-	);
-	$result = curl_exec($ch);
-	//close connection
-	curl_close($ch);
-}
-
-function endOfDayHoursToSlack($date = null) {
-	if(is_null($date)) {
-		$date = date('Y-m-d');
-	}
-	$msg = 'Congratulations on another hard day of work.#new_line#';
-	$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE DATE(a.time_in)='.db_quote($date).' AND DATE(a.time_out)=DATE(a.time_in) GROUP BY DATE(a.time_in)';
-	$result = db_select_single($query);
-	if(!is_null($result)) {
-		$hours = $result['hours'];
-		$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE year(a.time_in)='.db_quote(date('Y',strtotime($date))).' GROUP BY year(a.time_in)';
-		$result = db_select_single($query);
-		$total = !is_null($result) ? $result['hours'] : 0;
-		$msg .= 'Triple Helix completed another '.round($hours,1).' hours of work for an annual total of '.round($total,1).'.#new_line#Keep up the amazing work!!';
-		postToSlack($msg, $channel = null);
-	}
-}
-
-function slackMessageToUser($user_id, $msg) {
-	$userData = false;
-	$userData = getUserDataFromParam('user_id', $user_id);
-	if($userData && $userData['slack_id'] != '') {
-		postToSlack($msg, $userData['slack_id']);
-	}
-}
-
 function transposeData($data)
 {
   $retData = array();
