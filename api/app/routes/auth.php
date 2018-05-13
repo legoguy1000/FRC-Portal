@@ -138,7 +138,7 @@ $app->group('/auth', function () {
             $user = $data;
           }
           if($user != false) {
-            $oauth = FrcPortal\Oauth::firstOrNew(
+            $oauth = FrcPortal\Oauth::updateOrCreate(
                 ['oauth_id' => $id, 'oauth_provider' => $provider], ['user_id' => $user->user_id, 'oauth_user' => $email]
             );
           }
