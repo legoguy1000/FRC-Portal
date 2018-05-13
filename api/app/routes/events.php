@@ -321,7 +321,7 @@ $app->group('/events', function () {
       $event = FrcPortal\Event::find($event_id);
 
       $event->type = $formData['type'];
-      $event->poc = isset($formData['poc']['user_id']) && $formData['poc']['user_id'] != '' ? $formData['poc']['user_id']:null;
+      $event->poc_id = isset($formData['poc']['user_id']) && $formData['poc']['user_id'] != '' ? $formData['poc']['user_id']:null;
 
       if($event->save()) {
         $event->load('poc');
