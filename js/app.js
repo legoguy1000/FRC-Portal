@@ -168,6 +168,16 @@ angular.module('FrcPortal', [
 		  title: 'Admin | Metrics'
 		}
 	  })
+	  .state('main.admin.settings', {
+		url: '/settings',
+		templateUrl: 'views/main.admin.settings.html',
+		controller: 'main.admin.settingsController',
+		controllerAs: 'vm',
+		authenticate: true,
+		data: {
+		  title: 'Admin | Site Settings'
+		}
+	  })
 	/*	.state('main.admin.exemptHours', {
 		 url: '/exemptHours',
 		 templateUrl: 'views/main.admin.exemptHours.html',
