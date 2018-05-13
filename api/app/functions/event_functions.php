@@ -1,7 +1,7 @@
 <?php
 function syncGoogleCalendarEvent($event_id) {
-	$calendar = getIniProp('google_calendar_id');
-	$api_key = getIniProp('google_api_key');
+	$calendar = getSettingsProp('google_calendar_id');
+	$api_key = getSettingsProp('google_api_key');
 	$result = array(
 		'status' => false,
 		'msg' => '',

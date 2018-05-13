@@ -70,8 +70,8 @@ $app->group('/events', function () {
     return $response;
   });
   $this->get('/searchGoogleCalendar', function ($request, $response, $args) {
-    $calendar = getIniProp('google_calendar_id');
-    $api_key = getIniProp('google_api_key');
+    $calendar = getSettingsProp('google_calendar_id');
+    $api_key = getSettingsProp('google_api_key');
     $optParams = array();
     if($request->getParam('q') != null && $request->getParam('q') != '' && $request->getParam('q') != 'null' && $request->getParam('q') != 'undefined') {
     	$q = trim($request->getParam('q'));

@@ -64,9 +64,9 @@ $app->group('/auth', function () {
         if($update == true) {
           $user = $user->save();
         }
-        $key = getIniProp('jwt_key');
+        $key = getSettingsProp('jwt_key');
   			$token = array(
-  				"iss" => getIniProp('env_url'),
+  				"iss" => getSettingsProp('env_url'),
   				"iat" => time(),
   				"exp" => time()+60*60,
   				"jti" => bin2hex(random_bytes(10)),
@@ -92,7 +92,7 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'facebook';
-    $secret = getIniProp('facebook_client_secret');
+    $secret = getSettingsProp('facebook_client_secret');
     $accessTokenArr = file_get_contents('https://graph.facebook.com/v3.0/oauth/access_token?client_id='.$args['clientId'].'&redirect_uri='.$args['redirectUri'].'&client_secret='.$secret.'&code='.$args['code']);
     //die($accessTokenArr);
     $accessTokenArr = json_decode($accessTokenArr, true);
@@ -156,9 +156,9 @@ $app->group('/auth', function () {
           if($update == true) {
             $user = $user->save();
           }
-          $key = getIniProp('jwt_key');
+          $key = getSettingsProp('jwt_key');
     			$token = array(
-    				"iss" => getIniProp('env_url'),
+    				"iss" => getSettingsProp('env_url'),
     				"iat" => time(),
     				"exp" => time()+60*60,
     				"jti" => bin2hex(random_bytes(10)),
@@ -192,7 +192,7 @@ $app->group('/auth', function () {
     $args = $request->getParsedBody();
     $provider = 'microsoft';
     //$secret = getIniProp('microsoft_client_secret');
-    $secret = getIniProp('microsoft_client_secret');
+    $secret = getSettingsProp('microsoft_client_secret');
     $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
 
     if(isset($args['code'])) {
@@ -270,9 +270,9 @@ $app->group('/auth', function () {
         if($update == true) {
           $user = $user->save();
         }
-        $key = getIniProp('jwt_key');
+        $key = getSettingsProp('jwt_key');
   			$token = array(
-  				"iss" => getIniProp('env_url'),
+  				"iss" => getSettingsProp('env_url'),
   				"iat" => time(),
   				"exp" => time()+60*60,
   				"jti" => bin2hex(random_bytes(10)),
