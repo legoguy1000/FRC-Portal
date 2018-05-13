@@ -1,12 +1,18 @@
-<div flex layout-gt-sm="row" layout="column">
-	<md-content flex flex-gt-sm="50" flex-gt-md="33" layout="column" class="md-margin">
+<div flex layout-gt-sm="row" layout-gt-md="row" layout="column">
+	<md-content flex flex-gt-sm="50" flex-gt-md="20" layout="column" class="md-margin">
 		<h1 class="md-headline" layout="row" layout-align="start center">
 			<span flex>Settings</span>
 		</h1>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingUser"></md-progress-linear>
-
+		<md-list>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('login')">
+		    <p>Login Settings</p>
+		  </md-list-item>
+		</md-list>
 	</md-content>
-	<md-content flex="grow" class="md-margin" layout="column">
-
+	<md-content flex="grow" class="md-margin" layout="column" ng-show="vm.currentMenu == 'login';">
+		<div>
+			login settings
+		</div>
 	</md-content>
 </div>
