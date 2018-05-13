@@ -66,7 +66,7 @@
 				<md-input-container flex class="md-icon-float md-block md-icon-left">
 					<label>Google Sheets Membership Form Responses </label>
 					<md-icon md-font-library="material-icons">insert_drive_file</md-icon>
-					<input ng-model="vm.season.join_spreadsheet" type="text">
+					<input ng-model="vm.season.join_spreadsheet" type="text" readonly>
 				</md-input-container>
 				<md-button class="md-icon-button" ng-click="vm.updateSeasonMembershipForm()">
 					<md-tooltip md-direction="top">Find form within Google Drive</md-tooltip>
@@ -96,10 +96,40 @@
 					<md-button class="md-icon-button" ng-click="vm.showFilter()">
 						<md-icon>filter_list</md-icon>
 					</md-button>
-					<md-button class="md-icon-button" ng-click="vm.getUsers()">
+					<md-button class="md-icon-button" ng-click="vm.getUserAnnualRequirements()">
+						<md-tooltip md-direction="top">Refresh Data</md-tooltip>
 						<md-icon>refresh</md-icon>
 					</md-button>
-					</div>
+					<md-menu>
+						<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
+							<md-icon md-menu-origin>menu</md-icon>
+						</md-button>
+						<md-menu-content>
+							<md-menu-item>
+								<md-button aria-label="Join Team Toggle" ng-click="vm.toggleAnnualReqs('join_team')" ng-disabled="vm.selectedUsers.length == 0">
+									<md-icon class="material-icons">group</md-icon>
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Team Join Status</md-tooltip>
+									Toggle Team Join
+								</md-button>
+							</md-menu-item>
+							<md-menu-divider></md-menu-divider>
+							<md-menu-item>
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleAnnualReqs('stims')" ng-disabled="vm.selectedUsers.length == 0">
+									<md-tooltip md-direction="left" md-autohide="false">Toggle STIMS/TIMS Status</md-tooltip>
+									<md-icon class="material-icons">assignment</md-icon>
+									Toggle STIMS/TIMS
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleAnnualReqs('dues')" ng-disabled="vm.selectedUsers.length == 0">
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Dues Status</md-tooltip>
+									<md-icon class="material-icons">attach_money</md-icon>
+									Toggle Dues
+								</md-button>
+							</md-menu-item>
+						</md-menu-content>
+					</md-menu>
+				</div>
 			</md-toolbar>
 			<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
 				<div class="md-toolbar-tools">
@@ -117,45 +147,46 @@
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
 							<th md-column md-order-by="full_name"><span>Name</span></th>
-							<th md-column md-order-by="join_team"><span>Join Team</span></th>
-							<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>
-							<th md-column md-order-by="dues"><span>Pay Dues</span></th>
-							<th md-column md-order-by="build_season_hours" style="text-align: left;"><span>Build Season Hours</span></th>
-							<th md-column md-order-by="reqs_complete"><span>Requirements Complete</span></th><!--
+							<th md-column md-order-by="annual_requirements.join_team"><span>Join Team</span></th>
+							<th md-column md-order-by="annual_requirements.stims"><span>STIMS/TIMS</span></th>
+							<th md-column md-order-by="annual_requirements.dues"><span>Pay Dues</span></th>
+							<th md-column md-numeric md-order-by="annual_requirements.build_season_hours" style="text-align: left;"><span>Build Season Hours</span></th>
+							<th md-column md-order-by="annual_requirements.reqs_complete"><span>Requirements Complete</span></th><!--
 							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
 							<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
 					</thead>
 					<tbody md-body>
-						<tr md-row md-select="user" md-select-id="user_id" md-auto-select  ng-repeat="user in vm.season.requirements.data | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered">
+						<tr md-row md-select="user" md-select-id="user_id" md-auto-select  ng-repeat="user in vm.users | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered">
 							<td md-cell>
 								<md-list-item style="padding: 0px;">
 									{{user.full_name}}
 								</md-list-item>
 							</td>
 							<td md-cell>
-								<md-icon class="material-icons" style="color:green;" ng-show="user.join_team">check_circle</md-icon>
-								<md-icon class="material-icons" style="color:red;" ng-hide="user.join_team">remove_circle</md-icon>
+								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.join_team">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements.join_team">remove_circle</i>
 							</td>
 							<td md-cell>
-								<md-icon class="material-icons" style="color:green;" ng-show="user.stims">check_circle</md-icon>
-								<md-icon class="material-icons" style="color:red;" ng-hide="user.stims">remove_circle</md-icon>
+								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.stims">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements.stims">remove_circle</i>
 							</td>
 							<td md-cell>
 								<span ng-hide="user.user_type == 'Mentor'">
-									<md-icon class="material-icons" style="color:green;" ng-show="user.dues">check_circle</md-icon>
-									<md-icon class="material-icons" style="color:red;" ng-hide="user.dues">remove_circle</md-icon>
+									<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.dues">check_circle</i>
+									<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements.dues">remove_circle</i>
 								</span>
-								<md-icon class="material-icons" ng-hide="user.user_type == 'Student'">indeterminate_check_box</md-icon>
+								<md-icon class="material-icons" ng-hide="user.user_type == 'Student'">remove_circle_outline</md-icon>
 							</td>
 							<td md-cell  style="text-align: left;">
-								<md-icon class="material-icons" style="color:green;" ng-show="user.min_hours">check_circle</md-icon>
-								<md-icon class="material-icons" style="color:red;" ng-hide="user.min_hours">remove_circle</md-icon>
-								{{user.build_season_hours}}
+								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.min_hours">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements.min_hours">remove_circle</i>
+								<span ng-show="user.annual_requirements.build_season_hours">{{user.annual_requirements.build_season_hours}}</span>
+								<span ng-hide="user.annual_requirements.build_season_hours">0</span>
 							</td>
 							<td md-cell>
-								<md-icon class="material-icons" style="color:green;" ng-show="user.reqs_complete">check_circle</md-icon>
-								<md-icon class="material-icons" style="color:red;" ng-hide="user.reqs_complete">remove_circle</md-icon>
+								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.reqs_complete">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements.reqs_complete">remove_circle</i>
 							</td>
 							<!-- <td md-cell>
 								{{user.off_season_hours}}
@@ -166,9 +197,9 @@
 						</tr>
 					</tbody>
 				</table>
-				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.season.requirements.data | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
+				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.users | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
 			</md-table-container>
-			<md-fab-speed-dial md-open="vm.fabOpen" md-direction="up" class="md-scale md-fab-bottom-right">
+			<!--<md-fab-speed-dial md-open="vm.fabOpen" md-direction="up" class="md-scale md-fab-bottom-right">
 				<md-fab-trigger>
 					<md-button aria-label="menu" class="md-fab md-warn">
 						<md-icon class="material-icons">menu</md-icon>
@@ -188,7 +219,7 @@
 						<md-icon class="material-icons">attach_money</md-icon>
 					</md-button>
 				</md-fab-actions>
-			</md-fab-speed-dial>
+			</md-fab-speed-dial>-->
 		</div>
 	</md-content>
 </div>

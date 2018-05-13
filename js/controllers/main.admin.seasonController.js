@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.seasonController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log','$stateParams','$mdToast',
+.controller('main.admin.seasonController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log','$stateParams','$mdToast','$mdMenu',
 	mainAdminSeasonController
 ]);
-function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log,$stateParams,$mdToast) {
+function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log,$stateParams,$mdToast,$mdMenu) {
     var vm = this;
 
 	vm.loading = false;
@@ -21,20 +21,6 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			vm.filter.form.$setPristine();
 		}
 	};
-
-	vm.season_id = $stateParams.season_id;
-	vm.season = {};
-	vm.getSeason = function () {
-		vm.loading = true;
-		vm.promise = seasonsService.getSeason(vm.season_id).then(function(response){
-			vm.season = response.data;
-			//$scope.main.title += ' - '+vm.season.game_name;
-			vm.loading = false;
-		});
-	};
-	vm.selectedUsers = [];
-
-	vm.getSeason();
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
 		filter: '',
@@ -43,6 +29,27 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		page: 1
 	};
 	vm.fabOpen = false;
+	vm.selectedUsers = [];
+	vm.season_id = $stateParams.season_id;
+	vm.season = {};
+	vm.users = null;
+	vm.getSeason = function () {
+		vm.loading = true;
+		seasonsService.getSeason(vm.season_id).then(function(response){
+			vm.season = response.data;
+			//$scope.main.title += ' - '+vm.season.game_name;
+			vm.loading = false;
+		});
+	};
+	vm.getSeason();
+
+	vm.getUserAnnualRequirements = function() {
+		vm.promise = seasonsService.getSeasonAnnualRequirements(vm.season_id).then(function(response){
+			vm.users = response.data;
+		});
+	}
+	vm.getUserAnnualRequirements();
+
 
 	vm.toggleAnnualReqs = function (req) {
 		var data = {
@@ -52,7 +59,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		}
 		vm.promise = seasonsService.toggleAnnualReqs(data).then(function(response){
 			if(response.status && response.data) {
-				vm.season.requirements.data = response.data;
+				vm.users = response.data;
 			}
 			$mdToast.show(
 	      $mdToast.simple()
@@ -65,10 +72,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 
 	vm.updateSeasonMembershipForm = function () {
 		vm.loading = true;
-		var data = {
-			'year': vm.season.year
-		};
-		seasonsService.updateSeasonMembershipForm(data).then(function(response){
+		seasonsService.updateSeasonMembershipForm(vm.season.season_id).then(function(response){
 			if(response.status) {
 				vm.season.join_spreadsheet = response.data.join_spreadsheet;
 			}
@@ -96,11 +100,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			'join_spreadsheet': vm.season.join_spreadsheet,
 		};
 		vm.promise = seasonsService.updateSeason(data).then(function(response){
-			if(response.status) {
-				//var reqs = vm.season.requirements
-				//vm.season = response.data;
-				//vm.season.requirements = reqs;
-			}
+			if(response.status) {	}
 			$mdToast.show(
 	      $mdToast.simple()
 	        .textContent(response.msg)
@@ -112,9 +112,6 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	};
 
 	vm.deleteSeason = function() {
-		var data = {
-			season_id: vm.season.season_id,
-		};
 		var confirm = $mdDialog.confirm()
 					.title('Delete season '+vm.season.game_name+' '+'('+vm.season.year+')')
 					.textContent('Are you sure you want to delete season '+vm.season.game_name+' '+'('+vm.season.year+')?  This action is unreversable and any events and registration data will be removed.'	)
@@ -122,7 +119,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 					.ok('Delete')
 					.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
-			seasonsService.deleteSeason(data).then(function(response) {
+			seasonsService.deleteSeason(vm.season.season_id).then(function(response) {
 				if(response.status) {
 					$mdDialog.show(
 						$mdDialog.alert()
@@ -137,5 +134,9 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 				}
 			});
 		}, function() {});
+	}
+
+	vm.openMenu = function() {
+		$mdMenu.open();
 	}
 }

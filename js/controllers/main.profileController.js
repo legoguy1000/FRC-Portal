@@ -1,27 +1,41 @@
 angular.module('FrcPortal')
-.controller('main.profileController', ['$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth',
+.controller('main.profileController', ['$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams', '$window',
 	mainProfileController
 ]);
-function mainProfileController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth) {
+function mainProfileController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams, $window) {
     var vm = this;
 
   vm.selectedItem  = null;
   vm.searchText    = null;
   vm.querySearch   = querySearch;
-	vm.notificationEndpoints = [];
+	vm.notificationPreferences = [];
 	vm.linkedAccounts = [];
-	vm.seasonInfo = {};
-	vm.eventInfo = {};
+	vm.seasonInfo = [];
+	vm.eventInfo = [];
+	vm.limitOptions = [1,5,10];
 	vm.rmhData = {};
-	vm.showPastReqs = false;
-	vm.checkPinNum = null;
-	vm.checkPinMsg = '';
 	vm.changePinNum = null;
-	vm.changePinMsg = '';
-	vm.query = {
+	vm.selectedTab = 0;
+	if($stateParams.firstLogin) {
+		vm.selectedTab = 3;
+		var dialog = $mdDialog.alert()
+								.clickOutsideToClose(false)
+								.textContent('Please fill in the missing items of your profile.  Students, please check that your student ID number has been set as your PIN by using the change PIN form.  You should receive an "error".  Mentors (and students who want to change their PIN), please use this form to set up a new PIN.')
+								.ariaLabel('First Login')
+								.ok('OK');
+		$mdDialog.show(dialog);
+	}
+	console.info($stateParams.selectedTab);
+	vm.querySeasons = {
+		filter: '',
+		limit: 1,
+		order: '-year',
+		page: 1
+	};
+	vm.queryEvents = {
 		filter: '',
 		limit: 5,
-		order: '-year',
+		order: '-event_start',
 		page: 1
 	};
 	vm.loading = {
@@ -30,6 +44,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		profile: false,
 		rmh: false,
 	}
+	vm.user = $scope.main.userInfo;
 
 	vm.notificationOptions = {
 		sign_in_out: 'Clock In & Out',
@@ -40,36 +55,91 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		stims: 'Season - Complete STIMS/TIMS',
 	}
 
-	if($scope.main.userInfo.school_id != null) {
-			$scope.main.userInfo.schoolData = {
-			school_id: $scope.main.userInfo.school_id,
-			school_name: $scope.main.userInfo.school_name,
-		}
-	}
 	function querySearch (query) {
-		return schoolsService.searchAllSchools(query);
+		var data = {
+			filter: query,
+			limit: 0,
+			order: 'school_name',
+			page: 1,
+			listOnly: true
+		};
+		return schoolsService.getAllSchoolsFilter($.param(data));
 	}
 
 	vm.getProfileInfo = function() {
 		vm.loading.note_devices = true;
-		usersService.getProfileInfo().then(function(response){
-			vm.notificationEndpoints = response.data.endpoints;
-			vm.linkedAccounts = response.data.linkedAccounts;
-			vm.seasonInfo = response.data.seasonInfo;
-			vm.notificationPreferences = response.data.notificationPreferences;
-			vm.eventInfo = response.data.eventInfo;
+		usersService.getProfileInfo($scope.main.userInfo.user_id).then(function(response) {
+			//vm.user = response.data;
+			//vm.notificationEndpoints = response.data.endpoints;
+			//vm.linkedAccounts = response.data.linkedAccounts;
+			//vm.notificationPreferences = response.data.notificationPreferences;
+
 			vm.loading.note_devices = false;
 		});
 	}
 	vm.getProfileInfo();
 
+	vm.getUserAnnualRequirements = function() {
+		vm.loading.note_devices = true;
+		usersService.getUserAnnualRequirements($scope.main.userInfo.user_id).then(function(response) {
+			vm.seasonInfo = response.data;
+			vm.loading.note_devices = false;
+		});
+	}
+	vm.getUserAnnualRequirements();
+
+	vm.getUserEventRequirements = function() {
+		vm.loading.note_devices = true;
+		usersService.getUserEventRequirements($scope.main.userInfo.user_id).then(function(response) {
+			vm.eventInfo = response.data;
+			vm.loading.note_devices = false;
+		});
+	}
+	vm.getUserEventRequirements();
+
+	vm.getUserLinkedAccounts = function() {
+		vm.loading.note_devices = true;
+		usersService.getUserLinkedAccounts($scope.main.userInfo.user_id).then(function(response) {
+			vm.linkedAccounts = response.data;
+			vm.loading.note_devices = false;
+		});
+	}
+	vm.getUserLinkedAccounts();
+
+	vm.getUserNotificationPreferences = function() {
+		vm.loading.note_devices = true;
+		usersService.getUserNotificationPreferences($scope.main.userInfo.user_id).then(function(response) {
+			vm.notificationPreferences = response.data;
+			vm.loading.note_devices = false;
+		});
+	}
+	vm.getUserNotificationPreferences();
+
 	vm.updateUser = function() {
 		vm.loading.profile = true;
-		usersService.updateUserPersonalInfo($scope.main.userInfo).then(function(response) {
+		var data = {
+			user_id: vm.user.user_id,
+			fname: vm.user.fname,
+			lname: vm.user.lname,
+			email: vm.user.email,
+			team_email: vm.user.team_email,
+			phone: vm.user.phone,
+			user_type: vm.user.user_type,
+			gender: vm.user.gender,
+			school_id: vm.user.school != null ? vm.user.school.school_id : null,
+			grad_year: vm.user.grad_year,
+		}
+		usersService.updateUserPersonalInfo(data).then(function(response) {
 			vm.loading.profile = false;
 			if(response.status) {
-
+				$window.localStorage['userInfo'] = angular.toJson(response.data);
 			}
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 		});
 	}
 
@@ -92,35 +162,24 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		.then(function(answer) {}, function() {});
 	}
 
-	vm.checkPin = function() {
-		vm.loadingDevices = true;
-		vm.checkPinMsg = '';
-		var data = {
-			pin: vm.checkPinNum
-		}
-		usersService.checkPin(data).then(function(response){
-			vm.checkPinMsg = response.msg;
-			if(response.status) {
-				vm.checkPinNum = null;
-				vm.checkPinForm.$setPristine();
-				vm.checkPinForm.$setUntouched();
-			}
-		});
-	}
-	vm.changePinMsg = '';
 	vm.changePin = function() {
 		vm.loadingDevices = true;
-		vm.changePinMsg = '';
 		var data = {
+			user_id: $scope.main.userInfo.user_id,
 			pin: vm.changePinNum
 		}
 		usersService.changePin(data).then(function(response){
-			vm.changePinMsg = response.msg;
 			if(response.status) {
 				vm.changePinNum = null;
 				vm.changePinForm.$setPristine();
 				vm.changePinForm.$setUntouched();
 			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 		});
 	}
 
@@ -130,6 +189,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			'method': method,
 			'type': type,
 			'value': value,
+			'user_id': $scope.main.userInfo.user_id
 		}
 		usersService.updateNotificationPreferences(data).then(function(response){
 			vm.loading.note_types = false;
@@ -138,132 +198,23 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 
 	vm.requestMissingHours = function(method,type,value) {
 		vm.loading.rmh = true;
-		vm.rmhMsg = '';
 		var data = vm.rmhData;
+		data.user_id = $scope.main.userInfo.user_id;
 		usersService.requestMissingHours(data).then(function(response){
 			vm.loading.rmh = false;
-			vm.rmhMsg = response.msg;
 			if(response.status) {
 				vm.rmhData = {};
 				vm.rmhForm.$setPristine();
 				vm.rmhForm.$setUntouched();
 			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 		});
 	}
-
-/*	vm.subscribePush = function() {
-	  // Disable the button so it can't be changed while
-	  // we process the permission request
-	  $scope.main.enablePush.disabled = true;
-
-	  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-		serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
-		  .then(function(subscription) {
-			// The subscription was successful
-
-			// TODO: Send the subscription.endpoint to your server
-			// and save it to send a push message at a later date
-
-	//	  return sendSubscriptionToServer(subscription);
-			var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
-			var key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
-			var rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';
-			var authSecret = rawAuthSecret ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
-			var endpoint = subscription.endpoint;
-			var data = {'endpoint':endpoint, 'key':key, 'authSecret':authSecret};
-			usersService.deviceNotificationSubscribe(data).then(function(response){
-
-			});
-			console.log(data);
-			$scope.$apply( function () {
-				$scope.main.enablePush.subscription = subscription;
-				$scope.main.enablePush.status = true;
-				$scope.main.enablePush.disabled = false;
-				$scope.main.enablePush.endpoint = endpoint;
-			});
-		  })
-		  .catch(function(e) {
-			if (Notification.permission === 'denied') {
-			  // The user denied the notification permission which
-			  // means we failed to subscribe and the user will need
-			  // to manually change the notification permission to
-			  // subscribe to push messages
-			  console.warn('Permission for Notifications was denied');
-			  $scope.main.enablePush.disabled = true;
-			} else {
-			  // A problem occurred with the subscription; common reasons
-			  // include network errors, and lacking gcm_sender_id and/or
-			  // gcm_user_visible_only in the manifest.
-			  console.error('Unable to subscribe to push.', e);
-			  $scope.main.enablePush.disabled = false;
-			}
-		  });
-	  });
-	}
-
-	vm.unsubscribePush = function() {
-		$scope.main.enablePush.disabled = true;
-		if($scope.main.enablePush.status && $scope.main.enablePush.subscription) {
-			$scope.main.enablePush.subscription.unsubscribe().then(function(event) {
-				console.log('Unsubscribed!', event);
-				var data = {'endpoint':$scope.main.enablePush.endpoint};
-				usersService.deviceNotificationUnsubscribe(data).then(function(response){
-
-				});
-				$scope.$apply( function () {
-					$scope.main.enablePush.status = false;
-					$scope.main.enablePush.disabled = false;
-				});
-			}).catch(function(error) {
-				console.log('Error unsubscribing', error);
-			});
-		}
-	} */
-
-
-
-/*	vm.showDeviceEdit = function(ev, device) {
-		// Appending dialog to document.body to cover sidenav in docs app
-		var confirm = $mdDialog.prompt()
-			.title('Edit Device')
-			.textContent('Input a label for the device below.')
-			.placeholder('Device Label')
-			.ariaLabel('Device Label')
-			.initialValue(device.label)
-			.targetEvent(ev)
-			.required(true)
-			.ok('Submit')
-			.cancel('Cancel');
-		$mdDialog.show(confirm).then(function(result) {
-			var data = {
-				note_id: device.note_id,
-				label: result
-			}
-			usersService.editDeviceLabel(data).then(function(response){
-					if(response.status) {
-						vm.notificationEndpoints = response.endpoints;
-					}
-			});
-		}, function() {
-
-		});
-	};
-
-	vm.showDeviceDelete = function(ev, device) {
-	// Appending dialog to document.body to cover sidenav in docs app
-	var confirm = $mdDialog.confirm()
-		.title('Device Deletetion Confirmation')
-		.textContent('Please confirm that you would like to delete device '+device.label+'.  If you can readd the device again later.')
-		.ariaLabel('Delete Device')
-		.targetEvent(ev)
-		.ok('Delete')
-		.cancel('Cancel');
-		$mdDialog.show(confirm).then(function() {
-			vm.unsubscribePush();
-		}, function() {
-
-		});
-	}; */
 
 	vm.linkAccount = function(provider) {
 	  $auth.link(provider,{'link_account':true, 'provider':provider})

@@ -34,12 +34,18 @@ class Notification extends Eloquent {
   */
   protected $hidden = [];
 
+  public function save($options = array()) {
+    if(is_null($this->note_id)) {
+      $this->note_id = uniqid();
+    }
+    return parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->note_id = (string) uniqid();
     });
-  }
+  } */
 
   /**
    * Get the user.

@@ -13,7 +13,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-	
+
 	vm.registerForEvent = function () {
 		vm.loading = true;
 		var data = vm.registrationForm;
@@ -34,9 +34,9 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 
 	vm.getEventRegistrationStatus = function () {
 		vm.loading = true;
-		eventsService.getEventRegistrationStatus(vm.event.event_id,vm.userInfo.user_id).then(function(response){
+		usersService.getUserEventRequirements(vm.userInfo.user_id,vm.event.event_id).then(function(response){
 			if(response.status) {
-				vm.registrationForm = response.data[0];
+				vm.registrationForm = response.data.event_requirements;
 			}
 			vm.loading = false;
 		});

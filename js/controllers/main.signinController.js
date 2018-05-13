@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$scope', 'signinService', '$mdDialog', '$interval', 'usersService', 'signinService',
+.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$auth', '$scope', 'signinService', '$mdDialog', '$interval', 'usersService', 'signinService',
 	mainSigninController
 ]);
-function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $mdDialog, $interval, usersService, signinService) {
+function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinService, $mdDialog, $interval, usersService, signinService) {
     var vm = this;
 
 	vm.pin = '';
@@ -23,8 +23,9 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 	tick();
 	$interval(tick, 1000);
 
+	vm.signInAuthed = signinService.isAuthed();
 	vm.getUsers = function() {
-		usersService.signInUserList().then(function(response) {
+		signinService.signInUserList().then(function(response) {
 			vm.users = response;
 		});
 	}
@@ -32,17 +33,41 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 
 	//vm.signInAuthed = signinService.isAuthed();
 	vm.authorizeSignIn = function() {
-		signinService.authorizeSignIn().then(function(response) {
-			var data = {
-				'response': response,
-				'logout': false
+		var data = {
+			auth_token: null,
+			auth_code: null
+		};
+		if($auth.isAuthenticated()) {
+			data.auth_token = $auth.getToken();
+			sendAuth(data);
+		} else {
+			var confirm = $mdDialog.prompt()
+	      .title('Please enter your code to authorize sign in.')
+	      .textContent('Currently this is your signin PIN')
+	      .placeholder('Authorization Code')
+	      .ariaLabel('')
+	      .initialValue('')
+	      .required(true)
+	      .ok('Submit')
+	      .cancel('Cancel');
+				$mdDialog.show(confirm).then(function(result) {
+		      data.auth_code = result;
+					sendAuth(data);
+		    }, function() {});
+		}
+	}
+	function sendAuth(data) {
+		signinService.authorizeSignIn(data).then(function(response) {
+			var dialog = $mdDialog.alert()
+									.clickOutsideToClose(true)
+									.textContent(response.msg)
+									.ariaLabel('Time In/Out')
+									.ok('OK');
+			$mdDialog.show(dialog);
+			if(response.status && response.signin_token != undefined) {
+				signinService.saveToken(response.signin_token);
 			}
-			$rootScope.$broadcast('updateSigninStatus',data);
-			/* if(response.status == true) {
-				$scope.main.logout();
-				//signinService.saveToken(response.signin_token);
-				//vm.signInAuthed = signinService.isAuthed();
-			} */
+			vm.signInAuthed = signinService.isAuthed();
 		});
 	}
 	vm.deauthorizeSignIn = function() {
@@ -51,8 +76,8 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 		signinService.deauthorizeSignIn(data).then(function(response) {
 			if(response.status == true) {
 				signinService.logout();
-				$rootScope.$broadcast('updateSigninStatus');
 			}
+			vm.signInAuthed = signinService.isAuthed();
 		});
 	}
 
@@ -65,7 +90,8 @@ function mainSigninController($rootScope, $timeout, $q, $scope, signinService, $
 			}
 			var data = {
 				'user_id': vm.user_id,
-				'pin':vm.pin
+				'pin':vm.pin,
+				'token': signinService.getToken()
 			};
 			signinService.signInOut(data).then(function(response) {
 				vm.pin = '';

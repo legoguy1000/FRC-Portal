@@ -21,7 +21,7 @@ class Event extends Eloquent {
   ];
 
 
-  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_date_unix','season'];
+  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_date_unix','season','num_days'];
 
   //$data['requirements'] = array();
   /**
@@ -45,12 +45,19 @@ class Event extends Eloquent {
     'single_day' => 'boolean',
   ];
 
+  public function save($options = array()) {
+    if(is_null($this->event_id)) {
+      $this->event_id = uniqid();
+    }
+    return parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
-      $instance->season_id = (string) uniqid();
+      $instance->event_id = (string) uniqid();
     });
-  }
+  } */
+
   public function getSingleDayAttribute() {
     $start = new DateTime($this->attributes['event_start']);
     $end = new DateTime($this->attributes['event_end']);
@@ -68,8 +75,18 @@ class Event extends Eloquent {
     return $date->format('U');
   }
   public function getRegistrationDateUnixAttribute() {
-    $date = new DateTime($this->attributes['registration_date']);
-    return $date->format('U');
+    $return = null;
+    if(!is_null($this->attributes['registration_date'])) {
+      $date = new DateTime($this->attributes['registration_date']);
+      $return = $date->format('U');
+    }
+    return $return;
+  }
+  public function getNumDaysAttribute() {
+    $start = strtotime($this->attributes['event_start']);
+    $end = strtotime($this->attributes['event_end']);
+    $diff = $end - $start;
+    return ceil($diff / (60 * 60 * 24));
   }
 
   public function getSeasonAttribute() {
@@ -83,7 +100,7 @@ class Event extends Eloquent {
   * Get the Event requirements.
   */
   public function event_requirements() {
-    return $this->hasMany('FrcPortal\EventRequirement', 'event_id', 'event_id');
+    return $this->hasOne('FrcPortal\EventRequirement', 'event_id', 'event_id')->withDefault();
   }
   /**
   * Get the Event Cars.
@@ -94,7 +111,13 @@ class Event extends Eloquent {
   /**
    * Get the Room.
    */
-  public function users() {
+  public function event_rooms() {
       return $this->hasMany('FrcPortal\EventRoom', 'event_id', 'event_id');
+  }
+  /**
+  * Get the POC.
+  */
+  public function poc() {
+    return $this->hasOne('FrcPortal\User', 'user_id', 'poc_id');
   }
 }

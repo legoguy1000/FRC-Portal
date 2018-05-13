@@ -41,12 +41,19 @@ class Season extends Eloquent {
     'hour_requirement' => 'integer',
   ];
 
+  public function save($options = array()) {
+    if(is_null($this->season_id)) {
+      $this->season_id = uniqid();
+    }
+    return parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->season_id = (string) uniqid();
     });
-  }
+  }*/
+
   public function getStartDateUnixAttribute() {
     $date = new DateTime($this->attributes['start_date']);
     return $date->format('U');
@@ -76,7 +83,7 @@ class Season extends Eloquent {
   * Get the Annual requirements.
   */
   public function annual_requirements() {
-    return $this->hasMany('FrcPortal\AnnualRequirement', 'season_id', 'season_id');
+    return $this->hasOne('FrcPortal\AnnualRequirement', 'season_id', 'season_id')->withDefault();
   }
   /**
   * Get the Annual requirements.

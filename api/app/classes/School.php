@@ -25,18 +25,24 @@ class School extends Eloquent {
   */
   protected $hidden = [];
 
+  public function save($options = array()) {
+    if(is_null($this->school_id)) {
+      $this->school_id = uniqid();
+    }
+    return parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->school_id = (string) uniqid();
     });
-  }
+  }*/
 
   /**
    * Get the user.
    */
   public function users() {
-      return $this->hasMany('FrcPortal\User', 'school_id', 'school_id');
+      return $this->belongsTo('FrcPortal\User', 'school_id', 'school_id');
   }
 
 }

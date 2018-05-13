@@ -89,12 +89,12 @@ angular.module('FrcPortal')
             if(country)
             {
                 return (country+" (" + city + ") " + number).trim();
-            } 
+            }
             else
             {
                  return (" (" + city + ") " + number).trim();
             }
-           
+
         }
         else{
             return "(" + city;
@@ -110,4 +110,15 @@ angular.module('FrcPortal')
     return function(key) {
         return key.substring(3);
     };
-}]);
+}])
+.filter("emptyToEnd", function () {
+    return function (array, key) {
+        var present = array.filter(function (item) {
+            return item[key];
+        });
+        var empty = array.filter(function (item) {
+            return !item[key]
+        });
+        return present.concat(empty);
+    };
+});

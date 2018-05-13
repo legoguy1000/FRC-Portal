@@ -1,99 +1,81 @@
 angular.module('FrcPortal')
 .service('usersService', function ($http) {
 	return {
-		getAllUsers: function () {
-			return $http.get('site/getAllUsers.php')
-			.then(function(response) {
-				return response.data;
-			});
-		},
 		getAllUsersFilter: function (params) {
-			return $http.get('site/getAllUsersFilter.php?'+params)
+			return $http.get('/api/users?'+params)
 			.then(function(response) {
 				return response.data;
 			});
 		},
-		getNotificationEndpoints: function () {
-			return $http.get('site/getNotificationEndpoints.php')
-			.then(function(response) {
-				return response.data;
-			});
-		},
-		signInUserList: function () {
-			return $http.get('site/signInUserList.php')
-			.then(function(response) {
-				return response.data;
-			});
-		},
-		/* getUserById: function (id) {
-			return $http.get('api/v1/users/'+id)
-			.then(function(response) {
-				return response.data;
-			});
-		}, */
 		updateUserPersonalInfo: function (formData) {
-			return $http.post('site/updateUserPersonalInfo.php',formData)
-			.then(function(response) {
-				return response.data;
-			});
-		},
-		deviceNotificationSubscribe: function (formData) {
-			return $http.post('site/deviceNotificationSubscribe.php',formData)
-			.then(function(response) {
-				return response.data;
-			});
-		},
-		deviceNotificationUnsubscribe: function (formData) {
-			return $http.post('site/deviceNotificationUnsubscribe.php',formData)
-			.then(function(response) {
-				return response.data;
-			});
-		},
-		deviceNotificationUpdateEndpoint: function (formData) {
-			return $http.post('site/deviceNotificationUpdateEndpoint.php',formData)
-			.then(function(response) {
-				return response.data;
-			});
-		},
-		editDeviceLabel: function (formData) {
-			return $http.post('site/editDeviceLabel.php',formData)
-			.then(function(response) {
-				return response.data;
-			});
-		},
-		checkPin: function (formData) {
-			return $http.post('site/checkPin.php',formData)
+			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
+			return $http.put('api/users/'+user_id,formData)
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		changePin: function (formData) {
-			return $http.post('site/changePin.php',formData)
+			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
+			return $http.put('api/users/'+user_id+'/pin',formData)
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		updateNotificationPreferences: function (formData) {
-			return $http.post('site/updateNotificationPreferences.php',formData)
+			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
+			return $http.put('api/users/'+user_id+'/notificationPreferences',formData)
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		getProfileInfo: function (user_id) {
-			var a = user_id != undefined && user_id != null ? user_id:'';
-			return $http.get('site/getProfileInfo.php?user_id='+a)
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			return $http.get('api/users/'+user_id)
 			.then(function(response) {
 				return response.data;
 			});
 		},
-		userHoursbyDate: function (user,year) {
-			return $http.get('site/userHoursbyDate.php?user='+user+'&year='+year)
+		getUserAnnualRequirements: function (user_id, season_id = null) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			var season = season_id != undefined && season_id != null ? '/'+season_id:'';
+			return $http.get('api/users/'+user_id+'/annualRequirements'+season)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		getUserEventRequirements: function (user_id, event_id = null) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			var event = event_id != undefined && event_id != null ? '/'+event_id:'';
+			return $http.get('api/users/'+user_id+'/eventRequirements'+event)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		getUserLinkedAccounts: function (user_id) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			return $http.get('api/users/'+user_id+'/linkedAccounts')
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		getUserNotificationPreferences: function (user_id) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			return $http.get('api/users/'+user_id+'/notificationPreferences')
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		userHoursbyDate: function (user_id,year) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			var year = year != undefined && year != null ? year:'';
+			return $http.get('api/users/'+user_id+'/hoursByDate/'+year)
 			.then(function(response) {
 				return response.data;
 			});
 		},
 		requestMissingHours: function (formData) {
-			return $http.post('site/requestMissingHours.php',formData)
+			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
+			return $http.post('api/users/'+user_id+'/requestMissingHours',formData)
 			.then(function(response) {
 				return response.data;
 			});
@@ -110,8 +92,9 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		deleteUser: function (formData) {
-			return $http.post('site/deleteUser.php',formData)
+		deleteUser: function (user_id) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			return $http.delete('api/users/'+user_id)
 			.then(function(response) {
 				return response.data;
 			});

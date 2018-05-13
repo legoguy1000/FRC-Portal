@@ -37,28 +37,28 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-self.addEventListener('push', function(event) {  
+self.addEventListener('push', function(event) {
 	console.log('Received a push message', event);
 	console.log(event.data);
 
-	var title = 'Yay a message.';  
-	var body = 'We have received a push message.';  
-	var icon = '/favicons/android-chrome-512x512.png?v=47Myd2nElq';  
+	var title = 'Yay a message.';
+	var body = 'We have received a push message.';
+	var icon = '/favicons/android-chrome-512x512.png?v=47Myd2nElq';
 	var tag = 'simple-push-demo-notification-tag';
 	var data =  {'title':title, 'body':body, 'tag':tag};
 	data = event.data.json();
 	console.log(data);
-	
-  event.waitUntil(  
-    self.registration.showNotification(data.title, {  
-      body: data.body,  
-      icon: icon, 
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: icon,
 	  tag: data.tag,
-	  actions: [  
+	  actions: [
 		   {action: 'acknowledge', title: '👍Acknowledge'},
-		]  
-    })  
-  );  
+		]
+    })
+  );
 });
 
 self.addEventListener('notificationclick', function(event) {
@@ -66,7 +66,7 @@ self.addEventListener('notificationclick', function(event) {
     event.notification.close();
     var url = 'https://portal.team2363.org';
 	tag = event.notification.tag;
-	if (event.action === 'acknowledge') {  
+	if (event.action === 'acknowledge') {
 		console.log('acknowledge');
 		fetch(url+'/site/acknowledgeNotification.php',{method: 'post',headers: {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"},body: 'tag='+tag}).then(function(response) {
 			if (response.status !== 200) {

@@ -59,7 +59,7 @@
 	          md-input-minlength="2"
 	          md-input-maxlength="18"
 	          md-no-cache="false"
-	          md-selected-item="vm.event.pocInfo"
+	          md-selected-item="vm.event.poc"
 	          md-search-text="vm.searchPOC"
 	          md-items="user in vm.searchUsers(vm.searchPOC)"
 	          md-item-text="user.full_name"
@@ -75,64 +75,6 @@
 				<md-icon md-font-library="material-icons">event_note</md-icon>
         <div ng-bind-html="vm.event.details | linky:'_blank'" style="margin-top: 30px; white-space: pre-wrap;"></div>
       </md-input-container>
-			<md-input-container flex class="md-icon-float md-block">
-				<label>FRC Season</label>
-				<md-icon md-font-library="material-icons">event</md-icon>
-				<md-select ng-model="vm.event.season_id"
-						   md-on-close="vm.clearSearchSeason()"
-						   data-md-container-class="selectdemoSelectHeader">
-					<md-select-header class="demo-select-header">
-						<input ng-model="vm.searchSeason"
-						type="search"
-						placeholder="Search for a Season.."
-						class="demo-header-searchbox md-text">
-					</md-select-header>
-					<md-optgroup label="Seasons">
-						<md-option value=""></md-option>
-						<md-option ng-value="season.season_id" ng-repeat="season in vm.seasons | filter:vm.searchSeason">
-							<md-list-item style="padding: 0px;">
-							<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
-							{{season.year}} - {{season.game_name}}
-							</md-list-item>
-						</md-option>
-					</md-optgroup>
-				</md-select>
-			</md-input-container>
-<!--			<div layout="row">
-				<div flex>
-					<md-input-container flex class="md-icon-float md-block">
-						<label>Start Time</label>
-						<md-icon md-font-library="material-icons">today</md-icon>
-						<input moment-picker="vm.event.event_start" required
-							 format="YYYY-MM-DD"
-							 min-view="year"
-							 max-view="day"
-							 ng-model="vm.event.event_start_full">
-						</input>
-					</md-input-container>
-				</div>
-				<div>
-					<md-checkbox ng-model="vm.event.single_day" aria-label="Single Day" ng-click="vm.checkSingle()">
-						Single Day
-					</md-checkbox>
-				</div>
-			</div>
-			<md-input-container flex class="md-icon-float md-block">
-				<label>End Date</label>
-				<md-icon md-font-library="material-icons">today</md-icon>
-				<input moment-picker="vm.event.event_end" required
-					 format="YYYY-MM-DD"
-					 min-view="year"
-					 max-view="day"
-					 ng-model="vm.event.event_end_full"
-					 disable="vm.event.single_day">
-				</input>
-			</md-input-container> -->
-	<!--		<div>
-				<md-checkbox ng-model="vm.event.exempt_hours" aria-label="Exempt Hours">
-					Exempt Hours from counting to season total
-				</md-checkbox>
-			</div> -->
 			<div flex layout="row">
 				<span flex></span>
 				<md-button type="submit" class="md-raised">
@@ -158,10 +100,54 @@
 						<md-tooltip md-direction="top">View/Edit Driver/Passenger list</md-tooltip>
 						<md-icon>directions_car</md-icon>
 					</md-button>
-					<md-button class="md-icon-button" ng-click="vm.getUsers()">
+					<md-button class="md-icon-button" ng-click="vm.getEventRequirements()">
+						<md-tooltip md-direction="top">Refresh Data</md-tooltip>
 						<md-icon>refresh</md-icon>
 					</md-button>
-					</div>
+					<md-menu>
+						<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
+							<md-icon md-menu-origin>menu</md-icon>
+						</md-button>
+						<md-menu-content>
+							<md-menu-item>
+								<md-button aria-label="Join Team Toggle" ng-click="vm.toggleEventReqs('registration')" ng-disabled="vm.selectedUsers.length == 0">
+									<md-icon class="material-icons">playlist_add_heck</md-icon>
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Event Registration Status</md-tooltip>
+									Toggle Event Registration
+								</md-button>
+							</md-menu-item>
+							<md-menu-divider></md-menu-divider>
+							<md-menu-item>
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleEventReqs('payment')" ng-disabled="vm.selectedUsers.length == 0 || !vm.event.payment_required">
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Payment Status</md-tooltip>
+									<md-icon class="material-icons">attach_money</md-icon>
+									Toggle Payment
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleEventReqs('permission_slip')" ng-disabled="vm.selectedUsers.length == 0 || !vm.event.permission_slip_required">
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Permission Slip Status</md-tooltip>
+									<md-icon class="material-icons">assignment</md-icon>
+									Toggle Permission Slip
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleEventReqs('food')" ng-disabled="vm.selectedUsers.length == 0 || !vm.event.food_required">
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Food Status</md-tooltip>
+									<md-icon class="material-icons">local_dining</md-icon>
+									Toggle Food
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button aria-label="Confirm Attendance" ng-click="" ng-disabled="vm.selectedUsers.length == 0 || (vm.currentTime < vm.event.event_end_unix*1000)">
+									<md-tooltip md-direction="left" md-autohide="false">Toggle Attendance Confirmation</md-tooltip>
+									<md-icon class="material-icons">timelapse</md-icon>
+									Confirm Attendance
+								</md-button>
+							</md-menu-item>
+						</md-menu-content>
+					</md-menu>
+				</div>
 			</md-toolbar>
 			<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
 				<div class="md-toolbar-tools">
@@ -179,101 +165,83 @@
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
 							<th md-column md-order-by="full_name"><span>Name</span></th>
-							<th md-column md-order-by="registration"><span>Registration</span></th>
-							<th md-column md-order-by="payment" ng-show="vm.event.payment_required"><span>Payment</span></th>
-							<th md-column md-order-by="permission_slip" ng-show="vm.event.permission_slip_required"><span>Permission Slip</span></th>
-							<th md-column md-order-by="food" ng-show="vm.event.food_required"><span>Food Order</span></th>
-							<th md-column md-order-by="room_id" ng-show="vm.event.room_required"><span>Room Selected</span></th>
-							<th md-column md-order-by="can_drive" ng-show="vm.event.drivers_required"><span>Driver</span></th>
-							<th md-column md-order-by="car_id" ng-show="vm.event.drivers_required"><span>Car</span></th>
+							<th md-column md-order-by="event_requirements.registration"><span>Registration</span></th>
+							<th md-column md-order-by="event_requirements.payment" ng-show="vm.event.payment_required"><span>Payment</span></th>
+							<th md-column md-order-by="event_requirements.permission_slip" ng-show="vm.event.permission_slip_required"><span>Permission Slip</span></th>
+							<th md-column md-order-by="event_requirements.food" ng-show="vm.event.food_required"><span>Food Order</span></th>
+							<th md-column md-order-by="event_requirements.room_id" ng-show="vm.event.room_required"><span>Room Selected</span></th>
+							<th md-column md-order-by="event_requirements.can_drive" ng-show="vm.event.drivers_required"><span>Driver</span></th>
+							<th md-column md-order-by="event_requirements.car_id" ng-show="vm.event.drivers_required"><span>Car</span></th>
 							<th md-column><span>Edit Registration</span></th>
 							<!--<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
 					</thead>
 					<tbody md-body>
-						<tr md-row md-select="user" md-select-id="user_id" md-auto-select ng-repeat="user in vm.event.requirements.data | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+						<tr md-row md-select="user" md-select-id="user_id" ng-repeat="user in vm.users | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 							<td md-cell>
 								<md-list-item style="padding: 0px;">
 									{{user.full_name}}
 								</md-list-item>
 							</td>
 							<td md-cell>
-								<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.registration"></i>
-								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.registration"></i> -->
-								<i class="material-icons" style="color:green;" ng-show="user.registration">check_circle</i>
-								<i class="material-icons" style="color:red;" ng-hide="user.registration">remove_circle</i>
+								<i class="material-icons" style="color:green;" ng-show="user.event_requirements.registration">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.registration">remove_circle</i>
 							</td>
 							<td md-cell ng-show="vm.event.payment_required">
 								<span ng-hide="user.user_type == 'Mentor'">
-									<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.payment"></i>
-									<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.payment"></i>-->
-									<i class="material-icons" style="color:green;" ng-show="user.payment">check_circle</i>
-									<i class="material-icons" style="color:red;" ng-hide="user.payment">remove_circle</i>
+									<i class="material-icons" style="color:green;" ng-show="user.event_requirements.payment">check_circle</i>
+									<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.payment">remove_circle</i>
 								</span>
-								<!--<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type == 'Student'"></i>-->
 								<i class="material-icons" style="" ng-hide="user.user_type == 'Student'">remove_circle_outline</i>
 							</td>
 							<td md-cell ng-show="vm.event.permission_slip_required">
 								<span ng-hide="user.user_type == 'Mentor'">
-									<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.permission_slip"></i>
-									<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.permission_slip"></i>-->
-									<i class="material-icons" style="color:green;" ng-show="user.permission_slip">check_circle</i>
-									<i class="material-icons" style="color:red;" ng-hide="user.permission_slip">remove_circle</i>
+									<i class="material-icons" style="color:green;" ng-show="user.event_requirements.permission_slip">check_circle</i>
+									<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.permission_slip">remove_circle</i>
 								</span>
-								<!--<i class="mdi mdi-minus-box mdi-24px" ng-hide="user.user_type == 'Student'"></i>-->
 								<i class="material-icons" style="" ng-hide="user.user_type == 'Student'">remove_circle_outline</i>
 							</td>
 							<td md-cell ng-show="vm.event.food_required">
-								<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.food"></i>
-								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.food"></i>-->
-								<i class="material-icons" style="color:green;" ng-show="user.food">check_circle</i>
-								<i class="material-icons" style="color:red;" ng-hide="user.food">remove_circle</i>
+								<i class="material-icons" style="color:green;" ng-show="user.event_requirements.food">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.food">remove_circle</i>
 							</td>
 							<td md-cell ng-show="vm.event.room_required">
-								<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.room_bool"></i>
-								<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.room_bool"></i>-->
-								<i class="material-icons" style="color:green;" ng-show="user.room_bool">check_circle</i>
-								<i class="material-icons" style="color:red;" ng-hide="user.room_bool">remove_circle</i>
+								<i class="material-icons" style="color:green;" ng-show="user.event_requirements.room_bool">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.room_bool">remove_circle</i>
 								<span style="margin-left:10px;">{{user.room_title}}</span>
 							</td>
 							<td md-cell ng-show="vm.event.drivers_required">
-								<div ng-show="user.user_type == 'Mentor' && user.can_drive" layout="row" layout-align="start center">
-									<!--<div><i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;"></i></div>-->
+								<div ng-show="user.user_type == 'Mentor' && user.event_requirements.can_drive" layout="row" layout-align="start center">
 									<div><i class="material-icons" style="color:green;">check_circle</i></div>
-									<div style="margin-left:10px;">({{user.car_space}} Seats)</div>
+									<div style="margin-left:10px;">({{user.event_requirements.event_cars.car_space}} Seats)</div>
 								</div>
-								<i class="material-icons" style="" ng-show="user.user_type != 'Mentor' || (user.user_type == 'Mentor' && !user.can_drive)">remove_circle_outline</i>
-								<!--<i class="mdi mdi-minus-box mdi-24px" ng-show="user.user_type != 'Mentor' || (user.user_type == 'Mentor' && !user.can_drive)"></i>-->
+								<i class="material-icons" style="" ng-show="user.user_type != 'Mentor' || (user.user_type == 'Mentor' && !user.event_requirements.can_drive)">remove_circle_outline</i>
 							</td>
 							<td md-cell ng-show="vm.event.drivers_required">
 								<div layout="row" layout-align="start center">
 									<div>
-										<!--<i class="mdi mdi-checkbox-marked-circle mdi-24px" style="color:green;" ng-show="user.car_bool"></i>
-										<i class="mdi mdi-close-circle mdi-24px" style="color:red;" ng-hide="user.car_bool"></i>-->
-										<i class="material-icons" style="color:green;" ng-show="user.car_bool">check_circle</i>
-										<i class="material-icons" style="color:red;" ng-hide="user.car_bool">remove_circle</i>
+										<i class="material-icons" style="color:green;" ng-show="user.event_requirements.car_bool">check_circle</i>
+										<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.car_bool">remove_circle</i>
 									</div>
-									<div style="margin-left:10px;">{{user.car_title}}</div>
+									<div style="margin-left:10px;">{{user.event_requirements.event_cars.car_title}}</div>
 								</div>
 							</td>
 							<td md-cell>
 								<md-button class="md-icon-button md-primary" ng-click="vm.showRegistrationForm($event,user)">
-									<md-tooltip md-direction="top">Edit Registration information for {{user.full_name}}</md-tooltip>
+									<md-tooltip md-direction="top">Edit registration information for {{user.full_name}}</md-tooltip>
 									<md-icon class="material-icons">edit</md-icon>
 								</md-button>
+								<md-button class="md-icon-button" ng-click="vm.showComments($event,user)" ng-show="user.event_requirements.comments != ''">
+									<md-tooltip md-direction="top">Edit registration comments for {{user.full_name}}</md-tooltip>
+									<md-icon class="material-icons">comment</md-icon>
+								</md-button>
 							</td>
-							<!-- <td md-cell>
-								{{user.off_season_hours}}
-							</td>
-							<td md-cell>
-								<md-button ng-click="vm.seasonHoursGraph(user.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{user.total}}</md-button>
-							</td> -->
 						</tr>
 					</tbody>
 				</table>
-				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.event.requirements.data | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination></md-content>
+				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.users | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination></md-content>
 			</md-table-container>
-			<md-fab-speed-dial md-open="vm.fabOpen" md-direction="up" class="md-scale md-fab-bottom-right">
+<!--			<md-fab-speed-dial md-open="vm.fabOpen" md-direction="up" class="md-scale md-fab-bottom-right">
 				<md-fab-trigger>
 					<md-button aria-label="menu" class="md-fab md-warn">
 						<md-icon class="material-icons">menu</md-icon>
@@ -297,7 +265,7 @@
 						<md-icon class="material-icons">local_dining</md-icon>
 					</md-button>
 				</md-fab-actions>
-			</md-fab-speed-dial>
+			</md-fab-speed-dial> -->
 		</div>
 	</md-content>
 </div>

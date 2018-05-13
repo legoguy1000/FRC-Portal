@@ -11,6 +11,7 @@
 				<i class="material-icons">delete_forever</i>
 			</md-button>
 		</h1>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingUser"></md-progress-linear>
 		<form class="md-margin" flex layout="column" ng-submit="vm.updateUser()">
 			<md-input-container flex required>
 				<label>First Name</label>
@@ -59,7 +60,7 @@
 				<md-autocomplete flex ng-required="vm.userInfo.user_type=='Student'"  ng-disabled="vm.userInfo.user_type!='Student'"
 					md-input-name="autocompleteField"
 					md-no-cache="false"
-					md-selected-item="vm.userInfo.schoolData"
+					md-selected-item="vm.userInfo.school"
 					md-search-text="vm.searchText"
 					md-items="item in vm.querySearch(vm.searchText)"
 					md-item-text="item.school_name"
@@ -91,31 +92,29 @@
 	</md-content>
 	<md-content flex="grow" class="md-margin" layout="column">
 		<div flex layout="column">
-			<h1 class="md-headline">
-				<md-button class="md-icon-button" ng-click="vm.showPastReqs = !vm.showPastReqs">
-					<md-tooltip md-direction="top">Show past season requirements</md-tooltip>
-					<i class="material-icons">history</i>
+			<div class="md-toolbar-tools">
+				<span>Season Information</span>
+				<div flex></div>
+				<md-button class="md-icon-button" ng-click="vm.getUserAnnualRequirements()">
+					<md-icon>refresh</md-icon>
 				</md-button>
-				<span ng-hide="vm.showPastReqs">{{vm.seasonInfo.upcomming.year}} {{vm.seasonInfo.upcomming.game_name}}</span>
-				<span ng-show="vm.showPastReqs">All</span>
-				Season Information
-			</h1>
+			</div>
 			<md-table-container>
-				<table md-table>
+				<table md-table md-progress="vm.loadingReqs">
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
 							<th md-column md-order-by="year"><span>Season</span></th>
-							<th md-column md-order-by="join_team"><span>Join Team</span></th>
-							<th md-column md-order-by="stims"><span>STIMS/TIMS</span></th>
-							<th md-column md-order-by="dues"><span>Pay Dues</span></th>
-							<th md-column md-order-by="build_season_hours"><span>Build Season Hours</span></th>
-							<th md-column md-order-by="competition_season_hours"><span>Competition Season Hours</span></th>
-							<th md-column md-order-by="off_season_hours"><span>Off Season Hours</span></th>
-							<th md-column md-order-by="total_hours"><span>Total Annual Hours</span></th>
+							<th md-column md-order-by="annual_requirements.join_team"><span>Join Team</span></th>
+							<th md-column md-order-by="annual_requirements.stims"><span>STIMS/TIMS</span></th>
+							<th md-column md-order-by="annual_requirements.dues"><span>Pay Dues</span></th>
+							<th md-column md-order-by="annual_requirements.build_season_hours"><span>Build Season Hours</span></th>
+							<th md-column md-order-by="annual_requirements.competition_season_hours"><span>Competition Season Hours</span></th>
+							<th md-column md-order-by="annual_requirements.off_season_hours"><span>Off Season Hours</span></th>
+							<th md-column md-order-by="annual_requirements.total_hours"><span>Total Annual Hours</span></th>
 						</tr>
 					</thead>
 					<tbody md-body>
-						<tr md-row ng-repeat="season in vm.userInfo.seasonInfo.all | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" ng-show="vm.showPastReqs || $first">
+						<tr md-row ng-repeat="season in vm.seasonInfo | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 							<td md-cell>
 								<md-list-item style="padding: 0px;">
 									<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
@@ -123,40 +122,40 @@
 								</md-list-item>
 							</td>
 							<td md-cell>
-								<md-icon class="material-icons" style="color:green;" ng-show="season.join_team">check_circle</md-icon>
-								<md-icon class="material-icons" style="color:red;" ng-hide="season.join_team">remove_circle</md-icon>
+								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.join_team">check_circle</md-icon>
+								<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.join_team">remove_circle</md-icon>
 							</td>
 							<td md-cell>
-								<md-icon class="material-icons" style="color:green;" ng-show="season.stims">check_circle</md-icon>
-								<md-icon class="material-icons" style="color:red;" ng-hide="season.stims">remove_circle</md-icon>
+								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.stims">check_circle</md-icon>
+								<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.stims">remove_circle</md-icon>
 							</td>
 							<td md-cell>
 								<span ng-hide="vm.userInfo.user_type == 'Mentor'">
-									<md-icon class="material-icons" style="color:green;" ng-show="season.dues">check_circle</md-icon>
-									<md-icon class="material-icons" style="color:red;" ng-hide="season.dues">remove_circle</md-icon>
+									<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</md-icon>
+									<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</md-icon>
 								</span>
 								<md-icon class="material-icons" ng-hide="vm.userInfo.user_type == 'Student'">indeterminate_check_box</md-icon>
 							</td>
 							<td md-cell>
-								{{season.build_season_hours}}
+								{{season.annual_requirements.build_season_hours}}
 							</td>
 							<td md-cell>
-								{{season.competition_season_hours}}
+								{{season.annual_requirements.competition_season_hours}}
 							</td>
 							<td md-cell>
-								{{season.off_season_hours}}
+								{{season.annual_requirements.off_season_hours}}
 							</td>
 							<td md-cell>
-								<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.total_hours}}</md-button>
+								<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.annual_requirements.total_hours}}</md-button>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.seasonInfo.all.length}}" md-page-select md-boundary-links md-on-paginate="vm.getSeasons"></md-table-pagination></md-content>
+				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.seasonInfo.length}}" md-page-select md-boundary-links></md-table-pagination></md-content>
 			</md-table-container>
 		</div>
-		<!-- <div>
-			<pre>{{vm.userInfo | json}}
+	<!--	<div>
+			<pre>{{vm.seasonInfo | orderBy: '-year' | json}}
 		</div> -->
 	</md-content>
 </div>

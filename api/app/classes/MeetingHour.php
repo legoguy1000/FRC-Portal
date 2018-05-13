@@ -11,6 +11,7 @@ class MeetingHour extends Eloquent {
   //Use Custom Primary Key
   protected $primaryKey = 'hours_id'; // or null
   public $incrementing = false;
+  public $timestamps = false;
   /**
   * The attributes that are mass assignable.
   *
@@ -21,7 +22,7 @@ class MeetingHour extends Eloquent {
   ];
 
 
-  protected $appends = [];
+  protected $appends = ['time_in_unix','time_out_unix'];
 
   //$data['requirements'] = array();
   /**
@@ -31,6 +32,10 @@ class MeetingHour extends Eloquent {
   */
   protected $hidden = [];
 
+  protected $attributes = [
+    'time_out' => null,
+  ];
+
   /**
    * The attributes that should be cast to native types.
    *
@@ -38,18 +43,33 @@ class MeetingHour extends Eloquent {
    */
   protected $casts = [];
 
+  public function save($options = array()) {
+    if(is_null($this->hours_id)) {
+      $this->hours_id = uniqid();
+    }
+    return parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
-      $instance->meeting_hours = (string) uniqid();
+      $instance->hours_id = (string) uniqid();
     });
-  }
+  } */
 
   /**
    * Get the User.
    */
   public function users() {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
+  }
+
+  public function getTimeInUnixAttribute() {
+    $date = new DateTime($this->attributes['time_in']);
+    return $date->format('U');
+  }
+  public function getTimeOutUnixAttribute() {
+    $date = new DateTime($this->attributes['time_out']);
+    return $date->format('U');
   }
 
 }

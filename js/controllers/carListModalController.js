@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('carListModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService',
+.controller('carListModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService','$mdToast',
 	carListModalController
 ]);
-function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService) {
+function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,$mdToast) {
 	var vm = this;
 
 	vm.eventInfo = eventInfo;
@@ -29,6 +29,12 @@ function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersSe
 		};
 		eventsService.updateEventCarList(data).then(function(response){
 			vm.loading = false;
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 			if(close) {
 				$mdDialog.hide(response);
 			}

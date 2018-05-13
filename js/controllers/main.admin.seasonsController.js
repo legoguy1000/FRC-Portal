@@ -5,8 +5,8 @@ angular.module('FrcPortal')
 function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log) {
      var vm = this;
 
-	
-	
+
+
 	vm.selected = [];
 	vm.filter = {
 		show: false,
@@ -20,7 +20,7 @@ function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService
 	};
 	vm.seasons = [];
 	vm.limitOptions = [10,25,50,100];
-	
+
 	vm.showFilter = function () {
 		vm.filter.show = true;
 		vm.query.filter = '';
@@ -33,7 +33,7 @@ function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService
 			vm.filter.form.$setPristine();
 		}
 	};
-	
+
 	var timeoutPromise;
 	$scope.$watch('vm.query.filter', function (newValue, oldValue) {
 		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
@@ -49,9 +49,9 @@ function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService
 		timeoutPromise = $timeout(function(){   //Set timeout
 			vm.getSeasons();
 		},500);
-		
+
 	});
-	
+
 	vm.getSeasons = function () {
 		vm.promise = seasonsService.getAllSeasonsFilter($.param(vm.query)).then(function(response){
 			vm.seasons = response.data;
@@ -74,7 +74,7 @@ function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService
 			}
 		})
 		.then(function(response) {
-			vm.seasons = response.data.data;
+			vm.seasons = response.data.results;
 			vm.total = response.data.total;
 			vm.maxPage = response.data.maxPage;
 			$log.info('asdf');
@@ -82,5 +82,5 @@ function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
 	}
-	
+
 }

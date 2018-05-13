@@ -41,8 +41,8 @@ function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersSe
 		var data = vm.searchGoogle;
 		vm.loading.searchGoogle = eventsService.getGoogleCalendarEvents(data.q, vm.searchGoogle.timeMin, vm.searchGoogle.timeMax).then(function(response) {
 			if(response.status) {
-					vm.googleEvents.data = response.data;
-					vm.googleEvents.total = response.count;
+					vm.googleEvents.data = response.data.results;
+					vm.googleEvents.total = response.data.count;
 			}
 		});
 	}

@@ -1,11 +1,5 @@
 <?php
-ini_set("error_reporting", E_ALL);
-ini_set("expose_php", false);
-date_default_timezone_set('America/New_York');
-
-$root = $_SERVER['DOCUMENT_ROOT'];
-require $root.'/site/includes/vendor/autoload.php';
-include($root.'/site/includes/functions/getConfigFile.php');
+include('app/includes.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -24,6 +18,11 @@ $config['db']['collation'] = 'utf8_unicode_ci';
 $config['db']['prefix'] = '';
  //asdf
 $app = new \Slim\App(['settings' => $config]);
+$app->add(new Tuupola\Middleware\JwtAuthentication([
+    "secret" => getIniProp('jwt_key'),
+    "path" => ['/users', '/seasons', '/events', '/schools','/hours/missingHoursRequests','/hours/signIn/records'],
+    "passthrough" => ['/auth','/reports','/slack','/hours/signIn'],
+]));
 $container = $app->getContainer();
 /* $container['db'] = function ($c) {
     $dbConfig = $c['settings']['db'];
@@ -54,102 +53,21 @@ $container['db'] = function ($container) {
 
     return $capsule;
 };*/
-use Illuminate\Database\Capsule\Manager as Capsule;
-$capsule = new Capsule;
-$capsule->addConnection(array("driver" => "mysql", "host" =>getIniProp('db_host'), "database" => getIniProp('db_name').'_test', "username" => getIniProp('db_user'), "password" => getIniProp('db_pass')));
-$capsule->setAsGlobal();
-$capsule->bootEloquent();
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
     $name = $args['name'];
     $response->getBody()->write(json_encode($row));
     return $response;
 });
 
+include('./app/routes/auth.php');
+include('./app/routes/seasons.php');
+include('./app/routes/hours.php');
+include('./app/routes/users.php');
+include('./app/routes/events.php');
+include('./app/routes/reports.php');
+include('./app/routes/schools.php');
+include('./app/routes/slack.php');
 
-$app->group('/users', function () {
-  $this->get('', function ($request, $response, $args) {
-    $users = FrcPortal\User::with('school')->all();
-    $response = $response->withJson($users);
-    return $response;
-  });
-  $this->post('', function ($request, $response, $args) {
-    //$user = FrcPortal\User::Create(['user_id'=>uniqid(),'fname' => "Ahmed", 'lname' => "Ahmed", 'email' => "ahmed.khan@lbs.com"]);
-    //$response->getBody()->write(json_encode('Add new user'));
-    //return $response;
-  });
-  $this->get('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $user_id = $args['user_id'];
-    $user = FrcPortal\User::with('school')->find($user_id);
-    $response = $response->withJson($user);
-    return $response;
-  });
-  $this->put('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $user_id = $args['user_id'];
-    $response->getBody()->write(json_encode('Update User '.$user_id));
-    return $response;
-  });
-  $this->delete('/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $user_id = $args['user_id'];
-    $response->getBody()->write(json_encode('Delete User '.$user_id));
-    return $response;
-  });
-});
-$app->group('/seasons', function () {
-  $this->get('', function ($request, $response, $args) {
-
-    $response->getBody()->write(json_encode('Get all Seasons '));
-    return $response;
-  });
-  $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $season_id = $args['season_id'];
-    $season = FrcPortal\Season::find($season_id);
-    $response = $response->withJson($season);
-    return $response;
-  });
-  $this->post('', function ($request, $response, $args) {
-
-    $response->getBody()->write(json_encode('New Season'));
-    return $response;
-  });
-  $this->put('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $season_id = $args['season_id'];
-    $response->getBody()->write(json_encode('Update Season '.$season_id));
-    return $response;
-  });
-  $this->delete('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $season_id = $args['season_id'];
-    $response->getBody()->write(json_encode('Delete Season '.$season_id));
-    return $response;
-  });
-});
-$app->group('/events', function () {
-  $this->get('', function ($request, $response, $args) {
-
-    $response->getBody()->write(json_encode('Get all Events '));
-    return $response;
-  });
-  $this->get('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $event_id = $args['event_id'];
-    $event = FrcPortal\Event::with('season')->find($event_id);
-    $response = $response->withJson($event);
-    return $response;
-  });
-  $this->post('', function ($request, $response, $args) {
-
-    $response->getBody()->write(json_encode('New Event'));
-    return $response;
-  });
-  $this->put('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $event_id = $args['event_id'];
-    $response->getBody()->write(json_encode('Update Event '.$event_id));
-    return $response;
-  });
-  $this->delete('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-    $event_id = $args['event_id'];
-    $response->getBody()->write(json_encode('Delete Event '.$event_id));
-    return $response;
-  });
-});
 $app->run();
 
 ?>

@@ -11,6 +11,7 @@ class EventCar extends Eloquent {
   //Use Custom Primary Key
   protected $primaryKey = 'car_id'; // or null
   public $incrementing = false;
+  public $timestamps = false;
   /**
   * The attributes that are mass assignable.
   *
@@ -21,7 +22,7 @@ class EventCar extends Eloquent {
   ];
 
 
-  protected $appends = [];
+  protected $appends = ['car_title'];
 
   //$data['requirements'] = array();
   /**
@@ -40,12 +41,18 @@ class EventCar extends Eloquent {
     'car_space' => 'integer',
   ];
 
+  public function save($options = array()) {
+    if(is_null($this->car_id)) {
+      $this->car_id = uniqid();
+    }
+    return parent::save();
+  } /*
   public static function boot() {
     parent::boot();
     static::creating(function ($instance) {
       $instance->car_id = (string) uniqid();
     });
-  }
+  } */
 
   /**
    * Get the Season.
@@ -65,8 +72,8 @@ class EventCar extends Eloquent {
   public function event_requirements() {
       return $this->belongsTo('FrcPortal\EventRequirement', 'car_id', 'car_id');
   }
-  public function getCarBoolAttribute() {
-    return isset($this->attributes['car_id']) && !is_null($this->attributes['car_id']);
+  public function getCarTitleAttribute() {
+    return $this->users->full_name.' ('.$this->car_space.')';
   }
 
 }

@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.timeController', ['$timeout', '$q', '$scope', '$state', '$timeout', 'signinService', 'timeService',
+.controller('main.admin.timeController', ['$timeout', '$q', '$scope', '$state', '$timeout', 'signinService', 'timeService', '$mdToast',
 	mainAdminTimeController
 ]);
-function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinService, timeService) {
+function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinService, timeService, $mdToast) {
     var vm = this;
 
 		vm.limitOptions = [10,25,50,100];
@@ -118,15 +118,34 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 			});
 		};
 
-		vm.approveDenyHoursRequest = function (request, status) {
-			var data = {
-				'request_id': request,
-				'status': status
-			}
-			vm.mhrl.promise = timeService.approveDenyHoursRequest(data).then(function(response){
-				vm.requests = response.hoursRequestList.data;
-				vm.mhrl.total = response.hoursRequestList.total;
-				vm.mhrl.maxPage = response.hoursRequestList.maxPage;
+		vm.approveDenyHoursRequest = function (request) {
+			vm.mhrl.promise = timeService.approveMissingHoursRequest(request).then(function(response){
+				if(response.status) {
+					vm.requests = response.hoursRequestList.data;
+					vm.mhrl.total = response.hoursRequestList.total;
+					vm.mhrl.maxPage = response.hoursRequestList.maxPage;
+				}
+				$mdToast.show(
+		      $mdToast.simple()
+		        .textContent(response.msg)
+		        .position('top right')
+		        .hideDelay(3000)
+		    );
+			});
+		};
+		vm.denyMissingHoursRequest = function (request) {
+			vm.mhrl.promise = timeService.denyMissingHoursRequest(request).then(function(response){
+				if(response.status) {
+					vm.requests = response.hoursRequestList.data;
+					vm.mhrl.total = response.hoursRequestList.total;
+					vm.mhrl.maxPage = response.hoursRequestList.maxPage;
+				}
+				$mdToast.show(
+		      $mdToast.simple()
+		        .textContent(response.msg)
+		        .position('top right')
+		        .hideDelay(3000)
+		    );
 			});
 		};
 
