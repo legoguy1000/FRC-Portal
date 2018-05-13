@@ -78,12 +78,13 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		var data = {
 			'event_id': vm.event_id,
-			'event_poc': vm.event.event_poc,
+			'poc': vm.event.poc,
 			'type': vm.event.type,
 		};
 		eventsService.updateEvent(data).then(function(response){
-			vm.event = response.data;
-			vm.event.requirements = reqs;
+			if(response.status) {
+				vm.event = response.data;
+			}
 			$mdToast.show(
 	      $mdToast.simple()
 	        .textContent(response.msg)
