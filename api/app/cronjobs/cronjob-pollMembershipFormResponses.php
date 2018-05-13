@@ -9,7 +9,7 @@ if(!is_null($season)) {
 	$season_id = $season['season_id'];
 	$spreadsheetId = $season['join_spreadsheet'] != '' ? $season['join_spreadsheet']:null;
 } else {
-	$result = getSeasonMembershipForm(date('Y')+1));
+	$result = getSeasonMembershipForm(date('Y')+1);
 	if($result['status'] == true) {
 		$spreadsheetId = $result['data']['join_spreadsheet'];
 	}
