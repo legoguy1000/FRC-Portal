@@ -16,7 +16,7 @@ function getSeasonMembershipForm($year) {
 				'q' => 'name contains "'.$year.'" and name contains "Membership" and name contains "(Responses)" and mimeType = "application/vnd.google-apps.spreadsheet"',
 				'includeTeamDriveItems' => 'true',
 				'supportsTeamDrives' => 'true',
-				'teamDriveId' => '0AI0WovuxnF1zUk9PVA',
+				'teamDriveId' => getIniProp('google_drive_id'),
 				'pageSize' => '1'
 			);
 			$files = $service->files->listFiles($parameters);
