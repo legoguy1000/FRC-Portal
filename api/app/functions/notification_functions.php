@@ -89,6 +89,7 @@ function postToSlack($msg = '', $channel = null) {
 		$data["channel"] = $channel;
 	}
 	$content = str_replace('#new_line#','\n',json_encode($data));
+	$slack_token = getIniProp('slack_api_token');
 	$slack_webhook_url = getIniProp('slack_webhook_url');
 	$ch = curl_init();
 	//set the url, number of POST vars, POST data
@@ -98,7 +99,8 @@ function postToSlack($msg = '', $channel = null) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 	    'Content-Type: application/json',
-	    'Content-Length: ' . strlen($content))
+	    'Content-Length: ' . strlen($content)),
+			'Authorization: Bearer '.$slack_token
 	);
 	$result = curl_exec($ch);
 	//close connection
