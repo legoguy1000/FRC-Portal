@@ -125,7 +125,7 @@ function endOfDayHoursToSlack($date = null) {
 							->select(DB::raw('IFNULL(SUM(time_to_sec(timediff(meeting_hours.time_out, meeting_hours.time_in)) / 3600),0) as hours'))->groupBy(DB::raw('year(a.time_in)'))->first();
 		//$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE year(a.time_in)='.db_quote(date('Y',strtotime($date))).' GROUP BY year(a.time_in)';
 		//$result = db_select_single($query);
-		$total = !is_null($result) ? $result->hours; : 0;
+		$total = !is_null($result) ? $result->hours : 0;
 		$msg .= 'Triple Helix completed another '.round($hours,1).' hours of work for an annual total of '.round($total,1).'.#new_line#Keep up the amazing work!!';
 		postToSlack($msg, $channel = null);
 	}
