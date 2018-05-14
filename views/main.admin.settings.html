@@ -45,12 +45,24 @@
 				</div>
 			</md-toolbar>
 			<md-input-container flex>
-				<label>Facebook Client Secret</label>
-				<input ng-model="vm.settings.facebook_client_secret">
+				<label>Google OAuth2 Client ID</label>
+				<input ng-model="vm.settings.google_oauth_client_id">
 			</md-input-container>
 			<md-input-container flex>
-				<label>Microsoft Live Client Secret</label>
-				<input ng-model="vm.settings.microsoft_client_secret">
+				<label>Facebook OAuth2 Client ID</label>
+				<input ng-model="vm.settings.facebook_oauth_client_id">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Facebook OAuth2 Client Secret</label>
+				<input ng-model="vm.settings.facebook_oauth_client_secret">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Microsoft Live OAuth2 Client ID</label>
+				<input ng-model="vm.settings.microsoft_oauth_client_id">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Microsoft Live OAuth2 Client Secret</label>
+				<input ng-model="vm.settings.microsoft_oauth_client_secret">
 			</md-input-container>
 			<md-input-container flex required>
 				<label>JSON Web Token Secret Key</label>
