@@ -8,7 +8,10 @@ $app->group('/auth', function () {
     $args = $request->getParsedBody();
     $provider = 'google';
     $client = new Google_Client();
-    $client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
+    //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
+    $client->setClientId(getSettingsProp('google_oauth_client_id'));
+    $client->setClientSecret(getSettingsProp('google_oauth_client_secret'));
+    $client->setRedirectUri(getSettingsProp('env_url'));
     $plus = new Google_Service_Plus($client);
     $data = array();
     if(isset($args['code'])) {
@@ -92,13 +95,14 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'facebook';
-    $secret = getSettingsProp('facebook_client_secret');
+    $secret = getSettingsProp('facebook_oauth_client_secret');
     $accessTokenArr = file_get_contents('https://graph.facebook.com/v3.0/oauth/access_token?client_id='.$args['clientId'].'&redirect_uri='.$args['redirectUri'].'&client_secret='.$secret.'&code='.$args['code']);
     //die($accessTokenArr);
     $accessTokenArr = json_decode($accessTokenArr, true);
     $accessToken = $accessTokenArr['access_token'];
     $fb = new Facebook\Facebook([
-      'app_id'  => '1347987445311447',
+      //'app_id'  => '1347987445311447',
+      'app_id'  => getSettingsProp('facebook_oauth_client_id'),
       'app_secret' => $secret,
     	'default_graph_version' => 'v3.0',
     ]);
@@ -192,8 +196,9 @@ $app->group('/auth', function () {
     $args = $request->getParsedBody();
     $provider = 'microsoft';
     //$secret = getIniProp('microsoft_client_secret');
-    $secret = getSettingsProp('microsoft_client_secret');
-    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
+    $secret = getSettingsProp('microsoft_oauth_client_secret');
+//    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
+    $clientId =  getSettingsProp('microsoft_oauth_client_id');
 
     if(isset($args['code'])) {
       $data = array(
