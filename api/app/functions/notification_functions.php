@@ -98,10 +98,10 @@ function postToSlack($msg = '', $channel = null) {
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-	    'Content-Type: application/json',
-	    'Content-Length: ' . strlen($content)),
-			'Authorization: Bearer '.$slack_token
-	);
+		'Content-Type: application/json',
+		'Content-Length: ' . strlen($content),
+		'Authorization: Bearer '.$slack_token
+	));
 	$result = curl_exec($ch);
 	//close connection
 	curl_close($ch);
