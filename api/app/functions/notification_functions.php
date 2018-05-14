@@ -93,6 +93,7 @@ function postToSlack($msg = '', $channel = null) {
 	$slack_webhook_url = 'https://slack.com/api/chat.postMessage';
 	$ch = curl_init();
 	//set the url, number of POST vars, POST data
+	//
 	curl_setopt($ch,CURLOPT_URL, $slack_webhook_url);
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
