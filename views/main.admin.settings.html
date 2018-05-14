@@ -1,29 +1,32 @@
 <div flex layout-gt-sm="row" layout-gt-md="row" layout="column">
 	<md-content flex flex-gt-sm="50" flex-gt-md="20" layout="column" class="md-margin">
-		<h1 class="md-headline" layout="row" layout-align="start center">
-			<span flex>Settings</span>
-		</h1>
+		<md-toolbar class="md-default md-table-toolbar">
+			<div class="md-toolbar-tools">
+				<span>Settings</span>
+				<div flex></div>
+			</div>
+		</md-toolbar>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingUser"></md-progress-linear>
 		<md-list>
-			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('team')">
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('team')" ng-class="{'activeSelect': vm.currentMenu == 'team'}">
 		    <p>Team Settings</p>
 		  </md-list-item>
-			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('login')">
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('login')" ng-class="{'activeSelect': vm.currentMenu == 'login'}">
 		    <p>Login Settings</p>
 		  </md-list-item>
-			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('notification')">
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('notification')" ng-class="{'activeSelect': vm.currentMenu == 'notification'}">
 		    <p>Notification Settings</p>
 		  </md-list-item>
 		</md-list>
 	</md-content>
 	<md-content flex="grow" class="md-margin" layout="column">
-		<div layout="column" ng-show="vm.currentMenu == 'team';">
-			<md-toolbar class="md-default">
-				<div class="md-toolbar-tools">
-					<span>Team Settings</span>
-					<div flex></div>
-				</div>
-			</md-toolbar>
+		<md-toolbar class="md-default md-table-toolbar">
+			<div class="md-toolbar-tools">
+				<span>Settings</span>
+				<div flex></div>
+			</div>
+		</md-toolbar>
+		<div layout="column" ng-show="vm.currentMenu == 'team';" class="layout-padding">
 			<md-input-container flex required>
 				<label>Team Number</label>
 				<input ng-model="vm.settings.team_number">
@@ -37,16 +40,14 @@
 				<input ng-model="vm.settings.env_url">
 			</md-input-container>
 		</div>
-		<div layout="column" ng-show="vm.currentMenu == 'login';">
-			<md-toolbar class="md-default">
-				<div class="md-toolbar-tools">
-					<span>Login Settings</span>
-					<div flex></div>
-				</div>
-			</md-toolbar>
+		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">
 			<md-input-container flex>
 				<label>Google OAuth2 Client ID</label>
 				<input ng-model="vm.settings.google_oauth_client_id">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Google OAuth2 Client Secret</label>
+				<input ng-model="vm.settings.google_oauth_client_secret">
 			</md-input-container>
 			<md-input-container flex>
 				<label>Facebook OAuth2 Client ID</label>
@@ -73,13 +74,7 @@
 				<input ng-model="vm.settings.jwt_signin_key">
 			</md-input-container>
 		</div>
-		<div layout="column" ng-show="vm.currentMenu == 'notification'">
-			<md-toolbar class="md-default">
-				<div class="md-toolbar-tools">
-					<span>Notification Settings</span>
-					<div flex></div>
-				</div>
-			</md-toolbar>
+		<div layout="column" ng-show="vm.currentMenu == 'notification'" class="layout-padding">
 			<md-input-container flex>
 				<label>Slack Team ID</label>
 				<input ng-model="vm.settings.slack_team_id">

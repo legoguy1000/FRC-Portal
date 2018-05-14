@@ -350,3 +350,8 @@ md-list-item.min-height-reset::before,
 md-list-item.min-height-reset .md-list-item-inner::before {
   min-height: 0px !important;
 }
+
+.activeSelect {
+    background-color: rgb(102,46,145);
+    color: rgba(255,255,255,0.87);
+}
