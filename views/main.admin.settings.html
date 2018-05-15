@@ -24,6 +24,9 @@
 			<div class="md-toolbar-tools">
 				<span>Settings</span>
 				<div flex></div>
+				<md-button class="md-icon-button" ng-click="vm.getAllSettings()">
+					<md-icon>refresh</md-icon>
+				</md-button>
 			</div>
 		</md-toolbar>
 		<div layout="column" ng-show="vm.currentMenu == 'team';" class="layout-padding">
