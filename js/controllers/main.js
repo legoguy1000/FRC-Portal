@@ -9,6 +9,7 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 	main.team_number = team_number;
 	main.menuItems = [ ];
 	main.selectItem = selectItem;
+	main.toggleItemsList = toggleItemsList;
 	main.title = $state.current.data.title;
 	main.showSimpleToast = showSimpleToast;
 	main.toggleRightSidebar = toggleRightSidebar;
@@ -34,6 +35,10 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 
 	function toggleRightSidebar() {
 		$mdSidenav('right').toggle();
+	}
+
+	function toggleItemsList() {
+		$mdSidenav('left').toggle();
 	}
 
 	function selectItem (item) {
