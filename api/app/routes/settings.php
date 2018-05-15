@@ -17,7 +17,15 @@ $app->group('/settings', function () {
     $settings = FrcPortal\Setting::all();
     $normalArr = array();
     foreach($settings as $set) {
-      $normalArr[$set->setting] = $set->value;
+      $temp = $set->value;
+      $type =$set->type;
+    /*  if($type == 'string') {
+        $temp = (string) $temp;
+      } elseif($type == 'boolean') {
+        $temp = (boolean) $temp;
+      } */
+      settype($temp,$type);
+      $normalArr[$set->setting] = $temp;
     }
     $responseArr['status'] = true;
     $responseArr['msg'] = '';
