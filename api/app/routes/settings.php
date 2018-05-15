@@ -38,12 +38,13 @@ $app->group('/settings', function () {
     );
     $settings = FrcPortal\Setting::all();
 
-    $response = 'angular.module("FrcPortal")';
+    $responseStr = 'angular.module("FrcPortal")';
     foreach($settings as $set) {
       if(in_array($set->setting,$configArr)) {
-        $response .= '.constant("'.$set->setting.'", "'.$set->value.'")';
+        $responseStr .= '.constant("'.$set->setting.'", "'.$set->value.'")';
       }
     }
+    $response->getBody()->write($responseStr);
     $response = $response->withHeader('Content-type', 'application/javascript');
     return $response;
   });
