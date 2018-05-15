@@ -16,6 +16,7 @@ $app->group('/settings', function () {
     }
     $settings = FrcPortal\Setting::all();
     $normalArr = array();
+    $groupedArr = array();
     foreach($settings as $set) {
       $temp = $set->value;
       $type =$set->type;
@@ -26,12 +27,14 @@ $app->group('/settings', function () {
       } */
       settype($temp,$type);
       $normalArr[$set->setting] = $temp;
+      $normalArr[$set->section][$set->setting] = $temp;
     }
     $responseArr['status'] = true;
     $responseArr['msg'] = '';
     $responseArr['data'] = array(
       'raw' => $settings,
-      'normalized' => $normalArr
+      'normalized' => $normalArr,
+      'grouped' => $groupedArr,
     );
     $response = $response->withJson($responseArr);
     return $response;
