@@ -28,6 +28,32 @@ $app->group('/settings', function () {
     $response = $response->withJson($responseArr);
     return $response;
   });
+  $this->get('/config', function ($request, $response, $args) {
+    $responseArr = array(
+      'status' => false,
+      'msg' => 'Something went wrong',
+      'data' => null
+    );
+    $configArr = array(
+      'google_oauth_client_id',
+      'facebook_oauth_client_id',
+      'microsoft_oauth_client_id',
+      'team_name',
+      'team_number',
+    );
+    $settings = FrcPortal\Setting::all();
+    $data = array();
+    foreach($settings as $set) {
+      if(in_array($set->setting,$configArr)) {
+        $data[$set->setting] = $set->value;
+      }
+    }
+    $responseArr['status'] = true;
+    $responseArr['msg'] = '';
+    $responseArr['data'] = $data;
+    $response = $response->withJson($responseArr);
+    return $response;
+  });
   $this->group('/{setting_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
