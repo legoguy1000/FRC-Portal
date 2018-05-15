@@ -27,7 +27,7 @@ $app->group('/settings', function () {
       } */
       settype($temp,$type);
       $normalArr[$set->setting] = $temp;
-      $normalArr[$set->section][$set->setting] = $temp;
+      $groupedArr[$set->section][$set->setting] = $temp;
     }
     $responseArr['status'] = true;
     $responseArr['msg'] = '';
