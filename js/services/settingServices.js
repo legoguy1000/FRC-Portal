@@ -19,6 +19,12 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getConfigSettings: function () {
+			return $http.get('api/settings/config')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		updateSetting: function (formData) {
 			var setting_id = formData.setting_id != undefined && formData.setting_id != null ? formData.setting_id:'';
 			return $http.put('api/settings/'+setting_id,formData)
