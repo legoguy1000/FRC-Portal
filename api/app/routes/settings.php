@@ -29,11 +29,6 @@ $app->group('/settings', function () {
     return $response;
   });
   $this->get('/config', function ($request, $response, $args) {
-    $responseArr = array(
-      'status' => false,
-      'msg' => 'Something went wrong',
-      'data' => null
-    );
     $configArr = array(
       'google_oauth_client_id',
       'facebook_oauth_client_id',
@@ -42,16 +37,14 @@ $app->group('/settings', function () {
       'team_number',
     );
     $settings = FrcPortal\Setting::all();
-    $data = array();
+
+    $response = 'angular.module("FrcPortal")';
     foreach($settings as $set) {
       if(in_array($set->setting,$configArr)) {
-        $data[$set->setting] = $set->value;
+        $response .= '.constant("'.$set->setting.'", "'$set->value'")';
       }
     }
-    $responseArr['status'] = true;
-    $responseArr['msg'] = '';
-    $responseArr['data'] = $data;
-    $response = $response->withJson($responseArr);
+    $response = $response->withHeader('Content-type', 'application/javascript');
     return $response;
   });
   $this->group('/{setting_id:[a-z0-9]{13}}', function () {
