@@ -67,7 +67,6 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 			fullscreen: true // Only for -xs, -sm breakpoints.
 		})
 		.then(function(response) {
-			main.isAuthed = $auth.isAuthenticated();
 			if(response.auth) {
 				$rootScope.$broadcast('afterLoginAction');
 			}
@@ -130,7 +129,8 @@ function mainController($rootScope, team_number, $auth, navService, $mdSidenav, 
 	}
 
 	var loginActions = function() {
-		main.userInfo = angular.fromJson($window.localStorage['userInfo']);
+		main.isAuthed = $auth.isAuthenticated();
+		main.userInfo = angular.fromJson(window.localStorage['userInfo']);
 		main.checkServiceWorker();
 		//main.StartEventSource();
 		if(main.userInfo.first_login) {
