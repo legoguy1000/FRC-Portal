@@ -21,7 +21,7 @@ $app = new \Slim\App(['settings' => $config]);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
     "secret" => getSettingsProp('jwt_key'),
     "path" => ['/users', '/seasons', '/events', '/schools','/hours/missingHoursRequests','/hours/signIn/records','/settings'],
-    "passthrough" => ['/auth','/reports','/slack','/hours/signIn','/settings/config'],
+    "passthrough" => ['/auth','/reports','/slack','/hours/signIn','/config'],
 ]));
 $container = $app->getContainer();
 /* $container['db'] = function ($c) {
@@ -59,6 +59,27 @@ $app->get('/version', function (Request $request, Response $response, array $arg
     );
     $response = $response->withJson($responseArr);
     return $response;
+});
+$app->get('/config', function ($request, $response, $args) {
+  $configArr = array(
+    'google_oauth_client_id',
+    'facebook_oauth_client_id',
+    'microsoft_oauth_client_id',
+    'team_name',
+    'team_number',
+  );
+  $settings = FrcPortal\Setting::all();
+
+  $responseStr = 'angular.module("FrcPortal")';
+  foreach($settings as $set) {
+    if(in_array($set->setting,$configArr)) {
+      $responseStr .= '.constant("'.$set->setting.'", "'.$set->value.'")';
+    }
+  }
+  $responseStr .= ';';
+  $response->getBody()->write($responseStr);
+  $response = $response->withHeader('Content-type', 'application/javascript');
+  return $response;
 });
 
 

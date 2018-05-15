@@ -28,26 +28,6 @@ $app->group('/settings', function () {
     $response = $response->withJson($responseArr);
     return $response;
   });
-  $this->get('/config', function ($request, $response, $args) {
-    $configArr = array(
-      'google_oauth_client_id',
-      'facebook_oauth_client_id',
-      'microsoft_oauth_client_id',
-      'team_name',
-      'team_number',
-    );
-    $settings = FrcPortal\Setting::all();
-
-    $responseStr = 'angular.module("FrcPortal")';
-    foreach($settings as $set) {
-      if(in_array($set->setting,$configArr)) {
-        $responseStr .= '.constant("'.$set->setting.'", "'.$set->value.'")';
-      }
-    }
-    $response->getBody()->write($responseStr);
-    $response = $response->withHeader('Content-type', 'application/javascript');
-    return $response;
-  });
   $this->group('/{setting_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
