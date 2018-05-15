@@ -41,7 +41,7 @@ $app->group('/settings', function () {
     $response = 'angular.module("FrcPortal")';
     foreach($settings as $set) {
       if(in_array($set->setting,$configArr)) {
-        $response .= '.constant("'.$set->setting.'", "'$set->value'")';
+        $response .= '.constant("'.$set->setting.'", "'.$set->value.'")';
       }
     }
     $response = $response->withHeader('Content-type', 'application/javascript');
