@@ -419,8 +419,8 @@ angular.module('FrcPortal', [
 		}
 	});
 })
-.config(function($authProvider, $window, google_oauth_clientId, facebook_oauth_clientId, live_oauth_clientId) {
-	var configItems = angular.fromJson($window.localStorage['configItems']);
+.config(function($authProvider, $windowProvider, google_oauth_clientId, facebook_oauth_clientId, live_oauth_clientId) {
+	var configItems = angular.fromJson($windowProvider.localStorage['configItems']);
 	$authProvider.google({
 		clientId: configItems.google_oauth_client_id,
 		url: '/api/auth/google',
