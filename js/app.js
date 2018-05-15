@@ -30,9 +30,6 @@ angular.module('FrcPortal', [
 			authed: function($auth) {
 				return $auth.isAuthenticated();
 			},
-			configItems: function(settingsService) {
-				return settingsService.getConfigSettings();
-			},
 		},
 	  })
 	  .state('main.home', {
@@ -419,10 +416,9 @@ angular.module('FrcPortal', [
 		}
 	});
 })
-.config(function($authProvider, $windowProvider, google_oauth_clientId, facebook_oauth_clientId, live_oauth_clientId) {
-	var configItems = angular.fromJson($windowProvider.localStorage['configItems']);
+.config(function($authProvider, google_oauth_clientId, facebook_oauth_clientId, live_oauth_clientId) {
 	$authProvider.google({
-		clientId: configItems.google_oauth_client_id,
+		clientId: google_oauth_clientId,
 		url: '/api/auth/google',
 	//	url: '/api/v1/login/google',
 		authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
@@ -438,7 +434,7 @@ angular.module('FrcPortal', [
 		popupOptions: { width: 452, height: 633 }
 	});
  	$authProvider.facebook({
-		clientId: configItems.facebook_oauth_client_id,
+		clientId: facebook_oauth_clientId,
 		name: 'facebook',
 		url: '/api/auth/facebook',
 	//	url: '/api/v1/login/facebook ',
@@ -456,7 +452,7 @@ angular.module('FrcPortal', [
 	$authProvider.live({
 		url: '/api/auth/live',
 	//	url: '/api/v1/login/live',
-		clientId: configItems.microsoft_oauth_client_id,
+		clientId: live_oauth_clientId,
 		authorizationEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
 		redirectUri: window.location.origin,
 		requiredUrlParams: ['scope', 'response_mode', 'nonce'],

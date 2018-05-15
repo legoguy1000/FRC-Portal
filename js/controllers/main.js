@@ -1,14 +1,12 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'team_number', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'configItems', 'usersService', '$scope', 'signinService', '$window',
+	'$rootScope', 'team_number', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window',
 	mainController
 ]);
-function mainController($rootScope, team_number, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, configItems, usersService, $scope, signinService, $window) {
+function mainController($rootScope, team_number, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window) {
 	var main = this;
 
-	$window.localStorage['configItems'] = angular.toJson(configItems.data);
-	main.configItems = configItems.data
-	main.team_number = main.configItems.team_number;
+	main.team_number = team_number;
 	main.menuItems = [ ];
 	main.selectItem = selectItem;
 	main.title = $state.current.data.title;
