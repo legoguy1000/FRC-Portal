@@ -75,17 +75,23 @@
 			</md-input-container>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'notification'" class="layout-padding">
+			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.enable_slack">
+				Enable Slack Notifications
+			</md-switch>
 			<md-input-container flex>
 				<label>Slack Team ID</label>
-				<input ng-model="vm.settings.slack_team_id">
+				<input ng-model="vm.settings.slack_team_id" ng-disabled="!vm.settings.enable_slack">
 			</md-input-container>
 			<md-input-container flex>
 				<label>Slack API Token</label>
-				<input ng-model="vm.settings.slack_api_token">
+				<input ng-model="vm.settings.slack_api_token" ng-disabled="!vm.settings.enable_slack">
 			</md-input-container>
+				<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.enable_email">
+					Enable Email Notifications
+				</md-switch>
 			<md-input-container flex>
 				<label>Site Email</label>
-				<input ng-model="vm.settings.notification_email">
+				<input ng-model="vm.settings.notification_email" ng-disabled="!vm.settings.enable_email">
 			</md-input-container>
 		</div>
 	</md-content>

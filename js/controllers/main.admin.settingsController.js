@@ -18,7 +18,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		page: 1
 	};
 	vm.limitOptions = [1,5,10];
-	vm.currentMenu = 'login';
+	vm.currentMenu = 'team';
 
 	vm.selectSettingMenu = function(menu) {
 		vm.currentMenu = menu;
