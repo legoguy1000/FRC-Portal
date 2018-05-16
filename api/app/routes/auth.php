@@ -7,6 +7,12 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'google';
+    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','google_login_enable')->first();
+    if(is_null($loginEnabled)) {
+      $responseData = array('status'=>false, 'msg'=>'Google login is not enabled.  Please select a different option.');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
     $client = new Google_Client();
     //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
     $client->setClientId(getSettingsProp('google_oauth_client_id'));
@@ -95,6 +101,12 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'facebook';
+    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','facebook_login_enable')->first();
+    if(is_null($loginEnabled)) {
+      $responseData = array('status'=>false, 'msg'=>'Facebook login is not enabled.  Please select a different option.');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
     $secret = getSettingsProp('facebook_oauth_client_secret');
     $accessTokenArr = file_get_contents('https://graph.facebook.com/v3.0/oauth/access_token?client_id='.$args['clientId'].'&redirect_uri='.$args['redirectUri'].'&client_secret='.$secret.'&code='.$args['code']);
     //die($accessTokenArr);
@@ -195,6 +207,12 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'microsoft';
+    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','microsoft_login_enable')->first();
+    if(is_null($loginEnabled)) {
+      $responseData = array('status'=>false, 'msg'=>'Microsoft login is not enabled.  Please select a different option.');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
     //$secret = getIniProp('microsoft_client_secret');
     $secret = getSettingsProp('microsoft_oauth_client_secret');
 //    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
