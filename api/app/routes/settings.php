@@ -167,6 +167,9 @@ $app->group('/settings', function () {
             ['section' => $section, 'setting' => $setting], ['value' => $val]
         );
       }
+      $responseArr['status'] = true;
+      $responseArr['msg'] = '';
+      //$responseArr['data'] = $data;
       $response = $response->withJson($responseArr);
       return $response;
     });

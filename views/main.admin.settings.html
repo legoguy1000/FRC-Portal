@@ -29,6 +29,7 @@
 				</md-button>
 			</div>
 		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 		<div layout="column" ng-show="vm.currentMenu == 'team';" class="layout-padding">
 			<md-input-container flex required>
 				<label>Team Number</label>
