@@ -24,6 +24,9 @@
 			<div class="md-toolbar-tools">
 				<span>Settings</span>
 				<div flex></div>
+				<md-button class="md-icon-button" ng-click="vm.getSettingBySection(vm.currentMenu)">
+					<md-icon>refresh</md-icon>
+				</md-button>
 			</div>
 		</md-toolbar>
 		<div layout="column" ng-show="vm.currentMenu == 'team';" class="layout-padding">
@@ -41,29 +44,38 @@
 			</md-input-container>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">
+			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.login.google_login_enable" class="md-warn">
+				Enable Google Login
+			</md-switch>
 			<md-input-container flex>
 				<label>Google OAuth2 Client ID</label>
-				<input ng-model="vm.settings.login.google_oauth_client_id">
+				<input ng-model="vm.settings.login.google_oauth_client_id" ng-disabled="!vm.settings.login.google_login_enable">
 			</md-input-container>
 			<md-input-container flex>
 				<label>Google OAuth2 Client Secret</label>
-				<input ng-model="vm.settings.login.google_oauth_client_secret">
+				<input ng-model="vm.settings.login.google_oauth_client_secret" ng-disabled="!vm.settings.login.google_login_enable">
 			</md-input-container>
+			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
+				Enable Facebook Login
+			</md-switch>
 			<md-input-container flex>
 				<label>Facebook OAuth2 Client ID</label>
-				<input ng-model="vm.settings.login.facebook_oauth_client_id">
+				<input ng-model="vm.settings.login.facebook_oauth_client_id" ng-disabled="!vm.settings.login.facebook_login_enable">
 			</md-input-container>
 			<md-input-container flex>
 				<label>Facebook OAuth2 Client Secret</label>
-				<input ng-model="vm.settings.login.facebook_oauth_client_secret">
+				<input ng-model="vm.settings.login.facebook_oauth_client_secret" ng-disabled="!vm.settings.login.facebook_login_enable">
 			</md-input-container>
+			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn">
+				Enable Microsoft Login
+			</md-switch>
 			<md-input-container flex>
 				<label>Microsoft Live OAuth2 Client ID</label>
-				<input ng-model="vm.settings.login.microsoft_oauth_client_id">
+				<input ng-model="vm.settings.login.microsoft_oauth_client_id" ng-disabled="!vm.settings.login.microsoft_login_enable">
 			</md-input-container>
 			<md-input-container flex>
 				<label>Microsoft Live OAuth2 Client Secret</label>
-				<input ng-model="vm.settings.login.microsoft_oauth_client_secret">
+				<input ng-model="vm.settings.login.microsoft_oauth_client_secret" ng-disabled="!vm.settings.login.microsoft_login_enable">
 			</md-input-container>
 			<md-input-container flex required>
 				<label>JSON Web Token Secret Key</label>
@@ -86,13 +98,19 @@
 				<label>Slack API Token</label>
 				<input ng-model="vm.settings.notification.slack_api_token" ng-disabled="!vm.settings.notification.slack_enable">
 			</md-input-container>
-				<md-switch md-invert aria-label="Enable Email Notifications" ng-model="vm.settings.notification.email_enable" class="md-warn">
-					Enable Email Notifications
-				</md-switch>
+			<md-switch md-invert aria-label="Enable Email Notifications" ng-model="vm.settings.notification.email_enable" class="md-warn">
+				Enable Email Notifications
+			</md-switch>
 			<md-input-container flex>
 				<label>Site Email</label>
 				<input ng-model="vm.settings.notification.notification_email" ng-disabled="!vm.settings.notification.email_enable">
 			</md-input-container>
+		</div>
+		<div flex layout="row">
+			<span flex></span>
+			<md-button type="button" class="md-raised md-primary"  ng-click="vm.updateSettingBySection(vm.currentMenu)">
+				Save
+			</md-button>
 		</div>
 	</md-content>
 </div>

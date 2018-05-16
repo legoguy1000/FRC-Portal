@@ -24,14 +24,35 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		vm.currentMenu = menu;
 	}
 
-	vm.getAllSettings = function () {
+/*	vm.getAllSettings = function () {
 		vm.loading = true;
 		settingsService.getAllSettings().then(function(response){
 			vm.loading = false;
 			vm.settings = response.data.grouped;
 		});
 	};
-	vm.getAllSettings();
+	vm.getAllSettings(); */
 
+	vm.getSettingBySection = function (section) {
+		vm.loading = true;
+		settingsService.getSettingBySection(section).then(function(response){
+			vm.loading = false;
+			vm.settings[section] = response.data;
+		});
+	};
+	vm.getSettingBySection('team');
+	vm.getSettingBySection('login');
+	vm.getSettingBySection('notification');
 
+	vm.updateSettingBySection = function (section) {
+		vm.loading = true;
+		var data = {
+			'section': section,
+			'data': vm.settings[section]
+		}
+		settingsService.updateSettingBySection(data).then(function(response){
+			vm.loading = false;
+			vm.settings[section] = response.data;
+		});
+	};
 }
