@@ -168,7 +168,7 @@ $app->group('/settings', function () {
         );
       }
       $responseArr['status'] = true;
-      $responseArr['msg'] = '';
+      $responseArr['msg'] = ucwords($setting).' Settings Updated';
       //$responseArr['data'] = $data;
       $response = $response->withJson($responseArr);
       return $response;
