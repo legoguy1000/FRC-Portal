@@ -8,7 +8,7 @@ $app->group('/auth', function () {
     $args = $request->getParsedBody();
     $provider = 'google';
     $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','google_login_enable')->first();
-    if(is_null($loginEnabled)) {
+    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
       $responseData = array('status'=>false, 'msg'=>'Google login is not enabled.  Please select a different option.');
       $response = $response->withJson($responseArr,400);
       return $response;
@@ -102,7 +102,7 @@ $app->group('/auth', function () {
     $args = $request->getParsedBody();
     $provider = 'facebook';
     $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','facebook_login_enable')->first();
-    if(is_null($loginEnabled)) {
+    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
       $responseData = array('status'=>false, 'msg'=>'Facebook login is not enabled.  Please select a different option.');
       $response = $response->withJson($responseArr,400);
       return $response;
@@ -208,7 +208,7 @@ $app->group('/auth', function () {
     $args = $request->getParsedBody();
     $provider = 'microsoft';
     $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','microsoft_login_enable')->first();
-    if(is_null($loginEnabled)) {
+    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
       $responseData = array('status'=>false, 'msg'=>'Microsoft login is not enabled.  Please select a different option.');
       $response = $response->withJson($responseArr,400);
       return $response;
