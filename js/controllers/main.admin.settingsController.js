@@ -8,7 +8,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 	vm.userInfo = {};
 	vm.seasonInfo = null;
 	vm.loadingUser = false;
-
+	vm.loading = false;
   vm.selectedItem  = null;
   vm.searchText    = null;
 	vm.query = {
@@ -56,7 +56,13 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		}
 		settingsService.updateSettingBySection(data).then(function(response){
 			vm.loading = false;
-			vm.settings[section] = response.data;
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
+			//vm.settings[section] = response.data;
 		});
 	};
 }
