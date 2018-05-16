@@ -124,7 +124,7 @@ $app->group('/settings', function () {
         return $response;
       }
       $section = $args['section'];
-      $settings = FrcPortal\Setting::where('section',$section);
+      $settings = FrcPortal\Setting::where('section',$section)->get();
       $data = array();
       foreach($settings as $set) {
         $temp = $set->value;
