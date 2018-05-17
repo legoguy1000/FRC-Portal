@@ -17,6 +17,9 @@
 			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('notification')" ng-class="{'activeSelect': vm.currentMenu == 'notification'}">
 		    <p>Notification Settings</p>
 		  </md-list-item>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('other')" ng-class="{'activeSelect': vm.currentMenu == 'other'}">
+		    <p>Other Settings</p>
+		  </md-list-item>
 		</md-list>
 	</md-content>
 	<md-content flex="grow" class="md-margin" layout="column">
@@ -105,6 +108,20 @@
 			<md-input-container flex>
 				<label>Site Email</label>
 				<input ng-model="vm.settings.notification.notification_email" ng-disabled="!vm.settings.notification.email_enable">
+			</md-input-container>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'other'" class="layout-padding">
+			<md-input-container flex>
+				<label>Slack Team ID</label>
+				<input ng-model="vm.settings.other.google_api_key">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Slack Team ID</label>
+				<input ng-model="vm.settings.other.google_calendar_id">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Slack Team ID</label>
+				<input ng-model="vm.settings.other.google_drive_id">
 			</md-input-container>
 		</div>
 		<div flex layout="row">
