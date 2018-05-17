@@ -29,7 +29,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
     disabled: false,
 		restrictToFormat: true,
 		format: 'hex',
-		case 'upper',
+		case: 'upper',
 		inline: false,
 
 	};
