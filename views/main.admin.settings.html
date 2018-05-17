@@ -46,24 +46,18 @@
 				<label>Site URL</label>
 				<input ng-model="vm.settings.team.env_url">
 			</md-input-container>
-			<md-input-container flex required>
-				<label>Team Primary Color</label>
-				<input
-				    md-color-picker
-				    ng-model="vm.settings.team.team_color_primary"
-				    label="Team Primary Color"
-				    icon="brush"
-				></input>
-			</md-input-container>
-			<md-input-container flex required>
-				<label>Team Secondary Color</label>
-				<input
-				    md-color-picker
-				    ng-model="vm.settings.team.team_color_secondary"
-				    label="Team Secondary Color"
-				    icon="brush"
-				></input>
-			</md-input-container>
+			<div
+			    md-color-picker
+			    ng-model="vm.settings.team.team_color_primary"
+			    label="Team Primary Color"
+			    icon="brush"
+			></div>
+			<div
+			    md-color-picker
+			    ng-model="vm.settings.team.team_color_secondary"
+			    label="Team Secondary Color"
+			    icon="brush"
+			></div>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">
 			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.login.google_login_enable" class="md-warn">
