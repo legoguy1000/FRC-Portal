@@ -46,17 +46,26 @@
 				<label>Site URL</label>
 				<input ng-model="vm.settings.team.env_url">
 			</md-input-container>
+		<!--	<div flex label="Text Background" md-color-picker has-backdrop="true" click-outside-to-close="true" random="true" ng-model="textBackground" open-on-input="true"></div>-->
 			<div
-			    md-color-picker
-			    ng-model="vm.settings.team.team_color_primary"
-			    label="Team Primary Color"
-			    icon="brush"
+				flex
+		    md-color-picker
+		    ng-model="vm.settings.team.team_color_primary"
+		    label="Team Primary Color"
+		    icon="brush"
+				has-backdrop="true"
+				click-outside-to-close="true"
+				open-on-input="true"
 			></div>
 			<div
-			    md-color-picker
-			    ng-model="vm.settings.team.team_color_secondary"
-			    label="Team Secondary Color"
-			    icon="brush"
+				flex
+		    md-color-picker
+		    ng-model="vm.settings.team.team_color_secondary"
+		    label="Team Secondary Color"
+		    icon="brush"
+				has-backdrop="true"
+				click-outside-to-close="true"
+				open-on-input="true"
 			></div>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">
