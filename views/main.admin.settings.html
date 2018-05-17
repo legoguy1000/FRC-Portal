@@ -25,7 +25,7 @@
 	<md-content flex="grow" class="md-margin" layout="column">
 		<md-toolbar class="md-default md-table-toolbar">
 			<div class="md-toolbar-tools">
-				<span>Settings</span>
+				<span>{{vm.currentMenu | capitalizeWordsFirst}} Settings</span>
 				<div flex></div>
 				<md-button class="md-icon-button" ng-click="vm.getSettingBySection(vm.currentMenu)">
 					<md-icon>refresh</md-icon>
@@ -45,6 +45,20 @@
 			<md-input-container flex required>
 				<label>Site URL</label>
 				<input ng-model="vm.settings.team.env_url">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Team Primary Color</label>
+				<color-picker
+				    ng-model="vm.settings.team.team_color_primary"
+				    options="vm.colorOptions"
+				></color-picker>
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Team Secondary Color</label>
+				<color-picker
+				    ng-model="vm.settings.team.team_color_secondary"
+				    options="vm.colorOptions"
+				></color-picker>
 			</md-input-container>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">
@@ -112,15 +126,15 @@
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'other'" class="layout-padding">
 			<md-input-container flex>
-				<label>Slack Team ID</label>
+				<label>Google API Key</label>
 				<input ng-model="vm.settings.other.google_api_key">
 			</md-input-container>
 			<md-input-container flex>
-				<label>Slack Team ID</label>
+				<label>Google Calendar ID</label>
 				<input ng-model="vm.settings.other.google_calendar_id">
 			</md-input-container>
 			<md-input-container flex>
-				<label>Slack Team ID</label>
+				<label>Google Drive ID</label>
 				<input ng-model="vm.settings.other.google_drive_id">
 			</md-input-container>
 		</div>
