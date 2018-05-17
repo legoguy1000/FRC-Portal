@@ -37,7 +37,7 @@ if((date('N') <= 5 && date('H') == 21) || (date('N') > 5 && date('H') == 18)) {
 					'attachments'=>$attachments
 				);
 				$content = str_replace('#new_line#','\n',json_encode($data));
-				$slack_token = getIniProp('slack_api_token');
+				$slack_token = getSettingsProp('slack_api_token');
 				$slack_webhook_url = 'https://slack.com/api/chat.postMessage';
 				$ch = curl_init();
 				//set the url, number of POST vars, POST data
