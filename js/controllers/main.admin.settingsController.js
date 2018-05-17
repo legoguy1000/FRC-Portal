@@ -47,6 +47,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 	vm.getSettingBySection('team');
 	vm.getSettingBySection('login');
 	vm.getSettingBySection('notification');
+	vm.getSettingBySection('other');
 
 	vm.updateSettingBySection = function (section) {
 		vm.loading = true;
