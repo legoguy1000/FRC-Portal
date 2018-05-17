@@ -16,6 +16,7 @@ angular.module('FrcPortal', [
 	'ngMap',
 	'dndLists',
 	'timer',
+	'color.picker',
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider, $locationProvider) {
 
 	$locationProvider.html5Mode({ enabled: true, requireBase: true });
