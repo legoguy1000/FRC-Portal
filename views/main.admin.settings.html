@@ -48,17 +48,21 @@
 			</md-input-container>
 			<md-input-container flex required>
 				<label>Team Primary Color</label>
-				<color-picker
+				<input
+				    md-color-picker
 				    ng-model="vm.settings.team.team_color_primary"
-				    options="vm.colorOptions"
-				></color-picker>
+				    label="Team Primary Color"
+				    icon="brush"
+				></input>
 			</md-input-container>
 			<md-input-container flex required>
 				<label>Team Secondary Color</label>
-				<color-picker
+				<input
+				    md-color-picker
 				    ng-model="vm.settings.team.team_color_secondary"
-				    options="vm.colorOptions"
-				></color-picker>
+				    label="Team Secondary Color"
+				    icon="brush"
+				></input>
 			</md-input-container>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">

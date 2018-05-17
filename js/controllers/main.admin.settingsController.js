@@ -24,15 +24,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		'login': {},
 		'notification': {},
 	};
-	vm.colorOptions = {
-		required: true,
-    disabled: false,
-		restrictToFormat: true,
-		format: 'hex',
-		case: 'upper',
-		inline: false,
 
-	};
 	vm.selectSettingMenu = function(menu) {
 		vm.currentMenu = menu;
 	}
