@@ -25,7 +25,7 @@
 	<md-content flex="grow" class="md-margin" layout="column">
 		<md-toolbar class="md-default md-table-toolbar">
 			<div class="md-toolbar-tools">
-				<span>Settings</span>
+				<span>{{vm.currentMenu | capitalizeWordsFirst}} Settings</span>
 				<div flex></div>
 				<md-button class="md-icon-button" ng-click="vm.getSettingBySection(vm.currentMenu)">
 					<md-icon>refresh</md-icon>
