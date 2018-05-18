@@ -89,7 +89,7 @@ function postToSlack($msg = '', $channel = null) {
 		$data["channel"] = $channel;
 	}
 	$content = str_replace('#new_line#','\n',json_encode($data));
-	$slack_token = getIniProp('slack_api_token');
+	$slack_token = getSettingsProp('slack_api_token');
 	$slack_webhook_url = 'https://slack.com/api/chat.postMessage';
 	$ch = curl_init();
 	//set the url, number of POST vars, POST data
@@ -144,9 +144,9 @@ function slackMessageToUser($user_id, $msg) {
 
 function emailUser($userData = array(),$subject = '',$content = '',$attachments = false)
 {
-	$root = '/home/team2363_portal/portal.team2363.org';
-	$html = file_get_contents($root.'/site/includes/libraries/email_template.html');
-	$css = file_get_contents($root.'/site/includes/libraries/email_css.css');
+	$root = __DIR__;
+	$html = file_get_contents($root.'/../libraries/email/email_template.html');
+	$css = file_get_contents($root.'/../libraries/email/email_css.css');
 	$emogrifier = new \Pelago\Emogrifier($html, $css);
 	$mergedHtml = $emogrifier->emogrify();
 
@@ -168,7 +168,10 @@ function emailUser($userData = array(),$subject = '',$content = '',$attachments 
 	    $mail->Port = 587;                                    // TCP port to connect to */
 
 	    //Recipients
-	    $mail->setFrom('portal@team2363.org', 'Team 2363 Portal');
+			$mailFrom = getSettingsProp('notification_email');
+			$teamNumber = getSettingsProp('team_number');
+			$mailFromName = 'Team '.$teamNumber.' Portal';
+	    $mail->setFrom($mailFrom, $mailFromName);
 	    $mail->addAddress($userData['email'], $userData['full_name']);     // Add a recipient
 	   /*  $mail->addAddress('ellen@example.com');               // Name is optional
 	    $mail->addReplyTo('info@example.com', 'Information');
@@ -230,7 +233,8 @@ function emailSignInOut($user_id,$emailData) {
 		$io = 'out';
 	}
 	$subject = 'You signed '.$io.' at '.$signInTime;
-	$content = '<p>You signed '.$io.' using the Team 2363 Portal at '.$signInTime.'.</p><p> '.$msg.' You have accumulated '.$userSeasonInfo['total'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
+	$teamNumber = getSettingsProp('team_number');
+	$content = '<p>You signed '.$io.' using the Team '.$teamNumber.' Portal at '.$signInTime.'.</p><p> '.$msg.' You have accumulated '.$userSeasonInfo['total'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
 
 	return array(
 		'subject' => $subject,

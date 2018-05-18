@@ -67,6 +67,7 @@ $app->get('/config', function ($request, $response, $args) {
     'microsoft_oauth_client_id',
     'team_name',
     'team_number',
+    'team_logo_url',
   );
   $settings = FrcPortal\Setting::all();
 
