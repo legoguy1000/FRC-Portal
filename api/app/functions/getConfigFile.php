@@ -10,7 +10,7 @@ function getIniProp($prop) {
 }
 
 function getSettingsProp($prop) {
-	$value = '';
+	$value = null;
 	$setting = FrcPortal\Setting::where('setting',$prop)->first();
 	//$ini = parse_ini_file(__DIR__.'/../secured/config.ini');
 	if(!is_null($setting) && isset($setting->value)) {

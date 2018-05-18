@@ -66,7 +66,8 @@ $app->group('/auth', function () {
           $user->profile_image = $userData['profile_image'];
           $update = true;
         }
-        if($user->team_email == '' && strpos($userData['email'],'@team2363.org') !== false) {
+        $teamDomain = getSettingsProp('team_domain');
+        if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
           $user->team_email = $userData['email'];
           $update = true;
         }
@@ -165,7 +166,8 @@ $app->group('/auth', function () {
             $user->profile_image = $userData['profile_image'];
             $update = true;
           }
-          if($user->team_email == '' && strpos($userData['email'],'@team2363.org') !== false) {
+          $teamDomain = getSettingsProp('team_domain');
+          if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
             $user->team_email = $userData['email'];
             $update = true;
           }
@@ -286,7 +288,8 @@ $app->group('/auth', function () {
           $user->profile_image = $userData['profile_image'];
           $update = true;
         }
-        if($user->team_email == '' && strpos($userData['email'],'@team2363.org') !== false) {
+        $teamDomain = getSettingsProp('team_domain');
+        if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
           $user->team_email = $userData['email'];
           $update = true;
         }
