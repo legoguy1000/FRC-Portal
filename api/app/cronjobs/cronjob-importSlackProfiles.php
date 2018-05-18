@@ -22,7 +22,7 @@ if($result) {
 			$where = '';
 			if(isset($profile['email']) && $profile['email'] != '') {
 				$email = $profile['email'];
-				$user = FrcPortal\User::where('email',$email)->where('team_email',$email)->update(['slack_id' => $slack_id]);
+				$user = FrcPortal\User::where('email',$email)->orWhere('team_email',$email)->update(['slack_id' => $slack_id]);
 			}
 			if(isset($profile['first_name']) && $profile['first_name'] != '' && isset($profile['last_name']) && $profile['last_name'] != '') {
 				$first_name = $profile['first_name'];
