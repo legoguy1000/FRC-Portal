@@ -1,0 +1,164 @@
+<div flex layout-gt-sm="row" layout-gt-md="row" layout="column">
+	<md-content flex flex-gt-sm="50" flex-gt-md="20" layout="column" class="md-margin">
+		<md-toolbar class="md-default md-table-toolbar">
+			<div class="md-toolbar-tools">
+				<span>Settings</span>
+				<div flex></div>
+			</div>
+		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingUser"></md-progress-linear>
+		<md-list>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('team')" ng-class="{'activeSelect': vm.currentMenu == 'team'}">
+		    <p>Team Settings</p>
+		  </md-list-item>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('login')" ng-class="{'activeSelect': vm.currentMenu == 'login'}">
+		    <p>Login Settings</p>
+		  </md-list-item>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('notification')" ng-class="{'activeSelect': vm.currentMenu == 'notification'}">
+		    <p>Notification Settings</p>
+		  </md-list-item>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('other')" ng-class="{'activeSelect': vm.currentMenu == 'other'}">
+		    <p>Other Settings</p>
+		  </md-list-item>
+		</md-list>
+	</md-content>
+	<md-content flex="grow" class="md-margin" layout="column">
+		<md-toolbar class="md-default md-table-toolbar">
+			<div class="md-toolbar-tools">
+				<span>{{vm.currentMenu | capitalizeWordsFirst}} Settings</span>
+				<div flex></div>
+				<md-button class="md-icon-button" ng-click="vm.getSettingBySection(vm.currentMenu)">
+					<md-icon>refresh</md-icon>
+				</md-button>
+			</div>
+		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
+		<div layout="column" ng-show="vm.currentMenu == 'team';" class="layout-padding">
+			<md-input-container flex required>
+				<label>Team Number</label>
+				<input ng-model="vm.settings.team.team_number">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Team Name</label>
+				<input ng-model="vm.settings.team.team_name">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Team Domain</label>
+				<input ng-model="vm.settings.team.team_domain">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Site URL</label>
+				<input ng-model="vm.settings.team.env_url">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Team Logo URL</label>
+				<input ng-model="vm.settings.team.team_logo_url">
+			</md-input-container>
+		<!--	<div flex label="Text Background" md-color-picker has-backdrop="true" click-outside-to-close="true" random="true" ng-model="textBackground" open-on-input="true"></div>-->
+			<div
+				flex
+		    md-color-picker
+		    ng-model="vm.settings.team.team_color_primary"
+		    label="Team Primary Color"
+		    icon="brush"
+				has-backdrop="true"
+				click-outside-to-close="true"
+				open-on-input="true"
+				clear-button="false"
+			></div>
+			<div
+				flex
+		    md-color-picker
+		    ng-model="vm.settings.team.team_color_secondary"
+		    label="Team Secondary Color"
+		    icon="brush"
+				has-backdrop="true"
+				click-outside-to-close="true"
+				open-on-input="true"
+			></div>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">
+			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.login.google_login_enable" class="md-warn">
+				Enable Google Login
+			</md-switch>
+			<md-input-container flex>
+				<label>Google OAuth2 Client ID</label>
+				<input ng-model="vm.settings.login.google_oauth_client_id" ng-disabled="!vm.settings.login.google_login_enable">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Google OAuth2 Client Secret</label>
+				<input ng-model="vm.settings.login.google_oauth_client_secret" ng-disabled="!vm.settings.login.google_login_enable">
+			</md-input-container>
+			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
+				Enable Facebook Login
+			</md-switch>
+			<md-input-container flex>
+				<label>Facebook OAuth2 Client ID</label>
+				<input ng-model="vm.settings.login.facebook_oauth_client_id" ng-disabled="!vm.settings.login.facebook_login_enable">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Facebook OAuth2 Client Secret</label>
+				<input ng-model="vm.settings.login.facebook_oauth_client_secret" ng-disabled="!vm.settings.login.facebook_login_enable">
+			</md-input-container>
+			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn">
+				Enable Microsoft Login
+			</md-switch>
+			<md-input-container flex>
+				<label>Microsoft Live OAuth2 Client ID</label>
+				<input ng-model="vm.settings.login.microsoft_oauth_client_id" ng-disabled="!vm.settings.login.microsoft_login_enable">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Microsoft Live OAuth2 Client Secret</label>
+				<input ng-model="vm.settings.login.microsoft_oauth_client_secret" ng-disabled="!vm.settings.login.microsoft_login_enable">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>JSON Web Token Secret Key</label>
+				<input ng-model="vm.settings.login.jwt_key">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>JSON Web Token Time Secret Key</label>
+				<input ng-model="vm.settings.login.jwt_signin_key">
+			</md-input-container>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'notification'" class="layout-padding">
+			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.notification.slack_enable" class="md-warn">
+				Enable Slack Notifications
+			</md-switch>
+			<md-input-container flex>
+				<label>Slack Team ID</label>
+				<input ng-model="vm.settings.notification.slack_team_id" ng-disabled="!vm.settings.notification.slack_enable">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Slack API Token</label>
+				<input ng-model="vm.settings.notification.slack_api_token" ng-disabled="!vm.settings.notification.slack_enable">
+			</md-input-container>
+			<md-switch md-invert aria-label="Enable Email Notifications" ng-model="vm.settings.notification.email_enable" class="md-warn">
+				Enable Email Notifications
+			</md-switch>
+			<md-input-container flex>
+				<label>Site Email</label>
+				<input ng-model="vm.settings.notification.notification_email" ng-disabled="!vm.settings.notification.email_enable">
+			</md-input-container>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'other'" class="layout-padding">
+			<md-input-container flex>
+				<label>Google API Key</label>
+				<input ng-model="vm.settings.other.google_api_key">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Google Calendar ID</label>
+				<input ng-model="vm.settings.other.google_calendar_id">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Google Drive ID</label>
+				<input ng-model="vm.settings.other.google_drive_id">
+			</md-input-container>
+		</div>
+		<div flex layout="row">
+			<span flex></span>
+			<md-button type="button" class="md-raised md-primary"  ng-click="vm.updateSettingBySection(vm.currentMenu)">
+				Save
+			</md-button>
+		</div>
+	</md-content>
+</div>

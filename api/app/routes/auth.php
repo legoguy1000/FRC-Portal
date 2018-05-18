@@ -7,8 +7,17 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'google';
+    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','google_login_enable')->first();
+    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
+      $responseData = array('status'=>false, 'msg'=>'Google login is not enabled.  Please select a different option.');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
     $client = new Google_Client();
-    $client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
+    //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
+    $client->setClientId(getSettingsProp('google_oauth_client_id'));
+    $client->setClientSecret(getSettingsProp('google_oauth_client_secret'));
+    $client->setRedirectUri(getSettingsProp('env_url'));
     $plus = new Google_Service_Plus($client);
     $data = array();
     if(isset($args['code'])) {
@@ -57,16 +66,17 @@ $app->group('/auth', function () {
           $user->profile_image = $userData['profile_image'];
           $update = true;
         }
-        if($user->team_email == '' && strpos($userData['email'],'@team2363.org') !== false) {
+        $teamDomain = getSettingsProp('team_domain');
+        if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
           $user->team_email = $userData['email'];
           $update = true;
         }
         if($update == true) {
           $user = $user->save();
         }
-        $key = getIniProp('jwt_key');
+        $key = getSettingsProp('jwt_key');
   			$token = array(
-  				"iss" => getIniProp('env_url'),
+  				"iss" => getSettingsProp('env_url'),
   				"iat" => time(),
   				"exp" => time()+60*60,
   				"jti" => bin2hex(random_bytes(10)),
@@ -92,13 +102,20 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'facebook';
-    $secret = getIniProp('facebook_client_secret');
+    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','facebook_login_enable')->first();
+    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
+      $responseData = array('status'=>false, 'msg'=>'Facebook login is not enabled.  Please select a different option.');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
+    $secret = getSettingsProp('facebook_oauth_client_secret');
     $accessTokenArr = file_get_contents('https://graph.facebook.com/v3.0/oauth/access_token?client_id='.$args['clientId'].'&redirect_uri='.$args['redirectUri'].'&client_secret='.$secret.'&code='.$args['code']);
     //die($accessTokenArr);
     $accessTokenArr = json_decode($accessTokenArr, true);
     $accessToken = $accessTokenArr['access_token'];
     $fb = new Facebook\Facebook([
-      'app_id'  => '1347987445311447',
+      //'app_id'  => '1347987445311447',
+      'app_id'  => getSettingsProp('facebook_oauth_client_id'),
       'app_secret' => $secret,
     	'default_graph_version' => 'v3.0',
     ]);
@@ -149,16 +166,17 @@ $app->group('/auth', function () {
             $user->profile_image = $userData['profile_image'];
             $update = true;
           }
-          if($user->team_email == '' && strpos($userData['email'],'@team2363.org') !== false) {
+          $teamDomain = getSettingsProp('team_domain');
+          if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
             $user->team_email = $userData['email'];
             $update = true;
           }
           if($update == true) {
             $user = $user->save();
           }
-          $key = getIniProp('jwt_key');
+          $key = getSettingsProp('jwt_key');
     			$token = array(
-    				"iss" => getIniProp('env_url'),
+    				"iss" => getSettingsProp('env_url'),
     				"iat" => time(),
     				"exp" => time()+60*60,
     				"jti" => bin2hex(random_bytes(10)),
@@ -191,9 +209,16 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'microsoft';
+    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','microsoft_login_enable')->first();
+    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
+      $responseData = array('status'=>false, 'msg'=>'Microsoft login is not enabled.  Please select a different option.');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
     //$secret = getIniProp('microsoft_client_secret');
-    $secret = getIniProp('microsoft_client_secret');
-    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
+    $secret = getSettingsProp('microsoft_oauth_client_secret');
+//    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
+    $clientId =  getSettingsProp('microsoft_oauth_client_id');
 
     if(isset($args['code'])) {
       $data = array(
@@ -263,16 +288,17 @@ $app->group('/auth', function () {
           $user->profile_image = $userData['profile_image'];
           $update = true;
         }
-        if($user->team_email == '' && strpos($userData['email'],'@team2363.org') !== false) {
+        $teamDomain = getSettingsProp('team_domain');
+        if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
           $user->team_email = $userData['email'];
           $update = true;
         }
         if($update == true) {
           $user = $user->save();
         }
-        $key = getIniProp('jwt_key');
+        $key = getSettingsProp('jwt_key');
   			$token = array(
-  				"iss" => getIniProp('env_url'),
+  				"iss" => getSettingsProp('env_url'),
   				"iat" => time(),
   				"exp" => time()+60*60,
   				"jti" => bin2hex(random_bytes(10)),

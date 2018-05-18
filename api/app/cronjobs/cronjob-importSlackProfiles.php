@@ -3,7 +3,7 @@ include(__DIR__ . '/../includes.php');
 
 
 $users = array();
-$slack_token = getIniProp('slack_api_token');
+$slack_token = getSettingsProp('slack_api_token');
 $url = 'https://slack.com/api/users.list?token='.$slack_token;
 $ch = curl_init();
 curl_setopt($ch,CURLOPT_URL, $url);

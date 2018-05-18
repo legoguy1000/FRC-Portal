@@ -19,9 +19,9 @@ $config['db']['prefix'] = '';
  //asdf
 $app = new \Slim\App(['settings' => $config]);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
-    "secret" => getIniProp('jwt_key'),
-    "path" => ['/users', '/seasons', '/events', '/schools','/hours/missingHoursRequests','/hours/signIn/records'],
-    "passthrough" => ['/auth','/reports','/slack','/hours/signIn'],
+    "secret" => getSettingsProp('jwt_key'),
+    "path" => ['/users', '/seasons', '/events', '/schools','/hours/missingHoursRequests','/hours/signIn/records','/settings'],
+    "passthrough" => ['/auth','/reports','/slack','/hours/signIn','/config'],
 ]));
 $container = $app->getContainer();
 /* $container['db'] = function ($c) {
@@ -55,10 +55,32 @@ $container['db'] = function ($container) {
 };*/
 $app->get('/version', function (Request $request, Response $response, array $args) {
     $responseArr = array(
-      'version' => '2.2.5'
+      'version' => '2.3.0'
     );
     $response = $response->withJson($responseArr);
     return $response;
+});
+$app->get('/config', function ($request, $response, $args) {
+  $configArr = array(
+    'google_oauth_client_id',
+    'facebook_oauth_client_id',
+    'microsoft_oauth_client_id',
+    'team_name',
+    'team_number',
+    'team_logo_url',
+  );
+  $settings = FrcPortal\Setting::all();
+
+  $responseStr = 'angular.module("FrcPortal")';
+  foreach($settings as $set) {
+    if(in_array($set->setting,$configArr)) {
+      $responseStr .= '.constant("'.$set->setting.'", "'.$set->value.'")';
+    }
+  }
+  $responseStr .= ';';
+  $response->getBody()->write($responseStr);
+  $response = $response->withHeader('Content-type', 'application/javascript');
+  return $response;
 });
 
 
@@ -70,6 +92,7 @@ include('./app/routes/events.php');
 include('./app/routes/reports.php');
 include('./app/routes/schools.php');
 include('./app/routes/slack.php');
+include('./app/routes/settings.php');
 
 $app->run();
 
