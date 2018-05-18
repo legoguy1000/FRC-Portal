@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.homeController', ['$timeout', '$q', '$scope', '$state', 'metricsService',
+.controller('main.homeController', ['$timeout', '$q', '$scope', '$state', 'metricsService', 'google_calendar_id',
 	mainHomeController
 ]);
-function mainHomeController($timeout, $q, $scope, $state, metricsService) {
+function mainHomeController($timeout, $q, $scope, $state, metricsService, google_calendar_id) {
     var vm = this;
 
 	vm.loadingTopUsers = false;
@@ -16,7 +16,11 @@ function mainHomeController($timeout, $q, $scope, $state, metricsService) {
 			vm.loadingTopUsers = false;
 		});
 	}
-	
+
+	vm.getCalendarSrc = function () {
+  return 'https://calendar.google.com/calendar/embed?src='+google_calendar_id+'&ctz=America/New_York';
+};
+
 	/* vm.test = function() {
 		navigator.usb.requestDevice({ filters: [{ vendorId: 0xc00c         }] })
 		.then(device => {
