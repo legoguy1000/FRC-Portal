@@ -1,6 +1,6 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'team_number', 'team_logo_url', 'google_calendar_id' '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window',
+	'$rootScope', 'team_number', 'team_logo_url', 'google_calendar_id', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window',
 	mainController
 ]);
 function mainController($rootScope, team_number, team_logo_url, google_calendar_id, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window) {
