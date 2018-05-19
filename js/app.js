@@ -452,7 +452,7 @@ angular.module('FrcPortal', [
 		url: '/api/auth/facebook',
 	//	url: '/api/v1/login/facebook ',
 		authorizationEndpoint: 'https://www.facebook.com/v3.0/dialog/oauth',
-		redirectUri: window.location.origin+'/',
+		redirectUri: window.location.origin+'/oauth',
 		requiredUrlParams: ['display', 'scope'],
 		optionalUrlParams: ['auth_type'],
 		scope: ['public_profile','email'],
@@ -467,7 +467,7 @@ angular.module('FrcPortal', [
 	//	url: '/api/v1/login/live',
 		clientId: microsoft_oauth_client_id,
 		authorizationEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
-		redirectUri: window.location.origin,
+		redirectUri: window.location.origin+'/oauth',
 		requiredUrlParams: ['scope', 'response_mode', 'nonce'],
 		scope: ['openid','email',' profile','User.Read'], //,'User.Read','User.ReadBasic.All'
 		scopeDelimiter: ' ',
