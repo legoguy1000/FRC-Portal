@@ -1,15 +1,16 @@
 angular.module('FrcPortal')
-.controller('main.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService',
+.controller('main.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','slack_team_id','slack_url',
 	mainEventController
 ]);
-function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService) {
+function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,slack_team_id,slack_url) {
     var vm = this;
 
 		vm.registrationFormVisible = false;
 		vm.state = $state.current.name;
 
 
-
+		vm.slack_url = slack_url;
+		vm.slack_team_id = slack_team_id;
 
 		vm.event_id = $stateParams.event_id;
 		vm.event = {};

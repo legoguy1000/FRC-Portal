@@ -55,7 +55,7 @@ $container['db'] = function ($container) {
 };*/
 $app->get('/version', function (Request $request, Response $response, array $args) {
     $responseArr = array(
-      'version' => '2.3.4'
+      'version' => '2.3.5'
     );
     $response = $response->withJson($responseArr);
     return $response;
@@ -69,6 +69,8 @@ $app->get('/config', function ($request, $response, $args) {
     'team_number',
     'team_logo_url',
     'google_calendar_id',
+    'slack_team_id',
+    'slack_url',
   );
   $settings = FrcPortal\Setting::all();
 
