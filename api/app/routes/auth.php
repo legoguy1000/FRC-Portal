@@ -17,7 +17,7 @@ $app->group('/auth', function () {
     //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
     $client->setClientId(getSettingsProp('google_oauth_client_id'));
     $client->setClientSecret(getSettingsProp('google_oauth_client_secret'));
-    $client->setRedirectUri(getSettingsProp('env_url'));
+    $client->setRedirectUri(getSettingsProp('env_url').'/oauth');
     $plus = new Google_Service_Plus($client);
     $data = array();
     if(isset($args['code'])) {
@@ -108,8 +108,10 @@ $app->group('/auth', function () {
       $response = $response->withJson($responseArr,400);
       return $response;
     }
+    $client_id = getSettingsProp('facebook_oauth_client_id');
     $secret = getSettingsProp('facebook_oauth_client_secret');
-    $accessTokenArr = file_get_contents('https://graph.facebook.com/v3.0/oauth/access_token?client_id='.$args['clientId'].'&redirect_uri='.$args['redirectUri'].'&client_secret='.$secret.'&code='.$args['code']);
+    $redirect = getSettingsProp('env_url').'/oauth';
+    $accessTokenArr = file_get_contents('https://graph.facebook.com/v3.0/oauth/access_token?client_id='.$client_id.'&redirect_uri='.$redirect.'&client_secret='.$secret.'&code='.$args['code']);
     //die($accessTokenArr);
     $accessTokenArr = json_decode($accessTokenArr, true);
     $accessToken = $accessTokenArr['access_token'];
@@ -219,13 +221,13 @@ $app->group('/auth', function () {
     $secret = getSettingsProp('microsoft_oauth_client_secret');
 //    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
     $clientId =  getSettingsProp('microsoft_oauth_client_id');
-
+    $redirect = getSettingsProp('env_url').'/oauth';
     if(isset($args['code'])) {
       $data = array(
     		'client_id'=>$clientId,
     		'scope'=>'openid email profile User.Read', // User.Read User.ReadBasic.All
     		'code'=>$args['code'],
-    		'redirect_uri'=>$args['redirectUri'],
+    		'redirect_uri'=>$redirect,
     		'grant_type'=>'authorization_code',
     		'client_secret'=>$secret,
     	);
