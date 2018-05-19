@@ -82,7 +82,7 @@ function sendUserNotification($user_id, $type, $msgData)
 function postToSlack($msg = '', $channel = null) {
 	$data = array(
 		'text'=>$msg
-		//'username'=> 'Team 2363 Portal',
+		//'username'=> '',
 		//'icon_url'=> '',
 		//'icon_emoji'=>':taco:'
 	);
@@ -130,7 +130,8 @@ function endOfDayHoursToSlack($date = null) {
 		//$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE year(a.time_in)='.db_quote(date('Y',strtotime($date))).' GROUP BY year(a.time_in)';
 		//$result = db_select_single($query);
 		$total = !is_null($result) ? $result->hours : 0;
-		$msg .= 'Triple Helix completed another '.round($hours,1).' hours of work for an annual total of '.round($total,1).'.#new_line#Keep up the amazing work!!';
+		$teamName = getSettingsProp('team_name');
+		$msg .= $teamName.' completed another '.round($hours,1).' hours of work for an annual total of '.round($total,1).'.#new_line#Keep up the amazing work!!';
 		postToSlack($msg, $channel = null);
 	}
 }
@@ -153,7 +154,13 @@ function emailUser($userData = array(),$subject = '',$content = '',$attachments 
 
 	$subjectLine = $subject;
 	$emailContent = $content ;
-	$email = str_replace('###SUBJECT###',$subjectLine,$mergedHtml);
+	$teamName = getSettingsProp('team_name');
+	$teamNumber = getSettingsProp('team_number');
+	$envUrl = getSettingsProp('env_url');
+	$email = str_replace('###TEAM_NAME###',$teamName,$mergedHtml);
+	$email = str_replace('###TEAM_NUMBER###',$teamNumber,$email);
+	$email = str_replace('###ENV_URL###',$envUrl,$email);
+	$email = str_replace('###SUBJECT###',$subjectLine,$email);
 	$email = str_replace('###FNAME###',$userData['fname'],$email);
 	$email = str_replace('###CONTENT###',$emailContent,$email);
 	$mail = new PHPMailer(true);                              // Passing `true` enables exceptions

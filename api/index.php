@@ -55,7 +55,7 @@ $container['db'] = function ($container) {
 };*/
 $app->get('/version', function (Request $request, Response $response, array $args) {
     $responseArr = array(
-      'version' => '2.3.4'
+      'version' => '2.3.5'
     );
     $response = $response->withJson($responseArr);
     return $response;
@@ -69,16 +69,19 @@ $app->get('/config', function ($request, $response, $args) {
     'team_number',
     'team_logo_url',
     'google_calendar_id',
+    'slack_team_id',
+    'slack_url',
   );
   $settings = FrcPortal\Setting::all();
-
-  $responseStr = 'angular.module("FrcPortal")';
+//  $responseStr = '';
+  $constantArr = array();
   foreach($settings as $set) {
     if(in_array($set->setting,$configArr)) {
-      $responseStr .= '.constant("'.$set->setting.'", "'.$set->value.'")';
+      $constantArr[$set->setting] = $set->value;
+      //$responseStr .= '.constant("'.$set->setting.'", "'.$set->value.'")';
     }
   }
-  $responseStr .= ';';
+  $responseStr = 'angular.module("FrcPortal").constant("configItems", '.json_encode($constantArr).');';
   $response->getBody()->write($responseStr);
   $response = $response->withHeader('Content-type', 'application/javascript');
   return $response;
