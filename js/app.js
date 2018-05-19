@@ -430,7 +430,7 @@ angular.module('FrcPortal', [
 	});
 })
 .config(function($authProvider, configItems) {
-	$authProvider.loginUrl = '/api/auth/login';
+
 	$authProvider.google({
 		clientId: configItems.google_oauth_client_id,
 		url: '/api/auth/google',
@@ -479,37 +479,12 @@ angular.module('FrcPortal', [
 		type: '2.0',
 		popupOptions: { width: 500, height: 560 }
 	});
-/*	$authProvider.linkedin({
-		url: '/site/auth_linkedin.php',
-		clientId: '778o827lbrsltx',
-		authorizationEndpoint: 'https://www.linkedin.com/uas/oauth2/authorization',
-		redirectUri: window.location.origin,
-		requiredUrlParams: ['state'],
-		scope: ['r_emailaddress', 'r_basicprofile'],
-		scopeDelimiter: ' ',
-		state: 'STATE',
-		type: '2.0',
-		popupOptions: { width: 527, height: 582 }
-	});
-	$authProvider.yahoo({
-		url: '/site/auth_yahoo.php',
-		authorizationEndpoint: 'https://api.login.yahoo.com/oauth2/request_auth',
-		redirectUri: window.location.origin,
-		scope: [],
-		scopeDelimiter: ',',
-		type: '2.0',
-		popupOptions: { width: 559, height: 519 }
-	}); */
-
-
 
 	$authProvider.httpInterceptor = function() { return true; },
 	$authProvider.withCredentials = true;
 	$authProvider.tokenRoot = null;
 	$authProvider.baseUrl = '/';
-	$authProvider.loginUrl = '/site/auth/login';
-	$authProvider.signupUrl = '/site/auth/signup';
-	$authProvider.unlinkUrl = '/site/auth_unlink.php';
+	$authProvider.loginUrl = '/api/auth/login';
 	$authProvider.tokenName = 'token';
 	$authProvider.tokenPrefix = 'satellizer';
 	$authProvider.authHeader = 'Authorization';
