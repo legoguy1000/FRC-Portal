@@ -22,7 +22,7 @@ angular.module('FrcPortal', [
 	$locationProvider.html5Mode({ enabled: true, requireBase: true });
 	$stateProvider
 	  .state('main', {
-		url: '?clientId&code&redirectUri',
+		url: '',
 		templateUrl: 'views/main.html',
 		controller: 'mainController',
 		controllerAs: 'main',
@@ -34,13 +34,25 @@ angular.module('FrcPortal', [
 		},
 	  })
 	  .state('main.home', {
-		url: '/home?clientId&code&redirectUri',
+		url: '/home',
 		templateUrl: 'views/main.home.html',
 		controller: 'main.homeController',
 		controllerAs: 'vm',
 		authenticate: false,
 		data: {
 		  title: 'Home'
+		}
+	  })
+	  .state('main.oauthSuccess', {
+		url: '/oauth?clientId&code&redirectUri',
+		templateUrl: 'views/main.oauth.html',
+		controller: function($scope){
+    	var vm = this;
+	  }
+		controllerAs: 'vm',
+		authenticate: false,
+		data: {
+		  title: ''
 		}
 	  })
 	  .state('main.profile', {
@@ -423,7 +435,7 @@ angular.module('FrcPortal', [
 		url: '/api/auth/google',
 	//	url: '/api/v1/login/google',
 		authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
-		redirectUri: window.location.origin+'/home',
+		redirectUri: window.location.origin+'/oauth',
 		requiredUrlParams: ['scope','prompt'],
 		optionalUrlParams: ['display'],
 		scope: ['profile', 'email','https://www.googleapis.com/auth/plus.login'],
