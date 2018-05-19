@@ -10,21 +10,40 @@
       </div>
     </md-toolbar>
     <md-dialog-content layout="column" layout-align="center center">
-		<md-button class="md-raised google btn-large social" ng-click="vm.authenticate('google')" style="min-width: 300px;">
-			<i class="mdi mdi-google"></i>
-			Log in with Google
-		</md-button>
-		<md-button class="md-raised facebook btn-large social" ng-click="vm.authenticate('facebook')" style="min-width: 300px;">
-			<i class="mdi mdi-facebook"></i>
-			Log in with Facebook
-		</md-button>
-		<md-button class="md-raised microsoft btn-large social" ng-click="vm.authenticate('live')">
-			<i class="mdi mdi-microsoft"></i>
-			Log in with Microsoft
-		</md-button>
+  		<md-button class="md-raised google btn-large social" ng-click="vm.authenticate('google')" style="min-width: 300px;" ng-show="vm.configItems.google_login_enable">
+  			<i class="mdi mdi-google"></i>
+  			Log in with Google
+  		</md-button>
+  		<md-button class="md-raised facebook btn-large social" ng-click="vm.authenticate('facebook')" style="min-width: 300px;" ng-show="vm.configItems.facebook_login_enable">
+  			<i class="mdi mdi-facebook"></i>
+  			Log in with Facebook
+  		</md-button>
+  		<md-button class="md-raised microsoft btn-large social" ng-click="vm.authenticate('live')" style="min-width: 300px;" ng-show="vm.configItems.microsoft_login_enable">
+  			<i class="mdi mdi-microsoft"></i>
+  			Log in with Microsoft
+  		</md-button>
+      <div layout="column" ng-show="vm.configItems.local_login_enable">
+        <form name="Form" ng-submit="vm.login()">
+            <md-input-container class="md-block">
+              <label>Login</label>
+              <input type="text" name="email" ng-model="vm.loginForm.email" placeholder="login" required/>
+              <div ng-messages="Form.email.$error" role="alert" multiple="">
+                <div ng-message="required" class="my-message">Please enter your email.</div>
+              </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+              <label>Password</label>
+              <input type="password" name="password" ng-model="vm.loginForm.password" placeholder="password" required/>
+              <div ng-messages="Form.password.$error" role="alert" multiple="">
+                <div ng-message="required" class="my-message">Please enter your password.</div>
+              </div>
+            </md-input-container>
+            <md-button ng-disabled="!Form.$valid" type="submit" class="md-raised md-primary">Login</md-button>
+          </form>
+      </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-     
+
     </md-dialog-actions>
   </form>
 </md-dialog>

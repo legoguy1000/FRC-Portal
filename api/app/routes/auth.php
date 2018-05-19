@@ -42,14 +42,17 @@ $app->group('/auth', function () {
 
       $user = false;
       $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
-        $q->where('status','=','1');
+        $q->where('status',true);
       }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
       if($data != null) {
         $user = $data->users;
       } else {
         $data = FrcPortal\User::with(['school'])
-                ->where('email', $userData['email'])
-                ->orWhere('team_email', $userData['email'])
+                ->where(function ($query) {
+                  $query->where('email', $userData['email'])
+                        ->orWhere('team_email', $userData['email'])
+                })
+                ->where('status',true)
                 ->first();
         if($data != null) {
           $user = $data;
@@ -144,14 +147,17 @@ $app->group('/auth', function () {
       	);
         $user = false;
         $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
-          $q->where('status','=','1');
+          $q->where('status',true);
         }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
         if($data != null) {
           $user = $data->users;
         } else {
           $data = FrcPortal\User::with(['school'])
-                  ->where('email', $userData['email'])
-                  ->orWhere('team_email', $userData['email'])
+                  ->where(function ($query) {
+                    $query->where('email', $userData['email'])
+                          ->orWhere('team_email', $userData['email'])
+                  })
+                  ->where('status',true)
                   ->first();
           if($data != null) {
             $user = $data;
@@ -266,14 +272,17 @@ $app->group('/auth', function () {
       $user = false;
       $data = array();
       $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
-        $q->where('status','=','1');
+        $q->where('status',true);
       }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
       if($data != null) {
         $user = $data->users;
       } else {
         $data = FrcPortal\User::with(['school'])
-                ->where('email', $userData['email'])
-                ->orWhere('team_email', $userData['email'])
+                ->where(function ($query) {
+                  $query->where('email', $userData['email'])
+                        ->orWhere('team_email', $userData['email'])
+                })
+                ->where('status',true)
                 ->first();
         if($data != null) {
           $user = $data;
@@ -318,6 +327,55 @@ $app->group('/auth', function () {
       } else {
         $responseData = array('status'=>false, 'msg'=>'Microsoft account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
       }
+    }
+    $response = $response->withJson($responseData);
+    return $response;
+  });
+  $this->post('/login', function ($request, $response) {
+    $responseData = false;
+    $formData = $request->getParsedBody();
+    $provider = 'local';
+    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','local_login_enable')->first();
+    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
+      $responseData = array('status'=>false, 'msg'=>'Local login is not enabled.  Please select a different option.');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
+
+    $email = $formData['email'];
+    $password = $formData['password'];
+
+    $user = null;
+    $data = array();
+
+    $data = FrcPortal\User::with(['school'])
+            ->where(function ($query) {
+              $query->where('email', $userData['email'])
+                    ->orWhere('team_email', $userData['email'])
+            })
+            ->where('password', hash('sha512',$password))
+            ->where('status',true)
+            ->first();
+    if($user != null) {
+      $key = getSettingsProp('jwt_key');
+			$token = array(
+				"iss" => getSettingsProp('env_url'),
+				"iat" => time(),
+				"exp" => time()+60*60,
+				"jti" => bin2hex(random_bytes(10)),
+				'data' => array(
+          'user_id' => $user->user_id,
+          'full_name' => $user->full_name,
+          'admin' => $user->admin,
+          'status' => $user->status,
+          'user_type' => $user->user_type,
+          'email' => $user->email,
+        )
+			);
+			$jwt = JWT::encode($token, $key);
+      $responseData = array('status'=>true, 'msg'=>'Login Successful', 'token'=>$jwt, 'userInfo' => $user);
+    } else {
+      $responseData = array('status'=>false, 'msg'=>'Username or Password not correct. Please try again.');
     }
     $response = $response->withJson($responseData);
     return $response;
