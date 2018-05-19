@@ -126,6 +126,10 @@
 				Enable Slack Notifications
 			</md-switch>
 			<md-input-container flex>
+				<label>Slack Team URL</label>
+				<input ng-model="vm.settings.notification.slack_url" ng-disabled="!vm.settings.notification.slack_enable">
+			</md-input-container>
+			<md-input-container flex>
 				<label>Slack Team ID</label>
 				<input ng-model="vm.settings.notification.slack_team_id" ng-disabled="!vm.settings.notification.slack_enable">
 			</md-input-container>
