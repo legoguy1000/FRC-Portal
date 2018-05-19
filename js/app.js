@@ -430,6 +430,7 @@ angular.module('FrcPortal', [
 	});
 })
 .config(function($authProvider, configItems) {
+	$authProvider.loginUrl = '/api/auth/login';
 	$authProvider.google({
 		clientId: configItems.google_oauth_client_id,
 		url: '/api/auth/google',
