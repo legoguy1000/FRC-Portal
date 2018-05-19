@@ -50,7 +50,7 @@ $app->group('/auth', function () {
         $data = FrcPortal\User::with(['school'])
                 ->where(function ($query) {
                   $query->where('email', $userData['email'])
-                        ->orWhere('team_email', $userData['email'])
+                        ->orWhere('team_email', $userData['email']);
                 })
                 ->where('status',true)
                 ->first();
@@ -155,7 +155,7 @@ $app->group('/auth', function () {
           $data = FrcPortal\User::with(['school'])
                   ->where(function ($query) {
                     $query->where('email', $userData['email'])
-                          ->orWhere('team_email', $userData['email'])
+                          ->orWhere('team_email', $userData['email']);
                   })
                   ->where('status',true)
                   ->first();
@@ -280,7 +280,7 @@ $app->group('/auth', function () {
         $data = FrcPortal\User::with(['school'])
                 ->where(function ($query) {
                   $query->where('email', $userData['email'])
-                        ->orWhere('team_email', $userData['email'])
+                        ->orWhere('team_email', $userData['email']);
                 })
                 ->where('status',true)
                 ->first();
@@ -351,7 +351,7 @@ $app->group('/auth', function () {
     $data = FrcPortal\User::with(['school'])
             ->where(function ($query) {
               $query->where('email', $userData['email'])
-                    ->orWhere('team_email', $userData['email'])
+                    ->orWhere('team_email', $userData['email']);
             })
             ->where('password', hash('sha512',$password))
             ->where('status',true)
