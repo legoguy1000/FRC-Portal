@@ -43,6 +43,18 @@ angular.module('FrcPortal', [
 		  title: 'Home'
 		}
 	  })
+	  .state('main.oauthSuccess', {
+		url: '/oauth?clientId&code&redirectUri',
+		templateUrl: 'views/main.oauth.html',
+		controller: function($scope){
+    	var vm = this;
+	  },
+		controllerAs: 'vm',
+		authenticate: false,
+		data: {
+		  title: ''
+		}
+	  })
 	  .state('main.profile', {
 		url: '/profile',
 		templateUrl: 'views/main.profile.html',
@@ -423,7 +435,7 @@ angular.module('FrcPortal', [
 		url: '/api/auth/google',
 	//	url: '/api/v1/login/google',
 		authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
-		redirectUri: window.location.origin,
+		redirectUri: window.location.origin+'/oauth',
 		requiredUrlParams: ['scope','prompt'],
 		optionalUrlParams: ['display'],
 		scope: ['profile', 'email','https://www.googleapis.com/auth/plus.login'],
@@ -440,7 +452,7 @@ angular.module('FrcPortal', [
 		url: '/api/auth/facebook',
 	//	url: '/api/v1/login/facebook ',
 		authorizationEndpoint: 'https://www.facebook.com/v3.0/dialog/oauth',
-		redirectUri: window.location.origin+'/',
+		redirectUri: window.location.origin+'/oauth',
 		requiredUrlParams: ['display', 'scope'],
 		optionalUrlParams: ['auth_type'],
 		scope: ['public_profile','email'],
@@ -455,7 +467,7 @@ angular.module('FrcPortal', [
 	//	url: '/api/v1/login/live',
 		clientId: microsoft_oauth_client_id,
 		authorizationEndpoint: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
-		redirectUri: window.location.origin,
+		redirectUri: window.location.origin+'/oauth',
 		requiredUrlParams: ['scope', 'response_mode', 'nonce'],
 		scope: ['openid','email',' profile','User.Read'], //,'User.Read','User.ReadBasic.All'
 		scopeDelimiter: ' ',
