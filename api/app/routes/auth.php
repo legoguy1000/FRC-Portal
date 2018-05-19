@@ -349,7 +349,7 @@ $app->group('/auth', function () {
     $data = array();
 
     $data = FrcPortal\User::with(['school'])
-            ->where(function ($query) {
+            ->where(function ($query) use ($email) {
               $query->where('email', $email)
                     ->orWhere('team_email', $email);
             })
