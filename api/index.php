@@ -72,6 +72,7 @@ $app->get('/config', function ($request, $response, $args) {
     'slack_team_id',
     'slack_url',
   );
+  $settings = FrcPortal\Setting::all();
 //  $responseStr = '';
   $constantArr = array();
   foreach($settings as $set) {
