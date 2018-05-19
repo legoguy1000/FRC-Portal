@@ -423,7 +423,7 @@ angular.module('FrcPortal', [
 		url: '/api/auth/google',
 	//	url: '/api/v1/login/google',
 		authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
-		redirectUri: window.location.origin,
+		redirectUri: window.location.origin+'/home',
 		requiredUrlParams: ['scope','prompt'],
 		optionalUrlParams: ['display'],
 		scope: ['profile', 'email','https://www.googleapis.com/auth/plus.login'],
