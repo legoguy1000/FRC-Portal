@@ -350,8 +350,8 @@ $app->group('/auth', function () {
 
     $data = FrcPortal\User::with(['school'])
             ->where(function ($query) {
-              $query->where('email', $userData['email'])
-                    ->orWhere('team_email', $userData['email']);
+              $query->where('email', $email)
+                    ->orWhere('team_email', $email);
             })
             ->where('password', hash('sha512',$password))
             ->where('status',true)
