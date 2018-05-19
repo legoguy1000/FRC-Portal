@@ -21,8 +21,8 @@ angular.module('FrcPortal', [
 
 	$locationProvider.html5Mode({ enabled: true, requireBase: true });
 	$stateProvider
-	  .state('main?clientId&code&redirectUri', {
-		url: '',
+	  .state('main', {
+		url: '?clientId&code&redirectUri',
 		templateUrl: 'views/main.html',
 		controller: 'mainController',
 		controllerAs: 'main',
