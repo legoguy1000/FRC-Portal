@@ -77,12 +77,14 @@ $app->get('/config', function ($request, $response, $args) {
     'microsoft_login_enable',
   );
   $settings = FrcPortal\Setting::all();
-//  $responseStr = '';
   $constantArr = array();
   foreach($settings as $set) {
     if(in_array($set->setting,$configArr)) {
-      $constantArr[$set->setting] = $set->value;
-      //$responseStr .= '.constant("'.$set->setting.'", "'.$set->value.'")';
+      $temp = $set->value;
+      if(strpos($set->setting, 'enable') !== false) {
+        $temp = (boolean) $temp;
+      }
+      $constantArr[$set->setting] = $temp;
     }
   }
   $responseStr = 'angular.module("FrcPortal").constant("configItems", '.json_encode($constantArr).');';
