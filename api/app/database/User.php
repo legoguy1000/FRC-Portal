@@ -8,7 +8,7 @@ Capsule::schema()->create('users', function ($table) {
        $table->string('fname');
        $table->string('lname');
        $table->string('email');
-       $table->string('password')->nullable()->default(null);
+       $table->char('password',128)->nullable()->default(null);
        $table->char('school_id',13)->nullable()->default(null)->index();
        $table->string('user_type');
        $table->boolean('former_student')->default(0);
@@ -18,7 +18,7 @@ Capsule::schema()->create('users', function ($table) {
        $table->string('gender');
        $table->string('profile_image',500);
        $table->string('slack_id');
-       $table->string('signin_pin');
+       $table->char('signin_pin',64);
        $table->boolean('admin')->default(0);
        $table->boolean('first_login')->default(1);
        $table->boolean('status')->default(1);
