@@ -72,15 +72,15 @@ $app->get('/config', function ($request, $response, $args) {
     'slack_team_id',
     'slack_url',
   );
-  $settings = FrcPortal\Setting::all();
-
-  $responseStr = 'angular.module("FrcPortal")';
+//  $responseStr = '';
+  $configArr = array();
   foreach($settings as $set) {
     if(in_array($set->setting,$configArr)) {
-      $responseStr .= '.constant("'.$set->setting.'", "'.$set->value.'")';
+      $configArr[$set->setting] = $set->value;
+      //$responseStr .= '.constant("'.$set->setting.'", "'.$set->value.'")';
     }
   }
-  $responseStr .= ';';
+  $responseStr = 'angular.module("FrcPortal").constant("configItems", '.json_encode($configArr).');';
   $response->getBody()->write($responseStr);
   $response = $response->withHeader('Content-type', 'application/javascript');
   return $response;
