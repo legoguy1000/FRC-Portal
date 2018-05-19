@@ -42,7 +42,7 @@ $app->group('/auth', function () {
 
       $user = false;
       $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
-        $q->where('status','=','1');
+        $q->where('status',true);
       }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
       if($data != null) {
         $user = $data->users;
@@ -52,7 +52,7 @@ $app->group('/auth', function () {
                   $query->where('email', $userData['email'])
                         ->orWhere('team_email', $userData['email'])
                 })
-                ->where('status','=','1')
+                ->where('status',true)
                 ->first();
         if($data != null) {
           $user = $data;
@@ -147,7 +147,7 @@ $app->group('/auth', function () {
       	);
         $user = false;
         $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
-          $q->where('status','=','1');
+          $q->where('status',true);
         }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
         if($data != null) {
           $user = $data->users;
@@ -157,7 +157,7 @@ $app->group('/auth', function () {
                     $query->where('email', $userData['email'])
                           ->orWhere('team_email', $userData['email'])
                   })
-                  ->where('status','=','1')
+                  ->where('status',true)
                   ->first();
           if($data != null) {
             $user = $data;
@@ -272,7 +272,7 @@ $app->group('/auth', function () {
       $user = false;
       $data = array();
       $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
-        $q->where('status','=','1');
+        $q->where('status',true);
       }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
       if($data != null) {
         $user = $data->users;
@@ -282,7 +282,7 @@ $app->group('/auth', function () {
                   $query->where('email', $userData['email'])
                         ->orWhere('team_email', $userData['email'])
                 })
-                ->where('status','=','1')
+                ->where('status',true)
                 ->first();
         if($data != null) {
           $user = $data;
