@@ -69,6 +69,8 @@ $app->get('/config', function ($request, $response, $args) {
     'team_number',
     'team_logo_url',
     'google_calendar_id',
+    'slack_team_id',
+    'slack_url',
   );
   $settings = FrcPortal\Setting::all();
 
