@@ -346,9 +346,7 @@ $app->group('/auth', function () {
     $password = $formData['password'];
 
     $user = null;
-    $data = array();
-
-    $data = FrcPortal\User::with(['school'])
+    $user = FrcPortal\User::with(['school'])
             ->where(function ($query) use ($email) {
               $query->where('email', $email)
                     ->orWhere('team_email', $email);
