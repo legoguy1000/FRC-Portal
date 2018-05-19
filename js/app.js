@@ -48,7 +48,7 @@ angular.module('FrcPortal', [
 		templateUrl: 'views/main.oauth.html',
 		controller: function($scope){
     	var vm = this;
-	  }
+	  },
 		controllerAs: 'vm',
 		authenticate: false,
 		data: {
