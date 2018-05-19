@@ -22,7 +22,7 @@
   			<i class="mdi mdi-microsoft"></i>
   			Log in with Microsoft
   		</md-button>
-      <div layout="column">
+      <div layout="column" ng-show="vm.configItems.local_login_enable">
         <form name="Form" ng-submit="vm.login()">
             <md-input-container class="md-block">
               <label>Login</label>
