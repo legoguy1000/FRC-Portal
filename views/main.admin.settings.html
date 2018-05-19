@@ -79,7 +79,10 @@
 			></div>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">
-			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.login.google_login_enable" class="md-warn">
+			<md-switch md-invert aria-label="Enable Local Login" ng-model="vm.settings.login.local_login_enable" class="md-warn">
+				Enable Local Login
+			</md-switch>
+			<md-switch md-invert aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn">
 				Enable Google Login
 			</md-switch>
 			<md-input-container flex>
@@ -90,7 +93,7 @@
 				<label>Google OAuth2 Client Secret</label>
 				<input ng-model="vm.settings.login.google_oauth_client_secret" ng-disabled="!vm.settings.login.google_login_enable">
 			</md-input-container>
-			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
+			<md-switch md-invert aria-label="Enable Facebook Login" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
 				Enable Facebook Login
 			</md-switch>
 			<md-input-container flex>
@@ -101,7 +104,7 @@
 				<label>Facebook OAuth2 Client Secret</label>
 				<input ng-model="vm.settings.login.facebook_oauth_client_secret" ng-disabled="!vm.settings.login.facebook_login_enable">
 			</md-input-container>
-			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn">
+			<md-switch md-invert aria-label="Enable Microsoft Login" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn">
 				Enable Microsoft Login
 			</md-switch>
 			<md-input-container flex>
