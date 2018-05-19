@@ -71,6 +71,10 @@ $app->get('/config', function ($request, $response, $args) {
     'google_calendar_id',
     'slack_team_id',
     'slack_url',
+    'local_login_enable',
+    'google_login_enable',
+    'facebook_login_enable',
+    'microsoft_login_enable',
   );
   $settings = FrcPortal\Setting::all();
 //  $responseStr = '';
