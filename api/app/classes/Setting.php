@@ -16,7 +16,7 @@ class Setting extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'setting_id', 'setting', 'value'
+    'setting_id', 'section', 'setting', 'value', 'type'
   ];
 
   /**
