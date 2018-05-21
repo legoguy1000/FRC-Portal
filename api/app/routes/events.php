@@ -345,7 +345,7 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr,403);
         return $response;
       }
-      
+
       $event_id = $args['event_id'];
       $room_id = $args['room_id'];
       $event = FrcPortal\EventRoom::where('event_id',$event_id)->where('room_id',$room_id)->delete();
