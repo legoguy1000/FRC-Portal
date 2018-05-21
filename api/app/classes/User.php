@@ -26,7 +26,7 @@ class User extends Eloquent {
   *
   * @var array
   */
-  protected $hidden = [];
+  protected $hidden = ['signin_pin','password'];
 
   /**
    * The attributes that should be cast to native types.
