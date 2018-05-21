@@ -17,7 +17,7 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 		vm.getEvent = function () {
 			var user_id = $scope.main.isAuthed ? $scope.main.userInfo.user_id : null;
 			var reqs = $scope.main.isAuthed ? true : false;
-			vm.promise = eventsService.getEvent(vm.event_id, reqs, user_id).then(function(response){
+			vm.promise = eventsService.getEventPublic(vm.event_id, reqs, user_id).then(function(response){
 				vm.event = response.data;
 				$scope.main.title += ' - '+vm.event.name;
 			});
