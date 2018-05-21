@@ -153,6 +153,19 @@ $app->group('/events', function () {
     return $response;
   });
   $this->group('/{event_id:[a-z0-9]{13}}', function () {
+    $this->get('/public', function ($request, $response, $args) {
+      $event_id = $args['event_id'];
+      $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
+      $event = FrcPortal\Event::with('poc')->find($event_id);
+      if($reqsBool) {
+        $event->users = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+                        		$query->where('event_id','=',$event_id);
+                          }])->get();
+      }
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
     $this->get('', function ($request, $response, $args) {
       $event_id = $args['event_id'];
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
@@ -183,9 +196,22 @@ $app->group('/events', function () {
     });
 
     $this->put('/cars', function ($request, $response, $args) {
-      //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']->user_id;
-      //checkAdmin($user_id, $die = true);
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']->user_id;
+      $season_id = $args['season_id'];
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
+
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
       if(!isset($formData['cars']) || !is_array($formData['cars']) || empty($formData['cars'])) {
@@ -260,9 +286,21 @@ $app->group('/events', function () {
       return $response;
     });
     $this->put('/rooms', function ($request, $response, $args) {
-      //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']->user_id;
-      //checkAdmin($user_id, $die = true);
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']->user_id;
+      $season_id = $args['season_id'];
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
       if(!isset($formData['rooms']) || !is_array($formData['rooms']) || empty($formData['rooms'])) {
@@ -293,9 +331,21 @@ $app->group('/events', function () {
       return $response;
     });
     $this->delete('/rooms/{room_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-      //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']->user_id;
-      //checkAdmin($user_id, $die = true);
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']->user_id;
+      $season_id = $args['season_id'];
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+      
       $event_id = $args['event_id'];
       $room_id = $args['room_id'];
       $event = FrcPortal\EventRoom::where('event_id',$event_id)->where('room_id',$room_id)->delete();
@@ -313,9 +363,21 @@ $app->group('/events', function () {
       return $response;
     });
     $this->put('', function ($request, $response, $args) {
-      //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']->user_id;
-      //checkAdmin($user_id, $die = true);
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']->user_id;
+      $season_id = $args['season_id'];
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
       $event = FrcPortal\Event::find($event_id);
@@ -333,18 +395,42 @@ $app->group('/events', function () {
       return $response;
     });
     $this->put('/syncGoogleCalEvent', function ($request, $response, $args) {
-      //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']->user_id;
-      //checkAdmin($user_id, $die = true);
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']->user_id;
+      $season_id = $args['season_id'];
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
       $event_id = $args['event_id'];
       $responseArr = syncGoogleCalendarEvent($event_id);
       $response = $response->withJson($responseArr);
       return $response;
     });
     $this->put('/toggleEventReqs', function ($request, $response, $args) {
-      //$authToken = checkToken(true,true);
-      //$user_id = $authToken['data']->user_id;
-      //checkAdmin($user_id, $die = true);
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']->user_id;
+      $season_id = $args['season_id'];
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
       $event_id = $args['event_id'];
       $formData = $request->getParsedBody();
       if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {

@@ -21,7 +21,7 @@ $app = new \Slim\App(['settings' => $config]);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
     "secret" => getSettingsProp('jwt_key'),
     "path" => ['/users', '/seasons', '/events', '/schools','/hours/missingHoursRequests','/hours/signIn/records','/settings'],
-    "passthrough" => ['/auth','/reports','/slack','/hours/signIn','/config'],
+    "passthrough" => ['/auth','/reports','/slack','/hours/signIn','/config','/events/.*/public'],
 ]));
 $container = $app->getContainer();
 /* $container['db'] = function ($c) {
