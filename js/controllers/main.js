@@ -45,6 +45,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	function selectItem (item) {
 	  main.title = item.name;
 	  main.showSimpleToast(main.title);
+		main.toggleItemsList();
 	}
 
 
