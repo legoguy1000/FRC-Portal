@@ -1,5 +1,6 @@
 <?php
 include('app/includes.php');
+include('app/libraries/CustomAuthRule.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -20,8 +21,17 @@ $config['db']['prefix'] = '';
 $app = new \Slim\App(['settings' => $config]);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
     "secret" => getSettingsProp('jwt_key'),
-    "path" => ['/users', '/seasons', '/events', '/schools','/hours/missingHoursRequests','/hours/signIn/records','/settings'],
-    "passthrough" => ['/auth','/reports','/slack','/hours/signIn','/config','/public'],
+    "rules" => [
+        new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
+          "path" => ['/users', '/seasons', '/events', '/events', '/schools','/hours/missingHoursRequests','/hours/signIn/records','/settings'],
+          "passthrough" => ['/auth','/reports','/slack','/hours/signIn','/config','/public'],
+        ]),
+        new Tuupola\Middleware\JwtAuthentication\RequestPathMethodRule([
+          "passthrough" => [
+            "/events/([a-z0-9]{13})" => ["GET"],
+          ],
+        ])
+    ]
 ]));
 $container = $app->getContainer();
 /* $container['db'] = function ($c) {
