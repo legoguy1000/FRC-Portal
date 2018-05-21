@@ -16,7 +16,7 @@ angular.module('FrcPortal')
 		},
 		getEventPublic: function (event_id) {
 			var event_id = event_id != undefined && event_id != null ? event_id:'';
-			return $http.get('api/events/'+event_id+'/public')
+			return $http.get('api/public/events/'+event_id)
 			.then(function(response) {
 				return response.data;
 			});

@@ -21,7 +21,7 @@ $app = new \Slim\App(['settings' => $config]);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
     "secret" => getSettingsProp('jwt_key'),
     "path" => ['/users', '/seasons', '/events', '/schools','/hours/missingHoursRequests','/hours/signIn/records','/settings'],
-    "passthrough" => ['/auth','/reports','/slack','/hours/signIn','/config','/events/.*/public'],
+    "passthrough" => ['/auth','/reports','/slack','/hours/signIn','/config','/public'],
 ]));
 $container = $app->getContainer();
 /* $container['db'] = function ($c) {
@@ -71,14 +71,20 @@ $app->get('/config', function ($request, $response, $args) {
     'google_calendar_id',
     'slack_team_id',
     'slack_url',
+    'local_login_enable',
+    'google_login_enable',
+    'facebook_login_enable',
+    'microsoft_login_enable',
   );
   $settings = FrcPortal\Setting::all();
-//  $responseStr = '';
   $constantArr = array();
   foreach($settings as $set) {
     if(in_array($set->setting,$configArr)) {
-      $constantArr[$set->setting] = $set->value;
-      //$responseStr .= '.constant("'.$set->setting.'", "'.$set->value.'")';
+      $temp = $set->value;
+      if(strpos($set->setting, 'enable') !== false) {
+        $temp = (boolean) $temp;
+      }
+      $constantArr[$set->setting] = $temp;
     }
   }
   $responseStr = 'angular.module("FrcPortal").constant("configItems", '.json_encode($constantArr).');';
@@ -97,6 +103,7 @@ include('./app/routes/reports.php');
 include('./app/routes/schools.php');
 include('./app/routes/slack.php');
 include('./app/routes/settings.php');
+include('./app/routes/public.php');
 
 $app->run();
 
