@@ -1,6 +1,4 @@
-angular.module('FrcPortal',[
-	'chart.js',
-])
+angular.module('FrcPortal')
 .controller('main.admin.metricsController', ['$timeout', '$q', '$scope', '$state', '$timeout', 'metricsService',
 	mainAdminMetricsController
 ]);

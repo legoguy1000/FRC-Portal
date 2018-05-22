@@ -8,6 +8,7 @@ angular.module('FrcPortal', [
 	'satellizer',
 	'nvd3',
 	'ui.router.default',
+	'chart.js',
 	'bc.AngularKeypad',
 	'angularRipple',
 	'moment-picker',
