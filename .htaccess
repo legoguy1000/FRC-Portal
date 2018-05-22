@@ -14,3 +14,9 @@ RewriteRule ^ - [L]
 RewriteRule ^ index.html [L]
 
 SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
+
+#Gzip
+<ifmodule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css application/x-javascript application/javascript text/javascript
+</ifmodule>
+#End Gzip
