@@ -23,12 +23,14 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     "secret" => getSettingsProp('jwt_key'),
     "rules" => [
         new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
-          "path" => ['/users', '/seasons', '/events', '/events', '/schools','/hours/missingHoursRequests','/hours/signIn/records','/settings'],
-          "passthrough" => ['/auth','/reports','/slack','/hours/signIn','/config','/public'],
+          "path" => ['/'],
+          "ignore" => ['/auth','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/config'],
         ]),
         new Tuupola\Middleware\JwtAuthentication\RequestPathMethodRule([
           "passthrough" => [
             "/events/([a-z0-9]{13})" => ["GET"],
+            "/reports/topHourUsers/([0-9]{4})" => ["GET"],
+            "/hours/signIn" => ["POST"],
           ],
         ])
     ]
@@ -65,7 +67,7 @@ $container['db'] = function ($container) {
 };*/
 $app->get('/version', function (Request $request, Response $response, array $args) {
     $responseArr = array(
-      'version' => '2.4.0'
+      'version' => '2.4.1'
     );
     $response = $response->withJson($responseArr);
     return $response;
