@@ -23,12 +23,13 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     "secret" => getSettingsProp('jwt_key'),
     "rules" => [
         new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
-          "path" => ['/users', '/seasons', '/events', '/events', '/schools','/hours/missingHoursRequests','/hours/signIn/records','/settings'],
-          "ignore" => ['/auth','/reports','/slack','/hours/signIn','/config','/public'],
+          "path" => ['/'],
+          "ignore" => ['/auth','/reports','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/config','/public'],
         ]),
         new Tuupola\Middleware\JwtAuthentication\RequestPathMethodRule([
           "passthrough" => [
             "/events/([a-z0-9]{13})" => ["GET"],
+            "/hours/signIn" => ["POST"],
           ],
         ])
     ]
