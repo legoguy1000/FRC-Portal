@@ -6,7 +6,7 @@ angular.module('FrcPortal', [
 	'md.data.table',
 	'ngMdIcons',
 	'satellizer',
-	'nvd3',
+//	'nvd3',
 	'ui.router.default',
 	'chart.js',
 	'bc.AngularKeypad',
