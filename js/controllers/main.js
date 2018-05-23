@@ -59,23 +59,25 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	}
 
 	function loginModal(ev) {
-		$ocLazyLoad.load('loginModalController');
-		$mdDialog.show({
-			controller: loginModalController,
-			controllerAs: 'vm',
-			templateUrl: 'views/partials/loginModal.tmpl.html',
-			parent: angular.element(document.body),
-			targetEvent: ev,
-			clickOutsideToClose:true,
-			fullscreen: true // Only for -xs, -sm breakpoints.
-		})
-		.then(function(response) {
-			if(response.auth) {
-				$rootScope.$broadcast('afterLoginAction');
-			}
-		}, function() {
-			$log.info('Dialog dismissed at: ' + new Date());
+		$ocLazyLoad.load('loginModalController').then(function(response) {
+			$mdDialog.show({
+				controller: loginModalController,
+				controllerAs: 'vm',
+				templateUrl: 'views/partials/loginModal.tmpl.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose:true,
+				fullscreen: true // Only for -xs, -sm breakpoints.
+			})
+			.then(function(response) {
+				if(response.auth) {
+					$rootScope.$broadcast('afterLoginAction');
+				}
+			}, function() {
+				$log.info('Dialog dismissed at: ' + new Date());
+			});
 		});
+
 	}
 
 	function newUserModal(ev) {
