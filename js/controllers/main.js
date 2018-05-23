@@ -1,9 +1,9 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window',
+	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad',
 	mainController
 ]);
-function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window) {
+function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad) {
 	var main = this;
 
 	main.team_number = configItems.team_number;
@@ -59,6 +59,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	}
 
 	function loginModal(ev) {
+		$ocLazyLoad.load('loginModalController');
 		$mdDialog.show({
 			controller: loginModalController,
 			controllerAs: 'vm',

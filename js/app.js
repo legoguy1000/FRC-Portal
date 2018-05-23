@@ -494,4 +494,33 @@ angular.module('FrcPortal', [
 })
 .config(['momentPickerProvider', function (momentPickerProvider) {
 	//momentPickerProvider.options({ hoursFormat: 'LT' });
+}])
+.config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
+  $ocLazyLoadProvider.config({
+		modules: [{
+	    name: 'loginModalController',
+	    files: ['js/controllers/loginModalController.js']
+	  }, {
+	    name: 'newUserModalController',
+	    files: ['js/controllers/newUserModalController.js']
+	  }, {
+	    name: 'newSeasonModalController',
+	    files: ['js/controllers/newSeasonModalController.js']
+	  }, {
+	    name: 'newEventModalController',
+	    files: ['js/controllers/newEventModalController.js']
+	  }, {
+	    name: 'SeasonHoursGraphModalController',
+	    files: ['js/controllers/SeasonHoursGraphModalController.js']
+	  }, {
+	    name: 'roomListModalController',
+	    files: ['js/controllers/roomListModalController.js']
+	  }, {
+	    name: 'carListModalController',
+	    files: ['js/controllers/carListModalController.js']
+	  }, {
+	    name: 'eventRegistrationModalController',
+	    files: ['js/controllers/eventRegistrationModalController.js']
+	  }]
+  });
 }]);
