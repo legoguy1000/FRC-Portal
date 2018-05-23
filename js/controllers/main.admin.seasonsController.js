@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.seasonsController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log',
+.controller('main.admin.seasonsController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log', '$ocLazyLoad',
 	mainAdminSeasonsController
 ]);
-function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log) {
+function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log, $ocLazyLoad) {
      var vm = this;
 
 
@@ -61,25 +61,27 @@ function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService
 	};
 
 	function newSeasonModal(ev) {
-		$mdDialog.show({
-			controller: newSeasonModalController,
-			controllerAs: 'vm',
-			templateUrl: 'views/partials/newSeasonModal.tmpl.html',
-			parent: angular.element(document.body),
-			targetEvent: ev,
-			clickOutsideToClose:true,
-			fullscreen: true, // Only for -xs, -sm breakpoints.
-			locals: {
-				userInfo: {},
-			}
-		})
-		.then(function(response) {
-			vm.seasons = response.data.results;
-			vm.total = response.data.total;
-			vm.maxPage = response.data.maxPage;
-			$log.info('asdf');
-		}, function() {
-			$log.info('Dialog dismissed at: ' + new Date());
+		$ocLazyLoad.load('newSeasonModalController').then(function(response) {
+			$mdDialog.show({
+				controller: newSeasonModalController,
+				controllerAs: 'vm',
+				templateUrl: 'views/partials/newSeasonModal.tmpl.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose:true,
+				fullscreen: true, // Only for -xs, -sm breakpoints.
+				locals: {
+					userInfo: {},
+				}
+			})
+			.then(function(response) {
+				vm.seasons = response.data.results;
+				vm.total = response.data.total;
+				vm.maxPage = response.data.maxPage;
+				$log.info('asdf');
+			}, function() {
+				$log.info('Dialog dismissed at: ' + new Date());
+			});
 		});
 	}
 

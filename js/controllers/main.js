@@ -81,26 +81,28 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	}
 
 	function newUserModal(ev) {
-		$mdDialog.show({
-			controller: newUserModalController,
-			controllerAs: 'vm',
-			templateUrl: 'views/partials/newUserModal.tmpl.html',
-			parent: angular.element(document.body),
-			targetEvent: ev,
-			//clickOutsideToClose:true,
-			fullscreen: true, // Only for -xs, -sm breakpoints.
-			locals: {
-				userInfo: main.userInfo,
-			}
-		})
-		.then(function(response) {
-			if(response.status) {
-				console.log('After Dialog')
-				console.log(response.userInfo);
-				$rootScope.$broadcast('afterLoginAction');
-			}
-		}, function() {
-			$log.info('Dialog dismissed at: ' + new Date());
+		$ocLazyLoad.load('newUserModalController').then(function(response) {
+			$mdDialog.show({
+				controller: newUserModalController,
+				controllerAs: 'vm',
+				templateUrl: 'views/partials/newUserModal.tmpl.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				//clickOutsideToClose:true,
+				fullscreen: true, // Only for -xs, -sm breakpoints.
+				locals: {
+					userInfo: main.userInfo,
+				}
+			})
+			.then(function(response) {
+				if(response.status) {
+					console.log('After Dialog')
+					console.log(response.userInfo);
+					$rootScope.$broadcast('afterLoginAction');
+				}
+			}, function() {
+				$log.info('Dialog dismissed at: ' + new Date());
+			});
 		});
 	}
 
