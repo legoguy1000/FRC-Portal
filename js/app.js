@@ -39,6 +39,11 @@ angular.module('FrcPortal', [
 		templateUrl: 'views/main.home.html',
 		controller: 'main.homeController',
 		controllerAs: 'vm',
+		resolve: {
+			mainHomeController:  ['$ocLazyLoad', function($ocLazyLoad) {
+           return $ocLazyLoad.load('js/controllers/main.homeController.js');
+    	 }]
+		},
 		authenticate: false,
 		data: {
 		  title: 'Home'
@@ -61,6 +66,11 @@ angular.module('FrcPortal', [
 		templateUrl: 'views/main.profile.html',
 		controller: 'main.profileController',
 		controllerAs: 'vm',
+		resolve: {
+			mainProfileController:  ['$ocLazyLoad', function($ocLazyLoad) {
+           return $ocLazyLoad.load('js/controllers/main.profileController.js');
+    	 }]
+		},
 		authenticate: true,
 		params: {
         firstLogin: false
