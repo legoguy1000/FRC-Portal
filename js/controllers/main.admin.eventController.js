@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast','$mdMenu',
+.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast','$mdMenu','$ocLazyLoad',
 	mainAdminEventController
 ]);
-function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast,$mdMenu) {
+function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast,$mdMenu,$ocLazyLoad) {
     var vm = this;
 
 	vm.filter = {
@@ -123,30 +123,33 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	}
 
 	vm.showRoomListModal = function(ev) {
-    $mdDialog.show({
-      controller: roomListModalController,
-			controllerAs: 'vm',
-      templateUrl: 'views/partials/roomListModal.tmpl.html',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      clickOutsideToClose:true,
-      fullscreen: true, // Only for -xs, -sm breakpoints.
-			locals: {
-				eventInfo: {
-					'event_id': vm.event_id,
-					'name':vm.event.name,
-					//'room_info': vm.event.room_list
-				},
-			}
-    })
-    .then(function(response) {
-			vm.users = response.data;
-    }, function() {
+		$ocLazyLoad.load('roomListModalController').then(function(response) {
+	    $mdDialog.show({
+	      controller: roomListModalController,
+				controllerAs: 'vm',
+	      templateUrl: 'views/partials/roomListModal.tmpl.html',
+	      parent: angular.element(document.body),
+	      targetEvent: ev,
+	      clickOutsideToClose:true,
+	      fullscreen: true, // Only for -xs, -sm breakpoints.
+				locals: {
+					eventInfo: {
+						'event_id': vm.event_id,
+						'name':vm.event.name,
+						//'room_info': vm.event.room_list
+					},
+				}
+	    })
+	    .then(function(response) {
+				vm.users = response.data;
+	    }, function() {
 
+			});
     });
   };
 
 	vm.showCarListModal = function(ev) {
+		$ocLazyLoad.load('carListModalController').then(function(response) {
 	    $mdDialog.show({
 	      controller: carListModalController,
 				controllerAs: 'vm',
@@ -167,8 +170,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				vm.users = response.data;
 	    }, function() {
 
-	    });
-	  };
+			});
+    });
+  };
 	vm.toggleEventReqs = function (req) {
 		var data = {
 			'event_id': vm.event_id,
@@ -200,36 +204,38 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	};
 
 	vm.showRegistrationForm = function(ev,userInfo) {
-		var eventInfo = angular.copy(vm.event);
-		delete eventInfo.requirements;
-		$mdDialog.show({
-			controller: eventRegistrationController,
-			controllerAs: 'vm',
-			templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
-			parent: angular.element(document.body),
-			targetEvent: ev,
-			clickOutsideToClose:true,
-			fullscreen: true, // Only for -xs, -sm breakpoints.
-			locals: {
-				'eventInfo': eventInfo,
-				'userInfo': userInfo
-			}
-		})
-		.then(function(answer) {
-			var user_id = answer.data.user_id;
-			var index = null;
-			var len = vm.users.length;
-			for (var i = 0; i < len; i++) {
-			  if(vm.users[i].user_id == user_id) {
-					index = i;
-			    break;
-			  }
-			}
-			if(index != null) {
-				vm.users[index] = answer.data;
-			}
-		}, function() {
+		$ocLazyLoad.load('eventRegistrationModalController').then(function(response) {
+			var eventInfo = angular.copy(vm.event);
+			delete eventInfo.requirements;
+			$mdDialog.show({
+				controller: eventRegistrationController,
+				controllerAs: 'vm',
+				templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose:true,
+				fullscreen: true, // Only for -xs, -sm breakpoints.
+				locals: {
+					'eventInfo': eventInfo,
+					'userInfo': userInfo
+				}
+			})
+			.then(function(answer) {
+				var user_id = answer.data.user_id;
+				var index = null;
+				var len = vm.users.length;
+				for (var i = 0; i < len; i++) {
+				  if(vm.users[i].user_id == user_id) {
+						index = i;
+				    break;
+				  }
+				}
+				if(index != null) {
+					vm.users[index] = answer.data;
+				}
+			}, function() {
 
+			});
 		});
 	}
 

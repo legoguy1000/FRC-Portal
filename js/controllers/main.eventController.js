@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','configItems',
+.controller('main.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','configItems','$ocLazyLoad',
 	mainEventController
 ]);
-function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,configItems) {
+function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,configItems,$ocLazyLoad) {
     var vm = this;
 
 		vm.registrationFormVisible = false;
@@ -33,27 +33,29 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 		};
 
 		vm.showRegistrationForm = function(ev) {
-			var eventInfo = vm.event;
-			if(!$scope.main.isAuthed) {
-				return;
-			}
-			$mdDialog.show({
-	      controller: eventRegistrationController,
-				controllerAs: 'vm',
-	      templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
-	      parent: angular.element(document.body),
-	      targetEvent: ev,
-	      clickOutsideToClose:true,
-	      fullscreen: true, // Only for -xs, -sm breakpoints.
-				locals: {
-					'eventInfo': eventInfo,
-					'userInfo': $scope.main.userInfo
+			$ocLazyLoad.load('eventRegistrationModalController').then(function(response) {
+				var eventInfo = vm.event;
+				if(!$scope.main.isAuthed) {
+					return;
 				}
-	    })
-	    .then(function(answer) {
+				$mdDialog.show({
+		      controller: eventRegistrationController,
+					controllerAs: 'vm',
+		      templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
+		      parent: angular.element(document.body),
+		      targetEvent: ev,
+		      clickOutsideToClose:true,
+		      fullscreen: true, // Only for -xs, -sm breakpoints.
+					locals: {
+						'eventInfo': eventInfo,
+						'userInfo': $scope.main.userInfo
+					}
+		    })
+		    .then(function(answer) {
 
-	    }, function() {
+		    }, function() {
 
+				});
 	    });
 		}
 }
