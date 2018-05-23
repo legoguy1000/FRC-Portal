@@ -39,11 +39,6 @@ angular.module('FrcPortal', [
 		templateUrl: 'views/main.home.html',
 		controller: 'main.homeController',
 		controllerAs: 'vm',
-		resolve: {
-			mainHomeController:  ['$ocLazyLoad', function($ocLazyLoad) {
-           return $ocLazyLoad.load('js/controllers/main.homeController.js');
-    	 }]
-		},
 		authenticate: false,
 		data: {
 		  title: 'Home'
@@ -66,11 +61,6 @@ angular.module('FrcPortal', [
 		templateUrl: 'views/main.profile.html',
 		controller: 'main.profileController',
 		controllerAs: 'vm',
-		resolve: {
-			mainProfileController:  ['$ocLazyLoad', function($ocLazyLoad) {
-           return $ocLazyLoad.load('js/controllers/main.profileController.js');
-    	 }]
-		},
 		authenticate: true,
 		params: {
         firstLogin: false
@@ -336,29 +326,26 @@ angular.module('FrcPortal', [
 			responseError: function(rejection) {
 				if (rejection.status === 401) {
 					// Return a new promise
-					var $ocLazyLoad = $injector.get('$ocLazyLoad');
 					var $mdDialog = $injector.get('$mdDialog');
 					var $auth = $injector.get('$auth');
 					var $rootScope = $injector.get('$rootScope');
 					console.log(rejection);
-					$ocLazyLoad.load('loginModalController').then(function(response) {
-						$mdDialog.show({
-							controller: loginModalController,
-							controllerAs: 'vm',
-							templateUrl: 'views/partials/loginModal.tmpl.html',
-							parent: angular.element(document.body),
-							clickOutsideToClose:true,
-							fullscreen: true // Only for -xs, -sm breakpoints.
-						})
-						.then(function(data) {
-							if(data.auth) {
-								$rootScope.$broadcast('afterLoginAction');
-								return $injector.get('$http')(rejection.config);
-							}
-						}, function() {
-							$log.info('Dialog dismissed at: ' + new Date());
-							$log.error('Authentication Required');
-						});
+					$mdDialog.show({
+						controller: loginModalController,
+						controllerAs: 'vm',
+						templateUrl: 'views/partials/loginModal.tmpl.html',
+						parent: angular.element(document.body),
+						clickOutsideToClose:true,
+						fullscreen: true // Only for -xs, -sm breakpoints.
+					})
+					.then(function(data) {
+						if(data.auth) {
+							$rootScope.$broadcast('afterLoginAction');
+							return $injector.get('$http')(rejection.config);
+						}
+					}, function() {
+						$log.info('Dialog dismissed at: ' + new Date());
+						$log.error('Authentication Required');
 					});
 				} else if (rejection.status === 400) {
 					// Return a new promise
@@ -376,7 +363,7 @@ angular.module('FrcPortal', [
 		}
 	});
 })
-.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log, $location, $window, $ocLazyLoad) {
+.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log, $location, $window) {
 	// initialise google analytics
   $window.ga('create', 'UA-114656092-1', 'auto');
 
@@ -396,36 +383,34 @@ angular.module('FrcPortal', [
 			/* event.preventDefault();  */
 			$log.info('Need logged in');
 			//alert(JSON.stringify(fromState, null, 4));
-			$ocLazyLoad.load('loginModalController').then(function(response) {
-				$mdDialog.show({
-					controller: loginModalController,
-					controllerAs: 'vm',
-					templateUrl: 'views/partials/loginModal.tmpl.html',
-					parent: angular.element(document.body),
-					clickOutsideToClose:true,
-					fullscreen: true // Only for -xs, -sm breakpoints.
-				})
-				.then(function(data) {
-					if(data.auth) {
-						var data = {
-							'allActions': true,
-						}
-						$rootScope.$broadcast('afterLoginAction',data);
-						$log.info('Logged in');
-						$log.info(toState.name);
-						$log.info(trans.params());
-						$state.go(toState.name, trans.params());
+			$mdDialog.show({
+				controller: loginModalController,
+				controllerAs: 'vm',
+				templateUrl: 'views/partials/loginModal.tmpl.html',
+				parent: angular.element(document.body),
+				clickOutsideToClose:true,
+				fullscreen: true // Only for -xs, -sm breakpoints.
+			})
+			.then(function(data) {
+				if(data.auth) {
+					var data = {
+						'allActions': true,
 					}
-					else if(trans.$from().name == '') {
-						$state.go('main.home');
-					}
-				}, function() {
-					$log.info('Dialog dismissed at: ' + new Date());
-					$log.error('Authentication Required');
-					if(trans.$from().name == '') {
-						$state.go('main.home');
-					}
-				});
+					$rootScope.$broadcast('afterLoginAction',data);
+					$log.info('Logged in');
+					$log.info(toState.name);
+					$log.info(trans.params());
+					$state.go(toState.name, trans.params());
+				}
+				else if(trans.$from().name == '') {
+					$state.go('main.home');
+				}
+			}, function() {
+				$log.info('Dialog dismissed at: ' + new Date());
+				$log.error('Authentication Required');
+				if(trans.$from().name == '') {
+					$state.go('main.home');
+				}
 			});
 		} else if((toState.admin || toState.parent.admin) && !$auth.getPayload().data.admin) {
 			trans.abort();
@@ -509,33 +494,4 @@ angular.module('FrcPortal', [
 })
 .config(['momentPickerProvider', function (momentPickerProvider) {
 	//momentPickerProvider.options({ hoursFormat: 'LT' });
-}])
-.config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
-  $ocLazyLoadProvider.config({
-		modules: [{
-	    name: 'loginModalController',
-	    files: ['js/controllers/loginModalController.js']
-	  }, {
-	    name: 'newUserModalController',
-	    files: ['js/controllers/newUserModalController.js']
-	  }, {
-	    name: 'newSeasonModalController',
-	    files: ['js/controllers/newSeasonModalController.js']
-	  }, {
-	    name: 'newEventModalController',
-	    files: ['js/controllers/newEventModalController.js']
-	  }, {
-	    name: 'SeasonHoursGraphModalController',
-	    files: ['js/controllers/SeasonHoursGraphModalController.js']
-	  }, {
-	    name: 'roomListModalController',
-	    files: ['js/controllers/roomListModalController.js']
-	  }, {
-	    name: 'carListModalController',
-	    files: ['js/controllers/carListModalController.js']
-	  }, {
-	    name: 'eventRegistrationModalController',
-	    files: ['js/controllers/eventRegistrationModalController.js']
-	  }]
-  });
 }]);

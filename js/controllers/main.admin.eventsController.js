@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.eventsController', ['$log','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$ocLazyLoad',
+.controller('main.admin.eventsController', ['$log','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog',
 	mainAdminEventsController
 ]);
-function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsService, $mdDialog, $ocLazyLoad) {
+function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsService, $mdDialog) {
      var vm = this;
 
 	vm.selected = [];
@@ -59,27 +59,25 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 	};
 
 	function newEventModal(ev) {
-		$ocLazyLoad.load('newEventModalController').then(function(response) {
-			$mdDialog.show({
-				controller: newEventModalController,
-				controllerAs: 'vm',
-				templateUrl: 'views/partials/newEventModal.tmpl.html',
-				parent: angular.element(document.body),
-				targetEvent: ev,
-				clickOutsideToClose:true,
-				fullscreen: true, // Only for -xs, -sm breakpoints.
-				locals: {
-					userInfo: {},
-				}
-			})
-			.then(function(response) {
-				vm.events = response.data.results;
-				vm.total = response.data.total;
-				vm.maxPage = response.data.maxPage;
-				$log.info('asdf');
-			}, function() {
-				$log.info('Dialog dismissed at: ' + new Date());
-			});
+		$mdDialog.show({
+			controller: newEventModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/newEventModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				userInfo: {},
+			}
+		})
+		.then(function(response) {
+			vm.events = response.data.results;
+			vm.total = response.data.total;
+			vm.maxPage = response.data.maxPage;
+			$log.info('asdf');
+		}, function() {
+			$log.info('Dialog dismissed at: ' + new Date());
 		});
 	}
 

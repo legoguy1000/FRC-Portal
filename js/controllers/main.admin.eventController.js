@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast','$mdMenu','$ocLazyLoad',
+.controller('main.admin.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast','$mdMenu',
 	mainAdminEventController
 ]);
-function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast,$mdMenu,$ocLazyLoad) {
+function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast,$mdMenu) {
     var vm = this;
 
 	vm.filter = {
@@ -123,55 +123,47 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	}
 
 	vm.showRoomListModal = function(ev) {
-		$ocLazyLoad.load('roomListModalController').then(function(response) {
-	    $mdDialog.show({
-	      controller: roomListModalController,
-				controllerAs: 'vm',
-	      templateUrl: 'views/partials/roomListModal.tmpl.html',
-	      parent: angular.element(document.body),
-	      targetEvent: ev,
-	      clickOutsideToClose:true,
-	      fullscreen: true, // Only for -xs, -sm breakpoints.
-				locals: {
-					eventInfo: {
-						'event_id': vm.event_id,
-						'name':vm.event.name,
-						//'room_info': vm.event.room_list
-					},
-				}
-	    })
-	    .then(function(response) {
-				vm.users = response.data;
-	    }, function() {
-
-			});
-    });
+		$mdDialog.show({
+			controller: roomListModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/roomListModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				eventInfo: {
+					'event_id': vm.event_id,
+					'name':vm.event.name,
+					//'room_info': vm.event.room_list
+				},
+			}
+		})
+		.then(function(response) {
+			vm.users = response.data;
+		}, function() { });
   };
 
 	vm.showCarListModal = function(ev) {
-		$ocLazyLoad.load('carListModalController').then(function(response) {
-	    $mdDialog.show({
-	      controller: carListModalController,
-				controllerAs: 'vm',
-	      templateUrl: 'views/partials/carListModal.tmpl.html',
-	      parent: angular.element(document.body),
-	      targetEvent: ev,
-	      clickOutsideToClose:true,
-	      fullscreen: true, // Only for -xs, -sm breakpoints.
-				locals: {
-					eventInfo: {
-						'event_id': vm.event_id,
-						'name':vm.event.name,
-						//'room_info': vm.event.room_list
-					},
-				}
-	    })
-			.then(function(response) {
-				vm.users = response.data;
-	    }, function() {
-
-			});
-    });
+		$mdDialog.show({
+			controller: carListModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/carListModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				eventInfo: {
+					'event_id': vm.event_id,
+					'name':vm.event.name,
+					//'room_info': vm.event.room_list
+				},
+			}
+		})
+		.then(function(response) {
+			vm.users = response.data;
+		}, function() { });
   };
 	vm.toggleEventReqs = function (req) {
 		var data = {
@@ -204,39 +196,35 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	};
 
 	vm.showRegistrationForm = function(ev,userInfo) {
-		$ocLazyLoad.load('eventRegistrationModalController').then(function(response) {
-			var eventInfo = angular.copy(vm.event);
-			delete eventInfo.requirements;
-			$mdDialog.show({
-				controller: eventRegistrationController,
-				controllerAs: 'vm',
-				templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
-				parent: angular.element(document.body),
-				targetEvent: ev,
-				clickOutsideToClose:true,
-				fullscreen: true, // Only for -xs, -sm breakpoints.
-				locals: {
-					'eventInfo': eventInfo,
-					'userInfo': userInfo
+		var eventInfo = angular.copy(vm.event);
+		delete eventInfo.requirements;
+		$mdDialog.show({
+			controller: eventRegistrationController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				'eventInfo': eventInfo,
+				'userInfo': userInfo
+			}
+		})
+		.then(function(answer) {
+			var user_id = answer.data.user_id;
+			var index = null;
+			var len = vm.users.length;
+			for (var i = 0; i < len; i++) {
+				if(vm.users[i].user_id == user_id) {
+					index = i;
+					break;
 				}
-			})
-			.then(function(answer) {
-				var user_id = answer.data.user_id;
-				var index = null;
-				var len = vm.users.length;
-				for (var i = 0; i < len; i++) {
-				  if(vm.users[i].user_id == user_id) {
-						index = i;
-				    break;
-				  }
-				}
-				if(index != null) {
-					vm.users[index] = answer.data;
-				}
-			}, function() {
-
-			});
-		});
+			}
+			if(index != null) {
+				vm.users[index] = answer.data;
+			}
+		}, function() { });
 	}
 
 	vm.showComments = function(ev,userInfo) {

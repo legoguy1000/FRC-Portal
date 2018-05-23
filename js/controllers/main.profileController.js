@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.profileController', ['$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams', '$window', '$ocLazyLoad',
+.controller('main.profileController', ['$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams', '$window',
 	mainProfileController
 ]);
-function mainProfileController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams, $window, $ocLazyLoad) {
+function mainProfileController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams, $window) {
     var vm = this;
 
   vm.selectedItem  = null;
@@ -144,24 +144,22 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	}
 
 	vm.showSeasonHoursGraph = function(ev,year) {
-		$ocLazyLoad.load('SeasonHoursGraphModalController').then(function(response) {
-			$mdDialog.show({
-				controller: SeasonHoursGraphModalController,
-				controllerAs: 'vm',
-				templateUrl: 'views/partials/SeasonHoursGraphModal.tmpl.html',
-				parent: angular.element(document.body),
-				targetEvent: ev,
-				clickOutsideToClose:true,
-				fullscreen: true, // Only for -xs, -sm breakpoints.
-				locals: {
-					data: {
-						'user_id': $scope.main.userInfo.user_id,
-						'year': year
-					},
-				}
-			})
-			.then(function(answer) {}, function() {});
-		});
+		$mdDialog.show({
+			controller: SeasonHoursGraphModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/SeasonHoursGraphModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				data: {
+					'user_id': $scope.main.userInfo.user_id,
+					'year': year
+				},
+			}
+		})
+		.then(function(answer) {}, function() {});
 	}
 
 	vm.changePin = function() {
