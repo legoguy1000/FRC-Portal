@@ -366,7 +366,7 @@ angular.module('FrcPortal', [
 		}
 	});
 })
-.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log, $location, $window) {
+.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log, $location, $window, $ocLazyLoad) {
 	// initialise google analytics
   $window.ga('create', 'UA-114656092-1', 'auto');
 
@@ -386,34 +386,36 @@ angular.module('FrcPortal', [
 			/* event.preventDefault();  */
 			$log.info('Need logged in');
 			//alert(JSON.stringify(fromState, null, 4));
-			$mdDialog.show({
-				controller: loginModalController,
-				controllerAs: 'vm',
-				templateUrl: 'views/partials/loginModal.tmpl.html',
-				parent: angular.element(document.body),
-				clickOutsideToClose:true,
-				fullscreen: true // Only for -xs, -sm breakpoints.
-			})
-			.then(function(data) {
-				if(data.auth) {
-					var data = {
-						'allActions': true,
+			$ocLazyLoad.load('loginModalController').then(function(response) {
+				$mdDialog.show({
+					controller: loginModalController,
+					controllerAs: 'vm',
+					templateUrl: 'views/partials/loginModal.tmpl.html',
+					parent: angular.element(document.body),
+					clickOutsideToClose:true,
+					fullscreen: true // Only for -xs, -sm breakpoints.
+				})
+				.then(function(data) {
+					if(data.auth) {
+						var data = {
+							'allActions': true,
+						}
+						$rootScope.$broadcast('afterLoginAction',data);
+						$log.info('Logged in');
+						$log.info(toState.name);
+						$log.info(trans.params());
+						$state.go(toState.name, trans.params());
 					}
-					$rootScope.$broadcast('afterLoginAction',data);
-					$log.info('Logged in');
-					$log.info(toState.name);
-					$log.info(trans.params());
-					$state.go(toState.name, trans.params());
-				}
-				else if(trans.$from().name == '') {
-					$state.go('main.home');
-				}
-			}, function() {
-				$log.info('Dialog dismissed at: ' + new Date());
-				$log.error('Authentication Required');
-				if(trans.$from().name == '') {
-					$state.go('main.home');
-				}
+					else if(trans.$from().name == '') {
+						$state.go('main.home');
+					}
+				}, function() {
+					$log.info('Dialog dismissed at: ' + new Date());
+					$log.error('Authentication Required');
+					if(trans.$from().name == '') {
+						$state.go('main.home');
+					}
+				});
 			});
 		} else if((toState.admin || toState.parent.admin) && !$auth.getPayload().data.admin) {
 			trans.abort();
