@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.userController', ['$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog','$stateParams','$mdToast','$ocLazyLoad',
+.controller('main.admin.userController', ['$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog','$stateParams','$mdToast',
 	mainAdminUserController
 ]);
-function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $stateParams,$mdToast,$ocLazyLoad) {
+function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $stateParams,$mdToast) {
     var vm = this;
 
 	vm.user_id = $stateParams.user_id;
@@ -116,23 +116,21 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 	}
 
 	vm.showSeasonHoursGraph = function(ev,year) {
-		$ocLazyLoad.load('SeasonHoursGraphModalController').then(function(response) {
-			$mdDialog.show({
-				controller: SeasonHoursGraphModalController,
-				controllerAs: 'vm',
-				templateUrl: 'views/partials/SeasonHoursGraphModal.tmpl.html',
-				parent: angular.element(document.body),
-				targetEvent: ev,
-				clickOutsideToClose:true,
-				fullscreen: true, // Only for -xs, -sm breakpoints.
-				locals: {
-					data: {
-						'user_id': vm.user_id,
-						'year': year
-					},
-				}
-			})
-			.then(function(answer) {}, function() {});
-		});
+		$mdDialog.show({
+			controller: SeasonHoursGraphModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/SeasonHoursGraphModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				data: {
+					'user_id': vm.user_id,
+					'year': year
+				},
+			}
+		})
+		.then(function(answer) {}, function() {});
 	}
 }

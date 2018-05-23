@@ -1,9 +1,9 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad',
+	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window',
 	mainController
 ]);
-function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad) {
+function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window) {
 	var main = this;
 
 	main.team_number = configItems.team_number;
@@ -59,50 +59,45 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	}
 
 	function loginModal(ev) {
-		$ocLazyLoad.load('loginModalController').then(function(response) {
-			$mdDialog.show({
-				controller: loginModalController,
-				controllerAs: 'vm',
-				templateUrl: 'views/partials/loginModal.tmpl.html',
-				parent: angular.element(document.body),
-				targetEvent: ev,
-				clickOutsideToClose:true,
-				fullscreen: true // Only for -xs, -sm breakpoints.
-			})
-			.then(function(response) {
-				if(response.auth) {
-					$rootScope.$broadcast('afterLoginAction');
-				}
-			}, function() {
-				$log.info('Dialog dismissed at: ' + new Date());
-			});
+		$mdDialog.show({
+			controller: loginModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/loginModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true // Only for -xs, -sm breakpoints.
+		})
+		.then(function(response) {
+			if(response.auth) {
+				$rootScope.$broadcast('afterLoginAction');
+			}
+		}, function() {
+			$log.info('Dialog dismissed at: ' + new Date());
 		});
-
 	}
 
 	function newUserModal(ev) {
-		$ocLazyLoad.load('newUserModalController').then(function(response) {
-			$mdDialog.show({
-				controller: newUserModalController,
-				controllerAs: 'vm',
-				templateUrl: 'views/partials/newUserModal.tmpl.html',
-				parent: angular.element(document.body),
-				targetEvent: ev,
-				//clickOutsideToClose:true,
-				fullscreen: true, // Only for -xs, -sm breakpoints.
-				locals: {
-					userInfo: main.userInfo,
-				}
-			})
-			.then(function(response) {
-				if(response.status) {
-					console.log('After Dialog')
-					console.log(response.userInfo);
-					$rootScope.$broadcast('afterLoginAction');
-				}
-			}, function() {
-				$log.info('Dialog dismissed at: ' + new Date());
-			});
+		$mdDialog.show({
+			controller: newUserModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/newUserModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			//clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				userInfo: main.userInfo,
+			}
+		})
+		.then(function(response) {
+			if(response.status) {
+				console.log('After Dialog')
+				console.log(response.userInfo);
+				$rootScope.$broadcast('afterLoginAction');
+			}
+		}, function() {
+			$log.info('Dialog dismissed at: ' + new Date());
 		});
 	}
 
