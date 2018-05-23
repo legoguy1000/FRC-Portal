@@ -17,6 +17,7 @@ angular.module('FrcPortal', [
 	'dndLists',
 	'timer',
 	'mdColorPicker',
+	'oc.lazyLoad',
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider, $locationProvider) {
 
 	$locationProvider.html5Mode({ enabled: true, requireBase: true });
