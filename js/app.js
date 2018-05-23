@@ -326,26 +326,29 @@ angular.module('FrcPortal', [
 			responseError: function(rejection) {
 				if (rejection.status === 401) {
 					// Return a new promise
+					var $ocLazyLoad = $injector.get('$ocLazyLoad');
 					var $mdDialog = $injector.get('$mdDialog');
 					var $auth = $injector.get('$auth');
 					var $rootScope = $injector.get('$rootScope');
 					console.log(rejection);
-					$mdDialog.show({
-						controller: loginModalController,
-						controllerAs: 'vm',
-						templateUrl: 'views/partials/loginModal.tmpl.html',
-						parent: angular.element(document.body),
-						clickOutsideToClose:true,
-						fullscreen: true // Only for -xs, -sm breakpoints.
-					})
-					.then(function(data) {
-						if(data.auth) {
-							$rootScope.$broadcast('afterLoginAction');
-							return $injector.get('$http')(rejection.config);
-						}
-					}, function() {
-						$log.info('Dialog dismissed at: ' + new Date());
-						$log.error('Authentication Required');
+					$ocLazyLoad.load('loginModalController').then(function(response) {
+						$mdDialog.show({
+							controller: loginModalController,
+							controllerAs: 'vm',
+							templateUrl: 'views/partials/loginModal.tmpl.html',
+							parent: angular.element(document.body),
+							clickOutsideToClose:true,
+							fullscreen: true // Only for -xs, -sm breakpoints.
+						})
+						.then(function(data) {
+							if(data.auth) {
+								$rootScope.$broadcast('afterLoginAction');
+								return $injector.get('$http')(rejection.config);
+							}
+						}, function() {
+							$log.info('Dialog dismissed at: ' + new Date());
+							$log.error('Authentication Required');
+						});
 					});
 				} else if (rejection.status === 400) {
 					// Return a new promise
