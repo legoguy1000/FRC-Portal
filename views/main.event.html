@@ -36,7 +36,7 @@
 			<h2 class="mb-30">About the event</h2>
 			<md-content class="md-padding" layout="column">
 				<div layout="row">
-					<div ng-bind-html="vm.event.details | linky:'_blank'" style="white-space: pre-wrap;"></div>
+					<div ng-bind-html="vm.event.details | linkyWithHtml" style="white-space: pre-wrap;"></div>
 				</div>
 				<div layout="row" style="margin-top:40px;">
 					<div layout="column" flex="20" layout-align="start start" ng-show="vm.event.payment_required">
