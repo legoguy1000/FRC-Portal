@@ -121,4 +121,11 @@ angular.module('FrcPortal')
         });
         return present.concat(empty);
     };
+})
+.filter('linkyWithHtml', function($filter) {
+  return function(value) {
+    var linked = $filter('linky')(value, '_blank');
+    var replaced = linked.replace(/\&gt;/g, '>').replace(/\&lt;/g, '<');
+    return replaced;
+  };
 });
