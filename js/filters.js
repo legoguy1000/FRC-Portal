@@ -121,4 +121,10 @@ angular.module('FrcPortal')
         });
         return present.concat(empty);
     };
+})
+.filter('parseUrlFilter', function () {
+    var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
+    return function (text, target) {
+        return text != undefined ? text.replace(urlPattern, '<a target="' + target + '" href="$&">$&</a>') : '';
+    };
 });
