@@ -128,4 +128,10 @@ angular.module('FrcPortal')
     var replaced = linked.replace(/\&gt;/g, '>').replace(/\&lt;/g, '<');
     return replaced;
   };
+})
+.filter('parseUrlFilter', function () {
+    var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
+    return function (text, target, otherProp) {
+        return text.replace(urlPattern, '<a target="' + target + '" href="$&">$&</a>') + " | " + otherProp;
+    };
 });
