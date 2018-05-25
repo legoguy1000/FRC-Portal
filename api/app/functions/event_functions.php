@@ -118,7 +118,7 @@ function getEventTimeSlotList($event_id) {
 	if(isset($event_id) && $event_id != '') {
 		$timeSlots = FrcPortal\EventTimeSlot::with('users')->where('event_id',$event_id)->get();
 		$result['status'] = true;
-		$result['data'] = array('time_slots'=>$timeSlots, 'total'=>count($roomInfo));
+		$result['data'] = $timeSlots;
 	} else {
 		$result['msg'] = 'Event ID cannot be blank';
 	}
