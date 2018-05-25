@@ -151,6 +151,6 @@ class User extends Eloquent {
    * Get the Event Time Slots.
    */
   public function event_time_slots() {
-      return $this->belongsToMany('FrcPortal\EventTimeSlot', 'event_time_slots_users', 'user_id', 'user_id');
+    return $this->belongsToMany('FrcPortal\EventTimeSlot', 'event_time_slots_users', 'user_id', 'time_slot_id');
   }
 }
