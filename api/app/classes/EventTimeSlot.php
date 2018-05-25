@@ -40,8 +40,8 @@ class EventTimeSlot extends Eloquent {
   protected $casts = [];
 
   public function save($options = array()) {
-    if(is_null($this->room_id)) {
-      $this->room_id = uniqid();
+    if(is_null($this->time_slot_id)) {
+      $this->time_slot_id = uniqid();
     }
     return parent::save();
   } /*
@@ -61,10 +61,10 @@ class EventTimeSlot extends Eloquent {
   /**
    * Get the room.
    */
-/*  public function event_requirements() {
-      return $this->belongsToMany('FrcPortal\EventRequirement', 'room_id', 'room_id');
+  public function users() {
+      return $this->belongsToMany('FrcPortal\User', 'time_slot_id', 'time_slot_id');
   }
-*/
+
   public function getTimeStartUnixAttribute() {
     $date = new DateTime($this->attributes['time_start']);
     return $date->format('U');
