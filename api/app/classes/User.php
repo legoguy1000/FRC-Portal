@@ -145,7 +145,7 @@ class User extends Eloquent {
   * Get the Notification Preferences
   */
   public function missing_hours_approvers() {
-    return $this->hasOne('FrcPortal\MissingHoursRequest', 'approved_by', 'user_id');
+    return $this->hasOne('FrcPortal\MissingHoursRequest');
   }
   /**
    * Get the Event Time Slots.
