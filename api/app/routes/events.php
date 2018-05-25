@@ -181,7 +181,6 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-
     $this->put('/cars', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
@@ -346,6 +345,12 @@ $app->group('/events', function () {
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
       }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->get('/timeSlots', function ($request, $response, $args) {
+      $event_id = $args['event_id'];
+      $responseArr = getEventTimeSlotList($event_id);
       $response = $response->withJson($responseArr);
       return $response;
     });

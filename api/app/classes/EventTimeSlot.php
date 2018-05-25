@@ -22,7 +22,7 @@ class EventTimeSlot extends Eloquent {
   ];
 
 
-  protected $appends = ['time_start_unix', 'time_end_unix'];
+  protected $appends = ['time_start_unix', 'time_end_unix', 'date'];
 
   //$data['requirements'] = array();
   /**
@@ -72,5 +72,13 @@ class EventTimeSlot extends Eloquent {
   public function getTimeEndUnixAttribute() {
     $date = new DateTime($this->attributes['time_end']);
     return $date->format('U');
+  }
+  public function getDateAttribute() {
+    $date = new DateTime($this->attributes['time_start']);
+    return array(
+      'raw' => $date->format('Y-m-d'),
+      'dow' => $date->format('D'),
+      'formatted' => $date->format('F j, Y'),
+    );
   }
 }
