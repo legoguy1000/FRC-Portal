@@ -147,4 +147,10 @@ class User extends Eloquent {
   public function missing_hours_approvers() {
     return $this->hasOne('FrcPortal\MissingHoursRequest', 'approved_by', 'user_id');
   }
+  /**
+   * Get the Event Time Slots.
+   */
+  public function event_time_slots() {
+      return $this->belongsToMany('FrcPortal\EventTimeSlot', 'user_id', 'user_id');
+  }
 }
