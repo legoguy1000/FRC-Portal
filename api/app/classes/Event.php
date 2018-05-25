@@ -42,6 +42,7 @@ class Event extends Eloquent {
     'room_required' => 'boolean',
     'drivers_required' => 'boolean',
     'permission_slip_required' => 'boolean',
+    'time_slots' => 'boolean',
     'single_day' => 'boolean',
   ];
 

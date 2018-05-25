@@ -42,6 +42,13 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getEventTimeSlotList: function (event_id) {
+			var event_id = event_id != undefined && event_id != null ? event_id:'';
+			return $http.get('api/events/'+event_id+'/timeSlots')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		getEventCarList: function (event_id) {
 			var event_id = event_id != undefined && event_id != null ? event_id:'';
 			return $http.get('api/events/'+event_id+'/cars')

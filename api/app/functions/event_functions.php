@@ -107,4 +107,21 @@ function getEventRoomList($event_id) {
 	}
 	return $result;
 }
+
+function getEventTimeSlotList($event_id) {
+	$result = array(
+		'status' => false,
+		'msg' => '',
+		'data' => null
+	);
+	$timeSlots = array();
+	if(isset($event_id) && $event_id != '') {
+		$timeSlots = FrcPortal\EventTimeSlot::with('users')->where('event_id',$event_id)->get();
+		$result['status'] = true;
+		$result['data'] = array('time_slots'=>$timeSlots, 'total'=>count($roomInfo));
+	} else {
+		$result['msg'] = 'Event ID cannot be blank';
+	}
+	return $result;
+}
 ?>

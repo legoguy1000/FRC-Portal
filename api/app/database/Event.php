@@ -18,6 +18,7 @@ Capsule::schema()->create('events', function ($table) {
        $table->boolean('food_required')->default(0);
        $table->boolean('room_required')->default(0);
        $table->boolean('drivers_required')->default(0);
+       $table->boolean('time_slots')->default(0);
        $table->char('poc_id',13)->nullable()->default(null)->index();
        $table->timestamps();
 
