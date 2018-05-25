@@ -115,6 +115,12 @@ class Event extends Eloquent {
       return $this->hasMany('FrcPortal\EventRoom', 'event_id', 'event_id');
   }
   /**
+   * Get the Time Slots.
+   */
+  public function event_time_slots() {
+      return $this->hasMany('FrcPortal\EventTimeSLot', 'event_id', 'event_id');
+  }
+  /**
   * Get the POC.
   */
   public function poc() {
