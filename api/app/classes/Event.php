@@ -75,7 +75,7 @@ class Event extends Eloquent {
     $date = new DateTime($this->attributes['event_end']);
     return $date->format('U');
   }
-  public function getRegistrationDateUnixAttribute() {
+  public function getRegistrationDeadlineUnixAttribute() {
     $return = null;
     if(!is_null($this->attributes['registration_deadline'])) {
       $date = new DateTime($this->attributes['registration_deadline']);
@@ -83,7 +83,7 @@ class Event extends Eloquent {
     }
     return $return;
   }
-  public function getRegistrationDateFormattedAttribute() {
+  public function getRegistrationDeadlineFormattedAttribute() {
     $return = null;
     if(!is_null($this->attributes['registration_deadline'])) {
       $date = new DateTime($this->attributes['registration_deadline']);
