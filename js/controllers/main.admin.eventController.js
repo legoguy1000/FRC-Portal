@@ -65,6 +65,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
+			vm.event.registration_date_moment = moment(vm.event.registration_date);
 			vm.loading = false;
 			$mdToast.show(
 	      $mdToast.simple()
