@@ -45,7 +45,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.getEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
-			vm.event.registration_date_moment = moment(vm.event.registration_date);
+			vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
 			vm.loading = false;
 		});
 	};
@@ -65,7 +65,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
-			vm.event.registration_date_moment = moment(vm.event.registration_date);
+			vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
 			vm.loading = false;
 			$mdToast.show(
 	      $mdToast.simple()
@@ -82,12 +82,12 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'event_id': vm.event_id,
 			'poc': vm.event.poc,
 			'type': vm.event.type,
-			'registration_date': vm.event.registration_date_formatted,
+			'registration_deadline': vm.event.registration_deadline_formatted,
 		};
 		eventsService.updateEvent(data).then(function(response){
 			if(response.status) {
 				vm.event = response.data;
-				vm.event.registration_date_moment = moment(vm.event.registration_date);
+				vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
 			}
 			$mdToast.show(
 	      $mdToast.simple()
@@ -278,7 +278,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		})
 		.then(function(response) {
-			vm.event.registration_date_formatted = response.event_end_formatted;
+			vm.event.registration_deadline_formatted = response.event_end_formatted;
+			vm.event.registration_deadline_gcalid = response.google_cal_id;
 			$log.info('asdf');
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());

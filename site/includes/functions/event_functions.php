@@ -5,7 +5,7 @@ function eventQuery($sel='',$joins='', $where = '', $order = '') {
 	$joinStr = isset($joins) && $joins !='' ? ' '.$joins : '';
 	$orderStr = isset($order) && $order !='' ? ' '.$order : '';
 	$whereStr = isset($where) && $where !='' ? ' '.$where : '';
-	$query = 'SELECT events.*, UNIX_TIMESTAMP(events.event_start) AS event_start_unix, UNIX_TIMESTAMP(events.event_end) AS event_end_unix, if(events.registration_date IS NULL,0,UNIX_TIMESTAMP(events.registration_date)) AS registration_date_unix, YEAR(events.event_start) AS year, datediff(events.event_end,events.event_start)+1 as num_days, seasons.game_name, seasons.game_logo '.$selStr.'
+	$query = 'SELECT events.*, UNIX_TIMESTAMP(events.event_start) AS event_start_unix, UNIX_TIMESTAMP(events.event_end) AS event_end_unix, if(events.registration_deadline IS NULL,0,UNIX_TIMESTAMP(events.registration_deadline)) AS registration_deadline_unix, YEAR(events.event_start) AS year, datediff(events.event_end,events.event_start)+1 as num_days, seasons.game_name, seasons.game_logo '.$selStr.'
 			  FROM events
 			  LEFT JOIN seasons ON (events.event_start >= seasons.start_date AND events.event_end <= seasons.end_date)
 			  '.$joinStr.' '.$whereStr.' '.$orderStr;

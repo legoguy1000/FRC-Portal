@@ -10,7 +10,8 @@ Capsule::schema()->create('events', function ($table) {
        $table->string('type');
        $table->dateTime('event_start');
        $table->dateTime('event_end');
-       $table->dateTime('registration_date')->nullable()->default(null);
+       $table->dateTime('registration_deadline')->nullable()->default(null);
+       $table->string('registration_deadline_gcalid',50)->nullable()->default(null);
        $table->text('details');
        $table->string('location',500)->nullable()->default(null);
        $table->boolean('payment_required')->default(0);
