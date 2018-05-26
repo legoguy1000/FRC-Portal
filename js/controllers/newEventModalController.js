@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('newEventModalController', ['$log','$element','$mdDialog', '$scope', 'userInfo', 'usersService', 'schoolsService', 'seasonsService','$mdToast','eventData',
+.controller('newEventModalController', ['$log','$element','$mdDialog', '$scope', 'usersService', 'schoolsService', 'seasonsService','$mdToast','eventData',
 	newEventModalController
 ]);
-function newEventModalController($log,$element,$mdDialog,$scope,userInfo,usersService,eventsService,seasonsService,$mdToast,eventData) {
+function newEventModalController($log,$element,$mdDialog,$scope,usersService,eventsService,seasonsService,$mdToast,eventData) {
 	var vm = this;
 
 	vm.cancel = function() {
