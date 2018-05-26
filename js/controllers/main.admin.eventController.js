@@ -80,6 +80,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'event_id': vm.event_id,
 			'poc': vm.event.poc,
 			'type': vm.event.type,
+			'registration_date': vm.event.registration_date_formatted,
 		};
 		eventsService.updateEvent(data).then(function(response){
 			if(response.status) {

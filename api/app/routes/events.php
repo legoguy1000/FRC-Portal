@@ -132,8 +132,8 @@ $app->group('/events', function () {
       			$temp['event_end_unix'] = strtotime($temp['event_end']);
       			$temp['event_start_iso'] = date('c',strtotime($temp['event_start']));
       			$temp['event_end_iso'] = date('c',strtotime($temp['event_end']));
-      			$temp['event_start_formatted'] = date('F d, 2018',strtotime($temp['event_start']));
-      			$temp['event_end_formatted'] = date('F d, 2018',strtotime($temp['event_end']));
+      			$temp['event_start_formatted'] = date('F j, Y',strtotime($temp['event_start']));
+      			$temp['event_end_formatted'] = date('F j, Y',strtotime($temp['event_end']));
           	$allEvents[] = $temp;
       		}
         }
@@ -380,6 +380,10 @@ $app->group('/events', function () {
 
       $event->type = $formData['type'];
       $event->poc_id = isset($formData['poc']['user_id']) && $formData['poc']['user_id'] != '' ? $formData['poc']['user_id']:null;
+      if($formData['registration_date'] != null && $formData['registration_date'] != '') {
+        $registration_date = new DateTime($formData['registration_date']);
+        $event->registration_date = $registration_date->format('Y-m-d').' 23:59:59';
+      }
 
       if($event->save()) {
         $event->load('poc');
