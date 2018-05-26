@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
+use \DateTime;
 $app->group('/events', function () {
   $this->get('', function ($request, $response, $args) {
     $events = array();
@@ -123,7 +124,7 @@ $app->group('/events', function () {
       			if(empty($event->start->dateTime)) {
       				$temp['allDay'] = true;
       				$temp['event_start'] = $event->start->date.' 00:00:00';
-      				$temp['event_end'] = $event->end->date.' 23:59:59';
+              $temp['event_end'] = strtotime('-1 day', $event->end->date).' 23:59:59';
       			} else {
       				$temp['event_start'] = date('Y-m-d H:i:s', strtotime($event->start->dateTime));
       				$temp['event_end'] =date('Y-m-d H:i:s', strtotime($event->end->dateTime));
