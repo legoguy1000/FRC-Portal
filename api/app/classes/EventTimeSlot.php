@@ -74,11 +74,14 @@ class EventTimeSlot extends Eloquent {
     return $date->format('U');
   }
   public function getDateAttribute() {
-    $date = new DateTime($this->attributes['time_start']);
+    $sd = new DateTime($this->attributes['time_start']);
+    $ed = new DateTime($this->attributes['time_end']);
     return array(
-      'raw' => $date->format('Y-m-d'),
-      'dow' => $date->format('D'),
-      'formatted' => $date->format('F j, Y'),
+      'date_raw' => $sd->format('Y-m-d'),
+      'date_dow' => $sd->format('D'),
+      'date_formatted' => $sd->format('F j, Y'),
+      'event_start_formatted' => $sd->format('h:i A'),
+      'event_end_formatted' => $ed->format('h:i A'),
     );
   }
 }
