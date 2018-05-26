@@ -27,11 +27,9 @@
 					<div>{{time_slot.description}}</div>
 				</div>
 				<div flex>
-					<md-list ng-cloak
-					    <md-list-item ng-repeat="user in time_slot.users" class="min-height-reset">
-									<dnd-nodrag layout="row" layout-align="start center">
-						        <div style="margin-right:10px;">{{user.full_name}}</div>
-								</dnd-nodrag>
+					<md-list ng-cloak>
+					    <md-list-item ng-repeat="user in time_slot.users">
+									<div>{{user.full_name}}</div>
 					    </md-list-item>
 					</md-list>
 				</div>
