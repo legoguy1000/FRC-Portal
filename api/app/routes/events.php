@@ -113,9 +113,11 @@ $app->group('/events', function () {
       				'event_start' => null,
       				'event_end' => null,
       				'event_start_unix' => null,
-      				'event_end_unix' => null,
+              'event_end_unix' => null,
+      				'event_end_formatted' => null,
       				'event_start_iso' => null,
-      				'event_end_iso' => null,
+              'event_end_iso' => null,
+      				'event_end_formatted' => null,
       				'details' => $event->description,
       			);
       			if(empty($event->start->dateTime)) {
@@ -130,6 +132,8 @@ $app->group('/events', function () {
       			$temp['event_end_unix'] = strtotime($temp['event_end']);
       			$temp['event_start_iso'] = date('c',strtotime($temp['event_start']));
       			$temp['event_end_iso'] = date('c',strtotime($temp['event_end']));
+      			$temp['event_start_formatted'] = date('F d, 2018',strtotime($temp['event_start']));
+      			$temp['event_end_formatted'] = date('F d, 2018',strtotime($temp['event_end']));
           	$allEvents[] = $temp;
       		}
         }
