@@ -20,7 +20,7 @@ function syncGoogleCalendarEvent($event_id) {
 				$event->event_start = $ge['event_start'];
 				$event->event_end = $ge['event_end'];
 				if(!is_null($event->registration_deadline_gcalid) && $event->registration_deadline_gcalid != '') {
-					$gevent = $service->events->get($calendar, $event->registration_deadline_gcalid);
+					$gevent = getGoogleCalendarEvent($calendar, $event->registration_deadline_gcalid);
 					if($gevent['status'] != false) {
 						$ge = $gevent['data'];
 					 	$event->registration_deadline = $ge['event_end'];
