@@ -1,6 +1,5 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
-use \DateTime;
 $app->group('/events', function () {
   $this->get('', function ($request, $response, $args) {
     $events = array();
