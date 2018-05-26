@@ -1,3 +1,8 @@
+<style>
+	.lastRowStyle {
+		border-bottom: solid;
+	}
+</style>
 <md-dialog aria-label="New Event" style="" flex="50" >
 		<md-toolbar layout="row">
 		  <div class="md-toolbar-tools">
@@ -11,13 +16,15 @@
 		</md-toolbar>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 		<md-dialog-content class="md-margin">
-			<div layout="row" ng-repeat="time_slot in vm.time_slots" style="border-top: solid;border-left: solid;border-right: solid;">
-				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
+			<div layout="row" ng-repeat="time_slot in vm.time_slots" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
+				<div flex layout="column" layout-align="center start" class="md-padding" style="border-right: solid;">
 					<!--<md-button class="md-icon-button noprint" ng-click="vm.deleteEventRoom(room.room_id)">
 						<md-tooltip md-direction="top">Delete Room</md-tooltip>
 					  <md-icon class=""> close </md-icon>
 					</md-button>-->
-					<span>{{time_slot.name}}</span>
+					<div>{{time_slot.date.event_start_formatted}} - {{time_slot.date.event_start_formatted}}</div>
+					<div>{{time_slot.name}}</div>
+					<div>{{time_slot.description}}</div>
 				</div>
 				<div flex>
 					<md-list ng-cloak
