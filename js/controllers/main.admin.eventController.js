@@ -260,4 +260,24 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
         .targetEvent(ev)
     );
 	}
+
+	vm.searchEventModal = function (ev) {
+		$mdDialog.show({
+			controller: eventSearchModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/eventSearchModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+			}
+		})
+		.then(function(response) {
+			vm.event.registration_date = response.event_start_iso;
+			$log.info('asdf');
+		}, function() {
+			$log.info('Dialog dismissed at: ' + new Date());
+		});
+	}
 }
