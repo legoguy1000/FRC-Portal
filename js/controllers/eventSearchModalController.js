@@ -8,7 +8,7 @@ function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-	vm.data = {};
+	vm.data = false;
 	vm.loading = {
 		searchGoogle: false,
 	}
@@ -43,7 +43,7 @@ function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,
 		vm.data.start_moment = moment(vm.data.event_start);
 		vm.data.end_moment = moment(vm.data.event_end);
 		vm.showGoogle = false;
-		if(response.status) {
+		if(vm.data) {
 			$mdDialog.hide(vm.data);
 		}
 	}
