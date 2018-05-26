@@ -83,6 +83,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'poc': vm.event.poc,
 			'type': vm.event.type,
 			'registration_deadline': vm.event.registration_deadline_formatted,
+			'registration_deadline_gcalid': vm.event.registration_deadline_gcalid,
 		};
 		eventsService.updateEvent(data).then(function(response){
 			if(response.status) {
