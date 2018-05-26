@@ -274,7 +274,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		})
 		.then(function(response) {
-			vm.event.registration_date = response.event_start_iso;
+			vm.event.registration_date_formatted = response.event_end_formatted;
 			$log.info('asdf');
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
