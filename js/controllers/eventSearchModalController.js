@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('eventSearchModalController', ['$log','$element','$mdDialog', '$scope', 'userInfo', 'usersService', 'schoolsService', 'seasonsService','$mdToast',
+.controller('eventSearchModalController', ['$log','$element','$mdDialog', '$scope', 'usersService', 'schoolsService', 'seasonsService','$mdToast',
 	eventSearchModalController
 ]);
-function eventSearchModalController($log,$element,$mdDialog,$scope,userInfo,usersService,eventsService,seasonsService,$mdToast) {
+function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,eventsService,seasonsService,$mdToast) {
 	var vm = this;
 
 	vm.cancel = function() {
