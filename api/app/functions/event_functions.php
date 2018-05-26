@@ -14,8 +14,8 @@ function syncGoogleCalendarEvent($event_id) {
 			$gevent = getGoogleCalendarEvent($google_cal_id);
 			if($gevent['status'] != false) {
 				$ge = $gevent['data'];
-				$event->name = $ge['summary'];
-				$event->details = $ge['description'];
+				$event->name = $ge['name'];
+				$event->details = $ge['details'];
 				$event->location = $ge['location'];
 				$event->event_start = $ge['event_start'];
 				$event->event_end = $ge['event_end'];
