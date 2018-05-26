@@ -383,11 +383,11 @@ $app->group('/events', function () {
 
       $event->type = $formData['type'];
       $event->poc_id = isset($formData['poc']['user_id']) && $formData['poc']['user_id'] != '' ? $formData['poc']['user_id']:null;
-      if($formData['registration_date'] != null && $formData['registration_date'] != '') {
-        $registration_date = new DateTime($formData['registration_date']);
-        $event->registration_date = $registration_date->format('Y-m-d').' 23:59:59';
+      if($formData['registration_deadline'] != null && $formData['registration_deadline'] != '') {
+        $registration_deadline = new DateTime($formData['registration_deadline']);
+        $event->registration_deadline = $registration_deadline->format('Y-m-d').' 23:59:59';
       }
-
+      $event->registration_deadline_gcalid = isset($formData['registration_deadline_gcalid']) && $formData['registration_deadline_gcalid'] != '' ? $formData['registration_deadline_gcalid']:null;
       if($event->save()) {
         $event->load('poc');
         $responseArr = array('status'=>true, 'msg'=>'Event Information Saved', 'data' => $event);
@@ -504,8 +504,8 @@ $app->group('/events', function () {
           $responseArr = array('status'=>false, 'msg'=>'Registration is closed. Event has already started.');
           $response = $response->withJson($responseArr,400);
           return $response;
-      	} elseif($event->registration_date_unix != null && (time() > $event->registration_date_unix)) {
-            $responseArr = array('status'=>false, 'msg'=>'Registration is closed. Registration deadline was '.date('F j, Y g:m A',$event->registration_date_unix).'.');
+      	} elseif($event->registration_deadline_unix != null && (time() > $event->registration_deadline_unix)) {
+            $responseArr = array('status'=>false, 'msg'=>'Registration is closed. Registration deadline was '.date('F j, Y g:m A',$event->registration_deadline_unix).'.');
             $response = $response->withJson($responseArr,400);
             return $response;
       	}
