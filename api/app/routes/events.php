@@ -124,8 +124,9 @@ $app->group('/events', function () {
       			if(empty($event->start->dateTime)) {
       				$temp['allDay'] = true;
       				$temp['event_start'] = $event->start->date.' 00:00:00';
-              $ed = date('Y-m-d', strtotime('-1 day', $event->end->date));
-              $temp['event_end'] = $ed.' 23:59:59';
+              $ed = new DateTime($event->end->date);
+              $ed->modify("-1 day");
+              $temp['event_end'] = $ed->format("Y-m-d").' 23:59:59';
       			} else {
       				$temp['event_start'] = date('Y-m-d H:i:s', strtotime($event->start->dateTime));
       				$temp['event_end'] =date('Y-m-d H:i:s', strtotime($event->end->dateTime));
