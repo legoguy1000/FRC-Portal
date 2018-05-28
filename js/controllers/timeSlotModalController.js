@@ -20,7 +20,7 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 	vm.getEventTimeSlotList();
 
 	vm.editTimeSlot = function (ev, newTS = true, timeSlotInfo = {}) {
-		if(newTS == true) {
+		if(newTS == false) {
 			timeSlotInfo.time_end_moment = moment(timeSlotInfo.time_end);
 			timeSlotInfo.time_start_moment = moment(timeSlotInfo.time_start);
 		}
