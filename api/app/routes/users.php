@@ -170,11 +170,36 @@ $app->group('/users', function () {
         return $response;
       });
       $this->delete('', function ($request, $response, $args) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
         $user_id = $args['user_id'];
-        $event_id = $args['event_id'];
-        $user = FrcPortal\Event::with(['event_requirements' => function ($query) use ($user_id) {
-                  $query->where('user_id',$user_id); // fields from comments table,
-                }])->where('event_id',$event_id)->first();
+        $time_slot_id = $args['time_slot_id'];
+        if$user_id != $userId) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+
+        $timeSlot = FrcPortal\EventTimeSlot::where('time_slot_id',$time_slot_id)->first();
+        if(!is_null($timeSlot)) {
+          $event_id = $timeSlot->event_id;
+          $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->first();
+          if(!is_null($reqUpdate)) {
+            $ereq_id = $reqUpdate->ereq_id;
+            if($timeSlot->registrations()->detach($ereq_id)) {
+              $slots = getEventTimeSlotList($event_id);
+              $responseArr['status'] = true;
+              $responseArr['msg'] = 'Time Slot Updated';
+              $responseArr['data'] = $slots['data'];
+            }
+          }
+        }
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
