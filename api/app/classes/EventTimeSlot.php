@@ -62,8 +62,8 @@ class EventTimeSlot extends Eloquent {
    * Get the room.
    */
   public function users() {
-      //return $this->belongsToMany('FrcPortal\User', 'event_time_slots_users', 'time_slot_id', 'user_id');
-      return $this->hasManyThrough('FrcPortal\User', 'FrcPortal\EventRequirement', 'ereq_id', 'user_id', 'ereq_id', 'user_id');
+      return $this->belongsToMany('FrcPortal\EventRequirement', 'event_time_slots_users', 'time_slot_id', 'user_id');
+      //return $this->hasManyThrough('FrcPortal\User', 'FrcPortal\EventRequirement', 'ereq_id', 'user_id', 'ereq_id', 'user_id');
   }
 
   public function getTimeStartUnixAttribute() {
