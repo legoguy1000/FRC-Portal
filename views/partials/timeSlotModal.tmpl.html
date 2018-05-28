@@ -8,7 +8,7 @@
 		  <div class="md-toolbar-tools">
 			<h2><span class="noprint">View/Edit </span>Time Slots for {{vm.eventInfo.name}}</h2>
 			<span flex></span>
-			<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
+			<md-button class="md-icon-button noprint" ng-click="vm.cancel()" ng-show="vm.admin">
 				<md-tooltip md-direction="top">Close</md-tooltip>
 			  <md-icon class=""> close </md-icon>
 			</md-button>
@@ -81,7 +81,7 @@
 				<md-tooltip md-direction="top">Save and Close</md-tooltip>
 				Save
 			</md-button>-->
-			<md-button type="button" ng-click="vm.cancel()">
+			<md-button type="button" ng-click="vm.save()">
 				<md-tooltip md-direction="top">Close</md-tooltip>
 				Close
 			</md-button>
