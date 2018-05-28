@@ -150,7 +150,7 @@ function getEventTimeSlotList($event_id) {
 	);
 	$timeSlots = array();
 	if(isset($event_id) && $event_id != '') {
-		$timeSlots = FrcPortal\EventTimeSlot::with('users')->where('event_id',$event_id)->get();
+		$timeSlots = FrcPortal\EventTimeSlot::with('registrations.user')->where('event_id',$event_id)->get();
 		$result['status'] = true;
 		$result['data'] = $timeSlots;
 	} else {
