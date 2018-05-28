@@ -32,7 +32,7 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 			targetEvent: ev,
 			clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
-			skipHide: true,
+			multiple: true,
 			locals: {
 				eventInfo: vm.eventInfo,
 				newTS: newTS,
