@@ -48,6 +48,25 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 		}, function() {});
 	}
 
+	vm.toggleRegistrationEventTimeSlot = function(time_slot_id) {
+		var data = {
+			'user_id': vm.eventInfo.user_id,
+			'time_slot_id': time_slot_id,
+		};
+		usersService.toggleRegistrationEventTimeSlot(data).then(function(response) {
+			if(response.status) {
+				vm.time_slots = response.data;
+			}
+			vm.loading = false;
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
+		});
+	}
+
 	vm.registerTimeSlot = function(time_slot_id) {
 		var data = {
 			'user_id': vm.eventInfo.user_id,

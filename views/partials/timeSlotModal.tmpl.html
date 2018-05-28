@@ -32,20 +32,18 @@
 					<b>{{time_slot.name}}</b>
 					<div style="white-space:pre-wrap;">{{time_slot.description}}</div>
 				</div>
-				<div flex>
+				<div flex layout="column">
 					<md-list ng-cloak>
 					    <md-list-item ng-repeat="reg in time_slot.registrations">
 									<div>{{reg.user.full_name}}</div>
 					    </md-list-item>
 					</md-list>
+					<div flex></div>
 					<div  ng-if="!vm.admin" layout="row" layout-align="center center">
-						<md-button type="button" ng-click="vm.registerTimeSlot(time_slot.time_slot_id)" ng-hide="vm.checkReg($index)">
+						<md-button type="button" ng-click="vm.toggleRegistrationEventTimeSlot(time_slot.time_slot_id)">
 							<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
-							Register
-						</md-button>
-						<md-button type="button" ng-click="vm.unregisterTimeSlot(time_slot.time_slot_id)" ng-show="vm.checkReg($index)">
-							<md-tooltip md-direction="top">Unregister for Time Slot</md-tooltip>
-							Unregister
+							<span ng-hide="vm.checkReg($index)">Register</span>
+							<span ng-show="vm.checkReg($index)">Unregister</span>
 						</md-button>
 					</div>
 				</div>
