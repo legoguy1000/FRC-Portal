@@ -39,11 +39,11 @@
 					    </md-list-item>
 					</md-list>
 					<div  ng-if="!vm.admin">
-						<md-button type="button" ng-click="">
+						<md-button type="button" ng-click="vm.registerTimeSlot(time_slot.time_slot_id)">
 							<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
 							Register
 						</md-button>
-						<md-button type="button" ng-click="">
+						<md-button type="button" ng-click="vm.unregisterTimeSlot(time_slot.time_slot_id)">
 							<md-tooltip md-direction="top">Unregister for Time Slot</md-tooltip>
 							Unregister
 						</md-button>
