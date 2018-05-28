@@ -126,5 +126,28 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		addEventTimeSlot: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			return $http.post('api/events/'+event_id+'/timeSlots',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		deleteEventTimeSlot: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			var time_slot_id = formData.time_slot_id != undefined && formData.time_slot_id != null ? formData.time_slot_id:'';
+			return $http.delete('api/events/'+event_id+'/timeSlots/'+time_slot_id,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		updateEventTimeSlot: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			var time_slot_id = formData.time_slot_id != undefined && formData.time_slot_id != null ? formData.time_slot_id:'';
+			return $http.put('api/events/'+event_id+'/timeSlots/'+time_slot_id,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

@@ -363,6 +363,40 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
+      $this->put('/{time_slot_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!checkAdmin($userId)) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+        $event_id = $args['event_id'];
+        $time_slot_id = $args['time_slot_id'];
+        $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->first();
+        if($timeSlot) {
+          $timeSlot->name = $formData['name'];
+          $timeSlot->description = $formData['description'];
+          $ts = new DateTime($formData['time_start']);
+          $te = new DateTime($formData['time_end']);
+          $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
+          $timeSlot->time_end = $te->format('Y-m-d H:i:s');
+          if($timeSlot->save()) {
+            $slots = getEventTimeSlotList($event_id);
+            $responseArr['status'] = true;
+            $responseArr['msg'] = 'Time Slot Updated';
+            $responseArr['data'] = $slots['data'];
+          }
+        }
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
       $this->delete('/{time_slot_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $authToken = $request->getAttribute("token");
         $userId = $authToken['data']->user_id;
@@ -379,10 +413,10 @@ $app->group('/events', function () {
         }
         $event_id = $args['event_id'];
         $time_slot_id = $args['time_slot_id'];
-        $event = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->delete();
-        if($event) {
+        $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->delete();
+        if($timeSlot) {
           $slots = getEventTimeSlotList($event_id);
-          if($rooms['status'] != false) {
+          if($slots['status'] != false) {
             $responseArr = array('status'=>true, 'msg'=>'Time Slot Deleted', 'data' => $slots['data']);
           } else {
             $responseArr = $rooms;
@@ -391,6 +425,39 @@ $app->group('/events', function () {
           $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
         }
 
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->post('', function ($request, $response, $args) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!checkAdmin($userId)) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+        $event_id = $args['event_id'];
+        $time_slot_id = $args['time_slot_id'];
+        $timeSlot = new FrcPortal\EventTimeSlot();
+        $timeSlot->event_id = $event_id;
+        $timeSlot->name = $formData['name'];
+        $timeSlot->description = $formData['description'];
+        $ts = new DateTime($formData['time_start']);
+        $te = new DateTime($formData['time_end']);
+        $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
+        $timeSlot->time_end = $te->format('Y-m-d H:i:s');
+        if($timeSlot->save()) {
+          $slots = getEventTimeSlotList($event_id);
+          $responseArr['status'] = true;
+          $responseArr['msg'] = 'Time Slot Updated';
+          $responseArr['data'] = $slots['data'];
+        }
         $response = $response->withJson($responseArr);
         return $response;
       });
@@ -681,21 +748,5 @@ $app->group('/events', function () {
     return $response;
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ?>
