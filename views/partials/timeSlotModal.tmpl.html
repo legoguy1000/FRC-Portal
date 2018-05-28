@@ -42,8 +42,8 @@
 					<div  ng-if="!vm.admin" layout="row" layout-align="center center">
 						<md-button type="button" ng-click="vm.toggleRegistrationEventTimeSlot(time_slot.time_slot_id)">
 							<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
-							<span ng-hide="vm.checkReg($index)">Register</span>
-							<span ng-show="vm.checkReg($index)">Unregister</span>
+							<span ng-hide="vm.checkReg(vm.time_slots[$index])">Register</span>
+							<span ng-show="vm.checkReg(vm.time_slots[$index])">Unregister</span>
 						</md-button>
 					</div>
 				</div>
