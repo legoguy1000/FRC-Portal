@@ -73,7 +73,16 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			}
 		})
 		.then(function(response) {
-			//vm.users = response.data;
+			vm.time_slots = [];
+			var len = vm.time_slots.length;
+			for (var i = 0; i < len; i++) {
+				var len2 = vm.time_slots[i].registrations.length;
+				for (var j = 0; j < len2; j++) {
+					if(time_slot.registrations[j].user_id == vm.userInfo.user_id) {
+						vm.time_slots.push(vm.time_slots[i]);
+					}
+				}
+			}
 		}, function() { });
 	};
 
