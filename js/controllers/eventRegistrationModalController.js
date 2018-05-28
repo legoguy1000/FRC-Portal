@@ -79,17 +79,18 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		});
 	};
 
-	function relistTS() {
-		vm.time_slots = [];
-		var len = vm.time_slots.length;
+	function relistTS(allTS) {
+		var time_slots = [];
+		var len = allTS.length;
 		for (var i = 0; i < len; i++) {
-			var len2 = vm.time_slots[i].registrations.length;
+			var len2 = allTS[i].registrations.length;
 			for (var j = 0; j < len2; j++) {
-				if(time_slot.registrations[j].user_id == vm.userInfo.user_id) {
-					vm.time_slots.push(vm.time_slots[i]);
+				if(allTS[i].registrations[j].user_id == vm.userInfo.user_id) {
+					time_slots.push(allTS[i]);
 				}
 			}
 		}
+		vm.registrationForm.event_time_slots = time_slots;
 	}
 
 }
