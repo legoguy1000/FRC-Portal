@@ -4,7 +4,6 @@ require "../includes.php";
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 Capsule::schema()->create('event_time_slots_event_requirements', function ($table) {
-  $table->char('time_slot_user_id',13)->primary();
   $table->char('time_slot_id',13)->index();
   //$table->char('user_id',13)->nullable()->index();
   $table->char('ereq_id',13)->nullable()->index();
