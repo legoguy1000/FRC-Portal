@@ -115,7 +115,7 @@ $app->group('/users', function () {
     $this->group('/eventRequirements', function () {
       $this->get('', function ($request, $response, $args) {
         $user_id = $args['user_id'];
-        $user = FrcPortal\Event::with(['event_requirements' => function ($query) use ($user_id) {
+        $user = FrcPortal\Event::with(['event_requirements.event_cars', 'event_requirements.event_time_slots', 'event_requirements' => function ($query) use ($user_id) {
                   $query->where('user_id','=',$user_id); // fields from comments table,
                 }])->get();
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
