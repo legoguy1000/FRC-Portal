@@ -24,7 +24,7 @@
 					</md-button>-->
 					<h3 style="margin-top: 0px;">
 						<span>{{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</span>
-						<md-button class="md-icon-button noprint" ng-click="vm.editTimeSlot($event, false, time_slot)">
+						<md-button class="md-icon-button noprint" ng-click="vm.editTimeSlot($event, false, time_slot)" ng-if="vm.admin">
 							<md-tooltip md-direction="top">Edit Time Slot</md-tooltip>
 						  <md-icon class="material-icons"> edit </md-icon>
 						</md-button>
@@ -46,7 +46,7 @@
 					<md-tooltip md-direction="top">Print room list</md-tooltip>
 					<md-icon class=""> print </md-icon>
 			</md-button>
-			<md-button class="md-icon-button noprint" ng-click="vm.editTimeSlot($event)">
+			<md-button class="md-icon-button noprint" ng-click="vm.editTimeSlot($event)" ng-if="vm.admin">
 				<md-tooltip md-direction="top">Add Time Slot</md-tooltip>
 			  <md-icon class="material-icons"> add </md-icon>
 			</md-button>
