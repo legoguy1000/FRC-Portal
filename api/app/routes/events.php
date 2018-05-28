@@ -614,7 +614,7 @@ $app->group('/events', function () {
         $can_drive = (bool) $formData['can_drive'];
         $drivers_req = (bool) $event->drivers_required;
       	if($user_type == 'Mentor' && $can_drive && $drivers_req) {
-          $eventCarUpdate = FrcPortal\EventCar::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['car_space' => $formData['car_space']]);
+          $eventCarUpdate = FrcPortal\EventCar::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['car_space' => $formData['event_cars']['car_space']]);
           $reqUpdate->can_drive = true;
           $reqUpdate->car_id = $eventCarUpdate->car_id;
           $reqUpdate->save();
