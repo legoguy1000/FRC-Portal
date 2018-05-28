@@ -38,6 +38,16 @@
 									<div>{{reg.user.full_name}}</div>
 					    </md-list-item>
 					</md-list>
+					<div  ng-if="!vm.admin">
+						<md-button type="button" ng-click="">
+							<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
+							Register
+						</md-button>
+						<md-button type="button" ng-click="">
+							<md-tooltip md-direction="top">Unregister for Time Slot</md-tooltip>
+							Unregister
+						</md-button>
+					</div>
 				</div>
 			</div>
 		</md-dialog-content>

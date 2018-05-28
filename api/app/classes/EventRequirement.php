@@ -118,5 +118,10 @@ class EventRequirement extends Eloquent {
   public function event_rooms() {
     return $this->hasOne('FrcPortal\EventRoom', 'room_id', 'room_id');
   }
-
+  /**
+   * Get the Event Time Slots.
+   */
+  public function event_time_slots() {
+    return $this->belongsToMany('FrcPortal\EventTimeSlot', 'event_time_slots_event_requirements', 'ereq_id', 'time_slot_id');
+  }
 }
