@@ -66,12 +66,12 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 	    );
 		});
 	}
-	vm.checkReg = function(time_slot_index) {
+	vm.checkReg = function(time_slot) {
 		var index = false;
 		if(!vm.admin) {
-			var len = vm.time_slots[time_slot_index].length;
+			var len = time_slot.length;
 			for (var i = 0; i < len; i++) {
-				if(vm.time_slots[time_slot_index].registrations[i].user_id == vm.eventInfo.user_id) {
+				if(time_slot.registrations[i].user_id == vm.eventInfo.user_id) {
 					index = true;
 					break;
 				}
