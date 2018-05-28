@@ -11,7 +11,7 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 		$mdDialog.cancel();
 	}
 	vm.save = function() {
-		$mdDialog.hide();
+		$mdDialog.hide(vm.time_slots);
 	}
 	vm.time_slots = [];
 
