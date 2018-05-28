@@ -69,7 +69,7 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 	vm.checkReg = function(time_slot) {
 		var index = false;
 		if(!vm.admin) {
-			var len = time_slot.length;
+			var len = time_slot.registrations.length;
 			for (var i = 0; i < len; i++) {
 				if(time_slot.registrations[i].user_id == vm.eventInfo.user_id) {
 					index = true;
