@@ -40,13 +40,8 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 			}
 		})
 		.then(function(response) {
-			vm.seasons = response.data.results;
-			vm.total = response.data.total;
-			vm.maxPage = response.data.maxPage;
-			$log.info('asdf');
-		}, function() {
-			$log.info('Dialog dismissed at: ' + new Date());
-		});
+			vm.time_slots = response;
+		}, function() {});
 	}
 /*
 	vm.updateEventRoomList = function (close) {

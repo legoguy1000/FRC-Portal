@@ -1,15 +1,16 @@
 <md-dialog aria-label="New Event" style="" flex="50" >
-		<md-toolbar layout="row">
-		  <div class="md-toolbar-tools">
-			<h2><span ng-show="vm.newTS">Add</span><span ng-hide="vm.newTS">Edit</span> Time Slots for {{vm.eventInfo.name}}</h2>
-			<span flex></span>
-			<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
-				<md-tooltip md-direction="top">Close</md-tooltip>
-			  <md-icon class=""> close </md-icon>
-			</md-button>
-		  </div>
-		</md-toolbar>
-		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
+	<md-toolbar layout="row">
+	  <div class="md-toolbar-tools">
+		<h2><span ng-show="vm.newTS">Add</span><span ng-hide="vm.newTS">Edit</span> Time Slots for {{vm.eventInfo.name}}</h2>
+		<span flex></span>
+		<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
+			<md-tooltip md-direction="top">Close</md-tooltip>
+		  <md-icon class=""> close </md-icon>
+		</md-button>
+	  </div>
+	</md-toolbar>
+	<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
+	<form ng-submit="vm.submit()">
 		<md-dialog-content class="md-margin">
 			<div layout="row">
 				<md-input-container flex class="md-icon-float md-block">
@@ -48,15 +49,10 @@
 			</div>
 		</md-dialog-content>
 		<md-dialog-actions layout="row" class="noprint">
-<!--
-			<span flex></span>
-			<md-button type="button" ng-click="vm.updateEventRoomList(false)">
-				<md-tooltip md-direction="top">Save and Close</md-tooltip>
+			<md-button type="submit">
+				<md-tooltip md-direction="top">Save</md-tooltip>
 				Save
 			</md-button>
-			<md-button type="button" ng-click="vm.updateEventRoomList(true)">
-				<md-tooltip md-direction="top">Save and Close</md-tooltip>
-				Save & Close
-			</md-button>
-		</md-dialog-actions> -->
+		</md-dialog-actions>
+	</form>
 </md-dialog>

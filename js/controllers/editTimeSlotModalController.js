@@ -1,19 +1,20 @@
 angular.module('FrcPortal')
-.controller('editTimeSlotModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'newTS', 'timeSlotInfo', 'eventsService',
+.controller('editTimeSlotModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'newTS', 'timeSlotInfo', 'eventsService','$mdToast',
 	editTimeSlotModalController
 ]);
-function editTimeSlotModalController($log,$element,$mdDialog,$scope,eventInfo,newTS,timeSlotInfo,eventsService) {
+function editTimeSlotModalController($log,$element,$mdDialog,$scope,eventInfo,newTS,timeSlotInfo,eventsService,$mdToast) {
 	var vm = this;
 
 	vm.eventInfo = eventInfo;
 	vm.newTS = newTS;
 	vm.timeSlotInfo = timeSlotInfo;
-
+	vm.loading = false;
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
 
 	vm.submit = function() {
+		vm.loading = true;
 		var data = {
 			'event_id': vm.eventInfo.event_id,
 			'name': vm.timeSlotInfo.name,
@@ -22,11 +23,32 @@ function editTimeSlotModalController($log,$element,$mdDialog,$scope,eventInfo,ne
 			'time_end': vm.timeSlotInfo.time_end,
 		};
 		if(vm.newTS == true) {
-
+			eventsService.addEventTimeSlot(data).then(function(response) {
+				if(response.status) {
+					$mdDialog.hide(response.data);
+				}
+				vm.loading = false;
+				$mdToast.show(
+		      $mdToast.simple()
+		        .textContent(response.msg)
+		        .position('top right')
+		        .hideDelay(3000)
+		    );
+			});
 		} else {
 			data.time_slot_id = vm.timeSlotInfo.time_slot_id;
-
-
+			eventsService.updateEventTimeSlot(data).then(function(response) {
+				if(response.status) {
+					$mdDialog.hide(response.data);
+				}
+				vm.loading = false;
+				$mdToast.show(
+		      $mdToast.simple()
+		        .textContent(response.msg)
+		        .position('top right')
+		        .hideDelay(3000)
+		    );
+			});
 		}
 	}
 
