@@ -45,7 +45,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.getEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
-			vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
+			if(vm.event.registration_deadline != null) {
+				vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
+			}
 			vm.loading = false;
 		});
 	};
@@ -65,7 +67,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
-			vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
+			if(vm.event.registration_deadline != null) {
+				vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
+			}
 			vm.loading = false;
 			$mdToast.show(
 	      $mdToast.simple()
@@ -88,7 +92,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		eventsService.updateEvent(data).then(function(response){
 			if(response.status) {
 				vm.event = response.data;
-				vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
+				if(vm.event.registration_deadline != null) {
+					vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
+				}
 			}
 			$mdToast.show(
 	      $mdToast.simple()
