@@ -28,8 +28,8 @@
 				</div>
 				<div flex>
 					<md-list ng-cloak>
-					    <md-list-item ng-repeat="user in time_slot.users">
-									<div>{{user.full_name}}</div>
+					    <md-list-item ng-repeat="reg in time_slot.registrations">
+									<div>{{reg.user.full_name}}</div>
 					    </md-list-item>
 					</md-list>
 				</div>
