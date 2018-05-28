@@ -81,8 +81,8 @@ class EventTimeSlot extends Eloquent {
       'date_raw' => $sd->format('Y-m-d'),
       'date_dow' => $sd->format('D'),
       'date_formatted' => $sd->format('F j, Y'),
-      'event_start_formatted' => $sd->format('h:i A'),
-      'event_end_formatted' => $ed->format('h:i A'),
+      'event_start_formatted' => $sd->format('g:i A'),
+      'event_end_formatted' => $ed->format('g:i A'),
     );
   }
 }
