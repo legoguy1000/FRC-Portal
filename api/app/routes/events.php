@@ -181,184 +181,219 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->get('/cars', function ($request, $response, $args) {
-      $event_id = $args['event_id'];
-      $responseArr = getEventCarList($event_id);
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-    $this->put('/cars', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $season_id = $args['season_id'];
-      $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
-      if(!checkAdmin($userId)) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
+    $this->group('/cars', function () {
+      $this->get('', function ($request, $response, $args) {
+        $event_id = $args['event_id'];
+        $responseArr = getEventCarList($event_id);
+        $response = $response->withJson($responseArr);
         return $response;
-      }
+      });
+      $this->put('', function ($request, $response, $args) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        $season_id = $args['season_id'];
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!checkAdmin($userId)) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
 
 
-      $event_id = $args['event_id'];
-      $formData = $request->getParsedBody();
-      if(!isset($formData['cars']) || !is_array($formData['cars']) || empty($formData['cars'])) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid request');
-        $response = $response->withJson($responseArr,400);
-        return $response;
-      }
-      $cars = FrcPortal\EventCar::where('event_id',$event_id)->get();
-      foreach($cars as $car) {
-        $car_id = $car->car_id;
-        $carArr = $formData['cars'][$car_id];
+        $event_id = $args['event_id'];
+        $formData = $request->getParsedBody();
+        if(!isset($formData['cars']) || !is_array($formData['cars']) || empty($formData['cars'])) {
+          $responseArr = array('status'=>false, 'msg'=>'Invalid request');
+          $response = $response->withJson($responseArr,400);
+          return $response;
+        }
+        $cars = FrcPortal\EventCar::where('event_id',$event_id)->get();
+        foreach($cars as $car) {
+          $car_id = $car->car_id;
+          $carArr = $formData['cars'][$car_id];
+          $userArr = array_column($carArr, 'user_id');
+          if(!empty($userArr) && count($userArr) <= $car['car_space']) {
+            $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
+        	}
+        }
+        //Not Assigned a car
+        $carArr = $formData['cars']['non_select'];
         $userArr = array_column($carArr, 'user_id');
-        if(!empty($userArr) && count($userArr) <= $car['car_space']) {
-          $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
-      	}
-      }
-      //Not Assigned a car
-      $carArr = $formData['cars']['non_select'];
-      $userArr = array_column($carArr, 'user_id');
-      if(!empty($userArr)) {
-        $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => null]);
-      }
-      $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
-                          $query->where('event_id','=',$event_id);
-                        },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
-      $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>$event);
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-    $this->get('/rooms', function ($request, $response, $args) {
-      $event_id = $args['event_id'];
-      $responseArr = getEventRoomList($event_id);
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-    $this->post('/rooms', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $event_id = $args['event_id'];
-      $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
-      if(!checkAdmin($userId)) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
+        if(!empty($userArr)) {
+          $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => null]);
+        }
+        $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+                            $query->where('event_id','=',$event_id);
+                          },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
+        $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>$event);
+        $response = $response->withJson($responseArr);
         return $response;
-      }
-
-      if(!isset($formData['event_id']) || $formData['event_id'] == '') {
-      	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Event ID cannot be blank!')));
-      }
-      if(!isset($formData['user_type']) || $formData['user_type'] == '') {
-      	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'User type cannot be blank!')));
-      }
-      if(!isset($formData['gender']) || $formData['gender'] == '' && $formData['user_type'] != 'Mentor') {
-      	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Gender cannot be blank!')));
-      }
-      $room = new FrcPortal\EventRoom();
-      $room->event_id = $formData['event_id'];
-      $room->user_type = $formData['user_type'];
-      $room->gender = $formData['gender'];
-      if($room->save()) {
+      });
+    });
+    $this->group('/rooms', function () {
+      $this->get('', function ($request, $response, $args) {
+        $event_id = $args['event_id'];
         $responseArr = getEventRoomList($event_id);
-        $responseArr['msg'] = 'New room added';
-      } else {
-        $responseArr = array('status'=>false, 'msg'=>'Event went wrong', 'data' => null);
-      }
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-    $this->put('/rooms', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $season_id = $args['season_id'];
-      $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
-      if(!checkAdmin($userId)) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
+        $response = $response->withJson($responseArr);
         return $response;
-      }
-
-      $event_id = $args['event_id'];
-      $formData = $request->getParsedBody();
-      if(!isset($formData['rooms']) || !is_array($formData['rooms']) || empty($formData['rooms'])) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid request');
-        $response = $response->withJson($responseArr,400);
-        return $response;
-      }
-      $rooms = FrcPortal\EventRoom::where('event_id',$event_id)->get();
-      foreach($rooms as $room) {
-        $room_id = $room->room_id;
-        $roomArr = $formData['rooms'][$room_id];
-        $userArr = array_column($roomArr, 'user_id');
-        if(!empty($userArr) && count($userArr) <= 4) {
-          $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
+      });
+      $this->post('', function ($request, $response, $args) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        $event_id = $args['event_id'];
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!checkAdmin($userId)) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
         }
-      }
-      //Not Assigned a car
-      $roomArr = $formData['rooms']['non_select'];
-      $userArr = array_column($roomArr, 'user_id');
-      if(!empty($userArr)) {
-        $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
-      }
-      $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
-                          $query->where('event_id','=',$event_id);
-                        },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
-      $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>$event);
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-    $this->delete('/rooms/{room_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $season_id = $args['season_id'];
-      $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
-      if(!checkAdmin($userId)) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
-      }
 
-      $event_id = $args['event_id'];
-      $room_id = $args['room_id'];
-      $event = FrcPortal\EventRoom::where('event_id',$event_id)->where('room_id',$room_id)->delete();
-      if($event) {
-        $rooms = getEventRoomList($event_id);
-        if($rooms['status'] != false) {
-          $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms['data']);
+        if(!isset($formData['event_id']) || $formData['event_id'] == '') {
+        	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Event ID cannot be blank!')));
+        }
+        if(!isset($formData['user_type']) || $formData['user_type'] == '') {
+        	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'User type cannot be blank!')));
+        }
+        if(!isset($formData['gender']) || $formData['gender'] == '' && $formData['user_type'] != 'Mentor') {
+        	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Gender cannot be blank!')));
+        }
+        $room = new FrcPortal\EventRoom();
+        $room->event_id = $formData['event_id'];
+        $room->user_type = $formData['user_type'];
+        $room->gender = $formData['gender'];
+        if($room->save()) {
+          $responseArr = getEventRoomList($event_id);
+          $responseArr['msg'] = 'New room added';
         } else {
-          $responseArr = $rooms;
+          $responseArr = array('status'=>false, 'msg'=>'Event went wrong', 'data' => null);
         }
-      } else {
-        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
-      }
-      $response = $response->withJson($responseArr);
-      return $response;
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->put('', function ($request, $response, $args) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!checkAdmin($userId)) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+
+        $event_id = $args['event_id'];
+        $formData = $request->getParsedBody();
+        if(!isset($formData['rooms']) || !is_array($formData['rooms']) || empty($formData['rooms'])) {
+          $responseArr = array('status'=>false, 'msg'=>'Invalid request');
+          $response = $response->withJson($responseArr,400);
+          return $response;
+        }
+        $rooms = FrcPortal\EventRoom::where('event_id',$event_id)->get();
+        foreach($rooms as $room) {
+          $room_id = $room->room_id;
+          $roomArr = $formData['rooms'][$room_id];
+          $userArr = array_column($roomArr, 'user_id');
+          if(!empty($userArr) && count($userArr) <= 4) {
+            $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
+          }
+        }
+        //Not Assigned a car
+        $roomArr = $formData['rooms']['non_select'];
+        $userArr = array_column($roomArr, 'user_id');
+        if(!empty($userArr)) {
+          $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
+        }
+        $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+                            $query->where('event_id','=',$event_id);
+                          },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
+        $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>$event);
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->delete('/{room_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!checkAdmin($userId)) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+
+        $event_id = $args['event_id'];
+        $room_id = $args['room_id'];
+        $event = FrcPortal\EventRoom::where('event_id',$event_id)->where('room_id',$room_id)->delete();
+        if($event) {
+          $rooms = getEventRoomList($event_id);
+          if($rooms['status'] != false) {
+            $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms['data']);
+          } else {
+            $responseArr = $rooms;
+          }
+        } else {
+          $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
+        }
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
     });
-    $this->get('/timeSlots', function ($request, $response, $args) {
-      $event_id = $args['event_id'];
-      $responseArr = getEventTimeSlotList($event_id);
-      $response = $response->withJson($responseArr);
-      return $response;
+    $this->group('/timeSlots', function () {
+      $this->get('', function ($request, $response, $args) {
+        $event_id = $args['event_id'];
+        $responseArr = getEventTimeSlotList($event_id);
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->delete('/{time_slot_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!checkAdmin($userId)) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+        $event_id = $args['event_id'];
+        $time_slot_id = $args['time_slot_id'];
+        $event = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->delete();
+        if($event) {
+          $slots = getEventTimeSlotList($event_id);
+          if($rooms['status'] != false) {
+            $responseArr = array('status'=>true, 'msg'=>'Time Slot Deleted', 'data' => $slots['data']);
+          } else {
+            $responseArr = $rooms;
+          }
+        } else {
+          $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
+        }
+
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
     });
     $this->put('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
