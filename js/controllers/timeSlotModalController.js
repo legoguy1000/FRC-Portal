@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('timeSlotModalController', ['$log','$element','$mdDialog', '$scope', '$auth', 'eventInfo', 'admin', 'usersService', 'eventsService',
+.controller('timeSlotModalController', ['$log','$element','$mdDialog', '$scope', '$auth', 'eventInfo', 'admin', 'usersService', 'eventsService','$mdToast',
 	timeSlotModalController
 ]);
-function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,admin,usersService,eventsService) {
+function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,admin,usersService,eventsService,$mdToast) {
 	var vm = this;
 
 	vm.eventInfo = eventInfo;
@@ -10,11 +10,14 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
+	vm.save = function() {
+		$mdDialog.hide();
+	}
 	vm.time_slots = {};
 
 	//function get room list
 	vm.getEventTimeSlotList = function () {
-		vm.promise = eventsService.getEventTimeSlotList(vm.eventInfo.event_id).then(function(response) {
+		eventsService.getEventTimeSlotList(vm.eventInfo.event_id).then(function(response) {
 			vm.time_slots = response.data;
 		});
 	};
@@ -43,6 +46,44 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 		.then(function(response) {
 			vm.time_slots = response;
 		}, function() {});
+	}
+
+	vm.registerTimeSlot = function(time_slot_id) {
+		var data = {
+			'user_id': vm.eventInfo.user_id,
+			'time_slot_id': time_slot_id,
+		};
+		usersService.registerEventTimeSlot(data).then(function(response) {
+			if(response.status) {
+				vm.time_slots = response.data;
+			}
+			vm.loading = false;
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
+		});
+	}
+
+	vm.unregisterTimeSlot = function(time_slot_id) {
+		var data = {
+			'user_id': vm.eventInfo.user_id,
+			'time_slot_id': time_slot_id,
+		};
+		usersService.unregisterEventTimeSlot(data).then(function(response) {
+			if(response.status) {
+				vm.time_slots = response.data;
+			}
+			vm.loading = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+		});
 	}
 /*
 	vm.updateEventRoomList = function (close) {
