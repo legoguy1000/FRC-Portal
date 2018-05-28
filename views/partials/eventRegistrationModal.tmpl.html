@@ -24,7 +24,7 @@
 						<md-switch ng-model="vm.registrationForm.registration" class="md-warn"></md-switch>
 					</div>-->
 				</div>
-				<div layout="row" flex layout-align="end center" ng-if="vm.registrationForm.registration && vm.registrationForm.time_slots_required">
+				<div layout="row" flex layout-align="end center" ng-if="vm.registrationForm.registration && vm.event.time_slots_required">
 					<md-button type="button" class="md-raised md-primary" ng-click="vm.showTimeSlotListModal($event)">
 						Select Time Slots
 					</md-button>
