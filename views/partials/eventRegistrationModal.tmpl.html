@@ -24,11 +24,16 @@
 						<md-switch ng-model="vm.registrationForm.registration" class="md-warn"></md-switch>
 					</div>-->
 				</div>
-				<div layout="row" flex layout-align="end center" ng-if="vm.registrationForm.registration && vm.event.time_slots_required">
+				<div layout="row" flex layout-align="space-between center" ng-if="vm.registrationForm.registration && vm.event.time_slots_required">
 					<md-button type="button" class="md-raised md-primary" ng-click="vm.showTimeSlotListModal($event)">
 						Select Time Slots
 					</md-button>
-				</div>`
+					<div layout="column">
+						<div ng-repeat="time_slot in vm.registrationForm.event_time_slots">
+							{{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}
+						</div>
+					</div>
+				</div>
 				<div layout="column" flex ng-if="vm.event.drivers_required && vm.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
 					<div layout="row" flex layout-align="space-between center">
 						<div>Can you drive? </div>
