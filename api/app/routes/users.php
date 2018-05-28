@@ -165,7 +165,6 @@ $app->group('/users', function () {
             }
           }
         }
-        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
       });
@@ -200,7 +199,6 @@ $app->group('/users', function () {
             }
           }
         }
-        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
       });
