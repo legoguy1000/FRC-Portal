@@ -145,7 +145,7 @@ $app->group('/users', function () {
         );
         $user_id = $args['user_id'];
         $time_slot_id = $args['time_slot_id'];
-        if$user_id != $userId) {
+        if($user_id != $userId) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
@@ -180,7 +180,7 @@ $app->group('/users', function () {
         );
         $user_id = $args['user_id'];
         $time_slot_id = $args['time_slot_id'];
-        if$user_id != $userId) {
+        if($user_id != $userId) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
