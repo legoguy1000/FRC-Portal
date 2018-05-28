@@ -28,9 +28,11 @@
 					<md-button type="button" class="md-raised md-primary" ng-click="vm.showTimeSlotListModal($event)">
 						Select Time Slots
 					</md-button>
-					<div layout="column">
-						<div ng-repeat="time_slot in vm.registrationForm.event_time_slots">
-							{{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}
+					<div layout="column" layout-align="center center">
+						<div><b>My Time Slots</b></div>
+						<div ng-repeat="time_slot in vm.registrationForm.event_time_slots" layout="row">
+							<div>{{time_slot.name}}: </div>
+							<div> {{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</div>
 						</div>
 					</div>
 				</div>
