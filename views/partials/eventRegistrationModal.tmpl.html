@@ -46,7 +46,7 @@
 					</div>
 					<div layout="row" flex layout-align="space-between center" ng-show="vm.registrationForm.can_drive">
 						<div>How many including yourself can you drive? </div>
-						<md-select ng-model="vm.registrationForm.car_space" placeholder="" class="md-no-underline" ng-required="vm.registrationForm.can_drive">
+						<md-select ng-model="vm.registrationForm.event_cars.car_space" placeholder="" class="md-no-underline" ng-required="vm.registrationForm.can_drive">
 		          <md-option ng-value="{{n}}" ng-repeat="n in vm.range(0,10)">{{n}}</md-option>
 		        </md-select>
 					</div>

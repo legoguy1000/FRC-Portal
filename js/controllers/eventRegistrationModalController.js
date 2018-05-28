@@ -54,29 +54,31 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	};
 
 	vm.showTimeSlotListModal = function(ev) {
-		$mdDialog.show({
-			controller: timeSlotModalController,
-			controllerAs: 'vm',
-			templateUrl: 'views/partials/timeSlotModal.tmpl.html',
-			parent: angular.element(document.body),
-			targetEvent: ev,
-			//clickOutsideToClose:true,
-			fullscreen: true, // Only for -xs, -sm breakpoints.
-			multiple: true,
-			locals: {
-				eventInfo: {
-					'event_id': vm.event.event_id,
-					'name':vm.event.name,
-					'user_id': vm.userInfo.user_id,
-				},
-				admin: false,
-			}
-		})
-		.then(function(response) {
-			relistTS(response);
-		}, function() {
-			//relistTS(response);
-		});
+		if(vm.event.time_slots_required) {
+			$mdDialog.show({
+				controller: timeSlotModalController,
+				controllerAs: 'vm',
+				templateUrl: 'views/partials/timeSlotModal.tmpl.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				//clickOutsideToClose:true,
+				fullscreen: true, // Only for -xs, -sm breakpoints.
+				multiple: true,
+				locals: {
+					eventInfo: {
+						'event_id': vm.event.event_id,
+						'name':vm.event.name,
+						'user_id': vm.userInfo.user_id,
+					},
+					admin: false,
+				}
+			})
+			.then(function(response) {
+				relistTS(response);
+			}, function() {
+				//relistTS(response);
+			});
+		}		
 	};
 
 	function relistTS(allTS) {
