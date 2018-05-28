@@ -34,7 +34,7 @@
 				</div>
 				<div flex layout="column">
 					<md-list ng-cloak>
-					    <md-list-item ng-repeat="reg in time_slot.registrations">
+					    <md-list-item ng-repeat="reg in time_slot.registrations" class="min-height-reset">
 									<div>{{reg.user.full_name}}</div>
 									<div ng-hide="reg.registration" style="cursor: default; margin-left: 5px;">
 										<md-tooltip md-direction="top">User has not completed registration</md-tooltip>
