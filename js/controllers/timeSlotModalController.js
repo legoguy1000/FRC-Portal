@@ -1,5 +1,5 @@
 angular.module('FrcPortal')
-.controller('timeSlotModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService',
+.controller('timeSlotModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'eventsService',
 	timeSlotModalController
 ]);
 function timeSlotModalController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService) {
@@ -19,6 +19,35 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 	};
 	vm.getEventTimeSlotList();
 
+	vm.editTimeSlot = function (ev, newTS = true, timeSlotInfo = {}}) {
+		if(newTS == true) {
+			timeSlotInfo.time_end_moment = moment(timeSlotInfo.time_end);
+			timeSlotInfo.time_start_moment = moment(timeSlotInfo.time_start);
+		}
+		$mdDialog.show({
+			controller: editTimeSlotModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/editTimeSlotModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			skipHide: true,
+			locals: {
+				eventInfo: vm.eventInfo,
+				newTS: newTS,
+				timeSlotInfo: timeSlotInfo
+			}
+		})
+		.then(function(response) {
+			vm.seasons = response.data.results;
+			vm.total = response.data.total;
+			vm.maxPage = response.data.maxPage;
+			$log.info('asdf');
+		}, function() {
+			$log.info('Dialog dismissed at: ' + new Date());
+		});
+	}
 /*
 	vm.updateEventRoomList = function (close) {
 		vm.loading = true;

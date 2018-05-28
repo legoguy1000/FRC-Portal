@@ -40,6 +40,11 @@
 					<md-tooltip md-direction="top">Print room list</md-tooltip>
 					<md-icon class=""> print </md-icon>
 			</md-button>
+			<md-button class="md-icon-button noprint" ng-click="vm.editTimeSlot($event)">
+				<md-tooltip md-direction="top">Add room</md-tooltip>
+			  <md-icon class=""> add </md-icon>
+			</md-button>
+			<span flex></span>
 <!--			<md-input-container>
         <label>Add New Room</label>
         <md-select ng-model="vm.newRoom" style="min-width:150px;">
@@ -53,7 +58,7 @@
 				<md-tooltip md-direction="top">Add room</md-tooltip>
 			  <md-icon class=""> add </md-icon>
 			</md-button>
-			<span flex></span>
+
 			<md-button type="button" ng-click="vm.updateEventRoomList(false)">
 				<md-tooltip md-direction="top">Save and Close</md-tooltip>
 				Save
@@ -61,6 +66,6 @@
 			<md-button type="button" ng-click="vm.updateEventRoomList(true)">
 				<md-tooltip md-direction="top">Save and Close</md-tooltip>
 				Save & Close
-			</md-button>
-		</md-dialog-actions> -->
+			</md-button>-->
+		</md-dialog-actions>
 </md-dialog>
