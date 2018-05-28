@@ -99,12 +99,12 @@ function getEventCarList($event_id) {
 		if(count($carInfo) > 0) {
 			foreach($carInfo as $car) {
 				$car_id = $car->car_id;
-				$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->where('car_id','=',$car_id)->get();
+				$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('car_id','=',$car_id)->get();
 				$cars[$car_id] = $users;
 			}
 		}
 		//no user yet users
-		$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->where('registration',true)->whereNull('car_id')->get();
+		$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('registration',true)->whereNull('car_id')->get();
 		$cars['non_select'] = $users;
 		$result['status'] = true;
 		$result['data'] = array('cars'=>$carInfo, 'total'=>count($carInfo), 'car_selection'=>$cars);
@@ -127,12 +127,12 @@ function getEventRoomList($event_id) {
 		if(count($roomInfo) > 0) {
 			foreach($roomInfo as $room) {
 				$room_id = $room->room_id;
-				$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->where('room_id','=',$room_id)->get();
+				$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('room_id','=',$room_id)->get();
 				$rooms[$room_id] = $users;
 			}
 		}
 		//no user yet users
-		$users = FrcPortal\EventRequirement::with(['users'])->where('event_id',$event_id)->where('registration',true)->whereNull('room_id')->get();
+		$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('registration',true)->whereNull('room_id')->get();
 		$rooms['non_select'] = $users;
 		$result['status'] = true;
 		$result['data'] = array('rooms'=>$roomInfo, 'total'=>count($roomInfo), 'room_selection'=>$rooms);
