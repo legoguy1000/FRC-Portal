@@ -99,6 +99,14 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		toggleRegistrationEventTimeSlot: function (formData) {
+			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
+			var time_slot_id = formData.time_slot_id != undefined && formData.time_slot_id != null ? formData.time_slot_id:'';
+			return $http.put('api/users/'+user_id+'/eventTimeSlots/'+time_slot_id)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		registerEventTimeSlot: function (formData) {
 			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
 			var time_slot_id = formData.time_slot_id != undefined && formData.time_slot_id != null ? formData.time_slot_id:'';
