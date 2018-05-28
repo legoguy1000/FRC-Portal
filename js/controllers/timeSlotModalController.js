@@ -1,11 +1,12 @@
 angular.module('FrcPortal')
-.controller('timeSlotModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'eventsService',
+.controller('timeSlotModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'admin', 'usersService', 'eventsService',
 	timeSlotModalController
 ]);
-function timeSlotModalController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService) {
+function timeSlotModalController($log,$element,$mdDialog,$scope,eventInfo,admin,usersService,eventsService) {
 	var vm = this;
 
 	vm.eventInfo = eventInfo;
+	vm.admin = admin && $scope.main.userInfo.admin;
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}

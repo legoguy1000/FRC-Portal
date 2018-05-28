@@ -191,6 +191,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 					'event_id': vm.event_id,
 					'name':vm.event.name,
 				},
+				admin: true,
 			}
 		})
 		.then(function(response) {
