@@ -1,7 +1,7 @@
 <md-dialog aria-label="New Event" style="" flex="50" >
 		<md-toolbar layout="row">
 		  <div class="md-toolbar-tools">
-			<h2>Add/Edit Time Slots for {{vm.eventInfo.name}}</h2>
+			<h2><span ng-show="vm.newTS">Add</span><span ng-hide="vm.newTS">Edit</span> Time Slots for {{vm.eventInfo.name}}</h2>
 			<span flex></span>
 			<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
 				<md-tooltip md-direction="top">Close</md-tooltip>
