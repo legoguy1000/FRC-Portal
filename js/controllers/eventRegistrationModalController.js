@@ -60,7 +60,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			templateUrl: 'views/partials/timeSlotModal.tmpl.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
-			clickOutsideToClose:true,
+			//clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
 			multiple: true,
 			locals: {
@@ -73,18 +73,23 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			}
 		})
 		.then(function(response) {
-			vm.time_slots = [];
-			var len = vm.time_slots.length;
-			for (var i = 0; i < len; i++) {
-				var len2 = vm.time_slots[i].registrations.length;
-				for (var j = 0; j < len2; j++) {
-					if(time_slot.registrations[j].user_id == vm.userInfo.user_id) {
-						vm.time_slots.push(vm.time_slots[i]);
-					}
-				}
-			}
-		}, function() { });
+			relistTS(response);
+		}, function() {
+			//relistTS(response);
+		});
 	};
 
+	function relistTS() {
+		vm.time_slots = [];
+		var len = vm.time_slots.length;
+		for (var i = 0; i < len; i++) {
+			var len2 = vm.time_slots[i].registrations.length;
+			for (var j = 0; j < len2; j++) {
+				if(time_slot.registrations[j].user_id == vm.userInfo.user_id) {
+					vm.time_slots.push(vm.time_slots[i]);
+				}
+			}
+		}
+	}
 
 }
