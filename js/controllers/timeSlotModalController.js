@@ -13,7 +13,7 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 	vm.save = function() {
 		$mdDialog.hide();
 	}
-	vm.time_slots = []];
+	vm.time_slots = [];
 
 	//function get room list
 	vm.getEventTimeSlotList = function () {
@@ -86,7 +86,7 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 		});
 	}
 
-	vm.checkReg = function(time_slot_index) { 
+	vm.checkReg = function(time_slot_index) {
 		var index = false;
 		if(!vm.admin) {
 			var len = vm.time_slots[time_slot_index].length;
