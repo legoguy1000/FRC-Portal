@@ -16,7 +16,7 @@
 		</md-toolbar>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 		<md-dialog-content class="md-margin">
-			<div layout="row" ng-repeat="time_slot in vm.time_slots" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
+			<div layout="row" ng-repeat="time_slot in vm.time_slots track by $index" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
 				<div flex layout="column" layout-align="center start" class="md-padding" style="border-right: solid;">
 					<!--<md-button class="md-icon-button noprint" ng-click="vm.deleteEventRoom(room.room_id)">
 						<md-tooltip md-direction="top">Delete Room</md-tooltip>
@@ -38,12 +38,12 @@
 									<div>{{reg.user.full_name}}</div>
 					    </md-list-item>
 					</md-list>
-					<div  ng-if="!vm.admin">
-						<md-button type="button" ng-click="vm.registerTimeSlot(time_slot.time_slot_id)">
+					<div  ng-if="!vm.admin" layout="row" layout-align="center center">
+						<md-button type="button" ng-click="vm.registerTimeSlot(time_slot.time_slot_id)" ng-hide="vm.checkReg($index)">
 							<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
 							Register
 						</md-button>
-						<md-button type="button" ng-click="vm.unregisterTimeSlot(time_slot.time_slot_id)">
+						<md-button type="button" ng-click="vm.unregisterTimeSlot(time_slot.time_slot_id)" ng-show="vm.checkReg($index)">
 							<md-tooltip md-direction="top">Unregister for Time Slot</md-tooltip>
 							Unregister
 						</md-button>

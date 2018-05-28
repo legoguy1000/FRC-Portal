@@ -13,7 +13,7 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 	vm.save = function() {
 		$mdDialog.hide();
 	}
-	vm.time_slots = {};
+	vm.time_slots = []];
 
 	//function get room list
 	vm.getEventTimeSlotList = function () {
@@ -84,6 +84,20 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 					.hideDelay(3000)
 			);
 		});
+	}
+
+	vm.checkReg = function(time_slot_index) { 
+		var index = false;
+		if(!vm.admin) {
+			var len = vm.time_slots[time_slot_index].length;
+			for (var i = 0; i < len; i++) {
+				if(vm.time_slots[time_slot_index].registrations[i].user_id == vm.eventInfo.user_id) {
+					index = true;
+					break;
+				}
+			}
+		}
+		return index;
 	}
 /*
 	vm.updateEventRoomList = function (close) {
