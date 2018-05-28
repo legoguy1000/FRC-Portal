@@ -65,7 +65,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			multiple: true,
 			locals: {
 				eventInfo: {
-					'event_id': vm.event_id,
+					'event_id': vm.event.event_id,
 					'name':vm.event.name,
 				},
 				admin: false,
