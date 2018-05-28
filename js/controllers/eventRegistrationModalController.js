@@ -52,4 +52,29 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			}
 			return input;
 	};
+
+	vm.showTimeSlotListModal = function(ev) {
+		$mdDialog.show({
+			controller: timeSlotModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/timeSlotModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			multiple: true,
+			locals: {
+				eventInfo: {
+					'event_id': vm.event_id,
+					'name':vm.event.name,
+				},
+				admin: false,
+			}
+		})
+		.then(function(response) {
+			//vm.users = response.data;
+		}, function() { });
+	};
+
+
 }

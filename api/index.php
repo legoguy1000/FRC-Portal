@@ -29,6 +29,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
         new Tuupola\Middleware\JwtAuthentication\RequestPathMethodRule([
           "passthrough" => [
             "/events/([a-z0-9]{13})" => ["GET"],
+            "/events/([a-z0-9]{13})/timeSlots" => ["GET"],
             "/reports/topHourUsers/([0-9]{4})" => ["GET"],
             "/hours/signIn" => ["POST"],
           ],
