@@ -157,12 +157,11 @@ $app->group('/users', function () {
           $reqUpdate = FrcPortal\EventRequirement::firstOrNew(['event_id' => $event_id, 'user_id' => $user_id]);
           if($reqUpdate->save()) {
             $ereq_id = $reqUpdate->ereq_id;
-            if($timeSlot->registrations()->attach($ereq_id)) {
-              $slots = getEventTimeSlotList($event_id);
-              $responseArr['status'] = true;
-              $responseArr['msg'] = 'Time Slot Updated';
-              $responseArr['data'] = $slots['data'];
-            }
+            $timeSlot->registrations()->attach($ereq_id);
+            $slots = getEventTimeSlotList($event_id);
+            $responseArr['status'] = true;
+            $responseArr['msg'] = 'Time Slot Updated';
+            $responseArr['data'] = $slots['data'];
           }
         }
         $response = $response->withJson($responseArr);
