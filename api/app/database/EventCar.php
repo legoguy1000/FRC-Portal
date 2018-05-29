@@ -11,7 +11,7 @@ Capsule::schema()->create('event_cars', function ($table) {
 
        $table->foreign('event_id')->references('event_id')->on('events')->onDelete('cascade')->onUpdate('cascade');
        $table->foreign('user_id')->references('user_id')->on('users')->onDelete('set null')->onUpdate('cascade');
-       $table->foreign('user_id', 'event_cars_user_id_foreign2')->references('user_id')->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
+       //$table->foreign('user_id', 'event_cars_user_id_foreign2')->references('user_id')->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
    });
 
 ?>
