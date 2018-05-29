@@ -352,6 +352,7 @@ $app->group('/auth', function () {
                     ->orWhere('team_email', $email);
             })
             ->where('password', hash('sha512',$password))
+            ->whereNotNull('password')
             ->where('status',true)
             ->first();
     if($user != null) {
