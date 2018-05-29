@@ -20,7 +20,7 @@ $config['db']['prefix'] = '';
  //asdf
 $app = new \Slim\App(['settings' => $config]);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
-    "secret" => getSettingsProp('jwt_key'),
+    "secret" => getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : getIniProp('db_pass'),
     "rules" => [
         new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
           "path" => ['/'],
