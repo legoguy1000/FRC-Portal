@@ -76,6 +76,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		});
 	};
 
+	vm.searchText    = null;
 		/**
 	 * Create filter function for a query string
 	 */
