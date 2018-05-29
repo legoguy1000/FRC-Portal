@@ -43,6 +43,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		note_devices: false,
 		profile: false,
 		rmh: false,
+		linkedAccounts: false,
 	}
 	vm.user = $scope.main.userInfo;
 
@@ -98,10 +99,10 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.getUserEventRequirements();
 
 	vm.getUserLinkedAccounts = function() {
-		vm.loading.note_devices = true;
+		vm.loading.linkedAccounts = true;
 		usersService.getUserLinkedAccounts($scope.main.userInfo.user_id).then(function(response) {
 			vm.linkedAccounts = response.data;
-			vm.loading.note_devices = false;
+			vm.loading.linkedAccounts = false;
 		});
 	}
 	vm.getUserLinkedAccounts();

@@ -269,7 +269,7 @@
 
 						</div>
 					</md-toolbar> -->
-					<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingDevices"></md-progress-linear>
+					<md-progress-linear md-mode="indeterminate" ng-show="vm.loading.linkedAccounts"></md-progress-linear>
 					<md-list flex>
 						<md-list-item class="md-2-line" ng-repeat = "account in vm.linkedAccounts track by $index" ng-click="null">
 							<div style="margin-right:10px">
