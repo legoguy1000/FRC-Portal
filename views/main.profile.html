@@ -2,7 +2,7 @@
 	<md-content flex flex-gt-sm="50" flex-gt-md="20" layout="column" class="md-margin">
 		<h1 class="md-headline" layout="row" layout-align="center center">
 			<md-button class="md-icon-button profile" ng-click="alert('asdf')">
-				<img class="" ng-src="{{vm.user.profile_image}}">
+				<img class="" ng-src="{{vm.user.profile_image || 'https://png.icons8.com/color/50/000000/user.png'}}">
 				<md-tooltip md-direction="bottom">Click to clear profile picture</md-tooltip>
 			</md-button>
 			My Profile
