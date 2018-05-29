@@ -65,7 +65,7 @@
 <md-sidenav md-component-id="right" class="md-whiteframe-z2 md-sidenav-right">
     <md-toolbar>
         <md-toolbar class="md-warn" layout="row" layout-align="center center">
-            <img class="img-circle" ng-src="{{main.userInfo.profile_image}}">
+            <img class="img-circle" ng-src="{{main.userInfo.profile_image || 'https://png.icons8.com/color/50/000000/user.png'}}">
             <md-menu md-offset="0 20">
                 <md-button class="capitalize" ng-click="$mdMenu.open()" aria-label="Open menu">
                     <span>{{main.userInfo.full_name}}</span>
