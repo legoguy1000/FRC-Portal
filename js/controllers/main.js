@@ -6,6 +6,7 @@ angular.module('FrcPortal')
 function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window) {
 	var main = this;
 
+	main.configItems = configItems;
 	main.team_number = configItems.team_number;
 	main.team_logo_url = configItems.team_logo_url;
 	main.menuItems = [ ];

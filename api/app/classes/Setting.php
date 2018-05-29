@@ -16,7 +16,7 @@ class Setting extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'setting_id', 'section', 'setting', 'value', 'type'
+    'setting_id', 'section', 'setting', 'value', 'type', 'public'
   ];
 
   /**
@@ -25,6 +25,14 @@ class Setting extends Eloquent {
   * @var array
   */
   protected $hidden = [];
+  /**
+   * The attributes that should be cast to native types.
+   *
+   * @var array
+   */
+  protected $casts = [
+    'public' => 'boolean',
+  ];
 
   public function save($options = array()) {
     if(is_null($this->setting_id)) {
