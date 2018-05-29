@@ -74,13 +74,14 @@ $app->get('/version', function (Request $request, Response $response, array $arg
     return $response;
 });
 $app->get('/config', function ($request, $response, $args) {
-/*  $configArr = array(
+  $configArr = array(
     'google_oauth_client_id',
     'facebook_oauth_client_id',
     'microsoft_oauth_client_id',
     'team_name',
     'team_number',
     'team_logo_url',
+    'team_domain',
     'google_calendar_id',
     'slack_team_id',
     'slack_url',
@@ -92,8 +93,11 @@ $app->get('/config', function ($request, $response, $args) {
     'email_enable',
     'team_color_primary',
     'team_color_secondary',
-  ); */
-  $settings = FrcPortal\Setting::where('public',true)->get();
+    'notification_email',
+    'env_url',
+  );
+//  $settings = FrcPortal\Setting::where('public',true)->get();
+  $settings = FrcPortal\Setting::whereIn('setting', $configArr)->get();
   $constantArr = array();
   foreach($settings as $set) {
     $temp = $set->value;
