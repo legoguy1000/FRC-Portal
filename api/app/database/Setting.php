@@ -9,6 +9,7 @@ Capsule::schema()->create('settings', function ($table) {
        $table->string('setting');
        $table->text('value');
        $table->string('type');
+       $table->boolean('public')->default(0);
    });
 
 ?>

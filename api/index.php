@@ -74,7 +74,7 @@ $app->get('/version', function (Request $request, Response $response, array $arg
     return $response;
 });
 $app->get('/config', function ($request, $response, $args) {
-  $configArr = array(
+/*  $configArr = array(
     'google_oauth_client_id',
     'facebook_oauth_client_id',
     'microsoft_oauth_client_id',
@@ -88,17 +88,19 @@ $app->get('/config', function ($request, $response, $args) {
     'google_login_enable',
     'facebook_login_enable',
     'microsoft_login_enable',
-  );
-  $settings = FrcPortal\Setting::all();
+    'slack_enable',
+    'email_enable',
+    'team_color_primary',
+    'team_color_secondary',
+  ); */
+  $settings = FrcPortal\Setting::where('public',true)->get();
   $constantArr = array();
   foreach($settings as $set) {
-    if(in_array($set->setting,$configArr)) {
-      $temp = $set->value;
-      if(strpos($set->setting, 'enable') !== false) {
-        $temp = (boolean) $temp;
-      }
-      $constantArr[$set->setting] = $temp;
+    $temp = $set->value;
+    if(strpos($set->setting, 'enable') !== false) {
+      $temp = (boolean) $temp;
     }
+    $constantArr[$set->setting] = $temp;
   }
   $responseStr = 'angular.module("FrcPortal").constant("configItems", '.json_encode($constantArr).');';
   $response->getBody()->write($responseStr);
