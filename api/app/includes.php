@@ -2,7 +2,9 @@
 use Illuminate\Database\Capsule\Manager as Capsule;
 ini_set("error_reporting", E_ALL);
 ini_set("expose_php", false);
-date_default_timezone_set('America/New_York');
+$tz = getSettingsProp('timezone');
+$time_zone = !is_null($tz) ? $tz:date_default_timezone_get();
+date_default_timezone_set($time_zone);
 
 $root = __DIR__;
 require $root.'/vendor/autoload.php';
