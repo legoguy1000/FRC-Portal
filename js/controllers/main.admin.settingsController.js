@@ -85,7 +85,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 
 		return function filterFn(tz) {
 			console.log(tz.indexOf(lowercaseQuery) );
-			return (tz.indexOf(lowercaseQuery) === 0);
+			return (tz.indexOf(lowercaseQuery) != -1);
 		};
 	}
 
