@@ -1,15 +1,15 @@
 <?php
 use Illuminate\Database\Capsule\Manager as Capsule;
-include($root.'/functions/getConfigFile.php');
 ini_set("error_reporting", E_ALL);
 ini_set("expose_php", false);
+
+$root = __DIR__;
+include($root.'/functions/getConfigFile.php');
 $tz = getSettingsProp('timezone');
 $time_zone = !is_null($tz) ? $tz:date_default_timezone_get();
 date_default_timezone_set($time_zone);
 
-$root = __DIR__;
 require $root.'/vendor/autoload.php';
-
 include($root.'/functions/season_functions.php');
 include($root.'/functions/event_functions.php');
 include($root.'/functions/user_functions.php');
