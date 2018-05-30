@@ -82,8 +82,9 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 	 */
 	function createFilterFor(query) {
 		var lowercaseQuery = angular.lowercase(query);
-		console.log(lowercaseQuery);
+
 		return function filterFn(tz) {
+			console.log(tz.indexOf(lowercaseQuery) );
 			return (tz.indexOf(lowercaseQuery) === 0);
 		};
 	}
