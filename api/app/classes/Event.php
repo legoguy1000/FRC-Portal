@@ -17,11 +17,11 @@ class Event extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'event_id', 'google_cal_id', 'name', 'type', 'event_start', 'event_end', 'registration_date', 'details', 'location', 'payment_required', 'permission_slip_required', 'food_required', 'room_required', 'drivers_required', 'poc'
+    'event_id', 'google_cal_id', 'name', 'type', 'event_start', 'event_end', 'registration_deadline', 'registration_deadline_gcalid', 'details', 'location', 'payment_required', 'permission_slip_required', 'food_required', 'room_required', 'drivers_required', 'poc'
   ];
 
 
-  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_date_unix','season','num_days'];
+  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_deadline_unix','registration_deadline_formatted','season','num_days'];
 
   //$data['requirements'] = array();
   /**
@@ -42,6 +42,7 @@ class Event extends Eloquent {
     'room_required' => 'boolean',
     'drivers_required' => 'boolean',
     'permission_slip_required' => 'boolean',
+    'time_slots' => 'boolean',
     'single_day' => 'boolean',
   ];
 
@@ -74,11 +75,19 @@ class Event extends Eloquent {
     $date = new DateTime($this->attributes['event_end']);
     return $date->format('U');
   }
-  public function getRegistrationDateUnixAttribute() {
+  public function getRegistrationDeadlineUnixAttribute() {
     $return = null;
-    if(!is_null($this->attributes['registration_date'])) {
-      $date = new DateTime($this->attributes['registration_date']);
+    if(!is_null($this->attributes['registration_deadline'])) {
+      $date = new DateTime($this->attributes['registration_deadline']);
       $return = $date->format('U');
+    }
+    return $return;
+  }
+  public function getRegistrationDeadlineFormattedAttribute() {
+    $return = null;
+    if(!is_null($this->attributes['registration_deadline'])) {
+      $date = new DateTime($this->attributes['registration_deadline']);
+      $return = $date->format('F j, Y');
     }
     return $return;
   }
@@ -113,6 +122,12 @@ class Event extends Eloquent {
    */
   public function event_rooms() {
       return $this->hasMany('FrcPortal\EventRoom', 'event_id', 'event_id');
+  }
+  /**
+   * Get the Time Slots.
+   */
+  public function event_time_slots() {
+      return $this->hasMany('FrcPortal\EventTimeSlot', 'event_id', 'event_id');
   }
   /**
   * Get the POC.

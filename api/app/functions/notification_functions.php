@@ -38,15 +38,13 @@ function setDefaultNotifications($user_id) {
 	$queryStr	 = '';
 	foreach($data as $meth=>$types) {
 		foreach($types as $type) {
-			$pref_id = uniqid();
-			$queryArr[] = '('.db_quote($pref_id).', '.db_quote($user_id).', '.db_quote($meth).', '.db_quote($type).')';
+			$note = new FrcPortal\NotificationPreference();
+			$note->user_id = $user_id;
+			$note->method = $meth;
+			$note->type = $type;
+			$note->save();
 		}
 	}
-	if(!empty($queryArr)) {
-		$queryStr = implode(',',$queryArr);
-	}
-	$query = 'INSERT INTO notification_preferences (pref_id, user_id, method, type) VALUES '.$queryStr;
-	$result = db_query($query);
 }
 
 function sendUserNotification($user_id, $type, $msgData)
@@ -70,12 +68,12 @@ function sendUserNotification($user_id, $type, $msgData)
 		$body = $msg['body'];
 		$tag = '';
 		$note_id = uniqid();
-		$query = 'INSERT INTO notifications (note_id,user_id,message) VALUES ('.db_quote($note_id).','.db_quote($user_id).','.db_quote($body).')';
-		$result = db_query($query);
-		if($result) {
+		//$query = 'INSERT INTO notifications (note_id,user_id,message) VALUES ('.db_quote($note_id).','.db_quote($user_id).','.db_quote($body).')';
+		//$result = db_query($query);
+		//if($result) {
 			slackMessageToUser($user_id, $body);
 			//sendPushNotificationByUser($user_id, $title, $body, $note_id);
-		}
+		//}
 	}
 }
 

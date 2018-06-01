@@ -38,22 +38,20 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 				return;
 			}
 			$mdDialog.show({
-	      controller: eventRegistrationController,
+				controller: eventRegistrationController,
 				controllerAs: 'vm',
-	      templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
-	      parent: angular.element(document.body),
-	      targetEvent: ev,
-	      clickOutsideToClose:true,
-	      fullscreen: true, // Only for -xs, -sm breakpoints.
+				templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose:true,
+				fullscreen: true, // Only for -xs, -sm breakpoints.
 				locals: {
 					'eventInfo': eventInfo,
 					'userInfo': $scope.main.userInfo
 				}
-	    })
-	    .then(function(answer) {
+			})
+			.then(function(answer) {
 
-	    }, function() {
-
-	    });
+			}, function() { });
 		}
 }

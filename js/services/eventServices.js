@@ -42,6 +42,13 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getEventTimeSlotList: function (event_id) {
+			var event_id = event_id != undefined && event_id != null ? event_id:'';
+			return $http.get('api/events/'+event_id+'/timeSlots')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		getEventCarList: function (event_id) {
 			var event_id = event_id != undefined && event_id != null ? event_id:'';
 			return $http.get('api/events/'+event_id+'/cars')
@@ -115,6 +122,29 @@ angular.module('FrcPortal')
 			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
 			var room_id = formData.room_id != undefined && formData.room_id != null ? formData.room_id:'';
 			return $http.delete('api/events/'+event_id+'/rooms/'+room_id,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		addEventTimeSlot: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			return $http.post('api/events/'+event_id+'/timeSlots',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		deleteEventTimeSlot: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			var time_slot_id = formData.time_slot_id != undefined && formData.time_slot_id != null ? formData.time_slot_id:'';
+			return $http.delete('api/events/'+event_id+'/timeSlots/'+time_slot_id,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		updateEventTimeSlot: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			var time_slot_id = formData.time_slot_id != undefined && formData.time_slot_id != null ? formData.time_slot_id:'';
+			return $http.put('api/events/'+event_id+'/timeSlots/'+time_slot_id,formData)
 			.then(function(response) {
 				return response.data;
 			});

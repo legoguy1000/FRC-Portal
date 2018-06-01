@@ -1,4 +1,4 @@
-<title ng-bind="'Team {{main.team_number}} Portal | '+main.title">Team {{main.team_number}} Portal</title>
+<title ng-bind="'Team {{main.team_number}} Portal | '+main.title" ng-cloak>Team {{main.team_number}} Portal</title>
 <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2 md-sidenav-left" flex-xs="100">
 	<md-toolbar  class="md-hue-1 md-whiteframe-z2">
 		<md-button layout="row" layout-align="center center" class="md-toolbar-tools md-warn">
@@ -28,7 +28,7 @@
                 <i class="material-icons">menu</i>
             </md-button>
 						<div class="" >
-							<span hide-sm hide-xs>Team {{main.team_number}} Portal <span ng-show="main.title != ''"> | </span></span>{{main.title}}
+							<span hide-sm hide-xs ng-cloak>Team {{main.team_number}} Portal <span ng-show="main.title != ''"> | </span></span>{{main.title}}
 						</div>
         </section>
         <section layout-align="center center" layout="row" ng-show="main.isAuthed">
@@ -42,7 +42,7 @@
         <!--    <md-button class="toolbar-button" aria-label="Settings" ng-click="main.toggleRightSidebar()">
 				<i class="material-icons">menu</i>
 			</md-button> -->
-			<img class="img-circle" ng-src="{{main.userInfo.profile_image}}" ng-click="main.toggleRightSidebar()">
+			<img class="img-circle" ng-src="{{main.userInfo.profile_image || 'https://png.icons8.com/color/50/000000/user.png'}}" ng-click="main.toggleRightSidebar()">
         </section>
 		<section layout-align="end center" ng-hide="main.isAuthed">
             <md-button class="toolbar-button" aria-label="Search" ng-click="main.loginModal($event)">
@@ -65,7 +65,7 @@
 <md-sidenav md-component-id="right" class="md-whiteframe-z2 md-sidenav-right">
     <md-toolbar>
         <md-toolbar class="md-warn" layout="row" layout-align="center center">
-            <img class="img-circle" ng-src="{{main.userInfo.profile_image}}">
+            <img class="img-circle" ng-src="{{main.userInfo.profile_image || 'https://png.icons8.com/color/50/000000/user.png'}}">
             <md-menu md-offset="0 20">
                 <md-button class="capitalize" ng-click="$mdMenu.open()" aria-label="Open menu">
                     <span>{{main.userInfo.full_name}}</span>

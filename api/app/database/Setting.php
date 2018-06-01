@@ -1,6 +1,6 @@
 <?php
 
-require "../includes.php";
+require_once "../includes.php";
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 Capsule::schema()->create('settings', function ($table) {
@@ -9,6 +9,7 @@ Capsule::schema()->create('settings', function ($table) {
        $table->string('setting');
        $table->text('value');
        $table->string('type');
+       $table->boolean('public')->default(0);
    });
 
 ?>

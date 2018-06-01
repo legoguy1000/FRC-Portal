@@ -24,22 +24,34 @@
 						<md-switch ng-model="vm.registrationForm.registration" class="md-warn"></md-switch>
 					</div>-->
 				</div>
+				<div layout="row" flex layout-align="space-between center" ng-if="vm.registrationForm.registration && vm.event.time_slots_required">
+					<md-button type="button" class="md-raised md-primary" ng-click="vm.showTimeSlotListModal($event)">
+						Select Time Slots
+					</md-button>
+					<div layout="column">
+						<div layout="row" layout-align="center center"><b>My Time Slots</b></div>
+						<div ng-repeat="time_slot in vm.registrationForm.event_time_slots" layout="row" layout-align="space-between center">
+							<div style="margin-right: 10px;">{{time_slot.name}}: </div>
+							<div> {{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</div>
+						</div>
+					</div>
+				</div>
 				<div layout="column" flex ng-if="vm.event.drivers_required && vm.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
 					<div layout="row" flex layout-align="space-between center">
 						<div>Can you drive? </div>
-						<md-select ng-model="vm.registrationForm.can_drive" placeholder="" class="md-no-underline" ng-required="vm.event.drivers && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
+						<md-select ng-model="vm.registrationForm.can_drive" placeholder="" class="md-no-underline" ng-required="vm.event.drivers_required && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
 		          <md-option ng-value="true">Yes</md-option>
 		          <md-option ng-value="false">No</md-option>
 		        </md-select>
 					</div>
 					<div layout="row" flex layout-align="space-between center" ng-show="vm.registrationForm.can_drive">
 						<div>How many including yourself can you drive? </div>
-						<md-select ng-model="vm.registrationForm.car_space" placeholder="" class="md-no-underline" ng-required="vm.registrationForm.can_drive">
+						<md-select ng-model="vm.registrationForm.event_cars.car_space" placeholder="" class="md-no-underline" ng-required="vm.registrationForm.can_drive">
 		          <md-option ng-value="{{n}}" ng-repeat="n in vm.range(0,10)">{{n}}</md-option>
 		        </md-select>
 					</div>
 				</div>
-				<div layout="row" flex layout-align="space-between center" ng-if="vm.event.room && vm.registrationForm.registration">
+				<div layout="row" flex layout-align="space-between center" ng-if="vm.event.room_required && vm.registrationForm.registration">
 					<div>Please select hotel room? </div>
 					<md-select ng-model="vm.registrationForm.room_id" placeholder="" class="md-no-underline" ng-required="vm.event.room && vm.registrationForm.registration">
 						<md-option ng-value="true">Yes</md-option>

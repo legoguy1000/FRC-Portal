@@ -1,0 +1,58 @@
+<md-dialog aria-label="New Event" style="" flex="50" >
+	<md-toolbar layout="row">
+	  <div class="md-toolbar-tools">
+		<h2><span ng-show="vm.newTS">Add</span><span ng-hide="vm.newTS">Edit</span> Time Slots for {{vm.eventInfo.name}}</h2>
+		<span flex></span>
+		<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
+			<md-tooltip md-direction="top">Close</md-tooltip>
+		  <md-icon class=""> close </md-icon>
+		</md-button>
+	  </div>
+	</md-toolbar>
+	<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
+	<form ng-submit="vm.submit()">
+		<md-dialog-content class="md-margin">
+			<div layout="row">
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Name</label>
+					<md-icon md-font-library="material-icons">title</md-icon>
+					<input ng-model="vm.timeSlotInfo.name" required>
+				</md-input-container>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Start Time</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.timeSlotInfo.time_start" required
+						format="LL LT"
+						min-view="day"
+						max-view="hour"
+						start-view="day"
+						ng-model="vm.timeSlotInfo.time_start_moment">
+					</input>
+				</md-input-container>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>End Time</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.timeSlotInfo.time_end" required
+						format="LL LT"
+						min-view="day"
+						max-view="hour"
+						start-view="day"
+						ng-model="vm.timeSlotInfo.time_end_moment">
+					</input>
+				</md-input-container>
+			</div>
+			<div layout="row">
+				<md-input-container class="" style="width:99%;">
+					<label>Description</label>
+					<textarea ng-model="vm.timeSlotInfo.description" rows="5" md-select-on-focus></textarea>
+				</md-input-container>
+			</div>
+		</md-dialog-content>
+		<md-dialog-actions layout="row" class="noprint">
+			<md-button type="submit">
+				<md-tooltip md-direction="top">Save</md-tooltip>
+				Save
+			</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>

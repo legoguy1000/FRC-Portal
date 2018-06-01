@@ -46,5 +46,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getAllTimezones: function () {
+			return $http.get('api/public/timezones')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

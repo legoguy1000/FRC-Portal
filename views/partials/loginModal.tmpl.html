@@ -25,19 +25,21 @@
       <form name="Form" ng-submit="vm.login()">
           <md-input-container class="md-block">
             <label>Login</label>
-            <input type="text" name="email" ng-model="vm.loginForm.email" placeholder="login" required/>
+            <input type="text" name="email" ng-model="vm.loginForm.email" required/>
             <div ng-messages="Form.email.$error" role="alert" multiple="">
               <div ng-message="required" class="my-message">Please enter your email.</div>
             </div>
           </md-input-container>
           <md-input-container class="md-block">
             <label>Password</label>
-            <input type="password" name="password" ng-model="vm.loginForm.password" placeholder="password" required/>
+            <input type="password" name="password" ng-model="vm.loginForm.password" required/>
             <div ng-messages="Form.password.$error" role="alert" multiple="">
               <div ng-message="required" class="my-message">Please enter your password.</div>
             </div>
           </md-input-container>
-          <md-button ng-disabled="!Form.$valid" type="submit" class="md-raised md-primary">Login</md-button>
+          <div layout="row" layout-align="center center">
+            <md-button ng-disabled="!Form.$valid" type="submit" class="md-raised md-primary">Login</md-button>
+          </div>
         </form>
     </div>
   </md-dialog-content>

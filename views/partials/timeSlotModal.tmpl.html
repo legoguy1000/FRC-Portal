@@ -1,0 +1,89 @@
+<style>
+	.lastRowStyle {
+		border-bottom: solid;
+	}
+</style>
+<md-dialog aria-label="New Event" style="" flex="50" >
+		<md-toolbar layout="row">
+		  <div class="md-toolbar-tools">
+			<h2><span class="noprint">View/Edit </span>Time Slots for {{vm.eventInfo.name}}</h2>
+			<span flex></span>
+			<md-button class="md-icon-button noprint" ng-click="vm.cancel()" ng-show="vm.admin">
+				<md-tooltip md-direction="top">Close</md-tooltip>
+			  <md-icon class=""> close </md-icon>
+			</md-button>
+		  </div>
+		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
+		<md-dialog-content class="md-margin">
+			<div layout="row" ng-repeat="time_slot in vm.time_slots track by $index" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
+				<div flex layout="column" layout-align="center start" class="md-padding" style="border-right: solid;">
+					<!--<md-button class="md-icon-button noprint" ng-click="vm.deleteEventRoom(room.room_id)">
+						<md-tooltip md-direction="top">Delete Room</md-tooltip>
+					  <md-icon class=""> close </md-icon>
+					</md-button>-->
+					<h3 style="margin-top: 0px;">
+						<span>{{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</span>
+						<md-button class="md-icon-button noprint" ng-click="vm.editTimeSlot($event, false, time_slot)" ng-if="vm.admin">
+							<md-tooltip md-direction="top">Edit Time Slot</md-tooltip>
+						  <md-icon class="material-icons"> edit </md-icon>
+						</md-button>
+				 	</h3>
+					<b>{{time_slot.name}}</b>
+					<div style="white-space:pre-wrap;">{{time_slot.description}}</div>
+				</div>
+				<div flex layout="column">
+					<md-list ng-cloak>
+					    <md-list-item ng-repeat="reg in time_slot.registrations" class="min-height-reset">
+									<div>{{reg.user.full_name}}</div>
+									<div ng-hide="reg.registration" style="cursor: default; margin-left: 5px;">
+										<md-tooltip md-direction="top">User has not completed registration</md-tooltip>
+										<md-icon class="material-icons md-warn">warning</md-icon>
+									</div>
+					    </md-list-item>
+					</md-list>
+					<div flex></div>
+					<div  ng-if="!vm.admin" layout="row" layout-align="center center">
+						<md-button type="button" ng-click="vm.toggleRegistrationEventTimeSlot(time_slot.time_slot_id)">
+							<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
+							<span ng-hide="vm.checkReg(time_slot)">Register</span>
+							<span ng-show="vm.checkReg(time_slot)">Unregister</span>
+						</md-button>
+					</div>
+				</div>
+			</div>
+		</md-dialog-content>
+		<md-dialog-actions layout="row" class="noprint">
+			<md-button type="button" ng-click="window.print();" class="md-icon-button">
+					<md-tooltip md-direction="top">Print room list</md-tooltip>
+					<md-icon class=""> print </md-icon>
+			</md-button>
+			<md-button class="md-icon-button noprint" ng-click="vm.editTimeSlot($event)" ng-if="vm.admin">
+				<md-tooltip md-direction="top">Add Time Slot</md-tooltip>
+			  <md-icon class="material-icons"> add </md-icon>
+			</md-button>
+			<span flex></span>
+<!--			<md-input-container>
+        <label>Add New Room</label>
+        <md-select ng-model="vm.newRoom" style="min-width:150px;">
+          <md-option><em>None</em></md-option>
+          <md-option ng-repeat="room in vm.newRoomOpts" ng-value="room">
+            {{room.user_type}}<span ng-show="room.gender != ''"> - {{room.gender}}</span>
+          </md-option>
+        </md-select>
+      </md-input-container>
+			<md-button class="md-icon-button noprint" ng-click="vm.addEventRoom()">
+				<md-tooltip md-direction="top">Add room</md-tooltip>
+			  <md-icon class=""> add </md-icon>
+			</md-button>
+
+			<md-button type="button" ng-click="vm.updateEventRoomList(false)">
+				<md-tooltip md-direction="top">Save and Close</md-tooltip>
+				Save
+			</md-button>-->
+			<md-button type="button" ng-click="vm.save()">
+				<md-tooltip md-direction="top">Close</md-tooltip>
+				Close
+			</md-button>
+		</md-dialog-actions>
+</md-dialog>

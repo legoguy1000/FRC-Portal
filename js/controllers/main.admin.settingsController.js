@@ -24,6 +24,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		'login': {},
 		'notification': {},
 	};
+	vm.timezones = [];
 
 	vm.selectSettingMenu = function(menu) {
 		vm.currentMenu = menu;
@@ -50,6 +51,13 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 	vm.getSettingBySection('notification');
 	vm.getSettingBySection('other');
 
+	vm.getAllTimezones = function () {
+		settingsService.getAllTimezones().then(function(response){
+			vm.timezones = response;
+		});
+	};
+	vm.getAllTimezones();
+
 	vm.updateSettingBySection = function (section) {
 		vm.loading = true;
 		var data = {
@@ -67,4 +75,26 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 			//vm.settings[section] = response.data;
 		});
 	};
+
+	vm.searchText    = null;
+		/**
+	 * Create filter function for a query string
+	 */
+	function createFilterFor(query) {
+		var lowercaseQuery = angular.lowercase(query);
+
+		return function filterFn(tz) {
+			return (tz.toLowerCase().indexOf(lowercaseQuery) != -1);
+		};
+	}
+
+		/**
+	 * Search for states... use $timeout to simulate
+	 * remote dataservice call.
+	 */
+	vm.TzSearch = function (query) {
+		var results = query ? vm.timezones.filter( createFilterFor(query) ) : vm.timezones;
+		return results;
+	}
+
 }

@@ -129,7 +129,10 @@ if(!is_null($spreadsheetId)) {
 					$user->signin_pin = $signin_pin;
 				}
 				//Insert Data
-				$user->save();
+				if($user->save()) {
+					$user_id = $user->user_id;
+					setDefaultNotifications($user_id);
+				}
 			}
 			//Add User info into the Annual Requirements Table
 			if(!is_null($season_id)) {

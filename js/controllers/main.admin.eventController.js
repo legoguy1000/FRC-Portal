@@ -45,6 +45,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.getEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
+			if(vm.event.registration_deadline != null) {
+				vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
+			}
 			vm.loading = false;
 		});
 	};
@@ -64,6 +67,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
+			if(vm.event.registration_deadline != null) {
+				vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
+			}
 			vm.loading = false;
 			$mdToast.show(
 	      $mdToast.simple()
@@ -80,10 +86,15 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'event_id': vm.event_id,
 			'poc': vm.event.poc,
 			'type': vm.event.type,
+			'registration_deadline': vm.event.registration_deadline_formatted,
+			'registration_deadline_gcalid': vm.event.registration_deadline_gcalid,
 		};
 		eventsService.updateEvent(data).then(function(response){
 			if(response.status) {
 				vm.event = response.data;
+				if(vm.event.registration_deadline != null) {
+					vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
+				}
 			}
 			$mdToast.show(
 	      $mdToast.simple()
@@ -123,14 +134,14 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	}
 
 	vm.showRoomListModal = function(ev) {
-    $mdDialog.show({
-      controller: roomListModalController,
+		$mdDialog.show({
+			controller: roomListModalController,
 			controllerAs: 'vm',
-      templateUrl: 'views/partials/roomListModal.tmpl.html',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      clickOutsideToClose:true,
-      fullscreen: true, // Only for -xs, -sm breakpoints.
+			templateUrl: 'views/partials/roomListModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
 			locals: {
 				eventInfo: {
 					'event_id': vm.event_id,
@@ -138,37 +149,56 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 					//'room_info': vm.event.room_list
 				},
 			}
-    })
-    .then(function(response) {
+		})
+		.then(function(response) {
 			vm.users = response.data;
-    }, function() {
-
-    });
+		}, function() { });
   };
 
 	vm.showCarListModal = function(ev) {
-	    $mdDialog.show({
-	      controller: carListModalController,
-				controllerAs: 'vm',
-	      templateUrl: 'views/partials/carListModal.tmpl.html',
-	      parent: angular.element(document.body),
-	      targetEvent: ev,
-	      clickOutsideToClose:true,
-	      fullscreen: true, // Only for -xs, -sm breakpoints.
-				locals: {
-					eventInfo: {
-						'event_id': vm.event_id,
-						'name':vm.event.name,
-						//'room_info': vm.event.room_list
-					},
-				}
-	    })
-			.then(function(response) {
-				vm.users = response.data;
-	    }, function() {
+		$mdDialog.show({
+			controller: carListModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/carListModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				eventInfo: {
+					'event_id': vm.event_id,
+					'name':vm.event.name,
+					//'room_info': vm.event.room_list
+				},
+			}
+		})
+		.then(function(response) {
+			vm.users = response.data;
+		}, function() { });
+  };
 
-	    });
-	  };
+	vm.showTimeSlotListModal = function(ev) {
+		$mdDialog.show({
+			controller: timeSlotModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/timeSlotModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				eventInfo: {
+					'event_id': vm.event_id,
+					'name':vm.event.name,
+				},
+				admin: true,
+			}
+		})
+		.then(function(response) {
+			//vm.users = response.data;
+		}, function() { });
+	};
+
 	vm.toggleEventReqs = function (req) {
 		var data = {
 			'event_id': vm.event_id,
@@ -220,17 +250,15 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			var index = null;
 			var len = vm.users.length;
 			for (var i = 0; i < len; i++) {
-			  if(vm.users[i].user_id == user_id) {
+				if(vm.users[i].user_id == user_id) {
 					index = i;
-			    break;
-			  }
+					break;
+				}
 			}
 			if(index != null) {
 				vm.users[index] = answer.data;
 			}
-		}, function() {
-
-		});
+		}, function() { });
 	}
 
 	vm.showComments = function(ev,userInfo) {
@@ -243,5 +271,26 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
         .ok('close')
         .targetEvent(ev)
     );
+	}
+
+	vm.searchEventModal = function (ev) {
+		$mdDialog.show({
+			controller: eventSearchModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/eventSearchModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+			}
+		})
+		.then(function(response) {
+			vm.event.registration_deadline_formatted = response.event_end_formatted;
+			vm.event.registration_deadline_gcalid = response.google_cal_id;
+			$log.info('asdf');
+		}, function() {
+			$log.info('Dialog dismissed at: ' + new Date());
+		});
 	}
 }

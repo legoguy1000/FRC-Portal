@@ -28,7 +28,7 @@
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingTopUsers"></md-progress-linear>
 		<md-list flex>
 			<md-list-item class="md-1-line" ng-repeat = "u in vm.topUsers track by $index" ng-click="null">
-				<img ng-src="{{u.users.profile_image}}" class="md-avatar" alt="" ng-if="u.users.profile_image"/>
+				<img ng-src="{{u.users.profile_image || 'https://png.icons8.com/color/50/000000/user.png'}}" class="md-avatar" alt=""/>
 				<div class="md-list-item-text" flex layout="row">
 					<div><h3> {{ u.users.full_name }} </h3></div>
 					<div flex></div>

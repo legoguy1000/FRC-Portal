@@ -20,7 +20,7 @@ $config['db']['prefix'] = '';
  //asdf
 $app = new \Slim\App(['settings' => $config]);
 $app->add(new Tuupola\Middleware\JwtAuthentication([
-    "secret" => getSettingsProp('jwt_key'),
+    "secret" => getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : getIniProp('db_pass'),
     "rules" => [
         new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
           "path" => ['/'],
@@ -29,6 +29,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
         new Tuupola\Middleware\JwtAuthentication\RequestPathMethodRule([
           "passthrough" => [
             "/events/([a-z0-9]{13})" => ["GET"],
+            "/events/([a-z0-9]{13})/timeSlots" => ["GET"],
             "/reports/topHourUsers/([0-9]{4})" => ["GET"],
             "/hours/signIn" => ["POST"],
           ],
@@ -67,7 +68,7 @@ $container['db'] = function ($container) {
 };*/
 $app->get('/version', function (Request $request, Response $response, array $args) {
     $responseArr = array(
-      'version' => '2.4.4'
+      'version' => '2.5.0'
     );
     $response = $response->withJson($responseArr);
     return $response;
@@ -80,6 +81,7 @@ $app->get('/config', function ($request, $response, $args) {
     'team_name',
     'team_number',
     'team_logo_url',
+    'team_domain',
     'google_calendar_id',
     'slack_team_id',
     'slack_url',
@@ -87,17 +89,22 @@ $app->get('/config', function ($request, $response, $args) {
     'google_login_enable',
     'facebook_login_enable',
     'microsoft_login_enable',
+    'slack_enable',
+    'email_enable',
+    'team_color_primary',
+    'team_color_secondary',
+    'notification_email',
+    'env_url',
   );
-  $settings = FrcPortal\Setting::all();
+//  $settings = FrcPortal\Setting::where('public',true)->get();
+  $settings = FrcPortal\Setting::whereIn('setting', $configArr)->get();
   $constantArr = array();
   foreach($settings as $set) {
-    if(in_array($set->setting,$configArr)) {
-      $temp = $set->value;
-      if(strpos($set->setting, 'enable') !== false) {
-        $temp = (boolean) $temp;
-      }
-      $constantArr[$set->setting] = $temp;
+    $temp = $set->value;
+    if(strpos($set->setting, 'enable') !== false) {
+      $temp = (boolean) $temp;
     }
+    $constantArr[$set->setting] = $temp;
   }
   $responseStr = 'angular.module("FrcPortal").constant("configItems", '.json_encode($constantArr).');';
   $response->getBody()->write($responseStr);
