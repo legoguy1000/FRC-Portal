@@ -5,8 +5,8 @@ $app->group('/slack', function () {
     $formData = $request->getParsedBody();
     $json = urldecode($formData['payload']);
     $data = json_decode($json,true);
-    $responseArr = '';
-    
+    $responseStr = '';
+
     if($data['callback_id'] == 'sign_out' && $data['actions'][0]['name'] == 'sign_out') {
       $responseArr = 'Something went wrong.  We were unable to sign you out.';
       $answer = explode('-',$data['actions'][0]['value']);
@@ -18,15 +18,35 @@ $app->group('/slack', function () {
       } else {
           $time = date('Y-m-d').' 18:00:00';
       }
-      $signIn = FrcPortal\MeetingHour::where('user_id',$user_id)->where('hours_id',$hours_id)->whereNull('time_out')->get();
+      $signIn = FrcPortal\MeetingHour::where('user_id',$user_id)->where('hours_id',$hours_id)->whereNull('time_out')->first();
       if(!is_null($signIn)) {
         $signIn->time_out = $time;
         if($signIn->save()) {
-          $responseArr = 'You signed out at '.date('M d, Y H:i A', strtotime($time));
+          $responseStr = 'You signed out at '.date('M d, Y H:i A', strtotime($time));
         }
       }
     }
-    $response = $response->withJson($responseArr);
+    $response->getBody()->write($responseStr);
+    return $response;
+  });
+  $this->post('/myHours', function ($request, $response, $args) {
+    $formData = $request->getParsedBody();
+    $responseStr = '';
+    $token = $formData['token'];
+    $slack_id = $formData['user_id'];
+    $user_name = $formData['user_name'];
+
+    $user = FrcPortal\User::where('slack_id',$slack_id)->first();
+    if(!is_null($user)) {
+      $season = FrcPortal\Season::where('year',date('Y'))->first();
+      if(!is_null($season)) {
+    	   $annualReq = FrcPortal\AnnualRequirement::where('season_id',$season->season_id)->where('user_id',$user->user_id)->first();
+         $responseStr = $annualReq->total_hours;
+      }
+    }  else {
+    $responseStr = 'I don\'t know who you are.  Please check your portal profile to verify your Slack user ID is set.';
+    }
+    $response->getBody()->write($responseStr);
     return $response;
   });
 });
