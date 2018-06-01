@@ -85,33 +85,33 @@
 			<md-switch md-invert aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn">
 				Enable Google Login
 			</md-switch>
-			<md-input-container flex>
+			<md-input-container flex ng-show="vm.settings.login.google_login_enable">
 				<label>Google OAuth2 Client ID</label>
 				<input ng-model="vm.settings.login.google_oauth_client_id" ng-disabled="!vm.settings.login.google_login_enable">
 			</md-input-container>
-			<md-input-container flex>
+			<md-input-container flex ng-show="vm.settings.login.google_login_enable">
 				<label>Google OAuth2 Client Secret</label>
 				<input ng-model="vm.settings.login.google_oauth_client_secret" ng-disabled="!vm.settings.login.google_login_enable">
 			</md-input-container>
 			<md-switch md-invert aria-label="Enable Facebook Login" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
 				Enable Facebook Login
 			</md-switch>
-			<md-input-container flex>
+			<md-input-container flex ng-show="vm.settings.login.facebook_login_enable">
 				<label>Facebook OAuth2 Client ID</label>
 				<input ng-model="vm.settings.login.facebook_oauth_client_id" ng-disabled="!vm.settings.login.facebook_login_enable">
 			</md-input-container>
-			<md-input-container flex>
+			<md-input-container flex ng-show="vm.settings.login.facebook_login_enable">
 				<label>Facebook OAuth2 Client Secret</label>
 				<input ng-model="vm.settings.login.facebook_oauth_client_secret" ng-disabled="!vm.settings.login.facebook_login_enable">
 			</md-input-container>
 			<md-switch md-invert aria-label="Enable Microsoft Login" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn">
 				Enable Microsoft Login
 			</md-switch>
-			<md-input-container flex>
+			<md-input-container flex ng-show="vm.settings.login.microsoft_login_enable">
 				<label>Microsoft Live OAuth2 Client ID</label>
 				<input ng-model="vm.settings.login.microsoft_oauth_client_id" ng-disabled="!vm.settings.login.microsoft_login_enable">
 			</md-input-container>
-			<md-input-container flex>
+			<md-input-container flex ng-show="vm.settings.login.microsoft_login_enable">
 				<label>Microsoft Live OAuth2 Client Secret</label>
 				<input ng-model="vm.settings.login.microsoft_oauth_client_secret" ng-disabled="!vm.settings.login.microsoft_login_enable">
 			</md-input-container>
