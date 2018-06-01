@@ -300,6 +300,23 @@ $app->group('/hours', function () {
                 } else {
                   $hours = FrcPortal\MeetingHour::create(['user_id' => $user_id, 'time_in' => date('Y-m-d H:i:s',$date)]);
                   if($hours) {
+                    $emailData = array(
+                      'signin_time' => date('M d, Y H:i A', $date),
+                      'signin_out' => 'sign_in'
+                    );
+                  //  $emailInfo = emailSignInOut($user_id,$emailData);
+                    $msgData = array(
+                      'slack' => array(
+                        'title' => 'Sign In',
+                        'body' => 'You signed in at '.$emailData['signin_time']
+                      ),
+                      'email' => array(
+                        'subject' => '', //$emailInfo['subject'],
+                        'content' =>  '', //$emailInfo['content'],
+                        'userData' => $user
+                      )
+                    );
+                    sendUserNotification($user_id, 'sign_in_out', $msgData);
                     $season = FrcPortal\Season::where('year',date('Y'))->first();
                     $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
                       $query->where('season_id', $season->season_id); // fields from comments table,
