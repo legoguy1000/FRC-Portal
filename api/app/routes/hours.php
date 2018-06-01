@@ -261,7 +261,7 @@ $app->group('/hours', function () {
           if(isset($data['jti']) || $data['jti'] != '') {
             $jti = $data['jti'];
             if(isset($args['pin']) && isset($args['user_id']) && $args['pin'] != '' && $args['user_id'] != '') {
-              $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['pin']))->where('user_id',$args['user_id'])->where('status',true->first();
+              $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['pin']))->where('user_id',$args['user_id'])->where('status',true)->first();
               if($user != null) {
                 $user_id = $user->user_id;
                 $name = $user->full_name;
