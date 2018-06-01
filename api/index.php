@@ -68,7 +68,7 @@ $container['db'] = function ($container) {
 };*/
 $app->get('/version', function (Request $request, Response $response, array $args) {
     $responseArr = array(
-      'version' => '2.4.4'
+      'version' => '2.5.0'
     );
     $response = $response->withJson($responseArr);
     return $response;
