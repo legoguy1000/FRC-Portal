@@ -338,62 +338,64 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->get('/notificationPreferences', function ($request, $response, $args) {
-      $user_id = $args['user_id'];
-      $user = getNotificationPreferencesByUser($user_id);
-      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-    $this->put('/notificationPreferences', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $user_id = $args['user_id'];
-      $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
-      if($user_id != $userId && !checkAdmin($userId)) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
+    $this->group('/notificationPreferences', function () {
+      $this->get('', function ($request, $response, $args) {
+        $user_id = $args['user_id'];
+        $user = getNotificationPreferencesByUser($user_id);
+        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
+        $response = $response->withJson($responseArr);
         return $response;
-      }
-      if(!isset($formData['method']) || $formData['method'] == '') {
-        $responseArr = array('status'=>false, 'msg'=>'Notification method is required');
-        $response = $response->withJson($responseArr,400);
-        return $response;
-      }
-      if(!isset($formData['type']) || $formData['type'] == '') {
-        $responseArr = array('status'=>false, 'msg'=>'Notification type is required');
-        $response = $response->withJson($responseArr,400);
-        return $response;
-      }
-      if(!array_key_exists('value',$formData)) {
-        $responseArr = array('status'=>false, 'msg'=>'Value is required');
-        $response = $response->withJson($responseArr,400);
-        return $response;
-      }
+      });
+      $this->put('', function ($request, $response, $args) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        $user_id = $args['user_id'];
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if($user_id != $userId && !checkAdmin($userId)) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+        if(!isset($formData['method']) || $formData['method'] == '') {
+          $responseArr = array('status'=>false, 'msg'=>'Notification method is required');
+          $response = $response->withJson($responseArr,400);
+          return $response;
+        }
+        if(!isset($formData['type']) || $formData['type'] == '') {
+          $responseArr = array('status'=>false, 'msg'=>'Notification type is required');
+          $response = $response->withJson($responseArr,400);
+          return $response;
+        }
+        if(!array_key_exists('value',$formData)) {
+          $responseArr = array('status'=>false, 'msg'=>'Value is required');
+          $response = $response->withJson($responseArr,400);
+          return $response;
+        }
 
-      if($formData['value'] == true) {
-        $pref = new FrcPortal\NotificationPreference();
-        $pref->user_id = $user_id;
-        $pref->method = $formData['method'];
-        $pref->type = $formData['type'];
-        if($pref->save()) {
-          $responseArr['status'] = true;
-          $responseArr['msg'] ='Notification Preferences updated';
+        if($formData['value'] == true) {
+          $pref = new FrcPortal\NotificationPreference();
+          $pref->user_id = $user_id;
+          $pref->method = $formData['method'];
+          $pref->type = $formData['type'];
+          if($pref->save()) {
+            $responseArr['status'] = true;
+            $responseArr['msg'] ='Notification Preferences updated';
+          }
+        } else if($formData['value'] == false) {
+          $pref = FrcPortal\NotificationPreference::where('user_id',$user_id)->where('method',$formData['method'])->where('type',$formData['type'])->delete();
+          if($pref) {
+            $responseArr['status'] = true;
+            $responseArr['msg'] ='Notification Preferences updated';
+          }
         }
-      } else if($formData['value'] == false) {
-        $pref = FrcPortal\NotificationPreference::where('user_id',$user_id)->where('method',$formData['method'])->where('type',$formData['type'])->delete();
-        if($pref) {
-          $responseArr['status'] = true;
-          $responseArr['msg'] ='Notification Preferences updated';
-        }
-      }
-      $response = $response->withJson($responseArr);
-      return $response;
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
     });
     $this->post('/requestMissingHours', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
