@@ -172,4 +172,21 @@ function filterArrayData ($inputArray, $filter) {
 													},
 													ARRAY_FILTER_USE_KEY) : $inputArray;
 }
+
+function getServiceAccountFile() {
+	$result = array(
+		'status' => false,
+		'msg' => 'File Doesn\'t Exist',
+		'data' => array(
+			'path' => $file,
+			'contents' => null
+		)
+	);
+	$file = __DIR__.'/../secured/service_account_credentials.json';
+	if(file_exists($file)) {
+		$result['status'] = true;
+		$result['msg'] = 'File Present';
+		$result['data']['contents'] = file_get_contents($file);
+	}
+}
 ?>
