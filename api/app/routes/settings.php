@@ -173,35 +173,36 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-/*    $this->put('/notification', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $loggedInUser = $authToken['data']->user_id;
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
-      if(!checkAdmin($loggedInUser)) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
-      }
-      $section = $args['section'];
-      $formData = $request->getParsedBody();
-      $se = array_key_exists('slack_enable',$formData) && $formData['slack_enable'] ? 1:0;
-      $ee = array_key_exists('email_enable',$formData) && $formData['email_enable'] ? 1:0;
-      $set = FrcPortal\Setting::updateOrCreate(
-          ['section' => 'notification', 'setting' => 'slack_enable'], ['value' => $se]
-      );
-      $set = FrcPortal\Setting::updateOrCreate(
-          ['section' => 'notification', 'setting' => 'email_enable'], ['value' => $ee]
-      );
-
-
-      $response = $response->withJson($responseArr);
-      return $response;
-    }); */
   });
+  $this->post('/serviceAccountCredentials', function ($request, $response, $args) {
+    $authToken = $request->getAttribute("token");
+    $loggedInUser = $authToken['data']->user_id;
+    $responseArr = array(
+      'status' => false,
+      'msg' => 'Something went wrong',
+      'data' => null
+    );
+    if(!checkAdmin($loggedInUser)) {
+      $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+      $response = $response->withJson($responseArr,403);
+      return $response;
+    }
+
+    $directory = $this->get('upload_directory');
+    $uploadedFiles = $request->getUploadedFiles();
+    $uploadedFile = $uploadedFiles['example1'];
+    if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+        $filename = moveUploadedFile($directory, $uploadedFile);
+        //$response->write('uploaded ' . $filename . '<br/>');
+    }
+
+
+
+    $responseArr['status'] = true;
+    $responseArr['msg'] = ucwords($section).' Settings Updated';
+    //$responseArr['data'] = $data;
+    $response = $response->withJson($responseArr);
+    return $response;
   $this->post('', function ($request, $response, $args) {
 
     $response = $response->withJson($responseArr);

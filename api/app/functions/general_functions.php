@@ -189,4 +189,21 @@ function getServiceAccountFile() {
 		$result['data']['contents'] = file_get_contents($file);
 	}
 }
+
+function getMembershipFormName() {
+	$mfn = getSettingsProp('membership_form_name');
+	if(is_null($mfn)) {
+		$mfn = '###YEAR### Membership (Responses)';
+	}
+}
+
+function buildGoogleDriveQuery($file_name) {
+	$fileArr = explode(' ',$file_name);
+	$q = '';
+	foreach($fileArr as $str) {
+		$q .= 'name contains "'.$str.'" ';
+	}
+	$q .= 'mimeType = "application/vnd.google-apps.spreadsheet"';
+	return $q;
+}
 ?>

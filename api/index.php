@@ -4,6 +4,7 @@ include('app/libraries/CustomAuthRule.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\UploadedFile;
 
 $config = array();
 $config['displayErrorDetails'] = true;
@@ -37,6 +38,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     ]
 ]));
 $container = $app->getContainer();
+$container['upload_directory'] = __DIR__ . '/secured';
 /* $container['db'] = function ($c) {
     $dbConfig = $c['settings']['db'];
 

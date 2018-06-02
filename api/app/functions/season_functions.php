@@ -12,9 +12,13 @@ function getSeasonMembershipForm($year) {
 			$client->setAuthConfigFile($creds['data']['path']);
 			$client->setScopes(['https://www.googleapis.com/auth/drive.readonly']);
 			$service = new Google_Service_Drive($client);
+			$mfn = getMembershipFormName();
+			$mfn = str_replace('###YEAR###',$year,$mfn);
+			$query = buildGoogleDriveQuery($mfn);
 			$parameters = array(
 				'corpora' => 'user',
-				'q' => 'name contains "'.$year.'" and name contains "Membership" and name contains "(Responses)" and mimeType = "application/vnd.google-apps.spreadsheet"',
+				'q' => $query;
+				//'q' => 'name contains "'.$year.'" and name contains "Membership" and name contains "(Responses)" and mimeType = "application/vnd.google-apps.spreadsheet"',
 				'supportsTeamDrives' => 'true',
 				'pageSize' => '1'
 			);
