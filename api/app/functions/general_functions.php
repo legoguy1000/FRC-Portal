@@ -214,7 +214,7 @@ function json_validate($string) {
 			'msg' => '',
 			'data' => null
 		);
-    $json = json_decode($string);
+    $json = json_decode($string,true);
     // switch and check possible JSON errors
     switch (json_last_error()) {
         case JSON_ERROR_NONE:
