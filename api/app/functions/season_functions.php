@@ -17,7 +17,7 @@ function getSeasonMembershipForm($year) {
 			$query = buildGoogleDriveQuery($mfn);
 			$parameters = array(
 				'corpora' => 'user',
-				'q' => $query;
+				'q' => $query,
 				//'q' => 'name contains "'.$year.'" and name contains "Membership" and name contains "(Responses)" and mimeType = "application/vnd.google-apps.spreadsheet"',
 				'supportsTeamDrives' => 'true',
 				'pageSize' => '1'
