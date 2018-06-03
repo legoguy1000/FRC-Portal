@@ -193,7 +193,7 @@ $app->group('/settings', function () {
     $uploadedFile = $uploadedFiles['credentials'];
     if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
       $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-      $temp = file_get_contents($uploadedFile);
+      $temp = file_get_contents($uploadedFile->file);
       $validJson = json_validate($temp);
       if($extension != 'json' || !$validJson['status']) {
         $responseArr = array('status'=>false, 'msg'=>'File must be a valid JSON file. '.$validJson['msg']);
