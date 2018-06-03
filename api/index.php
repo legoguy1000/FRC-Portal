@@ -38,7 +38,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     ]
 ]));
 $container = $app->getContainer();
-$container['upload_directory'] = __DIR__ . '/secured';
+$container['upload_directory'] = __DIR__ . '/app/secured';
 /* $container['db'] = function ($c) {
     $dbConfig = $c['settings']['db'];
 

@@ -190,7 +190,7 @@ $app->group('/settings', function () {
 
     $directory = $this->get('upload_directory');
     $uploadedFiles = $request->getUploadedFiles();
-    $uploadedFile = $uploadedFiles['example1'];
+    $uploadedFile = $uploadedFiles['credentials'];
     if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
       $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
       if($extension != 'json') {
@@ -212,18 +212,6 @@ $app->group('/settings', function () {
     return $response;
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
