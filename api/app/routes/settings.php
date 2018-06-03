@@ -198,7 +198,7 @@ $app->group('/settings', function () {
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      $filename = 'service_account_credentials.json'
+      $filename = 'service_account_credentials.json';
       $uploadedFile->moveTo($directory.'/'.$filename);
       $responseArr['status'] = true;
       $responseArr['msg'] = 'Service account credentials uploaded';
