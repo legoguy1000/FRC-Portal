@@ -16,7 +16,8 @@ if(!is_null($season)) {
 }
 if(!is_null($spreadsheetId)) {
 	$client = new Google_Client();
-	$client->setAuthConfigFile(__DIR__ . '/../secured/team-2363-portal-0c12aca54f1c.json');
+	$creds = getServiceAccountFile();
+	$client->setAuthConfigFile($creds['data']['path']);
 	$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
 	$service = new Google_Service_Sheets($client);
 	// The A1 notation of the values to retrieve.
