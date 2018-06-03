@@ -192,17 +192,20 @@ $app->group('/settings', function () {
     $uploadedFiles = $request->getUploadedFiles();
     $uploadedFile = $uploadedFiles['example1'];
     if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-        $filename = moveUploadedFile($directory, $uploadedFile);
-        //$response->write('uploaded ' . $filename . '<br/>');
+      $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+      if($extension != '.json') {
+        $responseArr = array('status'=>false, 'msg'=>'File must be a valid JSON file');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      $filename = 'service_account_credentials.json'
+      $uploadedFile->moveTo($directory.'/'.$filename);
+      $responseArr['status'] = true;
+      $responseArr['msg'] = 'Service account credentials uploaded';
     }
-
-
-
-    $responseArr['status'] = true;
-    $responseArr['msg'] = ucwords($section).' Settings Updated';
-    //$responseArr['data'] = $data;
     $response = $response->withJson($responseArr);
     return $response;
+  });
   $this->post('', function ($request, $response, $args) {
 
     $response = $response->withJson($responseArr);
