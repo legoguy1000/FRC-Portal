@@ -200,6 +200,13 @@ $app->group('/settings', function () {
         $response = $response->withJson($responseArr,400);
         return $response;
       }
+      if($validJson['data']['type'] != 'service_account' || !isset($validJson['data']['client_email']) || $validJson['data']['client_email'] == ''
+                                                         || !isset($validJson['data']['client_id']) || $validJson['data']['client_id'] == ''
+                                                         || !isset($validJson['data']['private_key']) || $validJson['data']['private_key'] == '') {
+        $responseArr = array('status'=>false, 'msg'=>'File is not a valid Google Serice Account Credential JSON file.');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
       $filename = 'service_account_credentials.json';
       $uploadedFile->moveTo($directory.'/'.$filename);
       $responseArr['status'] = true;
