@@ -202,6 +202,7 @@ $app->group('/settings', function () {
       $uploadedFile->moveTo($directory.'/'.$filename);
       $responseArr['status'] = true;
       $responseArr['msg'] = 'Service account credentials uploaded';
+      $responseArr['data'] = json_decode(file_get_contents($directory.'/'.$filename),true);
     }
     $response = $response->withJson($responseArr);
     return $response;
