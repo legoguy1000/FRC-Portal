@@ -209,6 +209,9 @@ $app->group('/settings', function () {
       }
       $filename = 'service_account_credentials.json';
       $uploadedFile->moveTo($directory.'/'.$filename);
+      FrcPortal\Setting::updateOrCreate(
+          ['section' => 'other', 'setting' => 'google_service_account_email'], ['value' => $validJson['data']['client_email']]
+      );
       $responseArr['status'] = true;
       $responseArr['msg'] = 'Service account credentials uploaded';
       $responseArr['data'] = json_decode(file_get_contents($directory.'/'.$filename),true);
