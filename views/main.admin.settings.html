@@ -173,6 +173,10 @@
 				<input ng-model="vm.settings.other.google_drive_id">
 			</md-input-container>
 			<md-input-container flex>
+				<label>Google Service Account</label>
+				<input ng-model="vm.settings.other.google_service_account_email" readonly disabled>
+			</md-input-container>
+			<md-input-container flex>
 				<label>School Year Month End</label>
 				<input moment-picker="vm.settings.other.school_month_end" required
 			     format="MMMM"
