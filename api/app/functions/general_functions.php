@@ -174,6 +174,7 @@ function filterArrayData ($inputArray, $filter) {
 }
 
 function getServiceAccountFile() {
+	$file = __DIR__.'/../secured/service_account_credentials.json';
 	$result = array(
 		'status' => false,
 		'msg' => 'File Doesn\'t Exist',
@@ -182,11 +183,10 @@ function getServiceAccountFile() {
 			'contents' => null
 		)
 	);
-	$file = __DIR__.'/../secured/service_account_credentials.json';
 	if(file_exists($file)) {
 		$result['status'] = true;
 		$result['msg'] = 'File Present';
-		$result['data']['contents'] = file_get_contents($file);
+		$result['data']['contents'] = json_decode(file_get_contents($file),true);
 	}
 }
 

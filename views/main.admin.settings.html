@@ -172,10 +172,18 @@
 				<label>Google Team Drive ID</label>
 				<input ng-model="vm.settings.other.google_drive_id">
 			</md-input-container>
-			<md-input-container flex>
-				<label>Google Service Account</label>
-				<input ng-model="vm.settings.other.google_service_account_email" readonly disabled>
-			</md-input-container>
+			<div flex layout="row" layout-align="start center">
+				<md-input-container>
+					<label>Google Service Account</label>
+					<input ng-model="vm.settings.other.google_service_account_email" readonly disabled>
+				</md-input-container>
+				<md-button class="md-icon-button" ng-click="vm.openServiceAccountDialog()">
+					<md-tooltip md-direction="top">View/Edit Service Account Properties</md-tooltip>
+						<md-icon md-font-library="material-icons">open_in_new</md-icon>
+				</md-button>
+			</div>
+
+			</div>
 			<md-input-container flex>
 				<label>School Year Month End</label>
 				<input moment-picker="vm.settings.other.school_month_end" required
