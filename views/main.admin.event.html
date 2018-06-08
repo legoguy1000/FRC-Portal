@@ -61,9 +61,9 @@
 				<label>Event Type</label>
 				<md-icon md-font-library="material-icons">info_outline</md-icon>
 				<md-select ng-model="vm.event.type" style="min-width:150px;" required>
-					<md-option><em>None</em></md-option>
-					<md-option ng-repeat="type in vm.eventTypes" ng-value="type">
-						{{type}}
+					<md-option ng-value="null"><em>None</em></md-option>
+					<md-option ng-repeat="event_type in vm.eventTypes" ng-value="event_type.type">
+						{{event_type.type}}
 					</md-option>
 				</md-select>
 			</md-input-container>

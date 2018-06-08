@@ -7,7 +7,7 @@ Capsule::schema()->create('events', function ($table) {
        $table->char('event_id',13)->primary();
        $table->string('google_cal_id',50)->nullable()->default(null);
        $table->string('name');
-       $table->string('type');
+       $table->string('type')->nullable()->default(null);
        $table->dateTime('event_start');
        $table->dateTime('event_end');
        $table->dateTime('registration_deadline')->nullable()->default(null);
