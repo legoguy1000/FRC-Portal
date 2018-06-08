@@ -44,10 +44,10 @@
 								</md-input-container>
 							</td>
 							<td md-cell>
-								<md-button class="md-icon-button" ng-click="vm.editType(event_type)" ng-show="vm.eventTypeEdit==event_type.type_id">
+								<md-button class="md-icon-button" ng-click="vm.updateType(event_type)" ng-show="vm.eventTypeEdit==event_type.type_id">
 									<md-icon class=""> done </md-icon>
 								</md-button>
-								<md-button class="md-icon-button" ng-hide="vm.eventTypeEdit==event_type.type_id">
+								<md-button class="md-icon-button" ng-hide="vm.eventTypeEdit==event_type.type_id" ng-click="vm.editType(event_type)">
 									<md-icon>edit</md-icon>
 								</md-button>
 								<md-button class="md-icon-button" ng-hide="vm.eventTypeEdit==event_type.type_id">

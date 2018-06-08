@@ -29,6 +29,10 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 	vm.getEventTypeList();
 
 	vm.editType = function (event_type) {
+		vm.eventTypeEdit = event_type.type_id;
+	};
+
+	vm.updateType = function (event_type) {
 		vm.loading = true;
 		eventsService.updateEventType(event_type).then(function(response) {
 			vm.loading = false;
