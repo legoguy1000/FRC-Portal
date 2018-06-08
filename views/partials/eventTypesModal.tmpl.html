@@ -1,0 +1,80 @@
+<md-dialog aria-label="New Event" style="" flex="50" >
+		<md-toolbar layout="row">
+		  <div class="md-toolbar-tools">
+			<h2>Event Types</h2>
+			<span flex></span>
+			<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
+				<md-tooltip md-direction="top">Close</md-tooltip>
+			  <md-icon class=""> close </md-icon>
+			</md-button>
+		  </div>
+		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
+		<md-dialog-content class="md-margin">
+			<div layout="row" ng-repeat="car in vm.car_list.cars" style="border-top: solid;border-left: solid;border-right: solid;">
+				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
+					{{car.car_title}}
+				</div>
+				<div flex class="dndList">
+					<md-list ng-cloak
+						dnd-list="vm.car_list.car_selection[car.car_id]"
+						dnd-disable-if="vm.car_list.car_selection[car.car_id].length >= car.car_space"
+						style="min-height:20px;">
+					    <md-list-item ng-repeat="req in vm.car_list.car_selection[car.car_id]"
+					        dnd-draggable="req"
+					        dnd-moved="vm.car_list.car_selection[car.car_id].splice($index, 1)"
+					        dnd-effect-allowed="move"
+					        dnd-selected="models.selected = req"
+					        ng-class="{'selected': models.selected === req}"
+									class="min-height-reset"
+									dnd-disable-if="req.user_id == car.user_id"
+					        >
+									<dnd-nodrag layout="row" layout-align="start center">
+	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
+						        <div><span ng-show="user.user_id == car.user_id"><md-icon class="material-icons"> star </md-icon> </span>{{req.user.full_name}}</div>
+								</dnd-nodrag>
+					    </md-list-item>
+					</md-list>
+				</div>
+			</div>
+			<div layout="row" style="border: solid;">
+				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
+					No car Selected
+				</div>
+				<div flex class="dndList">
+					<md-list ng-cloak
+						dnd-list="vm.car_list.car_selection['non_select']"
+						style="min-height:20px;">
+					    <md-list-item ng-repeat="req in vm.car_list.car_selection['non_select']"
+					        dnd-draggable="req"
+					        dnd-moved="vm.car_list.car_selection['non_select'].splice($index, 1)"
+					        dnd-effect-allowed="move"
+					        dnd-selected="models.selected = req"
+					        ng-class="{'selected': models.selected === req}"
+									class="min-height-reset"
+					        >
+									<dnd-nodrag layout="row" layout-align="start center">
+	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
+						        <div>{{req.user.full_name}}</div>
+								</dnd-nodrag>
+					    </md-list-item>
+					</md-list>
+				</div>
+			</div>
+		</md-dialog-content>
+		<md-dialog-actions layout="row" class="noprint">
+			<md-button type="button" ng-click="window.print();" class="md-icon-button">
+					<md-tooltip md-direction="top">Print car list</md-tooltip>
+					<md-icon class=""> print </md-icon>
+			</md-button>
+			<span flex></span>
+			<md-button type="button" ng-click="vm.updateEventCarList(false)">
+				<md-tooltip md-direction="top">Save and Close</md-tooltip>
+				Save
+			</md-button>
+			<md-button type="button" ng-click="vm.updateEventCarList(true)">
+				<md-tooltip md-direction="top">Save and Close</md-tooltip>
+				Save & Close
+			</md-button>
+		</md-dialog-actions>
+</md-dialog>
