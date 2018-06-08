@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
-$app->group('/EventTypes', function () {
+$app->group('/eventTypes', function () {
   $this->get('', function ($request, $response, $args) {
     $responseArr = array(
       'status' => false,
