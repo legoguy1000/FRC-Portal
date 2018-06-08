@@ -125,6 +125,7 @@ include('./app/routes/schools.php');
 include('./app/routes/slack.php');
 include('./app/routes/settings.php');
 include('./app/routes/public.php');
+include('./app/routes/eventTypes.php');
 
 $app->run();
 
