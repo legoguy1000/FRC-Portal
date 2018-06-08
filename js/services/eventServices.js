@@ -149,5 +149,31 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getEventTypes: function () {
+			return $http.get('api/eventTypes')
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		addNewEventType: function (formData) {
+			return $http.post('api/eventTypes',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		updateEventType: function (formData) {
+			var type_id = formData.type_id != undefined && formData.type_id != null ? formData.type_id:'';
+			return $http.put('api/eventTypes/'+type_id,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		deleteEventType: function (formData) {
+			var type_id = formData.type_id != undefined && formData.type_id != null ? formData.type_id:'';
+			return $http.delete('api/eventTypes/'+type_id,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

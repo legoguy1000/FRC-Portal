@@ -24,6 +24,7 @@ Capsule::schema()->create('events', function ($table) {
        $table->timestamps();
 
        $table->foreign('poc_id')->references('user_id')->on('users')->onDelete('set null')->onUpdate('cascade');
+       $table->foreign('type')->references('type')->on('event_types')->onDelete('set null')->onUpdate('cascade');
 });
 
 ?>
