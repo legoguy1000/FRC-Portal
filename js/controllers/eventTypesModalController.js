@@ -17,6 +17,7 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 	};
 	vm.limitOptions = [10,25,50,100];
 	vm.loading = false;
+	vm.eventTypeEdit = null;
 	//function get room list
 	vm.getEventTypeList = function () {
 		vm.loading = true;
@@ -27,25 +28,20 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 	};
 	vm.getEventTypeList();
 
-/*
-	vm.updateEventCarList = function (close) {
+	vm.editType = function (event_type) {
 		vm.loading = true;
-		var data = {
-			event_id: vm.eventInfo.event_id,
-			cars: vm.car_list.car_selection
-		};
-		eventsService.updateEventCarList(data).then(function(response){
+		eventsService.updateEventType(event_type).then(function(response) {
 			vm.loading = false;
-			$mdToast.show(
-	      $mdToast.simple()
-	        .textContent(response.msg)
-	        .position('top right')
-	        .hideDelay(3000)
-	    );
-			if(close) {
-				$mdDialog.hide(response);
+			if(response.status) {
+				vm.eventTypeEdit = null;
 			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 		});
-	}; */
+	};
 
 }
