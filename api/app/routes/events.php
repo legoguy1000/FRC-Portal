@@ -488,7 +488,7 @@ $app->group('/events', function () {
       $formData = $request->getParsedBody();
       $event = FrcPortal\Event::find($event_id);
 
-      $event->type = $formData['type'];
+      $event->type = isset($formData['type']) && $formData['type'] != '' ? $formData['type'] : null;
       $event->poc_id = isset($formData['poc']['user_id']) && $formData['poc']['user_id'] != '' ? $formData['poc']['user_id']:null;
       if($formData['registration_deadline'] != null && $formData['registration_deadline'] != '') {
         $registration_deadline = new DateTime($formData['registration_deadline']);
