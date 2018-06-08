@@ -31,14 +31,14 @@
 						<tr md-row ng-repeat="event_type in vm.event_types | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 							<td md-cell flex>
 								<div ng-hide="vm.eventTypeEdit==event_type.type_id">{{event_type.type}}</div>
-								<md-input-container flex ng-show="vm.eventTypeEdit==event_type.type_id">
+								<md-input-container  style="width:100%" ng-show="vm.eventTypeEdit==event_type.type_id">
 									<label>Last Name</label>
 									<input type="text" ng-model="event_type.type" required>
 								</md-input-container>
 							</td>
 							<td md-cell flex>
 								<div ng-hide="vm.eventTypeEdit==event_type.type_id">{{event_type.description}}</div>
-								<md-input-container class="" flex ng-show="vm.eventTypeEdit==event_type.type_id">
+								<md-input-container class="" style="width:100%" ng-show="vm.eventTypeEdit==event_type.type_id">
 									<label>Description</label>
 									<textarea ng-model="event_type.description" rows="1" md-select-on-focus></textarea>
 								</md-input-container>
