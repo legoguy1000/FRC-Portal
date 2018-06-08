@@ -20,7 +20,7 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 	//function get room list
 	vm.getEventTypeList = function () {
 		vm.loading = true;
-		eventsService.getEventTypes().then(function(response){
+		vm.promise =	eventsService.getEventTypes().then(function(response){
 			vm.event_types = response.data;
 			vm.loading = false;
 		});
