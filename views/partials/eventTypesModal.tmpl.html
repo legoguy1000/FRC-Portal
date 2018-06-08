@@ -30,27 +30,27 @@
 					<tbody md-body> <!-- -->
 						<tr md-row ng-repeat="event_type in vm.event_types | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 							<td md-cell flex>
-								<div ng-hide="vm.eventTypeEdit==event.type_id">{{event_type.type}}</div>
-								<md-input-container flex ng-show="vm.eventTypeEdit==event.type_id">
+								<div ng-hide="vm.eventTypeEdit==event_type.type_id">{{event_type.type}}</div>
+								<md-input-container flex ng-show="vm.eventTypeEdit==event_type.type_id">
 									<label>Last Name</label>
 									<input type="text" ng-model="event_type.type" required>
 								</md-input-container>
 							</td>
 							<td md-cell flex>
-								<div ng-hide="vm.eventTypeEdit==event.type_id">{{event_type.description}}</div>
-								<md-input-container class="" flex ng-show="vm.eventTypeEdit==event.type_id">
+								<div ng-hide="vm.eventTypeEdit==event_type.type_id">{{event_type.description}}</div>
+								<md-input-container class="" flex ng-show="vm.eventTypeEdit==event_type.type_id">
 									<label>Description</label>
 									<textarea ng-model="event_type.description" rows="1" md-select-on-focus></textarea>
 								</md-input-container>
 							</td>
 							<td md-cell>
-								<md-button class="md-icon-button" ng-click="vm.editType(event_type)" ng-show="vm.eventTypeEdit==event.type_id">
+								<md-button class="md-icon-button" ng-click="vm.editType(event_type)" ng-show="vm.eventTypeEdit==event_type.type_id">
 									<md-icon class=""> done </md-icon>
 								</md-button>
-								<md-button class="md-icon-button" ng-hide="vm.eventTypeEdit==event.type_id">
+								<md-button class="md-icon-button" ng-hide="vm.eventTypeEdit==event_type.type_id">
 									<md-icon>edit</md-icon>
 								</md-button>
-								<md-button class="md-icon-button" ng-hide="vm.eventTypeEdit==event.type_id">
+								<md-button class="md-icon-button" ng-hide="vm.eventTypeEdit==event_type.type_id">
 									<md-icon>delete_forever</md-icon>
 								</md-button>
 							</td>
