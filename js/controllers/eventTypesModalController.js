@@ -18,6 +18,7 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 	vm.limitOptions = [10,25,50,100];
 	vm.loading = false;
 	vm.eventTypeEdit = null;
+	vm.formData = {};
 	//function get room list
 	vm.getEventTypeList = function () {
 		vm.loading = true;
@@ -30,6 +31,9 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 
 	vm.editType = function (event_type) {
 		vm.eventTypeEdit = event_type.type_id;
+	};
+	vm.cancelEdit = function () {
+		vm.eventTypeEdit = null;
 	};
 
 	vm.updateType = function (event_type) {
@@ -48,4 +52,21 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 		});
 	};
 
+	vm.addNewType = function () {
+		vm.loading = true;
+		eventsService.addNewEventType(vm.formData).then(function(response) {
+			vm.loading = false;
+			if(response.status) {
+				vm.formData = null;
+				vm.newTypeForm.$setPristine();
+				vm.newTypeForm.$setUntouched();
+			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+		});
+	};
 }
