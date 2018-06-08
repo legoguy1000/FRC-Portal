@@ -9,7 +9,14 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-	vm.types = []];
+	vm.event_types = [];
+	vm.query = {
+		filter: '',
+		limit: 10,
+		order: '-student_count',
+		page: 1
+	};
+	vm.limitOptions = [10,25,50,100];
 	vm.loading = false;
 	//function get room list
 	vm.getEventCarList = function () {
@@ -40,4 +47,5 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 			}
 		});
 	};
+
 }
