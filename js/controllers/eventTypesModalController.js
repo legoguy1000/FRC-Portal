@@ -5,7 +5,6 @@ angular.module('FrcPortal')
 function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,$mdToast) {
 	var vm = this;
 
-	vm.eventInfo = eventInfo;
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
