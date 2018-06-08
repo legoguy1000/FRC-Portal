@@ -38,7 +38,7 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 
 	vm.updateType = function (event_type) {
 		vm.loading = true;
-		eventsService.updateEventType(event_type).then(function(response) {
+		vm.promise =	eventsService.updateEventType(event_type).then(function(response) {
 			vm.loading = false;
 			if(response.status) {
 				vm.eventTypeEdit = null;
@@ -54,12 +54,13 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 
 	vm.addNewType = function () {
 		vm.loading = true;
-		eventsService.addNewEventType(vm.formData).then(function(response) {
+		vm.promise =	eventsService.addNewEventType(vm.formData).then(function(response) {
 			vm.loading = false;
 			if(response.status) {
 				vm.formData = null;
 				vm.newTypeForm.$setPristine();
 				vm.newTypeForm.$setUntouched();
+				vm.event_types = response.data;
 			}
 			$mdToast.show(
 				$mdToast.simple()
