@@ -159,7 +159,7 @@ $app->group('/hours', function () {
       }
       $users = FrcPortal\User::with(['meeting_hours' => function ($query) use ($date)  {
         $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
-      }])->where('status',true)->get();
+      }])->where('status',true)->orderBy('fname', 'ASC')->get();
       $responseArr = array(
         'status' => true,
         'msg' => '',
