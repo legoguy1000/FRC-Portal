@@ -150,7 +150,7 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 		};
 
 
-		vm.showTimeSheetModal = function(eventData) {
+		vm.showTimeSheetModal = function() {
 			$mdDialog.show({
 				controller: timeSheetModalController,
 				controllerAs: 'vm',
