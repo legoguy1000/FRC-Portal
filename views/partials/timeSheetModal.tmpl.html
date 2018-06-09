@@ -27,17 +27,17 @@
 				</md-button>
 			</div>
 			<div layout="column" layout-align="center start" flex>
-				<div layout="row" layout-align="start center" style="width:100%;">
-					<div flex>Name</div>
-					<div flex>Time In</div>
-					<div flex>Time Out</div>
+				<div layout="row" layout-align="start center" style="width:100%; border:solid;">
+					<div flex layout="row" layout-align="center center">Name</div>
+					<div flex layout="row" layout-align="center center" style="border-left:solid; border-right:solid;">Time In</div>
+					<div flex layout="row" layout-align="center center">Time Out</div>
 				</div>
-				<div layout="row" layout-align="start start" style="width:100%;" ng-repeat="user in vm.users">
+				<div layout="row" layout-align="start start" style="width:100%; border:solid;" ng-repeat="user in vm.users">
 					<div flex>{{user.full_name}}</div>
-					<div layout="column" flex>
+					<div layout="column" layout-align="start center" flex style="border-left:solid; border-right:solid;">
 							<div ng-repeat="date in user.meeting_hours">{{date.time_in}}</div>
 					</div>
-					<div layout="column" flex>
+					<div layout="column" layout-align="start center" flex>
 							<div ng-repeat="date in user.meeting_hours">{{date.time_out}}</div>
 					</div>
 				</div>
