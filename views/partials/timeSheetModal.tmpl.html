@@ -32,8 +32,10 @@
 					<div flex layout="row" layout-align="center center" style="border-left:solid; border-right:solid;">Time In</div>
 					<div flex layout="row" layout-align="center center">Time Out</div>
 				</div>
-				<div layout="row" layout-align="start start" style="width:100%; border:solid;" ng-repeat="user in vm.users">
-					<div flex>{{user.full_name}}</div>
+				<div layout="row" style="width:100%; border:solid; border-top:none;" ng-repeat="user in vm.users">
+					<div flex layout="row" layout-align="start center">
+						<span style="margin-left: 10px;">{{user.full_name}}</span>
+					</div>
 					<div layout="column" layout-align="start center" flex style="border-left:solid; border-right:solid;">
 							<div ng-repeat="date in user.meeting_hours">{{date.time_in}}</div>
 					</div>
