@@ -32,7 +32,7 @@
 					<div flex>Time In</div>
 					<div flex>Time Out</div>
 				</div>
-				<div layout="row" layout-align="start center" style="width:100%;" ng-repeat="user in vm.users">
+				<div layout="row" layout-align="start start" style="width:100%;" ng-repeat="user in vm.users">
 					<div flex>{{user.full_name}}</div>
 					<div layout="column" flex>
 							<div ng-repeat="date in user.meeting_hours">{{date.time_in}}</div>
