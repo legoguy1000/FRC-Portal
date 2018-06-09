@@ -142,6 +142,32 @@ $app->group('/hours', function () {
       $response = $response->withJson($users);
       return $response;
     });
+    //Time Sheet
+    $this->get('/timeSheet/{date:([1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))}', function ($request, $response, $args) {
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']->user_id;
+      $date = $args['date'];
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($userId)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+      $users = FrcPortal\User::with(['meeting_hours' => function ($query) use ($date)  {
+        $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
+      }])->where('status',true)->get();
+      $responseArr = array(
+        'status' => true,
+        'msg' => '',
+        'data' => $users
+      );
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
     //Get the list of all sign in/out records
     $this->get('/records', function ($request, $response, $args) {
       $users = array();
