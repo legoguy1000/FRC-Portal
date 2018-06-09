@@ -143,7 +143,7 @@ $app->group('/hours', function () {
       return $response;
     });
     //Time Sheet
-    $this->get('/timeSheet/{date:([1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))}', function ($request, $response, $args) {
+    $this->get('/timeSheet/{date:(?:[1-9]\d{3})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])}', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
       $date = $args['date'];
