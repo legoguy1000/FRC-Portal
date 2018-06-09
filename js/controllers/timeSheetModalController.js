@@ -38,6 +38,6 @@ function timeSheetModalController($log,$element,$mdDialog,$scope,timeService,$md
 					.position('top right')
 					.hideDelay(3000)
 			);
-		});
-	}; */
+		});*/
+	};
 }
