@@ -31,28 +31,16 @@
 					<div flex layout="row" layout-align="center center">Name</div>
 					<div flex layout="row" layout-align="center center" style="border-left:solid; border-right:solid;">Time In</div>
 					<div flex layout="row" layout-align="center center">Time Out</div>
-					<div layout="row" layout-align="center center">		</div>
 				</div>
 				<div layout="row" style="width:100%; border:solid; border-top:none;" ng-repeat="user in vm.users">
-					<div flex="33" layout="row" layout-align="start center">
+					<div flex layout="row" layout-align="start center">
 						<span style="margin-left: 10px;">{{user.full_name}}</span>
 					</div>
-					<div layout="column" layout-align="start center" flex ng-repeat="date in user.meeting_hours">
-						<div layout="row" layout-align="start center" style="width:100%">
-								<div flex>{{date.time_in}}</div>
-								<div flex>{{date.time_out}}</div>
-								<div layout="row" layout-align="center center">
-									<md-button class="md-icon-button" ng-click="vm.updateDate(event_type)" ng-show="vm.dateEdit==date.hours_id">
-										<md-icon class=""> done </md-icon>
-									</md-button>
-									<md-button class="md-icon-button" ng-click="vm.cancelEdit()" ng-show="vm.dateEdit==date.hours_id">
-										<md-icon class=""> close </md-icon>
-									</md-button>
-									<md-button class="md-icon-button" ng-hide="vm.dateEdit==date.hours_id" ng-click="vm.editDate(date)">
-										<md-icon>edit</md-icon>
-									</md-button>
-								</div>
-							</div>
+					<div layout="column" layout-align="start center" flex style="border-left:solid; border-right:solid;">
+							<div ng-repeat="date in user.meeting_hours">{{date.time_in}}</div>
+					</div>
+					<div layout="column" layout-align="start center" flex>
+							<div ng-repeat="date in user.meeting_hours">{{date.time_out}}</div>
 					</div>
 				</div>
 			</div>
