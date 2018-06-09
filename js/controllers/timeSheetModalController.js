@@ -11,6 +11,7 @@ function timeSheetModalController($log,$element,$mdDialog,$scope,timeService,$md
 	vm.users = [];
 	vm.loading = false;
 	vm.date = null;
+	vm.dateEdit = null;
 	//function time sheeet
 	vm.getSignInTimeSheet = function () {
 		var date = moment(vm.date).format('YYYY-MM-DD');
@@ -19,4 +20,24 @@ function timeSheetModalController($log,$element,$mdDialog,$scope,timeService,$md
 		});
 	};
 
+	vm.editDate = function (date) {
+		vm.dateEdit = date.type_id;
+	};
+	vm.cancelEdit = function () {
+		vm.dateEdit = null;
+	};
+
+	vm.updateDate = function (event_type) {
+	/*	vm.promise =	eventsService.updateEventType(event_type).then(function(response) {
+			if(response.status) {
+				vm.eventTypeEdit = null;
+			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+		});
+	}; */
 }
