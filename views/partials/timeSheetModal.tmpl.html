@@ -34,11 +34,11 @@
 				</div>
 				<div layout="row" layout-align="start center" style="width:100%;" ng-repeat="user in vm.users">
 					<div flex>{{user.full_name}}</div>
-					<div layout="column" flex ng-repeat-start="date in user.meeting_hours">
-							<div>{{date.time_in}}</div>
+					<div layout="column" flex>
+							<div ng-repeat="date in user.meeting_hours">{{date.time_in}}</div>
 					</div>
-					<div layout="column" flex ng-repeat-end>
-							<div>{{date.time_out}}</div>
+					<div layout="column" flex>
+							<div ng-repeat="date in user.meeting_hours">{{date.time_out}}</div>
 					</div>
 				</div>
 			</div>
