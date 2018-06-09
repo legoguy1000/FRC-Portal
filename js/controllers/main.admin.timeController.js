@@ -1,5 +1,5 @@
 angular.module('FrcPortal')
-.controller('main.admin.timeController', ['$timeout', '$q', '$scope', '$state', '$timeout', 'signinService', 'timeService', '$mdToast', '$mdDialog'
+.controller('main.admin.timeController', ['$timeout', '$q', '$scope', '$state', '$timeout', 'signinService', 'timeService', '$mdToast', '$mdDialog',
 	mainAdminTimeController
 ]);
 function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinService, timeService, $mdToast, $mdDialog) {
