@@ -23,7 +23,9 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		'team': {},
 		'login': {},
 		'notification': {},
+		'other': {},
 	};
+	vm.serviceAccountCredentials = {};
 	vm.timezones = [];
 
 	vm.selectSettingMenu = function(menu) {
@@ -57,6 +59,13 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		});
 	};
 	vm.getAllTimezones();
+
+	vm.getServiceAccountCredentials = function () {
+		settingsService.getServiceAccountCredentials().then(function(response){
+			vm.serviceAccountCredentials = response.data;
+		});
+	};
+	vm.getServiceAccountCredentials();
 
 	vm.updateSettingBySection = function (section) {
 		vm.loading = true;
