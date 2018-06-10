@@ -41,13 +41,13 @@ $app->group('/auth', function () {
     	);
 
       $user = false;
-      $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
+      $data = FrcPortal\Oauth::with(['users.school','users.user_categories', 'users' => function($q){
         $q->where('status',true);
       }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
       if($data != null) {
         $user = $data->users;
       } else {
-        $data = FrcPortal\User::with(['school'])
+        $data = FrcPortal\User::with(['school','user_categories'])
                 ->where(function ($query) {
                   $query->where('email', $userData['email'])
                         ->orWhere('team_email', $userData['email']);
@@ -146,13 +146,13 @@ $app->group('/auth', function () {
       		'profile_image' => $image,
       	);
         $user = false;
-        $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
+        $data = FrcPortal\Oauth::with(['users.school','users.user_categories','users' => function($q){
           $q->where('status',true);
         }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
         if($data != null) {
           $user = $data->users;
         } else {
-          $data = FrcPortal\User::with(['school'])
+          $data = FrcPortal\User::with(['school','user_categories'])
                   ->where(function ($query) {
                     $query->where('email', $userData['email'])
                           ->orWhere('team_email', $userData['email']);
@@ -271,13 +271,13 @@ $app->group('/auth', function () {
 
       $user = false;
       $data = array();
-      $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
+      $data = FrcPortal\Oauth::with(['users.school','users.user_categories','users' => function($q){
         $q->where('status',true);
       }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
       if($data != null) {
         $user = $data->users;
       } else {
-        $data = FrcPortal\User::with(['school'])
+        $data = FrcPortal\User::with(['school','user_categories'])
                 ->where(function ($query) {
                   $query->where('email', $userData['email'])
                         ->orWhere('team_email', $userData['email']);
@@ -346,7 +346,7 @@ $app->group('/auth', function () {
     $password = $formData['password'];
 
     $user = null;
-    $user = FrcPortal\User::with(['school'])
+    $user = FrcPortal\User::with(['school','user_categories'])
             ->where(function ($query) use ($email) {
               $query->where('email', $email)
                     ->orWhere('team_email', $email);
