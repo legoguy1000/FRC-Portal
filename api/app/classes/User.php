@@ -150,7 +150,7 @@ class User extends Eloquent {
   /**
    * Get the Event Time Slots.
    */
-  public function users_categories() {
+  public function user_categories() {
     return $this->belongsToMany('FrcPortal\UserCategory', 'users_user_categories', 'user_id', 'cat_id');
   }
 }
