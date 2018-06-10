@@ -1,3 +1,8 @@
+<style>
+	.minorBottomBorder {
+		border-bottom: 1px solid;
+	}
+</style>
 <md-dialog aria-label="New Event" style="" flex="50" >
 		<md-toolbar layout="row">
 		  <div class="md-toolbar-tools">
@@ -38,10 +43,18 @@
 						<span style="margin-left: 10px;">{{user.full_name}}</span>
 					</div>
 					<div layout="column" layout-align="start center" flex style="border-left:solid; border-right:solid;">
-							<div ng-repeat="mh in user.meeting_hours">{{mh.date.time_in_formatted}}</div>
+						<div ng-repeat="mh in user.meeting_hours" style="width: 100%;" ng-class="{'minorBottomBorder': !$last}">
+							<div layout="row" layout-align="center center">
+								{{mh.date.time_in_formatted}}
+							</div>
+						</div>
 					</div>
 					<div layout="column" layout-align="start center" flex>
-							<div ng-repeat="mh in user.meeting_hours">{{mh.date.time_out_formatted}}</div>
+						<div ng-repeat="mh in user.meeting_hours" style="width: 100%;" ng-class="{'minorBottomBorder': !$last}">
+							<div layout="row" layout-align="center center">
+								{{mh.date.time_out_formatted}}
+							</div>
+						</div>
 					</div>
 <!--					<div layout="column" layout-align="start center" style="min-width:110px">
 						<div ng-repeat="date in user.meeting_hours" layout="row" layout-align="center center">
