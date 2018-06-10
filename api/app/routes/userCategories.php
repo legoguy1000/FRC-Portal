@@ -44,7 +44,7 @@ $app->group('/userCategories', function () {
 
     $cat = new FrcPortal\UserCategory();
     $cat->name = $formData['name'];
-    $cat->type = $formData['type'];
+    $cat->type = str_replace(' ','_',strtolower($formData['type']));
     $cat->description = isset($formData['description']) ? $formData['description']:'';
     if($cat->save()) {
       $responseArr['data'] = FrcPortal\UserCategory::all();
@@ -85,7 +85,7 @@ $app->group('/userCategories', function () {
       $cat = FrcPortal\UserCategory::find($cat_id);
       if(!is_null($cat_id)) {
         $cat->name = $formData['name'];
-        $cat->type = $formData['type'];
+        $cat->type = str_replace(' ','_',strtolower($formData['type']));
         $cat->description = isset($formData['description']) ? $formData['description']:'';
         if($cat->save()) {
           $responseArr['data'] = FrcPortal\UserCategory::all();
