@@ -20,22 +20,22 @@ function userCategoriesModalController($log,$element,$mdDialog,$scope,usersServi
 	vm.userCatEdit = null;
 	vm.formData = {};
 	//function get room list
-	vm.getEventTypeList = function () {
-		vm.promise =	usersService.getEventTypes().then(function(response){
+	vm.getUserCategories = function () {
+		vm.promise =	usersService.getUserCategories().then(function(response){
 			vm.categories = response.data;
 		});
 	};
-	vm.getEventTypeList();
+	vm.getUserCategories();
 
-	vm.editType = function (category) {
+	vm.editCat = function (category) {
 		vm.userCatEdit = category.cat_id;
 	};
 	vm.cancelEdit = function () {
 		vm.userCatEdit = null;
 	};
 
-	vm.updateType = function (category) {
-		vm.promise =	usersService.updateEventType(category).then(function(response) {
+	vm.updateUserCategory = function (category) {
+		vm.promise =	usersService.updateUserCategory(category).then(function(response) {
 			if(response.status) {
 				vm.userCatEdit = null;
 			}
@@ -48,8 +48,8 @@ function userCategoriesModalController($log,$element,$mdDialog,$scope,usersServi
 		});
 	};
 
-	vm.addNewType = function () {
-		vm.promise =	usersService.addNewEventType(vm.formData).then(function(response) {
+	vm.addNewUserCategory = function () {
+		vm.promise =	usersService.addNewUserCategory(vm.formData).then(function(response) {
 			if(response.status) {
 				vm.formData = null;
 				vm.newTypeForm.$setPristine();
@@ -65,8 +65,8 @@ function userCategoriesModalController($log,$element,$mdDialog,$scope,usersServi
 		});
 	};
 
-	vm.deleteType = function (category) {
-		vm.promise =	usersService.deleteEventType(category).then(function(response) {
+	vm.deleteUserCategory = function (category) {
+		vm.promise =	usersService.deleteUserCategory(category).then(function(response) {
 			if(response.status) {
 				vm.categories = response.data;
 			}
