@@ -54,7 +54,7 @@ $app->group('/userCategories', function () {
     $response = $response->withJson($responseArr);
     return $response;
   });
-  $this->group('/{type_id:[a-z0-9]{13}}', function () {
+  $this->group('/{cat_id:[a-z0-9]{13}}', function () {
     $this->put('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
