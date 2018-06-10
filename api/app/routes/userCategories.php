@@ -82,7 +82,7 @@ $app->group('/userCategories', function () {
         return $response;
       }
 
-      $cat = new FrcPortal\UserCategory::find($cat_id);
+      $cat = FrcPortal\UserCategory::find($cat_id);
       if(!is_null($cat_id)) {
         $cat->name = $formData['name'];
         $cat->type = $formData['type'];
