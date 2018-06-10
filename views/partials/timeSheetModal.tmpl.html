@@ -38,10 +38,10 @@
 						<span style="margin-left: 10px;">{{user.full_name}}</span>
 					</div>
 					<div layout="column" layout-align="start center" flex style="border-left:solid; border-right:solid;">
-							<div ng-repeat="date in user.meeting_hours">{{date.time_in}}</div>
+							<div ng-repeat="mh in user.meeting_hours">{{mh.date.time_in_formatted}}</div>
 					</div>
 					<div layout="column" layout-align="start center" flex>
-							<div ng-repeat="date in user.meeting_hours">{{date.time_out}}</div>
+							<div ng-repeat="mh in user.meeting_hours">{{mh.date.time_out_formatted}}</div>
 					</div>
 <!--					<div layout="column" layout-align="start center" style="min-width:110px">
 						<div ng-repeat="date in user.meeting_hours" layout="row" layout-align="center center">
