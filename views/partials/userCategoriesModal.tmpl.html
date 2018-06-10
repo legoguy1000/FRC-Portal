@@ -31,7 +31,7 @@
 					<tbody md-body> <!-- -->
 						<tr md-row ng-repeat="category in vm.categories | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 							<td md-cell flex>
-								<div ng-hide="vm.userCatEdit==category.cat_id">{{category.type}}</div>
+								<div ng-hide="vm.userCatEdit==category.cat_id">{{category.name}}</div>
 								<md-input-container  md-no-float style="width:100%" ng-show="vm.userCatEdit==category.cat_id">
 									<input type="text" ng-model="category.name" placeholder="Type" required>
 								</md-input-container>
@@ -43,7 +43,7 @@
 								</md-input-container>
 							</td>
 							<td md-cell flex>
-								<div ng-hide="vm.userCatEdit==category.cat_id">{{category.type}}</div>
+								<div ng-hide="vm.userCatEdit==category.cat_id">{{category.type | underscoreless | capitalizeWordsFirst}}</div>
 								<md-input-container md-no-float style="width:100%" ng-show="vm.userCatEdit==category.cat_id">
 									<input type="text" ng-model="category.type" placeholder="Type" required>
 								</md-input-container>
