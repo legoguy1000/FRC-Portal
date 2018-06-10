@@ -17,7 +17,7 @@ class UserCategory extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'cat_id', 'name', 'description'
+    'cat_id', 'name', 'description', 'type'
   ];
 
 

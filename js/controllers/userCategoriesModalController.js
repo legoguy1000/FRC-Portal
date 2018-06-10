@@ -1,14 +1,14 @@
 angular.module('FrcPortal')
-.controller('eventTypesModalController', ['$log','$element','$mdDialog', '$scope', 'eventsService','$mdToast',
-	eventTypesModalController
+.controller('userCategoriesModalController', ['$log','$element','$mdDialog', '$scope', 'usersService','$mdToast',
+	userCategoriesModalController
 ]);
-function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,$mdToast) {
+function userCategoriesModalController($log,$element,$mdDialog,$scope,usersService,$mdToast) {
 	var vm = this;
 
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-	vm.event_types = [];
+	vm.categories = [];
 	vm.query = {
 		filter: '',
 		limit: 10,
@@ -17,27 +17,27 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 	};
 	vm.limitOptions = [10,25,50,100];
 	vm.loading = false;
-	vm.eventTypeEdit = null;
+	vm.userCatEdit = null;
 	vm.formData = {};
 	//function get room list
 	vm.getEventTypeList = function () {
-		vm.promise =	eventsService.getEventTypes().then(function(response){
-			vm.event_types = response.data;
+		vm.promise =	usersService.getEventTypes().then(function(response){
+			vm.categories = response.data;
 		});
 	};
 	vm.getEventTypeList();
 
-	vm.editType = function (event_type) {
-		vm.eventTypeEdit = event_type.type_id;
+	vm.editType = function (category) {
+		vm.userCatEdit = category.cat_id;
 	};
 	vm.cancelEdit = function () {
-		vm.eventTypeEdit = null;
+		vm.userCatEdit = null;
 	};
 
-	vm.updateType = function (event_type) {
-		vm.promise =	eventsService.updateEventType(event_type).then(function(response) {
+	vm.updateType = function (category) {
+		vm.promise =	usersService.updateEventType(category).then(function(response) {
 			if(response.status) {
-				vm.eventTypeEdit = null;
+				vm.userCatEdit = null;
 			}
 			$mdToast.show(
 				$mdToast.simple()
@@ -49,12 +49,12 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 	};
 
 	vm.addNewType = function () {
-		vm.promise =	eventsService.addNewEventType(vm.formData).then(function(response) {
+		vm.promise =	usersService.addNewEventType(vm.formData).then(function(response) {
 			if(response.status) {
 				vm.formData = null;
 				vm.newTypeForm.$setPristine();
 				vm.newTypeForm.$setUntouched();
-				vm.event_types = response.data;
+				vm.categories = response.data;
 			}
 			$mdToast.show(
 				$mdToast.simple()
@@ -65,10 +65,10 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 		});
 	};
 
-	vm.deleteType = function (event_type) {
-		vm.promise =	eventsService.deleteEventType(event_type).then(function(response) {
+	vm.deleteType = function (category) {
+		vm.promise =	usersService.deleteEventType(category).then(function(response) {
 			if(response.status) {
-				vm.event_types = response.data;
+				vm.categories = response.data;
 			}
 			$mdToast.show(
 				$mdToast.simple()
