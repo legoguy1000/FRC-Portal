@@ -73,14 +73,16 @@
 			<div layout="column">
 				<md-list class="md-dense">
 				  <md-subheader class="md-no-sticky">User Categories</md-subheader>
-				  <md-list-item class="secondary-button-padding" ng-repeat="cat in vm.user.user_categories">
-				    <p> {{cat.name}} </p>
+				  <md-list-item class="secondary-button-padding md-2-line" ng-repeat="cat in vm.user.user_categories">
+						<div class="md-list-item-text" layout="column">
+							<h3> {{cat.name}} </h3>
+					    <p> {{cat.type}} </p>
+						</div>
 				    <md-button class="md-secondary md-icon-button" ng-click="">
 							<md-icon class="material-icons">delete</md-icon>
 						</md-button>
 				  </md-list-item>
 				</md-list>
-
 			</div>
 			<div flex layout="row">
 				<span flex></span>
