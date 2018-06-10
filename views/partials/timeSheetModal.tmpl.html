@@ -31,7 +31,7 @@
 					<div flex layout="row" layout-align="center center">Name</div>
 					<div flex layout="row" layout-align="center center" style="border-left:solid; border-right:solid;">Time In</div>
 					<div flex layout="row" layout-align="center center">Time Out</div>
-					<div style="min-width:110px"></div>
+					<!--<div style="min-width:110px"></div>-->
 				</div>
 				<div layout="row" style="width:100%; border:solid; border-top:none;" ng-repeat="user in vm.users">
 					<div flex layout="row" layout-align="start center">
@@ -43,7 +43,7 @@
 					<div layout="column" layout-align="start center" flex>
 							<div ng-repeat="date in user.meeting_hours">{{date.time_out}}</div>
 					</div>
-					<div layout="column" layout-align="start center" style="min-width:110px">
+<!--					<div layout="column" layout-align="start center" style="min-width:110px">
 						<div ng-repeat="date in user.meeting_hours" layout="row" layout-align="center center">
 							<md-button class="md-icon-button" ng-click="vm.updateDate(date)" ng-show="vm.dateEdit==date.hours_id">
 								<md-icon class=""> done </md-icon>
@@ -54,7 +54,7 @@
 							<md-button class="md-icon-button" ng-hide="vm.dateEdit==date.hours_id" ng-click="vm.editDate(date)">
 								<md-icon>edit</md-icon>
 							</md-button>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
