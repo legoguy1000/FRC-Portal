@@ -188,6 +188,7 @@ function getServiceAccountFile() {
 		$result['msg'] = 'File Present';
 		$result['data']['contents'] = json_decode(file_get_contents($file),true);
 	}
+	return $result;
 }
 
 function getMembershipFormName() {
