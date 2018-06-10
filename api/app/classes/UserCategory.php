@@ -11,6 +11,7 @@ class UserCategory extends Eloquent {
   //Use Custom Primary Key
   protected $primaryKey = 'cat_id'; // or null
   public $incrementing = false;
+  public $timestamps = false;
   /**
   * The attributes that are mass assignable.
   *
