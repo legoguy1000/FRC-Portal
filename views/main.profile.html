@@ -76,7 +76,7 @@
 				  <md-list-item class="secondary-button-padding md-2-line" ng-repeat="cat in vm.user.user_categories">
 						<div class="md-list-item-text" layout="column">
 							<h3> {{cat.name}} </h3>
-					    <p> {{cat.type}} </p>
+					    <p> {{cat.type | underscoreless | capitalizeWordsFirst}} </p>
 						</div>
 				    <md-button class="md-secondary md-icon-button" ng-click="">
 							<md-icon class="material-icons">delete</md-icon>
