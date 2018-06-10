@@ -71,10 +71,10 @@
 				</md-input-container>
 			</div>
 			<div layout="column">
-				<md-list ng-cloak>
+				<md-list class="md-dense">
 				  <md-subheader class="md-no-sticky">User Categories</md-subheader>
 				  <md-list-item class="secondary-button-padding" ng-repeat="cat in vm.user.user_categories">
-				    <p> >{{cat.name}} </p>
+				    <p> {{cat.name}} </p>
 				    <md-button class="md-secondary md-icon-button" ng-click="">
 							<md-icon class="material-icons">delete</md-icon>
 						</md-button>
