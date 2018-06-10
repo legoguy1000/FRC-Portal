@@ -3,7 +3,7 @@
 require_once "../includes.php";
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-Capsule::schema()->create('event_time_slots_event_requirements', function ($table) {
+Capsule::schema()->create('users_user_categories', function ($table) {
   $table->char('cat_id',13)->index();
   $table->char('user_id',13)->index();
 
