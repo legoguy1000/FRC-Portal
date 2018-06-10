@@ -56,12 +56,18 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 			vm.maxPage = response.maxPage;
 		});
 	};
-	/*
-	vm.requireMatch = true;
-	vm.selectedItem = null;
-	vm.searchText = null;
-	vm.querySearch = function(search) {
-		return usersService.searchQueryBuilder(search);
-	}
-*/
+
+	vm.showUserCategoriessModal = function(ev) {
+		$mdDialog.show({
+			controller: userCategoriesModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/userCategoriesModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {	}
+		})
+		.then(function(response) {}, function() { });
+	};
 }
