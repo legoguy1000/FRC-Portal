@@ -71,6 +71,10 @@
 				<form flex ng-submit="vm.addNewUserCategory()" name="vm.newTypeForm">
 					<div layout="column" layout-gt-sm="row" layout-align="start center">
 						<md-input-container flex>
+							<label>Name</label>
+							<input type="text" ng-model="vm.formData.name" required>
+						</md-input-container>
+						<md-input-container flex>
 							<label>Type</label>
 							<input type="text" ng-model="vm.formData.type" required>
 						</md-input-container>
