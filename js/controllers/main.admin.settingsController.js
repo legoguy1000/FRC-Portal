@@ -85,6 +85,24 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		});
 	};
 
+	vm.showServiceAccountModal = function(ev) {
+		$mdDialog.show({
+			controller: serviceAccountModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/serviceAccountModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				credentials: vm.serviceAccountCredentials
+			}
+		})
+		.then(function(response) {
+			
+		}, function() { });
+	};
+
 	vm.searchText    = null;
 		/**
 	 * Create filter function for a query string
