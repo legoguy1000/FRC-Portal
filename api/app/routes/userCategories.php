@@ -83,15 +83,22 @@ $app->group('/userCategories', function () {
       }
 
       $cat = FrcPortal\UserCategory::find($cat_id);
-      if(!is_null($cat_id)) {
-        $cat->name = $formData['name'];
-        $cat->type = str_replace(' ','_',strtolower($formData['type']));
-        $cat->description = isset($formData['description']) ? $formData['description']:'';
-        if($cat->save()) {
-          $responseArr['data'] = FrcPortal\UserCategory::all();
-          $responseArr['msg'] = 'User Category updated';
-          $responseArr['status'] = true;
-        }
+      if(is_null($cat)) {
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if($cat->system) {
+        $responseArr = array('status'=>false, 'msg'=>'Cannot modify built-in categories');
+        $response = $response->withJson($responseArr);
+        return $response;
+      }
+      $cat->name = $formData['name'];
+      $cat->type = str_replace(' ','_',strtolower($formData['type']));
+      $cat->description = isset($formData['description']) ? $formData['description']:'';
+      if($cat->save()) {
+        $responseArr['data'] = FrcPortal\UserCategory::all();
+        $responseArr['msg'] = 'User Category updated';
+        $responseArr['status'] = true;
       }
       $response = $response->withJson($responseArr);
       return $response;
@@ -112,7 +119,17 @@ $app->group('/userCategories', function () {
         return $response;
       }
 
-      $cat = FrcPortal\UserCategory::destroy($cat_id);
+      $cat = FrcPortal\UserCategory::find($cat_id);
+      if(is_null($cat)) {
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if($cat->system) {
+        $responseArr = array('status'=>false, 'msg'=>'Cannot delete built-in categories');
+        $response = $response->withJson($responseArr);
+        return $response;
+      }
+      $cat->delete();
       $responseArr['data'] = FrcPortal\UserCategory::all();
       $responseArr['msg'] = 'User category deleted';
       $responseArr['status'] = true;
