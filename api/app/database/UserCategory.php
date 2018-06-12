@@ -8,6 +8,7 @@ Capsule::schema()->create('user_categories', function ($table) {
        $table->string('name');
        $table->text('description');
        $table->string('type');
+       $table->boolean('system')->default(0);
 });
 
 ?>

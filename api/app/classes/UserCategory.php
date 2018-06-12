@@ -18,13 +18,15 @@ class UserCategory extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'cat_id', 'name', 'description', 'type'
+    'cat_id', 'name', 'description', 'type', 'system'
   ];
 
 
   protected $appends = [];
 
-  protected $attributes = [];
+  protected $attributes = [
+    'system' => false
+  ];
 
   //$data['requirements'] = array();
   /**
@@ -39,7 +41,9 @@ class UserCategory extends Eloquent {
    *
    * @var array
    */
-  protected $casts = [];
+  protected $casts = [
+    'system' => 'boolean'
+  ];
 
   public function save($options = array()) {
     if(is_null($this->cat_id)) {
