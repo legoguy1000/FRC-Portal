@@ -1,9 +1,9 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window',
+	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad',
 	mainController
 ]);
-function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window) {
+function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad) {
 	var main = this;
 
 	main.configItems = configItems;
@@ -22,12 +22,22 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.signInAuthed = signinService.isAuthed();
 	main.browserData = {}
 
-	main.enablePush = {
-		status:false,
-		disabled:true,
-		subscription: null,
-		endpoint: null,
-	};
+	//lazy load dialog controllers
+	$ocLazyLoad.load('js/controllers/loginModalController.js');
+	$ocLazyLoad.load('js/controllers/newUserModalController.js');
+	$ocLazyLoad.load('js/controllers/newSeasonModalController.js');
+	$ocLazyLoad.load('js/controllers/newEventModalController.js');
+	$ocLazyLoad.load('js/controllers/SeasonHoursGraphModalController.js');
+	$ocLazyLoad.load('js/controllers/roomListModalController.js');
+	$ocLazyLoad.load('js/controllers/carListModalController.js');
+	$ocLazyLoad.load('js/controllers/eventRegistrationModalController.js');
+	$ocLazyLoad.load('js/controllers/timeSlotModalController.js');
+	$ocLazyLoad.load('js/controllers/eventSearchModalController.js');
+	$ocLazyLoad.load('js/controllers/editTimeSlotModalController.js');
+	$ocLazyLoad.load('js/controllers/eventTypesModalController.js');
+	$ocLazyLoad.load('js/controllers/timeSheetModalController.js');
+	$ocLazyLoad.load('js/controllers/userCategoriesModalController.js');
+  $ocLazyLoad.load('js/controllers/serviceAccountModalController.js');
 
 	navService
 	  .loadAllItems()
