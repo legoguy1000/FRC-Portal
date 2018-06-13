@@ -202,8 +202,12 @@ function getMembershipFormName() {
 function buildGoogleDriveQuery($file_name) {
 	$fileArr = explode(' ',$file_name);
 	$q = '';
+	$qArr = array();
 	foreach($fileArr as $str) {
-		$q .= 'name contains "'.$str.'" ';
+		$qArr[] = 'name contains "'.$str.'" ';
+	}
+	if(count($qArr) > 0) {
+		$q .= implode(' and ',$qArr);
 	}
 	$q .= 'mimeType = "application/vnd.google-apps.spreadsheet"';
 	return $q;
