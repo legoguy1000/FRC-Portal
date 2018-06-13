@@ -207,7 +207,7 @@ function buildGoogleDriveQuery($file_name) {
 		$qArr[] = 'name contains "'.$str.'" ';
 	}
 	if(count($qArr) > 0) {
-		$q .= implode(' and ',$qArr);
+		$q .= implode(' and ',$qArr).' and ';
 	}
 	$q .= 'mimeType = "application/vnd.google-apps.spreadsheet"';
 	return $q;
