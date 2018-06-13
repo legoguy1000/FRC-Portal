@@ -107,7 +107,7 @@
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 				<tr md-row ng-repeat="user in vm.users">
 					<td md-cell>
-						<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image" hide-xs/>
+						<img ng-src="{{user.profile_image}}" class="avatar" alt="" ng-if="user.profile_image" hide-xs/>
 						<span>{{user.full_name}}</span>
 					</td>
 					<td md-cell hide-xs><span>{{user.user_type}}</span> <span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</td>
