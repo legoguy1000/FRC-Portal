@@ -34,7 +34,7 @@ angular.module('FrcPortal', [
 			},// Any property in resolve should return a promise and is executed before the view is loaded
 			mainController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load(['js/controllers/main.js', 'js/filters.js','js/controllers/loginModalController.js']);
+	             return $ocLazyLoad.load(['js/controllers/main.js', 'js/filters.js']);
 	    }],
 	    services: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
@@ -438,23 +438,25 @@ angular.module('FrcPortal', [
 					var $auth = $injector.get('$auth');
 					var $rootScope = $injector.get('$rootScope');
 					console.log(rejection);
-					$mdDialog.show({
-						controller: loginModalController,
-						controllerAs: 'vm',
-						templateUrl: 'views/partials/loginModal.tmpl.html',
-						parent: angular.element(document.body),
-						clickOutsideToClose:true,
-						fullscreen: true // Only for -xs, -sm breakpoints.
-					})
-					.then(function(data) {
-						if(data.auth) {
-							$rootScope.$broadcast('afterLoginAction');
-							return $injector.get('$http')(rejection.config);
-						}
-					}, function() {
-						$log.info('Dialog dismissed at: ' + new Date());
-						$log.error('Authentication Required');
-						$rootScope.$broadcast('logOutAction');
+					$ocLazyLoad.load('js/controllers/loginModalController.js').then(function() {
+						$mdDialog.show({
+							controller: loginModalController,
+							controllerAs: 'vm',
+							templateUrl: 'views/partials/loginModal.tmpl.html',
+							parent: angular.element(document.body),
+							clickOutsideToClose:true,
+							fullscreen: true // Only for -xs, -sm breakpoints.
+						})
+						.then(function(data) {
+							if(data.auth) {
+								$rootScope.$broadcast('afterLoginAction');
+								return $injector.get('$http')(rejection.config);
+							}
+						}, function() {
+							$log.info('Dialog dismissed at: ' + new Date());
+							$log.error('Authentication Required');
+							$rootScope.$broadcast('logOutAction');
+						});
 					});
 				} else if (rejection.status === 400) {
 					// Return a new promise
@@ -502,35 +504,37 @@ angular.module('FrcPortal', [
 			/* event.preventDefault();  */
 			$log.info('Need logged in');
 			//alert(JSON.stringify(fromState, null, 4));
-			$mdDialog.show({
-				controller: loginModalController,
-				controllerAs: 'vm',
-				templateUrl: 'views/partials/loginModal.tmpl.html',
-				parent: angular.element(document.body),
-				clickOutsideToClose:true,
-				fullscreen: true // Only for -xs, -sm breakpoints.
-			})
-			.then(function(data) {
-				if(data.auth) {
-					var data = {
-						'allActions': true,
+			$ocLazyLoad.load('js/controllers/loginModalController.js').then(function() {
+				$mdDialog.show({
+					controller: loginModalController,
+					controllerAs: 'vm',
+					templateUrl: 'views/partials/loginModal.tmpl.html',
+					parent: angular.element(document.body),
+					clickOutsideToClose:true,
+					fullscreen: true // Only for -xs, -sm breakpoints.
+				})
+				.then(function(data) {
+					if(data.auth) {
+						var data = {
+							'allActions': true,
+						}
+						$rootScope.$broadcast('afterLoginAction',data);
+						$log.info('Logged in');
+						$log.info(toState.name);
+						$log.info(trans.params());
+						$state.go(toState.name, trans.params());
 					}
-					$rootScope.$broadcast('afterLoginAction',data);
-					$log.info('Logged in');
-					$log.info(toState.name);
-					$log.info(trans.params());
-					$state.go(toState.name, trans.params());
-				}
-				else if(trans.$from().name == '') {
-					$state.go('main.home');
-				}
-			}, function() {
-				$log.info('Dialog dismissed at: ' + new Date());
-				$log.error('Authentication Required');
-				if(trans.$from().name == '') {
-					$state.go('main.home');
-				}
-				$rootScope.$broadcast('logOutAction');
+					else if(trans.$from().name == '') {
+						$state.go('main.home');
+					}
+				}, function() {
+					$log.info('Dialog dismissed at: ' + new Date());
+					$log.error('Authentication Required');
+					if(trans.$from().name == '') {
+						$state.go('main.home');
+					}
+					$rootScope.$broadcast('logOutAction');
+				});
 			});
 		} else if((toState.admin || toState.parent.admin) && !$auth.getPayload().data.admin) {
 			trans.abort();
