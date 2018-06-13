@@ -436,7 +436,8 @@ angular.module('FrcPortal', [
 					// Return a new promise
 					var $mdDialog = $injector.get('$mdDialog');
 					var $auth = $injector.get('$auth');
-					var $rootScope = $injector.get('$rootScope');
+					var $rootScope = $injector.get('$ocLazyLoad');
+					var $ocLazyLoad = $injector.get('$ocLazyLoad');
 					console.log(rejection);
 					$ocLazyLoad.load('js/controllers/loginModalController.js').then(function() {
 						$mdDialog.show({
@@ -484,7 +485,7 @@ angular.module('FrcPortal', [
 		}
 	});
 })
-.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log, $location, $window) {
+.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log, $location, $window, $ocLazyLoad) {
 	// initialise google analytics
   $window.ga('create', 'UA-114656092-1', 'auto');
 
