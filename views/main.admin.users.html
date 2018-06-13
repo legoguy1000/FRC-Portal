@@ -106,13 +106,9 @@
 			</thead>
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 				<tr md-row ng-repeat="user in vm.users">
-					<td md-cell >
-						<md-list-item class="md-1-line" style="padding: 0px;" ng-click="null">
-							<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image" hide-xs/>
-							<div class="md-list-item-text" flex layout="row">
-								<span>{{user.full_name}}</span>
-							</div>
-						</md-list-item>
+					<td md-cell>
+						<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image" hide-xs/>
+						<span>{{user.full_name}}</span>
 					</td>
 					<td md-cell hide-xs><span>{{user.user_type}}</span> <span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</td>
 					<td md-cell hide-xs><span>{{user.school.school_name}}</span></td>
