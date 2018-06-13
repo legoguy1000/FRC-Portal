@@ -492,6 +492,8 @@ $app->group('/events', function () {
       if($formData['registration_deadline'] != null && $formData['registration_deadline'] != '') {
         $registration_deadline = new DateTime($formData['registration_deadline']);
         $event->registration_deadline = $registration_deadline->format('Y-m-d').' 23:59:59';
+      } else {
+        $event->registration_deadline = null;
       }
       $event->registration_deadline_gcalid = isset($formData['registration_deadline_gcalid']) && $formData['registration_deadline_gcalid'] != '' ? $formData['registration_deadline_gcalid']:null;
       if($event->save()) {
