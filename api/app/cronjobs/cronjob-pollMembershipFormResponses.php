@@ -8,6 +8,14 @@ $season = FrcPortal\Season::where('bag_day','>=',date('Y-m-d'))->first();
 if(!is_null($season)) {
 	$season_id = $season['season_id'];
 	$spreadsheetId = $season['join_spreadsheet'] != '' ? $season['join_spreadsheet']:null;
+	if(is_null($spreadsheetId)) {
+		$result = getSeasonMembershipForm($season->year);
+		if($result['status'] == true) {
+			$spreadsheetId = $result['data']['join_spreadsheet'];
+			$season->join_spreadsheet = $spreadsheetId;
+			$season->save();
+		}
+	}
 } else {
 	$year = date('Y')+1;
 	$result = getSeasonMembershipForm($year);
