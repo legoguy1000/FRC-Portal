@@ -21,7 +21,7 @@ class Event extends Eloquent {
   ];
 
 
-  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_deadline_unix','registration_deadline_formatted','registration_deadline_googlee_event','season','num_days','single_month'];
+  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_deadline_unix','registration_deadline_formatted','registration_deadline_google_event','season','num_days','single_month'];
 
   //$data['requirements'] = array();
   /**
