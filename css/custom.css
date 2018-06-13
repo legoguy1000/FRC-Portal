@@ -355,3 +355,8 @@ md-list-item.min-height-reset .md-list-item-inner::before {
     background-color: rgb(102,46,145);
     color: rgba(255,255,255,0.87);
 }
+
+table.md-table:not(.md-row-select) td.md-cell:first-child:not([class*="hide"]),
+table.md-table:not(.md-row-select) th.md-column:first-child:not([class*="hide"]) {
+    padding: 0 24px;
+}
