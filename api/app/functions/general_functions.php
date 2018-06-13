@@ -196,6 +196,7 @@ function getMembershipFormName() {
 	if(is_null($mfn)) {
 		$mfn = '###YEAR### Membership (Responses)';
 	}
+	return $mfn;
 }
 
 function buildGoogleDriveQuery($file_name) {

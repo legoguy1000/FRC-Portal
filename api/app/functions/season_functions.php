@@ -42,6 +42,7 @@ function getSeasonMembershipForm($year) {
 				//	$result['msg'] = 'Google Calendar event not found';
 			//} else {
 					$result['msg'] = 'Something went wrong searching Google Drive';
+					$result['error'] = $error;
 			//	}
 		}
 	}
