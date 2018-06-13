@@ -101,4 +101,19 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 		});
 	}
 
+	vm.showEventTypesModal = function(ev) {
+		$mdDialog.show({
+			controller: eventTypesModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/eventTypesModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {	}
+		})
+		.then(function(response) {
+			vm.users = response.data;
+		}, function() { });
+	};
 }

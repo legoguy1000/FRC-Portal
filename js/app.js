@@ -345,6 +345,7 @@ angular.module('FrcPortal', [
 					}, function() {
 						$log.info('Dialog dismissed at: ' + new Date());
 						$log.error('Authentication Required');
+						$rootScope.$broadcast('logOutAction');
 					});
 				} else if (rejection.status === 400) {
 					// Return a new promise
@@ -410,6 +411,7 @@ angular.module('FrcPortal', [
 				if(trans.$from().name == '') {
 					$state.go('main.home');
 				}
+				$rootScope.$broadcast('logOutAction');
 			});
 		} else if((toState.admin || toState.parent.admin) && !$auth.getPayload().data.admin) {
 			trans.abort();

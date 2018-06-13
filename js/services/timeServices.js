@@ -31,5 +31,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getSignInTimeSheet: function (date) {
+			return $http.get('api/hours/signIn/timeSheet/'+date)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

@@ -123,5 +123,31 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getUserCategories: function () {
+			return $http.get('api/userCategories')
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		addNewUserCategory: function (formData) {
+			return $http.post('api/userCategories',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		updateUserCategory: function (formData) {
+			var cat_id = formData.cat_id != undefined && formData.cat_id != null ? formData.cat_id:'';
+			return $http.put('api/userCategories/'+cat_id,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		deleteUserCategory: function (formData) {
+			var cat_id = formData.cat_id != undefined && formData.cat_id != null ? formData.cat_id:'';
+			return $http.delete('api/userCategories/'+cat_id,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

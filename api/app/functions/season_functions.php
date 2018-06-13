@@ -8,17 +8,26 @@ function getSeasonMembershipForm($year) {
 	if(!is_null($year)) {
 		try {
 			$client = new Google_Client();
-			$client->setAuthConfigFile(__DIR__.'/../secured/team-2363-portal-0c12aca54f1c.json');
+			$creds = getServiceAccountFile();
+			$client->setAuthConfigFile($creds['data']['path']);
 			$client->setScopes(['https://www.googleapis.com/auth/drive.readonly']);
 			$service = new Google_Service_Drive($client);
+			$mfn = getMembershipFormName();
+			$mfn = str_replace('###YEAR###',$year,$mfn);
+			$query = buildGoogleDriveQuery($mfn);
 			$parameters = array(
-				'corpora' => 'teamDrive',
-				'q' => 'name contains "'.$year.'" and name contains "Membership" and name contains "(Responses)" and mimeType = "application/vnd.google-apps.spreadsheet"',
-				'includeTeamDriveItems' => 'true',
+				'corpora' => 'user',
+				'q' => $query,
+				//'q' => 'name contains "'.$year.'" and name contains "Membership" and name contains "(Responses)" and mimeType = "application/vnd.google-apps.spreadsheet"',
 				'supportsTeamDrives' => 'true',
-				'teamDriveId' => getSettingsProp('google_drive_id'),
 				'pageSize' => '1'
 			);
+			$teamDrive = getSettingsProp('google_drive_id');
+			if(!is_null($teamDrive)) {
+				$parameters['corpora'] = 'teamDrive';
+				$parameters['teamDriveId'] = $teamDrive;
+				$parameters['includeTeamDriveItems'] = 'true';
+			}
 			$files = $service->files->listFiles($parameters);
 			$fileList = $files->getFiles();
 			if(count($fileList) > 0) {
@@ -33,6 +42,7 @@ function getSeasonMembershipForm($year) {
 				//	$result['msg'] = 'Google Calendar event not found';
 			//} else {
 					$result['msg'] = 'Something went wrong searching Google Drive';
+					$result['error'] = $error;
 			//	}
 		}
 	}

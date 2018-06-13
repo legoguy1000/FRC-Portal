@@ -38,6 +38,13 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	};
 	vm.currentTime = new Date().getTime();
 
+	vm.getEventTypeList = function () {
+		vm.promise =	eventsService.getEventTypes().then(function(response){
+			vm.eventTypes = response.data;
+		});
+	};
+	vm.getEventTypeList();
+
 	vm.event_id = $stateParams.event_id;
 	vm.event = {};
 	vm.users = null;

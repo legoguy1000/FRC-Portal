@@ -14,18 +14,17 @@ function newEventModalController($log,$element,$mdDialog,$scope,usersService,eve
 		searchGoogle: false,
 	}
 
-	vm.eventTypes = [
-		'Demo',
-		'Community Serivce',
-		'Season Event',
-		'Off Season Event',
-		'Other'
-	];
 
 
 	vm.backToSearch = function() {
 		$mdDialog.cancel();
 	}
+	vm.getEventTypeList = function () {
+		vm.promise =	eventsService.getEventTypes().then(function(response){
+			vm.eventTypes = response.data;
+		});
+	};
+	vm.getEventTypeList();
 
 	vm.addEvent = function() {
 		eventsService.addEvent(vm.data).then(function(response) {

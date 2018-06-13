@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.timeController', ['$timeout', '$q', '$scope', '$state', '$timeout', 'signinService', 'timeService', '$mdToast',
+.controller('main.admin.timeController', ['$timeout', '$q', '$scope', '$state', '$timeout', 'signinService', 'timeService', '$mdToast', '$mdDialog',
 	mainAdminTimeController
 ]);
-function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinService, timeService, $mdToast) {
+function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinService, timeService, $mdToast, $mdDialog) {
     var vm = this;
 
 		vm.limitOptions = [10,25,50,100];
@@ -150,37 +150,18 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 		};
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-	vm.signInAuthed = signinService.isAuthed();
-	vm.authorizeSignIn = function() {
-		signinService.authorizeSignIn().then(function(response) {
-			if(response.status == true) {
-				signinService.saveToken(response.signin_token);
-				vm.signInAuthed = signinService.isAuthed();
-			}
-		});
-	}
-	vm.deauthorizeSignIn = function() {
-		var jti = signinService.getTokenJti();
-		var data = {'jti':jti};
-		signinService.deauthorizeSignIn(data).then(function(response) {
-			if(response.status == true) {
-				signinService.logout();
-				vm.signInAuthed = signinService.isAuthed();
-			}
-		});
-	}
+		vm.showTimeSheetModal = function() {
+			$mdDialog.show({
+				controller: timeSheetModalController,
+				controllerAs: 'vm',
+				templateUrl: 'views/partials/timeSheetModal.tmpl.html',
+				parent: angular.element(document.body),
+				clickOutsideToClose:true,
+				fullscreen: true, // Only for -xs, -sm breakpoints.
+				locals: { }
+			})
+			.then(function(response) {}, function() {});
+		}
 
 
 

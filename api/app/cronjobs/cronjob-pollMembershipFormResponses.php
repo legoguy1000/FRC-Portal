@@ -6,17 +6,34 @@ $season_id = null;
 $spreadsheetId = null;
 $season = FrcPortal\Season::where('bag_day','>=',date('Y-m-d'))->first();
 if(!is_null($season)) {
-	$season_id = $season['season_id'];
-	$spreadsheetId = $season['join_spreadsheet'] != '' ? $season['join_spreadsheet']:null;
+	$season_id = $season->season_id;
+	$spreadsheetId = $season->join_spreadsheet != '' ? $season->join_spreadsheet:null;
+	if(is_null($spreadsheetId)) {
+		$result = getSeasonMembershipForm($season->year);
+		if($result['status'] == true) {
+			$spreadsheetId = $result['data']['join_spreadsheet'];
+			$season->join_spreadsheet = $spreadsheetId;
+			$season->save();
+		}
+	}
 } else {
-	$result = getSeasonMembershipForm(date('Y')+1);
+	$year = date('Y')+1;
+	$result = getSeasonMembershipForm($year);
 	if($result['status'] == true) {
 		$spreadsheetId = $result['data']['join_spreadsheet'];
+		$season = FrcPortal\Season::where('year',$year)->first();
+		if(!is_null($season)) {
+			$season_id = $season['season_id'];
+			$season->join_spreadsheet = $spreadsheetId;
+			$season->save();
+		}
+
 	}
 }
 if(!is_null($spreadsheetId)) {
 	$client = new Google_Client();
-	$client->setAuthConfigFile(__DIR__ . '/../secured/team-2363-portal-0c12aca54f1c.json');
+	$creds = getServiceAccountFile();
+	$client->setAuthConfigFile($creds['data']['path']);
 	$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
 	$service = new Google_Service_Sheets($client);
 	// The A1 notation of the values to retrieve.
@@ -136,17 +153,7 @@ if(!is_null($spreadsheetId)) {
 			}
 			//Add User info into the Annual Requirements Table
 			if(!is_null($season_id)) {
-				$season = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user_id)->first();
-				if(!is_null($season)) {
-					$season->join_team = true;
-					$season->save();
-				} else {
-					$season = new FrcPortal\AnnualRequirement();
-					$eason->user_id = $user_id;
-					$eason->season_id = $season_id;
-					$season->join_team = true;
-					$season->save();
-				}
+				$season = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
 			}
 		}
 	}

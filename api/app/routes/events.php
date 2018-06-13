@@ -259,13 +259,19 @@ $app->group('/events', function () {
         }
 
         if(!isset($formData['event_id']) || $formData['event_id'] == '') {
-        	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Event ID cannot be blank!')));
+          $responseArr['msg'] = 'Event ID cannot be blank';
+          $response = $response->withJson($responseArr,400);
+          return $response;
         }
         if(!isset($formData['user_type']) || $formData['user_type'] == '') {
-        	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'User type cannot be blank!')));
+          $responseArr['msg'] = 'User Type cannot be blank';
+          $response = $response->withJson($responseArr,400);
+          return $response;
         }
-        if(!isset($formData['gender']) || $formData['gender'] == '' && $formData['user_type'] != 'Mentor') {
-        	//die(json_encode(array('status'=>false, 'type'=>'warning', 'msg'=>'Gender cannot be blank!')));
+        if(!isset($formData['gender']) || ($formData['gender'] == '' && $formData['user_type'] != 'Mentor')) {
+          $responseArr['msg'] = 'Gender cannot be blank';
+          $response = $response->withJson($responseArr,400);
+          return $response;
         }
         $room = new FrcPortal\EventRoom();
         $room->event_id = $formData['event_id'];
@@ -482,7 +488,7 @@ $app->group('/events', function () {
       $formData = $request->getParsedBody();
       $event = FrcPortal\Event::find($event_id);
 
-      $event->type = $formData['type'];
+      $event->type = isset($formData['type']) && $formData['type'] != '' ? $formData['type'] : null;
       $event->poc_id = isset($formData['poc']['user_id']) && $formData['poc']['user_id'] != '' ? $formData['poc']['user_id']:null;
       if($formData['registration_deadline'] != null && $formData['registration_deadline'] != '') {
         $registration_deadline = new DateTime($formData['registration_deadline']);

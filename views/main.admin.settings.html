@@ -149,18 +149,6 @@
 			</md-input-container>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'other'" class="layout-padding">
-			<md-input-container flex>
-				<label>Google API Key</label>
-				<input ng-model="vm.settings.other.google_api_key">
-			</md-input-container>
-			<md-input-container flex>
-				<label>Google Calendar ID</label>
-				<input ng-model="vm.settings.other.google_calendar_id">
-			</md-input-container>
-			<md-input-container flex>
-				<label>Google Drive ID</label>
-				<input ng-model="vm.settings.other.google_drive_id">
-			</md-input-container>
 			<md-autocomplete flex
 				md-no-cache="false"
 				md-selected-item="vm.settings.other.timezone"
@@ -172,6 +160,37 @@
 					<span md-highlight-text="vm.searchText" md-highlight-flags="i">{{item}}</span>
 				</md-item-template>
 			</md-autocomplete>
+			<md-input-container flex>
+				<label>Google API Key</label>
+				<input ng-model="vm.settings.other.google_api_key">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Google Calendar ID</label>
+				<input ng-model="vm.settings.other.google_calendar_id">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Google Team Drive ID</label>
+				<input ng-model="vm.settings.other.google_drive_id">
+			</md-input-container>
+			<div flex layout="row" layout-align="start center">
+				<md-input-container flex>
+					<label>Google Service Account</label>
+					<input ng-model="vm.serviceAccountCredentials.client_email" readonly disabled>
+				</md-input-container>
+				<md-button class="md-icon-button" ng-click="vm.showServiceAccountModal()">
+					<md-tooltip md-direction="top">View/Edit Service Account Properties</md-tooltip>
+						<md-icon md-font-library="material-icons">open_in_new</md-icon>
+				</md-button>
+			</div>
+			<md-input-container flex>
+				<label>School Year Month End</label>
+				<input moment-picker="vm.settings.other.school_month_end" required
+			     format="MMMM"
+			     min-view="year"
+			     max-view="year"
+					 ng-model="vm.school_month_end_full">
+				</input>
+			</md-input-container>
 		</div>
 		<div flex layout="row">
 			<span flex></span>

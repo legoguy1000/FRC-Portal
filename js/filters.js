@@ -127,4 +127,9 @@ angular.module('FrcPortal')
     return function (text, target) {
         return text != undefined ? text.replace(urlPattern, '<a target="' + target + '" href="$&">$&</a>') : '';
     };
+})
+.filter('underscoreless', function () {
+  return function (input) {
+      return input.replace(/_/g, ' ');
+  };
 });

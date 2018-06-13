@@ -23,7 +23,9 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		'team': {},
 		'login': {},
 		'notification': {},
+		'other': {},
 	};
+	vm.serviceAccountCredentials = {};
 	vm.timezones = [];
 
 	vm.selectSettingMenu = function(menu) {
@@ -58,6 +60,13 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 	};
 	vm.getAllTimezones();
 
+	vm.getServiceAccountCredentials = function () {
+		settingsService.getServiceAccountCredentials().then(function(response){
+			vm.serviceAccountCredentials = response.data;
+		});
+	};
+	vm.getServiceAccountCredentials();
+
 	vm.updateSettingBySection = function (section) {
 		vm.loading = true;
 		var data = {
@@ -74,6 +83,24 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 	    );
 			//vm.settings[section] = response.data;
 		});
+	};
+
+	vm.showServiceAccountModal = function(ev) {
+		$mdDialog.show({
+			controller: serviceAccountModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/serviceAccountModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				credentials: vm.serviceAccountCredentials
+			}
+		})
+		.then(function(response) {
+			
+		}, function() { });
 	};
 
 	vm.searchText    = null;

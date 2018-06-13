@@ -1,0 +1,92 @@
+<md-dialog aria-label="New Event" style="" flex="50" >
+		<md-toolbar layout="row">
+		  <div class="md-toolbar-tools">
+			<h2>Event Types</h2>
+			<span flex></span>
+			<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
+				<md-tooltip md-direction="top">Close</md-tooltip>
+			  <md-icon class=""> close </md-icon>
+			</md-button>
+		  </div>
+		</md-toolbar>
+		<md-dialog-content class="md-margin">
+			<md-toolbar class="md-table-toolbar md-default">
+				<div class="md-toolbar-tools">
+					<md-icon class="material-icons">search</md-icon>
+					<form flex name="filter.form">
+						<input type="text" ng-model="vm.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">
+					</form>
+				</div>
+			</md-toolbar>
+			<md-table-container>
+				<table md-table ng-model="selected" md-progress="vm.promise">
+					<thead md-head md-order="vm.query.order">
+						<tr md-row>
+							<th md-column md-order-by="type"><span>Event Type</span></th>
+							<th md-column><span>Description</span></th>
+							<th md-column style="width: 150px;"></th>
+						</tr>
+					</thead>
+					<tbody md-body> <!-- -->
+						<tr md-row ng-repeat="event_type in vm.event_types | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+							<td md-cell flex>
+								<div ng-hide="vm.eventTypeEdit==event_type.type_id">{{event_type.type}}</div>
+								<md-input-container  md-no-float style="width:100%" ng-show="vm.eventTypeEdit==event_type.type_id">
+									<input type="text" ng-model="event_type.type" placeholder="Type" required>
+								</md-input-container>
+							</td>
+							<td md-cell flex>
+								<div ng-hide="vm.eventTypeEdit==event_type.type_id">{{event_type.description}}</div>
+								<md-input-container md-no-float style="width:100%" ng-show="vm.eventTypeEdit==event_type.type_id">
+									<textarea ng-model="event_type.description" rows="1" md-select-on-focus placeholder="Description"></textarea>
+								</md-input-container>
+							</td>
+							<td md-cell>
+								<md-button class="md-icon-button" ng-click="vm.updateType(event_type)" ng-show="vm.eventTypeEdit==event_type.type_id">
+									<md-icon class=""> done </md-icon>
+								</md-button>
+								<md-button class="md-icon-button" ng-click="vm.cancelEdit()" ng-show="vm.eventTypeEdit==event_type.type_id">
+									<md-icon class=""> close </md-icon>
+								</md-button>
+								<md-button class="md-icon-button" ng-hide="vm.eventTypeEdit==event_type.type_id" ng-click="vm.editType(event_type)">
+									<md-icon>edit</md-icon>
+								</md-button>
+								<md-button class="md-icon-button" ng-hide="vm.eventTypeEdit==event_type.type_id" ng-click="vm.deleteType(event_type)">
+									<md-icon>delete_forever</md-icon>
+								</md-button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</md-table-container>
+			<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.event_types | filter: vm.filter.search).length}}" md-page-select md-boundary-links></md-table-pagination>
+			<div flex layout="row">
+				<form flex ng-submit="vm.addNewType()" name="vm.newTypeForm">
+					<div layout="column" layout-gt-sm="row" layout-align="start center">
+						<md-input-container flex>
+							<label>Type</label>
+							<input type="text" ng-model="vm.formData.type" required>
+						</md-input-container>
+						<md-input-container class="" flex>
+							<label>Description</label>
+							<textarea ng-model="vm.formData.description" rows="1" md-select-on-focus></textarea>
+						</md-input-container>
+						<md-button type="submit" class="md-icon-button">
+							<md-icon class=""> add </md-icon>
+						</md-button>
+					</div>
+				</form>
+			</div>
+		</md-dialog-content>
+		<md-dialog-actions layout="row" class="noprint">
+			<span flex></span>
+			<md-button type="button" ng-click="vm.updateEventCarList(false)">
+				<md-tooltip md-direction="top">Save and Close</md-tooltip>
+				Save
+			</md-button>
+			<md-button type="button" ng-click="vm.updateEventCarList(true)">
+				<md-tooltip md-direction="top">Save and Close</md-tooltip>
+				Save & Close
+			</md-button>
+		</md-dialog-actions>
+</md-dialog>

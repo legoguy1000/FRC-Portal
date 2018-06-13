@@ -173,7 +173,9 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-/*    $this->put('/notification', function ($request, $response, $args) {
+  });
+  $this->group('/serviceAccountCredentials', function () {
+    $this->get('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $loggedInUser = $authToken['data']->user_id;
       $responseArr = array(
@@ -186,21 +188,60 @@ $app->group('/settings', function () {
         $response = $response->withJson($responseArr,403);
         return $response;
       }
-      $section = $args['section'];
-      $formData = $request->getParsedBody();
-      $se = array_key_exists('slack_enable',$formData) && $formData['slack_enable'] ? 1:0;
-      $ee = array_key_exists('email_enable',$formData) && $formData['email_enable'] ? 1:0;
-      $set = FrcPortal\Setting::updateOrCreate(
-          ['section' => 'notification', 'setting' => 'slack_enable'], ['value' => $se]
-      );
-      $set = FrcPortal\Setting::updateOrCreate(
-          ['section' => 'notification', 'setting' => 'email_enable'], ['value' => $ee]
-      );
-
-
+      $file = getServiceAccountFile();
+      if($file['status']) {
+        $responseArr['status'] = true;
+        $responseArr['msg'] = 'Service account credentials uploaded';
+        $responseArr['data'] = $file['data']['contents'];
+      } else {
+        $responseArr = $file;
+      }
       $response = $response->withJson($responseArr);
       return $response;
-    }); */
+    });
+    $this->post('', function ($request, $response, $args) {
+      $authToken = $request->getAttribute("token");
+      $loggedInUser = $authToken['data']->user_id;
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!checkAdmin($loggedInUser)) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
+      $directory = $this->get('upload_directory');
+      $uploadedFiles = $request->getUploadedFiles();
+      $uploadedFile = $uploadedFiles['credentials'];
+      if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+        $temp = file_get_contents($uploadedFile->file);
+        $validJson = json_validate($temp);
+        if($extension != 'json' || !$validJson['status']) {
+          $responseArr = array('status'=>false, 'msg'=>'File must be a valid JSON file. '.$validJson['msg']);
+          $response = $response->withJson($responseArr,400);
+          return $response;
+        }
+        if($validJson['data']['type'] != 'service_account' || !isset($validJson['data']['client_email']) || $validJson['data']['client_email'] == ''
+                                                           || !isset($validJson['data']['client_id']) || $validJson['data']['client_id'] == ''
+                                                           || !isset($validJson['data']['private_key']) || $validJson['data']['private_key'] == '') {
+          $responseArr = array('status'=>false, 'msg'=>'File is not a valid Google Serice Account Credential JSON file.');
+          $response = $response->withJson($responseArr,400);
+          return $response;
+        }
+        $filename = 'service_account_credentials.json';
+        $uploadedFile->moveTo($directory.'/'.$filename);
+
+        $responseArr['status'] = true;
+        $responseArr['msg'] = 'Service account credentials uploaded';
+        $responseArr['data'] = $validJson['data'];
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
   });
   $this->post('', function ($request, $response, $args) {
 
@@ -208,18 +249,6 @@ $app->group('/settings', function () {
     return $response;
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

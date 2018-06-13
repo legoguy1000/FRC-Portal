@@ -4,6 +4,7 @@ include('app/libraries/CustomAuthRule.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\Http\UploadedFile;
 
 $config = array();
 $config['displayErrorDetails'] = true;
@@ -37,6 +38,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     ]
 ]));
 $container = $app->getContainer();
+$container['upload_directory'] = __DIR__ . '/app/secured';
 /* $container['db'] = function ($c) {
     $dbConfig = $c['settings']['db'];
 
@@ -68,7 +70,7 @@ $container['db'] = function ($container) {
 };*/
 $app->get('/version', function (Request $request, Response $response, array $args) {
     $responseArr = array(
-      'version' => '2.5.0'
+      'version' => '2.6.0'
     );
     $response = $response->withJson($responseArr);
     return $response;
@@ -123,6 +125,8 @@ include('./app/routes/schools.php');
 include('./app/routes/slack.php');
 include('./app/routes/settings.php');
 include('./app/routes/public.php');
+include('./app/routes/eventTypes.php');
+include('./app/routes/userCategories.php');
 
 $app->run();
 

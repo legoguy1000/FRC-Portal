@@ -19,6 +19,7 @@ date_default_timezone_set($time_zone);
 
 
 
+include($root.'/functions/general_functions.php');
 include($root.'/functions/season_functions.php');
 include($root.'/functions/event_functions.php');
 include($root.'/functions/user_functions.php');

@@ -52,5 +52,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getServiceAccountCredentials: function () {
+			return $http.get('api/settings/serviceAccountCredentials')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

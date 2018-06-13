@@ -40,29 +40,7 @@ $app->group('/auth', function () {
     		'profile_image' => $image,
     	);
 
-      $user = false;
-      $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
-        $q->where('status',true);
-      }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
-      if($data != null) {
-        $user = $data->users;
-      } else {
-        $data = FrcPortal\User::with(['school'])
-                ->where(function ($query) {
-                  $query->where('email', $userData['email'])
-                        ->orWhere('team_email', $userData['email']);
-                })
-                ->where('status',true)
-                ->first();
-        if($data != null) {
-          $user = $data;
-        }
-        if($user != false) {
-          $oauth = FrcPortal\Oauth::updateOrCreate(
-              ['oauth_id' => $id, 'oauth_provider' => $provider], ['user_id' => $user->user_id, 'oauth_user' => $email]
-          );
-        }
-      }
+      $user = checkLogin($userData);
       if($user != false) {
         $update = false;
         if($user->profile_image == '') {
@@ -145,29 +123,8 @@ $app->group('/auth', function () {
       		'lname' => $lname,
       		'profile_image' => $image,
       	);
-        $user = false;
-        $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
-          $q->where('status',true);
-        }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
-        if($data != null) {
-          $user = $data->users;
-        } else {
-          $data = FrcPortal\User::with(['school'])
-                  ->where(function ($query) {
-                    $query->where('email', $userData['email'])
-                          ->orWhere('team_email', $userData['email']);
-                  })
-                  ->where('status',true)
-                  ->first();
-          if($data != null) {
-            $user = $data;
-          }
-          if($user != false) {
-            $oauth = FrcPortal\Oauth::updateOrCreate(
-                ['oauth_id' => $id, 'oauth_provider' => $provider], ['user_id' => $user->user_id, 'oauth_user' => $email]
-            );
-          }
-        }
+
+        $user = checkLogin($userData);
         if($user != false) {
           $update = false;
           if($user->profile_image == '') {
@@ -269,30 +226,7 @@ $app->group('/auth', function () {
     		'profile_image' => $image,
     	);
 
-      $user = false;
-      $data = array();
-      $data = FrcPortal\Oauth::with(['users.school','users' => function($q){
-        $q->where('status',true);
-      }])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
-      if($data != null) {
-        $user = $data->users;
-      } else {
-        $data = FrcPortal\User::with(['school'])
-                ->where(function ($query) {
-                  $query->where('email', $userData['email'])
-                        ->orWhere('team_email', $userData['email']);
-                })
-                ->where('status',true)
-                ->first();
-        if($data != null) {
-          $user = $data;
-        }
-        if($user != false) {
-          $oauth = FrcPortal\Oauth::updateOrCreate(
-              ['oauth_id' => $id, 'oauth_provider' => $provider], ['user_id' => $user->user_id, 'oauth_user' => $email]
-          );
-        }
-      }
+      $user = checkLogin($userData);
       if($user != false) {
         $update = false;
         if($user->profile_image == '') {
@@ -346,7 +280,7 @@ $app->group('/auth', function () {
     $password = $formData['password'];
 
     $user = null;
-    $user = FrcPortal\User::with(['school'])
+    $user = FrcPortal\User::with(['school']) //,'user_categories'
             ->where(function ($query) use ($email) {
               $query->where('email', $email)
                     ->orWhere('team_email', $email);
