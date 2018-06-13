@@ -23,7 +23,6 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.browserData = {}
 
 	//lazy load dialog controllers
-	$ocLazyLoad.load('js/controllers/loginModalController.js');
 	$ocLazyLoad.load('js/controllers/newUserModalController.js');
 	$ocLazyLoad.load('js/controllers/newSeasonModalController.js');
 	$ocLazyLoad.load('js/controllers/newEventModalController.js');

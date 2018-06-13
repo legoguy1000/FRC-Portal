@@ -34,7 +34,7 @@ angular.module('FrcPortal', [
 			},// Any property in resolve should return a promise and is executed before the view is loaded
 			mainController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load(['js/controllers/main.js', 'js/filters.js']);
+	             return $ocLazyLoad.load(['js/controllers/main.js', 'js/filters.js','js/controllers/loginModalController.js']);
 	    }],
 	    services: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
