@@ -358,5 +358,5 @@ md-list-item.min-height-reset .md-list-item-inner::before {
 
 table.md-table:not(.md-row-select) td.md-cell:first-child:not([class*="hide"]),
 table.md-table:not(.md-row-select) th.md-column:first-child:not([class*="hide"]) {
-    padding: 0 24px;
+  padding-left: 24px !important;
 }
