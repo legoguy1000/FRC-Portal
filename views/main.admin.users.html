@@ -96,11 +96,11 @@
 				<tr md-row>
 					<th md-column style="width:56px" hide-xs></th>
 					<th md-column md-order-by="full_name"><span>Name</span></th>
-					<th md-column md-order-by="user_type"><span>Type - Grade (Grad Year)</span></th>
-					<th md-column md-order-by="school_name"><span>School</span></th>
-					<th md-column md-order-by="email"><span>Email</span></th>
-					<th md-column md-order-by="gender"><span>Gender</span></th>
-					<th md-column md-order-by="status"><span>Status</span></th>
+					<th md-column md-order-by="user_type" hide-xs><span>Type - Grade (Grad Year)</span></th>
+					<th md-column md-order-by="school_name" hide-xs><span>School</span></th>
+					<th md-column md-order-by="email" hide-xs><span>Email</span></th>
+					<th md-column md-order-by="gender" hide-xs><span>Gender</span></th>
+					<th md-column md-order-by="status" hide-xs><span>Status</span></th>
 					<th md-column></th>
 				</tr>
 			</thead>
@@ -118,7 +118,7 @@
 					<td md-cell hide-xs><span>{{user.school.school_name}}</span></td>
 					<td md-cell hide-xs><span>{{user.email}}</span></td>
 					<td md-cell hide-xs><span>{{user.gender}}</span></td>
-					<td md-cell>
+					<td md-cell hide-xs>
 						<span ng-show="user.status">Active</span>
 						<span ng-hide="user.status">Inactive</span>
 					</td>
