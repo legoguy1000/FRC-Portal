@@ -97,6 +97,7 @@ $app->get('/config', function ($request, $response, $args) {
     'team_color_secondary',
     'notification_email',
     'env_url',
+    'require_team_email',
   );
 //  $settings = FrcPortal\Setting::where('public',true)->get();
   $settings = FrcPortal\Setting::whereIn('setting', $configArr)->get();

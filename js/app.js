@@ -531,12 +531,13 @@ angular.module('FrcPortal', [
 		authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
 		redirectUri: window.location.origin+'/oauth',
 		requiredUrlParams: ['scope','prompt'],
-		optionalUrlParams: ['display'],
+		optionalUrlParams: ['display','hd'],
 		scope: ['profile', 'email','https://www.googleapis.com/auth/plus.login'],
 		scopePrefix: 'openid',
 		scopeDelimiter: ' ',
 		display: 'popup',
 		prompt: 'select_account',
+		hd: configItems.require_team_email && configItems.team_domain != '' ? configItems.team_domain : '',
 		type: '2.0',
 		popupOptions: { width: 452, height: 633 }
 	});

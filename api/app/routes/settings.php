@@ -129,7 +129,7 @@ $app->group('/settings', function () {
       foreach($settings as $set) {
         $temp = $set->value;
         $type =$set->type;
-        if(strpos($set->setting, 'enable') !== false) {
+        if(strpos($set->setting, 'enable') !== false || strpos($set->setting, 'require') !== false) {
           $temp = (boolean) $temp;
         }
         //settype($temp,$type);
@@ -160,8 +160,8 @@ $app->group('/settings', function () {
       //Do update or create
       foreach($formData as $setting=>$value) {
         $val = $value;
-        if(strpos($setting, 'enable') !== false) {
-          $val = $value != false ? 1:0;
+        if(strpos($set->setting, 'enable') !== false || strpos($set->setting, 'require') !== false) {
+          $temp = (boolean) $temp;
         }
         $set = FrcPortal\Setting::updateOrCreate(
             ['section' => $section, 'setting' => $setting], ['value' => $val]
