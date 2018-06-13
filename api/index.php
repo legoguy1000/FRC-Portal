@@ -104,7 +104,7 @@ $app->get('/config', function ($request, $response, $args) {
   $constantArr = array();
   foreach($settings as $set) {
     $temp = $set->value;
-    if(strpos($set->setting, 'enable') !== false) {
+    if(strpos($set->setting, 'enable') !== false || strpos($set->setting, 'require') !== false) {
       $temp = (boolean) $temp;
     }
     $constantArr[$set->setting] = $temp;
