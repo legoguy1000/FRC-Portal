@@ -9,9 +9,17 @@ if(!is_null($season)) {
 	$season_id = $season['season_id'];
 	$spreadsheetId = $season['join_spreadsheet'] != '' ? $season['join_spreadsheet']:null;
 } else {
-	$result = getSeasonMembershipForm(date('Y')+1);
+	$year = date('Y')+1;
+	$result = getSeasonMembershipForm($year);
 	if($result['status'] == true) {
 		$spreadsheetId = $result['data']['join_spreadsheet'];
+		$season = FrcPortal\Season::where('year',$year)->first();
+		if(!is_null($season)) {
+			$season_id = $season['season_id'];
+			$season->join_spreadsheet = $spreadsheetId;
+			$season->save();
+		}
+
 	}
 }
 if(!is_null($spreadsheetId)) {

@@ -46,6 +46,7 @@ $app->group('/userCategories', function () {
     $cat->name = $formData['name'];
     $cat->type = str_replace(' ','_',strtolower($formData['type']));
     $cat->description = isset($formData['description']) ? $formData['description']:'';
+    $cat->system = false;
     if($cat->save()) {
       $responseArr['data'] = FrcPortal\UserCategory::all();
       $responseArr['msg'] = 'New user category added';
