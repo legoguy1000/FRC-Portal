@@ -191,7 +191,7 @@ $app->group('/events', function () {
       $this->put('', function ($request, $response, $args) {
         $authToken = $request->getAttribute("token");
         $userId = $authToken['data']->user_id;
-        $season_id = $args['season_id'];
+
         $formData = $request->getParsedBody();
         $responseArr = array(
           'status' => false,
@@ -471,7 +471,6 @@ $app->group('/events', function () {
     $this->put('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
-      $season_id = $args['season_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
@@ -507,7 +506,7 @@ $app->group('/events', function () {
     $this->put('/syncGoogleCalEvent', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
-      $season_id = $args['season_id'];
+
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
@@ -528,7 +527,7 @@ $app->group('/events', function () {
     $this->put('/toggleEventReqs', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
-      $season_id = $args['season_id'];
+
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,

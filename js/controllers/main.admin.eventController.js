@@ -68,6 +68,11 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	}
 	vm.getEventRequirements();
 
+	vm.clearDeadline = function () {
+		vm.event.registration_deadline_moment = null;
+		vm.event.registration_deadline_gcalid = null;
+		vm.event.registration_deadline_formatted = null;
+	};
 
 
 	vm.syncGoogleCalEvent = function () {
