@@ -127,13 +127,7 @@ $app->group('/settings', function () {
       $settings = FrcPortal\Setting::where('section',$section)->get();
       $data = array();
       foreach($settings as $set) {
-        $temp = $set->value;
-        $type =$set->type;
-        if(strpos($set->setting, 'enable') !== false || strpos($set->setting, 'require') !== false) {
-          $temp = (boolean) $temp;
-        }
-        //settype($temp,$type);
-        $data[$set->setting] = $temp;
+        $data[$set->setting] = formatSettings($set->setting, $set->value);
       }
       $responseArr['status'] = true;
       $responseArr['msg'] = '';
@@ -159,10 +153,7 @@ $app->group('/settings', function () {
       //loop through,
       //Do update or create
       foreach($formData as $setting=>$value) {
-        $val = $value;
-        if(strpos($set->setting, 'enable') !== false || strpos($set->setting, 'require') !== false) {
-          $temp = (boolean) $temp;
-        }
+        $val = formatSettings($setting, $value);
         $set = FrcPortal\Setting::updateOrCreate(
             ['section' => $section, 'setting' => $setting], ['value' => $val]
         );

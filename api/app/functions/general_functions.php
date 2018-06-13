@@ -266,4 +266,11 @@ function json_validate($string) {
     // everything is OK
     return $result;
 }
+
+function formatSettings($setting, $value) {
+	if(strpos($setting, 'enable') !== false || strpos($setting, 'require') !== false) {
+		$value = (boolean) $value;
+	}
+	return $value;
+}
 ?>

@@ -103,11 +103,7 @@ $app->get('/config', function ($request, $response, $args) {
   $settings = FrcPortal\Setting::whereIn('setting', $configArr)->get();
   $constantArr = array();
   foreach($settings as $set) {
-    $temp = $set->value;
-    if(strpos($set->setting, 'enable') !== false || strpos($set->setting, 'require') !== false) {
-      $temp = (boolean) $temp;
-    }
-    $constantArr[$set->setting] = $temp;
+    $constantArr[$set->setting] = formatSettings($set->setting, $set->value);
   }
   $responseStr = 'angular.module("FrcPortal").constant("configItems", '.json_encode($constantArr).');';
   $response->getBody()->write($responseStr);

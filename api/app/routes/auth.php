@@ -39,6 +39,16 @@ $app->group('/auth', function () {
     		'lname' => $lname,
     		'profile_image' => $image,
     	);
+      $require_team_email = getSettingsProp('require_team_email');
+      if($require_team_email) {
+        $teamDomain = getSettingsProp('team_domain');
+        if(!is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) === false) {
+          $responseArr = array('status'=>false, 'msg'=>'A '.$teamDomain.' email is required');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+      }
+
 
       $user = checkLogin($userData);
       if($user != false) {
@@ -123,6 +133,15 @@ $app->group('/auth', function () {
       		'lname' => $lname,
       		'profile_image' => $image,
       	);
+        $require_team_email = getSettingsProp('require_team_email');
+        if($require_team_email) {
+          $teamDomain = getSettingsProp('team_domain');
+          if(!is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) === false) {
+            $responseArr = array('status'=>false, 'msg'=>'A '.$teamDomain.' email is required');
+            $response = $response->withJson($responseArr,403);
+            return $response;
+          }
+        }
 
         $user = checkLogin($userData);
         if($user != false) {
@@ -225,6 +244,15 @@ $app->group('/auth', function () {
     		'lname' => $lname,
     		'profile_image' => $image,
     	);
+      $require_team_email = getSettingsProp('require_team_email');
+      if($require_team_email) {
+        $teamDomain = getSettingsProp('team_domain');
+        if(!is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) === false) {
+          $responseArr = array('status'=>false, 'msg'=>'A '.$teamDomain.' email is required');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+      }
 
       $user = checkLogin($userData);
       if($user != false) {
@@ -278,6 +306,15 @@ $app->group('/auth', function () {
 
     $email = $formData['email'];
     $password = $formData['password'];
+    $require_team_email = getSettingsProp('require_team_email');
+    if($require_team_email) {
+      $teamDomain = getSettingsProp('team_domain');
+      if(!is_null($teamDomain) && strpos($email,'@'.$teamDomain) === false) {
+        $responseArr = array('status'=>false, 'msg'=>'A '.$teamDomain.' email is required');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+    }
 
     $user = null;
     $user = FrcPortal\User::with(['school']) //,'user_categories'

@@ -524,6 +524,8 @@ angular.module('FrcPortal', [
 })
 .config(function($authProvider, configItems) {
 
+	var hdBool = configItems.require_team_email && configItems.team_domain != '';
+	var hdVar = hdBool ? 'hd' : '';
 	$authProvider.google({
 		clientId: configItems.google_oauth_client_id,
 		url: '/api/auth/google',
@@ -531,13 +533,13 @@ angular.module('FrcPortal', [
 		authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
 		redirectUri: window.location.origin+'/oauth',
 		requiredUrlParams: ['scope','prompt'],
-		optionalUrlParams: ['display','hd'],
+		optionalUrlParams: ['display', hdVar],
 		scope: ['profile', 'email','https://www.googleapis.com/auth/plus.login'],
 		scopePrefix: 'openid',
 		scopeDelimiter: ' ',
 		display: 'popup',
 		prompt: 'select_account',
-		hd: configItems.require_team_email && configItems.team_domain != '' ? configItems.team_domain : '',
+		hd: hdBool ? configItems.team_domain : '',
 		type: '2.0',
 		popupOptions: { width: 452, height: 633 }
 	});
