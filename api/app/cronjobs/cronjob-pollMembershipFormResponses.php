@@ -153,7 +153,10 @@ if(!is_null($spreadsheetId)) {
 			}
 			//Add User info into the Annual Requirements Table
 			if(!is_null($season_id)) {
-				$season = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user_id)->first();
+				$season = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
+
+				/* $season = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user_id)->first();
+
 				if(!is_null($season)) {
 					$season->join_team = true;
 					$season->save();
@@ -163,7 +166,7 @@ if(!is_null($spreadsheetId)) {
 					$eason->season_id = $season_id;
 					$season->join_team = true;
 					$season->save();
-				}
+				} */
 			}
 		}
 	}
