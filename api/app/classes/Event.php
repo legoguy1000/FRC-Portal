@@ -21,7 +21,7 @@ class Event extends Eloquent {
   ];
 
 
-  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_deadline_unix','registration_deadline_formatted','season','num_days','single_month'];
+  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_deadline_unix','registration_deadline_formatted','registration_deadline_googlee_event','season','num_days','single_month'];
 
   //$data['requirements'] = array();
   /**
@@ -94,6 +94,13 @@ class Event extends Eloquent {
     if(!is_null($this->attributes['registration_deadline'])) {
       $date = new DateTime($this->attributes['registration_deadline']);
       $return = $date->format('F j, Y');
+    }
+    return $return;
+  }
+  public function getRegistrationDeadlineGoogleEventAttribute() {
+    $return = null;
+    if(!is_null($this->attributes['registration_deadline_gcalid'])) {
+      $return = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid'])
     }
     return $return;
   }
