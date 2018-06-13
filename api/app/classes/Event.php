@@ -21,7 +21,7 @@ class Event extends Eloquent {
   ];
 
 
-  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_deadline_unix','registration_deadline_formatted','season','num_days'];
+  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_deadline_unix','registration_deadline_formatted','season','num_days','single_month'];
 
   //$data['requirements'] = array();
   /**
@@ -44,6 +44,7 @@ class Event extends Eloquent {
     'permission_slip_required' => 'boolean',
     'time_slots' => 'boolean',
     'single_day' => 'boolean',
+    'single_month' => 'boolean',
   ];
 
   public function save($options = array()) {
@@ -64,8 +65,13 @@ class Event extends Eloquent {
     $end = new DateTime($this->attributes['event_end']);
     return (bool) ($start->format('Y-m-d') == $end->format('Y-m-d'));
   }
+  public function getSingleMonthAttribute() {
+    $start = new DateTime($this->attributes['event_start']);
+    $end = new DateTime($this->attributes['event_end']);
+    return (bool) ($start->format('Y-m') == $end->format('Y-m'));
+  }
   public function getYearAttribute() {
-    return date('Y',strtotime($this->attributes['event_start']));
+    return (integer) date('Y',strtotime($this->attributes['event_start']));
   }
   public function getEventStartUnixAttribute() {
     $date = new DateTime($this->attributes['event_start']);
