@@ -2,7 +2,7 @@
 use Illuminate\Database\Capsule\Manager as Capsule;
 ini_set("error_reporting", E_ALL);
 ini_set("expose_php", false);
-
+define("VERSION",'2.6.0');
 
 $root = __DIR__;
 require $root.'/vendor/autoload.php';
