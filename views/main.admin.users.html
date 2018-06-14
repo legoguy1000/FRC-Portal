@@ -94,8 +94,8 @@
 		<table md-table ng-model="selected" md-progress="vm.promise">
 			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getUsers">
 				<tr md-row>
-					<!--<th md-column style="width:56px" hide-xs></th>-->
-					<th md-column md-order-by="full_name"><span style="width:56px" hide-xs></span><span>Name</span></th>
+					<th md-column style="width:56px"></th>
+					<th md-column md-order-by="full_name"><span>Name</span></th>
 					<th md-column md-order-by="user_type" hide-xs><span>Type - Grade (Grad Year)</span></th>
 					<th md-column md-order-by="school_name" hide-xs><span>School</span></th>
 					<th md-column md-order-by="email" hide-xs><span>Email</span></th>
@@ -106,8 +106,10 @@
 			</thead>
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 				<tr md-row ng-repeat="user in vm.users">
+					<td md-cell hide-xs>
+						<img ng-src="{{user.profile_image}}" class="avatar" alt="" ng-if="user.profile_image"/>
+					</td>
 					<td md-cell>
-						<img ng-src="{{user.profile_image}}" class="avatar" alt="" ng-if="user.profile_image" hide-xs/>
 						<span>{{user.full_name}}</span>
 					</td>
 					<td md-cell hide-xs><span>{{user.user_type}}</span> <span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</td>
