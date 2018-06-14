@@ -97,10 +97,10 @@
 					<th md-column style="width:56px"></th>
 					<th md-column md-order-by="full_name"><span>Name</span></th>
 					<th md-column md-order-by="user_type" hide-xs><span>Type - Grade (Grad Year)</span></th>
-					<th md-column md-order-by="school_name" hide-xs><span>School</span></th>
-					<th md-column md-order-by="email" hide-xs><span>Email</span></th>
-					<th md-column md-order-by="gender" hide-xs><span>Gender</span></th>
-					<th md-column md-order-by="status" hide-xs><span>Status</span></th>
+					<th md-column md-order-by="school_name" hide-xs hide-sm><span>School</span></th>
+					<th md-column md-order-by="email" hide-xs hide-sm><span>Email</span></th>
+					<th md-column md-order-by="gender" hide-xs hide-sm><span>Gender</span></th>
+					<th md-column md-order-by="status" hide-xs hide-sm><span>Status</span></th>
 					<th md-column></th>
 				</tr>
 			</thead>
@@ -113,10 +113,10 @@
 						<span>{{user.full_name}}</span>
 					</td>
 					<td md-cell hide-xs><span>{{user.user_type}}</span> <span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</td>
-					<td md-cell hide-xs><span>{{user.school.school_name}}</span></td>
-					<td md-cell hide-xs><span>{{user.email}}</span></td>
-					<td md-cell hide-xs><span>{{user.gender}}</span></td>
-					<td md-cell hide-xs>
+					<td md-cell hide-xs hide-sm><span>{{user.school.school_name}}</span></td>
+					<td md-cell hide-xs hide-sm><span>{{user.email}}</span></td>
+					<td md-cell hide-xs hide-sm><span>{{user.gender}}</span></td>
+					<td md-cell hide-xs hide-sm>
 						<span ng-show="user.status">Active</span>
 						<span ng-hide="user.status">Inactive</span>
 					</td>
