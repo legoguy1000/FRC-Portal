@@ -106,7 +106,7 @@
 			</thead>
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 				<tr md-row ng-repeat="user in vm.users">
-					<td md-cell hide-xs>
+					<td md-cell>
 						<img ng-src="{{user.profile_image}}" class="avatar" alt="" ng-if="user.profile_image"/>
 					</td>
 					<td md-cell>
