@@ -23,7 +23,7 @@
 			</md-input-container>
 			<md-input-container flex required>
 				<label>Team Email <span ng-if="main.configItems.team_domain != ''">(@{{main.configItems.team_domain}})</span></label>
-				<input ng-model="vm.user.team_email" type="email" ng-pattern="main.configItems.team_domain != '' ? '[a-z0-9._%+-]+@{{main.configItems.team_domain}}' : ''">
+				<input ng-model="vm.user.team_email" type="email" ng-pattern="main.configItems.team_domain != '' ? '[a-z0-9._%+-]+@{{main.configItems.team_domain}}' : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$'">
 			</md-input-container>
 			<div layout="row">
 				<md-input-container flex required>
