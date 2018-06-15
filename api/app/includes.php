@@ -13,7 +13,7 @@ $capsule->addConnection(array("driver" => "mysql", "host" =>getIniProp('db_host'
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-$tz = getSettingsProp('timezone');
+$tz = Capsule::schema()->hasTable('settings') ? getSettingsProp('timezone') : null;
 $time_zone = !is_null($tz) ? $tz:date_default_timezone_get();
 date_default_timezone_set($time_zone);
 
