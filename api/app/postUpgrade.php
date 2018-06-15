@@ -6,8 +6,8 @@ $version = VERSION;
 /**
 * 2.6.0
 **/
-//Create Event Types Table
 if($version <= '2.6.0') {
+  //Create Event Types Table
   $eventTypesExists = Capsule::schema()->hasTable('event_types');
   if(!$eventTypesExists) {
     include_once('EventType.php');
@@ -24,12 +24,18 @@ if($version <= '2.6.0') {
 **/
 if($version <= '2.7.0') {
 
+  //Create User Category Tables
+  /*
+  include_once('UserCategory.php');
+  include_once('UserUserCategory.php');
+  
+  */
   //add dbal package
   shell_exec("composer install");
   shell_exec("composer dump-autoload");
 }
 
-/** 
+/**
 *
 **/
 
