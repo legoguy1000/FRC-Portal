@@ -14,7 +14,7 @@ $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
 $tz = Capsule::schema()->hasTable('settings') ? getSettingsProp('timezone') : null;
-$time_zone = !is_null($tz) ? $tz:date_default_timezone_get();
+$time_zone = !is_null($tz) && $tz != '' ? $tz:date_default_timezone_get();
 date_default_timezone_set($time_zone);
 
 
