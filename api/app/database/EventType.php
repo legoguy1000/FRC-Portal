@@ -10,5 +10,10 @@ Capsule::schema()->create('event_types', function ($table) {
   $table->timestamps();
 });
 
+$et = FrcPortal\EventType::updateOrCreate(['type' => 'Demo'], ['description' => 'Demo Events']);
+$et = FrcPortal\EventType::updateOrCreate(['type' => 'Season Event'], ['description' => 'Season Events']);
+$et = FrcPortal\EventType::updateOrCreate(['type' => 'Off Season Event'], ['description' => 'Off Season Events']);
+
+
 
 ?>
