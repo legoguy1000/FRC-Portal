@@ -1,5 +1,5 @@
 <?php
-include('includes.php');
+include_once('includes.php');
 use Illuminate\Database\Capsule\Manager as Capsule;
 $version = VERSION;
 
