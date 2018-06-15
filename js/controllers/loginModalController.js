@@ -10,7 +10,12 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast) {
 	vm.loginForm = {};
 	vm.login = function () {
 		$auth.login(vm.loginForm).then(function(response) {
-			alert(response.data.msg)
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.data.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 			var authed = $auth.isAuthenticated();
 			if(authed) {
 				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);
