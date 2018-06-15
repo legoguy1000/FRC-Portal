@@ -462,7 +462,7 @@ $app->group('/users', function () {
         return $response;
       }
 
-      $user = FrcPortal\User::find($user_id);
+      $user = FrcPortal\User::with('schools')->find($user_id);
       $user->fname = $formData['fname'];
       $user->lname = $formData['lname'];
       $user->email = $formData['email'];
