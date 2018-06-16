@@ -7,7 +7,7 @@ Capsule::schema()->create('users', function ($table) {
   $table->char('user_id',13)->primary();
   $table->string('fname');
   $table->string('lname');
-  $table->string('email');
+  $table->string('email')->unique();
   $table->char('password',128)->nullable()->default(null);
   $table->char('school_id',13)->nullable()->default(null)->index();
   $table->string('user_type');
