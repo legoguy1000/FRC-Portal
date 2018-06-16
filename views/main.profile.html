@@ -9,28 +9,28 @@
 		</h1>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading.profile"></md-progress-linear>
 		<form class="md-margin" flex layout="column" ng-submit="vm.updateUser()">
-			<md-input-container flex required>
+			<md-input-container flex>
 				<label>First Name</label>
-				<input ng-model="vm.user.fname">
+				<input ng-model="vm.user.fname" required>
 			</md-input-container>
-			<md-input-container flex required>
+			<md-input-container flex>
 				<label>Last Name</label>
-				<input ng-model="vm.user.lname">
+				<input ng-model="vm.user.lname" required>
 			</md-input-container>
-			<md-input-container flex required>
+			<md-input-container flex>
 				<label>Alt Email</label>
-				<input ng-model="vm.user.email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+				<input ng-model="vm.user.email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required>
 			</md-input-container>
-			<md-input-container flex required>
+			<md-input-container flex>
 				<label>Team Email <span ng-if="main.configItems.team_domain != ''">(@{{main.configItems.team_domain}})</span></label>
 				<input ng-model="vm.user.team_email" type="email" ng-pattern="main.configItems.team_domain != '' ? '[a-z0-9._%+-]+@{{main.configItems.team_domain}}' : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$'">
 			</md-input-container>
 			<div layout="row">
-				<md-input-container flex required>
+				<md-input-container flex>
 					<label>Phone</label>
-					<input ng-model="vm.user.phone" phone-input type='text'/>
+					<input ng-model="vm.user.phone" phone-input type='text' required/>
 				</md-input-container>
-				<md-input-container flex required>
+				<md-input-container flex>
 					<label>Slack User</label>
 					<input ng-model="vm.user.slack_id" type='text' readonly disabled/>
 				</md-input-container>
@@ -38,7 +38,7 @@
 			<div layout="row">
 			<md-input-container flex>
 				<label>User Type</label>
-				<md-select ng-model="vm.user.user_type">
+				<md-select ng-model="vm.user.user_type" required>
 					<md-option ng-value="'Student'">Student</md-option>
 					<md-option ng-value="'Mentor'">Mentor</md-option>
 				</md-select>
