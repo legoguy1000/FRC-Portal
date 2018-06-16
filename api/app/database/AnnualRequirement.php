@@ -14,6 +14,7 @@ Capsule::schema()->create('annual_requirements', function ($table) {
 
        $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
        $table->foreign('season_id')->references('season_id')->on('seasons')->onDelete('cascade')->onUpdate('cascade');
+       $table->unique(['user_id','season_id']);
    });
 
 ?>
