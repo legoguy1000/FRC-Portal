@@ -160,6 +160,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 					'name':vm.event.name,
 					//'room_info': vm.event.room_list
 				},
+				admin: true,
 			}
 		})
 		.then(function(response) {

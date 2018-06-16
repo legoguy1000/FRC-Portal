@@ -78,7 +78,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			}, function() {
 				//relistTS(response);
 			});
-		}		
+		}
 	};
 
 	function relistTS(allTS) {
@@ -94,5 +94,29 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		}
 		vm.registrationForm.event_time_slots = time_slots;
 	}
+
+	vm.showRoomListModal = function(ev) {
+		$mdDialog.show({
+			controller: roomListModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/roomListModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				eventInfo: {
+					'event_id': vm.event.event_id,
+					'name':vm.event.name,
+					'user_id': vm.userInfo.user_id,
+					//'room_info': vm.event.room_list
+				},
+				admin: false,
+			}
+		})
+		.then(function(response) {
+			//vm.users = response.data;
+		}, function() { });
+	};
 
 }

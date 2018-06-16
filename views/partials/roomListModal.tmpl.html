@@ -23,7 +23,7 @@
 					<md-list ng-cloak
 						dnd-list="vm.room_list.room_selection[room.room_id]"
 						dnd-allowed-types="room.room_type"
-						dnd-disable-if="(room.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length >= 4) || (room.user_type == 'Mentor' && vm.room_list.room_selection[room.room_id].length >= 2)"
+						dnd-disable-if="!vm.admin || (room.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length >= 4) || (room.user_type == 'Mentor' && vm.room_list.room_selection[room.room_id].length >= 2)"
 						style="min-height:20px;">
 					    <md-list-item ng-repeat="req in vm.room_list.room_selection[room.room_id]"
 					        dnd-draggable="req"
@@ -33,6 +33,7 @@
 					        ng-class="{'selected': models.selected === req}"
 									dnd-type="req.user.room_type"
 									class="min-height-reset"
+									dnd-disable-if = "!vm.admin"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
@@ -40,9 +41,17 @@
 								</dnd-nodrag>
 					    </md-list-item>
 					</md-list>
+					<div flex></div>
+					<div ng-if="!vm.admin" layout="row" layout-align="center center">
+						<md-button type="button" ng-click="vm.toggleRoomSelect(time_slot.time_slot_id)">
+							<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
+							<span ng-hide="vm.checkReg(time_slot)">Register</span>
+							<span ng-show="vm.checkReg(time_slot)">Unregister</span>
+						</md-button>
+					</div>
 				</div>
 			</div>
-			<div layout="row" style="border: solid;">
+			<div layout="row" style="border: solid;" ng-hide="!vm.admin">
 				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
 					No Room Selected
 				</div>
@@ -58,6 +67,7 @@
 									dnd-type="req.user.room_type"
 					        ng-class="{'selected': models.selected === req}"
 									class="min-height-reset"
+									dnd-disable-if = "!vm.admin"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
@@ -69,31 +79,40 @@
 			</div>
 		</md-dialog-content>
 		<md-dialog-actions layout="row" class="noprint">
-			<md-button type="button" ng-click="window.print();" class="md-icon-button">
-					<md-tooltip md-direction="top">Print room list</md-tooltip>
-					<md-icon class=""> print </md-icon>
-			</md-button>
-			<md-input-container>
-        <label>Add New Room</label>
-        <md-select ng-model="vm.newRoom" style="min-width:150px;">
-          <md-option><em>None</em></md-option>
-          <md-option ng-repeat="room in vm.newRoomOpts" ng-value="room">
-            {{room.user_type}}<span ng-show="room.gender != ''"> - {{room.gender}}</span>
-          </md-option>
-        </md-select>
-      </md-input-container>
-			<md-button class="md-icon-button noprint" ng-click="vm.addEventRoom()">
-				<md-tooltip md-direction="top">Add room</md-tooltip>
-			  <md-icon class=""> add </md-icon>
-			</md-button>
+			<div ng-show="vm.admin" layout="row">
+				<md-button type="button" ng-click="window.print();" class="md-icon-button">
+						<md-tooltip md-direction="top">Print room list</md-tooltip>
+						<md-icon class=""> print </md-icon>
+				</md-button>
+				<md-input-container>
+	        <label>Add New Room</label>
+	        <md-select ng-model="vm.newRoom" style="min-width:150px;">
+	          <md-option><em>None</em></md-option>
+	          <md-option ng-repeat="room in vm.newRoomOpts" ng-value="room">
+	            {{room.user_type}}<span ng-show="room.gender != ''"> - {{room.gender}}</span>
+	          </md-option>
+	        </md-select>
+	      </md-input-container>
+				<md-button class="md-icon-button noprint" ng-click="vm.addEventRoom()">
+					<md-tooltip md-direction="top">Add room</md-tooltip>
+				  <md-icon class=""> add </md-icon>
+				</md-button>
+				<span flex></span>
+				<md-button type="button" ng-click="vm.updateEventRoomList(false)">
+					<md-tooltip md-direction="top">Save and Close</md-tooltip>
+					Save
+				</md-button>
+				<md-button type="button" ng-click="vm.updateEventRoomList(true)">
+					<md-tooltip md-direction="top">Save and Close</md-tooltip>
+					Save & Close
+				</md-button>
+			</md-dialog-actions>
+		</div>
+		<div ng-hide="vm.admin" layout="row">
 			<span flex></span>
-			<md-button type="button" ng-click="vm.updateEventRoomList(false)">
-				<md-tooltip md-direction="top">Save and Close</md-tooltip>
+			<md-button type="button" ng-click="vm.cancel()">
+				<md-tooltip md-direction="top">Close</md-tooltip>
 				Save
 			</md-button>
-			<md-button type="button" ng-click="vm.updateEventRoomList(true)">
-				<md-tooltip md-direction="top">Save and Close</md-tooltip>
-				Save & Close
-			</md-button>
-		</md-dialog-actions>
+		</div>
 </md-dialog>

@@ -53,10 +53,18 @@
 				</div>
 				<div layout="row" flex layout-align="space-between center" ng-if="vm.event.room_required && vm.registrationForm.registration">
 					<div>Please select hotel room? </div>
-					<md-select ng-model="vm.registrationForm.room_id" placeholder="" class="md-no-underline" ng-required="vm.event.room && vm.registrationForm.registration">
-						<md-option ng-value="true">Yes</md-option>
-						<md-option ng-value="false">No</md-option>
-					</md-select>
+				</div>
+				<div layout="row" flex layout-align="space-between center" ng-if="vm.event.room_required && vm.registrationForm.registration">
+					<md-button type="button" class="md-raised md-primary" ng-click="vm.showTimeSlotListModal($event)">
+						Select Hotel Room
+					</md-button>
+					<div layout="column">
+						<div layout="row" layout-align="center center"><b>My Hotel Room</b></div>
+		<!--				<div ng-repeat="time_slot in vm.registrationForm.event_time_slots" layout="row" layout-align="space-between center">
+							<div style="margin-right: 10px;">{{time_slot.name}}: </div>
+							<div> {{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</div>
+						</div> -->
+					</div>
 				</div>
 				<div layout="row" flex layout-align="start center" ng-if="vm.registrationForm.registration">
 					<md-input-container class="" style="width:99%;">

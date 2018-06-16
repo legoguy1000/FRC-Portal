@@ -1,11 +1,12 @@
 angular.module('FrcPortal')
-.controller('roomListModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService',
+.controller('roomListModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService','admin',
 	roomListModalController
 ]);
-function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService) {
+function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,admin) {
 	var vm = this;
 
 	vm.eventInfo = eventInfo;
+	vm.admin = admin && $auth.getPayload().data.admin;
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
@@ -72,4 +73,23 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 			}
 		});
 	};
+
+	vm.toggleRoomSelect = function(time_slot_id) {
+		var data = {
+			'user_id': vm.eventInfo.user_id,
+			'time_slot_id': time_slot_id,
+		};
+		usersService.toggleRegistrationEventTimeSlot(data).then(function(response) {
+			if(response.status) {
+				vm.time_slots = response.data;
+			}
+			vm.loading = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+		});
+	}
 }
