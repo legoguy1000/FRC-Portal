@@ -85,7 +85,7 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 		usersService.registerEventRoom(data).then(function(response) {
 			if(response.status) {
 				vm.room_list = response.data;
-				vm.userInfo.room_id = room_id;
+				vm.userInfo.event_requirements.room_id = room_id;
 			}
 			vm.loading = false;
 			$mdToast.show(
@@ -114,7 +114,7 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 
 	vm.save = function() {
 		var roommates = [];
-		var room = vm.room_list.room_selection[vm.userInfo.room_id];
+		var room = vm.room_list.room_selection[vm.userInfo.event_requirements.room_id];
 		var len = room.length;
 		for (var i = 0; i < len; i++) {
 			roommates.push(room[i].user);
