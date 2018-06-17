@@ -46,7 +46,7 @@
 					    </md-list-item>
 					</md-list>
 					<div flex></div>
-					<div ng-show="!vm.admin " layout="row" layout-align="center center">
+					<div ng-show="!vm.admin && vm.userInfo.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length < 4 && room.gender == vm.userInfo.gender && room.user_type == vm.userInfo.user_type" layout="row" layout-align="center center">
 						<md-button type="button" ng-click="vm.toggleRoomSelect(room.room_id)">
 							<md-tooltip md-direction="top">Select Room</md-tooltip>
 							<span>Select Room</span>
