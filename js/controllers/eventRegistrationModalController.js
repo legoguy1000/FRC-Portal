@@ -109,7 +109,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			locals: {
 				eventInfo: {
 					'event_id': vm.event.event_id,
-					'name':vm.event.name,
+					'name': vm.event.name,
 					'userInfo': vm.userInfo,
 					//'room_info': vm.event.room_list
 				},
@@ -117,7 +117,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			}
 		})
 		.then(function(response) {
-			vm.myHotelRoom = response;
+			vm.registrationForm.event_requirements.event_rooms.users = response;
 		}, function() { });
 	};
 

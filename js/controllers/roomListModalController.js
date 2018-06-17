@@ -113,6 +113,12 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 	}
 
 	vm.save = function() {
-		$mdDialog.hide(vm.room_list.room_selection[vm.userInfo.room_id]);
+		var roommates = [];
+		var room = vm.room_list.room_selection[vm.userInfo.room_id];
+		var len = room.length;
+		for (var i = 0; i < len; i++) {
+			roommates.push(room[i].user);
+		}
+		$mdDialog.hide(roommates);
 	}
 }
