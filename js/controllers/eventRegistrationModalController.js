@@ -103,7 +103,6 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			templateUrl: 'views/partials/roomListModal.tmpl.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
-			clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
 			multiple: true,
 			locals: {
