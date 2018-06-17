@@ -164,9 +164,9 @@ $app->group('/events', function () {
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
       $event = FrcPortal\Event::with('poc')->find($event_id);
       if($reqsBool) {
-        $event->users = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+        $event->users = FrcPortal\User::with(['event_rooms.users','event_requirements' => function ($query) use ($event_id) {
                         		$query->where('event_id','=',$event_id);
-                          }])->get();
+                          }, 'event_time_slots.registrations'])->get();
       }
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
