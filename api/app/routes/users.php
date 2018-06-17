@@ -175,7 +175,8 @@ $app->group('/users', function () {
           $roomUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id],['room_id'=>$room_id]);
           $responseArr['status'] = true;
           $responseArr['msg'] = 'Room Selected';
-          $responseArr['data'] = getEventRoomList($event_id);;
+          $rooms = getEventRoomList($event_id);
+          $responseArr['data'] = $rooms['data'];
           $response = $response->withJson($responseArr);
           return $response;
         });
