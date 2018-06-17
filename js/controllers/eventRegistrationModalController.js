@@ -9,6 +9,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	vm.userInfo = userInfo;
 	vm.registrationForm = {};
 	vm.loading = false;
+	vm.myHotelRoom = [];
 
 	vm.cancel = function() {
 		$mdDialog.cancel();
@@ -116,7 +117,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			}
 		})
 		.then(function(response) {
-			//vm.users = response.data;
+			vm.myHotelRoom = response;
 		}, function() { });
 	};
 

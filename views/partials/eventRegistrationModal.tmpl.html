@@ -60,10 +60,9 @@
 					</md-button>
 					<div layout="column">
 						<div layout="row" layout-align="center center"><b>My Hotel Room</b></div>
-		<!--				<div ng-repeat="time_slot in vm.registrationForm.event_time_slots" layout="row" layout-align="space-between center">
-							<div style="margin-right: 10px;">{{time_slot.name}}: </div>
-							<div> {{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</div>
-						</div> -->
+						<div ng-repeat="roommate in vm.myHotelRoom" layout="column" layout-align="center center">
+							<div> {{roommate.user.full_name}}</div>
+						</div>
 					</div>
 				</div>
 				<div layout="row" flex layout-align="start center" ng-if="vm.registrationForm.registration">

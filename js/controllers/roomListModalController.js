@@ -6,7 +6,7 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 	var vm = this;
 
 	vm.eventInfo = eventInfo;
-	vm.userInfo = vm.eventInfo.userInfo
+	vm.userInfo = vm.eventInfo.userInfo;
 	vm.admin = admin && $auth.getPayload().data.admin;
 	vm.cancel = function() {
 		$mdDialog.cancel();
@@ -85,6 +85,7 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 		usersService.registerEventRoom(data).then(function(response) {
 			if(response.status) {
 				vm.room_list = response.data;
+				vm.userInfo.room_id = room_id;
 			}
 			vm.loading = false;
 			$mdToast.show(
@@ -109,5 +110,9 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 			}
 		}
 		return index;
+	}
+
+	vm.save = function() {
+		$mdDialog.hide(vm.room_list.room_selection[vm.userInfo.room_id];);
 	}
 }
