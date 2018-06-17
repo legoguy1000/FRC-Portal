@@ -96,9 +96,10 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 		});
 	}
 
-	vm.checkReg = function(room) {
+	vm.checkReg = function(room_id) {
 		var index = false;
 		if(!vm.admin) {
+			var room = vm.room_list.room_selection[room_id];
 			var len = room.length;
 			for (var i = 0; i < len; i++) {
 				if(room[i].user_id == vm.userInfo.user_id) {
