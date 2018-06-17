@@ -27,7 +27,7 @@
 							</div>
 				    </v-pane-content>
 				  </v-pane>
-				  <v-pane disabled="!vm.registrationForm.registration" ng-if="vm.event.time_slots_required">
+				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.time_slots_required">
 				    <v-pane-header>
 				      Hours of Availability
 				    </v-pane-header>
@@ -46,7 +46,7 @@
 							</div>
 				    </v-pane-content>
 				  </v-pane>
-				  <v-pane disabled="!vm.registrationForm.registration" ng-if="vm.event.drivers_required && vm.userInfo.user_type=='Mentor'">
+				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.drivers_required && vm.userInfo.user_type=='Mentor'">
 				    <v-pane-header>
 				      Driving
 				    </v-pane-header>
@@ -68,7 +68,7 @@
 							</div>
 				    </v-pane-content>
 				  </v-pane>
-				  <v-pane disabled="!vm.registrationForm.registration" ng-if="vm.event.room_required && vm.userInfo.user_type != 'Mentor'">
+				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.room_required && vm.userInfo.user_type != 'Mentor'">
 				    <v-pane-header>
 				      Please Select Hotel Room
 				    </v-pane-header>
@@ -89,7 +89,7 @@
 							</div>
 				    </v-pane-content>
 				  </v-pane>
-				  <v-pane disabled="!vm.registrationForm.registration">
+				  <v-pane ng-disabled="!vm.registrationForm.registration">
 				    <v-pane-header>
 				      Final Comments
 				    </v-pane-header>
