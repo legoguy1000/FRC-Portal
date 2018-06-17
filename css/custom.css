@@ -368,3 +368,7 @@ md-list-item.min-height-reset .md-list-item-inner::before {
   border-radius: 50%;
   box-sizing: content-box;
 }
+
+.lastRowStyle {
+  border-bottom: solid;
+}
