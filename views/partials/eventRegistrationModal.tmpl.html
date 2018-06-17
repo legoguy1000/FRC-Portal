@@ -27,12 +27,12 @@
 							</div>
 				    </v-pane-content>
 				  </v-pane>
-				  <v-pane expanded>
+				  <v-pane disabled="!vm.registrationForm.registration" ng-if="vm.event.time_slots_required">
 				    <v-pane-header>
 				      Hours of Availability
 				    </v-pane-header>
 				    <v-pane-content layout="column">
-							<div layout="row" flex layout-align="space-between center" ng-if="vm.registrationForm.registration && vm.event.time_slots_required">
+							<div layout="row" flex layout-align="space-between center">
 								<md-button type="button" class="md-raised md-primary" ng-click="vm.showTimeSlotListModal($event)">
 									Select Time Slots
 								</md-button>
