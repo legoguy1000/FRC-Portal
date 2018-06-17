@@ -64,6 +64,13 @@ class EventRoom extends Eloquent {
   public function event_requirements() {
       return $this->hasMany('FrcPortal\EventRequirement', 'room_id', 'room_id');
   }
+  /**
+   * Get the users in room.
+   */
+  public function users() {
+      return $this->hasManyThrough('FrcPortal\User','FrcPortal\EventRequirement', 'room_id', 'user_id', 'room_id', 'user_id');
+  }
+
   public function getroomBoolAttribute() {
     return isset($this->attributes['room_id']) && !is_null($this->attributes['room_id']);
   }
