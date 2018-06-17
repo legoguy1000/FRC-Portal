@@ -1,12 +1,12 @@
 angular.module('FrcPortal')
-.controller('roomListModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService','admin','$auth','userInfo',
+.controller('roomListModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService','admin','$auth',
 	roomListModalController
 ]);
-function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,admin,$auth,userInfo) {
+function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,admin,$auth) {
 	var vm = this;
 
 	vm.eventInfo = eventInfo;
-	vm.userInfo = userInfo;
+	vm.userInfo = vm.eventInfo.userInfo
 	vm.admin = admin && $auth.getPayload().data.admin;
 	vm.cancel = function() {
 		$mdDialog.cancel();
@@ -77,7 +77,7 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 
 	vm.toggleRoomSelect = function(room_id) {
 		var data = {
-			'user_id': vm.eventInfo.user_id,
+			'user_id': vm.userInfo.user_id,
 			'room_id': room_id,
 		};
 		usersService.toggleRegistrationEventTimeSlot(data).then(function(response) {
