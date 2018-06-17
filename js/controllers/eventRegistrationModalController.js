@@ -117,7 +117,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			}
 		})
 		.then(function(response) {
-			vm.registrationForm.event_requirements.event_rooms.users = response;
+			vm.registrationForm.event_rooms.users = response;
 		}, function() { });
 	};
 
