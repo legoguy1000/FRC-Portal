@@ -76,13 +76,15 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 	};
 
 	vm.toggleRoomSelect = function(room_id) {
+		vm.loading = true;
 		var data = {
 			'user_id': vm.userInfo.user_id,
+			'event_id': vm.eventInfo.event_id,
 			'room_id': room_id,
 		};
-		usersService.toggleRegistrationEventTimeSlot(data).then(function(response) {
+		usersService.registerEventRoom(data).then(function(response) {
 			if(response.status) {
-				vm.time_slots = response.data;
+				vm.room_list = response.data;
 			}
 			vm.loading = false;
 			$mdToast.show(
@@ -92,5 +94,19 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 					.hideDelay(3000)
 			);
 		});
+	}
+
+	vm.checkReg = function(room) {
+		var index = false;
+		if(!vm.admin) {
+			var len = room.length;
+			for (var i = 0; i < len; i++) {
+				if(room[i].user_id == vm.userInfo.user_id) {
+					index = true;
+					break;
+				}
+			}
+		}
+		return index;
 	}
 }

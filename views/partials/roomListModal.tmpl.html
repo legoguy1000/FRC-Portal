@@ -46,11 +46,10 @@
 					    </md-list-item>
 					</md-list>
 					<div flex></div>
-					<div ng-show="!vm.admin && vm.userInfo.user_type == 'Student'" layout="row" layout-align="center center">
+					<div ng-show="!vm.admin && vm.userInfo.user_type == 'Student' && room.length < 4" layout="row" layout-align="center center">
 						<md-button type="button" ng-click="vm.toggleRoomSelect(room.room_id)">
 							<md-tooltip md-direction="top">Select Room</md-tooltip>
-							<span ng-hide="vm.checkReg(room)">Register</span>
-							<span ng-show="vm.checkReg(room)">Unregister</span>
+							<span ng-hide="vm.checkReg(room)">Select Room</span>
 						</md-button>
 					</div>
 				</div>
