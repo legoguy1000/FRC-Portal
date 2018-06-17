@@ -167,7 +167,7 @@ $app->group('/users', function () {
             $response = $response->withJson($responseArr);
             return $response;
           }
-          if($room->gender != $user->gender) {
+          if($room->user_type != 'Mentor' && $room->gender != $user->gender) {
             $responseArr['msg'] = 'Room Gender does not match User Gender';
             $response = $response->withJson($responseArr);
             return $response;
