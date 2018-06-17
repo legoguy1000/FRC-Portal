@@ -13,6 +13,7 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 	}
 	vm.room_list = {};
 	vm.newRoom = {};
+	vm.myRoom = {};
 	vm.newRoomOpts = [
 		{
 			'user_type':'Student',
@@ -86,6 +87,7 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 			if(response.status) {
 				vm.room_list = response.data;
 				vm.userInfo.event_requirements.room_id = room_id;
+				vm.myRoom = response.myRoom;
 			}
 			vm.loading = false;
 			$mdToast.show(
@@ -113,14 +115,6 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 	}
 
 	vm.save = function() {
-		var roommates = [];
-		var room = vm.room_list.room_selection[vm.userInfo.event_requirements.room_id];
-		if(room != undefined) {
-			var len = room.length;
-			for (var i = 0; i < len; i++) {
-				roommates.push(room[i].user);
-			}
-		}
-		$mdDialog.hide(roommates);
+		$mdDialog.hide(vm.myRoom.users);
 	}
 }

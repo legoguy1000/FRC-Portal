@@ -177,7 +177,7 @@ $app->group('/users', function () {
           $responseArr['msg'] = 'Room Selected';
           $rooms = getEventRoomList($event_id);
           $responseArr['data'] = $rooms['data'];
-          $responseArr['data']['roommates'] = FrcPortal\EventRoom::with(['users'])->find($room_id);
+          $responseArr['myRoom'] = FrcPortal\EventRoom::with(['users'])->find($room_id);
           $response = $response->withJson($responseArr);
           return $response;
         });
