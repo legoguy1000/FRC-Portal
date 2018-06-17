@@ -104,11 +104,12 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			targetEvent: ev,
 			clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
+			multiple: true,
 			locals: {
 				eventInfo: {
 					'event_id': vm.event.event_id,
 					'name':vm.event.name,
-					'user_id': vm.userInfo.user_id,
+					'userInfo': vm.userInfo,
 					//'room_info': vm.event.room_list
 				},
 				admin: false,

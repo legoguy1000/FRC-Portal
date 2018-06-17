@@ -11,9 +11,9 @@
 		</md-toolbar>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 		<md-dialog-content class="md-margin">
-			<div layout="row" ng-repeat="room in vm.room_list.rooms" style="border-top: solid;border-left: solid;border-right: solid;">
+			<div layout="row" ng-repeat="room in vm.room_list.rooms" style="border: solid;">
 				<div flex layout="row" layout-align="start center" class="" style="border-right: solid;">
-					<md-button class="md-icon-button noprint" ng-click="vm.deleteEventRoom(room.room_id)">
+					<md-button class="md-icon-button noprint" ng-click="vm.deleteEventRoom(room.room_id)" ng-hide="!vm.admin">
 						<md-tooltip md-direction="top">Delete Room</md-tooltip>
 					  <md-icon class=""> close </md-icon>
 					</md-button>
@@ -36,22 +36,26 @@
 									dnd-disable-if = "!vm.admin"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
-	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
+	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint" ng-hide="!vm.admin">:::</div>
 						        <div>{{req.user.full_name}}</div>
+										<div ng-hide="req.registration" style="cursor: default; margin-left: 5px;">
+											<md-tooltip md-direction="top">User has not completed registration</md-tooltip>
+											<md-icon class="material-icons md-warn">warning</md-icon>
+										</div>
 								</dnd-nodrag>
 					    </md-list-item>
 					</md-list>
 					<div flex></div>
-					<div ng-if="!vm.admin" layout="row" layout-align="center center">
-						<md-button type="button" ng-click="vm.toggleRoomSelect(time_slot.time_slot_id)">
-							<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
-							<span ng-hide="vm.checkReg(time_slot)">Register</span>
-							<span ng-show="vm.checkReg(time_slot)">Unregister</span>
+					<div ng-show="!vm.admin && vm.userInfo.user_type == 'Student'" layout="row" layout-align="center center">
+						<md-button type="button" ng-click="vm.toggleRoomSelect(room.room_id)">
+							<md-tooltip md-direction="top">Select Room</md-tooltip>
+							<span ng-hide="vm.checkReg(room)">Register</span>
+							<span ng-show="vm.checkReg(room)">Unregister</span>
 						</md-button>
 					</div>
 				</div>
 			</div>
-			<div layout="row" style="border: solid;" ng-hide="!vm.admin">
+			<div layout="row" style="border-bottom: solid;border-left: solid;border-right: solid;" ng-hide="!vm.admin">
 				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
 					No Room Selected
 				</div>
@@ -112,7 +116,7 @@
 			<span flex></span>
 			<md-button type="button" ng-click="vm.cancel()">
 				<md-tooltip md-direction="top">Close</md-tooltip>
-				Save
+				Close
 			</md-button>
 		</div>
 </md-dialog>
