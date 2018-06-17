@@ -162,11 +162,11 @@ $app->group('/events', function () {
     $this->get('', function ($request, $response, $args) {
       $event_id = $args['event_id'];
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
-      $event = FrcPortal\Event::with('poc')->find($event_id);
+      $event = FrcPortal\Event::with(['poc','event_rooms.users', 'event_time_slots.registrations'])->find($event_id);
       if($reqsBool) {
-        $event->users = FrcPortal\User::with(['event_rooms.users','event_requirements' => function ($query) use ($event_id) {
+        $event->users = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                         		$query->where('event_id','=',$event_id);
-                          }, 'event_time_slots.registrations'])->get();
+                          }])->get();
       }
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
