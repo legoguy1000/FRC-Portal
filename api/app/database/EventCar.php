@@ -9,7 +9,7 @@ Capsule::schema()->create('event_cars', function ($table) {
   $table->char('user_id',13)->nullable()->default(null)->index();
   $table->integer('car_space')->default(0);
 
-  $table->unique(['user_id','event_id']);
+  $table->unique(['event_id','user_id']);
 });
 
 ?>

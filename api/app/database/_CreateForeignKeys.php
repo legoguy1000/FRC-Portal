@@ -84,7 +84,7 @@ if($users && $events && $event_rooms && $event_cars && $event_requirements) {
 //Event Cars
 if($event_requirements && $event_cars) {
   Capsule::schema()->table('event_cars', function ($table) {
-    $table->foreign(['user_id','event_id'])->references(['user_id','event_id'])->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
+    $table->foreign(['event_id','user_id'])->references(['event_id','user_id'])->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
   });
 }
 

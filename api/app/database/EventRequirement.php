@@ -18,6 +18,6 @@ Capsule::schema()->create('event_requirements', function ($table) {
   $table->boolean('attendance_confirmed')->default(0);
   $table->timestamps();
 
-  $table->unique(['user_id','event_id']);
+  $table->unique(['event_id','user_id']);
 });
 ?>
