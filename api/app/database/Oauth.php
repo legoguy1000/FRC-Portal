@@ -11,7 +11,6 @@ Capsule::schema()->create('oauth_ids', function ($table) {
        $table->string('oauth_user');
        $table->timestamps();
 
-       $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
    });
 
 ?>

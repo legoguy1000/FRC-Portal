@@ -23,8 +23,6 @@ Capsule::schema()->create('users', function ($table) {
   $table->boolean('first_login')->default(1);
   $table->boolean('status')->default(1);
   $table->timestamps();
-
-  $table->foreign('school_id')->references('school_id')->on('schools')->onDelete('set null')->onUpdate('cascade');
 });
 //create Admin Account
 $email = 'admin@example.org';
