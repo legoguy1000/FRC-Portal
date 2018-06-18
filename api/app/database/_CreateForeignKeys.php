@@ -83,28 +83,28 @@ if($users && $events && $event_rooms && $event_cars && $event_requirements) {
 
 //Event Cars
 if($event_requirements && $event_cars) {
-  Capsule::schema()->table('event_requirements', function ($table) {
+  Capsule::schema()->table('event_cars', function ($table) {
     $table->foreign(['user_id','event_id'])->references(['user_id','event_id'])->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
   });
 }
 
 //Event Rooms
 if($event_requirements && $event_rooms) {
-  Capsule::schema()->table('event_requirements', function ($table) {
+  Capsule::schema()->table('event_rooms', function ($table) {
     $table->foreign('event_id')->references('event_id')->on('events')->onDelete('cascade')->onUpdate('cascade');
   });
 }
 
 //Event Time Slots
 if($events && $event_time_slots) {
-  Capsule::schema()->table('event_requirements', function ($table) {
+  Capsule::schema()->table('event_time_slots', function ($table) {
     $table->foreign('event_id')->references('event_id')->on('events')->onDelete('cascade')->onUpdate('cascade');
   });
 }
 
 //Event Time Slots Users Join Table
 if($event_time_slots_event_requirements && $event_time_slots && $event_requirements) {
-  Capsule::schema()->table('event_requirements', function ($table) {
+  Capsule::schema()->table('event_time_slots_event_requirements', function ($table) {
     $table->foreign('time_slot_id')->references('time_slot_id')->on('event_time_slots')->onDelete('cascade')->onUpdate('cascade');
     $table->foreign('ereq_id')->references('ereq_id')->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
   });
