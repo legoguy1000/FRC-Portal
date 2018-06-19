@@ -130,7 +130,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	vm.selectTimeSlot = function(ts_i) {
 		var add_remove = true;
 		var add_remove = vm.checkTSReg(ts_i);
-		if(add_remove) {
+		if(!add_remove) {
 			var new_ts = angular.copy(vm.time_slots[ts_i]);
 			delete new_ts.registrations;
 			vm.registrationForm.event_time_slots.push(new_ts);
