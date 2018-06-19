@@ -7,7 +7,7 @@ function syncGoogleCalendarEvent($event_id) {
 		'msg' => '',
 		'data' => null
 	);
-	$event = FrcPortal\Event::with('poc', 'event_rooms.users', 'event_cars', 'event_time_slots.registrations.user')->find($event_id);
+	$event = FrcPortal\Event::with('poc')->find($event_id); //, 'event_rooms.users', 'event_cars', 'event_time_slots.registrations.user'
 	if(!is_null($event)) {
 		$google_cal_id = $event->google_cal_id;
 		if(isset($google_cal_id) && $google_cal_id != '') {
