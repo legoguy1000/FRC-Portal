@@ -91,11 +91,18 @@
 								</div>
 								<div layout="row" flex layout-align="space-between start">
 									<div layout="column">
-										<div layout="row" layout-align="center center" class="bold">My Driver</div>
+										<div layout="row" layout-align="center center" class="bold">
+											<div ng-hide="vm.registrationForm.event_cars.user_id == vm.userInfo.user_id">My </div>
+											 Driver
+										 </div>
 										<div>{{vm.registrationForm.event_cars.driver.full_name}}</div>
 									</div>
 									<div layout="column">
-										<div layout="row" layout-align="center center" class="bold">My Passengers</div>
+										<div layout="row" layout-align="center center" class="bold">
+											<div ng-show="vm.registrationForm.event_cars.user_id == vm.userInfo.user_id">My </div>
+											<div ng-hide="vm.registrationForm.event_cars.user_id == vm.userInfo.user_id">Car </div>
+											Passengers
+										</div>
 										<div ng-repeat="user in vm.registrationForm.event_cars.passengers" layout="row" layout-align="center center">
 											<div>{{user.full_name}}</div>
 										</div>
