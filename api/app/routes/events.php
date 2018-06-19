@@ -645,16 +645,19 @@ $app->group('/events', function () {
         $can_drive = (bool) $formData['can_drive'];
         $drivers_req = (bool) $event->drivers_required;
       	if($drivers_req && $user_type == 'Mentor') {
+          $car = FrcPortal\EventCar::find($reqUpdate->car_id);
           if($can_drive) {
             $eventCarUpdate = FrcPortal\EventCar::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['car_space' => $formData['event_cars']['car_space']]);
             $reqUpdate->can_drive = true;
             $reqUpdate->car_id = $eventCarUpdate->car_id;
             $reqUpdate->save();
           } else {
-            $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
-            $reqUpdate->can_drive = false;
-            $reqUpdate->car_id = null;
-            $reqUpdate->save();
+            if(!is_null($car) && $car->user_id == $user_id) {
+              $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
+              $reqUpdate->can_drive = false;
+              $reqUpdate->car_id = null;
+              $reqUpdate->save();
+            }
           }
         }
         $room_required = (bool) $event->room_required;
