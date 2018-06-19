@@ -17,9 +17,17 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 
 	vm.registerForEvent = function () {
 		vm.loading = true;
-		var data = vm.registrationForm;
-		data.event_id = vm.event.event_id;
-		data.user_id = vm.userInfo.user_id;
+		var data = {
+			'event_id': vm.event.event_id,
+			'user_id': vm.event.user_id,
+			'registration': vm.registrationForm.registration,
+			'can_drive': vm.registrationForm.can_drive,
+			'event_cars': {
+				'car_space': vm.registrationForm.event_cars.car_space,
+			},
+			'comments': vm.registrationForm.comments,
+			'room_id': vm.registrationForm.room_id,
+		};
 		eventsService.registerForEvent(data).then(function(response){
 			if(response.status) {
 				$mdDialog.hide(response);

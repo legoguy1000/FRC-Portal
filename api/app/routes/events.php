@@ -631,6 +631,12 @@ $app->group('/events', function () {
           $reqUpdate->car_id = null;
           $reqUpdate->save();
         }
+        $room_required = (bool) $event->room_required;
+        if($room_required && $user_type == 'Student') {
+          $reqUpdate->room_id = isset($formData['room_id']) && $formData['room_id'] != '' ? $formData['room_id']:null;
+          $reqUpdate->save();
+        }
+
         $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Registered for '.$event->name;
         //notify event POC
         if(!is_null($event->poc_id)){
