@@ -78,7 +78,7 @@ class EventCar extends Eloquent {
       return $this->belongsTo('FrcPortal\EventRequirement', 'car_id', 'car_id');
   }
   public function getCarTitleAttribute() {
-    return $this->users->full_name.' ('.$this->car_space.')';
+    return isset($this->user_id) && isset($this->car_space) ? $this->users->full_name.' ('.$this->car_space.')' : null;
   }
 
 }
