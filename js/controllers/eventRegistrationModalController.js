@@ -151,7 +151,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			var len = regs.length;
 			for (var j = 0; j < len; j++) {
 				if(regs[j].user.user_id == vm.userInfo.user_id) {
-					vm.time_slots[ts_i].splice(j,1);
+					vm.time_slots[ts_i].registrations.splice(j,1);
 					break;
 				}
 			}
