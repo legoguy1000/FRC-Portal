@@ -15,9 +15,7 @@ if($version >= '2.6.0') {
       Capsule::schema()->table('events', function ($table) {
         $table->foreign('type')->references('type')->on('event_types')->onDelete('set null')->onUpdate('cascade');
       });
-    } catch (Exception $e) {
-
-    }
+    } catch (Exception $e) { }
   }
 }
 
@@ -25,6 +23,14 @@ if($version >= '2.6.0') {
 * 2.7.0
 **/
 if($version >= '2.7.0') {
+  //Change Column Name
+  if(Capsule::schema()->hasTable('events')) {
+    try {
+      Capsule::schema()->table('events', function($table) {
+        $table->renameColumn('time_slots', 'time_slots_required');
+      });
+    } catch (Exception $e) { }
+  }
 
 
   //Create User Category Tables

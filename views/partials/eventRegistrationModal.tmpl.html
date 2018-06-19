@@ -73,20 +73,10 @@
 				      Please Select Hotel Room
 				    </v-pane-header>
 				    <v-pane-content>
-							<div layout="column" >
-								<div>Please select hotel room? </div>
-								<div layout="row" flex layout-align="space-between center" ng-if="vm.event.room_required && vm.registrationForm.registration">
-									<md-button type="button" class="md-raised md-primary" ng-click="vm.showRoomListModal($event)">
-										Select Hotel Room
-									</md-button>
-									<div layout="column">
-										<div layout="row" layout-align="center center"><b>My Hotel Room</b></div>
-										<div ng-repeat="roommate in vm.registrationForm.event_rooms.users" layout="column" layout-align="center center">
-											<div> {{roommate.full_name}}</div>
-										</div>
-									</div>
-								</div>
-							</div>
+
+
+
+							
 				    </v-pane-content>
 				  </v-pane>
 				  <v-pane ng-disabled="!vm.registrationForm.registration">
