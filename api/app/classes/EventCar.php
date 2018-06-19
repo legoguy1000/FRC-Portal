@@ -68,7 +68,7 @@ class EventCar extends Eloquent {
   /**
    * Get the User.
    */
-  public function users() {
+  public function driver() {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
   }
   /**
@@ -76,6 +76,12 @@ class EventCar extends Eloquent {
    */
   public function event_requirements() {
       return $this->belongsTo('FrcPortal\EventRequirement', 'car_id', 'car_id');
+  }
+  /**
+   * Get the users in room.
+   */
+  public function passengers() {
+      return $this->hasManyThrough('FrcPortal\User','FrcPortal\EventRequirement', 'car_id', 'user_id', 'car_id', 'user_id');
   }
   public function getCarTitleAttribute() {
     return isset($this->user_id) && isset($this->car_space) ? $this->users->full_name.' ('.$this->car_space.')' : null;

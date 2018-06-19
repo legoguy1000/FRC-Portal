@@ -133,7 +133,7 @@ $app->group('/users', function () {
           $response = $response->withJson($responseArr);
           return $response;
         });
-        $this->put('/rooms', function ($request, $response, $args) {
+  /*      $this->put('/rooms', function ($request, $response, $args) {
           $authToken = $request->getAttribute("token");
           $userId = $authToken['data']->user_id;
           $formData = $request->getParsedBody();
@@ -181,9 +181,9 @@ $app->group('/users', function () {
           $response = $response->withJson($responseArr);
           return $response;
         });
-      });
+      }); */
     });
-    $this->group('/eventTimeSlots/{time_slot_id:[a-z0-9]{13}}', function () {
+  /*  $this->group('/eventTimeSlots/{time_slot_id:[a-z0-9]{13}}', function () {
       $this->put('', function ($request, $response, $args) {
         $authToken = $request->getAttribute("token");
         $userId = $authToken['data']->user_id;
@@ -217,7 +217,7 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
-    });
+    }); */
     $this->put('/pin', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;

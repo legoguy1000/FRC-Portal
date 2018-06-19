@@ -626,6 +626,7 @@ $app->group('/events', function () {
 
       $user =  FrcPortal\User::find($user_id);
       $user_type = $user->user_type;
+      $gender = $user->gender;
 
       $registrationBool = (bool) $formData['registration'];
       $event = FrcPortal\Event::find($event_id);
@@ -656,6 +657,23 @@ $app->group('/events', function () {
         }
         $room_required = (bool) $event->room_required;
         if($room_required && $user_type == 'Student') {
+          $room_id = $formData['room_id'];
+          $room = FrcPortal\EventRoom::where('room_id',$room_id)->where('event_id',$event_id)->first();
+          if(is_null($room)) {
+            $responseArr['msg'] = 'Invalid Room ID';
+            $response = $response->withJson($responseArr);
+            return $response;
+          }
+          if($room->user_type != $user_type) {
+            $responseArr['msg'] = 'Room User Type does not match User Type';
+            $response = $response->withJson($responseArr);
+            return $response;
+          }
+          if($room->user_type != 'Mentor' && $room->gender != $gender) {
+            $responseArr['msg'] = 'Room Gender does not match User Gender';
+            $response = $response->withJson($responseArr);
+            return $response;
+          }
           $reqUpdate->room_id = isset($formData['room_id']) && $formData['room_id'] != '' ? $formData['room_id']:null;
           $reqUpdate->save();
         }
