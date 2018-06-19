@@ -9,7 +9,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	vm.userInfo = userInfo;
 	vm.registrationForm = {};
 	vm.loading = false;
-	vm.myHotelRoom = [];
+
 	vm.room_list = [];
 	vm.time_slots = [];
 
@@ -29,6 +29,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			},
 			'comments': vm.registrationForm.comments,
 			'room_id': vm.registrationForm.room_id,
+			'event_time_slots':
 		};
 		data.event_cars.car_space = vm.registrationForm.event_cars != undefined && vm.registrationForm.event_cars.car_space != undefined ? vm.registrationForm.event_cars.car_space:null;
 		eventsService.registerForEvent(data).then(function(response){
@@ -126,8 +127,21 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		}
 	}
 
-	vm.selectTimeSlot = function(ts_id) {
-		
+	vm.selectTimeSlot = function(ts_i) {
+		var add_remove = true;
+		var add_remove = vm.checkTSReg(ts_i);
+		if(add_remove) {
+			var new_ts = angular.copy(vm.time_slots[ts_i]);
+			delete new_ts.registrations;
+			vm.registrationForm.event_time_slots.push(new_ts);
+			vm.time_slots[ts_i].registrations.push({
+				'user_id': vm.userInfo.user_id,
+				'user': vm.userInfo,
+			});
+		} else {
+			
+		}
+
 	}
 
 /*
