@@ -11,6 +11,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	vm.loading = false;
 	vm.myHotelRoom = [];
 	vm.room_list = [];
+	vm.time_slots = [];
 
 	vm.cancel = function() {
 		$mdDialog.cancel();
@@ -63,6 +64,29 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	};
 	vm.getEventRoomList();
 
+	//get time slots
+	vm.getEventTimeSlotList = function () {
+		eventsService.getEventTimeSlotList(vm.event.event_id).then(function(response) {
+			vm.time_slots = response.data;
+		});
+	};
+	vm.getEventTimeSlotList();
+
+	vm.checkTSReg = function(ts_i) {
+		var index = false;
+		if(vm.event.time_slots_required) {
+			var regs = vm.time_slots[ts_i].registrations;
+			var len = regs.length;
+			for (var i = 0; i < len; i++) {
+				if(regs[i].user_id == vm.userInfo.user_id) {
+					index = true;
+					break;
+				}
+			}
+		}
+		return index;
+	}
+
 	vm.range = function(min, max, step) {
 			step = step || 1;
 			var input = [];
@@ -102,7 +126,11 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		}
 	}
 
+	vm.selectTimeSlot = function(ts_id) {
+		
+	}
 
+/*
 	vm.showTimeSlotListModal = function(ev) {
 		if(vm.event.time_slots_required) {
 			$mdDialog.show({
@@ -168,5 +196,5 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			vm.registrationForm.event_rooms.users = response;
 		}, function() { });
 	};
-
+*/
 }

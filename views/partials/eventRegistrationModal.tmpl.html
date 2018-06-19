@@ -32,7 +32,31 @@
 				      Hours of Availability
 				    </v-pane-header>
 				    <v-pane-content layout="column">
-							<div layout="row" flex layout-align="space-between center">
+							<div layout="row" ng-repeat="time_slot in vm.time_slots track by $index" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
+								<div flex layout="column" layout-align="center start" class="md-padding" style="border-right: solid;">
+									<h3 style="margin-top: 0px;">
+										<span>{{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</span>
+								 	</h3>
+									<b>{{time_slot.name}}</b>
+									<div style="white-space:pre-wrap;">{{time_slot.description}}</div>
+								</div>
+								<div flex layout="column">
+									<md-list ng-cloak>
+								    <md-list-item ng-repeat="reg in time_slot.registrations" class="min-height-reset">
+												<div>{{reg.user.full_name}}</div>
+								    </md-list-item>
+									</md-list>
+									<div flex></div>
+									<div layout="row" layout-align="center center">
+										<md-button type="button" ng-click="vm.selectTimeSlot(time_slot.time_slot_id)">
+											<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
+											<span ng-hide="vm.checkTSReg($index)">Register</span>
+											<span ng-show="vm.checkTSReg($index)">Unregister</span>
+										</md-button>
+									</div>
+								</div>
+							</div>
+							<!--<div layout="row" flex layout-align="space-between center">
 								<md-button type="button" class="md-raised md-primary" ng-click="vm.showTimeSlotListModal($event)">
 									Select Time Slots
 								</md-button>
@@ -43,7 +67,7 @@
 										<div> {{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</div>
 									</div>
 								</div>
-							</div>
+							</div>-->
 				    </v-pane-content>
 				  </v-pane>
 				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.drivers_required && vm.userInfo.user_type=='Mentor'">
@@ -94,10 +118,7 @@
 									</div>
 								</div>
 							</div>
-
-
-
-				    </v-pane-content>
+			    	</v-pane-content>
 				  </v-pane>
 				  <v-pane ng-disabled="!vm.registrationForm.registration">
 				    <v-pane-header>
