@@ -54,6 +54,23 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			return input;
 	};
 
+	vm.selectRoom = function(room_id) {
+		var old_room_id = vm.registrationForm.room_id;
+		vm.registrationForm.room_id = room_id;
+		var len = vm.event.event_rooms[old_room_id].users.length;
+		var user = {};
+		for (var i = 0; i < len; i++) {
+			if(vm.event.event_rooms[old_room_id].users[i].user_id == vm.userInfo.user_id) {
+				var user = vm.event.event_rooms[old_room_id].users[i];
+				vm.event.event_rooms[old_room_id].users.splice(i,1);
+				vm.event.event_rooms[room_id].users.push(user);
+				break;
+			}
+
+		}
+	}
+
+
 	vm.showTimeSlotListModal = function(ev) {
 		if(vm.event.time_slots_required) {
 			$mdDialog.show({
