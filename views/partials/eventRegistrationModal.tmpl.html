@@ -89,6 +89,14 @@
 					          <md-option ng-value="{{n}}" ng-repeat="n in vm.range(0,10)">{{n}}</md-option>
 					        </md-select>
 								</div>
+								<div layout="row" flex layout-align="space-between center" ng-show="vm.registrationForm.can_drive">
+									<div>My Car Passenger List </div>
+									<div layout="column">
+										<div ng-repeat="user in vm.registrationForm.event_cars.passengers" layout="row" layout-align="space-between center">
+											<div ng-class="{'bold': user.user_id == vm.userInfo.user_id}">{{user.full_name}}</div>
+										</div>
+									</div>
+								</div>
 							</div>
 				    </v-pane-content>
 				  </v-pane>
