@@ -10,6 +10,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	vm.registrationForm = {};
 	vm.loading = false;
 	vm.myHotelRoom = [];
+	vm.room_list = [];
 
 	vm.cancel = function() {
 		$mdDialog.cancel();
@@ -54,6 +55,14 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	};
 	vm.getEventRegistrationStatus();
 
+	//function get room list
+	vm.getEventRoomList = function () {
+		vm.promise = eventsService.getEventRoomList(vm.event.event_id).then(function(response) {
+			vm.room_list = response.data;
+		});
+	};
+	vm.getEventRoomList();
+
 	vm.range = function(min, max, step) {
 			step = step || 1;
 			var input = [];
@@ -66,23 +75,23 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	vm.selectRoom = function(room_id) {
 		var old_room_id = vm.registrationForm.room_id;
 		vm.registrationForm.room_id = room_id;
-		var len = vm.event.event_rooms.length;
+		var len = vm.room_list.length;
 		var user = {};
 		var new_room_index = null;
 		for (var j = 0; j < len; j++) {
-			if(vm.event.event_rooms[j].room_id == room_id) {
+			if(vm.room_list[j].room_id == room_id) {
 				var new_room_index = j;
 				break;
 			}
 		}
 		for (var j = 0; j < len; j++) {
-			var users = vm.event.event_rooms[j].users;
+			var users = vm.room_list[j].users;
 			var len2 = users.length;
 			for (var i = 0; i < len2; i++) {
 				if(users[i].user_id == vm.userInfo.user_id) {
-					var user = vm.event.event_rooms[j].users[i];
-					vm.event.event_rooms[j].users.splice(i,1);
-					vm.event.event_rooms[new_room_index].users.push(user);
+					var user = vm.room_list[j].users[i];
+					vm.room_list[j].users.splice(i,1);
+					vm.room_list[new_room_index].users.push(user);
 					break;
 				}
 			}

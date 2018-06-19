@@ -238,6 +238,18 @@ $app->group('/events', function () {
     $this->group('/rooms', function () {
       $this->get('', function ($request, $response, $args) {
         $event_id = $args['event_id'];
+        $responseArr = array(
+          'status' => false,
+          'msg' => '',
+          'data' => null
+        );
+        $responseArr['data'] = FrcPortal\EventRoom::with('users')->where('event_id',$event_id)->get();
+        $responseArr['status'] = true;
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->get('/adminList', function ($request, $response, $args) {
+        $event_id = $args['event_id'];
         $responseArr = getEventRoomList($event_id);
         $response = $response->withJson($responseArr);
         return $response;
@@ -635,6 +647,7 @@ $app->group('/events', function () {
         if($room_required && $user_type == 'Student') {
           $reqUpdate->room_id = isset($formData['room_id']) && $formData['room_id'] != '' ? $formData['room_id']:null;
           $reqUpdate->save();
+          //$responseArr['newEventRooms'] = FrcPortal\EventRoom::with('users')->where('event_id',$event_id)->get();
         }
 
         $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Registered for '.$event->name;
