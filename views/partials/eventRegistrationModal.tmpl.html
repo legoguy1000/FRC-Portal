@@ -73,42 +73,24 @@
 				      Please Select Hotel Room
 				    </v-pane-header>
 				    <v-pane-content>
-							<div layout="row" ng-repeat="room in vm.room_list.rooms" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': !vm.admin && $last}">
+							<div layout="row" ng-repeat="room in vm.event.event_rooms" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
 								<div flex layout="row" layout-align="start center" class="" style="border-right: solid;">
-									<md-button class="md-icon-button noprint" ng-click="vm.deleteEventRoom(room.room_id)" ng-hide="!vm.admin">
-										<md-tooltip md-direction="top">Delete Room</md-tooltip>
-										<md-icon class=""> close </md-icon>
-									</md-button>
-									<span>{{room.room_title}}</span>
+									<span style="margin-left:10px;">{{room.room_title}}</span>
 								</div>
-								<div flex class="dndList">
-									<md-list ng-cloak
-										dnd-list="vm.room_list.room_selection[room.room_id]"
-										dnd-allowed-types="room.room_type"
-										dnd-disable-if="!vm.admin || (room.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length >= 4) || (room.user_type == 'Mentor' && vm.room_list.room_selection[room.room_id].length >= 2)"
-										style="min-height:20px;">
-											<md-list-item ng-repeat="req in vm.room_list.room_selection[room.room_id]"
-													dnd-draggable="req"
-													dnd-moved="vm.room_list.room_selection[room.room_id].splice($index, 1)"
-													dnd-effect-allowed="move"
-													dnd-selected="models.selected = req"
-													ng-class="{'selected': models.selected === req}"
-													dnd-type="req.user.room_type"
-													class="min-height-reset"
-													dnd-disable-if = "!vm.admin"
-													>
-													<dnd-nodrag layout="row" layout-align="start center">
-														<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint" ng-hide="!vm.admin">:::</div>
-														<div>{{req.user.full_name}}</div>
-														<div ng-hide="req.registration" style="cursor: default; margin-left: 5px;">
-															<md-tooltip md-direction="top">User has not completed registration</md-tooltip>
-															<md-icon class="material-icons md-warn">warning</md-icon>
-														</div>
-												</dnd-nodrag>
+								<div flex>
+									<md-list ng-cloak style="min-height:20px;">
+											<md-list-item ng-repeat="req in room.users" class="min-height-reset">
+												<div layout="row" layout-align="start center">
+													<div>{{req.user.full_name}}</div>
+													<div ng-hide="req.registration" style="cursor: default; margin-left: 5px;">
+														<md-tooltip md-direction="top">User has not completed registration</md-tooltip>
+														<md-icon class="material-icons md-warn">warning</md-icon>
+													</div>
+												</div>
 											</md-list-item>
 									</md-list>
 									<div flex></div>
-									<div ng-show="!vm.admin && !vm.checkReg(room.room_id) && vm.userInfo.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length < 4 && room.gender == vm.userInfo.gender && room.user_type == vm.userInfo.user_type" layout="row" layout-align="center center">
+									<div ng-show="vm.registrationForm.room_id != room.room_id && vm.userInfo.user_type == 'Student' && vroom.users.length < 4 && room.gender == vm.userInfo.gender && room.user_type == vm.userInfo.user_type" layout="row" layout-align="center center">
 										<md-button type="button" ng-click="vm.toggleRoomSelect(room.room_id)">
 											<md-tooltip md-direction="top">Select Room</md-tooltip>
 											<span>Select Room</span>
