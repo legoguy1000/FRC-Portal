@@ -19,7 +19,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		vm.loading = true;
 		var data = {
 			'event_id': vm.event.event_id,
-			'user_id': vm.event.user_id,
+			'user_id': vm.userInfo.user_id,
 			'registration': vm.registrationForm.registration,
 			'can_drive': vm.registrationForm.can_drive,
 			'event_cars': {
