@@ -143,7 +143,6 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			var len = my_ts.length;
 			for (var j = 0; j < len; j++) {
 				if(my_ts[j].time_slot_id == ts_id) {
-					vm.time_slots[ts_i].splice();
 					vm.registrationForm.event_time_slots.splice(j);
 					break;
 				}
