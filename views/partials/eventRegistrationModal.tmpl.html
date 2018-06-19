@@ -90,10 +90,14 @@
 					        </md-select>
 								</div>
 								<div layout="row" flex layout-align="space-between start">
-									<div>My Car Passenger List: </div>
 									<div layout="column">
+										<div layout="row" layout-align="center center" class="bold">My Driver</div>
+										<div>{{vm.registrationForm.event_cars.driver.full_name}}</div>
+									</div>
+									<div layout="column">
+										<div layout="row" layout-align="center center" class="bold">My Passengers</div>
 										<div ng-repeat="user in vm.registrationForm.event_cars.passengers" layout="row" layout-align="space-between center">
-											<div ng-class="{'bold': user.user_id == vm.userInfo.user_id}">{{user.full_name}}</div>
+											<div>{{user.full_name}}</div>
 										</div>
 									</div>
 								</div>
