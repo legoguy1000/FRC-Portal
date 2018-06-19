@@ -97,6 +97,8 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 					}
 				}
 			}
+		} else {
+			vm.room_list[new_room_index].users.push(user);
 		}
 	}
 
