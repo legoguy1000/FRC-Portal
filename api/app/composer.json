@@ -2,7 +2,6 @@
     "require": {
         "firebase/php-jwt": "^5.0",
         "phpmailer/phpmailer": "^6.0",
-        "minishlink/web-push": "^1.4",
         "google/apiclient": "^2.2",
         "facebook/graph-sdk": "^5.6",
         "microsoft/microsoft-graph": "^1.1",
