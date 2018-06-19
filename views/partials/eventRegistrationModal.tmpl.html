@@ -48,7 +48,7 @@
 									</md-list>
 									<div flex></div>
 									<div layout="row" layout-align="center center">
-										<md-button type="button" ng-click="vm.selectTimeSlot(time_slot.time_slot_id)">
+										<md-button type="button" ng-click="vm.selectTimeSlot($index)">
 											<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
 											<span ng-hide="vm.checkTSReg($index)">Register</span>
 											<span ng-show="vm.checkTSReg($index)">Unregister</span>
