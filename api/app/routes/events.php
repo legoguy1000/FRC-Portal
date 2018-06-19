@@ -640,6 +640,7 @@ $app->group('/events', function () {
             return $response;
       	}
         $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['registration' => true, 'comments' => $formData['comments']]);
+        $ereq_id = $reqUpdate->ereq_id;
         $can_drive = (bool) $formData['can_drive'];
         $drivers_req = (bool) $event->drivers_required;
       	if($user_type == 'Mentor' && $can_drive && $drivers_req) {
@@ -657,7 +658,13 @@ $app->group('/events', function () {
         if($room_required && $user_type == 'Student') {
           $reqUpdate->room_id = isset($formData['room_id']) && $formData['room_id'] != '' ? $formData['room_id']:null;
           $reqUpdate->save();
-          //$responseArr['newEventRooms'] = FrcPortal\EventRoom::with('users')->where('event_id',$event_id)->get();
+        }
+        $time_slots_required = (bool) $event->time_slots_required;
+        if($time_slots_required && isset($formData['event_time_slots']) && count($formData['event_time_slots']) > 0) {
+          $ts_ids = array_column($formData['event_time_slots'], 'time_slot_id');
+          $reqUpdate->event_time_slots()->sync($ts_ids);
+        } else {
+          $reqUpdate->event_time_slots()->detach();
         }
 
         $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Registered for '.$event->name;
