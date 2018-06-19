@@ -110,7 +110,7 @@ class EventRequirement extends Eloquent {
    * Get the Event Car.
    */
   public function event_cars() {
-      return $this->hasOne('FrcPortal\EventCar', 'car_id', 'car_id');
+      return $this->hasOne('FrcPortal\EventCar', 'car_id', 'car_id')->withDefault();
   }
   /**
   * Get the Event Room.

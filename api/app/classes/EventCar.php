@@ -24,6 +24,11 @@ class EventCar extends Eloquent {
 
   protected $appends = ['car_title'];
 
+  protected $attributes = [
+    'user_id' => null,
+    'event_id' => null,
+    'car_space' => null,
+  ];
   //$data['requirements'] = array();
   /**
   * The attributes that should be hidden for arrays.
