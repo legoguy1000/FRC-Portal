@@ -70,27 +70,27 @@
 							</div>-->
 				    </v-pane-content>
 				  </v-pane>
-				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.drivers_required && vm.userInfo.user_type=='Mentor'">
+				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.drivers_required">
 				    <v-pane-header>
 				      Driving
 				    </v-pane-header>
 				    <v-pane-content>
 							<div layout="column" flex >
-								<div layout="row" flex layout-align="space-between center">
+								<div layout="row" flex layout-align="space-between center" ng-if="vm.userInfo.user_type=='Mentor'">
 									<div>Can you drive? </div>
 									<md-select ng-model="vm.registrationForm.can_drive" placeholder="" class="md-no-underline" ng-required="vm.event.drivers_required && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
 					          <md-option ng-value="true">Yes</md-option>
 					          <md-option ng-value="false">No</md-option>
 					        </md-select>
 								</div>
-								<div layout="row" flex layout-align="space-between center" ng-show="vm.registrationForm.can_drive">
+								<div layout="row" flex layout-align="space-between center" ng-show="vm.registrationForm.can_drive" ng-if="vm.userInfo.user_type=='Mentor'">
 									<div>How many including yourself can you drive? </div>
 									<md-select ng-model="vm.registrationForm.event_cars.car_space" placeholder="" class="md-no-underline" ng-required="vm.registrationForm.can_drive">
 					          <md-option ng-value="{{n}}" ng-repeat="n in vm.range(0,10)">{{n}}</md-option>
 					        </md-select>
 								</div>
-								<div layout="row" flex layout-align="space-between center" ng-show="vm.registrationForm.can_drive">
-									<div>My Car Passenger List </div>
+								<div layout="row" flex layout-align="space-between start">
+									<div>My Car Passenger List: </div>
 									<div layout="column">
 										<div ng-repeat="user in vm.registrationForm.event_cars.passengers" layout="row" layout-align="space-between center">
 											<div ng-class="{'bold': user.user_id == vm.userInfo.user_id}">{{user.full_name}}</div>
