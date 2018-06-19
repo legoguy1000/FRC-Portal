@@ -128,7 +128,6 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 	}
 
 	vm.selectTimeSlot = function(ts_i) {
-		var add_remove = true;
 		var add_remove = vm.checkTSReg(ts_i);
 		if(!add_remove) {
 			var new_ts = angular.copy(vm.time_slots[ts_i]);
@@ -139,9 +138,18 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 				'user': vm.userInfo,
 			});
 		} else {
+			var ts_id = vm.time_slots[ts_i].time_slot_id;
+			var my_ts = vm.registrationForm.event_time_slots;
+			var len = my_ts.length;
+			for (var j = 0; j < len; j++) {
+				if(my_ts[j].time_slot_id == ts_id) {
+					vm.time_slots.splice(ts_i);
+					vm.registrationForm.event_time_slots.splice(j);
+					break;
+				}
+			}
 
 		}
-
 	}
 
 /*
