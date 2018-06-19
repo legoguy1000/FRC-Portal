@@ -23,11 +23,12 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			'registration': vm.registrationForm.registration,
 			'can_drive': vm.registrationForm.can_drive,
 			'event_cars': {
-				'car_space': vm.registrationForm.event_cars.car_space,
+				'car_space': null,
 			},
 			'comments': vm.registrationForm.comments,
 			'room_id': vm.registrationForm.room_id,
 		};
+		data.event_cars.car_space = vm.registrationForm.event_cars.car_space != undefined ? vm.registrationForm.event_cars.car_space:null;
 		eventsService.registerForEvent(data).then(function(response){
 			if(response.status) {
 				$mdDialog.hide(response);
