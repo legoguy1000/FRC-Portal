@@ -29,7 +29,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			},
 			'comments': vm.registrationForm.comments,
 			'room_id': vm.registrationForm.room_id,
-			'event_time_slots':
+			'event_time_slots': vm.registrationForm.event_time_slots,
 		};
 		data.event_cars.car_space = vm.registrationForm.event_cars != undefined && vm.registrationForm.event_cars.car_space != undefined ? vm.registrationForm.event_cars.car_space:null;
 		eventsService.registerForEvent(data).then(function(response){
@@ -139,7 +139,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 				'user': vm.userInfo,
 			});
 		} else {
-			
+
 		}
 
 	}
