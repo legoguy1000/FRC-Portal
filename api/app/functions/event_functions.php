@@ -95,7 +95,7 @@ function getEventCarList($event_id) {
 	$cars = array();
 	$carInfo = array();
 	if(isset($event_id) && $event_id != '') {
-		$carInfo = FrcPortal\EventCar::with('users')->where('event_id',$event_id)->get();
+		$carInfo = FrcPortal\EventCar::with(['driver','passengers'])->where('event_id',$event_id)->get();
 		if(count($carInfo) > 0) {
 			foreach($carInfo as $car) {
 				$car_id = $car->car_id;
