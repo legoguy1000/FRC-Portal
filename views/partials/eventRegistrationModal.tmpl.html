@@ -79,13 +79,9 @@
 								</div>
 								<div flex>
 									<md-list ng-cloak style="min-height:20px;">
-											<md-list-item ng-repeat="req in room.users" class="min-height-reset">
+											<md-list-item ng-repeat="user in room.users" class="min-height-reset">
 												<div layout="row" layout-align="start center">
-													<div>{{req.user.full_name}}</div>
-													<div ng-hide="req.registration" style="cursor: default; margin-left: 5px;">
-														<md-tooltip md-direction="top">User has not completed registration</md-tooltip>
-														<md-icon class="material-icons md-warn">warning</md-icon>
-													</div>
+													<div>{{user.full_name}}</div>
 												</div>
 											</md-list-item>
 									</md-list>
