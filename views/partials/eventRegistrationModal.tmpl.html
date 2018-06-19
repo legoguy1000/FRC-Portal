@@ -93,7 +93,7 @@
 									<div layout="column">
 										<div layout="row" layout-align="center center" class="bold">
 												<span ng-hide="vm.registrationForm.event_cars.user_id == vm.userInfo.user_id">My </span>
-										 		<span>Driver</span>
+												<span>&nbsp; Driver</span>
 										 </div>
 										<div>{{vm.registrationForm.event_cars.driver.full_name}}</div>
 									</div>
@@ -101,7 +101,7 @@
 										<div layout="row" layout-align="center center" class="bold">
 											<span ng-show="vm.registrationForm.event_cars.user_id == vm.userInfo.user_id">My </span>
 											<span ng-hide="vm.registrationForm.event_cars.user_id == vm.userInfo.user_id">Car </span>
-											<span>Passengers</span>
+											<span>&nbsp; Passengers</span>
 										</div>
 										<div ng-repeat="user in vm.registrationForm.event_cars.passengers" layout="row" layout-align="center center">
 											<div>{{user.full_name}}</div>
