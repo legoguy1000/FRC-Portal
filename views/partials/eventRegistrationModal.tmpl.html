@@ -105,7 +105,7 @@
 									<md-list ng-cloak style="min-height:20px;">
 											<md-list-item ng-repeat="user in room.users" class="min-height-reset">
 												<div layout="row" layout-align="start center">
-													<div>{{user.full_name}}</div>
+													<div ng-class="{'bold': user.user_id == vm.userInfo.user_id}">{{user.full_name}}</div>
 												</div>
 											</md-list-item>
 									</md-list>
