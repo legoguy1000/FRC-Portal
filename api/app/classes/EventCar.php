@@ -84,7 +84,7 @@ class EventCar extends Eloquent {
       return $this->hasManyThrough('FrcPortal\User','FrcPortal\EventRequirement', 'car_id', 'user_id', 'car_id', 'user_id');
   }
   public function getCarTitleAttribute() {
-    return isset($this->user_id) && isset($this->car_space) ? $this->users->full_name.' ('.$this->car_space.')' : null;
+    return isset($this->user_id) && isset($this->car_space) ? $this->driver->full_name.' ('.$this->car_space.')' : null;
   }
 
 }
