@@ -410,7 +410,7 @@ $app->group('/events', function () {
         $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->first();
         if($timeSlot) {
           $timeSlot->name = $formData['name'];
-          $timeSlot->description = $formData['description'];
+          $timeSlot->description = isset($formData['description']) ? $formData['description']:'';
           $ts = new DateTime($formData['time_start']);
           $te = new DateTime($formData['time_end']);
           $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
@@ -475,7 +475,7 @@ $app->group('/events', function () {
         $timeSlot = new FrcPortal\EventTimeSlot();
         $timeSlot->event_id = $event_id;
         $timeSlot->name = $formData['name'];
-        $timeSlot->description = $formData['description'];
+        $timeSlot->description = isset($formData['description']) ? $formData['description']:'';
         $ts = new DateTime($formData['time_start']);
         $te = new DateTime($formData['time_end']);
         $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
