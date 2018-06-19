@@ -372,3 +372,7 @@ md-list-item.min-height-reset .md-list-item-inner::before {
 .lastRowStyle {
   border-bottom: solid;
 }
+
+.bold {
+  font-weight: bold;
+}

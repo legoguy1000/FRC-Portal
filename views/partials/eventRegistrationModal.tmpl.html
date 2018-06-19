@@ -43,7 +43,7 @@
 								<div flex layout="column">
 									<md-list ng-cloak>
 								    <md-list-item ng-repeat="reg in time_slot.registrations" class="min-height-reset">
-												<div>{{reg.user.full_name}}</div>
+											<div ng-classs="{'bold': reg.user_id == vm.userInfo.user_id}">{{reg.user.full_name}}</div>
 								    </md-list-item>
 									</md-list>
 									<div flex></div>
