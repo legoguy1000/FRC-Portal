@@ -76,7 +76,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		var old_room_id = vm.registrationForm.room_id;
 		vm.registrationForm.room_id = room_id;
 		var len = vm.room_list.length;
-		var user = {};
+		var user = vm.userInfo;
 		var new_room_index = null;
 		for (var j = 0; j < len; j++) {
 			if(vm.room_list[j].room_id == room_id) {
@@ -84,15 +84,17 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 				break;
 			}
 		}
-		for (var j = 0; j < len; j++) {
-			var users = vm.room_list[j].users;
-			var len2 = users.length;
-			for (var i = 0; i < len2; i++) {
-				if(users[i].user_id == vm.userInfo.user_id) {
-					var user = vm.room_list[j].users[i];
-					vm.room_list[j].users.splice(i,1);
-					vm.room_list[new_room_index].users.push(user);
-					break;
+		if(old_room_id != null) {
+			for (var j = 0; j < len; j++) {
+				var users = vm.room_list[j].users;
+				var len2 = users.length;
+				for (var i = 0; i < len2; i++) {
+					if(users[i].user_id == vm.userInfo.user_id) {
+						var user = vm.room_list[j].users[i];
+						vm.room_list[j].users.splice(i,1);
+						vm.room_list[new_room_index].users.push(user);
+						break;
+					}
 				}
 			}
 		}
