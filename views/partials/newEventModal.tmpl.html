@@ -12,8 +12,8 @@
 			</md-button>
 		  </div>
 		</md-toolbar>
-		<md-dialog-content layout="column" class="md-margin">
-			<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.addEvent()">
+		<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.addEvent()">
+			<md-dialog-content layout="column" class="md-margin">
 				<div layout="row">
 					<md-input-container flex class="md-icon-float md-block">
 						<label>Event Name</label>
@@ -98,16 +98,13 @@
 						<md-switch class="md-primary"  ng-model="vm.data.exempt_hours">
 					   Exempt Hours
 					  </md-switch>
-				</div>
-				<div layout="row">
-					<span flex></span>
-					<md-button type="submit">
-						Submit
-					</md-button>
-				</div>
-			</form>
-		</md-dialog-content>
-		<md-dialog-actions layout="row">
-		</md-dialog-actions>
+				</div>			
+			</md-dialog-content>
+			<md-dialog-actions layout="row">
+				<md-button type="submit">
+					Submit
+				</md-button>
+			</md-dialog-actions>
+		</form>
 	<!--</form>-->
 </md-dialog>
