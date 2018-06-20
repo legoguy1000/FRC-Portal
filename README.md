@@ -9,6 +9,7 @@ Version 2.7.0 (Current Dev Branch)
 * Pull Google Calendar Event info for event registration deadline events
 * Lazy load controllers, filters, services
 * Update event registration menu.  Simplify process.
+* Update New Event Dialog. New Event Dialog -> Event Search.
 
 ## Getting Started
 
