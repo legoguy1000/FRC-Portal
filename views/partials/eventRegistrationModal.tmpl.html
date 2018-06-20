@@ -20,7 +20,7 @@
 				    <v-pane-content layout="column">
 							<div layout="row" flex layout-align="space-between center">
 								<div>Are you attending the event? </div>
-								<md-select ng-model="vm.registrationForm.registration" placeholder="" class="md-no-underline" required>
+								<md-select ng-model="vm.registrationForm.registration" placeholder="" class="md-no-underline" required aria-label="Registration">
 				          <md-option ng-value="true">Yes</md-option>
 				          <md-option ng-value="false">No</md-option>
 				        </md-select>
@@ -48,7 +48,7 @@
 									</md-list>
 									<div flex></div>
 									<div layout="row" layout-align="center center">
-										<md-button type="button" ng-click="vm.selectTimeSlot($index)">
+										<md-button type="button" ng-click="vm.selectTimeSlot($index)" aria-label="Register/Unregister for Time Slot">
 											<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
 											<span ng-hide="vm.checkTSReg($index)">Register</span>
 											<span ng-show="vm.checkTSReg($index)">Unregister</span>
@@ -78,14 +78,14 @@
 							<div layout="column" flex >
 								<div layout="row" flex layout-align="space-between center" ng-if="vm.userInfo.user_type=='Mentor'">
 									<div>Can you drive? </div>
-									<md-select ng-model="vm.registrationForm.can_drive" placeholder="" class="md-no-underline" ng-required="vm.event.drivers_required && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
+									<md-select ng-model="vm.registrationForm.can_drive" placeholder="" class="md-no-underline" ng-required="vm.event.drivers_required && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration" aria-label="Can Drive">
 					          <md-option ng-value="true">Yes</md-option>
 					          <md-option ng-value="false">No</md-option>
 					        </md-select>
 								</div>
 								<div layout="row" flex layout-align="space-between center" ng-show="vm.registrationForm.can_drive" ng-if="vm.userInfo.user_type=='Mentor'">
 									<div>How many including yourself can you drive? </div>
-									<md-select ng-model="vm.registrationForm.event_cars.car_space" placeholder="" class="md-no-underline" ng-required="vm.registrationForm.can_drive">
+									<md-select ng-model="vm.registrationForm.event_cars.car_space" placeholder="" class="md-no-underline" ng-required="vm.registrationForm.can_drive" aria-label="Number of Passengers">
 					          <md-option ng-value="{{n}}" ng-repeat="n in vm.range(0,10)">{{n}}</md-option>
 					        </md-select>
 								</div>
@@ -130,7 +130,7 @@
 									</md-list>
 									<div flex></div>
 									<div ng-show="vm.registrationForm.room_id != room.room_id && vm.userInfo.user_type == 'Student' && room.users.length < 4 && room.gender == vm.userInfo.gender && room.user_type == vm.userInfo.user_type" layout="row" layout-align="center center">
-										<md-button type="button" ng-click="vm.selectRoom(room.room_id)">
+										<md-button type="button" ng-click="vm.selectRoom(room.room_id)" aria-label="Select Hotel Room">
 											<md-tooltip md-direction="top">Select Room</md-tooltip>
 											<span>Select Room</span>
 										</md-button>
@@ -147,7 +147,7 @@
 							<div layout="row" flex layout-align="start center">
 								<md-input-container class="" style="width:99%;">
 				          <label>Comments</label>
-				          <textarea ng-model="vm.registrationForm.comments" rows="5" md-select-on-focus></textarea>
+				          <textarea ng-model="vm.registrationForm.comments" rows="5" md-select-on-focus aria-label="Registration Comments"></textarea>
 				        </md-input-container>
 							</div>
 				    </v-pane-content>

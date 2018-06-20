@@ -8,6 +8,7 @@ Version 2.7.0 (Current Dev Branch)
 * Replace login notification with toast
 * Pull Google Calendar Event info for event registration deadline events
 * Lazy load controllers, filters, services
+* Update event registration menu.  Simplify process.
 
 ## Getting Started
 
