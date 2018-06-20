@@ -7,7 +7,7 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 
 	vm.selected = [];
 	vm.newEventModal = newEventModal;
-	vm.searchEventModal = searchEventModal;
+	//vm.searchEventModal = searchEventModal;
 	vm.filter = {
 		show: false,
 	};
@@ -59,7 +59,7 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 		});
 	};
 
-	function searchEventModal(ev) {
+/*	function searchEventModal(ev) {
 		$mdDialog.show({
 			controller: eventSearchModalController,
 			controllerAs: 'vm',
@@ -68,6 +68,7 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 			targetEvent: ev,
 			clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
+			multiple: true,
 			locals: {
 			}
 		})
@@ -78,8 +79,8 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
 	}
-
-	function newEventModal(eventData) {
+*/
+	function newEventModal() {
 		$mdDialog.show({
 			controller: newEventModalController,
 			controllerAs: 'vm',
@@ -87,8 +88,8 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 			parent: angular.element(document.body),
 			clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
+			multiple: true,
 			locals: {
-				eventData: eventData,
 			}
 		})
 		.then(function(response) {
