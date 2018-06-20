@@ -38,6 +38,34 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	};
 	vm.currentTime = new Date().getTime();
 
+	vm.menuOptions = [
+		{
+			label: 'Save',        // menu option label
+			onClick: function($event){  // on click handler
+			}
+		},
+		{
+			label: 'Edit',
+			onClick: function($event){  // on click handler
+			}
+		},
+		{
+			label: 'Details',
+			onClick: function($event){  // on click handler
+			}
+		},
+		{
+			divider: true       // will render a divider
+		},
+		{
+			label: 'Remove',
+			onClick: function($event){  // on click handler
+			}
+		}
+	];
+
+
+
 	vm.getEventTypeList = function () {
 		vm.promise =	eventsService.getEventTypes().then(function(response){
 			vm.eventTypes = response.data;
