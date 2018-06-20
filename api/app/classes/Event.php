@@ -116,10 +116,7 @@ class Event extends Eloquent {
   }
 
   public function getSeasonAttribute() {
-    return DB::table('seasons')
-            ->join('events', function ($join) {
-                $join->on('events.event_start', '>=', 'seasons.start_date')->on('events.event_end', '<=', 'seasons.end_date');
-            })->where('events.event_id', '=', $this->attributes['event_id'])->select('seasons.*')->first();
+    return Season::where('year',date('Y',strtotime($this->event_start)))->first();
   }
 
   /**
