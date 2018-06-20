@@ -40,28 +40,50 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 	vm.menuOptions = [
 		{
-			label: 'Save',        // menu option label
-			onClick: function($event){  // on click handler
+			label: 'Event Registration',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'registration';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
 			}
 		},
 		{
-			label: 'Edit',
-			onClick: function($event){  // on click handler
+			label: 'Payment',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'payment';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
 			}
 		},
 		{
-			label: 'Details',
-			onClick: function($event){  // on click handler
+			label: 'Permission Slip',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'permission_slip';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
 			}
 		},
 		{
-			divider: true       // will render a divider
+			label: 'Food',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'food';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
+			}
 		},
 		{
-			label: 'Remove',
-			onClick: function($event){  // on click handler
+			label: 'Confirm Attendance',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'attendance_confirmed';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
 			}
-		}
+		},
 	];
 
 
@@ -238,6 +260,30 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		.then(function(response) {
 			//vm.users = response.data;
 		}, function() { });
+	};
+
+	vm.rcToggleEventReqs = function(user, req, action) {
+		if(vm.selectedUsers.length > 1) {
+
+		} else if ((vm.selectedUsers.length == 1 && vm.selectedUsers[0].user_id == user.user_id) || vm.selectedUsers.length == 0) {
+			var users = [];
+			users.psuh(user);
+			vm.toggleEventReqs2(users, req, action);
+		}
+	}
+
+	vm.toggleEventReqs2 = function (users, req, action) {
+		var data = {
+			'event_id': vm.event_id,
+			'users': users,
+			'requirement':req,
+			'action': action
+		}
+		vm.promise = eventsService.toggleEventReqs(data).then(function(response){
+			if(response.status && response.data) {
+				vm.users = response.data;
+			}
+		});
 	};
 
 	vm.toggleEventReqs = function (req) {
