@@ -11,6 +11,7 @@ function newEventModalController($log,$element,$mdDialog,$scope,usersService,eve
 	//vm.data = eventData;
 	vm.data = null;
 	vm.oldData = null;
+	vm.startDate = moment();
 	vm.loading = {
 		searchGoogle: false,
 	}

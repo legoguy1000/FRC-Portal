@@ -23,6 +23,7 @@
 							min-view="year"
 							max-view="month"
 							locale="en"
+							start-date="vm.startDate"
 						 	ng-model="vm.searchGoogle.timeMin">
 						</input>
 					</md-input-container>
@@ -33,6 +34,8 @@
 							 	min-view="year"
 							 	max-view="month"
 								locale="en"
+								start-date="vm.startDate"
+								min-date="vm.searchGoogle.end_form"
 							 	ng-model="vm.searchGoogle.timeMax">
 						</input>
 					</md-input-container>
