@@ -9,7 +9,8 @@ function newEventModalController($log,$element,$mdDialog,$scope,usersService,eve
 		$mdDialog.cancel();
 	}
 	//vm.data = eventData;
-	vm.data = {};
+	vm.data = null;
+	vm.oldData = null;
 	vm.loading = {
 		searchGoogle: false,
 	}
@@ -19,7 +20,7 @@ function newEventModalController($log,$element,$mdDialog,$scope,usersService,eve
 
 	vm.searchEventModal = function() {
 		vm.oldData = angular.copy(vm.data);
-		vm.data = {};
+		vm.data = null;
 		$mdDialog.show({
 			controller: eventSearchModalController,
 			controllerAs: 'vm',
@@ -35,6 +36,9 @@ function newEventModalController($log,$element,$mdDialog,$scope,usersService,eve
 		.then(function(event) {
 			vm.data = event;
 		}, function() {
+			if(vm.oldData == null) {
+				vm.cancel();
+			}
 			vm.data = angular.copy(vm.oldData);
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
