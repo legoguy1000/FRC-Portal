@@ -29,6 +29,9 @@ if($version >= '2.6.0') {
 * 2.7.0
 **/
 if($version >= '2.7.0') {
+  //add dbal package
+  shell_exec("composer install");
+  shell_exec("composer dump-autoload");
   //Backup Database
   exportDB();
   //Change Column Name
@@ -47,9 +50,7 @@ if($version >= '2.7.0') {
   include_once('UserUserCategory.php');
 
   */
-  //add dbal package
-  shell_exec("composer install");
-  shell_exec("composer dump-autoload");
+
 }
 
 /**
