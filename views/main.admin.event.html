@@ -186,8 +186,8 @@
 					</md-button>
 				</div>
 			</md-toolbar>
-			<md-table-container>
-				<table md-table md-row-select multiple ng-model="vm.selectedUsers" md-progress="vm.promise">
+			<md-table-container> <!-- md-row-select multiple ng-model="vm.selectedUsers" -->
+				<table md-table md-progress="vm.promise">
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
 							<th md-column md-order-by="full_name"><span>Name</span></th>
@@ -202,7 +202,7 @@
 							<!--<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
 					</thead>
-					<tbody md-body>
+					<tbody md-body> <!-- md-select="user" md-select-id="user_id" -->
 						<tr md-row ng-repeat="user in vm.users | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" sh-context-menu menu-options="vm.menuOptions" context-data="user">
 							<td md-cell>
 								<md-list-item style="padding: 0px;">
