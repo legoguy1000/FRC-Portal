@@ -72,7 +72,7 @@
 				  </v-pane>
 				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.drivers_required">
 				    <v-pane-header>
-				      Driving
+				      Transportation
 				    </v-pane-header>
 				    <v-pane-content>
 							<div layout="column" flex >
@@ -113,7 +113,7 @@
 				  </v-pane>
 				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.room_required && vm.userInfo.user_type != 'Mentor'">
 				    <v-pane-header>
-				      Please Select Hotel Room
+				      Hotel Room
 				    </v-pane-header>
 				    <v-pane-content>
 							<div layout="row" ng-repeat="room in vm.room_list" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
