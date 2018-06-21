@@ -197,8 +197,9 @@
 						</tr>
 					</tbody>
 				</table>
-				<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.users | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
 			</md-table-container>
+			<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.users | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
+		
 			<!--<md-fab-speed-dial md-open="vm.fabOpen" md-direction="up" class="md-scale md-fab-bottom-right">
 				<md-fab-trigger>
 					<md-button aria-label="menu" class="md-fab md-warn">

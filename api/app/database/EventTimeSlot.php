@@ -1,6 +1,6 @@
 <?php
 
-require_once "../includes.php";
+include_once(__DIR__.'/../includes.php');
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 Capsule::schema()->create('event_time_slots', function ($table) {
@@ -10,8 +10,6 @@ Capsule::schema()->create('event_time_slots', function ($table) {
        $table->text('description');
        $table->dateTime('time_start');
        $table->dateTime('time_end');
-
-       $table->foreign('event_id')->references('event_id')->on('events')->onDelete('cascade')->onUpdate('cascade');
 });
 
 ?>

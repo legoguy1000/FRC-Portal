@@ -38,6 +38,60 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	};
 	vm.currentTime = new Date().getTime();
 
+	vm.menuOptions = [
+		{
+			label: 'Toggle Event Registration',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'registration';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
+			}
+		}, {
+			label: 'Edit Registration',
+			onClick: function($event){
+				var user = $event.dataContext;
+				vm.showRegistrationForm(null,user);
+			}
+		}, {
+			divider: true,
+		}, {
+			label: 'Toggle Payment',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'payment';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
+			}
+		}, {
+			label: 'Toggle Permission Slip',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'permission_slip';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
+			}
+		}, {
+			label: 'Toggle Food',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'food';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
+			}
+		}, {
+			label: 'Confirm Attendance',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'attendance_confirmed';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
+			}
+		},
+	];
+
+
+
 	vm.getEventTypeList = function () {
 		vm.promise =	eventsService.getEventTypes().then(function(response){
 			vm.eventTypes = response.data;
@@ -68,6 +122,11 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	}
 	vm.getEventRequirements();
 
+	vm.clearDeadline = function () {
+		vm.event.registration_deadline_moment = null;
+		vm.event.registration_deadline_gcalid = null;
+		vm.event.registration_deadline_formatted = null;
+	};
 
 
 	vm.syncGoogleCalEvent = function () {
@@ -155,6 +214,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 					'name':vm.event.name,
 					//'room_info': vm.event.room_list
 				},
+				admin: true,
 			}
 		})
 		.then(function(response) {
@@ -204,6 +264,30 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		.then(function(response) {
 			//vm.users = response.data;
 		}, function() { });
+	};
+
+	vm.rcToggleEventReqs = function(user, req, action) {
+		if(vm.selectedUsers.length > 1) {
+
+		} else if ((vm.selectedUsers.length == 1 && vm.selectedUsers[0].user_id == user.user_id) || vm.selectedUsers.length == 0) {
+			var users = [];
+			users.push(user);
+			vm.toggleEventReqs2(users, req, action);
+		}
+	}
+
+	vm.toggleEventReqs2 = function (users, req, action) {
+		var data = {
+			'event_id': vm.event_id,
+			'users': users,
+			'requirement':req,
+			'action': action
+		}
+		vm.promise = eventsService.toggleEventReqs(data).then(function(response){
+			if(response.status && response.data) {
+				vm.users = response.data;
+			}
+		});
 	};
 
 	vm.toggleEventReqs = function (req) {

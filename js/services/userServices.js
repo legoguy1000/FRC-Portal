@@ -149,5 +149,13 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		registerEventRoom: function (formData) {
+			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			return $http.put('api/users/'+user_id+'/eventRequirements/'+event_id+'/rooms',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

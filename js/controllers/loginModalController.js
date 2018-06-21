@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('loginModalController', ['$auth', '$mdDialog', '$window', 'configItems',
+.controller('loginModalController', ['$auth', '$mdDialog', '$window', 'configItems', '$mdToast',
 	loginModalController
 ]);
-function loginModalController($auth,$mdDialog,$window, configItems) {
+function loginModalController($auth,$mdDialog,$window, configItems, $mdToast) {
 	var vm = this;
 
 	vm.configItems = configItems;
@@ -10,7 +10,12 @@ function loginModalController($auth,$mdDialog,$window, configItems) {
 	vm.loginForm = {};
 	vm.login = function () {
 		$auth.login(vm.loginForm).then(function(response) {
-			alert(response.data.msg)
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.data.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 			var authed = $auth.isAuthenticated();
 			if(authed) {
 				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);
@@ -26,7 +31,13 @@ function loginModalController($auth,$mdDialog,$window, configItems) {
 	vm.authenticate = function(provider) {
 		$auth.authenticate(provider).then(function(response) {
 		//	toastr[response.data.type](response.data.msg, 'Login');
-			alert(response.data.msg)
+			//alert(response.data.msg)
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.data.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 			var authed = $auth.isAuthenticated();
 			if(authed) {
 				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);

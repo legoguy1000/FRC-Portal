@@ -35,6 +35,13 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getEventAdminRoomList: function (event_id) {
+			var event_id = event_id != undefined && event_id != null ? event_id:'';
+			return $http.get('api/events/'+event_id+'/rooms/adminList')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		getEventRoomList: function (event_id) {
 			var event_id = event_id != undefined && event_id != null ? event_id:'';
 			return $http.get('api/events/'+event_id+'/rooms')

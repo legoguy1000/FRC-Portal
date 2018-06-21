@@ -7,7 +7,7 @@ function syncGoogleCalendarEvent($event_id) {
 		'msg' => '',
 		'data' => null
 	);
-	$event = FrcPortal\Event::with('poc')->find($event_id);
+	$event = FrcPortal\Event::with('poc')->find($event_id); //, 'event_rooms.users', 'event_cars', 'event_time_slots.registrations.user'
 	if(!is_null($event)) {
 		$google_cal_id = $event->google_cal_id;
 		if(isset($google_cal_id) && $google_cal_id != '') {
@@ -95,7 +95,7 @@ function getEventCarList($event_id) {
 	$cars = array();
 	$carInfo = array();
 	if(isset($event_id) && $event_id != '') {
-		$carInfo = FrcPortal\EventCar::with('users')->where('event_id',$event_id)->get();
+		$carInfo = FrcPortal\EventCar::with(['driver','passengers'])->where('event_id',$event_id)->get();
 		if(count($carInfo) > 0) {
 			foreach($carInfo as $car) {
 				$car_id = $car->car_id;

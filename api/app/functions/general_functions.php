@@ -266,4 +266,35 @@ function json_validate($string) {
     // everything is OK
     return $result;
 }
+
+function formatSettings($setting, $value) {
+	if(strpos($setting, 'enable') !== false || strpos($setting, 'require') !== false) {
+		$value = (boolean) $value;
+	}
+	return $value;
+}
+
+function exportDB() {
+	//ENTER THE RELEVANT INFO BELOW
+	$folder = __DIR__.'/../secured/db_exports/';
+	if (!file_exists($folder)) {
+	    mkdir($folder,0777,true);
+	}
+	$mysqlDatabaseName = getIniProp('db_name');
+	$mysqlUserName = getIniProp('db_user');
+	$mysqlPassword = getIniProp('db_pass');
+	$mysqlHostName = getIniProp('db_host');
+	$mysqlExportPath = $folder.date('Y-m-d H:i:s').' '.$mysqlDatabaseName.'.sql';
+	$worked = null;
+	$command='mysqldump --opt -h '.$mysqlHostName.' -u '.$mysqlUserName.' -p'.$mysqlPassword.' '.$mysqlDatabaseName.' > "' .$mysqlExportPath.'"';
+	exec($command,$output,$worked);
+	switch($worked){
+	case 0:
+		return true;
+	case 1:
+		return true;
+	case 2:
+		return false;
+	}
+}
 ?>

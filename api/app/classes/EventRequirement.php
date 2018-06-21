@@ -24,6 +24,8 @@ class EventRequirement extends Eloquent {
   protected $appends = ['car_bool','room_bool'];
 
   protected $attributes = [
+    'user_id' => null,
+    'event_id' => null,
     'registration' => false,
     'payment' => false,
     'permission_slip' => false,
@@ -110,13 +112,13 @@ class EventRequirement extends Eloquent {
    * Get the Event Car.
    */
   public function event_cars() {
-      return $this->hasOne('FrcPortal\EventCar', 'car_id', 'car_id');
+      return $this->hasOne('FrcPortal\EventCar', 'car_id', 'car_id')->withDefault();
   }
   /**
   * Get the Event Room.
   */
   public function event_rooms() {
-    return $this->hasOne('FrcPortal\EventRoom', 'room_id', 'room_id');
+    return $this->hasOne('FrcPortal\EventRoom', 'room_id', 'room_id')->withDefault();
   }
   /**
    * Get the Event Time Slots.

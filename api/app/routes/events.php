@@ -162,7 +162,17 @@ $app->group('/events', function () {
     $this->get('', function ($request, $response, $args) {
       $event_id = $args['event_id'];
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
-      $event = FrcPortal\Event::with('poc')->find($event_id);
+      $withArr = array('poc');
+      if($request->getParam('event_rooms') !== null && $request->getParam('event_rooms')==true) {
+        $withArr[] = 'event_rooms.users';
+      }
+      if($request->getParam('event_cars') !== null && $request->getParam('event_cars')==true) {
+        $withArr[] = 'event_cars';
+      }
+      if($request->getParam('event_time_slots') !== null && $request->getParam('event_time_slots')==true) {
+        $withArr[] = 'event_time_slots.registrations.user';
+      }
+      $event = FrcPortal\Event::with($withArr)->find($event_id);
       if($reqsBool) {
         $event->users = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                         		$query->where('event_id','=',$event_id);
@@ -191,7 +201,7 @@ $app->group('/events', function () {
       $this->put('', function ($request, $response, $args) {
         $authToken = $request->getAttribute("token");
         $userId = $authToken['data']->user_id;
-        $season_id = $args['season_id'];
+
         $formData = $request->getParsedBody();
         $responseArr = array(
           'status' => false,
@@ -237,6 +247,18 @@ $app->group('/events', function () {
     });
     $this->group('/rooms', function () {
       $this->get('', function ($request, $response, $args) {
+        $event_id = $args['event_id'];
+        $responseArr = array(
+          'status' => false,
+          'msg' => '',
+          'data' => null
+        );
+        $responseArr['data'] = FrcPortal\EventRoom::with('users')->where('event_id',$event_id)->get();
+        $responseArr['status'] = true;
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->get('/adminList', function ($request, $response, $args) {
         $event_id = $args['event_id'];
         $responseArr = getEventRoomList($event_id);
         $response = $response->withJson($responseArr);
@@ -388,7 +410,7 @@ $app->group('/events', function () {
         $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->first();
         if($timeSlot) {
           $timeSlot->name = $formData['name'];
-          $timeSlot->description = $formData['description'];
+          $timeSlot->description = isset($formData['description']) ? $formData['description']:'';
           $ts = new DateTime($formData['time_start']);
           $te = new DateTime($formData['time_end']);
           $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
@@ -453,7 +475,7 @@ $app->group('/events', function () {
         $timeSlot = new FrcPortal\EventTimeSlot();
         $timeSlot->event_id = $event_id;
         $timeSlot->name = $formData['name'];
-        $timeSlot->description = $formData['description'];
+        $timeSlot->description = isset($formData['description']) ? $formData['description']:'';
         $ts = new DateTime($formData['time_start']);
         $te = new DateTime($formData['time_end']);
         $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
@@ -471,7 +493,6 @@ $app->group('/events', function () {
     $this->put('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
-      $season_id = $args['season_id'];
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
@@ -493,6 +514,8 @@ $app->group('/events', function () {
       if($formData['registration_deadline'] != null && $formData['registration_deadline'] != '') {
         $registration_deadline = new DateTime($formData['registration_deadline']);
         $event->registration_deadline = $registration_deadline->format('Y-m-d').' 23:59:59';
+      } else {
+        $event->registration_deadline = null;
       }
       $event->registration_deadline_gcalid = isset($formData['registration_deadline_gcalid']) && $formData['registration_deadline_gcalid'] != '' ? $formData['registration_deadline_gcalid']:null;
       if($event->save()) {
@@ -507,7 +530,7 @@ $app->group('/events', function () {
     $this->put('/syncGoogleCalEvent', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
-      $season_id = $args['season_id'];
+
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
@@ -528,7 +551,7 @@ $app->group('/events', function () {
     $this->put('/toggleEventReqs', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
-      $season_id = $args['season_id'];
+
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
@@ -603,6 +626,7 @@ $app->group('/events', function () {
 
       $user =  FrcPortal\User::find($user_id);
       $user_type = $user->user_type;
+      $gender = $user->gender;
 
       $registrationBool = (bool) $formData['registration'];
       $event = FrcPortal\Event::find($event_id);
@@ -617,34 +641,79 @@ $app->group('/events', function () {
             return $response;
       	}
         $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['registration' => true, 'comments' => $formData['comments']]);
+        $ereq_id = $reqUpdate->ereq_id;
         $can_drive = (bool) $formData['can_drive'];
         $drivers_req = (bool) $event->drivers_required;
-      	if($user_type == 'Mentor' && $can_drive && $drivers_req) {
-          $eventCarUpdate = FrcPortal\EventCar::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['car_space' => $formData['event_cars']['car_space']]);
-          $reqUpdate->can_drive = true;
-          $reqUpdate->car_id = $eventCarUpdate->car_id;
-          $reqUpdate->save();
-        } else {
-          $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
-          $reqUpdate->can_drive = false;
-          $reqUpdate->car_id = null;
-          $reqUpdate->save();
-        }
-        $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Registered for '.$event->name;
-        //notify event POC
-        if(!is_null($event->poc_id)){
-          $responseArr['msg'] = $user->full_name.' registered for '.$event->name;
-          if($user_id != $loggedInUser) {
-            $responseArr['msg'] = $userFullName.' registered '.$user->full_name.' for '.$event->name;
+      	if($drivers_req && $user_type == 'Mentor') {
+          $car = FrcPortal\EventCar::find($reqUpdate->car_id);
+          if($can_drive) {
+            $eventCarUpdate = FrcPortal\EventCar::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['car_space' => $formData['event_cars']['car_space']]);
+            $reqUpdate->can_drive = true;
+            $reqUpdate->car_id = $eventCarUpdate->car_id;
+            $reqUpdate->save();
+          } else {
+            if(!is_null($car) && $car->user_id == $user_id) {
+              $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
+              $reqUpdate->can_drive = false;
+              $reqUpdate->car_id = null;
+              $reqUpdate->save();
+            }
           }
-          slackMessageToUser($event->poc_id, $msg);
-          $eventRequirements = array();
         }
+        $room_required = (bool) $event->room_required;
+        if($room_required && $user_type == 'Student') {
+          $room_id = $formData['room_id'];
+          $room = FrcPortal\EventRoom::where('room_id',$room_id)->where('event_id',$event_id)->first();
+          if(is_null($room)) {
+            $responseArr['msg'] = 'Invalid Room Selection';
+            $response = $response->withJson($responseArr);
+            return $response;
+          }
+          if($room->user_type != $user_type) {
+            $responseArr['msg'] = 'Room User Type does not match User Type';
+            $response = $response->withJson($responseArr);
+            return $response;
+          }
+          if($room->user_type != 'Mentor' && $room->gender != $gender) {
+            $responseArr['msg'] = 'Room Gender does not match User Gender';
+            $response = $response->withJson($responseArr);
+            return $response;
+          }
+          $reqUpdate->room_id = isset($formData['room_id']) && $formData['room_id'] != '' ? $formData['room_id']:null;
+          $reqUpdate->save();
+        }
+        $time_slots_required = (bool) $event->time_slots_required;
+        if($time_slots_required && isset($formData['event_time_slots']) && count($formData['event_time_slots']) > 0) {
+          $ts_ids = array_column($formData['event_time_slots'], 'time_slot_id');
+          $reqUpdate->event_time_slots()->sync($ts_ids);
+        } else {
+          $reqUpdate->event_time_slots()->detach();
+        }
+        $msg = $user->full_name.' registered for '.$event->name;
       } else {
         $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->delete();
         $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
-        $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'Unregistered';
+        $msg = $user->full_name.' unregistered for '.$event->name;
       }
+      //notify event POC
+      if(!is_null($event->poc_id)) {
+        $reg = $registrationBool ? 'registered':'unregistered';
+        $slackMsg = $user->full_name.' '.$reg.' for '.$event->name;
+        if($user_id != $loggedInUser) {
+          $slackMsg = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name;
+        }
+        slackMessageToUser($event->poc_id, $slackMsg);
+      }
+      //notify User
+      if($loggedInUser != $event->poc_id) {
+        $reg = $registrationBool ? 'registered':'unregistered';
+        $slackMsg = 'You '.$reg.' for '.$event->name;
+        if($user_id != $loggedInUser) {
+          //$slackMsg = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name;
+        }
+        slackMessageToUser($user_id, $slackMsg);
+      }
+
       $eventReqs = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id','=',$event_id);
                         },'event_requirements.event_rooms','event_requirements.event_cars'])->where('user_id',$user_id)->first();

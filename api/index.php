@@ -70,7 +70,7 @@ $container['db'] = function ($container) {
 };*/
 $app->get('/version', function (Request $request, Response $response, array $args) {
     $responseArr = array(
-      'version' => '2.6.0'
+      'version' => VERSION
     );
     $response = $response->withJson($responseArr);
     return $response;
@@ -97,16 +97,13 @@ $app->get('/config', function ($request, $response, $args) {
     'team_color_secondary',
     'notification_email',
     'env_url',
+    'require_team_email',
   );
 //  $settings = FrcPortal\Setting::where('public',true)->get();
   $settings = FrcPortal\Setting::whereIn('setting', $configArr)->get();
   $constantArr = array();
   foreach($settings as $set) {
-    $temp = $set->value;
-    if(strpos($set->setting, 'enable') !== false) {
-      $temp = (boolean) $temp;
-    }
-    $constantArr[$set->setting] = $temp;
+    $constantArr[$set->setting] = formatSettings($set->setting, $set->value);
   }
   $responseStr = 'angular.module("FrcPortal").constant("configItems", '.json_encode($constantArr).');';
   $response->getBody()->write($responseStr);

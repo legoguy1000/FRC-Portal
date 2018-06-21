@@ -24,6 +24,11 @@ class EventCar extends Eloquent {
 
   protected $appends = ['car_title'];
 
+  protected $attributes = [
+    'user_id' => null,
+    'event_id' => null,
+    'car_space' => null,
+  ];
   //$data['requirements'] = array();
   /**
   * The attributes that should be hidden for arrays.
@@ -63,7 +68,7 @@ class EventCar extends Eloquent {
   /**
    * Get the User.
    */
-  public function users() {
+  public function driver() {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
   }
   /**
@@ -72,8 +77,14 @@ class EventCar extends Eloquent {
   public function event_requirements() {
       return $this->belongsTo('FrcPortal\EventRequirement', 'car_id', 'car_id');
   }
+  /**
+   * Get the users in room.
+   */
+  public function passengers() {
+      return $this->hasManyThrough('FrcPortal\User','FrcPortal\EventRequirement', 'car_id', 'user_id', 'car_id', 'user_id')->where('users.user_id', '<>', $this->user_id);
+  }
   public function getCarTitleAttribute() {
-    return $this->users->full_name.' ('.$this->car_space.')';
+    return isset($this->user_id) && isset($this->car_space) ? $this->driver->full_name.' ('.$this->car_space.')' : null;
   }
 
 }

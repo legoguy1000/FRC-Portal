@@ -2,7 +2,7 @@
 use Illuminate\Database\Capsule\Manager as Capsule;
 ini_set("error_reporting", E_ALL);
 ini_set("expose_php", false);
-
+define("VERSION",'2.7.0');
 
 $root = __DIR__;
 require $root.'/vendor/autoload.php';
@@ -13,8 +13,8 @@ $capsule->addConnection(array("driver" => "mysql", "host" =>getIniProp('db_host'
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-$tz = getSettingsProp('timezone');
-$time_zone = !is_null($tz) ? $tz:date_default_timezone_get();
+$tz = Capsule::schema()->hasTable('settings') ? getSettingsProp('timezone') : null;
+$time_zone = !is_null($tz) && $tz != '' ? $tz:date_default_timezone_get();
 date_default_timezone_set($time_zone);
 
 

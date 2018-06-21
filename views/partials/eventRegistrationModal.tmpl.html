@@ -1,8 +1,8 @@
-<md-dialog aria-label="Event Registration" style="" flex="50" >
+<md-dialog aria-label="Event Registration" style="" flex="30" >
 		<form layout="column" style="width:100%;" name="vm.registrationForm1" ng-submit="vm.registerForEvent()">
 			<md-toolbar layout="row">
 			  <div class="md-toolbar-tools">
-				<h2>Register for {{vm.event.name}}</h2>
+				<h2>Register for {{vm.event.name}} - {{vm.userInfo.full_name}}</h2>
 				<span flex></span>
 				<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
 				  <md-icon class=""> close </md-icon>
@@ -11,63 +11,148 @@
 			</md-toolbar>
 			<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 			<md-dialog-content class="md-margin" layout="column" flex layout-align="center space-between">
-				<div layout="row" flex layout-align="space-between center">
-					<div>Registration for {{vm.userInfo.full_name}} </div>
-				</div>
-				<div layout="row" flex layout-align="space-between center">
-					<div>Are you attending the event? </div>
-					<md-select ng-model="vm.registrationForm.registration" placeholder="" class="md-no-underline" required>
-	          <md-option ng-value="true">Yes</md-option>
-	          <md-option ng-value="false">No</md-option>
-	        </md-select>
-					<!--<div>
-						<md-switch ng-model="vm.registrationForm.registration" class="md-warn"></md-switch>
-					</div>-->
-				</div>
-				<div layout="row" flex layout-align="space-between center" ng-if="vm.registrationForm.registration && vm.event.time_slots_required">
-					<md-button type="button" class="md-raised md-primary" ng-click="vm.showTimeSlotListModal($event)">
-						Select Time Slots
-					</md-button>
-					<div layout="column">
-						<div layout="row" layout-align="center center"><b>My Time Slots</b></div>
-						<div ng-repeat="time_slot in vm.registrationForm.event_time_slots" layout="row" layout-align="space-between center">
-							<div style="margin-right: 10px;">{{time_slot.name}}: </div>
-							<div> {{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</div>
-						</div>
-					</div>
-				</div>
-				<div layout="column" flex ng-if="vm.event.drivers_required && vm.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
-					<div layout="row" flex layout-align="space-between center">
-						<div>Can you drive? </div>
-						<md-select ng-model="vm.registrationForm.can_drive" placeholder="" class="md-no-underline" ng-required="vm.event.drivers_required && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration">
-		          <md-option ng-value="true">Yes</md-option>
-		          <md-option ng-value="false">No</md-option>
-		        </md-select>
-					</div>
-					<div layout="row" flex layout-align="space-between center" ng-show="vm.registrationForm.can_drive">
-						<div>How many including yourself can you drive? </div>
-						<md-select ng-model="vm.registrationForm.event_cars.car_space" placeholder="" class="md-no-underline" ng-required="vm.registrationForm.can_drive">
-		          <md-option ng-value="{{n}}" ng-repeat="n in vm.range(0,10)">{{n}}</md-option>
-		        </md-select>
-					</div>
-				</div>
-				<div layout="row" flex layout-align="space-between center" ng-if="vm.event.room_required && vm.registrationForm.registration">
-					<div>Please select hotel room? </div>
-					<md-select ng-model="vm.registrationForm.room_id" placeholder="" class="md-no-underline" ng-required="vm.event.room && vm.registrationForm.registration">
-						<md-option ng-value="true">Yes</md-option>
-						<md-option ng-value="false">No</md-option>
-					</md-select>
-				</div>
-				<div layout="row" flex layout-align="start center" ng-if="vm.registrationForm.registration">
-					<md-input-container class="" style="width:99%;">
-	          <label>Comments</label>
-	          <textarea ng-model="vm.registrationForm.comments" rows="5" md-select-on-focus></textarea>
-	        </md-input-container>
-				</div>
-				<div flex layout="row" layout-align="center center">
-					<!--<button class="md-button md-raised md-primary" ng-click="vm.registerForEvent()">Register Now</button>-->
-					<!--<button class="md-button md-raised md-primary" type="submit">Complete Registration</button>-->
-				</div>
+				<v-accordion class="vAccordion--default">
+				  <!-- add expanded attribute to open the section -->
+				  <v-pane expanded>
+				    <v-pane-header>
+				      Registration
+				    </v-pane-header>
+				    <v-pane-content layout="column">
+							<div layout="row" flex layout-align="space-between center">
+								<div>Are you attending the event? </div>
+								<md-select ng-model="vm.registrationForm.registration" placeholder="" class="md-no-underline" required aria-label="Registration">
+				          <md-option ng-value="true">Yes</md-option>
+				          <md-option ng-value="false">No</md-option>
+				        </md-select>
+							</div>
+				    </v-pane-content>
+				  </v-pane>
+				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.time_slots_required">
+				    <v-pane-header>
+				      Hours of Availability
+				    </v-pane-header>
+				    <v-pane-content layout="column">
+							<div layout="row" ng-repeat="time_slot in vm.time_slots track by $index" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
+								<div flex layout="column" layout-align="center start" class="md-padding" style="border-right: solid;">
+									<h3 style="margin-top: 0px;">
+										<span>{{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</span>
+								 	</h3>
+									<b>{{time_slot.name}}</b>
+									<div style="white-space:pre-wrap;">{{time_slot.description}}</div>
+								</div>
+								<div flex layout="column">
+									<md-list ng-cloak>
+								    <md-list-item ng-repeat="reg in time_slot.registrations" class="min-height-reset">
+											<div ng-class="{'bold': reg.user.user_id == vm.userInfo.user_id}">{{reg.user.full_name}}</div>
+								    </md-list-item>
+									</md-list>
+									<div flex></div>
+									<div layout="row" layout-align="center center">
+										<md-button type="button" ng-click="vm.selectTimeSlot($index)" aria-label="Register/Unregister for Time Slot" class="md-primary">
+											<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
+											<span ng-hide="vm.checkTSReg($index)">Register</span>
+											<span ng-show="vm.checkTSReg($index)">Unregister</span>
+										</md-button>
+									</div>
+								</div>
+							</div>
+							<!--<div layout="row" flex layout-align="space-between center">
+								<md-button type="button" class="md-raised md-primary" ng-click="vm.showTimeSlotListModal($event)">
+									Select Time Slots
+								</md-button>
+								<div layout="column">
+									<div layout="row" layout-align="center center"><b>My Time Slots</b></div>
+									<div ng-repeat="time_slot in vm.registrationForm.event_time_slots" layout="row" layout-align="space-between center">
+										<div style="margin-right: 10px;">{{time_slot.name}}: </div>
+										<div> {{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</div>
+									</div>
+								</div>
+							</div>-->
+				    </v-pane-content>
+				  </v-pane>
+				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.drivers_required">
+				    <v-pane-header>
+				      Transportation
+				    </v-pane-header>
+				    <v-pane-content>
+							<div layout="column" flex >
+								<div layout="row" flex layout-align="space-between center" ng-if="vm.userInfo.user_type=='Mentor'">
+									<div>Can you drive? </div>
+									<md-select ng-model="vm.registrationForm.can_drive" placeholder="" class="md-no-underline" ng-required="vm.event.drivers_required && main.userInfo.user_type=='Mentor' && vm.registrationForm.registration" aria-label="Can Drive">
+					          <md-option ng-value="true">Yes</md-option>
+					          <md-option ng-value="false">No</md-option>
+					        </md-select>
+								</div>
+								<div layout="row" flex layout-align="space-between center" ng-show="vm.registrationForm.can_drive" ng-if="vm.userInfo.user_type=='Mentor'">
+									<div>How many including yourself can you drive? </div>
+									<md-select ng-model="vm.registrationForm.event_cars.car_space" placeholder="" class="md-no-underline" ng-required="vm.registrationForm.can_drive" aria-label="Number of Passengers">
+					          <md-option ng-value="{{n}}" ng-repeat="n in vm.range(0,10)">{{n}}</md-option>
+					        </md-select>
+								</div>
+								<div layout="row" flex layout-align="space-between start">
+									<div layout="column">
+										<div layout="row" layout-align="center center" class="bold">
+												<span ng-hide="vm.registrationForm.event_cars.user_id == vm.userInfo.user_id">My </span>
+												<span>&nbsp; Driver</span>
+										 </div>
+										<div>{{vm.registrationForm.event_cars.driver.full_name}}</div>
+									</div>
+									<div layout="column">
+										<div layout="row" layout-align="center center" class="bold">
+											<span ng-show="vm.registrationForm.event_cars.user_id == vm.userInfo.user_id">My </span>
+											<span ng-hide="vm.registrationForm.event_cars.user_id == vm.userInfo.user_id">Car </span>
+											<span>&nbsp; Passengers</span>
+										</div>
+										<div ng-repeat="user in vm.registrationForm.event_cars.passengers" layout="row" layout-align="center center">
+											<div>{{user.full_name}}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+				    </v-pane-content>
+				  </v-pane>
+				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.room_required && vm.userInfo.user_type != 'Mentor'">
+				    <v-pane-header>
+				      Hotel Room
+				    </v-pane-header>
+				    <v-pane-content>
+							<div layout="row" ng-repeat="room in vm.room_list" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
+								<div flex layout="row" layout-align="start center" class="" style="border-right: solid;">
+									<span style="margin-left:10px;">{{room.room_title}}</span>
+								</div>
+								<div flex>
+									<md-list ng-cloak style="min-height:20px;">
+											<md-list-item ng-repeat="user in room.users" class="min-height-reset">
+												<div layout="row" layout-align="start center">
+													<div ng-class="{'bold': user.user_id == vm.userInfo.user_id}">{{user.full_name}}</div>
+												</div>
+											</md-list-item>
+									</md-list>
+									<div flex></div>
+									<div ng-show="vm.registrationForm.room_id != room.room_id && vm.userInfo.user_type == 'Student' && room.users.length < 4 && room.gender == vm.userInfo.gender && room.user_type == vm.userInfo.user_type" layout="row" layout-align="center center">
+										<md-button type="button" ng-click="vm.selectRoom(room.room_id)" aria-label="Select Hotel Room" class="md-primary">
+											<md-tooltip md-direction="top">Select Room</md-tooltip>
+											<span>Select Room</span>
+										</md-button>
+									</div>
+								</div>
+							</div>
+			    	</v-pane-content>
+				  </v-pane>
+				  <v-pane ng-disabled="!vm.registrationForm.registration">
+				    <v-pane-header>
+				      Final Comments
+				    </v-pane-header>
+				    <v-pane-content>
+							<div layout="row" flex layout-align="start center">
+								<md-input-container class="" style="width:99%;">
+				          <label>Comments</label>
+				          <textarea ng-model="vm.registrationForm.comments" rows="5" md-select-on-focus aria-label="Registration Comments"></textarea>
+				        </md-input-container>
+							</div>
+				    </v-pane-content>
+				  </v-pane>
+				</v-accordion>
 			</md-dialog-content>
 			<md-dialog-actions layout="row" class="noprint">
 				<span flex></span>

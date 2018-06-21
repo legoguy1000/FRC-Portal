@@ -5,6 +5,7 @@ angular.module('FrcPortal')
 function mainHomeController($timeout, $q, $scope, $state, metricsService, configItems, $sce) {
     var vm = this;
 
+	vm.configItems = configItems;
 	vm.loadingTopUsers = false;
 	vm.topUsersYear = new Date().getFullYear();
 	vm.topUsers = [];
@@ -18,7 +19,7 @@ function mainHomeController($timeout, $q, $scope, $state, metricsService, config
 	}
 
 	vm.getCalendarSrc = function () {
-  return $sce.trustAsResourceUrl('https://calendar.google.com/calendar/embed?src='+configItems.google_calendar_id+'&ctz=America/New_York');
+  return $sce.trustAsResourceUrl('https://calendar.google.com/calendar/embed?src='+vm.configItems.google_calendar_id+'&ctz=America/New_York');
 };
 
 	/* vm.test = function() {

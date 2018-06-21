@@ -64,17 +64,24 @@ class EventRoom extends Eloquent {
   public function event_requirements() {
       return $this->hasMany('FrcPortal\EventRequirement', 'room_id', 'room_id');
   }
+  /**
+   * Get the users in room.
+   */
+  public function users() {
+      return $this->hasManyThrough('FrcPortal\User','FrcPortal\EventRequirement', 'room_id', 'user_id', 'room_id', 'user_id');
+  }
+
   public function getroomBoolAttribute() {
     return isset($this->attributes['room_id']) && !is_null($this->attributes['room_id']);
   }
 
   public function getRoomTypeAttribute() {
-  	$roomType = $this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : $this->attributes['user_type'];
+  	$roomType = isset($this->user_type) && isset($this->gender) ? ($this->user_type == 'Student' ? $this->user_typ.'.'.$this->gender : $this->user_type) : null;
     return  array($roomType);
   }
   //$room['user_type'] == 'Student' ? str_replace('Male',"Boys",str_replace('Female',"Girls",$room['gender'])).' '.$c[$roomType] : $room['user_type'].' '.$c[$roomType];
 
     public function getRoomTitleAttribute() {
-      return $this->attributes['user_type'] == 'Student' ? str_replace('Male',"Boys",str_replace('Female',"Girls",$this->attributes['gender'])) : $this->attributes['user_type'];
+      return isset($this->user_type) && isset($this->gender) ? ($this->user_type == 'Student' ? str_replace('Male',"Boys",str_replace('Female',"Girls",$this->gender)) : $this->user_type) : null;
     }
 }

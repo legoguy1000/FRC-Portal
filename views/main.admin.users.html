@@ -96,29 +96,27 @@
 				<tr md-row>
 					<th md-column style="width:56px"></th>
 					<th md-column md-order-by="full_name"><span>Name</span></th>
-					<th md-column md-order-by="user_type"><span>Type - Grade (Grad Year)</span></th>
-					<th md-column md-order-by="school_name"><span>School</span></th>
-					<th md-column md-order-by="email"><span>Email</span></th>
-					<th md-column md-order-by="gender"><span>Gender</span></th>
-					<th md-column md-order-by="status"><span>Status</span></th>
+					<th md-column md-order-by="user_type" hide-xs><span>Type - Grade (Grad Year)</span></th>
+					<th md-column md-order-by="school_name" hide-xs hide-sm><span>School</span></th>
+					<th md-column md-order-by="email" hide-xs hide-sm><span>Email</span></th>
+					<th md-column md-order-by="gender" hide-xs hide-sm><span>Gender</span></th>
+					<th md-column md-order-by="status" hide-xs hide-sm><span>Status</span></th>
 					<th md-column></th>
 				</tr>
 			</thead>
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 				<tr md-row ng-repeat="user in vm.users">
 					<td md-cell>
-						<md-list-item style="padding: 0px;">
-							<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
-						</md-list-item>
+						<img ng-src="{{user.profile_image}}" class="avatar" alt="" ng-if="user.profile_image"/>
 					</td>
 					<td md-cell>
 						<span>{{user.full_name}}</span>
 					</td>
-					<td md-cell><span>{{user.user_type}}</span> <span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</td>
-					<td md-cell><span>{{user.school.school_name}}</span></td>
-					<td md-cell><span>{{user.email}}</span></td>
-					<td md-cell><span>{{user.gender}}</span></td>
-					<td md-cell>
+					<td md-cell hide-xs><span>{{user.user_type}}</span> <span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</td>
+					<td md-cell hide-xs hide-sm><span>{{user.school.school_name}}</span></td>
+					<td md-cell hide-xs hide-sm><span>{{user.email}}</span></td>
+					<td md-cell hide-xs hide-sm><span>{{user.gender}}</span></td>
+					<td md-cell hide-xs hide-sm>
 						<span ng-show="user.status">Active</span>
 						<span ng-hide="user.status">Inactive</span>
 					</td>

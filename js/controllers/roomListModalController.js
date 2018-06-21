@@ -1,16 +1,19 @@
 angular.module('FrcPortal')
-.controller('roomListModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService',
+.controller('roomListModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService','admin','$auth','$mdToast',
 	roomListModalController
 ]);
-function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService) {
+function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,admin,$auth,$mdToast) {
 	var vm = this;
 
 	vm.eventInfo = eventInfo;
+	vm.userInfo = vm.eventInfo.userInfo;
+	vm.admin = admin && $auth.getPayload().data.admin;
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
 	vm.room_list = {};
 	vm.newRoom = {};
+	vm.myRoom = {};
 	vm.newRoomOpts = [
 		{
 			'user_type':'Student',
@@ -27,7 +30,7 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 	];
 	//function get room list
 	vm.getEventRoomList = function () {
-		vm.promise = eventsService.getEventRoomList(vm.eventInfo.event_id).then(function(response) {
+		vm.promise = eventsService.getEventAdminRoomList(vm.eventInfo.event_id).then(function(response) {
 			vm.room_list = response.data;
 		});
 	};
@@ -72,4 +75,46 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 			}
 		});
 	};
+
+	vm.toggleRoomSelect = function(room_id) {
+		vm.loading = true;
+		var data = {
+			'user_id': vm.userInfo.user_id,
+			'event_id': vm.eventInfo.event_id,
+			'room_id': room_id,
+		};
+		usersService.registerEventRoom(data).then(function(response) {
+			if(response.status) {
+				vm.room_list = response.data;
+				vm.userInfo.event_requirements.room_id = room_id;
+				vm.myRoom = response.myRoom;
+			}
+			vm.loading = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+		});
+	}
+
+	vm.checkReg = function(room_id) {
+		var index = false;
+		if(!vm.admin) {
+			var room = vm.room_list.room_selection[room_id];
+			var len = room.length;
+			for (var i = 0; i < len; i++) {
+				if(room[i].user_id == vm.userInfo.user_id) {
+					index = true;
+					break;
+				}
+			}
+		}
+		return index;
+	}
+
+	vm.save = function() {
+		$mdDialog.hide(vm.myRoom.users);
+	}
 }

@@ -17,11 +17,11 @@ class Event extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'event_id', 'google_cal_id', 'name', 'type', 'event_start', 'event_end', 'registration_deadline', 'registration_deadline_gcalid', 'details', 'location', 'payment_required', 'permission_slip_required', 'food_required', 'room_required', 'drivers_required', 'poc'
+    'event_id', 'google_cal_id', 'name', 'type', 'event_start', 'event_end', 'registration_deadline', 'registration_deadline_gcalid', 'details', 'location', 'payment_required', 'permission_slip_required', 'food_required', 'room_required', 'drivers_required', 'poc','time_slots_required'
   ];
 
 
-  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_deadline_unix','registration_deadline_formatted','season','num_days'];
+  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_deadline_unix','registration_deadline_formatted','registration_deadline_google_event','season','num_days','single_month'];
 
   //$data['requirements'] = array();
   /**
@@ -42,8 +42,10 @@ class Event extends Eloquent {
     'room_required' => 'boolean',
     'drivers_required' => 'boolean',
     'permission_slip_required' => 'boolean',
+    'time_slots_required' => 'boolean',
     'time_slots' => 'boolean',
     'single_day' => 'boolean',
+    'single_month' => 'boolean',
   ];
 
   public function save($options = array()) {
@@ -64,8 +66,13 @@ class Event extends Eloquent {
     $end = new DateTime($this->attributes['event_end']);
     return (bool) ($start->format('Y-m-d') == $end->format('Y-m-d'));
   }
+  public function getSingleMonthAttribute() {
+    $start = new DateTime($this->attributes['event_start']);
+    $end = new DateTime($this->attributes['event_end']);
+    return (bool) ($start->format('Y-m') == $end->format('Y-m'));
+  }
   public function getYearAttribute() {
-    return date('Y',strtotime($this->attributes['event_start']));
+    return (integer) date('Y',strtotime($this->attributes['event_start']));
   }
   public function getEventStartUnixAttribute() {
     $date = new DateTime($this->attributes['event_start']);
@@ -91,6 +98,16 @@ class Event extends Eloquent {
     }
     return $return;
   }
+  public function getRegistrationDeadlineGoogleEventAttribute() {
+    $return = null;
+    if(!is_null($this->attributes['registration_deadline_gcalid'])) {
+      $event = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
+      if($event['status']) {
+        $return = $event['data'];
+      }
+    }
+    return $return;
+  }
   public function getNumDaysAttribute() {
     $start = strtotime($this->attributes['event_start']);
     $end = strtotime($this->attributes['event_end']);
@@ -99,10 +116,7 @@ class Event extends Eloquent {
   }
 
   public function getSeasonAttribute() {
-    return DB::table('seasons')
-            ->join('events', function ($join) {
-                $join->on('events.event_start', '>=', 'seasons.start_date')->on('events.event_end', '<=', 'seasons.end_date');
-            })->where('events.event_id', '=', $this->attributes['event_id'])->select('seasons.*')->first();
+    return Season::where('year',date('Y',strtotime($this->event_start)))->first();
   }
 
   /**

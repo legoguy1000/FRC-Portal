@@ -24,6 +24,14 @@ class EventTimeSlot extends Eloquent {
 
   protected $appends = ['time_start_unix', 'time_end_unix', 'date'];
 
+  protected $attributes = [
+    'time_slot_id' => null,
+    'event_id' => null,
+    'name' => null,
+    'description' => null,
+    'time_start' => null,
+    'time_end' => null,
+  ];
   //$data['requirements'] = array();
   /**
   * The attributes that should be hidden for arrays.

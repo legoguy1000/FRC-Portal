@@ -1,6 +1,6 @@
 <?php
 
-require_once "../includes.php";
+include_once(__DIR__.'/../includes.php');
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 Capsule::schema()->create('oauth_ids', function ($table) {
@@ -11,7 +11,6 @@ Capsule::schema()->create('oauth_ids', function ($table) {
        $table->string('oauth_user');
        $table->timestamps();
 
-       $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
    });
 
 ?>

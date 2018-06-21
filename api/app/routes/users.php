@@ -122,116 +122,101 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
-      $this->get('/{event_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-        $user_id = $args['user_id'];
-        $event_id = $args['event_id'];
-        $user = FrcPortal\Event::with(['event_requirements.event_cars', 'event_requirements.event_rooms', 'event_requirements.event_time_slots', 'event_requirements' => function ($query) use ($user_id) {
-                  $query->where('user_id',$user_id); // fields from comments table,
-                }])->where('event_id',$event_id)->first();
-        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
-        $response = $response->withJson($responseArr);
-        return $response;
-      });
+      $this->group('/{event_id:[a-z0-9]{13}}', function () {
+        $this->get('', function ($request, $response, $args) {
+          $user_id = $args['user_id'];
+          $event_id = $args['event_id'];
+          $user = FrcPortal\Event::with(['event_requirements.event_cars.passengers', 'event_requirements.event_rooms.users', 'event_requirements.event_time_slots', 'event_requirements' => function ($query) use ($user_id) {
+                    $query->where('user_id',$user_id); // fields from comments table,
+                  }])->where('event_id',$event_id)->first();
+          $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
+          $response = $response->withJson($responseArr);
+          return $response;
+        });
+  /*      $this->put('/rooms', function ($request, $response, $args) {
+          $authToken = $request->getAttribute("token");
+          $userId = $authToken['data']->user_id;
+          $formData = $request->getParsedBody();
+          $responseArr = array(
+            'status' => false,
+            'msg' => 'Something went wrong',
+            'data' => null
+          );
+          $user_id = $args['user_id'];
+          $event_id = $args['event_id'];
+          if($user_id != $userId && !checkAdmin($userId)) {
+            $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+            $response = $response->withJson($responseArr,403);
+            return $response;
+          }
+          if(!isset($formData['room_id']) || $formData['room_id'] == '') {
+            $responseArr = array('status'=>false, 'msg'=>'Room ID cannot be blank');
+            $response = $response->withJson($responseArr,400);
+            return $response;
+          }
+          $room_id = $formData['room_id'];
+          $user = FrcPortal\User::find($user_id);
+          $room = FrcPortal\EventRoom::where('room_id',$room_id)->where('event_id',$event_id)->first();
+          if(is_null($room)) {
+            $responseArr['msg'] = 'Invalid Room ID';
+            $response = $response->withJson($responseArr);
+            return $response;
+          }
+          if($room->user_type != $user->user_type) {
+            $responseArr['msg'] = 'Room User Type does not match User Type';
+            $response = $response->withJson($responseArr);
+            return $response;
+          }
+          if($room->user_type != 'Mentor' && $room->gender != $user->gender) {
+            $responseArr['msg'] = 'Room Gender does not match User Gender';
+            $response = $response->withJson($responseArr);
+            return $response;
+          }
+          $roomUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id],['room_id'=>$room_id]);
+          $responseArr['status'] = true;
+          $responseArr['msg'] = 'Room Selected';
+          $rooms = getEventRoomList($event_id);
+          $responseArr['data'] = $rooms['data'];
+          $responseArr['myRoom'] = FrcPortal\EventRoom::with(['users'])->find($room_id);
+          $response = $response->withJson($responseArr);
+          return $response;
+        });
+      }); */
     });
-    $this->group('/eventTimeSlots/{time_slot_id:[a-z0-9]{13}}', function () {
-      $this->put('', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
-        $formData = $request->getParsedBody();
-        $responseArr = array(
-          'status' => false,
-          'msg' => 'Something went wrong',
-          'data' => null
-        );
-        $user_id = $args['user_id'];
-        $time_slot_id = $args['time_slot_id'];
-        if($user_id != $userId && !checkAdmin($userId)) {
-          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-          $response = $response->withJson($responseArr,403);
-          return $response;
-        }
-
-        $timeSlot = FrcPortal\EventTimeSlot::where('time_slot_id',$time_slot_id)->first();
-        if(!is_null($timeSlot)) {
-          $event_id = $timeSlot->event_id;
-          $reqUpdate = FrcPortal\EventRequirement::firstOrNew(['event_id' => $event_id, 'user_id' => $user_id]);
-          if($reqUpdate->save()) {
-            $ereq_id = $reqUpdate->ereq_id;
-            $timeSlot->registrations()->toggle($ereq_id);
-            $slots = getEventTimeSlotList($event_id);
-            $responseArr['status'] = true;
-            $responseArr['msg'] = 'Time Slot Updated';
-            $responseArr['data'] = $slots['data'];
+  /*  $this->group('/eventTimeSlots/{time_slot_id:[a-z0-9]{13}}', function () {
+        $this->put('', function ($request, $response, $args) {
+          $authToken = $request->getAttribute("token");
+          $userId = $authToken['data']->user_id;
+          $formData = $request->getParsedBody();
+          $responseArr = array(
+            'status' => false,
+            'msg' => 'Something went wrong',
+            'data' => null
+          );
+          $user_id = $args['user_id'];
+          $time_slot_id = $args['time_slot_id'];
+          if($user_id != $userId && !checkAdmin($userId)) {
+            $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+            $response = $response->withJson($responseArr,403);
+            return $response;
           }
-        }
-        $response = $response->withJson($responseArr);
-        return $response;
-      }); /*
-      $this->post('', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
-        $formData = $request->getParsedBody();
-        $responseArr = array(
-          'status' => false,
-          'msg' => 'Something went wrong',
-          'data' => null
-        );
-        $user_id = $args['user_id'];
-        $time_slot_id = $args['time_slot_id'];
-        if($user_id != $userId) {
-          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-          $response = $response->withJson($responseArr,403);
-          return $response;
-        }
 
-        $timeSlot = FrcPortal\EventTimeSlot::where('time_slot_id',$time_slot_id)->first();
-        if(!is_null($timeSlot)) {
-          $event_id = $timeSlot->event_id;
-          $reqUpdate = FrcPortal\EventRequirement::firstOrNew(['event_id' => $event_id, 'user_id' => $user_id]);
-          if($reqUpdate->save()) {
-            $ereq_id = $reqUpdate->ereq_id;
-            $timeSlot->registrations()->attach($ereq_id);
-            $slots = getEventTimeSlotList($event_id);
-            $responseArr['status'] = true;
-            $responseArr['msg'] = 'Time Slot Updated';
-            $responseArr['data'] = $slots['data'];
+          $timeSlot = FrcPortal\EventTimeSlot::where('time_slot_id',$time_slot_id)->first();
+          if(!is_null($timeSlot)) {
+            $event_id = $timeSlot->event_id;
+            $reqUpdate = FrcPortal\EventRequirement::firstOrNew(['event_id' => $event_id, 'user_id' => $user_id]);
+            if($reqUpdate->save()) {
+              $ereq_id = $reqUpdate->ereq_id;
+              $timeSlot->registrations()->toggle($ereq_id);
+              $slots = getEventTimeSlotList($event_id);
+              $responseArr['status'] = true;
+              $responseArr['msg'] = 'Time Slot Updated';
+              $responseArr['data'] = $slots['data'];
+            }
           }
-        }
-        $response = $response->withJson($responseArr);
-        return $response;
-      });
-      $this->delete('', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
-        $formData = $request->getParsedBody();
-        $responseArr = array(
-          'status' => false,
-          'msg' => 'Something went wrong',
-          'data' => null
-        );
-        $user_id = $args['user_id'];
-        $time_slot_id = $args['time_slot_id'];
-        if($user_id != $userId) {
-          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-          $response = $response->withJson($responseArr,403);
+          $response = $response->withJson($responseArr);
           return $response;
-        }
-
-        $timeSlot = FrcPortal\EventTimeSlot::where('time_slot_id',$time_slot_id)->first();
-        if(!is_null($timeSlot)) {
-          $event_id = $timeSlot->event_id;
-          $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->first();
-          if(!is_null($reqUpdate)) {
-            $ereq_id = $reqUpdate->ereq_id;
-            $timeSlot->registrations()->detach($ereq_id);
-            $slots = getEventTimeSlotList($event_id);
-            $responseArr['status'] = true;
-            $responseArr['msg'] = 'Time Slot Updated';
-            $responseArr['data'] = $slots['data'];
-          }
-        }
-        $response = $response->withJson($responseArr);
-        return $response;
+        });
       }); */
     });
     $this->put('/pin', function ($request, $response, $args) {
@@ -462,7 +447,7 @@ $app->group('/users', function () {
         return $response;
       }
 
-      $user = FrcPortal\User::find($user_id);
+      $user = FrcPortal\User::with('school')->find($user_id);
       $user->fname = $formData['fname'];
       $user->lname = $formData['lname'];
       $user->email = $formData['email'];
