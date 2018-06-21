@@ -36,7 +36,7 @@ if($version >= '2.7.0') {
   //Change Column Name
   if(Capsule::schema()->hasTable('events') && Capsule::schema()->hasColumn('events','time_slots') && !Capsule::schema()->hasColumn('events','time_slots_required')) {
     try {
-      Capsule::schema()->table('events', function($table) { 
+      Capsule::schema()->table('events', function($table) {
         $table->renameColumn('time_slots', 'time_slots_required');
       });
     } catch (Exception $e) { }
