@@ -135,10 +135,12 @@ function endOfDayHoursToSlack($date = null) {
 }
 
 function slackMessageToUser($user_id, $msg) {
-	$userData = false;
-	$user = FrcPortal\User::find($user_id);
-	if(!is_null($user) && $user->slack_enabled == true) {
-		postToSlack($msg, $user->slack_id);
+	if(!is_null($user_id)) {
+		$userData = false;
+		$user = FrcPortal\User::find($user_id);
+		if(!is_null($user) && $user->slack_enabled == true) {
+			postToSlack($msg, $user->slack_id);
+		}
 	}
 }
 

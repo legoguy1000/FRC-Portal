@@ -48,6 +48,12 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				vm.rcToggleEventReqs(user, req, action);
 			}
 		}, {
+			label: 'Edit Registration',
+			onClick: function($event){
+				var user = $event.dataContext;
+				vm.showRegistrationForm(null,user);
+			}
+		}, {
 			divider: true,
 		}, {
 			label: 'Toggle Payment',
@@ -80,14 +86,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				var req = 'attendance_confirmed';
 				var action = true;
 				vm.rcToggleEventReqs(user, req, action);
-			}
-		}, {
-			divider: true,
-		}, {
-			label: 'Edit Registratione',
-			onClick: function($event){
-				var user = $event.dataContext;
-				vm.showRegistrationForm(null,user);
 			}
 		},
 	];
