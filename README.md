@@ -12,6 +12,7 @@ Version 2.7.0 (Current Dev Branch)
 * Update New Event Dialog. New Event Dialog -> Event Search.
 * Added right-click context menu for Event Admin.  Removed Edit Registration button.
 * Updated event registration slack notifications.
+* Added DB export before DB modifications
 
 
 ## Getting Started
