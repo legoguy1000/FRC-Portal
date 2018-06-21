@@ -76,7 +76,7 @@
 				<md-input-container  class="md-icon-float md-block">
 					<div><md-icon md-font-library="material-icons">person</md-icon></div>
 				</md-input-container>
-	      <md-autocomplete flex required class="md-icon-float md-block"
+	      <md-autocomplete flex class="md-icon-float md-block"
 	          md-input-name="autocompleteField"
 	          md-input-minlength="2"
 	          md-input-maxlength="18"
@@ -198,7 +198,7 @@
 							<th md-column md-order-by="event_requirements.room_id" ng-show="vm.event.room_required"><span>Room Selected</span></th>
 							<th md-column md-order-by="event_requirements.can_drive" ng-show="vm.event.drivers_required"><span>Driver</span></th>
 							<th md-column md-order-by="event_requirements.car_id" ng-show="vm.event.drivers_required"><span>Car</span></th>
-							<th md-column><span>Edit Registration</span></th>
+							<th md-column><!--<span>Edit Registration</span>--></th>
 							<!--<th md-column md-order-by="total"><span>Total Hours</span></th>				 -->
 						</tr>
 					</thead>
@@ -253,10 +253,12 @@
 								</div>
 							</td>
 							<td md-cell>
+								<!--
 								<md-button class="md-icon-button md-primary" ng-click="vm.showRegistrationForm($event,user)">
 									<md-tooltip md-direction="top">Edit registration information for {{user.full_name}}</md-tooltip>
 									<md-icon class="material-icons">edit</md-icon>
 								</md-button>
+								-->
 								<md-button class="md-icon-button" ng-click="vm.showComments($event,user)" ng-show="user.event_requirements.comments != ''">
 									<md-tooltip md-direction="top">Edit registration comments for {{user.full_name}}</md-tooltip>
 									<md-icon class="material-icons">comment</md-icon>

@@ -10,6 +10,9 @@ Version 2.7.0 (Current Dev Branch)
 * Lazy load controllers, filters, services
 * Update event registration menu.  Simplify process.
 * Update New Event Dialog. New Event Dialog -> Event Search.
+* Added right-click context menu for Event Admin.
+* Updated event registration slack notifications
+
 
 ## Getting Started
 
