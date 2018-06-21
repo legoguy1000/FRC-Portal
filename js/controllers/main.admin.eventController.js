@@ -40,48 +40,54 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 	vm.menuOptions = [
 		{
-			label: 'Event Registration',
+			label: 'Toggle Event Registration',
 			onClick: function($event){
 				var user = $event.dataContext;
 				var req = 'registration';
 				var action = true;
 				vm.rcToggleEventReqs(user, req, action);
 			}
-		},
-		{
-			label: 'Payment',
+		}, {
+			divider: true,
+		}, {
+			label: 'Toggle Payment',
 			onClick: function($event){
 				var user = $event.dataContext;
 				var req = 'payment';
 				var action = true;
 				vm.rcToggleEventReqs(user, req, action);
 			}
-		},
-		{
-			label: 'Permission Slip',
+		}, {
+			label: 'Toggle Permission Slip',
 			onClick: function($event){
 				var user = $event.dataContext;
 				var req = 'permission_slip';
 				var action = true;
 				vm.rcToggleEventReqs(user, req, action);
 			}
-		},
-		{
-			label: 'Food',
+		}, {
+			label: 'Toggle Food',
 			onClick: function($event){
 				var user = $event.dataContext;
 				var req = 'food';
 				var action = true;
 				vm.rcToggleEventReqs(user, req, action);
 			}
-		},
-		{
+		}, {
 			label: 'Confirm Attendance',
 			onClick: function($event){
 				var user = $event.dataContext;
 				var req = 'attendance_confirmed';
 				var action = true;
 				vm.rcToggleEventReqs(user, req, action);
+			}
+		}, {
+			divider: true,
+		}, {
+			label: 'Edit Registratione',
+			onClick: function($event){
+				var user = $event.dataContext;
+				vm.showRegistrationForm(null,user);
 			}
 		},
 	];
