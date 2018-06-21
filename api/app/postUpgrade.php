@@ -30,8 +30,7 @@ if($version >= '2.6.0') {
 **/
 if($version >= '2.7.0') {
   //add dbal package
-  shell_exec("composer install");
-  shell_exec("composer dump-autoload");
+  updateComposer();
   //Backup Database
   exportDB();
   //Change Column Name

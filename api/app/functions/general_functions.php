@@ -297,4 +297,10 @@ function exportDB() {
 		return false;
 	}
 }
+
+function updateComposer() {
+  shell_exec("composer install");
+  shell_exec("composer dump-autoload");
+	sleep(5);
+}
 ?>
