@@ -665,7 +665,7 @@ $app->group('/events', function () {
           $room_id = $formData['room_id'];
           $room = FrcPortal\EventRoom::where('room_id',$room_id)->where('event_id',$event_id)->first();
           if(is_null($room)) {
-            $responseArr['msg'] = 'Invalid Room ID';
+            $responseArr['msg'] = 'Invalid Room Selection';
             $response = $response->withJson($responseArr);
             return $response;
           }
@@ -694,7 +694,7 @@ $app->group('/events', function () {
         if(!is_null($event->poc_id)) {
           $slackMsg = $user->full_name.' registered for '.$event->name;
           if($user_id != $loggedInUser) {
-            $slackMsg = $userFullName.' registered '.$user->full_name.' for'.$event->name;
+            $slackMsg = $userFullName.' registered '.$user->full_name.' for '.$event->name;
           }
           slackMessageToUser($event->poc_id, $slackMsg);
           $eventRequirements = array();
@@ -708,7 +708,7 @@ $app->group('/events', function () {
         if(!is_null($event->poc_id)) {
           $slackMsg = $user->full_name.' unregistered for '.$event->name;
           if($user_id != $loggedInUser) {
-            $slackMsg = $userFullName.' unregistered '.$user->full_name.' for'.$event->name;
+            $slackMsg = $userFullName.' unregistered '.$user->full_name.' for '.$event->name;
           }
           slackMessageToUser($event->poc_id, $slackMsg);
           $eventRequirements = array();
