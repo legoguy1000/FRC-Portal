@@ -25,13 +25,13 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			'registration': vm.registrationForm.registration,
 			'can_drive': vm.registrationForm.can_drive,
 			'event_cars': {
-				'car_space': null,
+				'car_space': vm.userInfo.user_type == 'Mentor' && vm.registrationForm.event_cars != undefined && vm.registrationForm.event_cars.car_space != undefined ? vm.registrationForm.event_cars.car_space:null,
 			},
 			'comments': vm.registrationForm.comments,
 			'room_id': vm.registrationForm.room_id,
 			'event_time_slots': vm.registrationForm.event_time_slots,
 		};
-		data.event_cars.car_space = vm.userInfo.user_type == 'Mentor' && vm.registrationForm.event_cars != undefined && vm.registrationForm.event_cars.car_space != undefined ? vm.registrationForm.event_cars.car_space:null;
+
 		eventsService.registerForEvent(data).then(function(response){
 			if(response.status) {
 				$mdDialog.hide(response);
@@ -51,6 +51,9 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		usersService.getUserEventRequirements(vm.userInfo.user_id,vm.event.event_id).then(function(response){
 			if(response.status) {
 				vm.registrationForm = response.data.event_requirements;
+				if(vm.registrationForm.event_time_slots == undefined) {
+					vm.registrationForm.event_time_slots = [];
+				}
 			}
 			vm.loading = false;
 		});
