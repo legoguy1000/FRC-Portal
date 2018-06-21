@@ -29,6 +29,8 @@ if($version >= '2.6.0') {
 * 2.7.0
 **/
 if($version >= '2.7.0') {
+  //Backup Database
+  exportDB();
   //Change Column Name
   if(Capsule::schema()->hasTable('events') && Capsule::schema()->hasColumn('events','time_slots') && !Capsule::schema()->hasColumn('events','time_slots_required')) {
     try {
