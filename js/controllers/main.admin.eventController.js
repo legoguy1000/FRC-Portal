@@ -267,7 +267,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 		} else if ((vm.selectedUsers.length == 1 && vm.selectedUsers[0].user_id == user.user_id) || vm.selectedUsers.length == 0) {
 			var users = [];
-			users.psuh(user);
+			users.push(user);
 			vm.toggleEventReqs2(users, req, action);
 		}
 	}
