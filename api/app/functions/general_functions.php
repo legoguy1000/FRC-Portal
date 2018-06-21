@@ -278,7 +278,7 @@ function exportDB() {
 	//ENTER THE RELEVANT INFO BELOW
 	$folder = __DIR__.'/../secured/db_exports/';
 	if (!file_exists($folder)) {
-	    mkdir($folder,0660);
+	    mkdir($folder,0777,true);
 	}
 	$mysqlDatabaseName = getIniProp('db_name');
 	$mysqlUserName = getIniProp('db_user');
@@ -286,7 +286,7 @@ function exportDB() {
 	$mysqlHostName = getIniProp('db_host');
 	$mysqlExportPath = $folder.date('Y-m-d H:i:s').' '.$mysqlDatabaseName.'.sql';
 	$worked = null;
-	$command='mysqldump --opt -h' .$mysqlHostName .' -u' .$mysqlUserName .' -p' .$mysqlPassword .' ' .$mysqlDatabaseName .' > "' .$mysqlExportPath.'"';
+	$command='mysqldump --opt -h '.$mysqlHostName.' -u'.$mysqlUserName.' -p'.$mysqlPassword.' '.$mysqlDatabaseName.' > "' .$mysqlExportPath.'"';
 	exec($command,$output,$worked);
 	switch($worked){
 	case 0:
