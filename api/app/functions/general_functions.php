@@ -276,14 +276,18 @@ function formatSettings($setting, $value) {
 
 function exportDB() {
 	//ENTER THE RELEVANT INFO BELOW
+	$folder = __DIR__.'/../secured/db_exports/';
+	if (!file_exists($folder)) {
+	    mkdir($folder,0660);
+	}
 	$mysqlDatabaseName = getIniProp('db_name');
 	$mysqlUserName = getIniProp('db_user');
 	$mysqlPassword = getIniProp('db_pass');
 	$mysqlHostName = getIniProp('db_host');
-	$mysqlExportPath = __DIR__.'/../secured/db_exports/'.date('Y-m-d H:i:s').' '.$mysqlDatabaseName.'.sql';
+	$mysqlExportPath = $folder.date('Y-m-d H:i:s').' '.$mysqlDatabaseName.'.sql';
 	$worked = null;
-	$command='mysqldump --opt -h' .$mysqlHostName .' -u' .$mysqlUserName .' -p' .$mysqlPassword .' ' .$mysqlDatabaseName .' > ' .$mysqlExportPath;
-	exec($command,$output=array(),$worked);
+	$command='mysqldump --opt -h' .$mysqlHostName .' -u' .$mysqlUserName .' -p' .$mysqlPassword .' ' .$mysqlDatabaseName .' > "' .$mysqlExportPath.'"';
+	exec($command,$output,$worked);
 	switch($worked){
 	case 0:
 		return true;
