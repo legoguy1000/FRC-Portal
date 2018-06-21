@@ -286,7 +286,7 @@ function exportDB() {
 	$mysqlHostName = getIniProp('db_host');
 	$mysqlExportPath = $folder.date('Y-m-d H:i:s').' '.$mysqlDatabaseName.'.sql';
 	$worked = null;
-	$command='mysqldump --opt -h '.$mysqlHostName.' -u'.$mysqlUserName.' -p'.$mysqlPassword.' '.$mysqlDatabaseName.' > "' .$mysqlExportPath.'"';
+	$command='mysqldump --opt -h '.$mysqlHostName.' -u '.$mysqlUserName.' -p'.$mysqlPassword.' '.$mysqlDatabaseName.' > "' .$mysqlExportPath.'"';
 	exec($command,$output,$worked);
 	switch($worked){
 	case 0:
