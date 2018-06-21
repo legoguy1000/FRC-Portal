@@ -3,6 +3,9 @@ include_once(__DIR__.'/includes.php');
 use Illuminate\Database\Capsule\Manager as Capsule;
 $version = VERSION;
 
+//always update composer after pull
+updateComposer();
+
 /**
 * 2.6.0
 **/
@@ -29,8 +32,6 @@ if($version >= '2.6.0') {
 * 2.7.0
 **/
 if($version >= '2.7.0') {
-  //add dbal package
-  updateComposer();
   //Backup Database
   exportDB();
   //Change Column Name
@@ -40,7 +41,7 @@ if($version >= '2.7.0') {
         $table->renameColumn('time_slots', 'time_slots_required');
       });
     } catch (Exception $e) { }
-  } 
+  }
 
 
   //Create User Category Tables
