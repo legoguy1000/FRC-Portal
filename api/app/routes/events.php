@@ -689,30 +689,20 @@ $app->group('/events', function () {
         } else {
           $reqUpdate->event_time_slots()->detach();
         }
-
-        //notify event POC
-        if(!is_null($event->poc_id)) {
-          $slackMsg = $user->full_name.' registered for '.$event->name;
-          if($user_id != $loggedInUser) {
-            $slackMsg = $userFullName.' registered '.$user->full_name.' for '.$event->name;
-          }
-          slackMessageToUser($event->poc_id, $slackMsg);
-          $eventRequirements = array();
-        }
-        $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'registered for '.$event->name;
+        $msg = $user->full_name.' registered for '.$event->name;
       } else {
         $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->delete();
         $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
-        $msg = ($user_id != $loggedInUser ? $user->full_name.' ':'').'unregistered for '.$event->name;
-        //notify event POC
-        if(!is_null($event->poc_id)) {
-          $slackMsg = $user->full_name.' unregistered for '.$event->name;
-          if($user_id != $loggedInUser) {
-            $slackMsg = $userFullName.' unregistered '.$user->full_name.' for '.$event->name;
-          }
-          slackMessageToUser($event->poc_id, $slackMsg);
-          $eventRequirements = array();
+        $msg = $user->full_name.' unregistered for '.$event->name;
+      }
+      //notify event POC
+      if(!is_null($event->poc_id)) {
+        $reg = $registrationBool ? 'registered':'unregistered';
+        $slackMsg = $user->full_name.' '.$reg.' for '.$event->name;
+        if($user_id != $loggedInUser) {
+          $slackMsg = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name;
         }
+        slackMessageToUser($event->poc_id, $slackMsg);
       }
       $eventReqs = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id','=',$event_id);
