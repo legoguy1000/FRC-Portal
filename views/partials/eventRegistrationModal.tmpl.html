@@ -48,7 +48,7 @@
 									</md-list>
 									<div flex></div>
 									<div layout="row" layout-align="center center">
-										<md-button type="button" ng-click="vm.selectTimeSlot($index)" aria-label="Register/Unregister for Time Slot">
+										<md-button type="button" ng-click="vm.selectTimeSlot($index)" aria-label="Register/Unregister for Time Slot" class="md-primary">
 											<md-tooltip md-direction="top">Register for Time Slot</md-tooltip>
 											<span ng-hide="vm.checkTSReg($index)">Register</span>
 											<span ng-show="vm.checkTSReg($index)">Unregister</span>
@@ -130,7 +130,7 @@
 									</md-list>
 									<div flex></div>
 									<div ng-show="vm.registrationForm.room_id != room.room_id && vm.userInfo.user_type == 'Student' && room.users.length < 4 && room.gender == vm.userInfo.gender && room.user_type == vm.userInfo.user_type" layout="row" layout-align="center center">
-										<md-button type="button" ng-click="vm.selectRoom(room.room_id)" aria-label="Select Hotel Room">
+										<md-button type="button" ng-click="vm.selectRoom(room.room_id)" aria-label="Select Hotel Room" class="md-primary">
 											<md-tooltip md-direction="top">Select Room</md-tooltip>
 											<span>Select Room</span>
 										</md-button>
