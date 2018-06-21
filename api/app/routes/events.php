@@ -704,6 +704,16 @@ $app->group('/events', function () {
         }
         slackMessageToUser($event->poc_id, $slackMsg);
       }
+      //notify User
+      if($loggedInUser != $event->poc_id) {
+        $reg = $registrationBool ? 'registered':'unregistered';
+        $slackMsg = 'You '.$reg.' for '.$event->name;
+        if($user_id != $loggedInUser) {
+          //$slackMsg = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name;
+        }
+        slackMessageToUser($user_id, $slackMsg);
+      }
+
       $eventReqs = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id','=',$event_id);
                         },'event_requirements.event_rooms','event_requirements.event_cars'])->where('user_id',$user_id)->first();
