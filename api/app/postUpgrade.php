@@ -8,8 +8,14 @@ $version = VERSION;
 **/
 if($version >= '2.6.0') {
   //Create Event Types Table
-  $eventTypesExists = Capsule::schema()->hasTable('event_types');
-  if(!$eventTypesExists) {
+  if(Capsule::schema()->hasColumn('events','type')) {
+    try {
+      Capsule::schema()->table('events', function ($table) {
+        $table->string('type')->nullable()->default(null)->change();
+      });
+    } catch (Exception $e) { }
+  }
+  if(!Capsule::schema()->hasTable('event_types')) {
     include_once('EventType.php');
     try {
       Capsule::schema()->table('events', function ($table) {
@@ -24,7 +30,7 @@ if($version >= '2.6.0') {
 **/
 if($version >= '2.7.0') {
   //Change Column Name
-  if(Capsule::schema()->hasTable('events')) {
+  if(Capsule::schema()->hasTable('events') && Capsule::schema()->hasColumn('events','time_slots') && !Capsule::schema()->hasColumn('events','time_slots_required')) {
     try {
       Capsule::schema()->table('events', function($table) {
         $table->renameColumn('time_slots', 'time_slots_required');
