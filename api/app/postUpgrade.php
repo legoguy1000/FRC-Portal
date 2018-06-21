@@ -40,7 +40,7 @@ if($version >= '2.7.0') {
         $table->renameColumn('time_slots', 'time_slots_required');
       });
     } catch (Exception $e) { }
-  }
+  } 
 
 
   //Create User Category Tables
