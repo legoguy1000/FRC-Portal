@@ -185,7 +185,6 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	});
 	$rootScope.$on('stateChange', function(event, data) {
 		main.title = $state.current.data.title;
-		alert($state.current.data.title);
 	});
 
 
