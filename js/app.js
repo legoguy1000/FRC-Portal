@@ -596,7 +596,7 @@ angular.module('FrcPortal', [
 	      "Successful Transition from " + transition.from().name +
 	      " to " + transition.to().name
 	  );
-		$rootScope.$broadcast('stateChange',data);
+		$rootScope.$broadcast('stateChange');
 	});
 	$transitions.onStart({to: function(state) { return state != null && state.authenticate;}}, function(trans) {
 		var toState = trans.$to();
