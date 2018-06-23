@@ -400,24 +400,7 @@ angular.module('FrcPortal', [
 		return exportable;
 	};
 
-	if(configItems.team_color_primary != undefined && configItems.team_color_primary != '') {
-		var primaryPalette = computeColors(configItems.team_color_primary);
-		var palette = createAjsPaletteJsonObject(primaryPalette);
-		console.log(primaryPalette);
-		console.log(palette);
-		$mdThemingProvider.definePalette('primary', palette);
-
-		var style = document.createElement('style');
-		style.type = 'text/css';
-		style.innerHTML = '.activeSelect { background-color: #'+palette['500']+'; color: rgba(255,255,255,0.87); }';
-		document.getElementsByTagName('head')[0].appendChild(style);
-	}
-	if(configItems.team_color_secondary != undefined && configItems.team_color_secondary != '') {
-		var accentPalette = computeColors(configItems.team_color_secondary);
-		var palette = createAjsPaletteJsonObject(accentPalette);
-		$mdThemingProvider.definePalette('secondary', palette);
-	}
-	$mdThemingProvider.definePalette('tripplehelixpurple', {
+	$mdThemingProvider.definePalette('primary', {
 		'50': 'ede6f2',
 	  '100': 'd1c0de',
 	  '200': 'b397c8',
@@ -452,7 +435,7 @@ angular.module('FrcPortal', [
 	    'A700'
 	  ]
 	});
-	$mdThemingProvider.definePalette('tripplehelixyellow', {
+	$mdThemingProvider.definePalette('secondary', {
 	  '50': 'fff6e3',
 	  '100': 'feeab8',
 	  '200': 'fedc89',
@@ -486,6 +469,25 @@ angular.module('FrcPortal', [
 	  ],
 	  'contrastLightColors': []
 	});
+	
+	if(configItems.team_color_primary != undefined && configItems.team_color_primary != '') {
+		var primaryPalette = computeColors(configItems.team_color_primary);
+		var palette = createAjsPaletteJsonObject(primaryPalette);
+		console.log(primaryPalette);
+		console.log(palette);
+		$mdThemingProvider.definePalette('primary', palette);
+
+		var style = document.createElement('style');
+		style.type = 'text/css';
+		style.innerHTML = '.activeSelect { background-color: #'+palette['500']+'; color: rgba(255,255,255,0.87); }';
+		document.getElementsByTagName('head')[0].appendChild(style);
+	}
+	if(configItems.team_color_secondary != undefined && configItems.team_color_secondary != '') {
+		var accentPalette = computeColors(configItems.team_color_secondary);
+		var palette = createAjsPaletteJsonObject(accentPalette);
+		$mdThemingProvider.definePalette('secondary', palette);
+	}
+
 	$mdThemingProvider.theme('default')
 		.primaryPalette('primary', {
       'default': '500', // by default use shade 400 from the pink palette for primary intentions
