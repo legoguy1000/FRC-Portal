@@ -85,6 +85,10 @@ Add additional notes about how to deploy this on a live system
 
 * [AngularJS](https://angularjs.org/) - The web framework used
 * [Angular Material](https://material.angularjs.org) - Theme
+* [PHP](https://php.net) - Backend
+* [Slim PHP Framework](https://www.slimframework.com/) - API framework
+* [Eloquent](https://laravel.com/docs/5.6/eloquent) - OOP model
+* [MySQL](https://www.mysql.com/) - SQL Database
 
 ## Contributing
 
@@ -92,7 +96,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/legoguy1000/FRC-Portal/tags).
 
 ## Authors
 
