@@ -469,24 +469,31 @@ angular.module('FrcPortal', [
 	  ],
 	  'contrastLightColors': []
 	});
-	
-	if(configItems.team_color_primary != undefined && configItems.team_color_primary != '') {
-		var primaryPalette = computeColors(configItems.team_color_primary);
-		var palette = createAjsPaletteJsonObject(primaryPalette);
-		console.log(primaryPalette);
-		console.log(palette);
-		$mdThemingProvider.definePalette('primary', palette);
 
-		var style = document.createElement('style');
-		style.type = 'text/css';
-		style.innerHTML = '.activeSelect { background-color: #'+palette['500']+'; color: rgba(255,255,255,0.87); }';
-		document.getElementsByTagName('head')[0].appendChild(style);
+	//Primary Color
+	if(configItems.team_color_primary != undefined && configItems.team_color_primary != '') {
+		var primaryPalette = createAjsPaletteJsonObject(computeColors(configItems.team_color_primary));
+		$mdThemingProvider.definePalette('primary', primaryPalette);
+	} else {
+		var primaryPalette = createAjsPaletteJsonObject(computeColors('#662e91'));
+		$mdThemingProvider.definePalette('primary', primaryPalette);
 	}
+	//Accent Color
 	if(configItems.team_color_secondary != undefined && configItems.team_color_secondary != '') {
-		var accentPalette = computeColors(configItems.team_color_secondary);
-		var palette = createAjsPaletteJsonObject(accentPalette);
-		$mdThemingProvider.definePalette('secondary', palette);
+		var accentPalette = createAjsPaletteJsonObject(computeColors(configItems.team_color_secondary));
+		$mdThemingProvider.definePalette('secondary', accentPalette);
+	} else {
+		var accentPalette = createAjsPaletteJsonObject(omputeColors('#fdb813'));
+		$mdThemingProvider.definePalette('primary', accentPalette);
 	}
+	//CSS
+	var style = document.createElement('style');
+	style.type = 'text/css';
+	style.innerHTML = '.backgroundPrimary { background-color: #'+primaryPalette['500']+'; }';
+	style.innerHTML = '.colorPrimary { color: #'+primaryPalette['500']+'; }'; 
+	style.innerHTML += '.backgroundAccent { color: #'+accentPalette['500']+'; }';
+	style.innerHTML += '.colorAccent { color: #'+accentPalette['500']+'; }';
+	document.getElementsByTagName('head')[0].appendChild(style);
 
 	$mdThemingProvider.theme('default')
 		.primaryPalette('primary', {
