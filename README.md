@@ -21,16 +21,11 @@ Version 2.7.0
 
 
 ## Getting Started
-* Clone Git Repo
-* Create a "secured" folder in "/api/app"
-* Copy config.example.ini to "secured"
-* Edit config.ini file with database credentials (/api/app/secured/)
-* Run initalInstall.php File located in (/api/app/)
-* Login using provided admin credentials and configure accordingly
 *
 
 ### Prerequisites
 * PHP 7.0 or greater
+* MySQL
 
 
 ```
@@ -38,22 +33,25 @@ Give examples
 ```
 
 ### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
+* Clone Git Repo
 ```
-Give the example
+git clone https://github.com/legoguy1000/FRC-Portal.git
 ```
-
-And repeat
-
+* Create a "secured" folder in "/api/app"
 ```
-until finished
+mkdir secured/
 ```
-
-End with an example of getting some data out of the system or using it for a little demo
+* Copy config.example.ini to "secured"
+```
+cp config.example.ini secured/config.ini
+```
+* Edit config.ini file with database credentials (/api/app/secured/)
+* Run initalInstall.php File located in (/api/app/)
+```
+php initalInstall.php
+```
+* Go to url
+* Login using provided admin credentials and configure accordingly
 
 ## Running the tests
 
