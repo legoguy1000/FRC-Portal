@@ -70,7 +70,8 @@ $container['db'] = function ($container) {
 };*/
 $app->get('/version', function (Request $request, Response $response, array $args) {
     $responseArr = array(
-      'version' => VERSION
+      'version' => VERSION,
+      'host' => $_SERVER["HTTP_HOST"]
     );
     $response = $response->withJson($responseArr);
     return $response;
