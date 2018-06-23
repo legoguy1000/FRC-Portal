@@ -2,7 +2,12 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-Version 2.7.0 (Current Dev Branch)
+Version 2.8.0 (Current Dev Branch)
+* Minor fixes
+* Upload form for Google Service Account Credentials file
+*
+
+Version 2.7.0
 * Fix various styling issues
 * Add setting to require a team email to login
 * Replace login notification with toast
@@ -16,12 +21,17 @@ Version 2.7.0 (Current Dev Branch)
 
 
 ## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+* Clone Git Repo
+* Create a "secured" folder in "/api/app"
+* Copy config.example.ini to "secured"
+* Edit config.ini file with database credentials (/api/app/secured/)
+* Run initalInstall.php File located in (/api/app/)
+* Login using provided admin credentials and configure accordingly
+*
 
 ### Prerequisites
+* PHP 7.0 or greater
 
-What things you need to install the software and how to install them
 
 ```
 Give examples
