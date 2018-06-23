@@ -205,7 +205,6 @@ input.signin-pin {
   /*width: 100%;*/
   margin: auto;
   border: none;
-  /* background: rgb(102,46,145); */
   background: var(--primary-color);
   color: var(--accent-color);
   display: block;
