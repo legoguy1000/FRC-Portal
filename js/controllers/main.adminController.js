@@ -7,6 +7,7 @@ function mainAdminController($log,$timeout, $q, $scope, $state, eventsService, $
 
 	//$log.log($state.current)
 	admin.state = $state.current.name;
+	$scope.main.title = $state.current.data.title;
 	admin.tabs = [
       {
         name: 'Users',
