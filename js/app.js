@@ -409,7 +409,7 @@ angular.module('FrcPortal', [
 
 		var style = document.createElement('style');
 		style.type = 'text/css';
-		style.innerHTML = '.activeSelect { background-color: '+palette['500']+'; color: rgba(255,255,255,0.87); }';
+		style.innerHTML = '.activeSelect { background-color: #'+palette['500']+'; color: rgba(255,255,255,0.87); }';
 		document.getElementsByTagName('head')[0].appendChild(style);
 	}
 	if(configItems.team_color_secondary != undefined && configItems.team_color_secondary != '') {
