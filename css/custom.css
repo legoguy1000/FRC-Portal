@@ -205,8 +205,9 @@ input.signin-pin {
   /*width: 100%;*/
   margin: auto;
   border: none;
-  background: rgb(102,46,145);
-  color: #FDB813;
+  /* background: rgb(102,46,145); */
+  background: var(--primary-color);
+  color: var(--accent-color);
   display: block;
   font-size: 2em;
   font-weight: bold;
@@ -218,37 +219,37 @@ input.signin-pin:focus {
 
 input.signin-pin::-webkit-input-placeholder {
     /* WebKit, Blink, Edge */
-    color: #FDB813;
+    color: var(--accent-color);
 }
 input.signin-pin:-moz-placeholder {
     /* Mozilla Firefox 4 to 18 */
-    color: #FDB813;
+    color: var(--accent-color);
     opacity: 1;
 }
 input.signin-pin::-moz-placeholder {
     /* Mozilla Firefox 19+ */
-    color: #FDB813;
+    color: var(--accent-color);
     opacity: 1;
 }
 input.signin-pin:-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: #FDB813;
+    color: var(--accent-color);
 }
 
 .moment-picker-input:focus {
     outline: none;
 }
 .bc-keypad__key {
-	color: #FDB813;
+	color: var(--accent-color);
 	margin-bottom: 10px;
 }
 .bc-keypad__key-button {
 	font-size: 3em !important;
     font-weight: bolder;
-	color: #FDB813;
+	color: var(--accent-color);
 }
 .bc-keypad__key-button svg {
-	fill: #FDB813;
+	fill: var(--accent-color);
 }
 
 md-input-container .hint {

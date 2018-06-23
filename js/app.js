@@ -489,7 +489,9 @@ angular.module('FrcPortal', [
 	//CSS
 	var style = document.createElement('style');
 	style.type = 'text/css';
-	style.innerHTML = '.backgroundPrimary { background-color: #'+primaryPalette['500']+'; }';
+	style.innerHTML = ':root { --primary-color: #'+primaryPalette['500']+'; }';
+	style.innerHTML += ':root { --accent-color: #'+accentPalette['500']+'; }';
+	style.innerHTML += '.backgroundPrimary { background-color: #'+primaryPalette['500']+'; }';
 	style.innerHTML += '.colorPrimary { color: #'+primaryPalette['500']+'; }';
 	style.innerHTML += '.backgroundAccent { color: #'+accentPalette['500']+'; }';
 	style.innerHTML += '.colorAccent { color: #'+accentPalette['500']+'; }';
