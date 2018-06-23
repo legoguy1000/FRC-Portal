@@ -33,25 +33,29 @@ Give examples
 ```
 
 ### Installing
-* Clone Git Repo
+Clone Git Repo
 ```
 git clone https://github.com/legoguy1000/FRC-Portal.git
 ```
-* Create a "secured" folder in "/api/app"
+Create a "secured" folder in "/api/app"
 ```
 mkdir secured/
 ```
-* Copy config.example.ini to "secured"
+Copy config.example.ini to "secured"
 ```
 cp config.example.ini secured/config.ini
 ```
-* Edit config.ini file with database credentials (/api/app/secured/)
-* Run initalInstall.php File located in (/api/app/)
+Edit config.ini file with database credentials (/api/app/secured/)
+Run initalInstall.php script located in (/api/app/)
 ```
 php initalInstall.php
 ```
-* Go to url
-* Login using provided admin credentials and configure accordingly
+To upgrade an existing install pull the latest version from git and run the postUpgrade.php script
+```
+git pull
+php postUpgrade.php
+```
+Go to url and login using provided admin credentials and configure accordingly
 
 ## Running the tests
 
