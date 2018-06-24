@@ -21,8 +21,8 @@ class Season extends Eloquent {
   ];
 
 
-  protected $appends = ['start_date_unix','bag_day_unix','end_date_unix','start_date_formatted','bag_day_formatted','end_date_formatted','start_date_formatted','start_date_formatted'];
-
+  protected $appends = ['date'];
+  //'start_date_unix','bag_day_unix','end_date_unix','start_date_formatted','bag_day_formatted','end_date_formatted','start_date_formatted','start_date_formatted'
   //$data['requirements'] = array();
   /**
   * The attributes that should be hidden for arrays.
@@ -54,6 +54,7 @@ class Season extends Eloquent {
     });
   }*/
 
+/*
   public function getStartDateUnixAttribute() {
     $date = new DateTime($this->attributes['start_date']);
     return $date->format('U');
@@ -77,7 +78,29 @@ class Season extends Eloquent {
   public function getBagDayFormattedAttribute() {
     $date = new DateTime($this->attributes['bag_day']);
     return $date->format('F j, Y');
-  }
+  } */
+  public function getDateAttribute() {
+      $start = new DateTime($this->attributes['start_date']);
+      $end = new DateTime($this->attributes['end_date']);
+      $bag = new DateTime($this->attributes['bag_day']);
+      return array(
+        'start' => array(
+          'unix' => $start->format('U'),
+          'date_raw' => $start->format('Y-m-d'),
+          'long_date' => $start->format('F j, Y'),
+        ),
+        'end' => array(
+          'unix' => $end->format('U'),
+          'date_raw' => $end->format('Y-m-d'),
+          'long_date' => $end->format('F j, Y'),
+        )
+        'bag' => array(
+          'unix' => $end->format('U'),
+          'date_raw' => $end->format('Y-m-d'),
+          'long_date' => $end->format('F j, Y'),
+        )
+      );
+    }
 
   /**
   * Get the Annual requirements.

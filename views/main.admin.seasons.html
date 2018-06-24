@@ -33,9 +33,9 @@
 				<tr md-row>
 					<th md-column md-order-by="year"><span>Year</span></th>
 					<th md-column md-order-by="game_name"><span>Game Name</span></th>
-					<th md-column md-order-by="start_date"><span>Start Date</span></th>
-					<th md-column md-order-by="bag_day"><span>Bag Day</span></th>
-					<th md-column md-order-by="end_date"><span>End Date</span></th>
+					<th md-column md-order-by="start_date" hide-xs><span>Start Date</span></th>
+					<th md-column md-order-by="bag_day" hide-xs><span>Bag Day</span></th>
+					<th md-column md-order-by="end_date" hide-xs hide-sm><span>End Date</span></th>
 					<th md-column></th>
 				</tr>
 			</thead>
@@ -51,9 +51,9 @@
 <!--					<td md-cell>{{season.start_date_unix*1000 | date:'longDate'}}</td>
 					<td md-cell>{{season.bag_day_unix*1000 | date:'longDate'}}</td>
 					<td md-cell>{{season.end_date_unix*1000 | date:'longDate'}}</td> -->
-					<td md-cell>{{season.start_date_formatted}}</td>
-					<td md-cell>{{season.bag_day_formatted}}</td>
-					<td md-cell>{{season.end_date_formatted}}</td>
+					<td md-cell hide-xs>{{season.date.start.long_date}}</td>
+					<td md-cell hide-xs>{{season.date.bag.long_date}}</td>
+					<td md-cell hide-xs hide-sm>{{season.date.end.long_date}}</td>
 					<td md-cell>
 						<md-button class="md-icon-button" ui-sref="main.admin.season({'season_id':season.season_id})" ng-click="admin.slideLeft()">
 							<md-icon>open_in_new</md-icon>
