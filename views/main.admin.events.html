@@ -49,10 +49,10 @@
 					<td md-cell>{{event.name}}</td>
 					<td md-cell>
 						<span ng-show="event.date.single_day">
-							{{vm.event.date.start.long_date}} {{vm.event.date.start.time_formatted}} - {{vm.event.end.start.time_formatted}}
+							{{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.end.start.time_formatted}}
 						</span>
 						<span ng-hide="event.date.single_day">
-							{{vm.event.date.start.multi_day}} - {{vm.event.date.end.multi_day}}
+							{{event.date.start.multi_day}} - {{event.date.end.multi_day}}
 						</span>
 					</td>
 					<td md-cell>{{event.num_days}}</td>
