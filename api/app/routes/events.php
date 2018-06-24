@@ -688,6 +688,9 @@ $app->group('/events', function () {
           $reqUpdate->event_time_slots()->sync($ts_ids);
         } else {
           $reqUpdate->event_time_slots()->detach();
+          $responseArr['msg'] = 'Please select at least 1 time';
+          $response = $response->withJson($responseArr);
+          return $response;
         }
         $msg = $user->full_name.' registered for '.$event->name;
       } else {
@@ -707,7 +710,7 @@ $app->group('/events', function () {
       //notify User
       if($loggedInUser != $event->poc_id) {
         $reg = $registrationBool ? 'registered':'unregistered';
-        $slackMsg = 'You '.$reg.' for '.$event->name;
+        $slackMsg = 'You successfully '.$reg.' for '.$event->name;
         if($user_id != $loggedInUser) {
           //$slackMsg = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name;
         }
