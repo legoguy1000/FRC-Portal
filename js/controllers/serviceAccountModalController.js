@@ -16,8 +16,8 @@ function serviceAccountModalController($log,$element,$mdDialog,$scope,usersServi
 
 	// upload later on form submit or something similar
 	vm.submit = function() {
-		if (vm.form.file.$valid && vm.file) {
-			vm.upload(vm.file);
+		if (vm.form.credentials.$valid && vm.credentials) {
+			vm.upload(vm.credentials);
 		}
 	};
 
