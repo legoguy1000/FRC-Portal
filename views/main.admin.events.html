@@ -58,10 +58,10 @@
 					<td md-cell>{{event.num_days}}</td>
 					<td md-cell>{{event.type}}</td>
 					<td md-cell>
-						<md-list-item style="padding: 0px;">
-							<img ng-src="{{event.game_logo}}" class="md-avatar" alt="" ng-if="event.game_logo"/>
-							{{event.game_name}}
-						</md-list-item>
+						<div layout="row" layout-align="start center">
+							<img ng-src="{{event.season.game_logo}}" class="avatar" alt="" ng-if="event.season.game_logo"/>
+							{{event.season.game_name}}
+						</div>
 					</td>
 					<td md-cell>
 						<md-button class="md-icon-button" ui-sref="main.admin.event({'event_id':event.event_id})" ng-click="admin.slideLeft()">
