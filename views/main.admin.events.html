@@ -48,11 +48,11 @@
 				<tr md-row ng-repeat="event in vm.events">
 					<td md-cell>{{event.name}}</td>
 					<td md-cell>
-						<span ng-show="event.single_day">
-							{{event.event_start_unix*1000 | date:'longDate'}} {{event.event_start_unix*1000 | date:'h:mm a'}} - {{event.event_end_unix*1000 | date:'h:mm a'}}
+						<span ng-show="event.date.single_day">
+							{{vm.event.date.start.long_date}} {{vm.event.date.start.time_formatted}} - {{vm.event.end.start.time_formatted}}
 						</span>
-						<span ng-hide="event.single_day">
-							{{event.event_start_unix*1000 | date:'MMMM d'}} - {{event.event_end_unix*1000 | date:'d, y'}}
+						<span ng-hide="event.date.single_day">
+							{{vm.event.date.start.multi_day}} - {{vm.event.date.end.multi_day}}
 						</span>
 					</td>
 					<td md-cell>{{event.num_days}}</td>
