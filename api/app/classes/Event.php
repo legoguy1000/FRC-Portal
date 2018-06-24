@@ -21,8 +21,8 @@ class Event extends Eloquent {
   ];
 
 
-  protected $appends = ['registration_deadline_unix','registration_deadline_formatted','registration_deadline_google_event','season','num_days','date'];
-  //'single_day','year','event_start_unix','event_end_unix','single_month',
+  protected $appends = ['registration_deadline_google_event','season','num_days','date','registration_deadline_date'];
+  //'single_day','year','event_start_unix','event_end_unix','single_month','registration_deadline_unix','registration_deadline_formatted',
   //$data['requirements'] = array();
   /**
   * The attributes that should be hidden for arrays.
@@ -113,6 +113,31 @@ class Event extends Eloquent {
       )
     );
   }
+  public function getRegistrationDeadlineDateAttribute() {
+    $return = null;
+    if(!is_null($this->attributes['registration_deadline'])) {
+      $date = new DateTime($this->attributes['registration_deadline']);
+      return array(
+        'unix' => $date->format('U'),
+        'date_raw' => $date->format('Y-m-d'),
+        'long_date' => $date->format('F j, Y'),
+        'time_formatted' => $date->format('g:i A'),
+        'date_dow' => $date->format('D'),
+      );
+    }
+    return $return;
+  }
+  public function getRegistrationDeadlineGoogleEventAttribute() {
+    $return = null;
+    if(!is_null($this->attributes['registration_deadline_gcalid'])) {
+      $event = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
+      if($event['status']) {
+        $return = $event['data'];
+      }
+    }
+    return $return;
+  }
+  /*
   public function getRegistrationDeadlineUnixAttribute() {
     $return = null;
     if(!is_null($this->attributes['registration_deadline'])) {
@@ -129,17 +154,7 @@ class Event extends Eloquent {
     }
     return $return;
   }
-  public function getRegistrationDeadlineGoogleEventAttribute() {
-    $return = null;
-    if(!is_null($this->attributes['registration_deadline_gcalid'])) {
-      $event = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
-      if($event['status']) {
-        $return = $event['data'];
-      }
-    }
-    return $return;
-  }
-
+*/
 
   public function getSeasonAttribute() {
     return Season::where('year',date('Y',strtotime($this->event_start)))->first();

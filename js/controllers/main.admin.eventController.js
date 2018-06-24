@@ -106,9 +106,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.getEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
-			if(vm.event.registration_deadline != null) {
+	/*		if(vm.event.registration_deadline != null) {
 				vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
-			}
+			} */
 			vm.loading = false;
 		});
 	};
