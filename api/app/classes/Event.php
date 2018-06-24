@@ -98,16 +98,18 @@ class Event extends Eloquent {
       'start' => array(
         'unix' => $start->format('U'),
         'date_raw' => $start->format('Y-m-d'),
-        'date_formatted' => $start->format('F j, Y'),
+        'long_date' => $start->format('F j, Y'),
         'time_formatted' => $start->format('g:i A'),
         'date_dow' => $start->format('D'),
+        'multi_day' => $start->format('F j'),
       ),
       'end' => array(
         'unix' => $end->format('U'),
         'date_raw' => $end->format('Y-m-d'),
-        'date_formatted' => $end->format('F j, Y'),
+        'long_date' => $end->format('F j, Y'),
         'time_formatted' => $end->format('g:i A'),
         'date_dow' => $end->format('D'),
+        'multi_day' => $start->format('j, Y'),
       )
     );
   }
