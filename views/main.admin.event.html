@@ -26,7 +26,7 @@
 			<md-input-container flex class="md-icon-float md-block"  ng-show="vm.event.date.single_day">
 				<label>Date & Time</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
-				<input type="text" value="{{vm.event.date.start.long_date}} {{vm.event.date.start.time_formatted}} - {{vm.event.end.start.time_formatted}}"  readonly>
+				<input type="text" value="{{vm.event.date.start.long_date}} {{vm.event.date.start.time_formatted}} - {{vm.event.date.end.time_formatted}}"  readonly>
 				</input>
 			</md-input-container>
 			<md-input-container flex class="md-icon-float md-block"  ng-hide="vm.event.date.single_day">
