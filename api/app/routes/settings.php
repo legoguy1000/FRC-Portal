@@ -184,8 +184,6 @@ $app->group('/settings', function () {
         $responseArr['status'] = true;
         $responseArr['msg'] = 'Service account credentials uploaded';
         $responseArr['data'] = $file['data']['contents'];
-      } else {
-        $responseArr = $file;
       }
       $response = $response->withJson($responseArr);
       return $response;
