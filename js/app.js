@@ -20,6 +20,7 @@ angular.module('FrcPortal', [
 	'oc.lazyLoad',
 	'vAccordion',
 	'shContextMenu',
+	'ngFileUpload',
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider, $locationProvider) {
 
 	$locationProvider.html5Mode({ enabled: true, requireBase: true });
