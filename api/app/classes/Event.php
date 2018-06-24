@@ -109,7 +109,7 @@ class Event extends Eloquent {
         'long_date' => $end->format('F j, Y'),
         'time_formatted' => $end->format('g:i A'),
         'date_dow' => $end->format('D'),
-        'multi_day' => $start->format('j, Y'),
+        'multi_day' => $end->format('j, Y'),
       )
     );
   }
