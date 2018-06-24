@@ -27,7 +27,19 @@ function serviceAccountModalController($log,$element,$mdDialog,$scope,usersServi
 					url: 'api/settings/serviceAccountCredentials',
 					data: {file: file}
 			}).then(function (resp) {
+				var response = resp.data;
+				if(response.status) {
 					vm.credentials = resp.data.data;
+					vm.file = null;
+					vm.form.$setPristine();
+					vm.form.$setUntouched();
+				}
+				$mdToast.show(
+		      $mdToast.simple()
+		        .textContent(response.msg)
+		        .position('top right')
+		        .hideDelay(3000)
+		    );
 					//console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
 			}, function (resp) {
 					console.log('Error status: ' + resp.status);
