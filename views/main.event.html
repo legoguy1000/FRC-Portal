@@ -3,7 +3,7 @@
 		<div layout="column" flex-gt-md="60" flex layout-align="center center" style="background:white;padding: 45px 25px;">
 			<!--Counter-->
 			<div id="countdown" class="countdown font-pink mb-25">
-				<timer end-time="vm.event.event_start_unix*1000">{{days}} day{{daysS}} : {{hours}} hour{{hoursS}} : {{minutes}} minute{{minutesS}} : {{seconds}} second{{secondsS}}</timer>
+				<timer end-time="vm.event.date.start.unix*1000">{{days}} day{{daysS}} : {{hours}} hour{{hoursS}} : {{minutes}} minute{{minutesS}} : {{seconds}} second{{secondsS}}</timer>
 			</div>
 			<!--Counter-->
 			<div style="text-align: center;">
@@ -11,11 +11,11 @@
 			</div>
 			<div>
 				<h5 class="mt-20">
-					<span ng-show="vm.event.single_day">
-						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'longDate'}} {{vm.event.event_start_unix*1000 | date:'h:mm a'}} - {{vm.event.event_end_unix*1000 | date:'h:mm a'}}
+					<span ng-show="vm.event.date.single_day">
+						<md-icon class="material-icons">today</md-icon> {{vm.event.date.start.long_date}} {{vm.event.date.start.time_formatted}} - {{vm.event.date.end.time_formatted}}
 					</span>
-					<span ng-hide="vm.event.single_day">
-						<md-icon class="material-icons">today</md-icon> {{vm.event.event_start_unix*1000 | date:'MMMM d'}} - {{vm.event.event_end_unix*1000 | date:'d, y'}}
+					<span ng-hide="vm.event.date.single_day">
+						<md-icon class="material-icons">today</md-icon> {{vm.event.date.start.multi_day}} - {{vm.event.date.end.multi_day}}
 					</span>
 				</h5>
 			</div>
