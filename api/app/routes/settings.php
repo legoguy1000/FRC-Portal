@@ -206,7 +206,7 @@ $app->group('/settings', function () {
 
       $directory = $this->get('upload_directory');
       $uploadedFiles = $request->getUploadedFiles();
-      $uploadedFile = $uploadedFiles['credentials'];
+      $uploadedFile = $uploadedFiles['file'];
       if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
         $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
         $temp = file_get_contents($uploadedFile->file);

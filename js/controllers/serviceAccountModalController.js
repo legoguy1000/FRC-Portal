@@ -8,7 +8,7 @@ function serviceAccountModalController($log,$element,$mdDialog,$scope,usersServi
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-	vm.credentialsArr = credentials;
+	vm.credentials = credentials;
 
 	vm.close = function() {
 		$mdDialog.hide(vm.credentials);
@@ -16,8 +16,8 @@ function serviceAccountModalController($log,$element,$mdDialog,$scope,usersServi
 
 	// upload later on form submit or something similar
 	vm.submit = function() {
-		if (vm.form.credentials.$valid && vm.credentials) {
-			vm.upload(vm.credentials);
+		if (vm.form.file.$valid && vm.file) {
+			vm.upload(vm.file);
 		}
 	};
 
