@@ -93,7 +93,7 @@ class Season extends Eloquent {
           'unix' => $end->format('U'),
           'date_raw' => $end->format('Y-m-d'),
           'long_date' => $end->format('F j, Y'),
-        )
+        ),
         'bag' => array(
           'unix' => $end->format('U'),
           'date_raw' => $end->format('Y-m-d'),
