@@ -21,8 +21,8 @@ class Event extends Eloquent {
   ];
 
 
-  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_deadline_unix','registration_deadline_formatted','registration_deadline_google_event','season','num_days','single_month'];
-
+  protected $appends = ['registration_deadline_unix','registration_deadline_formatted','registration_deadline_google_event','season','num_days','date'];
+  //'single_day','year','event_start_unix','event_end_unix','single_month',
   //$data['requirements'] = array();
   /**
   * The attributes that should be hidden for arrays.
@@ -44,8 +44,8 @@ class Event extends Eloquent {
     'permission_slip_required' => 'boolean',
     'time_slots_required' => 'boolean',
     'time_slots' => 'boolean',
-    'single_day' => 'boolean',
-    'single_month' => 'boolean',
+    //'single_day' => 'boolean',
+    //'single_month' => 'boolean',
   ];
 
   public function save($options = array()) {
@@ -61,7 +61,7 @@ class Event extends Eloquent {
     });
   } */
 
-  public function getSingleDayAttribute() {
+/*  public function getSingleDayAttribute() {
     $start = new DateTime($this->attributes['event_start']);
     $end = new DateTime($this->attributes['event_end']);
     return (bool) ($start->format('Y-m-d') == $end->format('Y-m-d'));
@@ -81,6 +81,35 @@ class Event extends Eloquent {
   public function getEventEndUnixAttribute() {
     $date = new DateTime($this->attributes['event_end']);
     return $date->format('U');
+  } */
+  public function getNumDaysAttribute() {
+    $start = strtotime($this->attributes['event_start']);
+    $end = strtotime($this->attributes['event_end']);
+    $diff = $end - $start;
+    return ceil($diff / (60 * 60 * 24));
+  }
+  public function getDateAttribute() {
+    $start = new DateTime($this->attributes['event_start']);
+    $end = new DateTime($this->attributes['event_end']);
+    return array(
+      'single_day' => (bool) ($start->format('Y-m-d') == $end->format('Y-m-d')),
+      'single_month' => (bool) ($start->format('Y-m') == $end->format('Y-m')),
+      'year' => $start->format('Y'),
+      'start' => array(
+        'unix' => $start->format('U'),
+        'date_raw' => $start->format('Y-m-d'),
+        'date_formatted' => $start->format('F j, Y'),
+        'time_formatted' => $start->format('g:i A'),
+        'date_dow' => $start->format('D'),
+      ),
+      'end' => array(
+        'unix' => $end->format('U'),
+        'date_raw' => $end->format('Y-m-d'),
+        'date_formatted' => $end->format('F j, Y'),
+        'time_formatted' => $end->format('g:i A'),
+        'date_dow' => $end->format('D'),
+      )
+    );
   }
   public function getRegistrationDeadlineUnixAttribute() {
     $return = null;
@@ -108,12 +137,7 @@ class Event extends Eloquent {
     }
     return $return;
   }
-  public function getNumDaysAttribute() {
-    $start = strtotime($this->attributes['event_start']);
-    $end = strtotime($this->attributes['event_end']);
-    $diff = $end - $start;
-    return ceil($diff / (60 * 60 * 24));
-  }
+
 
   public function getSeasonAttribute() {
     return Season::where('year',date('Y',strtotime($this->event_start)))->first();
@@ -149,4 +173,6 @@ class Event extends Eloquent {
   public function poc() {
     return $this->hasOne('FrcPortal\User', 'user_id', 'poc_id');
   }
+
+
 }
