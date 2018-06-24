@@ -8,7 +8,7 @@ function serviceAccountModalController($log,$element,$mdDialog,$scope,usersServi
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
-	vm.credentials = credentials;
+	vm.credentialsArr = credentials;
 
 	vm.close = function() {
 		$mdDialog.hide(vm.credentials);
