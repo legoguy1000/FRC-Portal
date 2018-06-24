@@ -631,11 +631,11 @@ $app->group('/events', function () {
       $registrationBool = (bool) $formData['registration'];
       $event = FrcPortal\Event::find($event_id);
       if($registrationBool) {
-        if(time() > $event->event_start_unix) {
+        if(time() > $event->date->start->unix) {
           $responseArr = array('status'=>false, 'msg'=>'Registration is closed. Event has already started.');
           $response = $response->withJson($responseArr,400);
           return $response;
-      	} elseif($event->registration_deadline_unix != null && (time() > $event->registration_deadline_unix)) {
+      	} elseif(($event->registration_deadline_date->unix != null && time() > $event->registration_deadline_date->unix) && !checkAdmin($loggedInUser)) {
             $responseArr = array('status'=>false, 'msg'=>'Registration is closed. Registration deadline was '.date('F j, Y g:m A',$event->registration_deadline_unix).'.');
             $response = $response->withJson($responseArr,400);
             return $response;
