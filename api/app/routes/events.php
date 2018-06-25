@@ -134,6 +134,7 @@ $app->group('/events', function () {
       			}
             $temp['start'] = formatDateArrays($temp['event_start']);
             $temp['end'] = formatDateArrays($temp['event_end']);
+            $temp['poc'] = FrcPortal\User::where('email',$event->creator->email)->orWhere('team_email',$event->creator->email)->first();
     /*  			$temp['event_start_unix'] = strtotime($temp['event_start']);
       			$temp['event_end_unix'] = strtotime($temp['event_end']);
       			$temp['event_start_iso'] = date('c',strtotime($temp['event_start']));

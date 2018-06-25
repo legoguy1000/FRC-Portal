@@ -92,8 +92,8 @@ class Event extends Eloquent {
     $start = formatDateArrays($this->attributes['event_start']);
     $end = formatDateArrays($this->attributes['event_end']);
     return array(
-      'single_day' => (bool) ($start['date_raw'] == $start['date_raw']),
-      'single_month' => (bool) ($start['date_ym'] == $start['date_ym']),
+      'single_day' => (bool) ($start['date_raw'] == $end['date_raw']),
+      'single_month' => (bool) ($start['date_ym'] == $end['date_ym']),
       'year' => $start['year'],
       'start' => $start,
       'end' => $end

@@ -315,7 +315,8 @@ function formatDateArrays($date_raw) {
 		'long_date' => $date->format('F j, Y'),
 		'time_formatted' => $date->format('g:i A'),
 		'date_dow' => $date->format('D'),
-		'multi_day' => $date->format('F j'),
+		'multi_day_start' => $date->format('F j'),
+		'multi_day_end' => $date->format('j, Y'),
 	);
 }
 ?>
