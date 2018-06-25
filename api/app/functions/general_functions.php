@@ -304,18 +304,18 @@ function updateComposer() {
 	sleep(5);
 }
 
-function formatDateArrays($date) {
-	$date = new DateTime($date);
+function formatDateArrays($date_raw) {
+	$date = new DateTime($date_raw);
 	return array(
-		'year' => $start->format('Y'),
-		'unix' => $start->format('U'),
-		'date_raw' => $start->format('Y-m-d'),
-		'date_time_raw' => $start->format('Y-m-d H:i:s'),
-		'date_ym' => $start->format('Y-m'),
-		'long_date' => $start->format('F j, Y'),
-		'time_formatted' => $start->format('g:i A'),
-		'date_dow' => $start->format('D'),
-		'multi_day' => $start->format('F j'),
+		'year' => $date->format('Y'),
+		'unix' => $date->format('U'),
+		'date_raw' => $date->format('Y-m-d'),
+		'date_time_raw' => $date->format('Y-m-d H:i:s'),
+		'date_ym' => $date->format('Y-m'),
+		'long_date' => $date->format('F j, Y'),
+		'time_formatted' => $date->format('g:i A'),
+		'date_dow' => $date->format('D'),
+		'multi_day' => $date->format('F j'),
 	);
 }
 ?>
