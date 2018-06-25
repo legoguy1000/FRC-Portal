@@ -377,6 +377,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		})
 		.then(function(response) {
+			vm.event.registration_deadline_date = {};
 			console.log(response);
 			console.log(vm.event.registration_deadline_date.long_date);
 			vm.event.registration_deadline_date.long_date = response.end.long_date;
