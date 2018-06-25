@@ -377,6 +377,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		})
 		.then(function(response) {
+			console.log(response);
 			vm.event.registration_deadline_formatted = response.end.long_date;
 			vm.event.registration_deadline_gcalid = response.google_cal_id;
 			$log.info('asdf');
