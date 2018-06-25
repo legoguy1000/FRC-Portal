@@ -80,27 +80,15 @@ class Season extends Eloquent {
     return $date->format('F j, Y');
   } */
   public function getDateAttribute() {
-      $start = new DateTime($this->attributes['start_date']);
-      $end = new DateTime($this->attributes['end_date']);
-      $bag = new DateTime($this->attributes['bag_day']);
-      return array(
-        'start' => array(
-          'unix' => $start->format('U'),
-          'date_raw' => $start->format('Y-m-d'),
-          'long_date' => $start->format('F j, Y'),
-        ),
-        'end' => array(
-          'unix' => $end->format('U'),
-          'date_raw' => $end->format('Y-m-d'),
-          'long_date' => $end->format('F j, Y'),
-        ),
-        'bag' => array(
-          'unix' => $end->format('U'),
-          'date_raw' => $end->format('Y-m-d'),
-          'long_date' => $end->format('F j, Y'),
-        )
-      );
-    }
+    $start = formatDateArrays($this->attributes['start_date']);
+    $end = formatDateArrays($this->attributes['end_date']);
+    $bag = formatDateArrays($this->attributes['bag_day']);
+    return array(
+      'start' => $start,
+      'end' => $end,
+      'bag' => $bag
+    );
+  }
 
   /**
   * Get the Annual requirements.

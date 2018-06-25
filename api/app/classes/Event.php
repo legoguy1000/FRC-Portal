@@ -89,41 +89,21 @@ class Event extends Eloquent {
     return ceil($diff / (60 * 60 * 24));
   }
   public function getDateAttribute() {
-    $start = new DateTime($this->attributes['event_start']);
-    $end = new DateTime($this->attributes['event_end']);
+    $start = formatDateArrays($this->attributes['event_start']);
+    $end = formatDateArrays($this->attributes['event_end']);
     return array(
-      'single_day' => (bool) ($start->format('Y-m-d') == $end->format('Y-m-d')),
-      'single_month' => (bool) ($start->format('Y-m') == $end->format('Y-m')),
-      'year' => $start->format('Y'),
-      'start' => array(
-        'unix' => $start->format('U'),
-        'date_raw' => $start->format('Y-m-d'),
-        'long_date' => $start->format('F j, Y'),
-        'time_formatted' => $start->format('g:i A'),
-        'date_dow' => $start->format('D'),
-        'multi_day' => $start->format('F j'),
-      ),
-      'end' => array(
-        'unix' => $end->format('U'),
-        'date_raw' => $end->format('Y-m-d'),
-        'long_date' => $end->format('F j, Y'),
-        'time_formatted' => $end->format('g:i A'),
-        'date_dow' => $end->format('D'),
-        'multi_day' => $end->format('j, Y'),
-      )
+      'single_day' => (bool) ($start['date_raw'] == $start['date_raw']),
+      'single_month' => (bool) ($start['date_ym'] == $start['date_ym']),
+      'year' => $start['year'],
+      'start' => $start,
+      'end' => $end
     );
   }
   public function getRegistrationDeadlineDateAttribute() {
     $return = null;
     if(!is_null($this->attributes['registration_deadline'])) {
-      $date = new DateTime($this->attributes['registration_deadline']);
-      return array(
-        'unix' => $date->format('U'),
-        'date_raw' => $date->format('Y-m-d'),
-        'long_date' => $date->format('F j, Y'),
-        'time_formatted' => $date->format('g:i A'),
-        'date_dow' => $date->format('D'),
-      );
+      $date = formatDateArrays($this->attributes['registration_deadline']);
+      return $date;
     }
     return $return;
   }

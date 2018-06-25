@@ -158,4 +158,5 @@ function getEventTimeSlotList($event_id) {
 	}
 	return $result;
 }
+
 ?>

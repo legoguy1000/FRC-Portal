@@ -109,15 +109,17 @@ $app->group('/events', function () {
       				'name' => $event->summary,
       				'location' => $event->location,
       				'google_cal_id' => $event->id,
+              'start' => null,
+              'end' => null,
       				'allDay' => false,
       				'event_start' => null,
       				'event_end' => null,
-      				'event_start_unix' => null,
+      /*				'event_start_unix' => null,
               'event_end_unix' => null,
       				'event_end_formatted' => null,
       				'event_start_iso' => null,
               'event_end_iso' => null,
-      				'event_end_formatted' => null,
+      				'event_end_formatted' => null, */
       				'details' => $event->description,
       			);
       			if(empty($event->start->dateTime)) {
@@ -128,14 +130,16 @@ $app->group('/events', function () {
               $temp['event_end'] = $ed->format("Y-m-d").' 23:59:59';
       			} else {
       				$temp['event_start'] = date('Y-m-d H:i:s', strtotime($event->start->dateTime));
-      				$temp['event_end'] =date('Y-m-d H:i:s', strtotime($event->end->dateTime));
+      				$temp['event_end'] = date('Y-m-d H:i:s', strtotime($event->end->dateTime));
       			}
-      			$temp['event_start_unix'] = strtotime($temp['event_start']);
+            $temp['start'] = formatDateArrays($temp['event_start']);
+            $temp['end'] = formatDateArrays($temp['event_end']);
+    /*  			$temp['event_start_unix'] = strtotime($temp['event_start']);
       			$temp['event_end_unix'] = strtotime($temp['event_end']);
       			$temp['event_start_iso'] = date('c',strtotime($temp['event_start']));
       			$temp['event_end_iso'] = date('c',strtotime($temp['event_end']));
       			$temp['event_start_formatted'] = date('F j, Y',strtotime($temp['event_start']));
-      			$temp['event_end_formatted'] = date('F j, Y',strtotime($temp['event_end']));
+      			$temp['event_end_formatted'] = date('F j, Y',strtotime($temp['event_end'])); */
           	$allEvents[] = $temp;
       		}
         }
