@@ -316,6 +316,6 @@ function formatDateArrays($date) {
 		'time_formatted' => $start->format('g:i A'),
 		'date_dow' => $start->format('D'),
 		'multi_day' => $start->format('F j'),
-	)
+	);
 }
 ?>
