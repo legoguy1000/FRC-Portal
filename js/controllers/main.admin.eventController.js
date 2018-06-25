@@ -378,11 +378,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		})
 		.then(function(response) {
 			vm.event.registration_deadline_date = {};
-			console.log(response);
-			console.log(vm.event.registration_deadline_date.long_date);
 			vm.event.registration_deadline_date.long_date = response.end.long_date;
-			console.log(vm.event.registration_deadline_date.long_date);
 			vm.event.registration_deadline_gcalid = response.google_cal_id;
+			vm.event.registration_deadline_google_event = response.google_event;
 			$log.info('asdf');
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
