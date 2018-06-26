@@ -58,6 +58,16 @@ if($version >= '2.8.0') {
       });
     } catch (Exception $e) { }
   }
+  //Add Column
+  if(Capsule::schema()->hasTable('events') && !Capsule::schema()->hasColumn('events','hotel_info')) {
+    //Backup Database
+    exportDB();
+    try {
+      Capsule::schema()->table('events', function($table) {
+      $table->text('hotel_info');
+      });
+    } catch (Exception $e) { }
+  }
 }
 
 //Create User Category Tables
