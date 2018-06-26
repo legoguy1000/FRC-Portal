@@ -156,6 +156,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'registration_deadline_gcalid': vm.event.registration_deadline_gcalid,
 		};
 		eventsService.updateEvent(data).then(function(response){
+			vm.loading = false;
 			if(response.status) {
 				vm.event = response.data;
 				if(vm.event.registration_deadline != null) {
@@ -169,7 +170,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	        .hideDelay(3000)
 	    );
 		});
-		vm.loading = false;
 	};
 
 	vm.deleteEvent = function() {
