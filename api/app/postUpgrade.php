@@ -54,7 +54,7 @@ if($version >= '2.8.0') {
     exportDB();
     try {
       Capsule::schema()->table('events', function($table) {
-        $table->decimal('payment_amount', 5, 2);
+        $table->decimal('payment_amount', 5, 2)->default(00.00);
       });
     } catch (Exception $e) { }
   }
