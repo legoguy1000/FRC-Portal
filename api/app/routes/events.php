@@ -116,7 +116,7 @@ $app->group('/events', function () {
       				'allDay' => false,
       				'event_start' => null,
       				'event_end' => null,
-      /*				'event_start_unix' => null,
+      				'event_start_unix' => null,
               'event_end_unix' => null,
       				'event_end_formatted' => null,
       				'event_start_iso' => null,
@@ -137,8 +137,8 @@ $app->group('/events', function () {
             $temp['start'] = formatDateArrays($temp['event_start']);
             $temp['end'] = formatDateArrays($temp['event_end']);
             $temp['poc'] = FrcPortal\User::where('email',$event->creator->email)->orWhere('team_email',$event->creator->email)->first();
-            */
-    /*  			$temp['event_start_unix'] = strtotime($temp['event_start']);
+            
+      			$temp['event_start_unix'] = strtotime($temp['event_start']);
       			$temp['event_end_unix'] = strtotime($temp['event_end']);
       			$temp['event_start_iso'] = date('c',strtotime($temp['event_start']));
       			$temp['event_end_iso'] = date('c',strtotime($temp['event_end']));
