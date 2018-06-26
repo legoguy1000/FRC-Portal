@@ -191,7 +191,6 @@ function formatGoogleCalendarEventData($event) {
 	}
 	$temp['start'] = formatDateArrays($temp['event_start']);
 	$temp['end'] = formatDateArrays($temp['event_end']);
-	$temp['poc'] = FrcPortal\User::where('email',$event->creator->email)->orWhere('team_email',$event->creator->email)->first();
 	return $temp;
 }
 ?>

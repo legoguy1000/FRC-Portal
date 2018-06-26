@@ -144,6 +144,7 @@ $app->group('/events', function () {
       			$temp['event_end_iso'] = date('c',strtotime($temp['event_end']));
       			$temp['event_start_formatted'] = date('F j, Y',strtotime($temp['event_start']));
       			$temp['event_end_formatted'] = date('F j, Y',strtotime($temp['event_end'])); */
+          	$temp['poc'] = FrcPortal\User::where('email',$event->creator->email)->orWhere('team_email',$event->creator->email)->first();
           	$allEvents[] = $temp;
       		}
         }
