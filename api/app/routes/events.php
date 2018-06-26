@@ -104,6 +104,8 @@ $app->group('/events', function () {
       while(true) {
         foreach ($events->getItems() as $event) {
       		if($event->status == 'confirmed') {
+            $temp = formatGoogleCalendarEventData($event);
+            /*
       			$temp = array(
       				'google_event' => $event,
       				'name' => $event->summary,
@@ -119,7 +121,7 @@ $app->group('/events', function () {
       				'event_end_formatted' => null,
       				'event_start_iso' => null,
               'event_end_iso' => null,
-      				'event_end_formatted' => null, */
+      				'event_end_formatted' => null,
       				'details' => $event->description,
       			);
       			if(empty($event->start->dateTime)) {
@@ -135,6 +137,7 @@ $app->group('/events', function () {
             $temp['start'] = formatDateArrays($temp['event_start']);
             $temp['end'] = formatDateArrays($temp['event_end']);
             $temp['poc'] = FrcPortal\User::where('email',$event->creator->email)->orWhere('team_email',$event->creator->email)->first();
+            */
     /*  			$temp['event_start_unix'] = strtotime($temp['event_start']);
       			$temp['event_end_unix'] = strtotime($temp['event_end']);
       			$temp['event_start_iso'] = date('c',strtotime($temp['event_start']));
