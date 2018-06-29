@@ -34,12 +34,8 @@ class Auth {
   }
 
   public static function isAdmin() {
-  	$return = false;
   	$user = self::$user;
-  	if($user->status && $user->admin) {
-  		$return = true;
-  	}
-  	return $return;
+  	return checkAdmin($user);
   }
 
 }
