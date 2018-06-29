@@ -35,7 +35,13 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
             "/hours/signIn" => ["POST"],
           ],
         ])
-    ]
+    ],
+    "before" => function ($request, $arguments) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        error_log($userId, 0);
+        return $request;
+    }
 ]));
 $container = $app->getContainer();
 $container['upload_directory'] = __DIR__ . '/app/secured';
