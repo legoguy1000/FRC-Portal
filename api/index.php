@@ -39,9 +39,9 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     "before" => function ($request, $arguments) {
         $authToken = $request->getAttribute("token");
         $userId = $authToken['data']->user_id;
-        $auth = FrcPortal\Auth::setCurrentUser($userId);
-        $test = FrcPortal\Auth::user()->user_id;
-        error_log($test, 0);
+        FrcPortal\Auth::setCurrentUser($userId);
+        //$test = FrcPortal\Auth::user()->user_id;
+        //error_log($test, 0);
         return $request;
     }
 ]));
