@@ -20,6 +20,7 @@ class Auth {
   protected static $user = NULL;
 
   public static function setCurrentUser($user_id) {
+    die($user_id);
     self::currentuser = $user_id;
     $user = User::with(['school'])->find($user_id);
     if(!is_null($user)) {
