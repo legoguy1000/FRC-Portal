@@ -9,15 +9,15 @@ class Auth {
   * Public 'is_logged' field
   * @var bool
   */
-  public $isAuthenticated = FALSE;
+  public static $isAuthenticated = FALSE;
   /**
   * @var null
   */
-  protected $currentuser = NULL;
+  protected static $currentuser = NULL;
   /**
   * @var null
   */
-  protected $user = NULL;
+  protected static $user = NULL;
 
   /**
    * Initiates database connection
@@ -26,26 +26,26 @@ class Auth {
    * @param $config
    */
   public function __construct($user_id) {
-      $this->currentuser = $user_id;
+      self::currentuser = $user_id;
       $user = User::find($user_id);
       if(!is_null($user)) {
-        $this->user = $user;
-        return true;
+        self::user = $user;
+        return $user;
       }
   }
 
   public static function setCurrentUser($user_id) {
-    $this->currentuser = $user_id;
+    self::currentuser = $user_id;
     $user = User::with(['school'])->find($user_id);
     if(!is_null($user)) {
-      $this->user = $user;
+      self::user = $user;
       return true;
     }
     return false;
   }
 
   public static function user() {
-    return $this->user;
+    return self::user;
   }
 
 
