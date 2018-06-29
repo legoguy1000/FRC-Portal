@@ -19,21 +19,6 @@ class Auth {
   */
   protected static $user = NULL;
 
-  /**
-   * Initiates database connection
-   *
-   * @param \PDO $dbh
-   * @param $config
-   */
-  public function __construct($user_id) {
-      self::currentuser = $user_id;
-      $user = User::find($user_id);
-      if(!is_null($user)) {
-        self::user = $user;
-        return $user;
-      }
-  }
-
   public static function setCurrentUser($user_id) {
     self::currentuser = $user_id;
     $user = User::with(['school'])->find($user_id);
