@@ -217,7 +217,7 @@ $app->group('/events', function () {
           'msg' => 'Something went wrong',
           'data' => null
         );
-        if(!checkAdmin($userId)) {
+        if(!FrcPortal\Auth::isAdmin()) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
