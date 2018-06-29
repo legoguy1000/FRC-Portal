@@ -21,13 +21,13 @@ class Auth {
 
   public static function setCurrentUser($user_id) {
     die($user_id);
-    self::currentuser = $user_id;
+    /* self::currentuser = $user_id;
     $user = User::with(['school'])->find($user_id);
     if(!is_null($user)) {
       self::user = $user;
       return true;
     }
-    return false;
+    return false; */
   }
 
   public static function user() {
