@@ -40,6 +40,6 @@ class Auth {
   		$return = true;
   	}
   	return $return;
-  }``
+  }
 
 }
