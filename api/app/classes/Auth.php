@@ -34,7 +34,7 @@ class Auth {
       }
   }
 
-  public function setCurrentUser($user_id) {
+  public static function setCurrentUser($user_id) {
     $this->currentuser = $user_id;
     $user = User::with(['school'])->find($user_id);
     if(!is_null($user)) {
@@ -44,7 +44,7 @@ class Auth {
     return false;
   }
 
-  public function user() {
+  public static function user() {
     return $this->user;
   }
 
