@@ -2,7 +2,19 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-Version 2.7.0 (Current Dev Branch)
+Version 2.9.0 (Current Dev Branch)
+* 
+
+Version 2.8.0
+* Minor fixes
+* Upload form for Google Service Account Credentials file
+* Fix initial install script
+* Developing Roles and Permissions (not implemented yet)
+* Created new Auth Class to set logged in user throughout app
+* Fixed routes without requiring Admin Permissions
+* Update composer decencies
+
+Version 2.7.0
 * Fix various styling issues
 * Add setting to require a team email to login
 * Replace login notification with toast
@@ -16,34 +28,38 @@ Version 2.7.0 (Current Dev Branch)
 
 
 ## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+*
 
 ### Prerequisites
-
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+* PHP 7.0 or greater
+* MySQL
+* Composer
+*
 
 ### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
+Clone Git Repo
 ```
-Give the example
+git clone https://github.com/legoguy1000/FRC-Portal.git
 ```
-
-And repeat
-
+Create a "secured" folder in "/api/app"
 ```
-until finished
+mkdir secured/
 ```
-
-End with an example of getting some data out of the system or using it for a little demo
+Copy config.example.ini to "secured"
+```
+cp config.example.ini secured/config.ini
+```
+Edit config.ini file with database credentials (/api/app/secured/)
+Run initalInstall.php script located in (/api/app/)
+```
+php initalInstall.php
+```
+To upgrade an existing install pull the latest version from git and run the postUpgrade.php script
+```
+git pull
+php postUpgrade.php
+```
+Go to url and login using provided admin credentials and configure accordingly
 
 ## Running the tests
 
@@ -73,6 +89,10 @@ Add additional notes about how to deploy this on a live system
 
 * [AngularJS](https://angularjs.org/) - The web framework used
 * [Angular Material](https://material.angularjs.org) - Theme
+* [PHP](https://php.net) - Backend
+* [Slim PHP Framework](https://www.slimframework.com/) - API framework
+* [Eloquent](https://laravel.com/docs/5.6/eloquent) - OOP model
+* [MySQL](https://www.mysql.com/) - SQL Database
 
 ## Contributing
 
@@ -80,7 +100,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/legoguy1000/FRC-Portal/tags).
 
 ## Authors
 

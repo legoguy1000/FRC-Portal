@@ -286,21 +286,39 @@ function exportDB() {
 	$mysqlHostName = getIniProp('db_host');
 	$mysqlExportPath = $folder.date('Y-m-d H:i:s').' '.$mysqlDatabaseName.'.sql';
 	$worked = null;
-	$command='mysqldump --opt -h '.$mysqlHostName.' -u '.$mysqlUserName.' -p'.$mysqlPassword.' '.$mysqlDatabaseName.' > "' .$mysqlExportPath.'"';
-	exec($command,$output,$worked);
-	switch($worked){
-	case 0:
-		return true;
-	case 1:
-		return true;
-	case 2:
-		return false;
+	if (!file_exists($mysqlExportPath)) {
+		$command='mysqldump --opt -h '.$mysqlHostName.' -u '.$mysqlUserName.' -p'.$mysqlPassword.' '.$mysqlDatabaseName.' > "' .$mysqlExportPath.'"';
+		exec($command,$output,$worked);
+		switch($worked){
+		case 0:
+			return true;
+		case 1:
+			return true;
+		case 2:
+			return false;
+		}
 	}
 }
 
 function updateComposer() {
-  shell_exec("composer install");
-  shell_exec("composer dump-autoload");
-	sleep(5);
+  exec("composer install");
+  exec("composer dump-autoload");
+	sleep(2);
+}
+
+function formatDateArrays($date_raw) {
+	$date = new DateTime($date_raw);
+	return array(
+		'year' => $date->format('Y'),
+		'unix' => $date->format('U'),
+		'date_raw' => $date->format('Y-m-d'),
+		'date_time_raw' => $date->format('Y-m-d H:i:s'),
+		'date_ym' => $date->format('Y-m'),
+		'long_date' => $date->format('F j, Y'),
+		'time_formatted' => $date->format('g:i A'),
+		'date_dow' => $date->format('D'),
+		'multi_day_start' => $date->format('F j'),
+		'multi_day_end' => $date->format('j, Y'),
+	);
 }
 ?>

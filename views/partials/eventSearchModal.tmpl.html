@@ -59,10 +59,12 @@
 							<tr md-row ng-repeat="event in vm.googleEvents.data | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 								<td md-cell>{{event.name}}</td>
 								<td md-cell>
-									{{event.event_start_unix*1000 | date:'MMM d, y h:mm a'}}
+									{{event.start.long_date}} {{event.start.time_formatted}}
+									<!-- {{event.event_start_unix*1000 | date:'MMM d, y h:mm a'}} -->
 								</td>
 								<td md-cell>
-									{{event.event_end_unix*1000 | date:'MMM d, y h:mm a'}}
+									{{event.end.long_date}} {{event.end.time_formatted}}
+									<!-- {{event.event_end_unix*1000 | date:'MMM d, y h:mm a'}} -->
 								</td>
 								<td md-cell>
 									{{event.location}}

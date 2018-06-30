@@ -20,6 +20,7 @@ angular.module('FrcPortal', [
 	'oc.lazyLoad',
 	'vAccordion',
 	'shContextMenu',
+	'ngFileUpload',
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider, $locationProvider) {
 
 	$locationProvider.html5Mode({ enabled: true, requireBase: true });
@@ -334,10 +335,74 @@ angular.module('FrcPortal', [
  });*/
 
 	$urlRouterProvider.otherwise('/home');
+})
+.config(['$mdThemingProvider', 'configItems', function ($mdThemingProvider, configItems) {
 
+	var primaryPalette = null;
+	var accentPalette = null;
+	function multiply(rgb1, rgb2) {
+		rgb1.b = Math.floor(rgb1.b * rgb2.b / 255);
+		rgb1.g = Math.floor(rgb1.g * rgb2.g / 255);
+		rgb1.r = Math.floor(rgb1.r * rgb2.r / 255);
+		return tinycolor('rgb ' + rgb1.r + ' ' + rgb1.g + ' ' + rgb1.b);
+	};
+	function getColorObject(value, name) {
+		var c = tinycolor(value);
+		return {
+			name: name,
+			hex: c.toHexString(),
+			darkContrast: c.isLight()
+		};
+	}
 
-	$mdThemingProvider.definePalette('tripplehelixpurple', {
-	  '50': 'ede6f2',
+	// Function to calculate all colors from base
+	// These colors were determined by finding all
+	// HSL values for a google palette, calculating
+	// the difference in H, S, and L per color
+	// change individually, and then applying these
+	// here.
+	function computeColors(hex) {
+		// Return array of color objects.
+		var baseLight = tinycolor('#ffffff');
+		var baseDark = multiply(tinycolor(hex).toRgb(), tinycolor(hex).toRgb());
+		var baseTriad = tinycolor(hex).tetrad();
+		return [
+			getColorObject(tinycolor.mix(baseLight, hex, 12), '50'),
+			getColorObject(tinycolor.mix(baseLight, hex, 30), '100'),
+			getColorObject(tinycolor.mix(baseLight, hex, 50), '200'),
+			getColorObject(tinycolor.mix(baseLight, hex, 70), '300'),
+			getColorObject(tinycolor.mix(baseLight, hex, 85), '400'),
+			getColorObject(tinycolor.mix(baseLight, hex, 100), '500'),
+			getColorObject(tinycolor.mix(baseDark, hex, 87), '600'),
+			getColorObject(tinycolor.mix(baseDark, hex, 70), '700'),
+			getColorObject(tinycolor.mix(baseDark, hex, 54), '800'),
+			getColorObject(tinycolor.mix(baseDark, hex, 25), '900'),
+			getColorObject(tinycolor.mix(baseDark, baseTriad[4], 15).saturate(80).lighten(65), 'A100'),
+			getColorObject(tinycolor.mix(baseDark, baseTriad[4], 15).saturate(80).lighten(55), 'A200'),
+			getColorObject(tinycolor.mix(baseDark, baseTriad[4], 15).saturate(100).lighten(45), 'A400'),
+			getColorObject(tinycolor.mix(baseDark, baseTriad[4], 15).saturate(100).lighten(40), 'A700')
+		];
+	}
+ 	function createAjsPaletteJsonObject(colors) {
+		var exportable = {};
+		var darkColors = [];
+		var lightColors = [];
+		angular.forEach(colors, function (value, key) {
+				exportable[value.name] = value.hex.replace('#', '');
+				if (value.darkContrast) {
+						darkColors.push(value.name);
+				}else{
+						lightColors.push(value.name);
+				}
+		});
+		exportable.contrastDefaultColor = 'light';
+		exportable.contrastDarkColors = darkColors;
+		exportable.contrastLightColors = lightColors;
+		return exportable;
+	};
+
+	$mdThemingProvider.definePalette('primary', {
+		'50': 'ede6f2',
 	  '100': 'd1c0de',
 	  '200': 'b397c8',
 	  '300': '946db2',
@@ -353,25 +418,25 @@ angular.module('FrcPortal', [
 	  'A700': '7d1aff',
 	  'contrastDefaultColor': 'light',
 	  'contrastDarkColors': [
-		'50',
-		'100',
-		'200',
-		'300',
-		'A100',
-		'A200'
+	    '50',
+	    '100',
+	    '200',
+	    '300',
+	    'A100',
+	    'A200'
 	  ],
 	  'contrastLightColors': [
-		'400',
-		'500',
-		'600',
-		'700',
-		'800',
-		'900',
-		'A400',
-		'A700'
+	    '400',
+	    '500',
+	    '600',
+	    '700',
+	    '800',
+	    '900',
+	    'A400',
+	    'A700'
 	  ]
 	});
-	$mdThemingProvider.definePalette('tripplehelixyellow', {
+	$mdThemingProvider.definePalette('secondary', {
 	  '50': 'fff6e3',
 	  '100': 'feeab8',
 	  '200': 'fedc89',
@@ -405,19 +470,53 @@ angular.module('FrcPortal', [
 	  ],
 	  'contrastLightColors': []
 	});
+
+	//Primary Color
+	if(configItems.team_color_primary != undefined && configItems.team_color_primary != '') {
+		var primaryPalette = createAjsPaletteJsonObject(computeColors(configItems.team_color_primary));
+		$mdThemingProvider.definePalette('primary', primaryPalette);
+	} else {
+		var primaryPalette = createAjsPaletteJsonObject(computeColors('#662e91'));
+		$mdThemingProvider.definePalette('primary', primaryPalette);
+	}
+	//Accent Color
+	if(configItems.team_color_secondary != undefined && configItems.team_color_secondary != '') {
+		var accentPalette = createAjsPaletteJsonObject(computeColors(configItems.team_color_secondary));
+		$mdThemingProvider.definePalette('secondary', accentPalette);
+	} else {
+		var accentPalette = createAjsPaletteJsonObject(omputeColors('#fdb813'));
+		$mdThemingProvider.definePalette('primary', accentPalette);
+	}
+	//CSS
+	var style = document.createElement('style');
+	style.type = 'text/css';
+	style.innerHTML = ':root { --primary-color: #'+primaryPalette['500']+'; }';
+	style.innerHTML += ':root { --accent-color: #'+accentPalette['500']+'; }';
+	style.innerHTML += '.backgroundPrimary { background-color: #'+primaryPalette['500']+'; }';
+	style.innerHTML += '.colorPrimary { color: #'+primaryPalette['500']+'; }';
+	style.innerHTML += '.backgroundAccent { color: #'+accentPalette['500']+'; }';
+	style.innerHTML += '.colorAccent { color: #'+accentPalette['500']+'; }';
+	document.getElementsByTagName('head')[0].appendChild(style);
+
 	$mdThemingProvider.theme('default')
-		.primaryPalette('tripplehelixpurple')
-		.accentPalette('tripplehelixyellow');
+		.primaryPalette('primary', {
+      'default': '500', // by default use shade 400 from the pink palette for primary intentions
+      'hue-1': '100', // use shade 100 for the <code>md-hue-1</code> class
+      'hue-2': '600', // use shade 600 for the <code>md-hue-2</code> class
+      'hue-3': 'A100' // use shade A100 for the <code>md-hue-3</code> class
+    })
+		.accentPalette('secondary', {
+      'default': '500', // by default use shade 400 from the pink palette for primary intentions
+      'hue-1': '100', // use shade 100 for the <code>md-hue-1</code> class
+      'hue-2': '600', // use shade 600 for the <code>md-hue-2</code> class
+      'hue-3': 'A100' // use shade A100 for the <code>md-hue-3</code> class
+    });
 	//	.warnPalette('tripplehelixyellow');
-})
-.config( [
-    '$compileProvider',
-    function( $compileProvider )
-    {
+}])
+.config( ['$compileProvider', function( $compileProvider ) {
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|slack):/);
         // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
-    }
-])
+}])
 .config(function ($qProvider) {
     $qProvider.errorOnUnhandledRejections(false);
 })
@@ -498,6 +597,7 @@ angular.module('FrcPortal', [
 	      "Successful Transition from " + transition.from().name +
 	      " to " + transition.to().name
 	  );
+		$rootScope.$broadcast('stateChange');
 	});
 	$transitions.onStart({to: function(state) { return state != null && state.authenticate;}}, function(trans) {
 		var toState = trans.$to();

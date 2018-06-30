@@ -8,16 +8,16 @@
 		</md-toolbar>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingUser"></md-progress-linear>
 		<md-list>
-			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('team')" ng-class="{'activeSelect': vm.currentMenu == 'team'}">
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('team')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'team'}">
 		    <p>Team Settings</p>
 		  </md-list-item>
-			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('login')" ng-class="{'activeSelect': vm.currentMenu == 'login'}">
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('login')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'login'}">
 		    <p>Login Settings</p>
 		  </md-list-item>
-			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('notification')" ng-class="{'activeSelect': vm.currentMenu == 'notification'}">
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('notification')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'notification'}">
 		    <p>Notification Settings</p>
 		  </md-list-item>
-			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('other')" ng-class="{'activeSelect': vm.currentMenu == 'other'}">
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('other')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'other'}">
 		    <p>Other Settings</p>
 		  </md-list-item>
 		</md-list>

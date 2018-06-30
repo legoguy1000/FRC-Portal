@@ -64,19 +64,20 @@ $app->group('/hours', function () {
     });
     $this->group('/{request_id:[a-z0-9]{13}}', function () {
       $this->put('/approve', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
-        $request_id = $args['request_id'];
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
         $responseArr = array(
-      		'status' => false,
-      		'msg' => 'Something went wrong',
-      		'data' => null
-      	);
-        if(!checkAdmin($userId)) {
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!FrcPortal\Auth::isAdmin()) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
         }
+        $request_id = $args['request_id'];
+
         $request = FrcPortal\MissingHoursRequest::find($request_id);
         $mh = new FrcPortal\MeetingHour();
       	$date = time();
@@ -103,19 +104,20 @@ $app->group('/hours', function () {
         return $response;
       });
       $this->put('/deny', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
-        $request_id = $args['request_id'];
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
         $responseArr = array(
           'status' => false,
           'msg' => 'Something went wrong',
           'data' => null
         );
-        if(!checkAdmin($userId)) {
+        if(!FrcPortal\Auth::isAdmin()) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
         }
+        $request_id = $args['request_id'];
+
         $request = FrcPortal\MissingHoursRequest::find($request_id);
         $date = time();
         if(!is_null($request)) {
@@ -138,25 +140,26 @@ $app->group('/hours', function () {
       $season = FrcPortal\Season::where('year',date('Y'))->first();
       $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
         $query->where('season_id', $season->season_id); // fields from comments table,
-      }, 'last_sign_in'])->where('status','1')->get();
+      }, 'last_sign_in'])->where('status',true)->get();
       $response = $response->withJson($users);
       return $response;
     });
     //Time Sheet
     $this->get('/timeSheet/{date:(?:[1-9]\d{3})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])}', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $date = $args['date'];
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($userId)) {
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       }
+
+      $date = $args['date'];
       $users = FrcPortal\User::with(['meeting_hours' => function ($query) use ($date)  {
         $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
       }])->where('status',true)->orderBy('fname', 'ASC')->get();
@@ -233,24 +236,24 @@ $app->group('/hours', function () {
     $this->post('/authorize', function ($request, $response, $args) {
       $args = $request->getParsedBody();
       $responseArr = array();
-      $user = false;
+      $user = null;
       if(isset($args['auth_token'])) {
         $key = getSettingsProp('jwt_key');
         $jwt = $args['auth_token'];
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
-          $user = $decoded->data;
+          $user = $decoded->data->status && $decoded->data->admin;
         } catch(\Firebase\JWT\ExpiredException $e) {
           $responseArr = array('status'=>false, 'msg'=>'Authorization Error. '.$e->getMessage());
         } catch(\Firebase\JWT\SignatureInvalidException $e){
           $responseArr = array('status'=>false, 'msg'=>'Authorization Error. '.$e->getMessage());
         }
       } elseif(isset($args['auth_code'])) {
-        $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status','=','1')->where('admin','=','1')->first();
+        $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status',true)->where('admin',true)->first();
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Invalid request');
       }
-      if($user != false) {
+      if(!is_null($user)) {
         $jti = md5(random_bytes(20));
         $key = getSettingsProp('jwt_signin_key');
         $token = array(

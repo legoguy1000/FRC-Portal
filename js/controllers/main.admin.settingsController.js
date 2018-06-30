@@ -99,7 +99,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 			}
 		})
 		.then(function(response) {
-			
+			vm.serviceAccountCredentials = response;
 		}, function() { });
 	};
 

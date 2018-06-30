@@ -57,7 +57,8 @@ function getGoogleCalendarEvent($google_cal_id) {
 			$client->setDeveloperKey($api_key);
 			$service = new Google_Service_Calendar($client);
 			$gevent = $service->events->get($calendar, $google_cal_id);
-			$event = array();
+			$event = formatGoogleCalendarEventData($gevent);
+			/*
 			$event['name'] = $gevent->summary;
 			$event['details'] = $gevent->description;
 			$event['location'] = $gevent->location;
@@ -69,7 +70,7 @@ function getGoogleCalendarEvent($google_cal_id) {
 			} else {
 				$event['event_start'] = date('Y-m-d H:i:s', strtotime($gevent->start->dateTime));
 				$event['event_end'] =date('Y-m-d H:i:s', strtotime($gevent->end->dateTime));
-			}
+			} */
 			$result['status'] = true;
 			$result['data'] = $event;
 		} catch (Exception $e) {
@@ -157,5 +158,39 @@ function getEventTimeSlotList($event_id) {
 		$result['msg'] = 'Event ID cannot be blank';
 	}
 	return $result;
+}
+
+function formatGoogleCalendarEventData($event) {
+	$temp = array(
+		'google_event' => $event,
+		'name' => $event->summary,
+		'location' => $event->location,
+		'google_cal_id' => $event->id,
+		'start' => null,
+		'end' => null,
+		'allDay' => false,
+		'event_start' => null,
+		'event_end' => null,
+/*				'event_start_unix' => null,
+		'event_end_unix' => null,
+		'event_end_formatted' => null,
+		'event_start_iso' => null,
+		'event_end_iso' => null,
+		'event_end_formatted' => null, */
+		'details' => $event->description,
+	);
+	if(empty($event->start->dateTime)) {
+		$temp['allDay'] = true;
+		$temp['event_start'] = $event->start->date.' 00:00:00';
+		$ed = new DateTime($event->end->date);
+		$ed->modify("-1 day");
+		$temp['event_end'] = $ed->format("Y-m-d").' 23:59:59';
+	} else {
+		$temp['event_start'] = date('Y-m-d H:i:s', strtotime($event->start->dateTime));
+		$temp['event_end'] = date('Y-m-d H:i:s', strtotime($event->end->dateTime));
+	}
+	$temp['start'] = formatDateArrays($temp['event_start']);
+	$temp['end'] = formatDateArrays($temp['event_end']);
+	return $temp;
 }
 ?>

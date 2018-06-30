@@ -63,18 +63,18 @@
 			<div>  Mentors/Others: Please log in to the portal by clicking the "Log In" button in the top rght corner.  Please select one of the login providers (It does not have to be your team2363.org email).  Upon successful log in, please complete the new user form.  Here you will set your 4-8 digit PIN number.</div>
 		</div>
 	</div>
-	<div flex style="background:#662E91">
-		<md-toolbar flex style="height:30px;background:#FDB813;color:#662E91;"  layout="row" layout-align="center center">
-			<div class="" style="color:">
+	<div flex class="backgroundPrimary">
+		<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
+			<div class="" style="color: colorAccent">
 				<h3>{{ vm.clock | date:'medium'}}</h3>
 			</div>
 		</md-toolbar>
-		<md-toolbar flex style="height:30px;color: #FDB813;border-bottom: #FDB813 1px solid;"  layout="row" layout-align="center center">
+		<md-toolbar flex style="height:30px;border-bottom: #FDB813 1px solid;" class="colorAccent" layout="row" layout-align="center center">
 		<!--	<div class="">
 				<h1>{{ vm.pin }}</h1>
 			</div> -->
 			<div class="">
-					<input ng-model="vm.pin" placeholder="PIN Number" class="signin-pin" pattern="[0-9]{4,8}" type="password">
+					<input ng-model="vm.pin" placeholder="PIN Number" class="signin-pin backgroundPrimary" pattern="[0-9]{4,8}" type="password">
 			</div>
 		</md-toolbar>
 		<!-- <div flex style="height:30px;"  layout="row" layout-align="center center">

@@ -1,11 +1,11 @@
 <title ng-bind="'Team {{main.team_number}} Portal | '+main.title" class="ng-cloak">Team Portal</title>
 <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2 md-sidenav-left" flex-xs="100">
-	<md-toolbar  class="md-hue-1 md-whiteframe-z2">
+	<md-toolbar  class="md-accent md-whiteframe-z2">
 		<md-button layout="row" layout-align="center center" class="md-toolbar-tools md-warn">
 			<img ng-src="{{main.team_logo_url}}" style="max-height: 60px;"/>
 		</md-button>
 	</md-toolbar>
-	<md-button ng-repeat-start="item in main.menuItems" layout="row" layout-gt-sm="column" layout-align="start center" layout-align-gt-sm="center center" flex class="capitalize" ng-click="main.selectItem(item)" ui-sref-active="md-warn" ui-sref="{{item.sref}}">
+	<md-button ng-repeat-start="item in main.menuItems" layout="row" layout-gt-sm="column" layout-align="start center" layout-align-gt-sm="center center" flex class="capitalize" ng-click="main.selectItem(item)" ui-sref-active="md-accent" ui-sref="{{item.sref}}">
 		<div class="md-tile-content">
 			<i class="material-icons md-36">{{item.icon}}</i>
 		</div>
@@ -64,7 +64,7 @@
 
 <md-sidenav md-component-id="right" class="md-whiteframe-z2 md-sidenav-right">
     <md-toolbar>
-        <md-toolbar class="md-warn" layout="row" layout-align="center center">
+        <md-toolbar class="" layout="row" layout-align="center center">
             <img class="img-circle" ng-src="{{main.userInfo.profile_image || 'https://png.icons8.com/color/50/000000/user.png'}}">
             <md-menu md-offset="0 20">
                 <md-button class="capitalize" ng-click="$mdMenu.open()" aria-label="Open menu">

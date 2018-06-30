@@ -7,10 +7,13 @@ $users = Capsule::schema()->hasTable('users');
 $schools = Capsule::schema()->hasTable('schools');
 $oauth_ids = Capsule::schema()->hasTable('oauth_ids');
 $notification_preferences = Capsule::schema()->hasTable('notification_preferences');
+//Time
 $missing_hours_requests = Capsule::schema()->hasTable('missing_hours_requests');
-$meeting_hours = Capsule::schema()->hasTable('meeting_hours');
+$meeting_hours = Capsule::schema()->hasTable('meeting_hours');\
+//Seasons
 $seasons = Capsule::schema()->hasTable('seasons');
 $annual_requirements = Capsule::schema()->hasTable('annual_requirements');
+//Events
 $events = Capsule::schema()->hasTable('events');
 $event_requirements = Capsule::schema()->hasTable('event_requirements');
 $event_cars = Capsule::schema()->hasTable('event_cars');
@@ -18,6 +21,12 @@ $event_rooms = Capsule::schema()->hasTable('event_rooms');
 $event_types = Capsule::schema()->hasTable('event_types');
 $event_time_slots = Capsule::schema()->hasTable('event_time_slots');
 $event_time_slots_event_requirements = Capsule::schema()->hasTable('event_time_slots_event_requirements');
+//Roles & Permissions
+$roles = Capsule::schema()->hasTable('roles');
+$permissions = Capsule::schema()->hasTable('permissions');
+$role_user = Capsule::schema()->hasTable('role_user');
+$permission_role = Capsule::schema()->hasTable('permission_role');
+
 
 //Users Table
 if($users && $schools) {
@@ -109,12 +118,18 @@ if($event_time_slots_event_requirements && $event_time_slots && $event_requireme
     $table->foreign('ereq_id')->references('ereq_id')->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
   });
 }
-
-
-//include_once('UserCategory.php');
-//include_once('UserUserCategory.php');
-
-
-
+//Roles & Permissions
+if($role_user && $roles && $users) {
+  Capsule::schema()->table('role_user', function ($table) {
+    $table->foreign('role_id')->references('role_id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
+    $table->foreign('user_id')->references('user_id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+  });
+}
+if($permission_role && $roles && $permissions) {
+  Capsule::schema()->table('role_user', function ($table) {
+    $table->foreign('role_id')->references('role_id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
+    $table->foreign('permission_id')->references('permission_id')->on('permissions')->onUpdate('cascade')->onDelete('cascade');
+  });
+}
 
 ?>

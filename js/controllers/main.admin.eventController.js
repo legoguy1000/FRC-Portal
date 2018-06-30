@@ -106,9 +106,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.getEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
-			if(vm.event.registration_deadline != null) {
-				vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
-			}
 			vm.loading = false;
 		});
 	};
@@ -123,9 +120,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.getEventRequirements();
 
 	vm.clearDeadline = function () {
-		vm.event.registration_deadline_moment = null;
 		vm.event.registration_deadline_gcalid = null;
-		vm.event.registration_deadline_formatted = null;
+		vm.event.registration_deadline_date = {};
+		vm.event.registration_deadline_google_event = null;
 	};
 
 
@@ -133,9 +130,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
-			if(vm.event.registration_deadline != null) {
-				vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
-			}
 			vm.loading = false;
 			$mdToast.show(
 	      $mdToast.simple()
@@ -152,15 +146,13 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'event_id': vm.event_id,
 			'poc': vm.event.poc,
 			'type': vm.event.type,
-			'registration_deadline': vm.event.registration_deadline_formatted,
+			'registration_deadline': vm.event.registration_deadline_date.long_date,
 			'registration_deadline_gcalid': vm.event.registration_deadline_gcalid,
 		};
 		eventsService.updateEvent(data).then(function(response){
+			vm.loading = false;
 			if(response.status) {
 				vm.event = response.data;
-				if(vm.event.registration_deadline != null) {
-					vm.event.registration_deadline_moment = moment(vm.event.registration_deadline);
-				}
 			}
 			$mdToast.show(
 	      $mdToast.simple()
@@ -169,7 +161,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	        .hideDelay(3000)
 	    );
 		});
-		vm.loading = false;
 	};
 
 	vm.deleteEvent = function() {
@@ -377,9 +368,10 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		})
 		.then(function(response) {
-			vm.event.registration_deadline_formatted = response.event_end_formatted;
+			vm.event.registration_deadline_date = {};
+			vm.event.registration_deadline_date.long_date = response.end.long_date;
 			vm.event.registration_deadline_gcalid = response.google_cal_id;
-			$log.info('asdf');
+			vm.event.registration_deadline_google_event = response;
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
 		});

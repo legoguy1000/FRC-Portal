@@ -21,8 +21,8 @@ class Event extends Eloquent {
   ];
 
 
-  protected $appends = ['single_day','year','event_start_unix','event_end_unix','registration_deadline_unix','registration_deadline_formatted','registration_deadline_google_event','season','num_days','single_month'];
-
+  protected $appends = ['registration_deadline_google_event','season','num_days','date','registration_deadline_date'];
+  //'single_day','year','event_start_unix','event_end_unix','single_month','registration_deadline_unix','registration_deadline_formatted',
   //$data['requirements'] = array();
   /**
   * The attributes that should be hidden for arrays.
@@ -44,8 +44,8 @@ class Event extends Eloquent {
     'permission_slip_required' => 'boolean',
     'time_slots_required' => 'boolean',
     'time_slots' => 'boolean',
-    'single_day' => 'boolean',
-    'single_month' => 'boolean',
+    //'single_day' => 'boolean',
+    //'single_month' => 'boolean',
   ];
 
   public function save($options = array()) {
@@ -61,7 +61,7 @@ class Event extends Eloquent {
     });
   } */
 
-  public function getSingleDayAttribute() {
+/*  public function getSingleDayAttribute() {
     $start = new DateTime($this->attributes['event_start']);
     $end = new DateTime($this->attributes['event_end']);
     return (bool) ($start->format('Y-m-d') == $end->format('Y-m-d'));
@@ -81,7 +81,43 @@ class Event extends Eloquent {
   public function getEventEndUnixAttribute() {
     $date = new DateTime($this->attributes['event_end']);
     return $date->format('U');
+  } */
+  public function getNumDaysAttribute() {
+    $start = strtotime($this->attributes['event_start']);
+    $end = strtotime($this->attributes['event_end']);
+    $diff = $end - $start;
+    return ceil($diff / (60 * 60 * 24));
   }
+  public function getDateAttribute() {
+    $start = formatDateArrays($this->attributes['event_start']);
+    $end = formatDateArrays($this->attributes['event_end']);
+    return array(
+      'single_day' => (bool) ($start['date_raw'] == $end['date_raw']),
+      'single_month' => (bool) ($start['date_ym'] == $end['date_ym']),
+      'year' => $start['year'],
+      'start' => $start,
+      'end' => $end
+    );
+  }
+  public function getRegistrationDeadlineDateAttribute() {
+    $return = null;
+    if(!is_null($this->attributes['registration_deadline'])) {
+      $date = formatDateArrays($this->attributes['registration_deadline']);
+      return $date;
+    }
+    return $return;
+  }
+  public function getRegistrationDeadlineGoogleEventAttribute() {
+    $return = array();
+    if(!is_null($this->attributes['registration_deadline_gcalid'])) {
+      $event = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
+      if($event['status']) {
+        $return = $event['data'];
+      }
+    }
+    return $return;
+  }
+  /*
   public function getRegistrationDeadlineUnixAttribute() {
     $return = null;
     if(!is_null($this->attributes['registration_deadline'])) {
@@ -98,22 +134,7 @@ class Event extends Eloquent {
     }
     return $return;
   }
-  public function getRegistrationDeadlineGoogleEventAttribute() {
-    $return = null;
-    if(!is_null($this->attributes['registration_deadline_gcalid'])) {
-      $event = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
-      if($event['status']) {
-        $return = $event['data'];
-      }
-    }
-    return $return;
-  }
-  public function getNumDaysAttribute() {
-    $start = strtotime($this->attributes['event_start']);
-    $end = strtotime($this->attributes['event_end']);
-    $diff = $end - $start;
-    return ceil($diff / (60 * 60 * 24));
-  }
+*/
 
   public function getSeasonAttribute() {
     return Season::where('year',date('Y',strtotime($this->event_start)))->first();
@@ -149,4 +170,6 @@ class Event extends Eloquent {
   public function poc() {
     return $this->hasOne('FrcPortal\User', 'user_id', 'poc_id');
   }
+
+
 }

@@ -3,6 +3,9 @@ include_once(__DIR__.'/includes.php');
 use Illuminate\Database\Capsule\Manager as Capsule;
 $version = VERSION;
 
+//always update composer after pull
+updateComposer();
+
 /**
 * 2.6.0
 **/
@@ -16,7 +19,7 @@ if($version >= '2.6.0') {
     } catch (Exception $e) { }
   }
   if(!Capsule::schema()->hasTable('event_types')) {
-    include_once('EventType.php');
+    include_once('database/EventType.php');
     try {
       Capsule::schema()->table('events', function ($table) {
         $table->foreign('type')->references('type')->on('event_types')->onDelete('set null')->onUpdate('cascade');
@@ -29,31 +32,51 @@ if($version >= '2.6.0') {
 * 2.7.0
 **/
 if($version >= '2.7.0') {
-  //add dbal package
-  updateComposer();
-  //Backup Database
-  exportDB();
   //Change Column Name
   if(Capsule::schema()->hasTable('events') && Capsule::schema()->hasColumn('events','time_slots') && !Capsule::schema()->hasColumn('events','time_slots_required')) {
+    //Backup Database
+    exportDB();
     try {
       Capsule::schema()->table('events', function($table) {
         $table->renameColumn('time_slots', 'time_slots_required');
       });
     } catch (Exception $e) { }
   }
-
-
-  //Create User Category Tables
-  /*
-  include_once('UserCategory.php');
-  include_once('UserUserCategory.php');
-
-  */
-
 }
 
 /**
-*
+* 2.8.0
 **/
+if($version >= '2.8.0') {
+  
+}
 
+//Create User Category Tables
+/*
+include_once('UserCategory.php');
+include_once('UserUserCategory.php');
+*/
+
+
+/*
+//Add Column
+if(Capsule::schema()->hasTable('events') && !Capsule::schema()->hasColumn('events','payment_amount')) {
+  //Backup Database
+  exportDB();
+  try {
+    Capsule::schema()->table('events', function($table) {
+      $table->decimal('payment_amount', 5, 2)->default(00.00);
+    });
+  } catch (Exception $e) { }
+}
+//Add Column
+if(Capsule::schema()->hasTable('events') && !Capsule::schema()->hasColumn('events','hotel_info')) {
+  //Backup Database
+  exportDB();
+  try {
+    Capsule::schema()->table('events', function($table) {
+    $table->text('hotel_info');
+    });
+  } catch (Exception $e) { }
+} */
 ?>

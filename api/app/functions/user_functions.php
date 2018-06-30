@@ -1,9 +1,11 @@
 <?php
-function checkAdmin($user_id) {
+function checkAdmin($user) {
 	$return = false;
-	$user = FrcPortal\User::where('user_id',$user_id)->where('admin',true)->where('status',true)->first();
-	if($user) {
-		$return = true;
+	if($user instanceof FrcPortal\User) {
+		$return = $user->status && $user->admin;
+	} else {
+		$temp = FrcPortal\User::where('user_id',$user)->where('admin',true)->where('status',true)->first();
+		$return = !is_null($temp);
 	}
 	return $return;
 }

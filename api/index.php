@@ -35,7 +35,15 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
             "/hours/signIn" => ["POST"],
           ],
         ])
-    ]
+    ],
+    "before" => function ($request, $arguments) {
+        $authToken = $request->getAttribute("token");
+        $userId = $authToken['data']->user_id;
+        FrcPortal\Auth::setCurrentUser($userId);
+        //$test = FrcPortal\Auth::user()->user_id;
+        //error_log($test, 0);
+        return $request;
+    }
 ]));
 $container = $app->getContainer();
 $container['upload_directory'] = __DIR__ . '/app/secured';
@@ -70,7 +78,8 @@ $container['db'] = function ($container) {
 };*/
 $app->get('/version', function (Request $request, Response $response, array $args) {
     $responseArr = array(
-      'version' => VERSION
+      'version' => VERSION,
+      'host' => $_SERVER["HTTP_HOST"]
     );
     $response = $response->withJson($responseArr);
     return $response;

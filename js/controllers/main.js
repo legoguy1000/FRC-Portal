@@ -183,6 +183,9 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 			$rootScope.$broadcast('logOutAction',data);
 		}
 	});
+	$rootScope.$on('stateChange', function(event, data) {
+		main.title = $state.current.data.title;
+	});
 
 
 }
