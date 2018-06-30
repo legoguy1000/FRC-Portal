@@ -6,7 +6,7 @@ Version 2.8.0 (Current Dev Branch)
 * Minor fixes
 * Upload form for Google Service Account Credentials file
 * Fix initial install script
-* Developing Roles and Permissions
+* Developing Roles and Permissions (not implemented yet)
 * Created new Auth Class to set logged in user throughout app
 * Fixed routes without requiring Admin Permissions
 
