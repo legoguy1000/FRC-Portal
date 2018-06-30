@@ -609,7 +609,7 @@ $app->group('/events', function () {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
-      } else if(isset($formData['user_id']) && checkAdmin($loggedInUser)) {
+      } else if(isset($formData['user_id']) && FrcPortal\Auth::isAdmin()) {
       	$user_id = $formData['user_id'];
       }
       $userFullName = FrcPortal\Auth::user()->full_name;
@@ -631,7 +631,7 @@ $app->group('/events', function () {
           $responseArr = array('status'=>false, 'msg'=>'Registration is closed. Event has already started.');
           $response = $response->withJson($responseArr,400);
           return $response;
-      	} elseif(($event->registration_deadline_date['unix'] != null && time() > $event->registration_deadline_date['unix']) && !checkAdmin($loggedInUser)) {
+      	} elseif(($event->registration_deadline_date['unix'] != null && time() > $event->registration_deadline_date['unix']) && !FrcPortal\Auth::isAdmin()) {
             $responseArr = array('status'=>false, 'msg'=>'Registration is closed. Registration deadline was '.date('F j, Y g:m A',$event->registration_deadline_unix).'.');
             $response = $response->withJson($responseArr,400);
             return $response;
