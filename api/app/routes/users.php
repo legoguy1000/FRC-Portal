@@ -220,20 +220,20 @@ $app->group('/users', function () {
       }); */
     });
     $this->put('/pin', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $user_id = $args['user_id'];
+      $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = array(
-    		'status' => false,
-    		'msg' => 'Something went wrong',
-    		'data' => null
-    	);
-      if($user_id != $userId && !checkAdmin($userId)) {
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      $user_id = $args['user_id'];
+      if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       }
+
       if(!isset($formData['pin']) || $formData['pin'] == '') {
         $responseArr = array('status'=>false, 'msg'=>'PIN cannot be blank');
         $response = $response->withJson($responseArr,400);
@@ -266,16 +266,16 @@ $app->group('/users', function () {
       return $response;
     });
     $this->get('/hoursByDate/{year:[0-9]{4}}', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
       $user_id = $args['user_id'];
       $year = $args['year'];
-      $responseArr = array(
-    		'status' => false,
-    		'msg' => 'Something went wrong',
-    		'data' => null
-    	);
-      if($user_id != $userId && !checkAdmin($userId)) {
+      if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
@@ -317,7 +317,20 @@ $app->group('/users', function () {
       return $response;
     });
     $this->get('/linkedAccounts', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
       $user_id = $args['user_id'];
+      if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+
       $user = FrcPortal\Oauth::where('user_id',$user_id)->get();
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
       $response = $response->withJson($responseArr);
@@ -325,27 +338,40 @@ $app->group('/users', function () {
     });
     $this->group('/notificationPreferences', function () {
       $this->get('', function ($request, $response, $args) {
-        $user_id = $args['user_id'];
-        $user = getNotificationPreferencesByUser($user_id);
-        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
-        $response = $response->withJson($responseArr);
-        return $response;
-      });
-      $this->put('', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
-        $user_id = $args['user_id'];
+        $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = array(
           'status' => false,
           'msg' => 'Something went wrong',
           'data' => null
         );
-        if($user_id != $userId && !checkAdmin($userId)) {
+        $user_id = $args['user_id'];
+        if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
         }
+
+        $user = getNotificationPreferencesByUser($user_id);
+        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->put('', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        $user_id = $args['user_id'];
+        if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+
         if(!isset($formData['method']) || $formData['method'] == '') {
           $responseArr = array('status'=>false, 'msg'=>'Notification method is required');
           $response = $response->withJson($responseArr,400);
@@ -383,20 +409,20 @@ $app->group('/users', function () {
       });
     });
     $this->post('/requestMissingHours', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $user_id = $args['user_id'];
+      $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = array(
-    		'status' => false,
-    		'msg' => 'Something went wrong',
-    		'data' => null
-    	);
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      $user_id = $args['user_id'];
       if($user_id != $userId) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       }
+
       if(!isset($formData['start_time']) || $formData['start_time'] == '') {
         $responseArr = array('status'=>false, 'msg'=>'Start Time cannot be blank');
         $response = $response->withJson($responseArr,400);
@@ -430,17 +456,17 @@ $app->group('/users', function () {
       return $response;
     });
     $this->put('', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $user_id = $args['user_id'];
+      $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
+      $user_id = $args['user_id'];
+
       $selfUpdate = $user_id == $userId;
-      $admin = checkAdmin($userId);
+      $admin = FrcPortal\Auth::isAdmin();
       if( !$selfUpdate && !$admin) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
@@ -459,7 +485,7 @@ $app->group('/users', function () {
         $user->school_id = $formData['school_id'];
         $user->grad_year = $formData['grad_year'];
       }
-      if($selfUpdate) {
+      if($selfUpdate && $user->first_login) {
         $user->first_login = false;
       }
       if($admin && isset($formData['admin'])) {
@@ -477,16 +503,15 @@ $app->group('/users', function () {
       return $response;
     });
     $this->delete('', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $user_id = $args['user_id'];
+      $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($userId)) {
+      $user_id = $args['user_id'];
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;

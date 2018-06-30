@@ -17,15 +17,14 @@ $app->group('/eventTypes', function () {
     return $response;
   });
   $this->post('', function ($request, $response, $args) {
-    $authToken = $request->getAttribute("token");
-    $userId = $authToken['data']->user_id;
+    $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
     $responseArr = array(
       'status' => false,
       'msg' => 'Something went wrong',
       'data' => null
     );
-    if(!checkAdmin($userId)) {
+    if(!FrcPortal\Auth::isAdmin()) {
       $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
       $response = $response->withJson($responseArr,403);
       return $response;
@@ -50,20 +49,19 @@ $app->group('/eventTypes', function () {
   });
   $this->group('/{type_id:[a-z0-9]{13}}', function () {
     $this->put('', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $type_id = $args['type_id'];
+      $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($userId)) {
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       }
+      $type_id = $args['type_id'];
 
       if(!isset($formData['type']) || $formData['type'] == '') {
         $responseArr['msg'] = 'Type cannot be blank';
@@ -85,20 +83,19 @@ $app->group('/eventTypes', function () {
       return $response;
     });
     $this->delete('', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      $type_id = $args['type_id'];
+      $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($userId)) {
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       }
+      $type_id = $args['type_id'];
 
       $type = FrcPortal\EventType::destroy($type_id);
       $responseArr['data'] = FrcPortal\EventType::all();

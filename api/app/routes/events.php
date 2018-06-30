@@ -208,9 +208,7 @@ $app->group('/events', function () {
         return $response;
       });
       $this->put('', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
         $userId = FrcPortal\Auth::user()->user_id;
-
         $formData = $request->getParsedBody();
         $responseArr = array(
           'status' => false,
@@ -274,16 +272,14 @@ $app->group('/events', function () {
         return $response;
       });
       $this->post('', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
-        $event_id = $args['event_id'];
+        $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = array(
           'status' => false,
           'msg' => 'Something went wrong',
           'data' => null
         );
-        if(!checkAdmin($userId)) {
+        if(!FrcPortal\Auth::isAdmin()) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
@@ -318,15 +314,14 @@ $app->group('/events', function () {
         return $response;
       });
       $this->put('', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
+        $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = array(
           'status' => false,
           'msg' => 'Something went wrong',
           'data' => null
         );
-        if(!checkAdmin($userId)) {
+        if(!FrcPortal\Auth::isAdmin()) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
@@ -362,15 +357,14 @@ $app->group('/events', function () {
         return $response;
       });
       $this->delete('/{room_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
+        $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = array(
           'status' => false,
           'msg' => 'Something went wrong',
           'data' => null
         );
-        if(!checkAdmin($userId)) {
+        if(!FrcPortal\Auth::isAdmin()) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
@@ -401,19 +395,19 @@ $app->group('/events', function () {
         return $response;
       });
       $this->put('/{time_slot_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
+        $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = array(
           'status' => false,
           'msg' => 'Something went wrong',
           'data' => null
         );
-        if(!checkAdmin($userId)) {
+        if(!FrcPortal\Auth::isAdmin()) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
         }
+
         $event_id = $args['event_id'];
         $time_slot_id = $args['time_slot_id'];
         $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->first();
@@ -435,19 +429,19 @@ $app->group('/events', function () {
         return $response;
       });
       $this->delete('/{time_slot_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
+        $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = array(
           'status' => false,
           'msg' => 'Something went wrong',
           'data' => null
         );
-        if(!checkAdmin($userId)) {
+        if(!FrcPortal\Auth::isAdmin()) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
         }
+
         $event_id = $args['event_id'];
         $time_slot_id = $args['time_slot_id'];
         $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->delete();
@@ -466,19 +460,19 @@ $app->group('/events', function () {
         return $response;
       });
       $this->post('', function ($request, $response, $args) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
+        $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = array(
           'status' => false,
           'msg' => 'Something went wrong',
           'data' => null
         );
-        if(!checkAdmin($userId)) {
+        if(!FrcPortal\Auth::isAdmin()) {
           $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
           $response = $response->withJson($responseArr,403);
           return $response;
         }
+
         $event_id = $args['event_id'];
         $time_slot_id = $args['time_slot_id'];
         $timeSlot = new FrcPortal\EventTimeSlot();
@@ -500,22 +494,20 @@ $app->group('/events', function () {
       });
     });
     $this->put('', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
+      $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($userId)) {
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       }
 
       $event_id = $args['event_id'];
-      $formData = $request->getParsedBody();
       $event = FrcPortal\Event::find($event_id);
 
       $event->type = isset($formData['type']) && $formData['type'] != '' ? $formData['type'] : null;
@@ -537,16 +529,14 @@ $app->group('/events', function () {
       return $response;
     });
     $this->put('/syncGoogleCalEvent', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-
+      $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($userId)) {
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
@@ -558,23 +548,20 @@ $app->group('/events', function () {
       return $response;
     });
     $this->put('/toggleEventReqs', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-
+      $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($userId)) {
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       }
 
       $event_id = $args['event_id'];
-      $formData = $request->getParsedBody();
       if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
         $responseArr = array('status'=>false, 'msg'=>'Please select at least 1 user');
         $response = $response->withJson($responseArr,400);
@@ -608,24 +595,24 @@ $app->group('/events', function () {
       return $response;
     });
     $this->post('/register', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $loggedInUser = $authToken['data']->user_id;
-      $event_id = $args['event_id'];
+      $loggedInUser = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      $user_id = $loggedInUser;
-      if(isset($formData['user_id']) && $formData['user_id'] != $loggedInUser && !checkAdmin($loggedInUser)) {
+      $event_id = $args['event_id'];
+      $user_id = $loggedInUser
+
+      if(isset($formData['user_id']) && $formData['user_id'] != $loggedInUser && !FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       } else if(isset($formData['user_id']) && checkAdmin($loggedInUser)) {
       	$user_id = $formData['user_id'];
       }
-      $userFullName = $authToken['data']->full_name;
+      $userFullName = FrcPortal\Auth::user()->full_name;
 
       if(!is_bool($formData['registration'])) {
         $responseArr = array('status'=>false, 'msg'=>'Invalid Request, no registration option.');
@@ -734,18 +721,19 @@ $app->group('/events', function () {
       return $response;
     });
     $this->delete('', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $loggedInUser = $authToken['data']->user_id;
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($loggedInUser)) {
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       }
+
       $event_id = $args['event_id'];
       $event = FrcPortal\Event::destroy($event_id);
       if($event) {
@@ -758,19 +746,19 @@ $app->group('/events', function () {
     });
   });
   $this->post('', function ($request, $response, $args) {
-    $authToken = $request->getAttribute("token");
-    $loggedInUser = $authToken['data']->user_id;
+    $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
     $responseArr = array(
       'status' => false,
       'msg' => 'Something went wrong',
       'data' => null
     );
-    if(!checkAdmin($loggedInUser)) {
+    if(!FrcPortal\Auth::isAdmin()) {
       $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
       $response = $response->withJson($responseArr,403);
       return $response;
     }
+
     if(!isset($formData['name']) || $formData['name'] == '') {
       $responseArr['msg'] = 'Name cannot be blank';
       $response = $response->withJson($responseArr,400);

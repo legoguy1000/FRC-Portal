@@ -2,18 +2,19 @@
 use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/settings', function () {
   $this->get('', function ($request, $response, $args) {
-    $authToken = $request->getAttribute("token");
-    $loggedInUser = $authToken['data']->user_id;
+    $userId = FrcPortal\Auth::user()->user_id;
+    $formData = $request->getParsedBody();
     $responseArr = array(
       'status' => false,
       'msg' => 'Something went wrong',
       'data' => null
     );
-    if(!checkAdmin($loggedInUser)) {
+    if(!FrcPortal\Auth::isAdmin()) {
       $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
       $response = $response->withJson($responseArr,403);
       return $response;
     }
+
     $settings = FrcPortal\Setting::all();
     $normalArr = array();
     $groupedArr = array();
@@ -111,18 +112,18 @@ $app->group('/settings', function () {
   });*/
   $this->group('/section/{section}', function () {
     $this->get('', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $loggedInUser = $authToken['data']->user_id;
+      $userId = FrcPortal\Auth::user()->user_id;
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($loggedInUser)) {
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       }
+
       $section = $args['section'];
       $settings = FrcPortal\Setting::where('section',$section)->get();
       $data = array();
@@ -136,20 +137,19 @@ $app->group('/settings', function () {
       return $response;
     });
     $this->put('', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $loggedInUser = $authToken['data']->user_id;
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($loggedInUser)) {
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       }
       $section = $args['section'];
-      $formData = $request->getParsedBody();
       //loop through,
       //Do update or create
       foreach($formData as $setting=>$value) {
@@ -167,18 +167,18 @@ $app->group('/settings', function () {
   });
   $this->group('/serviceAccountCredentials', function () {
     $this->get('', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $loggedInUser = $authToken['data']->user_id;
+      $userId = FrcPortal\Auth::user()->user_id;
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($loggedInUser)) {
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
       }
+
       $file = getServiceAccountFile();
       if($file['status']) {
         $responseArr['status'] = true;
@@ -189,14 +189,14 @@ $app->group('/settings', function () {
       return $response;
     });
     $this->post('', function ($request, $response, $args) {
-      $authToken = $request->getAttribute("token");
-      $loggedInUser = $authToken['data']->user_id;
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
       $responseArr = array(
         'status' => false,
         'msg' => 'Something went wrong',
         'data' => null
       );
-      if(!checkAdmin($loggedInUser)) {
+      if(!FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;

@@ -5,7 +5,10 @@ This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We ne
 Version 2.8.0 (Current Dev Branch)
 * Minor fixes
 * Upload form for Google Service Account Credentials file
-*
+* Fix initial install script
+* Developing Roles and Permissions
+* Created new Auth Class to set logged in user throughout app
+* Fixed routes without requiring Admin Permissions
 
 Version 2.7.0
 * Fix various styling issues
@@ -26,11 +29,8 @@ Version 2.7.0
 ### Prerequisites
 * PHP 7.0 or greater
 * MySQL
-
-
-```
-Give examples
-```
+* Composer
+*
 
 ### Installing
 Clone Git Repo
