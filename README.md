@@ -9,6 +9,7 @@ Version 2.8.0 (Current Dev Branch)
 * Developing Roles and Permissions (not implemented yet)
 * Created new Auth Class to set logged in user throughout app
 * Fixed routes without requiring Admin Permissions
+* Update composer decencies
 
 Version 2.7.0
 * Fix various styling issues
