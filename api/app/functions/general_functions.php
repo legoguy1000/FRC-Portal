@@ -301,9 +301,9 @@ function exportDB() {
 }
 
 function updateComposer() {
-  shell_exec("composer install");
-  shell_exec("composer dump-autoload");
-	sleep(5);
+  exec("composer install");
+  exec("composer dump-autoload");
+	sleep(2);
 }
 
 function formatDateArrays($date_raw) {
