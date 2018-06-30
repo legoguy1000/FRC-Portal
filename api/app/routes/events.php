@@ -603,7 +603,7 @@ $app->group('/events', function () {
         'data' => null
       );
       $event_id = $args['event_id'];
-      $user_id = $loggedInUser
+      $user_id = $loggedInUser;
 
       if(isset($formData['user_id']) && $formData['user_id'] != $loggedInUser && !FrcPortal\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
