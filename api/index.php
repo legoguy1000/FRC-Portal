@@ -49,7 +49,7 @@ $container = $app->getContainer();
 $container['upload_directory'] = __DIR__ . '/app/secured';
 $container['logger'] = function($c) {
     $logger = new \Monolog\Logger('my_logger');
-    $file_handler = new \Monolog\Handler\StreamHandler(__DIR__ . '/app/secured/logs/app.log');
+    $file_handler = new \Monolog\Handler\StreamHandler(__DIR__ . '/app/secured/app.log');
     $logger->pushHandler($file_handler);
     return $logger;
 };
