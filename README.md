@@ -3,6 +3,7 @@
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
 Version 2.9.0 (Current Dev Branch)
+* Add Monolog to app
 * 
 
 Version 2.8.0

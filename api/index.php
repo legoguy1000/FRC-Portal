@@ -47,35 +47,13 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
 ]));
 $container = $app->getContainer();
 $container['upload_directory'] = __DIR__ . '/app/secured';
-/* $container['db'] = function ($c) {
-    $dbConfig = $c['settings']['db'];
-
-    $db = mysqli_init();
-      // Try and connect to the database, if a connection has not been established yet
-  	if (!$db) {
-  		//die('mysqli_init failed');
-  	}
-  	if (!$db->options(MYSQLI_INIT_COMMAND, 'SET time_zone = "America/New_York"')) {
-  		//die('Setting MYSQLI_INIT_COMMAND failed');
-  	}
-  	if (!$db->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5)) {
-  		//die('Setting MYSQLI_OPT_CONNECT_TIMEOUT failed');
-  	}
-    if (!$db->real_connect($dbConfig['host'], $dbConfig['user'], $dbConfig['pass'], $dbConfig['dbname'])) {
-      return $db->connect_error;
-    }
-    return $db;
+$container['logger'] = function($c) {
+    $logger = new \Monolog\Logger('my_logger');
+    $file_handler = new \Monolog\Handler\StreamHandler(__DIR__ . '/app/secured/logs/app.log');
+    $logger->pushHandler($file_handler);
+    return $logger;
 };
-// Service factory for the ORM
-$container['db'] = function ($container) {
-    $capsule = new \Illuminate\Database\Capsule\Manager;
-    $capsule->addConnection($container['settings']['db']);
 
-    $capsule->setAsGlobal();
-    $capsule->bootEloquent();
-
-    return $capsule;
-};*/
 $app->get('/version', function (Request $request, Response $response, array $args) {
     $responseArr = array(
       'version' => VERSION,
