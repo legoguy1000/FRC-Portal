@@ -77,8 +77,10 @@ function getGoogleCalendarEvent($google_cal_id) {
 				$error = json_decode($e->getMessage(), true);
         if($error['error']['code'] == 404) {
 					$result['msg'] = 'Google Calendar event not found';
+					$result['error'] = $error;
 				} else {
 					$result['msg'] = 'Something went wrong searching Google Calendar';
+					$result['error'] = $error;
 				}
     }
 	} else {
