@@ -31,27 +31,31 @@ if(!is_null($season)) {
 	}
 }
 if(!is_null($spreadsheetId)) {
+	$data = array();
 	$client = new Google_Client();
 	$creds = getServiceAccountFile();
-	$client->setAuthConfigFile($creds['data']['path']);
-	$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
-	$service = new Google_Service_Sheets($client);
-	// The A1 notation of the values to retrieve.
-	$range = 'Form Responses 1';  // TODO: Update placeholder value.
-	$response = $service->spreadsheets_values->get($spreadsheetId, $range);
-	$values = $response->getValues();
-	$data = array();
-	if (count($values) != 0) {
-		$headers = array_map('strtolower', array_shift($values));
-		foreach ($values as $row) {
-			$temp = array();
-			for($i=0; $i<count($headers);$i++) {
-				$key = $headers[$i];
-				$val = isset($row[$i]) ? $row[$i] : '';
-				$temp[$key] = $val;
+	if($creds['status'] != false) {
+		$client->setAuthConfigFile($creds['data']['path']);
+		$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
+		$service = new Google_Service_Sheets($client);
+		// The A1 notation of the values to retrieve.
+		$range = 'Form Responses 1';  // TODO: Update placeholder value.
+		$response = $service->spreadsheets_values->get($spreadsheetId, $range);
+		$values = $response->getValues();
+		if (count($values) != 0) {
+			$headers = array_map('strtolower', array_shift($values));
+			foreach ($values as $row) {
+				$temp = array();
+				for($i=0; $i<count($headers);$i++) {
+					$key = $headers[$i];
+					$val = isset($row[$i]) ? $row[$i] : '';
+					$temp[$key] = $val;
+				}
+				$data[] = $temp;
 			}
-			$data[] = $temp;
 		}
+	} else {
+		//Credentials file doesn't work
 	}
 	//Itterate through data
 	if(count($data) > 0) {
