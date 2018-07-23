@@ -8,6 +8,7 @@ Version 2.9.0 (Current Dev Branch)
 * Event and Season registration will list all users who are Active or have a Registration
 * Fix credential issue for Google APIs
 * Removed Google Maps JavaScript API as it now requires a billing account
+* Fixed disappearing deadline on sync or update
 
 Version 2.8.0
 * Minor fixes
