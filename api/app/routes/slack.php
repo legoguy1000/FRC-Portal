@@ -60,7 +60,7 @@ $app->group('/slack', function () {
     $response->getBody()->write($responseStr);
     return $response;
   });
-  $this->post('/signin', function ($request, $response, $args) {
+  /*$this->post('/signin', function ($request, $response, $args) {
     $formData = $request->getParsedBody();
     $responseStr = '';
     $token = $formData['token'];
@@ -79,7 +79,7 @@ $app->group('/slack', function () {
     }
     $response->getBody()->write($responseStr);
     return $response;
-  });
+  });*/
 });
 
 
