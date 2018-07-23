@@ -55,12 +55,13 @@ $container['logger'] = function($c) {
 };
 
 $app->get('/version', function (Request $request, Response $response, array $args) {
-    $responseArr = array(
-      'version' => VERSION,
-      'host' => $_SERVER["HTTP_HOST"]
-    );
-    $response = $response->withJson($responseArr);
-    return $response;
+  $this->logger->addInfo('Called version endpoint');
+  $responseArr = array(
+    'version' => VERSION,
+    'host' => $_SERVER["HTTP_HOST"]
+  );
+  $response = $response->withJson($responseArr);
+  return $response;
 });
 $app->get('/config', function ($request, $response, $args) {
   $configArr = array(
