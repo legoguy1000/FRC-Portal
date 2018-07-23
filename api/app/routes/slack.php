@@ -25,7 +25,18 @@ $app->group('/slack', function () {
           $responseStr = 'You signed out at '.date('M d, Y H:i A', strtotime($time));
         }
       }
+    } else if($data['callback_id'] == 'remote_sign_in' && $data['actions'][0]['name'] == 'approve') {
+      $responseArr = 'Something went wrong.  We were unable to sign you out.';
+      $answer = explode('-',$data['actions'][0]['value']);
+      $user_id = $answer[0];
+      $time = $answer[1];
+      $signIn = FrcPortal\MeetingHour::where('user_id',$user->user_id)->whereNotNull('time_in')->whereNull('time_out')->first();
+      if(is_null($signIn)) {
+        $hours = FrcPortal\MeetingHour::create(['user_id' => $user_id, 'time_in' => date('Y-m-d H:i:s',$time)]);
+      }
+
     }
+
     $response->getBody()->write($responseStr);
     return $response;
   });
@@ -45,6 +56,26 @@ $app->group('/slack', function () {
       }
     }  else {
     $responseStr = 'I don\'t know who you are.  Please check your portal profile to verify your Slack user ID is set.';
+    }
+    $response->getBody()->write($responseStr);
+    return $response;
+  });
+  $this->post('/signin', function ($request, $response, $args) {
+    $formData = $request->getParsedBody();
+    $responseStr = '';
+    $token = $formData['token'];
+    $slack_id = $formData['user_id'];
+    $user_name = $formData['user_name'];
+
+    $user = FrcPortal\User::where('slack_id',$slack_id)->first();
+    if(!is_null($user)) {
+      $signIn = FrcPortal\MeetingHour::where('user_id',$user->user_id)->whereNotNull('time_in')->whereNull('time_out')->first();
+      if(is_null($signIn)) {
+        $time = time();
+        //Send question to mentors channel
+      } else {
+        $responseStr = 'You are already signed in.  Last sign in at '.date('M d, Y H:i A', strtotime($signIn->time_in )).'. Please sign out first before signing in again.';
+      }
     }
     $response->getBody()->write($responseStr);
     return $response;
