@@ -30,7 +30,7 @@ function syncGoogleCalendarEvent($event_id) {
 			if($event->save()) {
 				$result['status'] = true;
 				$result['msg'] = $event->name.' synced with Google Calendar';
-				$result['data'] = FrcPortal\Event::with('poc')->find($event_id);
+				$result['data'] = $event;
 			} else {
 				$result['msg'] = 'Something went wrong updating the event';
 			}
