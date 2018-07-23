@@ -84,7 +84,7 @@
 				  </md-list-item>
 				</md-list>
 			</div>-->
-			<div flex layout="row">
+			<div layout="row">
 				<span flex></span>
 				<md-button type="submit" class="md-raised md-primary">
 					Submit
@@ -191,10 +191,10 @@
 									</td>
 									<td md-cell>
 										<span ng-show="event.single_day">
-											{{event.event_start_unix*1000 | date:'longDate'}} {{event.event_start_unix*1000 | date:'h:mm a'}} - {{event.event_end_unix*1000 | date:'h:mm a'}}
+											{{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
 										</span>
 										<span ng-hide="event.single_day">
-											{{event.event_start_unix*1000 | date:'MMMM d'}} - {{event.event_end_unix*1000 | date:'d, y'}}
+											{{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
 										</span>
 									</td>
 									<!--<td md-cell>{{event.num_days}}</td>-->
