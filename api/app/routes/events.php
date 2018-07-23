@@ -185,7 +185,7 @@ $app->group('/events', function () {
       if($reqsBool) {
         $event->users = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                         		$query->where('event_id','=',$event_id);
-                          }])->whereExists(function ($query) use ($season_id) {
+                          }])->whereExists(function ($query) use ($event_id) {
                             $query->select(DB::raw(1))
                                   ->from('event_requirements')
                                   ->whereRaw('event_requirements.user_id = users.user_id AND event_requirements.event_id = ?',[$event_id]);
@@ -202,7 +202,7 @@ $app->group('/events', function () {
       $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id','=',$event_id);
                         },'event_requirements.event_rooms','event_requirements.event_cars'])
-                        ->whereExists(function ($query) use ($season_id) {
+                        ->whereExists(function ($query) use ($event_id) {
                           $query->select(DB::raw(1))
                                 ->from('event_requirements')
                                 ->whereRaw('event_requirements.user_id = users.user_id AND event_requirements.event_id = ?',[$event_id]);
