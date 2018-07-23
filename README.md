@@ -4,7 +4,10 @@ This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We ne
 
 Version 2.9.0 (Current Dev Branch)
 * Add Monolog to app
-* 
+* Add error checking for calendar syncing
+* Event and Season registration will list all users who are Active or have a Registration
+* Fix credential issue for Google APIs
+* Removed Google Maps JavaScript API as it now requires a billing account
 
 Version 2.8.0
 * Minor fixes
