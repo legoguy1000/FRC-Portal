@@ -293,7 +293,7 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   });
-  $this->post('/slack', function ($request, $response) {
+  /*$this->post('/slack', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'google';
@@ -310,7 +310,7 @@ $app->group('/auth', function () {
 
     $data = array();
     if(isset($args['code'])) {
-    
+
 
       $email = $me['emails'][0]['value'];
       $fname = $me['name']['givenName'];
@@ -375,7 +375,7 @@ $app->group('/auth', function () {
     }
     $response = $response->withJson($responseData);
     return $response;
-  });
+  }); */
   $this->post('/login', function ($request, $response) {
     $responseData = false;
     $formData = $request->getParsedBody();
