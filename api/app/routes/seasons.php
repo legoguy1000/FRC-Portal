@@ -61,7 +61,13 @@ $app->group('/seasons', function () {
       if($reqsBool) {
         $season->users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
                         		$query->where('season_id','=',$season_id);
-                          }])->get();
+                          }])->whereExists(function ($query) use ($season_id) {
+                            $query->select(DB::raw(1))
+                                  ->from('annual_requirements')
+                                  ->whereRaw('annual_requirements.user_id = users.user_id AND annual_requirements.season_id = ?',[$season_id]);
+                          })
+                          ->orWhere('status',true)
+                          ->get();
       }
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
       $response = $response->withJson($responseArr);
@@ -71,7 +77,13 @@ $app->group('/seasons', function () {
       $season_id = $args['season_id'];
       $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
                           $query->where('season_id','=',$season_id);
-                        }])->get();
+                        }])->whereExists(function ($query) use ($season_id) {
+                          $query->select(DB::raw(1))
+                                ->from('annual_requirements')
+                                ->whereRaw('annual_requirements.user_id = users.user_id AND annual_requirements.season_id = ?',[$season_id]);
+                        })
+                        ->orWhere('status',true)
+                        ->get();
     $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
     $response = $response->withJson($responseArr);
     return $response;

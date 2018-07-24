@@ -293,6 +293,89 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   });
+  /*$this->post('/slack', function ($request, $response) {
+    $responseData = false;
+    $args = $request->getParsedBody();
+    $provider = 'google';
+    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','slack_login_enable')->first();
+    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
+      $responseData = array('status'=>false, 'msg'=>'Slack login is not enabled.  Please select a different option.');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
+    $client = new Google_Client();
+    $client = getSettingsProp('slack_oauth_client_id');
+    $secret = getSettingsProp('slack_oauth_client_secret');
+    $redirect = getSettingsProp('env_url').'/oauth');
+
+    $data = array();
+    if(isset($args['code'])) {
+
+
+      $email = $me['emails'][0]['value'];
+      $fname = $me['name']['givenName'];
+      $lname = $me['name']['familyName'];
+      $image = $me['image']['url'];
+      $id = $me['id'];
+
+      $userData = array(
+        'id' => $id,
+        'provider' => $provider,
+        'email' => $email,
+        'fname' => $fname,
+        'lname' => $lname,
+        'profile_image' => $image,
+      );
+      $require_team_email = getSettingsProp('require_team_email');
+      if($require_team_email) {
+        $teamDomain = getSettingsProp('team_domain');
+        if(!is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) === false) {
+          $responseArr = array('status'=>false, 'msg'=>'A '.$teamDomain.' email is required');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+      }
+
+
+      $user = checkLogin($userData);
+      if($user != false) {
+        $update = false;
+        if($user->profile_image == '') {
+          $user->profile_image = $userData['profile_image'];
+          $update = true;
+        }
+        $teamDomain = getSettingsProp('team_domain');
+        if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
+          $user->team_email = $userData['email'];
+          $update = true;
+        }
+        if($update == true) {
+          $user = $user->save();
+        }
+        $key = getSettingsProp('jwt_key');
+        $token = array(
+          "iss" => getSettingsProp('env_url'),
+          "iat" => time(),
+          "exp" => time()+60*60,
+          "jti" => bin2hex(random_bytes(10)),
+          'data' => array(
+            'user_id' => $user->user_id,
+            'full_name' => $user->full_name,
+            'admin' => $user->admin,
+            'status' => $user->status,
+            'user_type' => $user->user_type,
+            'email' => $user->email,
+          )
+        );
+        $jwt = JWT::encode($token, $key);
+        $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+      } else {
+        $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.');
+      }
+    }
+    $response = $response->withJson($responseData);
+    return $response;
+  }); */
   $this->post('/login', function ($request, $response) {
     $responseData = false;
     $formData = $request->getParsedBody();

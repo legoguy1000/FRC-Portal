@@ -517,16 +517,16 @@
         },
         {
             "name": "facebook/graph-sdk",
-            "version": "5.6.2",
+            "version": "5.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/php-graph-sdk.git",
-                "reference": "030f8c5b9b1a6c09e71719fd638b66ea4daa2f10"
+                "reference": "90e92bd1816fe718e55184ab85910dfcf488432c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/php-graph-sdk/zipball/030f8c5b9b1a6c09e71719fd638b66ea4daa2f10",
-                "reference": "030f8c5b9b1a6c09e71719fd638b66ea4daa2f10",
+                "url": "https://api.github.com/repos/facebook/php-graph-sdk/zipball/90e92bd1816fe718e55184ab85910dfcf488432c",
+                "reference": "90e92bd1816fe718e55184ab85910dfcf488432c",
                 "shasum": ""
             },
             "require": {
@@ -571,7 +571,7 @@
                 "facebook",
                 "sdk"
             ],
-            "time": "2018-02-14T23:24:51+00:00"
+            "time": "2018-07-03T02:25:00+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -680,16 +680,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.63",
+            "version": "v0.64",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client-services.git",
-                "reference": "a009a33246e90bf1f60f745f8e47039ac5a87fdf"
+                "reference": "0250aa8cadbe58e790aa07d736b675f3bdd87a1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/a009a33246e90bf1f60f745f8e47039ac5a87fdf",
-                "reference": "a009a33246e90bf1f60f745f8e47039ac5a87fdf",
+                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/0250aa8cadbe58e790aa07d736b675f3bdd87a1c",
+                "reference": "0250aa8cadbe58e790aa07d736b675f3bdd87a1c",
                 "shasum": ""
             },
             "require": {
@@ -713,7 +713,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2018-06-07T00:22:54+00:00"
+            "time": "2018-06-30T00:22:51+00:00"
         },
         {
             "name": "google/auth",
@@ -1325,16 +1325,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "1.30.0",
+            "version": "1.31.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "863a1a651ea324e1838da3a52753a4239b9d4bea"
+                "reference": "385780c8ca2dbfd25452666e3f55e8dc1df58c41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/863a1a651ea324e1838da3a52753a4239b9d4bea",
-                "reference": "863a1a651ea324e1838da3a52753a4239b9d4bea",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/385780c8ca2dbfd25452666e3f55e8dc1df58c41",
+                "reference": "385780c8ca2dbfd25452666e3f55e8dc1df58c41",
                 "shasum": ""
             },
             "require": {
@@ -1346,6 +1346,13 @@
                 "phpunit/phpunit": "^4.8.35 || ^5.7"
             },
             "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Carbon\\Laravel\\ServiceProvider"
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "": "src/"
@@ -1369,7 +1376,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2018-06-15T11:52:26+00:00"
+            "time": "2018-06-25T13:15:16+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -2172,16 +2179,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v4.1.0",
+            "version": "v4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "16328f5b217cebc8dd4adfe4aeeaa8c377581f5a"
+                "reference": "b6d8164085ee0b6debcd1b7a131fd6f63bb04854"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/16328f5b217cebc8dd4adfe4aeeaa8c377581f5a",
-                "reference": "16328f5b217cebc8dd4adfe4aeeaa8c377581f5a",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/b6d8164085ee0b6debcd1b7a131fd6f63bb04854",
+                "reference": "b6d8164085ee0b6debcd1b7a131fd6f63bb04854",
                 "shasum": ""
             },
             "require": {
@@ -2237,7 +2244,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-30T07:26:09+00:00"
+            "time": "2018-06-22T08:59:39+00:00"
         },
         {
             "name": "tuupola/callable-handler",
