@@ -39,7 +39,7 @@ $app->group('/users', function () {
   		}
   	} else {
       if(isset($search['name']) && $search['name'] != '') {
-        $queryArr[] = '(users.full_name LIKE "%'.$search['name'].'%")';
+        $queryArr[] = '(full_name LIKE "%'.$search['name'].'%")';
       }
       if(isset($search['user_type']) && $search['user_type'] != '') {
         $queryArr[] = '(users.user_type LIKE "%'.$search['user_type'].'%")';
