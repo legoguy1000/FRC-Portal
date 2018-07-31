@@ -13,7 +13,15 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 		filter: '',
 		limit: 10,
 		order: 'full_name',
-		page: 1
+		page: 1,
+		search: {
+			name: '',
+			user_type: '',
+			school: '',
+			email: '',
+			gender: '',
+			status: true,
+		}
 	};
 	vm.users = [];
 	vm.limitOptions = [10,25,50,100];
@@ -32,7 +40,7 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 	};
 
 	var timeoutPromise;
-	$scope.$watch('vm.query.filter', function (newValue, oldValue) {
+	$scope.$watch('vm.query.search', function (newValue, oldValue) {
 		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
 		if(!oldValue) {
 			bookmark = vm.query.page;

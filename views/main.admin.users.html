@@ -105,6 +105,32 @@
 				</tr>
 			</thead>
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+				<tr md-row>
+					<td md-cell></td>
+					<td md-cell>
+						<input type="text" ng-model="vm.query.search.name" placeholder="Name" class="" aria-invalid="false">
+					</td>
+					<td md-cell hide-xs>
+						<input type="text" ng-model="vm.query.search.user_type" placeholder="User Type" class="" aria-invalid="false">
+					</td>
+					<td md-cell hide-xs hide-sm>
+						<input type="text" ng-model="vm.query.search.school" placeholder="School" class="" aria-invalid="false">
+					</td>
+					<td md-cell hide-xs hide-sm>
+						<input type="text" ng-model="vm.query.search.email" placeholder="Email" class="" aria-invalid="false">
+					</td>
+					<td md-cell hide-xs hide-sm>
+						<input type="text" ng-model="vm.query.search.gender" placeholder="Gender" class="" aria-invalid="false">
+					</td>
+					<td md-cell hide-xs hide-sm>
+						<md-select ng-model="vm.query.search.status" placeholder="User Status">
+							<md-option value=""></md-option>
+							<md-option value="true">Active</md-option>
+							<md-option value="false">Inactive</md-option>
+						</md-select>
+					</td>
+					<td md-cell></td>
+				</tr
 				<tr md-row ng-repeat="user in vm.users">
 					<td md-cell>
 						<img ng-src="{{user.profile_image}}" class="avatar" alt="" ng-if="user.profile_image"/>
