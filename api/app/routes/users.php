@@ -4,12 +4,20 @@ $app->group('/users', function () {
   $this->get('', function ($request, $response, $args) {
     $users = array();
   	$data = array();
-
+    $searchProperties = array(
+      'name' => '',
+      'user_type' => '',
+      'school' => '',
+      'email' => '',
+      'gender' => '',
+      'status' => true,
+    );
     $filter = $request->getParam('filter') !== null ? $request->getParam('filter'):'';
     $limit = $request->getParam('limit') !== null ? $request->getParam('limit'):10;
     $order = $request->getParam('order') !== null ? $request->getParam('order'):'full_name';
     $page = $request->getParam('page') !== null ? $request->getParam('page'):1;
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
+    $search = $request->getParam('search') !== null ? $request->getParam('search'):$searchProperties;
 
     $queryArr = array();
   	$queryStr = '';
@@ -29,7 +37,26 @@ $app->group('/users', function () {
   			$queryArr[] = '(schools.abv LIKE "%'.$filter.'%")';
   			$queryArr[] = '(student_grade LIKE "%'.$filter.'%")';
   		}
-  	}
+  	} else {
+      if(isset($search['name']) && $search['name'] != '') {
+        $queryArr[] = '(users.full_name LIKE "%'.$search['name'].'%")';
+      }
+      if(isset($search['user_type']) && $search['user_type'] != '') {
+        $queryArr[] = '(users.user_type LIKE "%'.$search['user_type'].'%")';
+      }
+      if(isset($search['school']) && $search['school'] != '') {
+        $queryArr[] = '(schools.school_name LIKE "%'.$search['school'].'%")';
+      }
+      if(isset($search['email']) && $search['email'] != '') {
+        $queryArr[] = '(users.email LIKE "%'.$search['email'].'%")';
+      }
+      if(isset($search['gender']) && $search['gender'] != '') {
+        $queryArr[] = '(users.gender LIKE "%'.$search['gender'].'%")';
+      }
+      if(isset($search['status']) && $search['status'] != '') {
+        $queryArr[] = '(users.user_type = "'.$search['status'].'")';
+      }
+    }
     $totalNum = 0;
   	if(count($queryArr) > 0) {
   		$queryStr = implode(' OR ',$queryArr);
