@@ -96,7 +96,7 @@ $app->group('/users', function () {
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
     $data['status'] =true;
-    $data['msg'] = '';
+    $data['msg'] = $queryArr;
     if($listOnly) {
       $data = $users;
     }
