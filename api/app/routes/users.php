@@ -54,13 +54,13 @@ $app->group('/users', function () {
         $queryArr[] = '(users.gender LIKE "%'.$search['gender'].'%")';
       }
       if(isset($search['status']) && $search['status'] != '') {
-        $bool = $search['status'] == true ? true:false;
+        $bool = $search['status'] == 'true' ? true:false;
         $queryArr[] = '(users.status = '.$bool.')';
       }
     }
     $totalNum = 0;
   	if(count($queryArr) > 0) {
-  		$queryStr = implode(' OR ',$queryArr);
+  		$queryStr = implode(' AND ',$queryArr);
       $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->havingRaw($queryStr)->get();
       $totalNum = count($users);
   	} else {
