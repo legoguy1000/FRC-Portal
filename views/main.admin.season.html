@@ -27,34 +27,34 @@
 			<md-input-container flex class="md-icon-float md-block">
 				<label>Start Date</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
-				<input moment-picker="vm.season.start_date_formatted" required
+				<input moment-picker="vm.season.date.start.long_date" required
 					 format="LL"
 					 min-view="year"
 					 max-view="day"
 					 start-view="day"
-					 ng-model="vm.season.start_date_full">
+					 ng-model="vm.start_date_full">
 				</input>
 			</md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
 				<label>Bag Date</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
-				<input moment-picker="vm.season.bag_day_formatted" required
+				<input moment-picker="vm.season.date.bag.long_date" required
 					 format="LL"
 					 min-view="year"
 					 max-view="day"
 					 start-view="day"
-					 ng-model="vm.season.bag_day_full">
+					 ng-model="vm.bag_day_full">
 				</input>
 			</md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
 				<label>End Date</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
-				<input moment-picker="vm.season.end_date_formatted" required
+				<input moment-picker="vm.season.date.end.long_date" required
 					 format="LL"
 					 min-view="year"
 					 max-view="day"
 					 start-view="day"
-					 ng-model="vm.season.end_date_full">
+					 ng-model="vm.end_date_full">
 				</input>
 			</md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
@@ -199,7 +199,7 @@
 				</table>
 			</md-table-container>
 			<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{(vm.users | filter: vm.query.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
-		
+
 			<!--<md-fab-speed-dial md-open="vm.fabOpen" md-direction="up" class="md-scale md-fab-bottom-right">
 				<md-fab-trigger>
 					<md-button aria-label="menu" class="md-fab md-warn">
