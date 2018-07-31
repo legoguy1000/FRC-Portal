@@ -67,7 +67,7 @@ $app->group('/users', function () {
       $totalNum = FrcPortal\User::count();
     }
 
-
+    die($search['status'] );
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
@@ -96,7 +96,7 @@ $app->group('/users', function () {
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
     $data['status'] =true;
-    $data['msg'] = $search['status'] ;
+    $data['msg'] = $queryArr;
     if($listOnly) {
       $data = $users;
     }
