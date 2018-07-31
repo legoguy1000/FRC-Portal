@@ -56,6 +56,7 @@ $app->group('/users', function () {
       if(isset($search['status']) && $search['status'] != '') {
         $bool = $search['status'] == 'true' ? true : false;
         $queryArr[] = '(users.status = '.$bool.')';
+        die($bool );
       }
     }
     $totalNum = 0;
@@ -63,7 +64,7 @@ $app->group('/users', function () {
 
   	if(count($queryArr) > 0) {
   		$queryStr = implode(' AND ',$queryArr);
-      die($queryStr );
+
       $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->havingRaw($queryStr)->get();
       $totalNum = count($users);
   	} else {
