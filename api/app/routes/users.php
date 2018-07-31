@@ -54,8 +54,8 @@ $app->group('/users', function () {
         $queryArr[] = '(users.gender LIKE "%'.$search['gender'].'%")';
       }
       if(isset($search['status']) && $search['status'] != '') {
-        $bool = $search['status'] == 'true' ? 1 : 0;
-        $queryArr[] = '(users.status = '.$bool.')';
+        $bool = $search['status'] == 'true' ? true: false;
+        $queryArr[] = '(users.status = "'.$bool.'")';
         die($bool );
       }
     }
