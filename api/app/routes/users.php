@@ -55,7 +55,7 @@ $app->group('/users', function () {
       }
       if(isset($search['status']) && $search['status'] != '') {
         $bool = $search['status'] == true ? true:false;
-        $queryArr[] = '(users.user_type = '.$bool.')';
+        $queryArr[] = '(users.status = '.$bool.')';
       }
     }
     $totalNum = 0;
