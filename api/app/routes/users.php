@@ -54,7 +54,7 @@ $app->group('/users', function () {
         $queryArr[] = '(users.gender LIKE "%'.$search['gender'].'%")';
       }
       if(isset($search['status']) && $search['status'] != '') {
-        $bool = $search['status'] == 'true' ? true:false;
+        $bool = $search['status'] == 'true' ? true : false;
         $queryArr[] = '(users.status = '.$bool.')';
       }
     }
@@ -96,7 +96,7 @@ $app->group('/users', function () {
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
     $data['status'] =true;
-    $data['msg'] = $queryArr;
+    $data['msg'] = $search['status'] ;
     if($listOnly) {
       $data = $users;
     }
