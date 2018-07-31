@@ -40,7 +40,7 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 	};
 
 	var timeoutPromise;
-	$scope.$watch('vm.query.search', function (newValue, oldValue) {
+	$scope.$watch('vm.query.filter', function (newValue, oldValue) {
 		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
 		if(!oldValue) {
 			bookmark = vm.query.page;
@@ -55,7 +55,7 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 			vm.getUsers();
 		},500);
 
-	},true);
+	});
 
 	vm.getUsers = function () {
 		vm.promise = usersService.getAllUsersFilter($.param(vm.query)).then(function(response){
