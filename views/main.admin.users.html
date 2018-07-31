@@ -120,7 +120,11 @@
 						<input type="text" ng-model="vm.query.search.email" placeholder="Email" class="" aria-invalid="false">
 					</td>
 					<td md-cell hide-xs hide-sm>
-						<input type="text" ng-model="vm.query.search.gender" placeholder="Gender" class="" aria-invalid="false">
+						<md-select ng-model="vm.query.search.gender" placeholder="Gender">
+							<md-option value=""></md-option>
+							<md-option value="Male">Male</md-option>
+							<md-option value="Female">Female</md-option>
+						</md-select>
 					</td>
 					<td md-cell hide-xs hide-sm>
 						<md-select ng-model="vm.query.search.status" placeholder="User Status">
