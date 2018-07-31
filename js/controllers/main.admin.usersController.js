@@ -55,7 +55,7 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 			vm.getUsers();
 		},500);
 
-	});
+	},true);
 
 	vm.getUsers = function () {
 		vm.promise = usersService.getAllUsersFilter($.param(vm.query)).then(function(response){
