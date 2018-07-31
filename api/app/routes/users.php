@@ -60,9 +60,10 @@ $app->group('/users', function () {
     }
     $totalNum = 0;
 
-    die($search['status'] );
+
   	if(count($queryArr) > 0) {
   		$queryStr = implode(' AND ',$queryArr);
+      die($queryStr );
       $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->havingRaw($queryStr)->get();
       $totalNum = count($users);
   	} else {
