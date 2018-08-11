@@ -29,7 +29,7 @@ if(!is_null($season)) {
 		}
 	}
 }
-pollMembershipForm($spreadsheetId);
+$data = pollMembershipForm($spreadsheetId);
 if($data != false && !empty($data)) {
 	$return = itterateMembershipFormData($data, $season_id);
 }
