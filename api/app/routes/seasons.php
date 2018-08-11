@@ -59,15 +59,7 @@ $app->group('/seasons', function () {
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
       $season = FrcPortal\Season::find($season_id);
       if($reqsBool) {
-        $season->users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
-                        		$query->where('season_id','=',$season_id);
-                          }])->whereExists(function ($query) use ($season_id) {
-                            $query->select(DB::raw(1))
-                                  ->from('annual_requirements')
-                                  ->whereRaw('annual_requirements.user_id = users.user_id AND annual_requirements.season_id = ?',[$season_id]);
-                          })
-                          ->orWhere('status',true)
-                          ->get();
+        $season->users = getUsersAnnualRequirements($season_id);
       }
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
       $response = $response->withJson($responseArr);
@@ -75,16 +67,8 @@ $app->group('/seasons', function () {
     });
     $this->get('/annualRequirements', function ($request, $response, $args) {
       $season_id = $args['season_id'];
-      $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
-                          $query->where('season_id','=',$season_id);
-                        }])->whereExists(function ($query) use ($season_id) {
-                          $query->select(DB::raw(1))
-                                ->from('annual_requirements')
-                                ->whereRaw('annual_requirements.user_id = users.user_id AND annual_requirements.season_id = ?',[$season_id]);
-                        })
-                        ->orWhere('status',true)
-                        ->get();
-    $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+      $season = getUsersAnnualRequirements($season_id);
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
     $response = $response->withJson($responseArr);
     return $response;
     });
@@ -139,6 +123,27 @@ $app->group('/seasons', function () {
       $season_id = $args['season_id'];
 
       $responseArr = updateSeasonMembershipForm($season_id);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->put('/pollMembershipForm', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!FrcPortal\Auth::isAdmin()) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+      $season_id = $args['season_id'];
+
+      $poll = updateSeasonRegistrationFromForm($season_id);
+      $season = getUsersAnnualRequirements($season_id);
+      $responseArr = array('status'=>true, 'msg'=>'Latest data dowwnloaded from Google form', 'data' => $season);
       $response = $response->withJson($responseArr);
       return $response;
     });

@@ -100,6 +100,10 @@
 						<md-tooltip md-direction="top">Refresh Data</md-tooltip>
 						<md-icon>refresh</md-icon>
 					</md-button>
+					<md-button class="md-icon-button" ng-click="vm.pollMembershipForm()">
+						<md-tooltip md-direction="top">Pull latest data from registration form</md-tooltip>
+						<md-icon>cloud_download</md-icon>
+					</md-button>
 					<md-menu>
 						<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
 							<md-icon md-menu-origin>menu</md-icon>

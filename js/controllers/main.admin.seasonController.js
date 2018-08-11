@@ -74,7 +74,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		vm.loading = true;
 		seasonsService.updateSeasonMembershipForm(vm.season.season_id).then(function(response){
 			if(response.status) {
-				vm.season.join_spreadsheet = response.data.join_spreadsheet;
+				vm.users = response.data;
 			}
 			vm.loading = false;
 			$mdToast.show(
@@ -83,6 +83,22 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
+		});
+	};
+
+	vm.pollMembershipForm = function () {
+		vm.loading = true;
+		seasonsService.pollMembershipForm(vm.season.season_id).then(function(response){
+			if(response.status) {
+				vm.season.join_spreadsheet = response.data.join_spreadsheet;
+			}
+			vm.loading = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 		});
 	};
 
