@@ -2,9 +2,12 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-<!---
+
 Version 2.10.0 (Current Dev Branch)
--->
+* Added button to download latest responses from Google form
+* Organized functions to poll Membership Form
+* Updated Change User Status cronjob to execute on the last day of month
+* 
 
 Version 2.9.0
 * Add Monolog to app
