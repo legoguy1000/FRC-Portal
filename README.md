@@ -7,7 +7,7 @@ Version 2.10.0 (Current Dev Branch)
 * Added button to download latest responses from Google form
 * Organized functions to poll Membership Form
 * Updated Change User Status cronjob to execute on the last day of month
-* 
+* Re-added google maps embed to event page
 
 Version 2.9.0
 * Add Monolog to app
