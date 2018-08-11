@@ -78,7 +78,7 @@ function updateSeasonMembershipForm($season_id) {
 }
 
 function pollMembershipForm($spreadsheetId) {
-	
+
 	$data = false;
 	if(!is_null($spreadsheetId)) {
 		$data = array();
@@ -229,9 +229,9 @@ function updateSeasonRegistrationFromForm($season_id) {
 		$season = FrcPortal\Season::find($season_id);
 		if(!is_null($season)) {
 			$spreadsheetId = $season->join_spreadsheet != '' ? $season->join_spreadsheet:null;
-			if(is_null($spreadsheetId)) {
+			if(!is_null($spreadsheetId)) {
 				$data = pollMembershipForm($spreadsheetId);
-				if($data != false && !empty($data)) {
+				if($data != false && count($data) > 0) {
 					$return = itterateMembershipFormData($data, $season_id);
 				}
 			}
