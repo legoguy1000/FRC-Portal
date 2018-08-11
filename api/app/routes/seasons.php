@@ -182,9 +182,7 @@ $app->group('/seasons', function () {
         $new = !$cur;
         $reqUpdate = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], [$req => $new]);
       }
-      $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
-                          $query->where('season_id','=',$season_id);
-                        }])->get();
+      $season = getUsersAnnualRequirements($season_id);
       $responseArr = array('status'=>true, 'msg'=>'Annual Requirements Updated', 'data' => $season);
       $response = $response->withJson($responseArr);
       return $response;
