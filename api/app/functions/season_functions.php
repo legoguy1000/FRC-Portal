@@ -50,6 +50,7 @@ function getSeasonMembershipForm($year) {
 }
 
 function updateSeasonMembershipForm($season_id) {
+	$this->logger->addInfo('test');
 	$result = array(
 		'status' => false,
 		'msg' => '',
@@ -215,8 +216,10 @@ function itterateMembershipFormData($data = array(), $season_id = null) {
 				$season = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
 			}
 		}
+		return true;
+	} else {
+		return false;
 	}
-	return true;
 }
 
 function updateSeasonRegistrationFromForm($season_id) {
