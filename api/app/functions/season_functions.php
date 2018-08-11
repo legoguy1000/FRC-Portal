@@ -50,7 +50,6 @@ function getSeasonMembershipForm($year) {
 }
 
 function updateSeasonMembershipForm($season_id) {
-	$this->logger->addInfo('test');
 	$result = array(
 		'status' => false,
 		'msg' => '',
@@ -79,6 +78,7 @@ function updateSeasonMembershipForm($season_id) {
 }
 
 function pollMembershipForm($spreadsheetId) {
+		$this->logger->addInfo('test');
 	$data = false;
 	if(!is_null($spreadsheetId)) {
 		$data = array();
