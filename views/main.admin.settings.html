@@ -93,7 +93,7 @@
 						Enable Google Login
 					</md-switch>
 				</div>
-				<div layout="column" flex flex-offset-gt-sm="10" ng-show="vm.settings.login.google_login_enable">
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.google_login_enable">
 					<md-input-container flex ng-show="vm.settings.login.google_login_enable">
 						<label>Google OAuth2 Client ID</label>
 						<input ng-model="vm.settings.login.google_oauth_client_id" ng-disabled="!vm.settings.login.google_login_enable">
@@ -110,7 +110,7 @@
 						Enable Facebook Login
 					</md-switch>
 				</div>
-				<div layout="column" flex flex-offset-gt-sm="10" ng-show="vm.settings.login.facebook_login_enable">
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.facebook_login_enable">
 					<md-input-container flex ng-show="vm.settings.login.facebook_login_enable">
 						<label>Facebook OAuth2 Client ID</label>
 						<input ng-model="vm.settings.login.facebook_oauth_client_id" ng-disabled="!vm.settings.login.facebook_login_enable">
@@ -127,7 +127,7 @@
 						Enable Microsoft Login
 					</md-switch>
 				</div>
-				<div layout="column" flex flex-offset-gt-sm="10" ng-show="vm.settings.login.microsoft_login_enable">
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.microsoft_login_enable">
 					<md-input-container flex ng-show="vm.settings.login.microsoft_login_enable">
 						<label>Microsoft OAuth2 Client ID</label>
 						<input ng-model="vm.settings.login.microsoft_oauth_client_id" ng-disabled="!vm.settings.login.microsoft_login_enable">
