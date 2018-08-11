@@ -85,17 +85,23 @@
 			<md-switch md-invert aria-label="Require Team Email For Login" ng-model="vm.settings.login.require_team_email" class="md-warn">
 				Require Team Email For Login
 			</md-switch>
-			<md-switch md-invert aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn">
-				Enable Google Login
-			</md-switch>
-			<md-input-container flex ng-show="vm.settings.login.google_login_enable">
-				<label>Google OAuth2 Client ID</label>
-				<input ng-model="vm.settings.login.google_oauth_client_id" ng-disabled="!vm.settings.login.google_login_enable">
-			</md-input-container>
-			<md-input-container flex ng-show="vm.settings.login.google_login_enable">
-				<label>Google OAuth2 Client Secret</label>
-				<input ng-model="vm.settings.login.google_oauth_client_secret" ng-disabled="!vm.settings.login.google_login_enable">
-			</md-input-container>
+			<div layout="row">
+				<div>
+					<md-switch md-invert aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn">
+						Enable Google Login
+					</md-switch>
+				<div>
+				<div layout="column">
+					<md-input-container flex ng-show="vm.settings.login.google_login_enable">
+						<label>Google OAuth2 Client ID</label>
+						<input ng-model="vm.settings.login.google_oauth_client_id" ng-disabled="!vm.settings.login.google_login_enable">
+					</md-input-container>
+					<md-input-container flex ng-show="vm.settings.login.google_login_enable">
+						<label>Google OAuth2 Client Secret</label>
+						<input ng-model="vm.settings.login.google_oauth_client_secret" ng-disabled="!vm.settings.login.google_login_enable">
+					</md-input-container>
+				</div>
+			</div>
 			<md-switch md-invert aria-label="Enable Facebook Login" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
 				Enable Facebook Login
 			</md-switch>
