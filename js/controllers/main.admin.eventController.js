@@ -148,6 +148,13 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'type': vm.event.type,
 			'registration_deadline': vm.event.registration_deadline_date.long_date,
 			'registration_deadline_gcalid': vm.event.registration_deadline_gcalid,
+			'requirements': {
+				'payment_required': vm.event.payment_required,
+				'permission_slip_required': vm.event.permission_slip_required,
+				'food_required': vm.event.food_required,
+				'room_required': vm.event.room_required,
+				'drivers_required': vm.event.drivers_required,
+			}
 		};
 		eventsService.updateEvent(data).then(function(response){
 			vm.loading = false;

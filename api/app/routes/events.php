@@ -532,6 +532,13 @@ $app->group('/events', function () {
         $event->registration_deadline = null;
       }
       $event->registration_deadline_gcalid = isset($formData['registration_deadline_gcalid']) && $formData['registration_deadline_gcalid'] != '' ? $formData['registration_deadline_gcalid']:null;
+
+      $eventReqs = isset($formData['requirements']) ? $formData['requirements'] : null;
+      if(!is_null($eventReqs)) {
+        foreach($eventReqs as $req=>$val) {
+          $event->{$req} = $val;
+        }
+      }
       if($event->save()) {
         $event->load('poc');
         $responseArr = array('status'=>true, 'msg'=>'Event Information Saved', 'data' => $event);
