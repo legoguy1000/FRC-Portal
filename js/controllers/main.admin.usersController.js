@@ -40,7 +40,22 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 	};
 
 	var timeoutPromise;
-	$scope.$watch('vm.query.filter', function (newValue, oldValue) {
+	$scope.$watchGroup(['vm.query.filter'], function(newValues, oldValues, scope) {
+		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
+		if(!oldValue) {
+			bookmark = vm.query.page;
+		}
+		if(newValues !== oldValues) {
+			vm.query.page = 1;
+		}
+		if(!newValue) {
+			vm.query.page = bookmark;
+		}
+		timeoutPromise = $timeout(function(){   //Set timeout
+			vm.getUsers();
+		},500);
+});
+	/*$scope.$watch('vm.query.filter', function (newValue, oldValue) {
 		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
 		if(!oldValue) {
 			bookmark = vm.query.page;
@@ -55,7 +70,7 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 			vm.getUsers();
 		},500);
 
-	});
+	}); */
 
 	vm.getUsers = function () {
 		vm.promise = usersService.getAllUsersFilter($.param(vm.query)).then(function(response){
