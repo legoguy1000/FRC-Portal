@@ -67,7 +67,7 @@ $app->group('/users', function () {
   	if(count($queryArr) > 0) {
       $users = $users->where($queryArr);
   	}
-    $totalNum = $users->count();
+    $totalNum = count($users->get());
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
