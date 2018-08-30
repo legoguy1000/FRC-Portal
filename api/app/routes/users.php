@@ -20,24 +20,26 @@ $app->group('/users', function () {
     $search = $request->getParam('search') !== null ? $request->getParam('search'):$searchProperties;
 
     $queryArr = array();
-  	$queryStr = '';
+    $queryArr2 = array();
+    $queryStr = '';
+  	$queryStr2 = '';
   	if($filter != '') {
-  		if($filter == strtolower('active')) {
-  			$queryArr[] = '(users.status = "1")';
-  		} elseif($filter == strtolower('inactive')) {
-  			$queryArr[] = '(users.status = "0")';
-  		} else {
-  		//	$queryArr[] = '(users.fname LIKE '.db_quote('%'.$filter.'%').')';
-  		//	$queryArr[] = '(users.lname LIKE '.db_quote('%'.$filter.'%').')';
-  			$queryArr[] = '(users.email LIKE "%'.$filter.'%")';
-  			$queryArr[] = '(users.user_type LIKE "%'.$filter.'%")';
-  			$queryArr[] = '(users.gender = "'.$filter.'")';
-  			$queryArr[] = '(full_name LIKE "%'.$filter.'%")';
-  			$queryArr[] = '(schools.school_name LIKE "%'.$filter.'%")';
-  			$queryArr[] = '(schools.abv LIKE "%'.$filter.'%")';
-  			$queryArr[] = '(student_grade LIKE "%'.$filter.'%")';
-  		}
+      $queryArr[] = array('email', 'LIKE', '%'.$filter.'%');
+      $queryArr[] = array('user_type', 'LIKE', '%'.$filter.'%');
+      $queryArr[] = array('gender', '=', $filter);
+      $queryArr[] = array('full_name', 'LIKE', '%'.$filter.'%');
+      $queryArr[] = array('schools.school_name', 'LIKE', '%'.$filter.'%');
+      $queryArr[] = array('schools.abv', 'LIKE', '%'.$filter.'%');
+      $queryArr[] = array('student_grade', 'LIKE', '%'.$filter.'%');
   	}
+    if(isset($search['user_type']) && $search['user_type'] != '') {
+      $queryArr2[] = array('user_type', '=', $search['user_type']);
+    }
+    if(isset($search['status']) && $search['status'] != '') {
+      $bool = $search['status'] == 'true' ? '1': '0';
+      $queryArr2[] = array('status', '=', $bool);
+    //  die($bool );
+    }
     /* else {
       if(isset($search['name']) && $search['name'] != '') {
         $queryArr[] = '(full_name LIKE "%'.$search['name'].'%")';
@@ -61,16 +63,11 @@ $app->group('/users', function () {
       }
     } */
     $totalNum = 0;
-
-
+    $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->where($queryArr2);
   	if(count($queryArr) > 0) {
-  		$queryStr = implode(' OR ',$queryArr);
-
-      $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->havingRaw($queryStr)->get();
-      $totalNum = count($users);
-  	} else {
-      $totalNum = FrcPortal\User::count();
-    }
+      $users = $users->where($queryArr);
+  	}
+    $totalNum = $users->count();
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
@@ -88,11 +85,7 @@ $app->group('/users', function () {
       $limit = $totalNum;
     }
 
-    if($filter != '' ) {
-      $users = FrcPortal\User::with('school')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    } else {
-      $users = FrcPortal\User::with('school')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    }
+    $users = $users->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
 
     $data['data'] = $users;
