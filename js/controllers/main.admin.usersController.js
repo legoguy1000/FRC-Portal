@@ -41,8 +41,8 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 
 	var timeoutPromise;
 	$scope.$watchGroup(['vm.query.filter', 'vm.query.search.status','vm.query.search.user_type'], function(newValues, oldValues, scope) {
-		console.log(newValues);
-		console.log(oldValues);
+		//console.log(newValues);
+		//console.log(oldValues);
 		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
 		if(!oldValues) {
 			bookmark = vm.query.page;
