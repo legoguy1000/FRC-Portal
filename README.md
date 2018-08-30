@@ -8,6 +8,10 @@ Version 2.10.0 (Current Dev Branch)
 * Organized functions to poll Membership Form
 * Updated Change User Status cronjob to execute on the last day of month
 * Re-added google maps embed to event page
+* Update look of Login Settings page
+* Minor style changes
+* Add Event Requirements toggles on Event Admin page & add server side logic to update
+* Add button to test Slack notifications
 
 Version 2.9.0
 * Add Monolog to app

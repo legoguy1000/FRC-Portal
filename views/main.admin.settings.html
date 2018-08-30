@@ -161,12 +161,12 @@
 			</md-input-container>
 			<div layout="column" layout-gt-sm="row">
 				<div flex>
-					<md-input-container flex>
+					<md-input-container flex style="width: 100%;">
 						<label>Slack API Token</label>
 						<input ng-model="vm.settings.notification.slack_api_token" ng-disabled="!vm.settings.notification.slack_enable">
 					</md-input-container>
 				</div>
-				<div>
+				<div class="layout-align-center-center layout-row">
 					<md-button type="button" class="md-raised md-primary"  ng-click="vm.testSlack()">
 						Test Slack Notification
 					</md-button>
