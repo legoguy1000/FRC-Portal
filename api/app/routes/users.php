@@ -38,41 +38,8 @@ $app->group('/users', function () {
       $users = $users->orHavingRaw('schools.abv LIKE ?',array('%'.$filter.'%'));
       $users = $users->orHavingRaw('student_grade LIKE ?',array('%'.$filter.'%'));
       $users = $users->orHavingRaw('gender = ?',array('%'.$filter.'%'));
-    /*  $queryArr[] = array('email', 'LIKE', '%'.$filter.'%');
-      $queryArr[] = array('user_type', 'LIKE', '%'.$filter.'%');
-      $queryArr[] = array('gender', '=', $filter);
-      $queryArr[] = array('full_name', 'LIKE', '%'.$filter.'%');
-      $queryArr[] = array('schools.school_name', 'LIKE', '%'.$filter.'%');
-      $queryArr[] = array('schools.abv', 'LIKE', '%'.$filter.'%');
-      $queryArr[] = array('student_grade', 'LIKE', '%'.$filter.'%'); */
-
     }
     $totalNum = count($users->get());
-    /* else {
-      if(isset($search['name']) && $search['name'] != '') {
-        $queryArr[] = '(full_name LIKE "%'.$search['name'].'%")';
-      }
-      if(isset($search['user_type']) && $search['user_type'] != '') {
-        $queryArr[] = '(users.user_type LIKE "%'.$search['user_type'].'%")';
-      }
-      if(isset($search['school']) && $search['school'] != '') {
-        $queryArr[] = '(schools.school_name LIKE "%'.$search['school'].'%")';
-      }
-      if(isset($search['email']) && $search['email'] != '') {
-        $queryArr[] = '(users.email LIKE "%'.$search['email'].'%")';
-      }
-      if(isset($search['gender']) && $search['gender'] != '') {
-        $queryArr[] = '(users.gender LIKE "%'.$search['gender'].'%")';
-      }
-      if(isset($search['status']) && $search['status'] != '') {
-        $bool = $search['status'] == 'true' ? '1': '0';
-        $queryArr[] = '(users.status = "'.$bool.'")';
-      //  die($bool );
-      }
-    } */
-
-
-
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
   	if(in_array($orderCol,array('full_name','fname','lname','email','user_type','gender','school_name'))) {
