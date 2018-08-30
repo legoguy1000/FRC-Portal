@@ -44,13 +44,13 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 		console.log(newValues);
 		console.log(oldValues);
 		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
-		if(!oldValue) {
+		if(!oldValues) {
 			bookmark = vm.query.page;
 		}
-		if(newValue !== oldValue) {
+		if(newValues !== oldValues) {
 			vm.query.page = 1;
 		}
-		if(!newValue) {
+		if(!newValues) {
 			vm.query.page = bookmark;
 		}
 		timeoutPromise = $timeout(function(){   //Set timeout
