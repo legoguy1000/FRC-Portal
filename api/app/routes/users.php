@@ -65,9 +65,9 @@ $app->group('/users', function () {
     $totalNum = 0;
     $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->where($queryArr2);
   	if(count($queryArr) > 0) {
-      $users = $users->where($queryArr);
+      $users = $users->having($queryArr);
   	}
-    $totalNum = count($users->get());
+    $totalNum = $users->count();
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
