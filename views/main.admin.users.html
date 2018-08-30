@@ -48,6 +48,28 @@
 			</md-button>
 		</div>
 	</md-toolbar>
+	<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
+		<div class="md-toolbar-tools">
+			<md-input-container class="md-block">
+				<label>User Type</label>
+				<md-icon class="material-icons">person</md-icon>
+				<md-select ng-model="vm.query.search.status">
+					<md-option value="" ></md-option>
+					<md-option value="Mentor" >Mentor</md-option>
+					<md-option value="Student" >Student</md-option>
+				</md-select>
+			</md-input-container>
+			<md-input-container class="md-block">
+				<label>User Status</label>
+				<md-icon class="material-icons">person</md-icon>
+				<md-select ng-model="vm.query.search.status" >
+					<md-option value="" ></md-option>
+					<md-option value="true" >Active</md-option>
+					<md-option value="false" >Inactive</md-option>
+				</md-select>
+			</md-input-container>
+		</div>
+	</md-toolbar>
 	<md-content layout="column" ng-show="vm.showSearchOptions" class="md-padding" style="background-color: #fff; position: absolute; margin-top: 3px;width: 750px; z-index: 60;box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.2);">
 		<md-input-container class="md-icon-float md-block">
 			<label>Name</label>
