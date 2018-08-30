@@ -21,17 +21,6 @@ $app->group('/users', function () {
 
     $queryArr = array();
     $queryArr2 = array();
-    $queryStr = '';
-  	$queryStr2 = '';
-  	if($filter != '') {
-      $queryArr[] = array('email', 'LIKE', '%'.$filter.'%');
-      $queryArr[] = array('user_type', 'LIKE', '%'.$filter.'%');
-      $queryArr[] = array('gender', '=', $filter);
-      $queryArr[] = array('full_name', 'LIKE', '%'.$filter.'%');
-      $queryArr[] = array('schools.school_name', 'LIKE', '%'.$filter.'%');
-      $queryArr[] = array('schools.abv', 'LIKE', '%'.$filter.'%');
-      $queryArr[] = array('student_grade', 'LIKE', '%'.$filter.'%');
-  	}
     if(isset($search['user_type']) && $search['user_type'] != '') {
       $queryArr2[] = array('user_type', '=', $search['user_type']);
     }
@@ -40,6 +29,20 @@ $app->group('/users', function () {
       $queryArr2[] = array('status', '=', $bool);
     //  die($bool );
     }
+    $totalNum = 0;
+    $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->where($queryArr2);
+  	if($filter != '') {
+      $users = $users->orHavingRaw('email LIKE ?',array('%'.$filter.'%'));
+    /*  $queryArr[] = array('email', 'LIKE', '%'.$filter.'%');
+      $queryArr[] = array('user_type', 'LIKE', '%'.$filter.'%');
+      $queryArr[] = array('gender', '=', $filter);
+      $queryArr[] = array('full_name', 'LIKE', '%'.$filter.'%');
+      $queryArr[] = array('schools.school_name', 'LIKE', '%'.$filter.'%');
+      $queryArr[] = array('schools.abv', 'LIKE', '%'.$filter.'%');
+      $queryArr[] = array('student_grade', 'LIKE', '%'.$filter.'%'); */
+
+    }
+    $totalNum = count($users->get());
     /* else {
       if(isset($search['name']) && $search['name'] != '') {
         $queryArr[] = '(full_name LIKE "%'.$search['name'].'%")';
@@ -62,12 +65,8 @@ $app->group('/users', function () {
       //  die($bool );
       }
     } */
-    $totalNum = 0;
-    $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->where($queryArr2);
-  	if(count($queryArr) > 0) {
-      $users = $users->orHaving($queryArr);
-  	}
-    $totalNum = count($users->get());
+
+
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
