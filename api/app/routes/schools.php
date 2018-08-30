@@ -36,6 +36,7 @@ $app->group('/schools', function () {
     }
     $schools = $schools->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
+
     $data['data'] = $schools;
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
