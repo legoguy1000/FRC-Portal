@@ -95,24 +95,31 @@
 	      </md-autocomplete>
 		</div>
 		<div layout="column">
-			<div layout="row">
-				Event Requirements
-			</div>
-			<md-switch class="md-primary"  ng-model="vm.event.payment_required">
-			 Payment Required
-			</md-switch>
-			<md-switch class="md-primary"  ng-model="vm.event.permission_slip_required">
-			 Permission Slip Required
-			</md-switch>
-			<md-switch class="md-primary"  ng-model="vm.event.food_required">
-			 Food Order Required
-			</md-switch>
-			<md-switch class="md-primary"  ng-model="vm.event.room_required">
-				Lodging Required
-			</md-switch>
-			<md-switch class="md-primary"  ng-model="vm.event.drivers_required">
-				Drivers Required
-			</md-switch>
+			<v-accordion class="vAccordion--default">
+				<!-- add expanded attribute to open the section -->
+				<v-pane expanded>
+					<v-pane-header>
+						Event Requirements
+					</v-pane-header>
+					<v-pane-content layout="column">
+						<md-switch class="md-primary"  ng-model="vm.event.payment_required">
+						 Payment Required
+						</md-switch>
+						<md-switch class="md-primary"  ng-model="vm.event.permission_slip_required">
+						 Permission Slip Required
+						</md-switch>
+						<md-switch class="md-primary"  ng-model="vm.event.food_required">
+						 Food Order Required
+						</md-switch>
+						<md-switch class="md-primary"  ng-model="vm.event.room_required">
+							Lodging Required
+						</md-switch>
+						<md-switch class="md-primary"  ng-model="vm.event.drivers_required">
+							Drivers Required
+						</md-switch>
+					</v-pane-content>
+				</v-pane>
+			</v-accordion>
 		</div>
 		<md-input-container flex class="md-icon-float md-block md-icon-left">
       <label>Details</label>
