@@ -40,7 +40,7 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 	};
 
 	var timeoutPromise;
-	$scope.$watchGroup(['vm.query.filter'], function(newValues, oldValues, scope) {
+	$scope.$watchGroup(['vm.query.filter', 'vm.query.search.status','vm.query.search.user_type'], function(newValues, oldValues, scope) {
 	vm.getUsers();
 });
 	/*$scope.$watch('vm.query.filter', function (newValue, oldValue) {
