@@ -159,10 +159,15 @@
 				<label>Slack Team ID</label>
 				<input ng-model="vm.settings.notification.slack_team_id" ng-disabled="!vm.settings.notification.slack_enable">
 			</md-input-container>
-			<md-input-container flex>
-				<label>Slack API Token</label>
-				<input ng-model="vm.settings.notification.slack_api_token" ng-disabled="!vm.settings.notification.slack_enable">
-			</md-input-container>
+			<div layout="column" layout-gt-sm="row">
+				<md-input-container flex>
+					<label>Slack API Token</label>
+					<input ng-model="vm.settings.notification.slack_api_token" ng-disabled="!vm.settings.notification.slack_enable">
+				</md-input-container>
+				<md-button type="button" class="md-raised md-primary"  ng-click="vm.testSlack()">
+					Test Slack Notification
+				</md-button>
+			</div>
 			<md-switch md-invert aria-label="Enable Email Notifications" ng-model="vm.settings.notification.email_enable" class="md-warn">
 				Enable Email Notifications
 			</md-switch>

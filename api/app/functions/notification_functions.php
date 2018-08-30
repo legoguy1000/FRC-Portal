@@ -78,6 +78,7 @@ function sendUserNotification($user_id, $type, $msgData)
 }
 
 function postToSlack($msg = '', $channel = null) {
+	$result = false;
 	$data = array(
 		'text'=>$msg
 		//'username'=> '',
@@ -105,6 +106,7 @@ function postToSlack($msg = '', $channel = null) {
 	$result = curl_exec($ch);
 	//close connection
 	curl_close($ch);
+	return $result;
 }
 
 function endOfDayHoursToSlack($date = null) {
@@ -135,13 +137,15 @@ function endOfDayHoursToSlack($date = null) {
 }
 
 function slackMessageToUser($user_id, $msg) {
+	$result = false;
 	if(!is_null($user_id)) {
 		$userData = false;
 		$user = FrcPortal\User::find($user_id);
 		if(!is_null($user) && $user->slack_enabled == true) {
-			postToSlack($msg, $user->slack_id);
+			$result = postToSlack($msg, $user->slack_id);
 		}
 	}
+	return $result;
 }
 
 function emailUser($userData = array(),$subject = '',$content = '',$attachments = false)

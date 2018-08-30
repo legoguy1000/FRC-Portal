@@ -103,6 +103,20 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		}, function() { });
 	};
 
+	vm.testSlack = function() {
+		vm.loading = false;
+		settingsService.testSlack().then(function(response){
+			vm.loading = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+			//vm.settings[section] = response.data;
+		});
+	}
+
 	vm.searchText    = null;
 		/**
 	 * Create filter function for a query string
