@@ -49,8 +49,8 @@
 		</div>
 	</md-toolbar>
 	<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
-		<div class="md-toolbar-tools">
-			<md-input-container class="md-block">
+		<div class="md-toolbar-tools" layout="row">
+			<md-input-container class="" flex>
 				<label>User Type</label>
 				<md-icon class="material-icons">person</md-icon>
 				<md-select ng-model="vm.query.search.status">
@@ -59,7 +59,7 @@
 					<md-option value="Student" >Student</md-option>
 				</md-select>
 			</md-input-container>
-			<md-input-container class="md-block">
+			<md-input-container class="" flex>
 				<label>User Status</label>
 				<md-icon class="material-icons">person</md-icon>
 				<md-select ng-model="vm.query.search.status" >
