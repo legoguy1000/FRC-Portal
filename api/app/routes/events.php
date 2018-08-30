@@ -13,7 +13,7 @@ $app->group('/events', function () {
 
 
     $totalNum = 0;
-    $events = FrcPortal\Event::newQuery();
+    $events = new FrcPortal\Event();
   	if($filter != '') {
       $events = $events->orHavingRaw('name LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('type LIKE ?',array('%'.$filter.'%'));
