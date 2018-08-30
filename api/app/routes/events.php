@@ -13,28 +13,17 @@ $app->group('/events', function () {
 
 
     $totalNum = 0;
-    $queryArr = array();
-  	$queryStr = '';
+    $events = FrcPortal\Event::newQuery();
   	if($filter != '') {
-      $queryArr[] = '(events.name LIKE "%'.$filter.'%")';
-      $queryArr[] = '(events.type LIKE "%'.$filter.'%")';
-      $queryArr[] = '(events.event_start LIKE "%'.$filter.'%")';
-      $queryArr[] = '(events.event_end LIKE "%'.$filter.'%")';
-      //$queryArr[] = '(seasons.game_name LIKE "%'.$filter.'%")';
-      //$queryArr[] = '(seasons.year LIKE "%'.$filter.'%")';
-      //Date Filters
-      $queryArr[] = '(YEAR(events.event_start) LIKE "%'.$filter.'%")';
-      $queryArr[] = '(MONTHNAME(events.event_start) LIKE "%'.$filter.'%")';
-      $queryArr[] = '(MONTHNAME(events.event_end) LIKE "%'.$filter.'%")';
-  	}
-
-  	if(count($queryArr) > 0) {
-  		$queryStr = implode(' OR ',$queryArr);
-      $events = FrcPortal\Event::havingRaw($queryStr)->get();
-      $totalNum = count($events);
-  	} else {
-      $totalNum = FrcPortal\Event::count();
+      $events = $events->orHavingRaw('name LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('type LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('event_start LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('event_end LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('YEAR(events.event_start) LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('MONTHNAME(events.event_start) LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('MONTHNAME(events.event_end) LIKE ?',array('%'.$filter.'%'));
     }
+    $totalNum = count($events->get());
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
@@ -51,12 +40,7 @@ $app->group('/events', function () {
   	} elseif($limit == 0) {
       $limit = $totalNum;
     }
-
-    if($filter != '' ) {
-      $events = FrcPortal\Event::havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    } else {
-      $events = FrcPortal\Event::orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    }
+    $events = $events->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
     $data['data'] = $events;
     $data['total'] = $totalNum;
@@ -248,14 +232,14 @@ $app->group('/events', function () {
           $carArr = $formData['cars'][$car_id];
           $userArr = array_column($carArr, 'user_id');
           if(!empty($userArr) && count($userArr) <= $car['car_space']) {
-            $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
+            $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
         	}
         }
         //Not Assigned a car
         $carArr = $formData['cars']['non_select'];
         $userArr = array_column($carArr, 'user_id');
         if(!empty($userArr)) {
-          $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => null]);
+          $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => null]);
         }
         $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                             $query->where('event_id','=',$event_id);
@@ -353,14 +337,14 @@ $app->group('/events', function () {
           $roomArr = $formData['rooms'][$room_id];
           $userArr = array_column($roomArr, 'user_id');
           if(!empty($userArr) && count($userArr) <= 4) {
-            $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
+            $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
           }
         }
         //Not Assigned a car
         $roomArr = $formData['rooms']['non_select'];
         $userArr = array_column($roomArr, 'user_id');
         if(!empty($userArr)) {
-          $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
+          $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
         }
         $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                             $query->where('event_id','=',$event_id);
@@ -595,8 +579,8 @@ $app->group('/events', function () {
       $event = FrcPortal\Event::find($event_id);
       $array = array();
       $req = $formData['requirement'];
-      $users = $formData['users'];
-      foreach($users as $user) {
+      $events = $formData['users'];
+      foreach($events as $user) {
         $user_id = $user['user_id'];
         $cur = isset($user['event_requirements'][$req]) ? $user['event_requirements'][$req] : false;
         $new = !$cur;
