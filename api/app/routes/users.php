@@ -33,6 +33,11 @@ $app->group('/users', function () {
     $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->where($queryArr2);
   	if($filter != '') {
       $users = $users->orHavingRaw('email LIKE ?',array('%'.$filter.'%'));
+      $users = $users->orHavingRaw('full_name LIKE ?',array('%'.$filter.'%'));
+      $users = $users->orHavingRaw('schools.school_name LIKE ?',array('%'.$filter.'%'));
+      $users = $users->orHavingRaw('schools.abv LIKE ?',array('%'.$filter.'%'));
+      $users = $users->orHavingRaw('student_grade LIKE ?',array('%'.$filter.'%'));
+      $users = $users->orHavingRaw('gender = ?',array('%'.$filter.'%'));
     /*  $queryArr[] = array('email', 'LIKE', '%'.$filter.'%');
       $queryArr[] = array('user_type', 'LIKE', '%'.$filter.'%');
       $queryArr[] = array('gender', '=', $filter);
