@@ -12,11 +12,8 @@ $app->group('/seasons', function () {
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
     $totalNum = 0;
-  	if($filter != '') {
-      $totalNum = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->count();
-  	} else {
-      $totalNum = FrcPortal\Season::count();
-    }
+    $seasons = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%');
+    $totalNum = count($seasons->get());
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
@@ -33,13 +30,7 @@ $app->group('/seasons', function () {
   	} elseif($limit == 0) {
       $limit = $totalNum;
     }
-
-    if($filter != '' ) {
-      $seasons = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    } else {
-      $seasons = FrcPortal\Season::orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    }
-
+    $seasons = $seasons->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
     $data['data'] = $seasons;
     $data['total'] = $totalNum;
