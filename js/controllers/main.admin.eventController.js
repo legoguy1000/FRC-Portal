@@ -264,7 +264,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		}, function() { });
 	};
 
-	vm.showEventFoodModal = function(ev) {
+	vm.showFoodListModal = function(ev) {
 		$mdDialog.show({
 			controller: eventFoodModalController,
 			controllerAs: 'vm',
