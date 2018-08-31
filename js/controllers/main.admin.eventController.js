@@ -264,6 +264,28 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		}, function() { });
 	};
 
+	vm.showEventFoodModal = function(ev) {
+		$mdDialog.show({
+			controller: eventFoodModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/eventFoodModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				eventInfo: {
+					'event_id': vm.event_id,
+					'name':vm.event.name,
+					//'room_info': vm.event.room_list
+				},
+			}
+		})
+		.then(function(response) {
+			vm.users = response.data;
+		}, function() { });
+	};
+
 	vm.rcToggleEventReqs = function(user, req, action) {
 		if(vm.selectedUsers.length > 1) {
 

@@ -182,5 +182,35 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getEventFood: function (event_id) {
+			var event_id = event_id != undefined && event_id != null ? event_id:'';
+			return $http.get('api/events/'+event_id+'/food')
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		addEventFood: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			return $http.post('api/events/'+event_id+'/food',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		deleteEventFood: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			var food_id = formData.food_id != undefined && formData.food_id != null ? formData.food_id:'';
+			return $http.delete('api/events/'+event_id+'/food/'+food_id,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		updateEventFood: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			var food_id = formData.food_id != undefined && formData.food_id != null ? formData.food_id:'';
+			return $http.put('api/events/'+event_id+'/food/'+food_id,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

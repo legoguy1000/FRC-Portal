@@ -490,6 +490,101 @@ $app->group('/events', function () {
         return $response;
       });
     });
+    $this->group('/food', function () {
+      $this->get('', function ($request, $response, $args) {
+        $event_id = $args['event_id'];
+        $responseArr = array(
+          'status' => false,
+          'msg' => '',
+          'data' => null
+        );
+        $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
+        $responseArr['status'] = true;
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->put('/{food_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!FrcPortal\Auth::isAdmin()) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+
+        $event_id = $args['event_id'];
+        $food_id = $args['food_id'];
+        $food = FrcPortal\EventFood::where('event_id',$event_id)->where('food_id',$food_id)->first();
+        if($food) {
+          $food->group = $formData['group'];
+          $food->description = isset($formData['description']) ? $formData['description']:'';
+          if($timeSlot->save()) {
+            $responseArr['status'] = true;
+            $responseArr['msg'] = 'Food option Updated';
+            $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
+          }
+        }
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->delete('/{food_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!FrcPortal\Auth::isAdmin()) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+
+        $event_id = $args['event_id'];
+        $food_id = $args['food_id'];
+        $food = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('food_id',$food_id)->delete();
+        if($food) {
+          $responseArr['status'] = true;
+          $responseArr['msg'] = 'Food option deleted';
+          $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
+        }
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->post('', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!FrcPortal\Auth::isAdmin()) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+
+        $event_id = $args['event_id'];
+        $food = new FrcPortal\EventFood();
+        $food->event_id = $event_id;
+        $food->group = $formData['group'];
+        $food->description = isset($formData['description']) ? $formData['description']:'';
+        if($food->save()) {
+          $responseArr['status'] = true;
+          $responseArr['msg'] = 'Food option created';
+          $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
+        }
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+    });
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
