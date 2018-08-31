@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('eventFoodModalController', ['$log','$element','$mdDialog', '$scope', 'eventsService','$mdToast','eventsService',
+.controller('eventFoodModalController', ['$log','$element','$mdDialog', '$scope', 'eventsService','$mdToast','eventsService','eventInfo',
 	eventFoodModalController
 ]);
-function eventFoodModalController($log,$element,$mdDialog,$scope,eventsService,$mdToast,eventsService) {
+function eventFoodModalController($log,$element,$mdDialog,$scope,eventsService,$mdToast,eventsService,eventInfo) {
 	var vm = this;
 
 	vm.cancel = function() {
