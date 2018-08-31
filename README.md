@@ -13,6 +13,7 @@ Version 2.10.0 (Current Dev Branch)
 * Add Event Requirements toggles on Event Admin page & add server side logic to update
 * Add button to test Slack notifications
 * Update search queries to use best practice
+* Add food options to event registration
 
 Version 2.9.0
 * Add Monolog to app

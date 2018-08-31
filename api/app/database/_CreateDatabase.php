@@ -16,6 +16,8 @@ include_once('EventRoom.php');
 include_once('EventRequirement.php');
 include_once('EventTimeSlot.php');
 include_once('EventTimeSlotUser.php');
+include_once('EventFood.php');
+include_once('EventFoodUser.php');
 
 //include_once('UserCategory.php');
 //include_once('UserUserCategory.php');

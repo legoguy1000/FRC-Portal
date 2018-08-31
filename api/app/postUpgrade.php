@@ -45,10 +45,26 @@ if($version >= '2.7.0') {
 }
 
 /**
-* 2.8.0
+* 2.10.0
 **/
-if($version >= '2.8.0') {
-  
+if($version >= '2.10.0') {
+  if(!Capsule::schema()->hasTable('event_food')) {
+    include_once('database/EventFood.php');
+    try {
+      Capsule::schema()->table('event_food', function ($table) {
+        $table->foreign('event_id')->references('event_id')->on('events')->onDelete('cascade')->onUpdate('cascade');
+      });
+    } catch (Exception $e) { }
+  }
+  if(!Capsule::schema()->hasTable('event_food_event_requirements')) {
+    include_once('database/EventFoodUser.php');
+    try {
+      Capsule::schema()->table('event_food_event_requirements', function ($table) {
+        $table->foreign('food_id')->references('food_id')->on('event_food')->onDelete('cascade')->onUpdate('cascade');
+        $table->foreign('ereq_id')->references('ereq_id')->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
+      });
+    } catch (Exception $e) { }
+  }
 }
 
 //Create User Category Tables

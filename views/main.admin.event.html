@@ -151,6 +151,10 @@
 						<md-tooltip md-direction="top">View/Edit Driver/Passenger list</md-tooltip>
 						<md-icon>directions_car</md-icon>
 					</md-button>
+					<md-button class="md-icon-button" ng-click="vm.showFoodListModal($event)" ng-show="vm.event.food_required">
+						<md-tooltip md-direction="top">Edit Food Options</md-tooltip>
+						<md-icon>fastfood</md-icon>
+					</md-button>
 					<md-button class="md-icon-button" ng-click="vm.showTimeSlotListModal($event)" ng-show="vm.event.time_slots_required">
 						<md-tooltip md-direction="top">View/Edit Time Slot list</md-tooltip>
 						<md-icon>access_time</md-icon>
