@@ -30,6 +30,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$ocLazyLoad.load('js/controllers/SeasonHoursGraphModalController.js');
 	$ocLazyLoad.load('js/controllers/roomListModalController.js');
 	$ocLazyLoad.load('js/controllers/carListModalController.js');
+	$ocLazyLoad.load('js/controllers/eventFoodModalController.js');
 	$ocLazyLoad.load('js/controllers/eventRegistrationModalController.js');
 	$ocLazyLoad.load('js/controllers/timeSlotModalController.js');
 	$ocLazyLoad.load('js/controllers/eventSearchModalController.js');
