@@ -807,7 +807,7 @@ $app->group('/events', function () {
         }
         $food_required = (bool) $event->food_required;
         if($food_required) {
-          $food_options = $event->load('event_food');
+          $food_options = (array) $event->load('event_food');
           $groups_count = count(array_unique(array_column($food_options,'group')));
           if(isset($formData['event_food']) && count($formData['event_food']) == $groups_count) {
             $food_ids = array_column($formData['event_food'], 'food_id');
