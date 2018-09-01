@@ -56,6 +56,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 				if(vm.registrationForm.event_time_slots == undefined) {
 					vm.registrationForm.event_time_slots = [];
 				}
+				vm.registrationForm.selected_food = {};
 				if(vm.event.food_required) {
 					var food = vm.registrationForm.event_food;
 					var len = food.length;
