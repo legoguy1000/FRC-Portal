@@ -523,7 +523,7 @@ $app->group('/events', function () {
         if($food) {
           $food->group = $formData['group'];
           $food->description = isset($formData['description']) ? $formData['description']:'';
-          if($timeSlot->save()) {
+          if($food->save()) {
             $responseArr['status'] = true;
             $responseArr['msg'] = 'Food option Updated';
             $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
