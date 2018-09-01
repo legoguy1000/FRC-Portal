@@ -1,4 +1,4 @@
-<md-dialog aria-label="Event Registration" style="" flex="30" >
+<md-dialog aria-label="Event Registration" style="" flex="40" >
 		<form layout="column" style="width:100%;" name="vm.registrationForm1" ng-submit="vm.registerForEvent()">
 			<md-toolbar layout="row">
 			  <div class="md-toolbar-tools">
@@ -149,7 +149,7 @@
 									<span style="margin-left:10px;">{{group}}</span>
 								</div>
 								<div flex>
-									<md-radio-group ng-model="">
+									<md-radio-group ng-model="vm.registrationForm.selected_food[group]">
 							      <md-radio-button ng-repeat="opt in options" ng-value="opt.description">{{opt.description}}</md-radio-button>
 							    </md-radio-group>
 								</div>

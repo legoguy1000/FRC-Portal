@@ -56,6 +56,15 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 				if(vm.registrationForm.event_time_slots == undefined) {
 					vm.registrationForm.event_time_slots = [];
 				}
+				if(vm.event.food_required) {
+					var food = vm.registrationForm.event_food;
+					var len = regs.length;
+					for (var i = 0; i < len; i++) {
+						var food_id = food[i].food_id;
+						var group = food[i].group;
+						vm.registrationForm.selected_food[group] = food_id;
+					}
+				}
 			}
 			vm.loading = false;
 		});
@@ -85,6 +94,21 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		});
 	};
 	vm.getEventFoodList();
+
+	vm.checkFoodReg = function() {
+		var index = false;
+		if(vm.event.food_required) {
+			var regs = vm.time_slots[ts_i].registrations;
+			var len = regs.length;
+			for (var i = 0; i < len; i++) {
+				if(regs[i].user_id == vm.userInfo.user_id) {
+					index = true;
+					break;
+				}
+			}
+		}
+		return index;
+	}
 
 	vm.checkTSReg = function(ts_i) {
 		var index = false;
