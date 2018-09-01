@@ -51,7 +51,7 @@ function eventFoodModalController($log,$element,$mdDialog,$scope,eventsService,$
 	};
 
 	vm.addNewFood = function () {
-		vm.promise =	eventsService.addNewEventFood(vm.formData).then(function(response) {
+		vm.promise =	eventsService.addEventFood(vm.formData).then(function(response) {
 			if(response.status) {
 				vm.formData = null;
 				vm.newFoodForm.$setPristine();
