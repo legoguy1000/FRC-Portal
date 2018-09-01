@@ -811,7 +811,7 @@ $app->group('/events', function () {
           $food_options = json_decode(json_encode($event->event_food), true);
           $groups_count = count(array_unique(array_column($food_options,'group')));
           if(isset($formData['event_food']) && count($formData['event_food']) == $groups_count) {
-            $food_ids = array_column($formData['event_food'], 'food_id');
+            $food_ids = array_values($formData['event_food']);
             $reqUpdate->event_food()->sync($food_ids);
           } else {
             $reqUpdate->event_food()->detach();
