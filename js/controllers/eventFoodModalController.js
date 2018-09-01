@@ -32,15 +32,15 @@ function eventFoodModalController($log,$element,$mdDialog,$scope,eventsService,$
 	};
 	vm.getEventFoodList();
 
-	vm.editFood = function (event_type) {
-		vm.eventFoodEdit = event_type.type_id;
+	vm.editFood = function (event_food) {
+		vm.eventFoodEdit = event_food.food_id;
 	};
 	vm.cancelEdit = function () {
 		vm.eventFoodEdit = null;
 	};
 
-	vm.updateFood = function (event_type) {
-		vm.promise =	eventsService.updateEventFood(event_type).then(function(response) {
+	vm.updateFood = function (event_food) {
+		vm.promise =	eventsService.updateEventFood(event_food).then(function(response) {
 			if(response.status) {
 				vm.eventFoodEdit = null;
 			}
@@ -75,8 +75,8 @@ function eventFoodModalController($log,$element,$mdDialog,$scope,eventsService,$
 		});
 	};
 
-	vm.deleteFood = function (event_type) {
-		vm.promise =	eventsService.deleteEventFood(event_type).then(function(response) {
+	vm.deleteFood = function (event_food) {
+		vm.promise =	eventsService.deleteEventFood(event_food).then(function(response) {
 			if(response.status) {
 				vm.event_food = response.data;
 			}

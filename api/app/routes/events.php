@@ -548,7 +548,7 @@ $app->group('/events', function () {
 
         $event_id = $args['event_id'];
         $food_id = $args['food_id'];
-        $food = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('food_id',$food_id)->delete();
+        $food = FrcPortal\EventFood::where('event_id',$event_id)->where('food_id',$food_id)->delete();
         if($food) {
           $responseArr['status'] = true;
           $responseArr['msg'] = 'Food option deleted';
