@@ -805,6 +805,20 @@ $app->group('/events', function () {
           $response = $response->withJson($responseArr);
           return $response;
         }
+        $food_required = (bool) $event->food_required;
+        if($food_required) {
+          $food_options = $event->load('event_food');
+          $groups_count = count(array_unique(array_column($food_options,'group')));
+          if(isset($formData['event_food']) && count($formData['event_food']) == $groups_count) {
+            $food_ids = array_column($formData['event_food'], 'food_id');
+            $reqUpdate->event_food()->sync($food_ids);
+          } else {
+            $reqUpdate->event_food()->detach();
+            $responseArr['msg'] = 'Please select 1 option for each section';
+            $response = $response->withJson($responseArr);
+            return $response;
+          }
+        }
         $msg = $user->full_name.' registered for '.$event->name;
       } else {
         $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->delete();

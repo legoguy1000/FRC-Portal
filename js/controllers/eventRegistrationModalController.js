@@ -31,7 +31,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			'comments': vm.registrationForm.comments,
 			'room_id': vm.registrationForm.room_id,
 			'event_time_slots': vm.registrationForm.event_time_slots,
-			'event_food': null
+			'event_food': vm.registrationForm.selected_food
 		};
 
 		eventsService.registerForEvent(data).then(function(response){
