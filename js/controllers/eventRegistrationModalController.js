@@ -12,6 +12,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 
 	vm.room_list = [];
 	vm.time_slots = [];
+	vm.food_list = [];
 
 	vm.cancel = function() {
 		$mdDialog.cancel();
@@ -30,6 +31,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			'comments': vm.registrationForm.comments,
 			'room_id': vm.registrationForm.room_id,
 			'event_time_slots': vm.registrationForm.event_time_slots,
+			'event_food': null
 		};
 
 		eventsService.registerForEvent(data).then(function(response){
@@ -75,6 +77,14 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		});
 	};
 	vm.getEventTimeSlotList();
+
+	//get Food options
+	vm.getEventFoodList = function () {
+		eventsService.getEventFoodList(vm.event.event_id).then(function(response) {
+			vm.food_list = response.data;
+		});
+	};
+	vm.getEventFoodList();
 
 	vm.checkTSReg = function(ts_i) {
 		var index = false;

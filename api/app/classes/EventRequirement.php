@@ -130,4 +130,10 @@ class EventRequirement extends Eloquent {
   public function event_time_slots() {
     return $this->belongsToMany('FrcPortal\EventTimeSlot', 'event_time_slots_event_requirements', 'ereq_id', 'time_slot_id');
   }
+  /**
+   * Get the Event Food Options.
+   */
+  public function event_food() {
+    return $this->belongsToMany('FrcPortal\EventFood', 'event_food_event_requirements', 'ereq_id', 'food_id');
+  }
 }

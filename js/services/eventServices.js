@@ -189,6 +189,13 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getEventFoodList: function (event_id) {
+			var event_id = event_id != undefined && event_id != null ? event_id:'';
+			return $http.get('api/events/'+event_id+'/food/list')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		addEventFood: function (formData) {
 			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
 			return $http.post('api/events/'+event_id+'/food',formData)

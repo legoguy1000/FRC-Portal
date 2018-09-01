@@ -503,6 +503,24 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
+      $this->get('/list', function ($request, $response, $args) {
+        $event_id = $args['event_id'];
+        $responseArr = array(
+          'status' => false,
+          'msg' => '',
+          'data' => null
+        );
+        $data = array();
+        $foods = FrcPortal\EventFood::where('event_id',$event_id)->get();
+        foreach($foods as $food) {
+          $group = $food['group'];
+          $data[$group] = $food;
+        }
+        $responseArr['data'] = $data;
+        $responseArr['status'] = true;
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
       $this->put('/{food_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
