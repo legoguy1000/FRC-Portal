@@ -60,6 +60,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 					var food = vm.registrationForm.event_food;
 					var len = food.length;
 					for (var i = 0; i < len; i++) {
+						console.log(food[i]);
 						var food_id = food[i].food_id;
 						var group = food[i].group;
 						vm.registrationForm.selected_food[group] = food_id;
