@@ -514,7 +514,7 @@ $app->group('/events', function () {
         $foods = FrcPortal\EventFood::where('event_id',$event_id)->get();
         foreach($foods as $food) {
           $group = $food['group'];
-          $data[$group] = $food;
+          $data[$group][] = $food;
         }
         $responseArr['data'] = $data;
         $responseArr['status'] = true;
