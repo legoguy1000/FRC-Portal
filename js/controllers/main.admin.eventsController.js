@@ -7,7 +7,7 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 
 	vm.selected = [];
 	vm.newEventModal = newEventModal;
-	
+
 	vm.filter = {
 		show: false,
 	};
@@ -93,8 +93,8 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 			fullscreen: true, // Only for -xs, -sm breakpoints.
 			locals: {	}
 		})
-		.then(function(response) {
-			vm.users = response.data;
+		.then(function() {
+
 		}, function() { });
 	};
 }

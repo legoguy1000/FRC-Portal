@@ -8,6 +8,9 @@ function eventFoodModalController($log,$element,$mdDialog,$scope,eventsService,$
 	vm.cancel = function() {
 		$mdDialog.cancel();
 	}
+	vm.hide = function() {
+		$mdDialog.hide();
+	}
 	vm.eventInfo = eventInfo;
 
 	vm.event_food = [];
@@ -23,7 +26,7 @@ function eventFoodModalController($log,$element,$mdDialog,$scope,eventsService,$
 	vm.formData = {};
 	//function get room list
 	vm.getEventFoodList = function () {
-		vm.promise =	eventsService.getEventFood().then(function(response){
+		vm.promise =	eventsService.getEventFood(vm.eventInfo.event_id).then(function(response){
 			vm.event_food = response.data;
 		});
 	};
@@ -51,7 +54,12 @@ function eventFoodModalController($log,$element,$mdDialog,$scope,eventsService,$
 	};
 
 	vm.addNewFood = function () {
-		vm.promise =	eventsService.addEventFood(vm.formData).then(function(response) {
+		var data = {
+			'event_id':vm.eventInfo.event_id,
+			'group': vm.formData.group,
+			'description': vm.formData.description,
+		}
+		vm.promise =	eventsService.addEventFood(data).then(function(response) {
 			if(response.status) {
 				vm.formData = null;
 				vm.newFoodForm.$setPristine();
