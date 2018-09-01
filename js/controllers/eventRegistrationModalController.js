@@ -58,7 +58,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 				}
 				if(vm.event.food_required) {
 					var food = vm.registrationForm.event_food;
-					var len = regs.length;
+					var len = food.length;
 					for (var i = 0; i < len; i++) {
 						var food_id = food[i].food_id;
 						var group = food[i].group;
