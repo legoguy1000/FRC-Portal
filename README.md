@@ -14,6 +14,7 @@ Version 2.10.0 (Current Dev Branch)
 * Add button to test Slack notifications
 * Update search queries to use best practice
 * Add food options to event registration
+* Add food order column to event admin page
 
 Version 2.9.0
 * Add Monolog to app
