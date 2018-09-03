@@ -64,12 +64,12 @@
 				<form flex ng-submit="vm.addNewFood()" name="vm.newFoodForm">
 					<div layout="column" layout-gt-sm="row" layout-align="start center">
 						<md-input-container flex>
-							<label>Food</label>
-							<input type="text" ng-model="vm.formData.group" required>
+							<label>Group (Day 1,2.. Lunch, Dinner..)</label>
+							<input type="text" ng-model="vm.formData.group">
 						</md-input-container>
 						<md-input-container class="" flex>
-							<label>Description</label>
-							<textarea ng-model="vm.formData.description" rows="1" md-select-on-focus></textarea>
+							<label>Food Option</label>
+							<textarea ng-model="vm.formData.description" rows="1" md-select-on-focus required></textarea>
 						</md-input-container>
 						<md-button type="submit" class="md-icon-button">
 							<md-icon class=""> add </md-icon>
