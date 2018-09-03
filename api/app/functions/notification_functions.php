@@ -78,6 +78,10 @@ function sendUserNotification($user_id, $type, $msgData)
 }
 
 function postToSlack($msg = '', $channel = null) {
+	$slack_enable = getSettingsProp('slack_enable');
+	if(!$slack_enable) {
+		return false;
+	}
 	$result = false;
 	$data = array(
 		'text'=>$msg

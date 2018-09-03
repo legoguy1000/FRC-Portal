@@ -167,7 +167,7 @@
 					</md-input-container>
 				</div>
 				<div class="layout-align-center-center layout-row">
-					<md-button type="button" class="md-raised md-primary"  ng-click="vm.testSlack()">
+					<md-button type="button" class="md-raised md-primary"  ng-click="vm.testSlack()" ng-disabled="!vm.settings.notification.slack_enable">
 						Test Slack Notification
 					</md-button>
 				</div>
