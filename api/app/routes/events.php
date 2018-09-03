@@ -807,10 +807,8 @@ $app->group('/events', function () {
         }
         $food_required = (bool) $event->food_required;
         if($food_required) {
-          $event = $event->load('event_food');
-          $food_options = json_decode(json_encode($event->event_food), true);
-          $groups_count = count(array_unique(array_column($food_options,'group')));
-          if(isset($formData['event_food']) && count($formData['event_food']) == $groups_count) {
+          $event_food_count = FrcPortal\EventFood::distinct('group')->where('event_id',$event_id)->count('group');
+          if(isset($formData['event_food']) && count($formData['event_food']) == $event_food_count) {
             $food_ids = array_values($formData['event_food']);
             $reqUpdate->event_food()->sync($food_ids);
           } else {
