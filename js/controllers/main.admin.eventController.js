@@ -40,14 +40,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 	vm.menuOptions = [
 		{
-			label: 'Toggle Event Registration',
-			onClick: function($event){
-				var user = $event.dataContext;
-				var req = 'registration';
-				var action = true;
-				vm.rcToggleEventReqs(user, req, action);
-			}
-		}, {
 			label: 'Edit Registration',
 			onClick: function($event){
 				var user = $event.dataContext;
@@ -55,6 +47,14 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		}, {
 			divider: true,
+		}, {
+			label: 'Toggle Event Registration',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'registration';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
+			}
 		}, {
 			label: 'Toggle Payment',
 			onClick: function($event){
