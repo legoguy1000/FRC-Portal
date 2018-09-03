@@ -146,7 +146,7 @@
 				    <v-pane-content>
 							<div layout="column" ng-repeat="(group,options) in vm.food_list">
 								<div flex layout="row" layout-align="start center" class="">
-									<span style="border-bottom: solid 2px; font-weight: bold;">{{group}}</span>
+									<span style="border-bottom: solid 2px; font-weight: bold; margin-bottom: 10px;">{{group}}</span>
 								</div>
 								<div flex>
 									<md-radio-group ng-model="vm.registrationForm.selected_food[group]">
