@@ -145,7 +145,7 @@
 				    </v-pane-header>
 				    <v-pane-content>
 							<div layout="column" ng-repeat="(group,options) in vm.food_list">
-								<div flex layout="row" layout-align="start center" class="" ng-if="vm.food_list.length == 1 && group == ''">
+								<div flex layout="row" layout-align="start center" class="" ng-hide="vm.food_list.length == 1 && group == ''">
 									<san style="border-bottom: solid 2px; font-weight: bold; margin-bottom: 10px;">{{group}}</span>
 								</div>
 								<div flex>
