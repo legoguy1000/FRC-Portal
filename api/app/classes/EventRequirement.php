@@ -81,9 +81,12 @@ class EventRequirement extends Eloquent {
     return isset($this->attributes['room_id']) && !is_null($this->attributes['room_id']);
   }
   public function getFoodBoolAttribute() {
-    $food_count = EventFood::distinct('group')->where('event_id',$this->attributes['event_id'])->count('group');
-    //$my_food = count($this->event_food);
-    return $food_count;
+    if(!is_null($this->attributes['event_id'])) {
+      $food_count = EventFood::distinct('group')->where('event_id',$this->attributes['event_id'])->count('group');
+      $my_food = count($this->event_food);
+      return $food_count == $my_food;
+    }
+    return false;
   }
 /*  public function getReqsCompleteAttribute() {
     $registration = $this->registration;
