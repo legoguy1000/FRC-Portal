@@ -117,14 +117,21 @@ class AnnualRequirement extends Eloquent {
     $data = array();
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
-      $hours = DB::table('meeting_hours')
-              ->leftJoin('seasons', function ($join) {
-                  $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))->on('meeting_hours.time_in', '>=', 'seasons.start_date')->on('meeting_hours.time_in', '<=', 'seasons.bag_day');
-              })
-              //->whereNull('exempt_hours.exempt_id')
-              ->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
-              ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
-              ->select(DB::raw('user_id, seasons.start_date, @week_hours := SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week, (@week_hours >= seasons.hour_requirement_week) as req_complete'))->groupBy('meeting_hours.user_id', 'week')->get();
+      $q = DB::table('meeting_hours')
+        ->leftJoin('seasons', function ($join) {
+        $join->where('seasons.season_id', '=', "5a16f3faaebb8")
+          ->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))
+          ->on('meeting_hours.time_in', '>=', 'seasons.start_date')
+          ->on('meeting_hours.time_in', '<=', 'seasons.bag_day');
+        })
+        ->where('meeting_hours.user_id','5a11bd670484e')
+        ->select(DB::raw('user_id, YEAR(meeting_hours.time_in) as year, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week'))->groupBy('meeting_hours.user_id', 'week');
+      $hours = DB::table(DB::raw("(" . $q->toSql() . ") as subtable"))
+        ->mergeBindings($q)
+        ->select(DB::raw('seasons.hour_requirement_week, seasons.start_date, subtable.*, (subtable.week_hours >= seasons.hour_requirement_week) as req_complete'))
+        ->leftJoin('seasons', function ($join) {
+          $join->on('subtable.year', 'seasons.year');
+        })->get();
     }
     if(!is_null($hours) && !empty($hours)) {
       $first = new DateTime();
