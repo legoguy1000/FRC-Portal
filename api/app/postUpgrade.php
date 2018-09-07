@@ -65,7 +65,7 @@ if($version >= '2.9.1') {
       });
     } catch (Exception $e) { }
   }
-  if(!Capsule::schema()->hasTable('seasons')) {
+  if(Capsule::schema()->hasTable('seasons')) {
     try {
       Capsule::schema()->table('seasons', function ($table) {
         $table->integer('hour_requirement_week');
