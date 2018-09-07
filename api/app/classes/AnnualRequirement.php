@@ -114,18 +114,28 @@ class AnnualRequirement extends Eloquent {
     //ON seasons.year=YEAR(meeting_hours.time_in) AND mh.time_in >= seasons.start_date AND mh.time_in <= seasons.bag_day
     //WHERE week(mh.time_in) = (WEEK(CURDATE())-30)
     //GROUP BY user_id,week
+    $data = array();
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
       $hours = DB::table('meeting_hours')
               ->leftJoin('seasons', function ($join) {
                   $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))->on('meeting_hours.time_in', '>=', 'seasons.start_date')->on('meeting_hours.time_in', '<=', 'seasons.bag_day');
               })
-                //->whereNull('exempt_hours.exempt_id')
-                ->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
-                ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
-                ->select(DB::raw('user_id, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as build_season_hours, week(meeting_hours.time_in,1) as week'))->groupBy('meeting_hours.user_id', 'week')->get();
+              //->whereNull('exempt_hours.exempt_id')
+              ->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
+              ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
+              ->select(DB::raw('user_id, seasons.start_date, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week, (week_hours >= seasons.hour_requirement_week) as req_complete'))->groupBy('meeting_hours.user_id', 'week')->get();
     }
-    return !is_null($hours) ? $hours : null;
+    if(!is_null($hours)) {
+      $first = new DateTime();
+      $second = new DateTime($hours[0]->start_date);
+      $num_weeks = floor($first->diff($second)->days/7);
+      $num_req_com = count(array_filter(array_column($hours,'req_complete')));
+      $all_complete = $num_weeks == $num_req_com;
+      $data['hours'] = $hours;
+      $data['reqs_complete'] = $all_complete;
+    }
+    return $data;
   }
   public function getCompetitionSeasonHoursAttribute() {
     //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS competition_season_hours, seasons.*
