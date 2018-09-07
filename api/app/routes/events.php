@@ -87,7 +87,7 @@ $app->group('/events', function () {
       $events = $service->events->listEvents($calendar, $optParams);
       while(true) {
         foreach ($events->getItems() as $event) {
-      		if($event->status == 'confirmed') {
+      	//	if($event->status == 'confirmed') {
             $temp = formatGoogleCalendarEventData($event);
             /*
       			$temp = array(
@@ -130,7 +130,7 @@ $app->group('/events', function () {
       			$temp['event_end_formatted'] = date('F j, Y',strtotime($temp['event_end'])); */
           	$temp['poc'] = FrcPortal\User::where('email',$event->creator->email)->orWhere('team_email',$event->creator->email)->first();
           	$allEvents[] = $temp;
-      		}
+      		//}
         }
         $pageToken = $events->getNextPageToken();
         if ($pageToken) {
