@@ -15,6 +15,7 @@ Version 2.10.0 (Current Dev Branch)
 * Update search queries to use best practice
 * Add food options to event registration
 * Add food order column to event admin page
+* Add additional search methods on Admin Users, Admin Season, Admin Event
 
 Version 2.9.0
 * Add Monolog to app
