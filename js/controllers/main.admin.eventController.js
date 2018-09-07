@@ -11,11 +11,11 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.loading = false;
 	vm.showFilter = function () {
 		vm.filter.show = true;
-		vm.query.filter = '';
+		vm.query.filter = {}};
 	};
 	vm.removeFilter = function () {
 		vm.filter.show = false;
-		vm.query.filter = '';
+		vm.query.filter = {}};
 
 		if(vm.filter.form.$dirty) {
 			vm.filter.form.$setPristine();
