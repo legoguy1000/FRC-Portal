@@ -31,7 +31,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	];
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
-		filter: '',
+		filter: {},
 		limit: 10,
 		order: 'full_name',
 		page: 1
