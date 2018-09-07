@@ -47,7 +47,7 @@ if($version >= '2.7.0') {
 /**
 * 2.10.0
 **/
-if($version >= '2.10.0') {
+if($version >= '2.9.1') {
   if(!Capsule::schema()->hasTable('event_food')) {
     include_once('database/EventFood.php');
     try {
