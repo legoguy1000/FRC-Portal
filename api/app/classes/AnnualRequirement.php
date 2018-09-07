@@ -52,7 +52,7 @@ class AnnualRequirement extends Eloquent {
     'dues' => 'boolean',
     'off_season_hours' => 'float',
     'build_season_hours' => 'float',
-    'weekly_build_season_hours' => 'float',
+    //'weekly_build_season_hours' => 'float',
     'competition_season_hours' => 'float',
     'total_hours' => 'float',
 //    'min_hours' => 'boolean',
