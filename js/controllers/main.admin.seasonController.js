@@ -11,11 +11,11 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	};
 	vm.showFilter = function () {
 		vm.filter.show = true;
-		vm.query.filter = '';
+		vm.query.filter = {};
 	};
 	vm.removeFilter = function () {
 		vm.filter.show = false;
-		vm.query.filter = '';
+		vm.query.filter = {};
 
 		if(vm.filter.form.$dirty) {
 			vm.filter.form.$setPristine();
@@ -23,14 +23,11 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	};
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
-		filter: {
-			'annual_requirements': {}
-		},
+		filter: {},
 		limit: 10,
 		order: 'full_name',
 		page: 1
 	};
-	vm.query.filter.$ = '';
 	vm.fabOpen = false;
 	vm.selectedUsers = [];
 	vm.season_id = $stateParams.season_id;
