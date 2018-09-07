@@ -22,7 +22,7 @@ class AnnualRequirement extends Eloquent {
   ];
 
 
-  protected $appends = ['off_season_hours','build_season_hours','competition_season_hours','event_hours','total_hours','min_hours','reqs_complete'];
+  protected $appends = ['off_season_hours','build_season_hours','weekly_build_season_hours','competition_season_hours','event_hours','total_hours','min_hours','reqs_complete'];
 
   protected $attributes = [
     'join_team' => false,
@@ -52,6 +52,7 @@ class AnnualRequirement extends Eloquent {
     'dues' => 'boolean',
     'off_season_hours' => 'float',
     'build_season_hours' => 'float',
+    'weekly_build_season_hours' => 'float',
     'competition_season_hours' => 'float',
     'total_hours' => 'float',
 //    'min_hours' => 'boolean',
