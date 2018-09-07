@@ -12,6 +12,7 @@ Capsule::schema()->create('seasons', function ($table) {
        $table->dateTime('bag_day');
        $table->dateTime('end_date');
        $table->integer('hour_requirement');
+       $table->integer('hour_requirement_week');
        $table->string('join_spreadsheet',500);
        $table->timestamps();
 });

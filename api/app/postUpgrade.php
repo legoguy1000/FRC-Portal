@@ -65,6 +65,14 @@ if($version >= '2.10.0') {
       });
     } catch (Exception $e) { }
   }
+  if(!Capsule::schema()->hasTable('seasons')) {
+    try {
+      Capsule::schema()->table('seasons', function ($table) {
+        $table->integer('hour_requirement_week');
+      });
+    } catch (Exception $e) { }
+  }
+
 }
 
 //Create User Category Tables

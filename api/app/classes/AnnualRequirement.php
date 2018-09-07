@@ -124,9 +124,9 @@ class AnnualRequirement extends Eloquent {
               //->whereNull('exempt_hours.exempt_id')
               ->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
               ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
-              ->select(DB::raw('user_id, seasons.start_date, @week_hours := SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week, (@week_hours >= 1) as req_complete'))->groupBy('meeting_hours.user_id', 'week')->get();
+              ->select(DB::raw('user_id, seasons.start_date, @week_hours := SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week, (@week_hours >= seasons.hour_requirement_week) as req_complete'))->groupBy('meeting_hours.user_id', 'week')->get();
     }
-    if(!is_null($hours)) {
+    if(!is_null($hours) && !empty($hours)) {
       $first = new DateTime();
       $second = new DateTime($hours[0]->start_date);
       $num_weeks = floor($first->diff($second)->days/7);

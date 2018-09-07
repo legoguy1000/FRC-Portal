@@ -17,7 +17,7 @@ class Season extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'season_id', 'year', 'game_name', 'game_logo', 'start_date','bag_day','end_date','hour_requirement','join_spreadsheet'
+    'season_id', 'year', 'game_name', 'game_logo', 'start_date','bag_day','end_date','hour_requirement','hour_requirement_week','join_spreadsheet'
   ];
 
 

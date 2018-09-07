@@ -89,6 +89,7 @@ $app->group('/seasons', function () {
       $season->game_logo = $formData['game_logo'];
       $season->game_name = $formData['game_name'];
       $season->hour_requirement = $formData['hour_requirement'];
+      $season->hour_requirement_week = $formData['hour_requirement_week'];
       $season->game_logo = $formData['game_logo'];
       if($season->save()) {
         $responseArr = array('status'=>true, 'msg'=>'Season Information Saved', 'data' => $season);
