@@ -111,7 +111,7 @@ class AnnualRequirement extends Eloquent {
   public function getWeeklyBuildSeasonHoursAttribute() {
     //SELECT user_id,IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, week(mh.time_in,1) as week from meeting_hours mh
     //LEFT JOIN seasons
-    //ON mh.time_in >= seasons.start_date AND mh.time_in <= seasons.bag_day
+    //ON seasons.year=YEAR(meeting_hours.time_in) AND mh.time_in >= seasons.start_date AND mh.time_in <= seasons.bag_day
     //WHERE week(mh.time_in) = (WEEK(CURDATE())-30)
     //GROUP BY user_id,week
     $hours = null;
