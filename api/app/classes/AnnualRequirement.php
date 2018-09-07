@@ -107,6 +107,25 @@ class AnnualRequirement extends Eloquent {
     }
     return !is_null($hours) ? (float) $hours->build_season_hours : 0;
   }
+  public function getWeeklyBuildSeasonHoursAttribute() {
+    //SELECT user_id,IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, week(mh.time_in,1) as week from meeting_hours mh
+    //LEFT JOIN seasons
+    //ON mh.time_in >= seasons.start_date AND mh.time_in <= seasons.bag_day
+    //WHERE week(mh.time_in) = (WEEK(CURDATE())-30)
+    //GROUP BY user_id,week
+    $hours = null;
+    if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
+      $hours = DB::table('meeting_hours')
+              ->leftJoin('seasons', function ($join) {
+                  $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))->on('meeting_hours.time_in', '>=', 'seasons.start_date')->on('meeting_hours.time_in', '<=', 'seasons.bag_day');
+              })
+                //->whereNull('exempt_hours.exempt_id')
+                ->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
+                ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
+                ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as build_season_hours, week(mh.time_in,1) as week'))->groupBy('meeting_hours.user_id', 'week');
+    }
+    return !is_null($hours) ? (float) $hours : null;
+  }
   public function getCompetitionSeasonHoursAttribute() {
     //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS competition_season_hours, seasons.*
     //FROM meeting_hours

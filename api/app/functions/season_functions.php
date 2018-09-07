@@ -139,9 +139,9 @@ function itterateMembershipFormData($data = array(), $season_id = null) {
 			if(is_null($user)) {
 				$school_id = '';
 				if($user_type == 'Student' && $school != '') {
-					$school_formated = str_replace('HS', 'High School', $school);
-					$school_formated = str_replace('MS', 'Middle School', $school_formated);
-					$school_formated = stripos($school_formated,' School') === false ? $school_formated.' School': $school_formated;
+					$school_formated = str_replace(' HS', ' High School', $school);
+					$school_formated = str_replace(' MS', ' Middle School', $school_formated);
+					//$school_formated = stripos($school_formated,' School') === false ? $school_formated.' School': $school_formated;
 					$school = FrcPortal\School::where('school_name','LIKE','%'.$school_formated.'%')->orWhere('abv','LIKE','%'.$school_formated.'%')->first();
 					if(!is_null($school)) {
 						$school_id = $school['school_id'];

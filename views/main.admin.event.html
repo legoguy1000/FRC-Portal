@@ -212,11 +212,78 @@
 				<div class="md-toolbar-tools">
 					<md-icon class="material-icons">search</md-icon>
 					<form flex name="filter.form" >
-						<input type="text" ng-model="vm.query.filter" placeholder="search" class="" aria-invalid="false">
+						<input type="text" ng-model="vm.query.filter.$" placeholder="search" class="" aria-invalid="false">
 					</form>
 					<md-button class="md-icon-button" ng-click="vm.removeFilter()">
 						<md-icon class="material-icons">close</md-icon>
 					</md-button>
+				</div>
+			</md-toolbar>
+			<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
+				<div class="md-toolbar-tools" layout="row">
+					<md-input-container class="" flex>
+						<label>Registration</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.registration">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Payment</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.payment">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Permission Slip</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.permission_slip">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Food Order</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.food">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Room</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.room_bool">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Car</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.car_bool">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Driving</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.can_drive">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
 				</div>
 			</md-toolbar>
 			<md-table-container> <!-- md-row-select multiple ng-model="vm.selectedUsers" -->
