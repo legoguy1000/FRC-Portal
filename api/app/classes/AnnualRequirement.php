@@ -125,7 +125,7 @@ class AnnualRequirement extends Eloquent {
                 ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
                 ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as build_season_hours, week(meeting_hours.time_in,1) as week'))->groupBy('meeting_hours.user_id', 'week')->get();
     }
-    return !is_null($hours) ? (float) $hours : null;
+    return !is_null($hours) ? $hours : null;
   }
   public function getCompetitionSeasonHoursAttribute() {
     //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS competition_season_hours, seasons.*
