@@ -30,6 +30,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		order: 'full_name',
 		page: 1
 	};
+	vm.query.filter.$ = '';
 	vm.fabOpen = false;
 	vm.selectedUsers = [];
 	vm.season_id = $stateParams.season_id;
