@@ -113,6 +113,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			'game_logo': vm.season.game_logo,
 			'game_name': vm.season.game_name,
 			'hour_requirement': vm.season.hour_requirement,
+			'hour_requirement_week': vm.season.hour_requirement_week,
 			'join_spreadsheet': vm.season.join_spreadsheet,
 		};
 		vm.promise = seasonsService.updateSeason(data).then(function(response){
