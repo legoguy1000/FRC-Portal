@@ -57,7 +57,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 					var user = $event.dataContext;
 					var req = 'join_team';
 					var action = true;
-					vm.rcToggleEventReqs(user, req, action);
+					vm.rcToggleAnnualReqs(user, req, action);
 				}
 			}, {
 				divider: true,
@@ -67,7 +67,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 					var user = $event.dataContext;
 					var req = 'stims';
 					var action = true;
-					vm.rcToggleEventReqs(user, req, action);
+					vm.rcToggleAnnualReqs(user, req, action);
 				}
 			}, {
 				label: 'Toggle Dues Payment',
@@ -75,12 +75,12 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 					var user = $event.dataContext;
 					var req = 'dues';
 					var action = true;
-					vm.rcToggleEventReqs(user, req, action);
+					vm.rcToggleAnnualReqs(user, req, action);
 				}
 			}
 		];
 
-		vm.rcToggleEventReqs = function(user, req, action) {
+		vm.rcToggleAnnualReqs = function(user, req, action) {
 			if(vm.selectedUsers.length > 1) {
 
 			} else if ((vm.selectedUsers.length == 1 && vm.selectedUsers[0].user_id == user.user_id) || vm.selectedUsers.length == 0) {
@@ -90,13 +90,13 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			}
 		}
 
-		vm.toggleEventReqs2 = function (users, req, action) {
+		vm.toggleAnnualReqs2 = function (users, req, action) {
 			var data = {
 				'season_id': vm.season_id,
 				'users': users,
 				'requirement':req,
 			}
-			vm.promise = eventsService.toggleEventReqs(data).then(function(response){
+			vm.promise = seasonsService.toggleAnnualReqs(data).then(function(response){
 				if(response.status && response.data) {
 					vm.users = response.data;
 				}
