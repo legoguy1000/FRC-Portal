@@ -17,6 +17,7 @@ Version 2.10.0 (Current Dev Branch)
 * Add food order column to event admin page
 * Add additional search methods on Admin Users, Admin Season, Admin Event
 * Add weekly minimum hour requirement
+* Update Composer
 
 Version 2.9.0
 * Add Monolog to app
