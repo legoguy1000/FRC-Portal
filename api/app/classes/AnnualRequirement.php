@@ -131,7 +131,7 @@ class AnnualRequirement extends Eloquent {
         ->select(DB::raw('seasons.hour_requirement_week, seasons.start_date, seasons.bag_day, subtable.*, (subtable.week_hours >= seasons.hour_requirement_week) as req_complete'))
         ->leftJoin('seasons', function ($join) {
           $join->on('subtable.year', 'seasons.year');
-        })->get();
+      })->havingRaw('subtable.week > WEEK(seasons.start_date,1) AND subtable.week < WEEK(seasons.bag_day,1)')->get();
     }
     if(!is_null($hours) && !empty($hours)) {
 		$start = $hours[0]->start_date;
@@ -140,11 +140,12 @@ class AnnualRequirement extends Eloquent {
 		if(time() < strtotime($end)) {
 			$end_week = date('W');
 		}
+    $end_week = $end_week - 1;
 		$start_week = date('W',strtotime($start));
-		$num_weeks = floor($end_week - $start_week) + 1;
+		$num_weeks = floor($end_week - $start_week);
     $hours_arr = (array) json_decode(json_encode($hours),true);
 		$num_req_com = count(array_filter(array_column($hours_arr,'req_complete')));
-		$all_complete = $num_weeks == $num_req_com;
+    $all_complete = $num_req_com >= $num_weeks;
 		$data['hours'] = $hours;
 		$data['reqs_complete'] = $all_complete;
     }
