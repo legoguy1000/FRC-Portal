@@ -4,43 +4,42 @@ $app->group('/users', function () {
   $this->get('', function ($request, $response, $args) {
     $users = array();
   	$data = array();
-
+    $searchProperties = array(
+      'name' => '',
+      'user_type' => '',
+      'school' => '',
+      'email' => '',
+      'gender' => '',
+      'status' => true,
+    );
     $filter = $request->getParam('filter') !== null ? $request->getParam('filter'):'';
     $limit = $request->getParam('limit') !== null ? $request->getParam('limit'):10;
     $order = $request->getParam('order') !== null ? $request->getParam('order'):'full_name';
     $page = $request->getParam('page') !== null ? $request->getParam('page'):1;
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
+    $search = $request->getParam('search') !== null ? $request->getParam('search'):$searchProperties;
 
     $queryArr = array();
-  	$queryStr = '';
-  	if($filter != '') {
-  		if($filter == strtolower('active')) {
-  			$queryArr[] = '(users.status = "1")';
-  		} elseif($filter == strtolower('inactive')) {
-  			$queryArr[] = '(users.status = "0")';
-  		} else {
-  		//	$queryArr[] = '(users.fname LIKE '.db_quote('%'.$filter.'%').')';
-  		//	$queryArr[] = '(users.lname LIKE '.db_quote('%'.$filter.'%').')';
-  			$queryArr[] = '(users.email LIKE "%'.$filter.'%")';
-  			$queryArr[] = '(users.user_type LIKE "%'.$filter.'%")';
-  			$queryArr[] = '(users.gender = "'.$filter.'")';
-  			$queryArr[] = '(full_name LIKE "%'.$filter.'%")';
-  			$queryArr[] = '(schools.school_name LIKE "%'.$filter.'%")';
-  			$queryArr[] = '(schools.abv LIKE "%'.$filter.'%")';
-  			$queryArr[] = '(student_grade LIKE "%'.$filter.'%")';
-  		}
-  	}
-    $totalNum = 0;
-  	if(count($queryArr) > 0) {
-  		$queryStr = implode(' OR ',$queryArr);
-      $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->havingRaw($queryStr)->get();
-      $totalNum = count($users);
-  	} else {
-      $totalNum = FrcPortal\User::count();
+    $queryArr2 = array();
+    if(isset($search['user_type']) && $search['user_type'] != '') {
+      $queryArr2[] = array('user_type', '=', $search['user_type']);
     }
-
-
-
+    if(isset($search['status']) && $search['status'] != '') {
+      $bool = $search['status'] == 'true' ? '1': '0';
+      $queryArr2[] = array('status', '=', $bool);
+    //  die($bool );
+    }
+    $totalNum = 0;
+    $users = FrcPortal\User::leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->where($queryArr2);
+  	if($filter != '') {
+      $users = $users->orHavingRaw('email LIKE ?',array('%'.$filter.'%'));
+      $users = $users->orHavingRaw('full_name LIKE ?',array('%'.$filter.'%'));
+      $users = $users->orHavingRaw('schools.school_name LIKE ?',array('%'.$filter.'%'));
+      $users = $users->orHavingRaw('schools.abv LIKE ?',array('%'.$filter.'%'));
+      $users = $users->orHavingRaw('student_grade LIKE ?',array('%'.$filter.'%'));
+      $users = $users->orHavingRaw('gender = ?',array('%'.$filter.'%'));
+    }
+    $totalNum = count($users->get());
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
   	if(in_array($orderCol,array('full_name','fname','lname','email','user_type','gender','school_name'))) {
@@ -57,18 +56,14 @@ $app->group('/users', function () {
       $limit = $totalNum;
     }
 
-    if($filter != '' ) {
-      $users = FrcPortal\User::with('school')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    } else {
-      $users = FrcPortal\User::with('school')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    }
+    $users = $users->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
 
     $data['data'] = $users;
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
     $data['status'] =true;
-    $data['msg'] = '';
+    $data['msg'] = $queryArr;
     if($listOnly) {
       $data = $users;
     }
@@ -126,7 +121,7 @@ $app->group('/users', function () {
         $this->get('', function ($request, $response, $args) {
           $user_id = $args['user_id'];
           $event_id = $args['event_id'];
-          $user = FrcPortal\Event::with(['event_requirements.event_cars.passengers', 'event_requirements.event_rooms.users', 'event_requirements.event_time_slots', 'event_requirements' => function ($query) use ($user_id) {
+          $user = FrcPortal\Event::with(['event_requirements.event_cars.passengers', 'event_requirements.event_rooms.users', 'event_requirements.event_time_slots', 'event_requirements.event_food', 'event_requirements' => function ($query) use ($user_id) {
                     $query->where('user_id',$user_id); // fields from comments table,
                   }])->where('event_id',$event_id)->first();
           $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);

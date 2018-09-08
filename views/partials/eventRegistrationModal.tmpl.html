@@ -1,4 +1,4 @@
-<md-dialog aria-label="Event Registration" style="" flex="30" >
+<md-dialog aria-label="Event Registration" style="" flex="40" >
 		<form layout="column" style="width:100%;" name="vm.registrationForm1" ng-submit="vm.registerForEvent()">
 			<md-toolbar layout="row">
 			  <div class="md-toolbar-tools">
@@ -135,6 +135,23 @@
 											<span>Select Room</span>
 										</md-button>
 									</div>
+								</div>
+							</div>
+			    	</v-pane-content>
+				  </v-pane>
+					<v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.food_required">
+				    <v-pane-header>
+				      Food Options
+				    </v-pane-header>
+				    <v-pane-content>
+							<div layout="column" ng-repeat="(group,options) in vm.food_list">
+								<div flex layout="row" layout-align="start center" class="" ng-hide="vm.food_list.length == 1 && group == ''">
+									<san style="border-bottom: solid 2px; font-weight: bold; margin-bottom: 10px;">{{group}}</span>
+								</div>
+								<div flex>
+									<md-radio-group ng-model="vm.registrationForm.selected_food[group]">
+							      <md-radio-button ng-repeat="opt in options" ng-value="opt.food_id">{{opt.description}}</md-radio-button>
+							    </md-radio-group>
 								</div>
 							</div>
 			    	</v-pane-content>

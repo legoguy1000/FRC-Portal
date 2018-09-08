@@ -2,9 +2,21 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-<!---
+
 Version 2.10.0 (Current Dev Branch)
--->
+* Added button to download latest responses from Google form
+* Organized functions to poll Membership Form
+* Updated Change User Status cronjob to execute on the last day of month
+* Re-added google maps embed to event page
+* Update look of Login Settings page
+* Minor style changes
+* Add Event Requirements toggles on Event Admin page & add server side logic to update
+* Add button to test Slack notifications
+* Update search queries to use best practice
+* Add food options to event registration
+* Add food order column to event admin page
+* Add additional search methods on Admin Users, Admin Season, Admin Event
+* Add weekly minimum hour requirement
 
 Version 2.9.0
 * Add Monolog to app

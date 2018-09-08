@@ -58,5 +58,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		testSlack: function () {
+			return $http.post('api/settings/testSlack')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

@@ -232,6 +232,29 @@ $app->group('/settings', function () {
       return $response;
     });
   });
+  $this->post('/testSlack', function ($request, $response, $args) {
+    $userId = FrcPortal\Auth::user()->user_id;
+    $responseArr = array(
+      'status' => false,
+      'msg' => 'Something went wrong',
+      'data' => null
+    );
+    if(!FrcPortal\Auth::isAdmin()) {
+      $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+      $response = $response->withJson($responseArr,403);
+      return $response;
+    }
+    $slackMsg = 'Test Slack notification.';
+    if(slackMessageToUser($userId, $slackMsg)) {
+      $responseArr = array(
+        'status' => true,
+        'msg' => 'Test Slack notification sent',
+        'data' => null
+      );
+    }
+    $response = $response->withJson($responseArr);
+    return $response;
+  });
   $this->post('', function ($request, $response, $args) {
 
     $response = $response->withJson($responseArr);

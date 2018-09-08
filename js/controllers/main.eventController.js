@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','configItems',
+.controller('main.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','configItems','$sce',
 	mainEventController
 ]);
-function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,configItems) {
+function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,configItems,$sce) {
     var vm = this;
 
 		vm.registrationFormVisible = false;
@@ -21,6 +21,7 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 				vm.event = response.data;
 				$scope.main.title += ' - '+vm.event.name;
 			});
+
 		};
 
 		vm.getEvent();
@@ -30,6 +31,10 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 			limit: 5,
 			order: 'full_name',
 			page: 1
+		};
+
+		vm.getMapsSrc = function () {
+			return $sce.trustAsResourceUrl('https://maps.google.com/maps?q='+vm.event.location+'&t=m&z=12&output=embed&iwloc=near');
 		};
 
 		vm.showRegistrationForm = function(ev) {

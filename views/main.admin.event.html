@@ -94,17 +94,44 @@
 	        </md-item-template>
 	      </md-autocomplete>
 		</div>
-			<md-input-container flex class="md-icon-float md-block md-icon-left">
-        <label>Details</label>
-				<md-icon md-font-library="material-icons">event_note</md-icon>
-        <div ng-bind-html="vm.event.details | parseUrlFilter:'_blank'" style="margin-top: 30px; white-space: pre-wrap;"></div>
-      </md-input-container>
-			<div flex layout="row">
-				<span flex></span>
-				<md-button type="submit" class="md-raised md-primary">
-					Submit
-				</md-button>
-			</div>
+		<div layout="column">
+			<v-accordion class="vAccordion--default">
+				<!-- add expanded attribute to open the section -->
+				<v-pane>
+					<v-pane-header>
+						Event Requirements
+					</v-pane-header>
+					<v-pane-content layout="column">
+						<md-switch class="md-primary"  ng-model="vm.event.payment_required">
+						 Payment Required
+						</md-switch>
+						<md-switch class="md-primary"  ng-model="vm.event.permission_slip_required">
+						 Permission Slip Required
+						</md-switch>
+						<md-switch class="md-primary"  ng-model="vm.event.food_required">
+						 Food Order Required
+						</md-switch>
+						<md-switch class="md-primary"  ng-model="vm.event.room_required">
+							Lodging Required
+						</md-switch>
+						<md-switch class="md-primary"  ng-model="vm.event.drivers_required">
+							Drivers Required
+						</md-switch>
+					</v-pane-content>
+				</v-pane>
+			</v-accordion>
+		</div>
+		<md-input-container flex class="md-icon-float md-block md-icon-left">
+      <label>Details</label>
+			<md-icon md-font-library="material-icons">event_note</md-icon>
+      <div ng-bind-html="vm.event.details | parseUrlFilter:'_blank'" style="margin-top: 30px; white-space: pre-wrap;"></div>
+    </md-input-container>
+		<div flex layout="row">
+			<span flex></span>
+			<md-button type="submit" class="md-raised md-primary">
+				Submit
+			</md-button>
+		</div>
 		</form>
 	</md-content>
 	<md-content flex="grow" class="md-margin" layout="column">
@@ -123,6 +150,10 @@
 					<md-button class="md-icon-button" ng-click="vm.showCarListModal($event)" ng-show="vm.event.drivers_required">
 						<md-tooltip md-direction="top">View/Edit Driver/Passenger list</md-tooltip>
 						<md-icon>directions_car</md-icon>
+					</md-button>
+					<md-button class="md-icon-button" ng-click="vm.showFoodListModal($event)" ng-show="vm.event.food_required">
+						<md-tooltip md-direction="top">Edit Food Options</md-tooltip>
+						<md-icon>local_dining</md-icon>
 					</md-button>
 					<md-button class="md-icon-button" ng-click="vm.showTimeSlotListModal($event)" ng-show="vm.event.time_slots_required">
 						<md-tooltip md-direction="top">View/Edit Time Slot list</md-tooltip>
@@ -160,13 +191,6 @@
 								</md-button>
 							</md-menu-item>
 							<md-menu-item>
-								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleEventReqs('food')" ng-disabled="vm.selectedUsers.length == 0 || !vm.event.food_required">
-									<md-tooltip md-direction="left" md-autohide="false">Toggle Food Status</md-tooltip>
-									<md-icon class="material-icons">local_dining</md-icon>
-									Toggle Food
-								</md-button>
-							</md-menu-item>
-							<md-menu-item>
 								<md-button aria-label="Confirm Attendance" ng-click="" ng-disabled="vm.selectedUsers.length == 0 || (vm.currentTime < vm.event.event_end_unix*1000)">
 									<md-tooltip md-direction="left" md-autohide="false">Toggle Attendance Confirmation</md-tooltip>
 									<md-icon class="material-icons">timelapse</md-icon>
@@ -181,11 +205,78 @@
 				<div class="md-toolbar-tools">
 					<md-icon class="material-icons">search</md-icon>
 					<form flex name="filter.form" >
-						<input type="text" ng-model="vm.query.filter" placeholder="search" class="" aria-invalid="false">
+						<input type="text" ng-model="vm.query.filter.$" placeholder="search" class="" aria-invalid="false">
 					</form>
 					<md-button class="md-icon-button" ng-click="vm.removeFilter()">
 						<md-icon class="material-icons">close</md-icon>
 					</md-button>
+				</div>
+			</md-toolbar>
+			<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
+				<div class="md-toolbar-tools" layout="row">
+					<md-input-container class="" flex>
+						<label>Registration</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.registration">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Payment</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.payment">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Permission Slip</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.permission_slip">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Food Order</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.food">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Room</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.room_bool">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Car</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.car_bool">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Driving</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.event_requirements.can_drive">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
 				</div>
 			</md-toolbar>
 			<md-table-container> <!-- md-row-select multiple ng-model="vm.selectedUsers" -->
@@ -230,8 +321,8 @@
 								<i class="material-icons" style="" ng-hide="user.user_type == 'Student'">remove_circle_outline</i>
 							</td>
 							<td md-cell ng-show="vm.event.food_required">
-								<i class="material-icons" style="color:green;" ng-show="user.event_requirements.food">check_circle</i>
-								<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.food">remove_circle</i>
+								<i class="material-icons" style="color:green;" ng-show="user.event_requirements.food_bool">check_circle</i>
+								<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.food_bool">remove_circle</i>
 							</td>
 							<td md-cell ng-show="vm.event.room_required">
 								<i class="material-icons" style="color:green;" ng-show="user.event_requirements.room_bool">check_circle</i>

@@ -13,28 +13,17 @@ $app->group('/events', function () {
 
 
     $totalNum = 0;
-    $queryArr = array();
-  	$queryStr = '';
+    $events = new FrcPortal\Event();
   	if($filter != '') {
-      $queryArr[] = '(events.name LIKE "%'.$filter.'%")';
-      $queryArr[] = '(events.type LIKE "%'.$filter.'%")';
-      $queryArr[] = '(events.event_start LIKE "%'.$filter.'%")';
-      $queryArr[] = '(events.event_end LIKE "%'.$filter.'%")';
-      //$queryArr[] = '(seasons.game_name LIKE "%'.$filter.'%")';
-      //$queryArr[] = '(seasons.year LIKE "%'.$filter.'%")';
-      //Date Filters
-      $queryArr[] = '(YEAR(events.event_start) LIKE "%'.$filter.'%")';
-      $queryArr[] = '(MONTHNAME(events.event_start) LIKE "%'.$filter.'%")';
-      $queryArr[] = '(MONTHNAME(events.event_end) LIKE "%'.$filter.'%")';
-  	}
-
-  	if(count($queryArr) > 0) {
-  		$queryStr = implode(' OR ',$queryArr);
-      $events = FrcPortal\Event::havingRaw($queryStr)->get();
-      $totalNum = count($events);
-  	} else {
-      $totalNum = FrcPortal\Event::count();
+      $events = $events->orHavingRaw('name LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('type LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('event_start LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('event_end LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('YEAR(events.event_start) LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('MONTHNAME(events.event_start) LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('MONTHNAME(events.event_end) LIKE ?',array('%'.$filter.'%'));
     }
+    $totalNum = count($events->get());
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
@@ -51,12 +40,7 @@ $app->group('/events', function () {
   	} elseif($limit == 0) {
       $limit = $totalNum;
     }
-
-    if($filter != '' ) {
-      $events = FrcPortal\Event::havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    } else {
-      $events = FrcPortal\Event::orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    }
+    $events = $events->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
     $data['data'] = $events;
     $data['total'] = $totalNum;
@@ -248,14 +232,14 @@ $app->group('/events', function () {
           $carArr = $formData['cars'][$car_id];
           $userArr = array_column($carArr, 'user_id');
           if(!empty($userArr) && count($userArr) <= $car['car_space']) {
-            $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
+            $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
         	}
         }
         //Not Assigned a car
         $carArr = $formData['cars']['non_select'];
         $userArr = array_column($carArr, 'user_id');
         if(!empty($userArr)) {
-          $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => null]);
+          $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => null]);
         }
         $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                             $query->where('event_id','=',$event_id);
@@ -353,14 +337,14 @@ $app->group('/events', function () {
           $roomArr = $formData['rooms'][$room_id];
           $userArr = array_column($roomArr, 'user_id');
           if(!empty($userArr) && count($userArr) <= 4) {
-            $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
+            $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
           }
         }
         //Not Assigned a car
         $roomArr = $formData['rooms']['non_select'];
         $userArr = array_column($roomArr, 'user_id');
         if(!empty($userArr)) {
-          $users = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
+          $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
         }
         $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                             $query->where('event_id','=',$event_id);
@@ -506,6 +490,119 @@ $app->group('/events', function () {
         return $response;
       });
     });
+    $this->group('/food', function () {
+      $this->get('', function ($request, $response, $args) {
+        $event_id = $args['event_id'];
+        $responseArr = array(
+          'status' => false,
+          'msg' => '',
+          'data' => null
+        );
+        $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
+        $responseArr['status'] = true;
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->get('/list', function ($request, $response, $args) {
+        $event_id = $args['event_id'];
+        $responseArr = array(
+          'status' => false,
+          'msg' => '',
+          'data' => null
+        );
+        $data = array();
+        $foods = FrcPortal\EventFood::where('event_id',$event_id)->get();
+        foreach($foods as $food) {
+          $group = $food['group'];
+          $data[$group][] = $food;
+        }
+        $responseArr['data'] = $data;
+        $responseArr['status'] = true;
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->put('/{food_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!FrcPortal\Auth::isAdmin()) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+
+        $event_id = $args['event_id'];
+        $food_id = $args['food_id'];
+        $food = FrcPortal\EventFood::where('event_id',$event_id)->where('food_id',$food_id)->first();
+        if($food) {
+          $food->group = isset($formData['group']) ? $formData['group']:'';
+          $food->description = isset($formData['description']) ? $formData['description']:'';
+          if($food->save()) {
+            $responseArr['status'] = true;
+            $responseArr['msg'] = 'Food option Updated';
+            $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
+          }
+        }
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->delete('/{food_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!FrcPortal\Auth::isAdmin()) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+
+        $event_id = $args['event_id'];
+        $food_id = $args['food_id'];
+        $food = FrcPortal\EventFood::where('event_id',$event_id)->where('food_id',$food_id)->delete();
+        if($food) {
+          $responseArr['status'] = true;
+          $responseArr['msg'] = 'Food option deleted';
+          $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
+        }
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->post('', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = array(
+          'status' => false,
+          'msg' => 'Something went wrong',
+          'data' => null
+        );
+        if(!FrcPortal\Auth::isAdmin()) {
+          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+          $response = $response->withJson($responseArr,403);
+          return $response;
+        }
+
+        $event_id = $args['event_id'];
+        $food = new FrcPortal\EventFood();
+        $food->event_id = $event_id;
+        $food->group = isset($formData['group']) ? $formData['group']:'';
+        $food->description = isset($formData['description']) ? $formData['description']:'';
+        if($food->save()) {
+          $responseArr['status'] = true;
+          $responseArr['msg'] = 'Food option created';
+          $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
+        }
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+    });
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -532,6 +629,13 @@ $app->group('/events', function () {
         $event->registration_deadline = null;
       }
       $event->registration_deadline_gcalid = isset($formData['registration_deadline_gcalid']) && $formData['registration_deadline_gcalid'] != '' ? $formData['registration_deadline_gcalid']:null;
+
+      $eventReqs = isset($formData['requirements']) ? $formData['requirements'] : null;
+      if(!is_null($eventReqs)) {
+        foreach($eventReqs as $req=>$val) {
+          $event->{$req} = $val;
+        }
+      }
       if($event->save()) {
         $event->load('poc');
         $responseArr = array('status'=>true, 'msg'=>'Event Information Saved', 'data' => $event);
@@ -588,8 +692,8 @@ $app->group('/events', function () {
       $event = FrcPortal\Event::find($event_id);
       $array = array();
       $req = $formData['requirement'];
-      $users = $formData['users'];
-      foreach($users as $user) {
+      $events = $formData['users'];
+      foreach($events as $user) {
         $user_id = $user['user_id'];
         $cur = isset($user['event_requirements'][$req]) ? $user['event_requirements'][$req] : false;
         $new = !$cur;
@@ -700,6 +804,19 @@ $app->group('/events', function () {
           $responseArr['msg'] = 'Please select at least 1 time';
           $response = $response->withJson($responseArr);
           return $response;
+        }
+        $food_required = (bool) $event->food_required;
+        if($food_required) {
+          $event_food_count = FrcPortal\EventFood::distinct('group')->where('event_id',$event_id)->count('group');
+          if(isset($formData['event_food']) && count($formData['event_food']) == $event_food_count) {
+            $food_ids = array_values($formData['event_food']);
+            $reqUpdate->event_food()->sync($food_ids);
+          } else {
+            $reqUpdate->event_food()->detach();
+            $responseArr['msg'] = 'Please select 1 option for each section';
+            $response = $response->withJson($responseArr);
+            return $response;
+          }
         }
         $msg = $user->full_name.' registered for '.$event->name;
       } else {

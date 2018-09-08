@@ -11,11 +11,11 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	};
 	vm.showFilter = function () {
 		vm.filter.show = true;
-		vm.query.filter = '';
+		vm.query.filter = {};
 	};
 	vm.removeFilter = function () {
 		vm.filter.show = false;
-		vm.query.filter = '';
+		vm.query.filter = {};
 
 		if(vm.filter.form.$dirty) {
 			vm.filter.form.$setPristine();
@@ -23,7 +23,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	};
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
-		filter: '',
+		filter: {},
 		limit: 10,
 		order: 'full_name',
 		page: 1
@@ -50,6 +50,64 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	}
 	vm.getUserAnnualRequirements();
 
+	vm.menuOptions = [
+			{
+				label: 'Toggle Annual Team Registration',
+				onClick: function($event){
+					var user = $event.dataContext;
+					var req = 'join_team';
+					var action = true;
+					vm.rcToggleAnnualReqs(user, req, action);
+				}
+			}, {
+				divider: true,
+			}, {
+				label: 'Toggle STIMS/TIMS Completetion',
+				onClick: function($event){
+					var user = $event.dataContext;
+					var req = 'stims';
+					var action = true;
+					vm.rcToggleAnnualReqs(user, req, action);
+				}
+			}, {
+				label: 'Toggle Dues Payment',
+				onClick: function($event){
+					var user = $event.dataContext;
+					var req = 'dues';
+					var action = true;
+					vm.rcToggleAnnualReqs(user, req, action);
+				}
+			}
+		];
+
+		vm.rcToggleAnnualReqs = function(user, req, action) {
+			if(vm.selectedUsers.length > 1) {
+
+			} else if ((vm.selectedUsers.length == 1 && vm.selectedUsers[0].user_id == user.user_id) || vm.selectedUsers.length == 0) {
+				var users = [];
+				users.push(user);
+				vm.toggleAnnualReqs2(users, req, action);
+			}
+		}
+
+		vm.toggleAnnualReqs2 = function (users, req, action) {
+			var data = {
+				'season_id': vm.season_id,
+				'users': users,
+				'requirement':req,
+			}
+			vm.promise = seasonsService.toggleAnnualReqs(data).then(function(response){
+				if(response.status && response.data) {
+					vm.users = response.data;
+				}
+				$mdToast.show(
+		      $mdToast.simple()
+		        .textContent(response.msg)
+		        .position('top right')
+		        .hideDelay(3000)
+		    );
+			});
+		};
 
 	vm.toggleAnnualReqs = function (req) {
 		var data = {
@@ -86,17 +144,34 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		});
 	};
 
+	vm.pollMembershipForm = function () {
+		vm.loading = true;
+		seasonsService.pollMembershipForm(vm.season.season_id).then(function(response){
+			if(response.status) {
+				vm.users = response.data;
+			}
+			vm.loading = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+		});
+	};
+
 	vm.updateSeason = function () {
 		vm.loading = true;
 		var data = {
 			'year': vm.season.year,
 			'season_id': vm.season.season_id,
-			'start_date': vm.season.start_date_formatted,
-			'bag_day': vm.season.bag_day_formatted,
-			'end_date': vm.season.end_date_formatted,
+			'start_date': vm.season.date.start.long_date,
+			'bag_day': vm.season.date.bag.long_date,
+			'end_date': vm.season.date.end.long_date,
 			'game_logo': vm.season.game_logo,
 			'game_name': vm.season.game_name,
 			'hour_requirement': vm.season.hour_requirement,
+			'hour_requirement_week': vm.season.hour_requirement_week,
 			'join_spreadsheet': vm.season.join_spreadsheet,
 		};
 		vm.promise = seasonsService.updateSeason(data).then(function(response){

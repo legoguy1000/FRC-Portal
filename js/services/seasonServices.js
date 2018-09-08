@@ -40,6 +40,12 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		pollMembershipForm: function (season_id) {
+			return $http.put('api/seasons/'+season_id+'/pollMembershipForm')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		updateSeason: function (formData) {
 			var season_id = formData.season_id != undefined && formData.season_id != null ? formData.season_id:'';
 			return $http.put('api/seasons/'+season_id,formData)

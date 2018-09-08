@@ -21,7 +21,7 @@ class EventRequirement extends Eloquent {
   ];
 
 
-  protected $appends = ['car_bool','room_bool'];
+  protected $appends = ['car_bool','room_bool', 'food_bool'];
 
   protected $attributes = [
     'user_id' => null,
@@ -58,6 +58,7 @@ class EventRequirement extends Eloquent {
     'can_drive' => 'boolean',
     'car_bool' => 'boolean',
     'room_bool' => 'boolean',
+    'food_bool' => 'boolean',
   ];
 
   public function save($options = array()) {
@@ -78,6 +79,14 @@ class EventRequirement extends Eloquent {
   }
   public function getRoomBoolAttribute() {
     return isset($this->attributes['room_id']) && !is_null($this->attributes['room_id']);
+  }
+  public function getFoodBoolAttribute() {
+    if(!is_null($this->attributes['event_id'])) {
+      $food_count = EventFood::distinct('group')->where('event_id',$this->attributes['event_id'])->count('group');
+      $my_food = count($this->event_food);
+      return $food_count == $my_food;
+    }
+    return false;
   }
 /*  public function getReqsCompleteAttribute() {
     $registration = $this->registration;
@@ -125,5 +134,11 @@ class EventRequirement extends Eloquent {
    */
   public function event_time_slots() {
     return $this->belongsToMany('FrcPortal\EventTimeSlot', 'event_time_slots_event_requirements', 'ereq_id', 'time_slot_id');
+  }
+  /**
+   * Get the Event Food Options.
+   */
+  public function event_food() {
+    return $this->belongsToMany('FrcPortal\EventFood', 'event_food_event_requirements', 'ereq_id', 'food_id');
   }
 }

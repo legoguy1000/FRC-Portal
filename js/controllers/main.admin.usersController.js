@@ -13,7 +13,15 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 		filter: '',
 		limit: 10,
 		order: 'full_name',
-		page: 1
+		page: 1,
+		search: {
+			name: '',
+			user_type: '',
+			school: '',
+			email: '',
+			gender: '',
+			status: true,
+		}
 	};
 	vm.users = [];
 	vm.limitOptions = [10,25,50,100];
@@ -32,7 +40,24 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 	};
 
 	var timeoutPromise;
-	$scope.$watch('vm.query.filter', function (newValue, oldValue) {
+	$scope.$watchGroup(['vm.query.filter', 'vm.query.search.status','vm.query.search.user_type'], function(newValues, oldValues, scope) {
+		//console.log(newValues);
+		//console.log(oldValues);
+		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
+		if(!oldValues) {
+			bookmark = vm.query.page;
+		}
+		if(newValues !== oldValues) {
+			vm.query.page = 1;
+		}
+		if(!newValues) {
+			vm.query.page = bookmark;
+		}
+		timeoutPromise = $timeout(function(){   //Set timeout
+			vm.getUsers();
+		},500);
+	});
+	/*$scope.$watch('vm.query.filter', function (newValue, oldValue) {
 		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
 		if(!oldValue) {
 			bookmark = vm.query.page;
@@ -47,7 +72,7 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 			vm.getUsers();
 		},500);
 
-	});
+	}); */
 
 	vm.getUsers = function () {
 		vm.promise = usersService.getAllUsersFilter($.param(vm.query)).then(function(response){

@@ -58,9 +58,14 @@
 				</input>
 			</md-input-container>
 			<md-input-container flex class="md-icon-float md-block">
-				<label>Min Hour Requirement </label>
+				<label>Total Hour Requirement </label>
 				<md-icon md-font-library="material-icons">access_time</md-icon>
 				<input ng-model="vm.season.hour_requirement" type="number" min="0" required>
+			</md-input-container>
+			<md-input-container flex class="md-icon-float md-block">
+				<label>Weekly Hour Requirement </label>
+				<md-icon md-font-library="material-icons">access_time</md-icon>
+				<input ng-model="vm.season.hour_requirement_week" type="number" min="0" required>
 			</md-input-container>
 			<div flex layout="row" layout-align="start center">
 				<md-input-container flex class="md-icon-float md-block md-icon-left">
@@ -100,6 +105,10 @@
 						<md-tooltip md-direction="top">Refresh Data</md-tooltip>
 						<md-icon>refresh</md-icon>
 					</md-button>
+					<md-button class="md-icon-button" ng-click="vm.pollMembershipForm()" ng-disabled="vm.season.join_spreadsheet == ''">
+						<md-tooltip md-direction="top">Pull latest data from registration form</md-tooltip>
+						<md-icon>cloud_download</md-icon>
+					</md-button>
 					<md-menu>
 						<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
 							<md-icon md-menu-origin>menu</md-icon>
@@ -135,15 +144,55 @@
 				<div class="md-toolbar-tools">
 					<md-icon class="material-icons">search</md-icon>
 					<form flex name="filter.form" >
-						<input type="text" ng-model="vm.query.filter" placeholder="search" class="" aria-invalid="false">
+						<input type="text" ng-model="vm.query.filter.$" placeholder="search" class="" aria-invalid="false">
 					</form>
 					<md-button class="md-icon-button" ng-click="vm.removeFilter()">
 						<md-icon class="material-icons">close</md-icon>
 					</md-button>
 				</div>
 			</md-toolbar>
+			<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
+				<div class="md-toolbar-tools" layout="row">
+					<md-input-container class="" flex>
+						<label>Join Team</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.annual_requirements.join_team">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>STIMS/TIMS</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.annual_requirements.stims">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Dues</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.annual_requirements.dues">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+					<md-input-container class="" flex>
+						<label>Reqs Complete</label>
+						<md-icon class="material-icons">person</md-icon>
+						<md-select ng-model="vm.query.filter.annual_requirements.reqs_complete">
+							<md-option value="" ></md-option>
+							<md-option value="True">True</md-option>
+							<md-option value="False">False</md-option>
+						</md-select>
+					</md-input-container>
+				</div>
+			</md-toolbar>
 			<md-table-container>
-				<table md-table md-row-select multiple ng-model="vm.selectedUsers" md-progress="vm.promise">
+				<table md-table md-progress="vm.promise">
 					<thead md-head md-order="vm.query.order">
 						<tr md-row>
 							<th md-column md-order-by="full_name"><span>Name</span></th>
@@ -157,7 +206,7 @@
 						</tr>
 					</thead>
 					<tbody md-body>
-						<tr md-row md-select="user" md-select-id="user_id" md-auto-select  ng-repeat="user in vm.users | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered">
+						<tr md-row ng-repeat="user in vm.users | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered" sh-context-menu menu-options="vm.menuOptions" context-data="user">
 							<td md-cell>
 								<md-list-item style="padding: 0px;">
 									{{user.full_name}}

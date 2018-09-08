@@ -12,11 +12,8 @@ $app->group('/seasons', function () {
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
     $totalNum = 0;
-  	if($filter != '') {
-      $totalNum = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->count();
-  	} else {
-      $totalNum = FrcPortal\Season::count();
-    }
+    $seasons = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%');
+    $totalNum = count($seasons->get());
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
@@ -33,13 +30,7 @@ $app->group('/seasons', function () {
   	} elseif($limit == 0) {
       $limit = $totalNum;
     }
-
-    if($filter != '' ) {
-      $seasons = FrcPortal\Season::where('game_name','LIKE','%'.$filter.'%')->orWhere('year','LIKE','%'.$filter.'%')->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    } else {
-      $seasons = FrcPortal\Season::orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    }
-
+    $seasons = $seasons->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
     $data['data'] = $seasons;
     $data['total'] = $totalNum;
@@ -59,15 +50,7 @@ $app->group('/seasons', function () {
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
       $season = FrcPortal\Season::find($season_id);
       if($reqsBool) {
-        $season->users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
-                        		$query->where('season_id','=',$season_id);
-                          }])->whereExists(function ($query) use ($season_id) {
-                            $query->select(DB::raw(1))
-                                  ->from('annual_requirements')
-                                  ->whereRaw('annual_requirements.user_id = users.user_id AND annual_requirements.season_id = ?',[$season_id]);
-                          })
-                          ->orWhere('status',true)
-                          ->get();
+        $season->users = getUsersAnnualRequirements($season_id);
       }
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
       $response = $response->withJson($responseArr);
@@ -75,16 +58,8 @@ $app->group('/seasons', function () {
     });
     $this->get('/annualRequirements', function ($request, $response, $args) {
       $season_id = $args['season_id'];
-      $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
-                          $query->where('season_id','=',$season_id);
-                        }])->whereExists(function ($query) use ($season_id) {
-                          $query->select(DB::raw(1))
-                                ->from('annual_requirements')
-                                ->whereRaw('annual_requirements.user_id = users.user_id AND annual_requirements.season_id = ?',[$season_id]);
-                        })
-                        ->orWhere('status',true)
-                        ->get();
-    $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+      $season = getUsersAnnualRequirements($season_id);
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
     $response = $response->withJson($responseArr);
     return $response;
     });
@@ -104,16 +79,22 @@ $app->group('/seasons', function () {
       $season_id = $args['season_id'];
 
       $season = FrcPortal\Season::find($season_id);
-      $start_date = new DateTime($formData['start_date']);
-      $bag_day = new DateTime($formData['bag_day']);
-      $end_date = new DateTime($formData['end_date']);
-
-      $season->start_date = $start_date->format('Y-m-d');
-      $season->bag_day = $bag_day->format('Y-m-d');
-      $season->end_date = $end_date->format('Y-m-d');
+      if(!is_null($formData['start_date'])) {
+        $start_date = new DateTime($formData['start_date']);
+        $season->start_date = $start_date->format('Y-m-d');
+      }
+      if(!is_null($formData['bag_day'])) {
+        $bag_day = new DateTime($formData['bag_day']);
+        $season->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
+      }
+      if(!is_null($formData['end_date'])) {
+        $end_date = new DateTime($formData['end_date']);
+        $season->end_date = $end_date->format('Y-m-d'." 23:59:59");
+      }
       $season->game_logo = $formData['game_logo'];
       $season->game_name = $formData['game_name'];
       $season->hour_requirement = $formData['hour_requirement'];
+      $season->hour_requirement_week = $formData['hour_requirement_week'];
       $season->game_logo = $formData['game_logo'];
       if($season->save()) {
         $responseArr = array('status'=>true, 'msg'=>'Season Information Saved', 'data' => $season);
@@ -139,6 +120,27 @@ $app->group('/seasons', function () {
       $season_id = $args['season_id'];
 
       $responseArr = updateSeasonMembershipForm($season_id);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->put('/pollMembershipForm', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = array(
+        'status' => false,
+        'msg' => 'Something went wrong',
+        'data' => null
+      );
+      if(!FrcPortal\Auth::isAdmin()) {
+        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        $response = $response->withJson($responseArr,403);
+        return $response;
+      }
+      $season_id = $args['season_id'];
+
+      $poll = updateSeasonRegistrationFromForm($season_id);
+      $season = getUsersAnnualRequirements($season_id);
+      $responseArr = array('status'=>true, 'msg'=>'Latest data dowwnloaded from Google form', 'data' => $season);
       $response = $response->withJson($responseArr);
       return $response;
     });
@@ -177,9 +179,7 @@ $app->group('/seasons', function () {
         $new = !$cur;
         $reqUpdate = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], [$req => $new]);
       }
-      $season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
-                          $query->where('season_id','=',$season_id);
-                        }])->get();
+      $season = getUsersAnnualRequirements($season_id);
       $responseArr = array('status'=>true, 'msg'=>'Annual Requirements Updated', 'data' => $season);
       $response = $response->withJson($responseArr);
       return $response;

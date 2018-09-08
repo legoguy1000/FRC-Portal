@@ -170,6 +170,11 @@ class Event extends Eloquent {
   public function poc() {
     return $this->hasOne('FrcPortal\User', 'user_id', 'poc_id');
   }
-
+  /**
+   * Get the Food Options.
+   */
+  public function event_food() {
+      return $this->hasMany('FrcPortal\EventFood', 'event_id', 'event_id');
+  }
 
 }

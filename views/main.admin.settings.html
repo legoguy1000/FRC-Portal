@@ -1,5 +1,5 @@
 <div flex layout-gt-sm="row" layout-gt-md="row" layout="column">
-	<md-content flex flex-gt-sm="50" flex-gt-md="20" layout="column" class="md-margin">
+	<md-content flex flex-gt-sm="30" flex-gt-md="20" layout="column" class="md-margin">
 		<md-toolbar class="md-default md-table-toolbar">
 			<div class="md-toolbar-tools">
 				<span>Settings</span>
@@ -79,45 +79,65 @@
 			></div>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">
-			<md-switch md-invert aria-label="Enable Local Login" ng-model="vm.settings.login.local_login_enable" class="md-warn">
-				Enable Local Login
-			</md-switch>
-			<md-switch md-invert aria-label="Require Team Email For Login" ng-model="vm.settings.login.require_team_email" class="md-warn">
-				Require Team Email For Login
-			</md-switch>
-			<md-switch md-invert aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn">
-				Enable Google Login
-			</md-switch>
-			<md-input-container flex ng-show="vm.settings.login.google_login_enable">
-				<label>Google OAuth2 Client ID</label>
-				<input ng-model="vm.settings.login.google_oauth_client_id" ng-disabled="!vm.settings.login.google_login_enable">
-			</md-input-container>
-			<md-input-container flex ng-show="vm.settings.login.google_login_enable">
-				<label>Google OAuth2 Client Secret</label>
-				<input ng-model="vm.settings.login.google_oauth_client_secret" ng-disabled="!vm.settings.login.google_login_enable">
-			</md-input-container>
-			<md-switch md-invert aria-label="Enable Facebook Login" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
-				Enable Facebook Login
-			</md-switch>
-			<md-input-container flex ng-show="vm.settings.login.facebook_login_enable">
-				<label>Facebook OAuth2 Client ID</label>
-				<input ng-model="vm.settings.login.facebook_oauth_client_id" ng-disabled="!vm.settings.login.facebook_login_enable">
-			</md-input-container>
-			<md-input-container flex ng-show="vm.settings.login.facebook_login_enable">
-				<label>Facebook OAuth2 Client Secret</label>
-				<input ng-model="vm.settings.login.facebook_oauth_client_secret" ng-disabled="!vm.settings.login.facebook_login_enable">
-			</md-input-container>
-			<md-switch md-invert aria-label="Enable Microsoft Login" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn">
-				Enable Microsoft Login
-			</md-switch>
-			<md-input-container flex ng-show="vm.settings.login.microsoft_login_enable">
-				<label>Microsoft Live OAuth2 Client ID</label>
-				<input ng-model="vm.settings.login.microsoft_oauth_client_id" ng-disabled="!vm.settings.login.microsoft_login_enable">
-			</md-input-container>
-			<md-input-container flex ng-show="vm.settings.login.microsoft_login_enable">
-				<label>Microsoft Live OAuth2 Client Secret</label>
-				<input ng-model="vm.settings.login.microsoft_oauth_client_secret" ng-disabled="!vm.settings.login.microsoft_login_enable">
-			</md-input-container>
+			<div layout="row">
+				<md-switch md-invert aria-label="Enable Local Login" ng-model="vm.settings.login.local_login_enable" class="md-warn">
+					Enable Local Login
+				</md-switch>
+				<md-switch md-invert aria-label="Require Team Email For Login" ng-model="vm.settings.login.require_team_email" class="md-warn">
+					Require Team Email For Login
+				</md-switch>
+			</div>
+			<div layout-gt-sm="row">
+				<div>
+					<md-switch md-invert aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn">
+						Enable Google Login
+					</md-switch>
+				</div>
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.google_login_enable">
+					<md-input-container flex ng-show="vm.settings.login.google_login_enable">
+						<label>Google OAuth2 Client ID</label>
+						<input ng-model="vm.settings.login.google_oauth_client_id" ng-disabled="!vm.settings.login.google_login_enable">
+					</md-input-container>
+					<md-input-container flex ng-show="vm.settings.login.google_login_enable">
+						<label>Google OAuth2 Client Secret</label>
+						<input ng-model="vm.settings.login.google_oauth_client_secret" ng-disabled="!vm.settings.login.google_login_enable">
+					</md-input-container>
+				</div>
+			</div>
+			<div layout-gt-sm="row">
+				<div>
+					<md-switch md-invert aria-label="Enable Facebook Login" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
+						Enable Facebook Login
+					</md-switch>
+				</div>
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.facebook_login_enable">
+					<md-input-container flex ng-show="vm.settings.login.facebook_login_enable">
+						<label>Facebook OAuth2 Client ID</label>
+						<input ng-model="vm.settings.login.facebook_oauth_client_id" ng-disabled="!vm.settings.login.facebook_login_enable">
+					</md-input-container>
+					<md-input-container flex ng-show="vm.settings.login.facebook_login_enable">
+						<label>Facebook OAuth2 Client Secret</label>
+						<input ng-model="vm.settings.login.facebook_oauth_client_secret" ng-disabled="!vm.settings.login.facebook_login_enable">
+					</md-input-container>
+				</div>
+			</div>
+			<div layout-gt-sm="row">
+				<div>
+					<md-switch md-invert aria-label="Enable Microsoft Login" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn">
+						Enable Microsoft Login
+					</md-switch>
+				</div>
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.microsoft_login_enable">
+					<md-input-container flex ng-show="vm.settings.login.microsoft_login_enable">
+						<label>Microsoft OAuth2 Client ID</label>
+						<input ng-model="vm.settings.login.microsoft_oauth_client_id" ng-disabled="!vm.settings.login.microsoft_login_enable">
+					</md-input-container>
+					<md-input-container flex ng-show="vm.settings.login.microsoft_login_enable">
+						<label>Microsoft OAuth2 Client Secret</label>
+						<input ng-model="vm.settings.login.microsoft_oauth_client_secret" ng-disabled="!vm.settings.login.microsoft_login_enable">
+					</md-input-container>
+				</div>
+			</div>
 			<md-input-container flex required>
 				<label>JSON Web Token Secret Key</label>
 				<input ng-model="vm.settings.login.jwt_key">
@@ -139,10 +159,19 @@
 				<label>Slack Team ID</label>
 				<input ng-model="vm.settings.notification.slack_team_id" ng-disabled="!vm.settings.notification.slack_enable">
 			</md-input-container>
-			<md-input-container flex>
-				<label>Slack API Token</label>
-				<input ng-model="vm.settings.notification.slack_api_token" ng-disabled="!vm.settings.notification.slack_enable">
-			</md-input-container>
+			<div layout="column" layout-gt-sm="row">
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Slack API Token</label>
+						<input ng-model="vm.settings.notification.slack_api_token" ng-disabled="!vm.settings.notification.slack_enable">
+					</md-input-container>
+				</div>
+				<div class="layout-align-center-center layout-row">
+					<md-button type="button" class="md-raised md-primary"  ng-click="vm.testSlack()" ng-disabled="!vm.settings.notification.slack_enable">
+						Test Slack Notification
+					</md-button>
+				</div>
+			</div>
 			<md-switch md-invert aria-label="Enable Email Notifications" ng-model="vm.settings.notification.email_enable" class="md-warn">
 				Enable Email Notifications
 			</md-switch>

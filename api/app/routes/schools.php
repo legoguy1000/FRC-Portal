@@ -11,21 +11,13 @@ $app->group('/schools', function () {
     $page = $request->getParam('page') !== null ? $request->getParam('page'):1;
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
-    $queryArr = array();
-    $queryStr = '';
-    if($filter != '') {
-      $queryArr[] = '(schools.school_name LIKE "%'.$filter.'%")';
-      $queryArr[] = '(schools.abv LIKE "%'.$filter.'%")';
-    }
-
     $totalNum = 0;
-    if(count($queryArr) > 0) {
-      $queryStr = implode(' OR ',$queryArr);
-      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'sc.school_id', '=', 'schools.school_id')->addSelect('schools.*',DB::raw('IFNULL(sc.student_count,0) as student_count'))->havingRaw($queryStr)->get();
-      $totalNum = count($schools);
-    } else {
-      $totalNum = FrcPortal\School::count();
+    $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'sc.school_id', '=', 'schools.school_id')->addSelect('schools.*',DB::raw('IFNULL(sc.student_count,0) as student_count'));
+    if($filter != '') {
+      $schools = $schools->orHavingRaw('school_name LIKE ?',array('%'.$filter.'%'));
+      $schools = $schools->orHavingRaw('abv LIKE ?',array('%'.$filter.'%'));
     }
+    $totalNum = count($events->get());
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
@@ -42,12 +34,7 @@ $app->group('/schools', function () {
   	} elseif($limit == 0) {
       $limit = $totalNum;
     }
-
-    if($filter != '' ) {
-      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'sc.school_id', '=', 'schools.school_id')->addSelect('schools.*',DB::raw('IFNULL(sc.student_count,0) as student_count'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    } else {
-      $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'sc.school_id', '=', 'schools.school_id')->addSelect('schools.*',DB::raw('IFNULL(sc.student_count,0) as student_count'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-    }
+    $schools = $schools->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
 
     $data['data'] = $schools;

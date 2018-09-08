@@ -21,6 +21,8 @@ $event_rooms = Capsule::schema()->hasTable('event_rooms');
 $event_types = Capsule::schema()->hasTable('event_types');
 $event_time_slots = Capsule::schema()->hasTable('event_time_slots');
 $event_time_slots_event_requirements = Capsule::schema()->hasTable('event_time_slots_event_requirements');
+$event_food = Capsule::schema()->hasTable('event_food');
+$event_food_event_requirements = Capsule::schema()->hasTable('event_food_event_requirements');
 //Roles & Permissions
 $roles = Capsule::schema()->hasTable('roles');
 $permissions = Capsule::schema()->hasTable('permissions');
@@ -115,6 +117,21 @@ if($events && $event_time_slots) {
 if($event_time_slots_event_requirements && $event_time_slots && $event_requirements) {
   Capsule::schema()->table('event_time_slots_event_requirements', function ($table) {
     $table->foreign('time_slot_id')->references('time_slot_id')->on('event_time_slots')->onDelete('cascade')->onUpdate('cascade');
+    $table->foreign('ereq_id')->references('ereq_id')->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
+  });
+}
+
+//Event Food
+if($events && $event_food) {
+  Capsule::schema()->table('event_food', function ($table) {
+    $table->foreign('event_id')->references('event_id')->on('events')->onDelete('cascade')->onUpdate('cascade');
+  });
+}
+
+//Event Food Users Join Table
+if($event_food_event_requirements && $event_food && $event_requirements) {
+  Capsule::schema()->table('event_food_event_requirements', function ($table) {
+    $table->foreign('food_id')->references('food_id')->on('event_food')->onDelete('cascade')->onUpdate('cascade');
     $table->foreign('ereq_id')->references('ereq_id')->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
   });
 }

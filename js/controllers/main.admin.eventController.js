@@ -11,11 +11,11 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.loading = false;
 	vm.showFilter = function () {
 		vm.filter.show = true;
-		vm.query.filter = '';
+		vm.query.filter = {};
 	};
 	vm.removeFilter = function () {
 		vm.filter.show = false;
-		vm.query.filter = '';
+		vm.query.filter = {};
 
 		if(vm.filter.form.$dirty) {
 			vm.filter.form.$setPristine();
@@ -31,7 +31,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	];
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
-		filter: '',
+		filter: {},
 		limit: 10,
 		order: 'full_name',
 		page: 1
@@ -40,14 +40,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 	vm.menuOptions = [
 		{
-			label: 'Toggle Event Registration',
-			onClick: function($event){
-				var user = $event.dataContext;
-				var req = 'registration';
-				var action = true;
-				vm.rcToggleEventReqs(user, req, action);
-			}
-		}, {
 			label: 'Edit Registration',
 			onClick: function($event){
 				var user = $event.dataContext;
@@ -55,6 +47,14 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		}, {
 			divider: true,
+		}, {
+			label: 'Toggle Event Registration',
+			onClick: function($event){
+				var user = $event.dataContext;
+				var req = 'registration';
+				var action = true;
+				vm.rcToggleEventReqs(user, req, action);
+			}
 		}, {
 			label: 'Toggle Payment',
 			onClick: function($event){
@@ -68,14 +68,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			onClick: function($event){
 				var user = $event.dataContext;
 				var req = 'permission_slip';
-				var action = true;
-				vm.rcToggleEventReqs(user, req, action);
-			}
-		}, {
-			label: 'Toggle Food',
-			onClick: function($event){
-				var user = $event.dataContext;
-				var req = 'food';
 				var action = true;
 				vm.rcToggleEventReqs(user, req, action);
 			}
@@ -148,6 +140,13 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'type': vm.event.type,
 			'registration_deadline': vm.event.registration_deadline_date.long_date,
 			'registration_deadline_gcalid': vm.event.registration_deadline_gcalid,
+			'requirements': {
+				'payment_required': vm.event.payment_required,
+				'permission_slip_required': vm.event.permission_slip_required,
+				'food_required': vm.event.food_required,
+				'room_required': vm.event.room_required,
+				'drivers_required': vm.event.drivers_required,
+			}
 		};
 		eventsService.updateEvent(data).then(function(response){
 			vm.loading = false;
@@ -257,6 +256,28 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		}, function() { });
 	};
 
+	vm.showFoodListModal = function(ev) {
+		$mdDialog.show({
+			controller: eventFoodModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/eventFoodModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				eventInfo: {
+					'event_id': vm.event_id,
+					'name':vm.event.name,
+					//'room_info': vm.event.room_list
+				},
+			}
+		})
+		.then(function(response) {
+			vm.users = response.data;
+		}, function() { });
+	};
+
 	vm.rcToggleEventReqs = function(user, req, action) {
 		if(vm.selectedUsers.length > 1) {
 
@@ -278,6 +299,12 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			if(response.status && response.data) {
 				vm.users = response.data;
 			}
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 		});
 	};
 
