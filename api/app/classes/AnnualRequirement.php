@@ -141,7 +141,7 @@ class AnnualRequirement extends Eloquent {
 			$end_week = date('W');
 		}
 		$start_week = date('W',strtotime($start));
-		$num_weeks = floor($end_week - $start_week);
+		$num_weeks = floor($end_week - $start_week) + 1;
     $hours_arr = (array) json_decode(json_encode($hours),true);
 		$num_req_com = count(array_filter(array_column($hours_arr,'req_complete')));
 		$all_complete = $num_weeks == $num_req_com;
