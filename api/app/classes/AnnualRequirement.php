@@ -242,9 +242,9 @@ class AnnualRequirement extends Eloquent {
     $mh = $this->min_hours;
     if(isset($this->attributes['user_id'])) {
       $userInfo = User::find($this->attributes['user_id']);
-      $stu = (bool) $userInfo->user_type == 'Student';
-      $men = (bool) $userInfo->user_type == 'Mentor';
-      return $jt && $stims && (($stu && $dues) || $men) && $mh;
+      $dues_req = (bool) $userInfo->user_type == 'Student' ? $dues : ($userInfo->user_type == 'Mentor' ? true : false);
+      //$men = (bool) $userInfo->user_type == 'Mentor';
+      return $jt && $stims && $dues_req && $mh;
     } else {
       return false;
     }
