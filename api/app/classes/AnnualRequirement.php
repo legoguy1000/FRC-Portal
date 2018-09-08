@@ -128,19 +128,24 @@ class AnnualRequirement extends Eloquent {
         ->select(DB::raw('user_id, YEAR(meeting_hours.time_in) as year, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week'))->groupBy('meeting_hours.user_id', 'week');
       $hours = DB::table(DB::raw("(" . $q->toSql() . ") as subtable"))
         ->mergeBindings($q)
-        ->select(DB::raw('seasons.hour_requirement_week, seasons.start_date, subtable.*, (subtable.week_hours >= seasons.hour_requirement_week) as req_complete'))
+        ->select(DB::raw('seasons.hour_requirement_week, seasons.start_date, seasons.bag_day, subtable.*, (subtable.week_hours >= seasons.hour_requirement_week) as req_complete'))
         ->leftJoin('seasons', function ($join) {
           $join->on('subtable.year', 'seasons.year');
         })->get();
     }
     if(!is_null($hours) && !empty($hours)) {
-      $first = new DateTime();
-      $second = new DateTime($hours[0]->start_date);
-      $num_weeks = floor($first->diff($second)->days/7);
-      $num_req_com = count(array_filter(array_column($hours,'req_complete')));
-      $all_complete = $num_weeks == $num_req_com;
-      $data['hours'] = $hours;
-      $data['reqs_complete'] = $all_complete;
+		$start = $hours[0]->start_date;
+		$end = $hours[0]->bag_day;
+		$end_week = date('W',strtotime($end));
+		if(time() < strtotime($end)) {
+			$end_week = date('W');
+		}
+		$start_week = date('W',strtotime($start));
+		$num_weeks = floor($end_week - $start_week);
+		$num_req_com = count(array_filter(array_column($hours,'req_complete')));
+		$all_complete = $num_weeks == $num_req_com;
+		$data['hours'] = $hours;
+		$data['reqs_complete'] = $all_complete;
     }
     return $data;
   }
@@ -219,8 +224,10 @@ class AnnualRequirement extends Eloquent {
     $hours = $this->build_season_hours;
     if(isset($hours) && isset($this->attributes['season_id'])) {
       $sid = $this->attributes['season_id'];
-      $hours_req = Season::find($sid)->hour_requirement;
-      return $hours >= $hours_req;
+      $season = Season::find($sid);
+      $hours_req = $season->hour_requirement;
+      $hours_req_week = $season->weekly_build_season_hours;
+      return ($hours_req> 0 && $hours >= $hours_req) && $hours_req_week['reqs_complete'];
     } else {
       return false;
     }
