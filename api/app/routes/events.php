@@ -539,7 +539,7 @@ $app->group('/events', function () {
         $food_id = $args['food_id'];
         $food = FrcPortal\EventFood::where('event_id',$event_id)->where('food_id',$food_id)->first();
         if($food) {
-          $food->group = $formData['group'];
+          $food->group = isset($formData['group']) ? $formData['group']:'';
           $food->description = isset($formData['description']) ? $formData['description']:'';
           if($food->save()) {
             $responseArr['status'] = true;
@@ -592,7 +592,7 @@ $app->group('/events', function () {
         $event_id = $args['event_id'];
         $food = new FrcPortal\EventFood();
         $food->event_id = $event_id;
-        $food->group = $formData['group'];
+        $food->group = isset($formData['group']) ? $formData['group']:'';
         $food->description = isset($formData['description']) ? $formData['description']:'';
         if($food->save()) {
           $responseArr['status'] = true;
