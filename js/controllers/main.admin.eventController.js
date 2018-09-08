@@ -307,6 +307,12 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			if(response.status && response.data) {
 				vm.users = response.data;
 			}
+			$mdToast.show(
+	      $mdToast.simple()
+	        .textContent(response.msg)
+	        .position('top right')
+	        .hideDelay(3000)
+	    );
 		});
 	};
 
