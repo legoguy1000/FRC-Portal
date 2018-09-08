@@ -129,11 +129,13 @@ function itterateMembershipFormData($data = array(), $season_id = null) {
 			$clean_phone = preg_replace('/[^0-9]/s', '', $phone);
 
 			$user = null;
+			$user_id = null;
 			$user = FrcPortal\User::where('email',$email)->first();
-			$user_id = $user->user_id;;
 			if(is_null($user)) {
 				$user = FrcPortal\User::where('fname',$fname)->where('lname',$lname)->where('user_type',$user_type)->first();
-				$user_id = $user->user_id;;
+			}
+			if(!is_null($user)) {
+				$user_id = $user->user_id;
 			}
 			//If user doesn't exist, add data to user table
 			if(is_null($user)) {
@@ -191,18 +193,20 @@ function itterateMembershipFormData($data = array(), $season_id = null) {
 				$user->fname = $fname;
 				$user->lname = $lname;
 				$user->user_type = $user_type;
-				if($school_id != '' && $user_type == 'Student') {
-					$user->school_id = $school_id;
-				}
-				if($grad_year != '' && $user_type == 'Student') {
-					$user->grad_year = $grad_year;
+				if($user_type == 'Student') {
+					if($school_id != '') {
+						$user->school_id = $school_id;
+					}
+					if($grad_year != '') {
+						$user->grad_year = $grad_year;
+					}
+					if($student_id != '' && is_numeric($student_id)) {
+						$signin_pin = hash('SHA256',$student_id);
+						$user->signin_pin = $signin_pin;
+					}
 				}
 				if($clean_phone != '' && is_numeric($clean_phone)) {
 					$user->phone = $clean_phone;
-				}
-				if($user_type == 'Student' && $student_id != '' && is_numeric($student_id)) {
-					$signin_pin = hash('SHA256',$student_id);
-					$user->signin_pin = $signin_pin;
 				}
 				//Insert Data
 				if($user->save()) {
@@ -211,7 +215,7 @@ function itterateMembershipFormData($data = array(), $season_id = null) {
 				}
 			}
 			//Add User info into the Annual Requirements Table
-			if(!is_null($season_id)) {
+			if(!is_null($season_id) && !is_null($user)) {
 				$season = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
 			}
 		}
