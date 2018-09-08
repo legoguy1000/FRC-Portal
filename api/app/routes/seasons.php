@@ -85,11 +85,11 @@ $app->group('/seasons', function () {
       }
       if(!is_null($formData['bag_day'])) {
         $bag_day = new DateTime($formData['bag_day']);
-        $season->bag_day = $bag_day->format('Y-m-d');
+        $season->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
       }
       if(!is_null($formData['end_date'])) {
         $end_date = new DateTime($formData['end_date']);
-        $season->end_date = $end_date->format('Y-m-d');
+        $season->end_date = $end_date->format('Y-m-d'." 23:59:59");
       }
       $season->game_logo = $formData['game_logo'];
       $season->game_name = $formData['game_name'];
