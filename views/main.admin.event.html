@@ -191,13 +191,6 @@
 								</md-button>
 							</md-menu-item>
 							<md-menu-item>
-								<md-button aria-label="STIMS/TIMS" ng-click="vm.toggleEventReqs('food')" ng-disabled="vm.selectedUsers.length == 0 || !vm.event.food_required">
-									<md-tooltip md-direction="left" md-autohide="false">Toggle Food Status</md-tooltip>
-									<md-icon class="material-icons">local_dining</md-icon>
-									Toggle Food
-								</md-button>
-							</md-menu-item>
-							<md-menu-item>
 								<md-button aria-label="Confirm Attendance" ng-click="" ng-disabled="vm.selectedUsers.length == 0 || (vm.currentTime < vm.event.event_end_unix*1000)">
 									<md-tooltip md-direction="left" md-autohide="false">Toggle Attendance Confirmation</md-tooltip>
 									<md-icon class="material-icons">timelapse</md-icon>

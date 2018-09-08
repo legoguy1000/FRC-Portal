@@ -72,14 +72,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				vm.rcToggleEventReqs(user, req, action);
 			}
 		}, {
-			label: 'Toggle Food',
-			onClick: function($event){
-				var user = $event.dataContext;
-				var req = 'food';
-				var action = true;
-				vm.rcToggleEventReqs(user, req, action);
-			}
-		}, {
 			label: 'Confirm Attendance',
 			onClick: function($event){
 				var user = $event.dataContext;
