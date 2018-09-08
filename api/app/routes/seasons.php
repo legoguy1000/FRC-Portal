@@ -79,13 +79,18 @@ $app->group('/seasons', function () {
       $season_id = $args['season_id'];
 
       $season = FrcPortal\Season::find($season_id);
-      $start_date = new DateTime($formData['start_date']);
-      $bag_day = new DateTime($formData['bag_day']);
-      $end_date = new DateTime($formData['end_date']);
-
-      $season->start_date = $start_date->format('Y-m-d');
-      $season->bag_day = $bag_day->format('Y-m-d');
-      $season->end_date = $end_date->format('Y-m-d');
+      if(!is_null($formData['start_date'])) {
+        $start_date = new DateTime($formData['start_date']);
+        $season->start_date = $start_date->format('Y-m-d');
+      }
+      if(!is_null($formData['bag_day'])) {
+        $bag_day = new DateTime($formData['bag_day']);
+        $season->bag_day = $bag_day->format('Y-m-d');
+      }
+      if(!is_null($formData['end_date'])) {
+        $end_date = new DateTime($formData['end_date']);
+        $season->end_date = $end_date->format('Y-m-d');
+      }
       $season->game_logo = $formData['game_logo'];
       $season->game_name = $formData['game_name'];
       $season->hour_requirement = $formData['hour_requirement'];
