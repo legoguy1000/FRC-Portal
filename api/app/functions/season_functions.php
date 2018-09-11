@@ -1,4 +1,6 @@
 <?php
+use Genderize;
+
 function getSeasonMembershipForm($year) {
 	$result = array(
 		'status' => false,
@@ -203,6 +205,8 @@ function itterateMembershipFormData($data = array(), $season_id = null) {
 				$user->email = $email;
 				$user->fname = $fname;
 				$user->lname = $lname;
+				$gender = Genderize::name($fname)->country('US')->lang('EN')->get();
+				$user->gender = ucfirst($gender->result->gender);
 				$user->user_type = $user_type;
 				if($user_type == 'Student') {
 					if($school_id != '') {
