@@ -1,5 +1,5 @@
 <?php
-use Genderize;
+use Pixelpeter\Genderize;
 
 function getSeasonMembershipForm($year) {
 	$result = array(
@@ -205,7 +205,7 @@ function itterateMembershipFormData($data = array(), $season_id = null) {
 				$user->email = $email;
 				$user->fname = $fname;
 				$user->lname = $lname;
-				$gender = Genderize::name($fname)->country('US')->lang('EN')->get();
+				$gender = Pixelpeter\Genderize::name($fname)->country('US')->lang('EN')->get();
 				$user->gender = ucfirst($gender->result->gender);
 				$user->user_type = $user_type;
 				if($user_type == 'Student') {
