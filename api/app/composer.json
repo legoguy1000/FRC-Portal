@@ -10,8 +10,7 @@
         "monolog/monolog": "^1.23",
         "illuminate/database": "^5.4",
         "tuupola/slim-jwt-auth": "^3.0",
-        "doctrine/dbal": "^2.7",
-        "pixelpeter/laravel5-genderize-api-client": "^2.0"
+        "doctrine/dbal": "^2.7"
     },
 	"autoload": {
         "psr-4": {

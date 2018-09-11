@@ -56,4 +56,16 @@ function getUsersAnnualRequirements($season_id) {
 	}
 	return $season;
 }
+
+function getGenderByFirstName($name) {
+	$return = false;
+	if(!is_null($name) && $name != '') {
+		$base = 'http://api.genderize.io/';
+		$url = $base.'?name='.$name;
+		$contents = json_decode(file_get_contents($url),true);
+		if(isset($contents['gender']) && !is_null($contents['gender']) && $contents['gender'] != '') {
+			$return = $contents['gender'];
+		}
+	}
+}
 ?>
