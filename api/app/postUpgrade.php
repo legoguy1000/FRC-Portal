@@ -65,14 +65,26 @@ if($version >= '2.10.0') {
       });
     } catch (Exception $e) { }
   }
-  if(Capsule::schema()->hasTable('seasons')) {
+  if(Capsule::schema()->hasTable('seasons') && !Capsule::schema()->hasColumn('seasons','hour_requirement_week')) {
     try {
       Capsule::schema()->table('seasons', function ($table) {
         $table->integer('hour_requirement_week')->after('hour_requirement');
       });
     } catch (Exception $e) { }
   }
+}
 
+/**
+* 2.X.X
+**/
+if($version >= '2.10.0') {
+  if(Capsule::schema()->hasTable('seasons') && !Capsule::schema()->hasColumn('seasons','membership_form_map')) {
+    try {
+      Capsule::schema()->table('seasons', function ($table) {
+        $table->text('membership_form_map')->after('join_spreadsheet');
+      });
+    } catch (Exception $e) { }
+  }
 }
 
 //Create User Category Tables

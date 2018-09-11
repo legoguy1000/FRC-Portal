@@ -112,20 +112,31 @@ function pollMembershipForm($spreadsheetId) {
 }
 
 function itterateMembershipFormData($data = array(), $season_id = null) {
+	$season = FrcPortal\Season::find($season_id);
+	$form_map = $season->membership_form_map;
+	$email_column = $form_map['email'];
+	$fname_column = $form_map['fname'];
+	$lname_column = $form_map['lname'];
+	$userType_column = $form_map['user_type'];
+	$grad_column = $form_map['grad'];
+	$school_column = $form_map['school'];
+	$pin_column = $form_map['pin_number'];
+	$phone_column = $form_map['phone'];
+
 	//Itterate through data
 	if(count($data) > 0) {
 		foreach($data as $userInfo) {
 			//	$timestamp = $data['timestamp'];
-			$email = $userInfo['email address'];
-			$fname = $userInfo['first name'];
-			$lname = $userInfo['last name'];
-			$form_user_type = $userInfo['member type'];
+			$email = $userInfo[$email_column];
+			$fname = $userInfo[$fname_column];
+			$lname = $userInfo[$lname_column];
+			$form_user_type = $userInfo[$userType_column];
 			$user_type = $form_user_type == 'Adult' ? 'Mentor' : $form_user_type;
 			//	$birthday = $userInfo['birthday'];
-			$grad_year = $userInfo['year of graduation'];
-			$school = $userInfo['school'];
-			$student_id = $userInfo['student id'];
-			$phone = $userInfo['phone'];
+			$grad_year = $userInfo[$grad_column];
+			$school = $userInfo[$school_column];
+			$student_id = $userInfo[$pin_column];
+			$phone = $userInfo[$phone_column];
 			$clean_phone = preg_replace('/[^0-9]/s', '', $phone);
 
 			$user = null;
