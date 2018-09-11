@@ -67,5 +67,6 @@ function getGenderByFirstName($name) {
 			$return = $contents['gender'];
 		}
 	}
+	return $return;
 }
 ?>
