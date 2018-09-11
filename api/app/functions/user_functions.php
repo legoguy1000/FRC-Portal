@@ -60,7 +60,7 @@ function getUsersAnnualRequirements($season_id) {
 function getGenderByFirstName($name) {
 	$return = false;
 	if(!is_null($name) && $name != '') {
-		$base = 'http://api.genderize.io/';
+		$base = 'https://api.genderize.io/';
 		$url = $base.'?name='.$name;
 		$contents = json_decode(file_get_contents($url),true);
 		if(isset($contents['gender']) && !is_null($contents['gender']) && $contents['gender'] != '') {
