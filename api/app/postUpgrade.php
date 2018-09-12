@@ -85,6 +85,7 @@ if($version >= '2.10.0') {
       });
     } catch (Exception $e) { }
   }
+  $set = FrcPortal\Setting::where('setting','jwt_key')->orWhere('setting','jwt_signin_key')->update(['section' => 'jwt']);
 }
 
 //Create User Category Tables
