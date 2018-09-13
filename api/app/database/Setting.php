@@ -26,8 +26,8 @@ Capsule::schema()->create('settings', function ($table) {
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'facebook_login_enable'], ['value' => '0']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'microsoft_login_enable'], ['value' => '0']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'require_team_email'], ['value' => '0']);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'jwt_key'], ['value' => hash('sha512',bin2hex(random_bytes(64)))]);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'jwt_signin_key'], ['value' => hash('sha512',bin2hex(random_bytes(64)))]);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'jwt', 'setting' => 'jwt_key'], ['value' => hash('sha512',bin2hex(random_bytes(64)))]);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'jwt', 'setting' => 'jwt_signin_key'], ['value' => hash('sha512',bin2hex(random_bytes(64)))]);
 
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'team_name'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'team_number'], ['value' => '']);

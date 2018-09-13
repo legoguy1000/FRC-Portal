@@ -57,6 +57,7 @@ function getUsersAnnualRequirements($season_id) {
 	return $season;
 }
 
+
 function getUsersEventRequirements($event_id) {
 	$event = false;
 	if(!is_null($event_id)) {
@@ -72,5 +73,17 @@ function getUsersEventRequirements($event_id) {
 			->get();
 	}
 	return $event;
+
+function getGenderByFirstName($name) {
+	$return = false;
+	if(!is_null($name) && $name != '') {
+		$base = 'https://api.genderize.io/';
+		$url = $base.'?name='.$name;
+		$contents = json_decode(file_get_contents($url),true);
+		if(isset($contents['gender']) && !is_null($contents['gender']) && $contents['gender'] != '') {
+			$return = $contents['gender'];
+		}
+	}
+	return $return;
 }
 ?>
