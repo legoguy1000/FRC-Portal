@@ -926,6 +926,18 @@ $app->group('/events', function () {
         $data['total'] = $totalNum;
         $data['maxPage'] = ceil($totalNum/$limit);
         $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$data);
+         //Send notifications
+        $msgData = array(
+          'slack' => array(
+            'title' => 'New Event Created',
+            'body' => 'Event '.$event->name.' has been created in the Team Portal.  Please go to https://'.$_SERVER["HTTP_HOST"].'/events/'.$event->event_id.' for more information and registration.'
+          ),
+          'email' => array(
+            'subject' => 'New Event Created',
+            'content' =>  'Event '.$event->name.' has been created in the Team Portal.  Please go to https://'.$_SERVER["HTTP_HOST"].'/events/'.$event->event_id.' for more information and registration.'
+          )
+        );
+        sendMassNotifications($type = 'new_event', $msgData);
       } else {
         $responseArr['msg'] = 'Something went wrong';
       }
