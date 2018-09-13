@@ -276,11 +276,11 @@ $app->group('/seasons', function () {
         $msgData = array(
           'slack' => array(
             'title' => 'New Season Created',
-            'body' => 'The '.$newSeason->year.' FRC Season '.$newSeason->game_name.' has been created in the Team Portal.';
+            'body' => 'The '.$newSeason->year.' FRC Season '.$newSeason->game_name.' has been created in the Team Portal.'
           ),
           'email' => array(
             'subject' => 'New Season Created',
-            'content' =>  'The '.$newSeason->year.' FRC Season '.$newSeason->game_name.' has been created in the Team Portal.';
+            'content' =>  'The '.$newSeason->year.' FRC Season '.$newSeason->game_name.' has been created in the Team Portal.'
           )
         );
         sendMassNotifications($type = 'new_season', $msgData);
