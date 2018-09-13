@@ -7,6 +7,7 @@ Version 2.11.0 (Current Dev Branch)
 * Use 3rd party API to guess gender of new users
 * Fix time slot issue with event registration
 * Add toggle on event admin for Time Slots
+* Fix profile event's items
 
 Version 2.10.0 
 * Added button to download latest responses from Google form
