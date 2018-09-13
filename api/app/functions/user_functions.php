@@ -73,6 +73,7 @@ function getUsersEventRequirements($event_id) {
 			->get();
 	}
 	return $event;
+}
 
 function getGenderByFirstName($name) {
 	$return = false;
