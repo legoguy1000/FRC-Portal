@@ -200,40 +200,40 @@
 									<!--<td md-cell>{{event.num_days}}</td>-->
 									<td md-cell>{{event.type}}</td>
 									<td md-cell>
-										<i class="material-icons" style="color:green;" ng-show="user.event_requirements.registration">check_circle</i>
-										<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.registration">remove_circle</i>
+										<i class="material-icons" style="color:green;" ng-show="event.event_requirements.registration">check_circle</i>
+										<i class="material-icons" style="color:red;" ng-hide="event.event_requirements.registration">remove_circle</i>
 									</td>
 									<td md-cell>
-										<span ng-show="vm.user.user_type == 'Student' && event.payment_required">
+										<span ng-show="main.userInfo.user_type == 'Student' && event.payment_required">
 											<i class="material-icons" style="color:green;" ng-show="event.event_requirements.payment">check_circle</i>
 											<i class="material-icons" style="color:red;" ng-hide="event.event_requirements.payment">remove_circle</i>
 										</span>
-										<i class="material-icons" style="" ng-show="vm.user.user_type == 'Mentor' || !event.payment_required">remove_circle_outline</i>
+										<i class="material-icons" style="" ng-show="main.userInfo.user_type == 'Mentor' || !event.payment_required">remove_circle_outline</i>
 									</td>
 									<td md-cell>
 										<span ng-show="vm.user.user_type == 'Student' && event.permission_slip_required">
 											<i class="material-icons" style="color:green;" ng-show="event.event_requirements.permission_slip">check_circle</i>
 											<i class="material-icons" style="color:red;" ng-hide="event.event_requirements.permission_slip">remove_circle</i>
 										</span>
-										<i class="material-icons" style="" ng-show="vm.user.user_type == 'Mentor' || !event.permission_slip_required">remove_circle_outline</i>
+										<i class="material-icons" style="" ng-show="main.userInfo.user_type == 'Mentor' || !event.permission_slip_required">remove_circle_outline</i>
 									</td>
 									<td md-cell>
 										<span ng-show="event.food_required">
-											<i class="material-icons" style="color:green;" ng-show="user.event_requirements.food">check_circle</i>
-											<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.food">remove_circle</i>
+											<i class="material-icons" style="color:green;" ng-show="event.event_requirements.food">check_circle</i>
+											<i class="material-icons" style="color:red;" ng-hide="event.event_requirements.food">remove_circle</i>
 										</span>
 										<i class="material-icons" style="" ng-show="!event.food_required">remove_circle_outline</i>
 									</td>
 									<td md-cell>
 										<span ng-show="event.room_required">
-											<i class="material-icons" style="color:green;" ng-show="user.event_requirements.room_bool">check_circle</i>
-											<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.room_bool">remove_circle</i>
+											<i class="material-icons" style="color:green;" ng-show="event.event_requirements.room_bool">check_circle</i>
+											<i class="material-icons" style="color:red;" ng-hide="event.event_requirements.room_bool">remove_circle</i>
 										</span>
 										<i class="material-icons" style="" ng-show="!event.room_required">remove_circle_outline</i>
 									</td>
 									<td md-cell>
-										<i class="material-icons" style="color:green;" ng-show="user.event_requirements.attendance_confirmed">check_circle</i>
-										<i class="material-icons" style="color:red;" ng-hide="user.event_requirements.attendance_confirmed">remove_circle</i>
+										<i class="material-icons" style="color:green;" ng-show="event.event_requirements.attendance_confirmed">check_circle</i>
+										<i class="material-icons" style="color:red;" ng-hide="event.event_requirements.attendance_confirmed">remove_circle</i>
 									</td>
 								</tr>
 							</tbody>
