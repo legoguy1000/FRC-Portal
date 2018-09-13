@@ -190,10 +190,10 @@
 										<a ui-sref="main.event({'event_id':event.event_id})">{{event.name}}</a>
 									</td>
 									<td md-cell>
-										<span ng-show="event.single_day">
+										<span ng-show="event.date.single_day">
 											{{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
 										</span>
-										<span ng-hide="event.single_day">
+										<span ng-hide="event.date.single_day">
 											{{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
 										</span>
 									</td>
