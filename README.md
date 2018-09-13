@@ -5,8 +5,10 @@ This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We ne
 Version 2.11.0 (Current Dev Branch)
 * Add JSON field to season model to allow customization of google form columns mapping to DB
 * Use 3rd party API to guess gender of new users
+* Fix time slot issue with event registration
+* Add toggle on event admin for Time Slots
 
-Version 2.10.0 (Current Dev Branch)
+Version 2.10.0 
 * Added button to download latest responses from Google form
 * Organized functions to poll Membership Form
 * Updated Change User Status cronjob to execute on the last day of month
