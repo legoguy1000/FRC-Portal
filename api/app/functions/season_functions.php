@@ -112,6 +112,8 @@ function pollMembershipForm($spreadsheetId) {
 }
 
 function itterateMembershipFormData($data = array(), $season_id = null) {
+	$team_num = getSettingsProp('team_number');
+	$team_name = getSettingsProp('team_name');
 	$season = FrcPortal\Season::find($season_id);
 	$form_map = $season->membership_form_map;
 	$email_column = $form_map['email'];
@@ -225,11 +227,30 @@ function itterateMembershipFormData($data = array(), $season_id = null) {
 				if($user->save()) {
 					$user_id = $user->user_id;
 					setDefaultNotifications($user_id);
+					$msgData = array(
+						'subject' => 'User account created for '.$team_name.'\s team portal',
+						'content' =>  'Congratulations! You have been added to '.$team_name.'\s team portal.  Please go to https://'.$_SERVER["HTTP_HOST"].' to view your annual registration, event registration, season hours and more.',
+						'userData' => $user
+					);
 				}
 			}
 			//Add User info into the Annual Requirements Table
 			if(!is_null($season_id) && !is_null($user)) {
-				$season = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
+				$season_join = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
+				if($season_join) {
+					$msgData = array(
+						'slack' => array(
+						'title' => 'Annual Registration Complete',
+						'body' => 'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$season->year.' FRC season.'
+						),
+					'email' => array(
+						'subject' => 'Annual Registration Complete',
+						'content' =>  'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$season->year.' FRC season.',
+						'userData' => $user
+						)
+					);
+					sendUserNotification($user_id, $type = 'join_team', $msgData);	
+				}
 			}
 		}
 		return true;
