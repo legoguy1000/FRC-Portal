@@ -114,14 +114,14 @@ function pollMembershipForm($spreadsheetId) {
 function itterateMembershipFormData($data = array(), $season_id = null) {
 	$season = FrcPortal\Season::find($season_id);
 	$form_map = $season->membership_form_map;
-	$email_column = $form_map['email'];
-	$fname_column = $form_map['fname'];
-	$lname_column = $form_map['lname'];
-	$userType_column = $form_map['user_type'];
-	$grad_column = $form_map['grad'];
-	$school_column = $form_map['school'];
-	$pin_column = $form_map['pin_number'];
-	$phone_column = $form_map['phone'];
+	$email_column = 'email address';
+	$fname_column = 'first name';
+	$lname_column = 'last name';
+	$userType_column = 'member type';
+	$grad_column = 'year of graduation';
+	$school_column = 'school';
+	$pin_column = 'student id';
+	$phone_column = 'phone';
 
 	//Itterate through data
 	if(count($data) > 0) {
