@@ -57,6 +57,23 @@ function getUsersAnnualRequirements($season_id) {
 	return $season;
 }
 
+function getUsersEventRequirements($event_id) {
+	$event = false;
+	if(!is_null($event_id)) {
+		$event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+			  $query->where('event_id','=',$event_id);
+			},'event_requirements.event_rooms','event_requirements.event_cars'])
+			->whereExists(function ($query) use ($event_id) {
+			  $query->select(DB::raw(1))
+				->from('event_requirements')
+				->whereRaw('event_requirements.user_id = users.user_id AND event_requirements.event_id = ?',[$event_id]);
+			})
+			->orWhere('status',true)
+			->get();
+	}
+	return $event;
+}
+
 function getGenderByFirstName($name) {
 	$return = false;
 	if(!is_null($name) && $name != '') {
