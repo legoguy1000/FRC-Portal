@@ -167,7 +167,15 @@ $app->group('/events', function () {
       }
       $event = FrcPortal\Event::with($withArr)->find($event_id);
       if($reqsBool) {
-        $event->users = getUsersEventRequirements($event_id);
+        $event->users = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+                        		$query->where('event_id','=',$event_id);
+                          }])->whereExists(function ($query) use ($event_id) {
+                            $query->select(DB::raw(1))
+                                  ->from('event_requirements')
+                                  ->whereRaw('event_requirements.user_id = users.user_id AND event_requirements.event_id = ?',[$event_id]);
+                          })
+                          ->orWhere('status',true)
+                          ->get();
       }
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
@@ -175,7 +183,16 @@ $app->group('/events', function () {
     });
     $this->get('/eventRequirements', function ($request, $response, $args) {
       $event_id = $args['event_id'];
-      $event = getUsersEventRequirements($event_id);
+      $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+                          $query->where('event_id','=',$event_id);
+                        },'event_requirements.event_rooms','event_requirements.event_cars'])
+                        ->whereExists(function ($query) use ($event_id) {
+                          $query->select(DB::raw(1))
+                                ->from('event_requirements')
+                                ->whereRaw('event_requirements.user_id = users.user_id AND event_requirements.event_id = ?',[$event_id]);
+                        })
+                        ->orWhere('status',true)
+                        ->get();
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
       return $response;
@@ -687,8 +704,10 @@ $app->group('/events', function () {
           $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], [$req => $new]);
         }
       }
-      $event = getUsersEventRequirements($event_id);
-      $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $event);
+      $season = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
+                          $query->where('event_id',$event_id);
+                        },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
+      $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $season);
       $response = $response->withJson($responseArr);
       return $response;
     });
