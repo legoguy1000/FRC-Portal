@@ -797,7 +797,9 @@ $app->group('/events', function () {
         }
         $time_slots_required = (bool) $event->time_slots_required;
         if($time_slots_required) {
-          
+          isset($formData['event_time_slots']) && count($formData['event_time_slots']) > 0) {
+          } else {
+          }
         }
         $food_required = (bool) $event->food_required;
         if($food_required) {
