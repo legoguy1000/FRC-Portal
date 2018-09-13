@@ -71,5 +71,6 @@ function getUsersEventRequirements($event_id) {
 			->orWhere('status',true)
 			->get();
 	}
+	return $event;
 }
 ?>
