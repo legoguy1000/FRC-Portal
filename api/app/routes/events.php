@@ -796,14 +796,8 @@ $app->group('/events', function () {
           $reqUpdate->save();
         }
         $time_slots_required = (bool) $event->time_slots_required;
-        if($time_slots_required && isset($formData['event_time_slots']) && count($formData['event_time_slots']) > 0) {
-          $ts_ids = array_column($formData['event_time_slots'], 'time_slot_id');
-          $reqUpdate->event_time_slots()->sync($ts_ids);
-        } else {
-          $reqUpdate->event_time_slots()->detach();
-          $responseArr['msg'] = 'Please select at least 1 time';
-          $response = $response->withJson($responseArr);
-          return $response;
+        if($time_slots_required) {
+          
         }
         $food_required = (bool) $event->food_required;
         if($food_required) {
