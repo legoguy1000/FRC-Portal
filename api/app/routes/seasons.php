@@ -283,7 +283,7 @@ $app->group('/seasons', function () {
             'content' =>  'The '.$newSeason->year.' FRC Season '.$newSeason->game_name.' has been created in the Team Portal.';
           )
         );
-        sendMassNotifications($type, $msgData);
+        sendMassNotifications($type = 'new_season', $msgData);
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Something went wrong');
       }
