@@ -134,11 +134,12 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 	vm.updateEvent = function () {
 		vm.loading = true;
+		var deadline = vm.event.registration_deadline_date != null ? vm.event.registration_deadline_date.long_date : null;
 		var data = {
 			'event_id': vm.event_id,
 			'poc': vm.event.poc,
 			'type': vm.event.type,
-			'registration_deadline': vm.event.registration_deadline_date.long_date,
+			'registration_deadline': deadline,
 			'registration_deadline_gcalid': vm.event.registration_deadline_gcalid,
 			'requirements': {
 				'payment_required': vm.event.payment_required,
