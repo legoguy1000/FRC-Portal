@@ -362,18 +362,7 @@ $app->group('/events', function () {
         $time_slot_id = $args['time_slot_id'];
         $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->first();
         if($timeSlot) {
-          $timeSlot->name = $formData['name'];
-          $timeSlot->description = isset($formData['description']) ? $formData['description']:'';
-          $ts = new DateTime($formData['time_start']);
-          $te = new DateTime($formData['time_end']);
-          $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
-          $timeSlot->time_end = $te->format('Y-m-d H:i:s');
-          if($timeSlot->save()) {
-            $slots = getEventTimeSlotList($event_id);
-            $responseArr['status'] = true;
-            $responseArr['msg'] = 'Time Slot Updated';
-            $responseArr['data'] = $slots['data'];
-          }
+          $responseArr = updateTimeSlot($timeSlot, $formData);
         }
         $response = $response->withJson($responseArr);
         return $response;
@@ -412,21 +401,8 @@ $app->group('/events', function () {
         }
 
         $event_id = $args['event_id'];
-        $time_slot_id = $args['time_slot_id'];
-        $timeSlot = new FrcPortal\EventTimeSlot();
-        $timeSlot->event_id = $event_id;
-        $timeSlot->name = $formData['name'];
-        $timeSlot->description = isset($formData['description']) ? $formData['description']:'';
-        $ts = new DateTime($formData['time_start']);
-        $te = new DateTime($formData['time_end']);
-        $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
-        $timeSlot->time_end = $te->format('Y-m-d H:i:s');
-        if($timeSlot->save()) {
-          $slots = getEventTimeSlotList($event_id);
-          $responseArr['status'] = true;
-          $responseArr['msg'] = 'Time Slot Updated';
-          $responseArr['data'] = $slots['data'];
-        }
+        $responseArr = AddTimeSlot($event_id, $formData);
+
         $response = $response->withJson($responseArr);
         return $response;
       });
@@ -739,9 +715,9 @@ $app->group('/events', function () {
       if($loggedInUser != $event->poc_id) {
         $reg = $registrationBool ? 'registered':'unregistered';
         $slackMsg = 'You successfully '.$reg.' for '.$event->name;
-        if($user_id != $loggedInUser) {
+        //if($user_id != $loggedInUser) {
           //$slackMsg = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name;
-        }
+        //}
         slackMessageToUser($user_id, $slackMsg);
       }
 
