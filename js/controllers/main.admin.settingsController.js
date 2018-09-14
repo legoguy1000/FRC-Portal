@@ -92,7 +92,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 			}).then(function (resp) {
 				var response = resp.data;
 				if(response.status) {
-
+					vm.serviceAccountCredentials.client_email = response.data.client_email;
 				}
 				$mdToast.show(
 		      $mdToast.simple()
