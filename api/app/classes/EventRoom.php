@@ -76,7 +76,7 @@ class EventRoom extends Eloquent {
   }
 
   public function getRoomTypeAttribute() {
-  	$roomType = isset($this->user_type) && isset($this->gender) ? ($this->user_type == 'Student' ? $this->user_typ.'.'.$this->gender : $this->user_type) : null;
+  	$roomType = isset($this->attributes['user_type']) && isset($this->attributes['gender']) ? ($this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : $this->attributes['user_type']) : null;
     return  array($roomType);
   }
   //$room['user_type'] == 'Student' ? str_replace('Male',"Boys",str_replace('Female',"Girls",$room['gender'])).' '.$c[$roomType] : $room['user_type'].' '.$c[$roomType];
