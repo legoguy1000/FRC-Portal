@@ -19,7 +19,7 @@ $app->group('/reports', function () {
   $this->get('/hoursPerPersonPerYear', function ($request, $response, $args) {
 
     $check = checkReportInputs($request, $response, $type = 'range');
-   if($check !== true) {
+    if($check !== true) {
       return $check;
     }
     $start_date = $request->getParam('start_date');
@@ -69,15 +69,9 @@ $app->group('/reports', function () {
   **/
   $this->get('/activeUsersPerYear', function ($request, $response, $args) {
 
-    if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid Start Date.');
-        $response = $response->withJson($responseArr,400);
-        return $response;
-    }
-    if($request->getParam('end_date') == null || $request->getParam('end_date') == '' || !is_numeric($request->getParam('end_date'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid End Date.');
-        $response = $response->withJson($responseArr,400);
-        return $response;
+    $check = checkReportInputs($request, $response, $type = 'range');
+    if($check !== true) {
+      return $check;
     }
     $start_date = $request->getParam('start_date');
     $end_date = $request->getParam('end_date');
@@ -166,15 +160,9 @@ $app->group('/reports', function () {
   **/
   $this->get('/hoursPerGradePerYear', function ($request, $response, $args) {
 
-    if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid Start Date.');
-        $response = $response->withJson($responseArr,400);
-        return $response;
-    }
-    if($request->getParam('end_date') == null || $request->getParam('end_date') == '' || !is_numeric($request->getParam('end_date'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid End Date.');
-        $response = $response->withJson($responseArr,400);
-        return $response;
+    $check = checkReportInputs($request, $response, $type = 'range');
+    if($check !== true) {
+      return $check;
     }
     $start_date = $request->getParam('start_date');
     $end_date = $request->getParam('end_date');
@@ -237,15 +225,9 @@ $app->group('/reports', function () {
   * Total & average Hours per Gender per Year
   **/
   $this->get('/hoursPerGenderPerYear', function ($request, $response, $args) {
-    if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid Start Date.');
-        $response = $response->withJson($responseArr,400);
-        return $response;
-    }
-    if($request->getParam('end_date') == null || $request->getParam('end_date') == '' || !is_numeric($request->getParam('end_date'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid End Date.');
-        $response = $response->withJson($responseArr,400);
-        return $response;
+    $check = checkReportInputs($request, $response, $type = 'range');
+    if($check !== true) {
+      return $check;
     }
     $start_date = $request->getParam('start_date');
     $end_date = $request->getParam('end_date');
@@ -298,10 +280,9 @@ $app->group('/reports', function () {
   **/
   $this->get('/hoursPerWeek', function ($request, $response, $args) {
 
-    if($request->getParam('year') == null|| $request->getParam('year') == '' || !is_numeric($request->getParam('year'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid Year');
-        $response = $response->withJson($responseArr,400);
-        return $response;
+    $check = checkReportInputs($request, $response, $type = 'single');
+    if($check !== true) {
+      return $check;
     }
     $year = $request->getParam('year');
 
@@ -335,10 +316,9 @@ $app->group('/reports', function () {
   * Hours per Event per Year
   **/
   $this->get('/hoursPerEventPerYear', function ($request, $response, $args) {
-    if($request->getParam('year') == null|| $request->getParam('year') == '' || !is_numeric($request->getParam('year'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid Year');
-        $response = $response->withJson($responseArr,400);
-        return $response;
+    $check = checkReportInputs($request, $response, $type = 'single');
+    if($check !== true) {
+      return $check;
     }
     $year = $request->getParam('year');
 
@@ -404,10 +384,9 @@ $app->group('/reports', function () {
   * Hours per Event Type per Year
   **/
   $this->get('/hoursPerEventTypePerYear', function ($request, $response, $args) {
-    if($request->getParam('year') == null|| $request->getParam('year') == '' || !is_numeric($request->getParam('year'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid Year');
-        $response = $response->withJson($responseArr,400);
-        return $response;
+    $check = checkReportInputs($request, $response, $type = 'single');
+    if($check !== true) {
+      return $check;
     }
     $year = $request->getParam('year');
 
@@ -444,15 +423,9 @@ $app->group('/reports', function () {
   * Total & average Hours per User Type per Year
   **/
   $this->get('/hoursPerUserTypePerYear', function ($request, $response, $args) {
-    if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid Start Date.');
-        $response = $response->withJson($responseArr,400);
-        return $response;
-    }
-    if($request->getParam('end_date') == null || $request->getParam('end_date') == '' || !is_numeric($request->getParam('end_date'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid End Date.');
-        $response = $response->withJson($responseArr,400);
-        return $response;
+    $check = checkReportInputs($request, $response, $type = 'range');
+    if($check !== true) {
+      return $check;
     }
     $start_date = $request->getParam('start_date');
     $end_date = $request->getParam('end_date');
