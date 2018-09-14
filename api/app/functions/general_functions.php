@@ -331,8 +331,13 @@ function standardResponse($status = false, $msg = '', $data = null) {
 	return $responseArr;
 }
 
-function unauthorizedResponse($response, $msg = 'Unauthorized') {
+function unauthorizedResponse($response, $msg = 'Unauthorized Action') {
 	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
 	return $response->withJson($responseArr,403);
+}
+
+function badRequestResponse($response, $msg = 'Invalid Request') {
+	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
+	return $response->withJson($responseArr,400);
 }
 ?>
