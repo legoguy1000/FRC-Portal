@@ -205,7 +205,7 @@ function updateTimeSlot($timeSlot, $formData) {
           $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
           $timeSlot->time_end = $te->format('Y-m-d H:i:s');
           if($timeSlot->save()) {
-            $slots = getEventTimeSlotList($event_id);
+            $slots = getEventTimeSlotList($timeSlot->event_id);
 	    $responseArr = standardResponse($status = true, $msg = 'Time Slot Updated', $data = $slots['data']);
           }
 	  return $responseArr;
