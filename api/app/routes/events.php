@@ -751,6 +751,7 @@ $app->group('/events', function () {
     }
     if(!isset($formData['event_start']) || $formData['event_start'] == '') {
       return badRequestResponse($response, $msg = 'Start Date cannot be blank');
+    }
     if(!isset($formData['event_end']) || $formData['event_end'] == '') {
       return badRequestResponse($response, $msg = 'End Date cannot be blank');
     }
