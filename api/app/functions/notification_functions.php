@@ -11,6 +11,7 @@ function getNotificationOptions() {
 		'join_team' => false,
 		'dues' => false,
 		'stims' => false,
+		'event_registration' => false,
 	);
 	$data = array(
 		'slack' => $default,
