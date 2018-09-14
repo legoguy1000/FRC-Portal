@@ -321,4 +321,13 @@ function formatDateArrays($date_raw) {
 		'multi_day_end' => $date->format('j, Y'),
 	);
 }
+
+function standardResponse($status = false, $msg = '', $data = null) {
+	$responseArr = array(
+		'status' => $status,
+		'msg' => $msg, // 'Something went wrong',
+		'data' => null
+	      );
+	return $responseArr;
+}
 ?>
