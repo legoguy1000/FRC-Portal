@@ -549,15 +549,9 @@ $app->group('/events', function () {
       $this->post('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
-        $responseArr = array(
-          'status' => false,
-          'msg' => 'Something went wrong',
-          'data' => null
-        );
-        if(!FrcPortal\Auth::isAdmin()) {
-          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-          $response = $response->withJson($responseArr,403);
-          return $response;
+        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+        if(FrcPortal\Auth::isAdmin()) {
+          return unauthorizedResponse($response, $msg = 'Unauthorized');
         }
 
         $event_id = $args['event_id'];
