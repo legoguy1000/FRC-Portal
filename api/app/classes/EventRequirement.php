@@ -59,6 +59,7 @@ class EventRequirement extends Eloquent {
     'car_bool' => 'boolean',
     'room_bool' => 'boolean',
     'food_bool' => 'boolean',
+    'attendance_confirmed' => 'boolean'
   ];
 
   public function save($options = array()) {
