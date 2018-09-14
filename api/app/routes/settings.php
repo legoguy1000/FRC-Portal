@@ -4,15 +4,9 @@ $app->group('/settings', function () {
   $this->get('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
-    $responseArr = array(
-      'status' => false,
-      'msg' => 'Something went wrong',
-      'data' => null
-    );
+    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
     if(!FrcPortal\Auth::isAdmin()) {
-      $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-      $response = $response->withJson($responseArr,403);
-      return $response;
+      return unauthorizedResponse($response);
     }
 
     $settings = FrcPortal\Setting::all();
@@ -113,15 +107,9 @@ $app->group('/settings', function () {
   $this->group('/section/{section}', function () {
     $this->get('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
+        return unauthorizedResponse($response);
       }
 
       $section = $args['section'];
@@ -139,16 +127,11 @@ $app->group('/settings', function () {
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
+        return unauthorizedResponse($response);
       }
+      
       $section = $args['section'];
       //loop through,
       //Do update or create
@@ -168,15 +151,9 @@ $app->group('/settings', function () {
   $this->group('/serviceAccountCredentials', function () {
     $this->get('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
+        return unauthorizedResponse($response);
       }
 
       $file = getServiceAccountFile();
@@ -191,15 +168,9 @@ $app->group('/settings', function () {
     $this->post('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
+        return unauthorizedResponse($response);
       }
 
       $directory = $this->get('upload_directory');
@@ -210,16 +181,12 @@ $app->group('/settings', function () {
         $temp = file_get_contents($uploadedFile->file);
         $validJson = json_validate($temp);
         if($extension != 'json' || !$validJson['status']) {
-          $responseArr = array('status'=>false, 'msg'=>'File must be a valid JSON file. '.$validJson['msg']);
-          $response = $response->withJson($responseArr,400);
-          return $response;
+          return badRequestResponse($response, $msg = 'File must be a valid JSON file. '.$validJson['msg']);
         }
         if($validJson['data']['type'] != 'service_account' || !isset($validJson['data']['client_email']) || $validJson['data']['client_email'] == ''
                                                            || !isset($validJson['data']['client_id']) || $validJson['data']['client_id'] == ''
                                                            || !isset($validJson['data']['private_key']) || $validJson['data']['private_key'] == '') {
-          $responseArr = array('status'=>false, 'msg'=>'File is not a valid Google Serice Account Credential JSON file.');
-          $response = $response->withJson($responseArr,400);
-          return $response;
+          return badRequestResponse($response, $msg = 'File is not a valid Google Serice Account Credential JSON file.');
         }
         $filename = 'service_account_credentials.json';
         $uploadedFile->moveTo($directory.'/'.$filename);
@@ -234,16 +201,11 @@ $app->group('/settings', function () {
   });
   $this->post('/testSlack', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
-    $responseArr = array(
-      'status' => false,
-      'msg' => 'Something went wrong',
-      'data' => null
-    );
+    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
     if(!FrcPortal\Auth::isAdmin()) {
-      $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-      $response = $response->withJson($responseArr,403);
-      return $response;
+      return unauthorizedResponse($response);
     }
+    
     $slackMsg = 'Test Slack notification.';
     if(slackMessageToUser($userId, $slackMsg)) {
       $responseArr = array(
