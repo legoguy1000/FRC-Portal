@@ -186,7 +186,8 @@ function getServiceAccountFile() {
 	if(file_exists($file)) {
 		$result['status'] = true;
 		$result['msg'] = 'File Present';
-		$result['data']['contents'] = json_decode(file_get_contents($file),true);
+		$json = json_decode(file_get_contents($file),true);
+		$result['data']['contents'] = array_intersect_key($json['data']['contents'],array('client_email'=>''))
 	}
 	return $result;
 }

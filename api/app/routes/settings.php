@@ -160,7 +160,7 @@ $app->group('/settings', function () {
       if($file['status']) {
         $responseArr['status'] = true;
         $responseArr['msg'] = 'Service account credentials uploaded';
-        $responseArr['data'] = array_intersect_key($file['data']['contents'],array('client_email'=>''));
+        $responseArr['data'] = $file['data'];
       }
       $response = $response->withJson($responseArr);
       return $response;
