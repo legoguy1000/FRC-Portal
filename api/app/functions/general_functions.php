@@ -330,4 +330,9 @@ function standardResponse($status = false, $msg = '', $data = null) {
 	      );
 	return $responseArr;
 }
+
+function unauthorizedResponse($response, $msg = 'Unauthorized') {
+	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
+	return $response->withJson($responseArr,403);
+}
 ?>
