@@ -399,7 +399,7 @@ $app->group('/reports', function () {
       $join->on('events.event_id', 'event_requirements.event_id');
     })->leftJoin('seasons', function ($join) {
       $join->on('seasons.year', '=', DB::raw('YEAR(events.event_start)'));
-    })->where('seasons.year',2018)
+    })->where('seasons.year',$year)
       ->where('event_requirements.registration',true)
       ->where('event_requirements.attendance_confirmed',true)
       ->select(DB::raw('events.type, SUM(time_to_sec(IFNULL(timediff(events.event_end, events.event_start),0)) / 3600) as hours'))->groupBy('events.type')->get();
