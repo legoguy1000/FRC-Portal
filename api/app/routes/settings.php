@@ -131,7 +131,7 @@ $app->group('/settings', function () {
       if(!FrcPortal\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
-      
+
       $section = $args['section'];
       //loop through,
       //Do update or create
@@ -186,7 +186,7 @@ $app->group('/settings', function () {
         if($validJson['data']['type'] != 'service_account' || !isset($validJson['data']['client_email']) || $validJson['data']['client_email'] == ''
                                                            || !isset($validJson['data']['client_id']) || $validJson['data']['client_id'] == ''
                                                            || !isset($validJson['data']['private_key']) || $validJson['data']['private_key'] == '') {
-          return badRequestResponse($response, $msg = 'File is not a valid Google Serice Account Credential JSON file.');
+          return badRequestResponse($response, $msg = json_encode($validJson['data']));
         }
         $filename = 'service_account_credentials.json';
         $uploadedFile->moveTo($directory.'/'.$filename);
@@ -205,7 +205,7 @@ $app->group('/settings', function () {
     if(!FrcPortal\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
-    
+
     $slackMsg = 'Test Slack notification.';
     if(slackMessageToUser($userId, $slackMsg)) {
       $responseArr = array(
