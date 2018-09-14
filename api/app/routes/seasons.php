@@ -66,15 +66,9 @@ $app->group('/seasons', function () {
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
+        return unauthorizedResponse($response);
       }
       $season_id = $args['season_id'];
 
@@ -107,15 +101,9 @@ $app->group('/seasons', function () {
     $this->put('/updateMembershipForm', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
+        return unauthorizedResponse($response);
       }
       $season_id = $args['season_id'];
 
@@ -126,15 +114,9 @@ $app->group('/seasons', function () {
     $this->put('/pollMembershipForm', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
+        return unauthorizedResponse($response);
       }
       $season_id = $args['season_id'];
 
@@ -147,15 +129,9 @@ $app->group('/seasons', function () {
     $this->put('/toggleAnnualReqs', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
+        return unauthorizedResponse($response);
       }
       $season_id = $args['season_id'];
 
@@ -187,15 +163,9 @@ $app->group('/seasons', function () {
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
+        return unauthorizedResponse($response);
       }
       $season_id = $args['season_id'];
       $season = FrcPortal\Season::destroy($season_id);
@@ -211,15 +181,9 @@ $app->group('/seasons', function () {
   $this->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
-    $responseArr = array(
-      'status' => false,
-      'msg' => 'Something went wrong',
-      'data' => null
-    );
+    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
     if(!FrcPortal\Auth::isAdmin()) {
-      $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-      $response = $response->withJson($responseArr,403);
-      return $response;
+      return unauthorizedResponse($response);
     }
 
     if(!isset($formData['year']) || $formData['year'] == '') {
