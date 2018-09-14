@@ -2,11 +2,8 @@
 use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/eventTypes', function () {
   $this->get('', function ($request, $response, $args) {
-    $responseArr = array(
-      'status' => false,
-      'msg' => 'Something went wrong',
-      'data' => null
-    );
+    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+
     $users = FrcPortal\EventType::all();
     $responseArr = array(
       'status' => true,
@@ -19,15 +16,9 @@ $app->group('/eventTypes', function () {
   $this->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
-    $responseArr = array(
-      'status' => false,
-      'msg' => 'Something went wrong',
-      'data' => null
-    );
+    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
     if(!FrcPortal\Auth::isAdmin()) {
-      $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-      $response = $response->withJson($responseArr,403);
-      return $response;
+      return unauthorizedResponse($response);
     }
 
     if(!isset($formData['type']) || $formData['type'] == '') {
@@ -51,15 +42,9 @@ $app->group('/eventTypes', function () {
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
+        return unauthorizedResponse($response);
       }
       $type_id = $args['type_id'];
 
@@ -85,15 +70,9 @@ $app->group('/eventTypes', function () {
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
+        return unauthorizedResponse($response);
       }
       $type_id = $args['type_id'];
 
