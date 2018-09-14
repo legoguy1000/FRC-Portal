@@ -8,7 +8,7 @@ Version 2.11.0 (Current Dev Branch)
 * Fix time slot issue with event registration
 * Add toggle on event admin for Time Slots
 * Fix profile event's check items & date format
-
+* Added CodeFactor integration to review code, cleaned up a lot of the code base using identified issues
 
 Version 2.10.0 
 * Added button to download latest responses from Google form
