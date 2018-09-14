@@ -702,24 +702,32 @@ $app->group('/events', function () {
         $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
         $msg = $user->full_name.' unregistered for '.$event->name;
       }
-      //notify event POC
-      if(!is_null($event->poc_id)) {
-        $reg = $registrationBool ? 'registered':'unregistered';
-        $slackMsg = $user->full_name.' '.$reg.' for '.$event->name;
-        if($user_id != $loggedInUser) {
-          $slackMsg = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name;
-        }
-        slackMessageToUser($event->poc_id, $slackMsg);
-      }
       //notify User
-      if($loggedInUser != $event->poc_id) {
-        $reg = $registrationBool ? 'registered':'unregistered';
-        $slackMsg = 'You successfully '.$reg.' for '.$event->name;
-        //if($user_id != $loggedInUser) {
-          //$slackMsg = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name;
-        //}
-        slackMessageToUser($user_id, $slackMsg);
+      $reg = $registrationBool ? 'registered':'unregistered';
+      $slackMsg = 'You successfully '.$reg.' for '.$event->name.'.';
+      $slackMsgPoc = $user->full_name.' '.$reg.' for '.$event->name.'.';
+      if($user_id != $loggedInUser) {
+        $slackMsg = $userFullName.' '.$reg.'  you for '.$event->name.'.';
+        $slackMsgPoc = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name.'.';
       }
+     //Send notifications
+      $msgData = array(
+        'slack' => array(
+          'title' => 'Event Registration',
+          'body' => $slackMsg.' Please go to https://'.$_SERVER["HTTP_HOST"].'/events/'.$event->event_id.' for more information.'
+        ),
+        'email' => array(
+          'subject' => 'Event Registration',
+          'content' =>  $slackMsg.' Please go to https://'.$_SERVER["HTTP_HOST"].'/events/'.$event->event_id.' for more information.'
+        )
+      );
+      sendUserNotification($user_id, 'event_registration', $msgData);
+      //slackMessageToUser($user_id, $slackMsg);
+      //notify event POC
+      if(!is_null($event->poc_id) && $user_id != $event->poc_id && $loggedInUser != $event->poc_id) {
+        slackMessageToUser($event->poc_id, $slackMsgPoc);
+      }
+
 
       $eventReqs = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
                           $query->where('event_id','=',$event_id);
