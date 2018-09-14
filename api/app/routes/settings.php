@@ -160,7 +160,7 @@ $app->group('/settings', function () {
       if($file['status']) {
         $responseArr['status'] = true;
         $responseArr['msg'] = 'Service account credentials uploaded';
-        $responseArr['data'] = $file['data'];
+        $responseArr['data'] = $file['data']['contents'];
       }
       $response = $response->withJson($responseArr);
       return $response;
@@ -193,7 +193,7 @@ $app->group('/settings', function () {
 
         $responseArr['status'] = true;
         $responseArr['msg'] = 'Service account credentials uploaded';
-        $responseArr['data'] = $validJson['data'];
+        $responseArr['data'] = $validJson['data']['contents'];
       }
       $response = $response->withJson($responseArr);
       return $response;
