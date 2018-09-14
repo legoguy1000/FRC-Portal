@@ -179,6 +179,10 @@ function slackMessageToUser($user_id, $msg) {
 
 function emailUser($userData = array(),$subject = '',$content = '',$attachments = false)
 {
+	$email_enable = getSettingsProp('email_enable');
+	if(!$email_enable) {
+		return false;
+	}
 	$root = __DIR__;
 	$html = file_get_contents($root.'/../libraries/email/email_template.html');
 	$css = file_get_contents($root.'/../libraries/email/email_css.css');
