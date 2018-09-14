@@ -18,10 +18,10 @@ $app->group('/reports', function () {
   **/
   $this->get('/hoursPerPersonPerYear', function ($request, $response, $args) {
 
-    $check = checkReportInputs($request, $response, type = 'range');
+   /* $check = checkReportInputs($request, $response, type = 'range');
     if($check !== true) {
       return $check;
-    }
+    } */
     $start_date = $request->getParam('start_date');
     $end_date = $request->getParam('end_date');
 
