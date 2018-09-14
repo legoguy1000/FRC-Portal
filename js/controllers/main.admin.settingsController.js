@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.settingsController', ['$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'settingsService', '$mdDialog','$stateParams','$mdToast',
+.controller('main.admin.settingsController', ['$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'settingsService', '$mdDialog','$stateParams','$mdToast','Upload'.,
 	mainAdminSettingsController
 ]);
-function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsService, usersService, settingsService, $mdDialog, $stateParams,$mdToast) {
+function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsService, usersService, settingsService, $mdDialog, $stateParams,$mdToast,Upload {
 	var vm = this;
 
 	vm.userInfo = {};
@@ -84,7 +84,31 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 			//vm.settings[section] = response.data;
 		});
 	};
+	// upload on file select or drop
+	vm.uploadSAFile = function (file) {
+			Upload.upload({
+					url: 'api/settings/serviceAccountCredentials',
+					data: {file: file}
+			}).then(function (resp) {
+				var response = resp.data;
+				if(response.status) {
 
+				}
+				$mdToast.show(
+		      $mdToast.simple()
+		        .textContent(response.msg)
+		        .position('top right')
+		        .hideDelay(3000)
+		    );
+					//console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+			}, function (resp) {
+					console.log('Error status: ' + resp.status);
+			}, function (evt) {
+					var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+					console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+			});
+	};
+/*
 	vm.showServiceAccountModal = function(ev) {
 		$mdDialog.show({
 			controller: serviceAccountModalController,
@@ -102,7 +126,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 			vm.serviceAccountCredentials = response;
 		}, function() { });
 	};
-
+*/
 	vm.testSlack = function() {
 		vm.loading = false;
 		settingsService.testSlack().then(function(response){
