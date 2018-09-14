@@ -326,8 +326,8 @@ function standardResponse($status = false, $msg = '', $data = null) {
 	$responseArr = array(
 		'status' => $status,
 		'msg' => $msg, // 'Something went wrong',
-		'data' => null
-	      );
+		'data' => $data
+  );
 	return $responseArr;
 }
 

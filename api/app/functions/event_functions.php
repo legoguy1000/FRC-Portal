@@ -198,18 +198,18 @@ function formatGoogleCalendarEventData($event) {
 
 function updateTimeSlot($timeSlot, $formData) {
 	  $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-          $timeSlot->name = $formData['name'];
-          $timeSlot->description = isset($formData['description']) ? $formData['description']:'';
-          $ts = new DateTime($formData['time_start']);
-          $te = new DateTime($formData['time_end']);
-          $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
-          $timeSlot->time_end = $te->format('Y-m-d H:i:s');
-          if($timeSlot->save()) {
-            $slots = getEventTimeSlotList($timeSlot->event_id);
+    $timeSlot->name = $formData['name'];
+    $timeSlot->description = isset($formData['description']) ? $formData['description']:'';
+    $ts = new DateTime($formData['time_start']);
+    $te = new DateTime($formData['time_end']);
+    $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
+    $timeSlot->time_end = $te->format('Y-m-d H:i:s');
+    if($timeSlot->save()) {
+      $slots = getEventTimeSlotList($timeSlot->event_id);
 	    if($slots['status']) {
 	       $responseArr = standardResponse($status = true, $msg = 'Time Slot Updated', $data = $slots['data']);
 	    } else {
-		$responseArr = $slots;   
+				$responseArr = $slots;
 	    }
 	  }
 	  return $responseArr;
@@ -218,7 +218,7 @@ function updateTimeSlot($timeSlot, $formData) {
 function AddTimeSlot($event_id, $formData) {
 	$responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
 	$timeSlot = new FrcPortal\EventTimeSlot();
-        $timeSlot->event_id = $event_id;
+  $timeSlot->event_id = $event_id;
 	$update = updateTimeSlot($timeSlot, $formData);
 	if($update['status']) {
 	  $update['msg'] = 'Time Slot Created';
