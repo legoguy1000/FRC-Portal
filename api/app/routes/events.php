@@ -607,7 +607,7 @@ $app->group('/events', function () {
         if(time() > $event->date['start']['unix']) {
           return badRequestResponse($response, $msg = 'Registration is closed. Event has already started.');
       	} elseif(($event->registration_deadline_date['unix'] != null && time() > $event->registration_deadline_date['unix']) && !FrcPortal\Auth::isAdmin()) {
-          return badRequestResponse($response, $msg = 'Registration is closed. Registration deadline was '.date('F j, Y g:m A',$event->registration_deadline_unix).'.'); 
+          return badRequestResponse($response, $msg = 'Registration is closed. Registration deadline was '.date('F j, Y g:m A',$event->registration_deadline_unix).'.');
       	}
         $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['registration' => true, 'comments' => $formData['comments']]);
         $ereq_id = $reqUpdate->ereq_id;
@@ -723,7 +723,7 @@ $app->group('/events', function () {
       if(!FrcPortal\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
-      
+
       $event_id = $args['event_id'];
       $event = FrcPortal\Event::destroy($event_id);
       if($event) {
@@ -776,6 +776,8 @@ $app->group('/events', function () {
       $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
       $event->room_required = isset($formData['requirements']['room']) && $formData['requirements']['room'] ? true:false;
       $event->drivers_required = isset($formData['requirements']['drivers']) && $formData['requirements']['drivers'] ? true:false;
+      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
+      $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
       if($event->save()) {
         $limit = 10;
         $totalNum = FrcPortal\Event::count();
