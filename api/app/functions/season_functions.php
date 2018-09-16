@@ -77,7 +77,7 @@ function updateSeasonMembershipForm($season_id) {
 	return $result;
 }
 
-function pollMembershipForm($spreadsheetId) {
+function pollMembershipForm($spreadsheetId, $season = null) {
 	$data = false;
 	if(!is_null($spreadsheetId)) {
 		$data = array();
@@ -89,6 +89,14 @@ function pollMembershipForm($spreadsheetId) {
 			$service = new Google_Service_Sheets($client);
 			// The A1 notation of the values to retrieve.
 			$range = 'Form Responses 1';  // TODO: Update placeholder value.
+			if(!is_null($season) && !$season instanceof FrcPortal\Season && is_string($season)) {
+				$season = FrcPortal\Season::find($season);
+			}
+			$sheet = $season->membership_form_sheet;
+			if(!is_null($sheet) && $sheet != '') {
+				$range = $sheet;
+			}
+
 			$response = $service->spreadsheets_values->get($spreadsheetId, $range);
 			$values = $response->getValues();
 			if (count($values) != 0) {
@@ -111,10 +119,13 @@ function pollMembershipForm($spreadsheetId) {
 	return $data;
 }
 
-function itterateMembershipFormData($data = array(), $season_id = null) {
+function itterateMembershipFormData($data = array(), $season = null) {
 	$team_num = getSettingsProp('team_number');
 	$team_name = getSettingsProp('team_name');
-	$season = FrcPortal\Season::find($season_id);
+	if(!is_null($season) && !$season instanceof FrcPortal\Season && is_string($season)) {
+		$season = FrcPortal\Season::find($season);
+	}
+	$season_id = $season->season_id;
 	$form_map = $season->membership_form_map;
 	$email_column = $form_map['email'];
 	$fname_column = $form_map['fname'];
@@ -249,7 +260,7 @@ function itterateMembershipFormData($data = array(), $season_id = null) {
 						'userData' => $user
 						)
 					);
-					sendUserNotification($user_id, $type = 'join_team', $msgData);	
+					sendUserNotification($user_id, $type = 'join_team', $msgData);
 				}
 			}
 		}
@@ -267,9 +278,9 @@ function updateSeasonRegistrationFromForm($season_id) {
 		if(!is_null($season)) {
 			$spreadsheetId = $season->join_spreadsheet != '' ? $season->join_spreadsheet:null;
 			if(!is_null($spreadsheetId)) {
-				$data = pollMembershipForm($spreadsheetId);
+				$data = pollMembershipForm($spreadsheetId, $season);
 				if($data != false && !empty($data)) {
-					$return = itterateMembershipFormData($data, $season_id);
+					$return = itterateMembershipFormData($data, $season);
 				}
 			}
 		}

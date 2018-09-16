@@ -15,6 +15,7 @@ Capsule::schema()->create('seasons', function ($table) {
        $table->integer('hour_requirement_week');
        $table->string('join_spreadsheet',500);
        $table->text('membership_form_map');
+       $table->string('membership_form_sheet')->nullable();
        $table->timestamps();
 });
 
