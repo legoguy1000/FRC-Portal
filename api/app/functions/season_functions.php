@@ -158,59 +158,11 @@ function itterateMembershipFormData($data = array(), $season = null) {
 			if(is_null($user)) {
 				$user = FrcPortal\User::where('fname',$fname)->where('lname',$lname)->where('user_type',$user_type)->first();
 			}
-			if(!is_null($user)) {
-				$user_id = $user->user_id;
-			}
 			//If user doesn't exist, add data to user table
 			if(is_null($user)) {
 				$school_id = '';
 				if($user_type == 'Student' && $school != '') {
-					$school_formated = str_replace(' HS', ' High School', $school);
-					$school_formated = str_replace(' MS', ' Middle School', $school_formated);
-					//$school_formated = stripos($school_formated,' School') === false ? $school_formated.' School': $school_formated;
-					$school = FrcPortal\School::where('school_name','LIKE','%'.$school_formated.'%')->orWhere('abv','LIKE','%'.$school_formated.'%')->first();
-					if(!is_null($school)) {
-						$school_id = $school['school_id'];
-					} else {
-						$abv = '';
-						for($i=0; $i<strlen($school_formated); $i++) {
-							if (ctype_upper($school_formated[$i])) {
-								$abv .= $school_formated[$i];
-							}
-						}
-						$school = new FrcPortal\School();
-						$school->school_name = $school_formated;
-						$school->abv = $abv;
-						if($school->save()) {
-							$school_id = $school->school_id;
-						}
-					}
-	/*				if(strpos($school,'Menchville') !== false) {
-						$query = 'SELECT schools.* FROM schools WHERE school_name LIKE '.db_quote('%Menchville%');
-						$schools = db_select_single($query);
-						if(!is_null($schools)) {
-							$school_id = $schools['school_id'];
-						}
-					} else {
-						$query = 'SELECT schools.* FROM schools WHERE school_name LIKE '.db_quote('%'.$school.'%').' OR abv LIKE '.db_quote('%'.$school.'%');
-						$schools = db_select_single($query);
-						if(!is_null($schools)) {
-							$school_id = $schools['school_id'];
-						} else {
-							$sid = uniqid();
-							$abv = '';
-							for($i=0; $i<strlen($school); $i++) {
-								if (ctype_upper($school[$i])) {
-									$abv .= $school[$i];
-								}
-							}
-							$query = 'insert into schools (school_id, school_name, abv) values ('.db_quote($sid).','.db_quote($school).','.db_quote($abv).')';
-							$result = db_query($query);
-							if($result) {
-								$school_id = $sid;
-							}
-						}
-					} */
+					$school_id = checkSchool($school);
 				}
 				$user = new FrcPortal\User();
 				$user->email = $email;
@@ -247,6 +199,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 			}
 			//Add User info into the Annual Requirements Table
 			if(!is_null($season_id) && !is_null($user)) {
+				$user_id = $user->user_id;
 				$season_join = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
 				if($season_join) {
 					$msgData = array(
@@ -286,5 +239,38 @@ function updateSeasonRegistrationFromForm($season_id) {
 		}
 	}
 	return $return;
+}
+
+function createSchoolAbv($name = null) {
+	$abv = '';
+	if(!is_null($name) && is_string($name) && $name != '') {
+		for($i=0; $i<strlen($name); $i++) {
+			if (ctype_upper($name[$i])) {
+				$abv .= $name[$i];
+			}
+		}
+	}
+	return $abv;
+}
+
+
+function checkSchool($school) {
+	$school_id = '';
+	$school_formated = str_replace(' HS', ' High School', $school);
+	$school_formated = str_replace(' MS', ' Middle School', $school_formated);
+	//$school_formated = stripos($school_formated,' School') === false ? $school_formated.' School': $school_formated;
+	$school = FrcPortal\School::where('school_name','LIKE','%'.$school_formated.'%')->orWhere('abv','LIKE','%'.$school_formated.'%')->first();
+	if(!is_null($school)) {
+		$school_id = $school['school_id'];
+	} else {
+		$abv = createSchoolAbv($school_formated);
+		$school = new FrcPortal\School();
+		$school->school_name = $school_formated;
+		$school->abv = $abv;
+		if($school->save()) {
+			$school_id = $school->school_id;
+		}
+	}
+	return $school_id;
 }
 ?>
