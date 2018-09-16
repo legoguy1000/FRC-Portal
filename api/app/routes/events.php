@@ -658,7 +658,7 @@ $app->group('/events', function () {
             $reqUpdate->event_time_slots()->sync($ts_ids);
           } else {
             $reqUpdate->event_time_slots()->detach();
-            $responseArr['msg'] = 'Please select at least 1 time';
+            $responseArr['msg'] = 'Please select at least 1 time slot';
             $response = $response->withJson($responseArr);
             return $response;
           }
@@ -676,11 +676,9 @@ $app->group('/events', function () {
             return $response;
           }
         }
-        $msg = $user->full_name.' registered for '.$event->name;
       } else {
         $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->delete();
         $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
-        $msg = $user->full_name.' unregistered for '.$event->name;
       }
       //notify User
       $reg = $registrationBool ? 'registered':'unregistered';

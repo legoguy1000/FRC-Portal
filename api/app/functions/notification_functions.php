@@ -96,10 +96,10 @@ function sendMassNotifications($type, $msgData) {
 			$body = $msg['body'];
 			$tag = '';
 			$note_id = uniqid();
-			slackMessageToUser($user_id, $body);
-		}	
+			slackMessageToUser($user->user_id, $body);
+		}
 	}
-	
+
 }
 
 function postToSlack($msg = '', $channel = null) {
