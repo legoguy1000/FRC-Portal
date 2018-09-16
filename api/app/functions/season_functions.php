@@ -88,7 +88,7 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 			$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
 			$service = new Google_Service_Sheets($client);
 			// The A1 notation of the values to retrieve.
-			$range = 'Form Responses 1';  // TODO: Update placeholder value.
+			$range = 'Form Responses 1';
 			if(!is_null($season) && !$season instanceof FrcPortal\Season && is_string($season)) {
 				$season = FrcPortal\Season::find($season);
 			}
