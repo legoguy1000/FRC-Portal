@@ -107,7 +107,7 @@ function postToSlack($msg = '', $channel = null) {
 	if(!$slack_enable) {
 		return false;
 	}
-	$result = false;
+
 	$data = array(
 		'text'=>$msg
 		//'username'=> '',
@@ -116,6 +116,15 @@ function postToSlack($msg = '', $channel = null) {
 	);
 	if($channel != null) {
 		$data["channel"] = $channel;
+	}
+	$result = SlackApiPost($data);
+	return $result;
+}
+
+function SlackApiPost($data = null) {
+	$result = false;
+	if(is_null($data) || !is_array($data) || empty($data)) {
+		return $result;
 	}
 	$content = str_replace('#new_line#','\n',json_encode($data));
 	$slack_token = getSettingsProp('slack_api_token');
