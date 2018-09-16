@@ -321,7 +321,7 @@ function emailSignInOut($user_id,$emailData) {
 
 
 /* OLD */
-
+/*
 function errorHandle($error, $query = '')
 {
 	$db = db_connect();
@@ -470,7 +470,7 @@ function contactEmail($msgData)
 }
 
 
-
+*/
 
 
 
