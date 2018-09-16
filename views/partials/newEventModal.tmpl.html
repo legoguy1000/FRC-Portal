@@ -5,9 +5,11 @@
 			<h2>New Event</h2>
 			<span flex></span>
 			<md-button type="submit" class="md-icon-button" ng-click="vm.searchEventModal()">
+				<md-tooltip md-direction="top">Search for Google Calendar Event</md-tooltip>
 				<md-icon class=""> search </md-icon>
 			</md-button>
 			<md-button class="md-icon-button" ng-click="vm.cancel()">
+				<md-tooltip md-direction="top">Close</md-tooltip>
 			  <md-icon class=""> close </md-icon>
 			</md-button>
 		  </div>
@@ -106,7 +108,7 @@
 			-->
 			</md-dialog-content>
 			<md-dialog-actions layout="row">
-				<md-button type="submit" class="md-raised">
+				<md-button type="submit" class="md-raised md-primary">
 					Submit
 				</md-button>
 			</md-dialog-actions>
