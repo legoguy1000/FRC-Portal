@@ -89,7 +89,7 @@ if($version >= '2.10.0') {
 /**
 * 2.11.0
 **/
-if($version >= '2.10.0') {
+if($version >= '2.11.0') {
   if(Capsule::schema()->hasTable('seasons')) {
     if(!Capsule::schema()->hasColumn('seasons','membership_form_map')) {
       try {
