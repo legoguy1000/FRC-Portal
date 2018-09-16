@@ -2,7 +2,7 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-Version 2.11.0 (Current Dev Branch)
+Version 2.11.0
 * Add JSON field to season model to allow customization of google form columns mapping to DB
 * Use 3rd party API to guess gender of new users
 * Fix time slot issue with event registration
