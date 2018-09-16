@@ -30,7 +30,7 @@ $app->group('/users', function () {
     //  die($bool );
     }
     $totalNum = 0;
-    $users = FrcPortal\User::with('school')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->addSelect('schools.school_name', 'schools.abv')->where($queryArr2);
+    $users = FrcPortal\User::with('school')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->where($queryArr2);
   	if($filter != '') {
       $users = $users->orHavingRaw('email LIKE ?',array('%'.$filter.'%'));
       $users = $users->orHavingRaw('full_name LIKE ?',array('%'.$filter.'%'));
