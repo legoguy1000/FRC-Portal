@@ -761,8 +761,8 @@ $app->group('/events', function () {
     if(!isset($formData['google_cal_id']) || $formData['google_cal_id'] == '') {
       return badRequestResponse($response, $msg = 'Invalid Google calendar ID');
     }
-    $events = FrcPortal\Event::where('google_cal_id', $formData['google_cal_id'])->count();
-    if($events == 0) {
+    $event = FrcPortal\Event::where('google_cal_id', $formData['google_cal_id'])->first();
+    if(is_null($event)) {
       $event = new FrcPortal\Event();
       $event->google_cal_id = $formData['google_cal_id'];
       $event->name = $formData['name'];
