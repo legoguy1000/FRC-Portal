@@ -76,7 +76,7 @@
 					<div layout="row">
 						Event Requirements
 					</div>
-					<div layout="row">
+					<div layout="row" layout-wrap>
 						<md-switch class="md-primary"  ng-model="vm.data.requirements.payment">
 					   Payment Required
 					  </md-switch>
@@ -94,11 +94,13 @@
 					  </md-switch>
 					</div>
 				</div>
+				<!--
 				<div layout="column">
 						<md-switch class="md-primary"  ng-model="vm.data.exempt_hours">
 					   Exempt Hours
 					  </md-switch>
 				</div>
+			-->
 			</md-dialog-content>
 			<md-dialog-actions layout="row">
 				<md-button type="submit" class="md-raised">

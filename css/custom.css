@@ -252,14 +252,14 @@ input.signin-pin:-ms-input-placeholder {
 }
 
 md-input-container .hint {
-    position: absolute;
+  /*  position: absolute;
     left: 2px;
     right: auto;
-    bottom: 7px;
+    bottom: 7px; */
     font-size: 12px;
     line-height: 14px;
     transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-    color: rgb(102,46,145);
+    color: var(--primary-color);
 }
 
 .this-device {
