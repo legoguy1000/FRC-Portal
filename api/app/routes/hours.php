@@ -66,15 +66,9 @@ $app->group('/hours', function () {
       $this->put('/approve', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
-        $responseArr = array(
-          'status' => false,
-          'msg' => 'Something went wrong',
-          'data' => null
-        );
+        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
-          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-          $response = $response->withJson($responseArr,403);
-          return $response;
+          return unauthorizedResponse($response);
         }
         $request_id = $args['request_id'];
 
@@ -106,15 +100,9 @@ $app->group('/hours', function () {
       $this->put('/deny', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
-        $responseArr = array(
-          'status' => false,
-          'msg' => 'Something went wrong',
-          'data' => null
-        );
+        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
-          $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-          $response = $response->withJson($responseArr,403);
-          return $response;
+          return unauthorizedResponse($response);
         }
         $request_id = $args['request_id'];
 
@@ -148,16 +136,10 @@ $app->group('/hours', function () {
     $this->get('/timeSheet/{date:(?:[1-9]\d{3})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])}', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = array(
-        'status' => false,
-        'msg' => 'Something went wrong',
-        'data' => null
-      );
-      if(!FrcPortal\Auth::isAdmin()) {
-        $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        $response = $response->withJson($responseArr,403);
-        return $response;
-      }
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+        if(!FrcPortal\Auth::isAdmin()) {
+          return unauthorizedResponse($response);
+        }
 
       $date = $args['date'];
       $users = FrcPortal\User::with(['meeting_hours' => function ($query) use ($date)  {
@@ -235,7 +217,8 @@ $app->group('/hours', function () {
     //Create a new signin token
     $this->post('/authorize', function ($request, $response, $args) {
       $args = $request->getParsedBody();
-      $responseArr = array();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+
       $user = null;
       if(isset($args['auth_token'])) {
         $key = getSettingsProp('jwt_key');
@@ -244,14 +227,14 @@ $app->group('/hours', function () {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $user = $decoded->data->status && $decoded->data->admin;
         } catch(\Firebase\JWT\ExpiredException $e) {
-          $responseArr = array('status'=>false, 'msg'=>'Authorization Error. '.$e->getMessage());
+          $responseArr = unauthorizedResponse($status = false, $msg = 'Authorization Error. '.$e->getMessage(), $data = null);
         } catch(\Firebase\JWT\SignatureInvalidException $e){
-          $responseArr = array('status'=>false, 'msg'=>'Authorization Error. '.$e->getMessage());
+          $responseArr = unauthorizedResponse($status = false, $msg = 'Authorization Error. '.$e->getMessage(), $data = null);
         }
       } elseif(isset($args['auth_code'])) {
         $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status',true)->where('admin',true)->first();
       } else {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid request');
+        return badRequestResponse($response);
       }
       if(!is_null($user)) {
         $jti = md5(random_bytes(20));
@@ -365,10 +348,10 @@ $app->group('/hours', function () {
           } else {
             $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
           }
-        } catch(\Firebase\JWT\ExpiredException $e){
-          $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        } catch(\Firebase\JWT\ExpiredException $e) {
+          $responseArr = unauthorizedResponse($status = false, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.', $data = null);
         } catch(\Firebase\JWT\SignatureInvalidException $e){
-          $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+          $responseArr = unauthorizedResponse($status = false, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.', $data = null);
         }
       } else {
         $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Sign in is not authorized at this time and/or on this device. Please see a mentor.');

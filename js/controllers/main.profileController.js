@@ -51,9 +51,10 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		sign_in_out: 'Clock In & Out',
 		new_season: 'New Season',
 		new_event: 'New Event',
-		joint_team: 'Season - Join team',
-		dues: 'Season - Pay Dues',
-		stims: 'Season - Complete STIMS/TIMS',
+		joint_team: 'Membership Form',
+		dues: 'Annual Dues',
+		stims: 'STIMS/TIMS Registration',
+		event_registration: 'Event Registration'
 	}
 
 	function querySearch (query) {

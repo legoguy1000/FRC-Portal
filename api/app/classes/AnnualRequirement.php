@@ -134,20 +134,20 @@ class AnnualRequirement extends Eloquent {
       })->havingRaw('subtable.week > WEEK(seasons.start_date,1) AND subtable.week < WEEK(seasons.bag_day,1)')->get();
     }
     if(!is_null($hours) && !empty($hours)) {
-		$start = $hours[0]->start_date;
-		$end = $hours[0]->bag_day;
-		$end_week = date('W',strtotime($end));
-		if(time() < strtotime($end)) {
-			$end_week = date('W');
-		}
-    $end_week = $end_week - 1;
-		$start_week = date('W',strtotime($start));
-		$num_weeks = floor($end_week - $start_week);
-    $hours_arr = $hours->toArray();
-		$num_req_com = count(array_filter(array_column($hours_arr,'req_complete')));
-    $all_complete = $num_req_com >= $num_weeks;
-		$data['hours'] = $hours;
-		$data['reqs_complete'] = $all_complete;
+  		$start = $hours[0]->start_date;
+  		$end = $hours[0]->bag_day;
+  		$end_week = date('W',strtotime($end));
+  		if(time() < strtotime($end)) {
+  			$end_week = date('W');
+  		}
+      $end_week = $end_week - 1;
+  		$start_week = date('W',strtotime($start));
+  		$num_weeks = floor($end_week - $start_week);
+      $hours_arr = $hours->toArray();
+  		$num_req_com = count(array_filter(array_column($hours_arr,'req_complete')));
+      $all_complete = $num_req_com >= $num_weeks;
+  		$data['hours'] = $hours;
+  		$data['reqs_complete'] = $all_complete;
     }
     return $data;
   }

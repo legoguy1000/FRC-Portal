@@ -35,7 +35,8 @@ angular.module('FrcPortal') //https://codepen.io/rpdasilva/pen/DpbFf
         }
 
     };
-})
+});
+/*
 .filter('tel', function () {
     return function (tel) {
         if (!tel) { return ''; }
@@ -75,4 +76,4 @@ angular.module('FrcPortal') //https://codepen.io/rpdasilva/pen/DpbFf
         }
 
     };
-});
+}); */

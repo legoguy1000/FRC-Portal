@@ -5,9 +5,11 @@
 			<h2>New Event</h2>
 			<span flex></span>
 			<md-button type="submit" class="md-icon-button" ng-click="vm.searchEventModal()">
+				<md-tooltip md-direction="top">Search for Google Calendar Event</md-tooltip>
 				<md-icon class=""> search </md-icon>
 			</md-button>
 			<md-button class="md-icon-button" ng-click="vm.cancel()">
+				<md-tooltip md-direction="top">Close</md-tooltip>
 			  <md-icon class=""> close </md-icon>
 			</md-button>
 		  </div>
@@ -76,7 +78,7 @@
 					<div layout="row">
 						Event Requirements
 					</div>
-					<div layout="row">
+					<div layout="row" layout-wrap>
 						<md-switch class="md-primary"  ng-model="vm.data.requirements.payment">
 					   Payment Required
 					  </md-switch>
@@ -92,16 +94,21 @@
 						<md-switch class="md-primary"  ng-model="vm.data.requirements.drivers">
 					   	Drivers Required
 					  </md-switch>
+						<md-switch class="md-primary"  ng-model="vm.data.requirements.time_slots">
+					   	Time Slots Required
+					  </md-switch>
 					</div>
 				</div>
+				<!--
 				<div layout="column">
 						<md-switch class="md-primary"  ng-model="vm.data.exempt_hours">
 					   Exempt Hours
 					  </md-switch>
 				</div>
+			-->
 			</md-dialog-content>
 			<md-dialog-actions layout="row">
-				<md-button type="submit" class="md-raised">
+				<md-button type="submit" class="md-raised md-primary">
 					Submit
 				</md-button>
 			</md-dialog-actions>

@@ -29,9 +29,9 @@ if(!is_null($season)) {
 		}
 	}
 }
-$data = pollMembershipForm($spreadsheetId);
+$data = pollMembershipForm($spreadsheetId, $season);
 if($data != false && !empty($data)) {
-	$return = itterateMembershipFormData($data, $season_id);
+	$return = itterateMembershipFormData($data, $season);
 }
 
 

@@ -11,6 +11,7 @@ function getNotificationOptions() {
 		'join_team' => false,
 		'dues' => false,
 		'stims' => false,
+		'event_registration' => false,
 	);
 	$data = array(
 		'slack' => $default,
@@ -47,8 +48,7 @@ function setDefaultNotifications($user_id) {
 	}
 }
 
-function sendUserNotification($user_id, $type, $msgData)
-{
+function sendUserNotification($user_id, $type, $msgData) {
 	global $db;
 
 	$preferences = getNotificationPreferencesByUser($user_id);
@@ -77,12 +77,37 @@ function sendUserNotification($user_id, $type, $msgData)
 	}
 }
 
+function sendMassNotifications($type, $msgData) {
+	global $db;
+
+	$users = FrcPortal\NotificationPreference::where('type',$type)->get();
+	foreach($users as $user) {
+		if($user['method'] == 'email') {
+			$msg = $msgData['email'];
+			$subject = $msg['subject'];
+			$content = $msg['content'];
+			$userData = FrcPortal\User::find($user_id);
+			$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
+			emailUser($userData,$subject,$content,$attachments);
+		}
+		elseif($user['method'] == 'slack') {
+			$msg = $msgData['slack'];
+			$title = $msg['title'];
+			$body = $msg['body'];
+			$tag = '';
+			$note_id = uniqid();
+			slackMessageToUser($user->user_id, $body);
+		}
+	}
+
+}
+
 function postToSlack($msg = '', $channel = null) {
 	$slack_enable = getSettingsProp('slack_enable');
 	if(!$slack_enable) {
 		return false;
 	}
-	$result = false;
+
 	$data = array(
 		'text'=>$msg
 		//'username'=> '',
@@ -91,6 +116,15 @@ function postToSlack($msg = '', $channel = null) {
 	);
 	if($channel != null) {
 		$data["channel"] = $channel;
+	}
+	$result = SlackApiPost($data);
+	return $result;
+}
+
+function SlackApiPost($data = null) {
+	$result = false;
+	if(is_null($data) || !is_array($data) || empty($data)) {
+		return $result;
 	}
 	$content = str_replace('#new_line#','\n',json_encode($data));
 	$slack_token = getSettingsProp('slack_api_token');
@@ -154,6 +188,10 @@ function slackMessageToUser($user_id, $msg) {
 
 function emailUser($userData = array(),$subject = '',$content = '',$attachments = false)
 {
+	$email_enable = getSettingsProp('email_enable');
+	if(!$email_enable) {
+		return false;
+	}
 	$root = __DIR__;
 	$html = file_get_contents($root.'/../libraries/email/email_template.html');
 	$css = file_get_contents($root.'/../libraries/email/email_css.css');
@@ -283,7 +321,7 @@ function emailSignInOut($user_id,$emailData) {
 
 
 /* OLD */
-
+/*
 function errorHandle($error, $query = '')
 {
 	$db = db_connect();
@@ -432,7 +470,7 @@ function contactEmail($msgData)
 }
 
 
-
+*/
 
 
 

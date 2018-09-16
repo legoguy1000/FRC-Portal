@@ -345,7 +345,7 @@ angular.module('FrcPortal', [
 		rgb1.g = Math.floor(rgb1.g * rgb2.g / 255);
 		rgb1.r = Math.floor(rgb1.r * rgb2.r / 255);
 		return tinycolor('rgb ' + rgb1.r + ' ' + rgb1.g + ' ' + rgb1.b);
-	};
+	}
 	function getColorObject(value, name) {
 		var c = tinycolor(value);
 		return {
@@ -399,7 +399,7 @@ angular.module('FrcPortal', [
 		exportable.contrastDarkColors = darkColors;
 		exportable.contrastLightColors = lightColors;
 		return exportable;
-	};
+	}
 
 	$mdThemingProvider.definePalette('primary', {
 		'50': 'ede6f2',
@@ -526,7 +526,6 @@ angular.module('FrcPortal', [
 			// If a token was sent back, save it
 			response: function(res) {
 				var $auth = $injector.get('$auth');
-				var $rootScope = $injector.get('$rootScope');
 				if(res.data.token) {
 					$auth.setToken(res.data.token);
 				}
@@ -536,8 +535,7 @@ angular.module('FrcPortal', [
 				if (rejection.status === 401) {
 					// Return a new promise
 					var $mdDialog = $injector.get('$mdDialog');
-					var $auth = $injector.get('$auth');
-					var $rootScope = $injector.get('$ocLazyLoad');
+					var $rootScope = $injector.get('$rootScope');
 					var $ocLazyLoad = $injector.get('$ocLazyLoad');
 					console.log(rejection);
 					$ocLazyLoad.load('js/controllers/loginModalController.js').then(function() {
@@ -721,7 +719,7 @@ angular.module('FrcPortal', [
 	$authProvider.authHeader = 'Authorization';
 	$authProvider.authToken = 'Bearer';
 	$authProvider.storageType = 'localStorage';
-})
-.config(['momentPickerProvider', function (momentPickerProvider) {
+});
+//.config(['momentPickerProvider', function (momentPickerProvider) {
 	//momentPickerProvider.options({ hoursFormat: 'LT' });
-}]);
+//}]);

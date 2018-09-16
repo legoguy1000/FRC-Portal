@@ -117,6 +117,9 @@
 						<md-switch class="md-primary"  ng-model="vm.event.drivers_required">
 							Drivers Required
 						</md-switch>
+						<md-switch class="md-primary"  ng-model="vm.event.time_slots_required">
+							Time Slots Required
+						</md-switch>
 					</v-pane-content>
 				</v-pane>
 			</v-accordion>
@@ -204,7 +207,7 @@
 			<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
 				<div class="md-toolbar-tools">
 					<md-icon class="material-icons">search</md-icon>
-					<form flex name="filter.form" >
+					<form flex name="vm.filter.form" >
 						<input type="text" ng-model="vm.query.filter.$" placeholder="search" class="" aria-invalid="false">
 					</form>
 					<md-button class="md-icon-button" ng-click="vm.removeFilter()">

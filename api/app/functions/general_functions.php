@@ -186,7 +186,8 @@ function getServiceAccountFile() {
 	if(file_exists($file)) {
 		$result['status'] = true;
 		$result['msg'] = 'File Present';
-		$result['data']['contents'] = json_decode(file_get_contents($file),true);
+		$json = json_decode(file_get_contents($file),true);
+		$result['data']['contents'] = array_intersect_key($json,array('client_email'=>''));
 	}
 	return $result;
 }
@@ -320,5 +321,24 @@ function formatDateArrays($date_raw) {
 		'multi_day_start' => $date->format('F j'),
 		'multi_day_end' => $date->format('j, Y'),
 	);
+}
+
+function standardResponse($status = false, $msg = '', $data = null) {
+	$responseArr = array(
+		'status' => $status,
+		'msg' => $msg, // 'Something went wrong',
+		'data' => $data
+  );
+	return $responseArr;
+}
+
+function unauthorizedResponse($response, $msg = 'Unauthorized Action') {
+	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
+	return $response->withJson($responseArr,403);
+}
+
+function badRequestResponse($response, $msg = 'Invalid Request') {
+	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
+	return $response->withJson($responseArr,400);
 }
 ?>
