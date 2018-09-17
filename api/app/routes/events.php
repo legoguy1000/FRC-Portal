@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/events', function () {
+  //Get all events
   $this->get('', function ($request, $response, $args) {
     $events = array();
   	$data = array();
@@ -53,6 +54,7 @@ $app->group('/events', function () {
     $response = $response->withJson($data);
     return $response;
   });
+  //Search Google Calendar for events
   $this->get('/searchGoogleCalendar', function ($request, $response, $args) {
     $calendar = getSettingsProp('google_calendar_id');
     $api_key = getSettingsProp('google_api_key');
@@ -89,45 +91,6 @@ $app->group('/events', function () {
         foreach ($events->getItems() as $event) {
       		if($event->status == 'confirmed') {
             $temp = formatGoogleCalendarEventData($event);
-            /*
-      			$temp = array(
-      				'google_event' => $event,
-      				'name' => $event->summary,
-      				'location' => $event->location,
-      				'google_cal_id' => $event->id,
-              'start' => null,
-              'end' => null,
-      				'allDay' => false,
-      				'event_start' => null,
-      				'event_end' => null,
-      				'event_start_unix' => null,
-              'event_end_unix' => null,
-      				'event_end_formatted' => null,
-      				'event_start_iso' => null,
-              'event_end_iso' => null,
-      				'event_end_formatted' => null,
-      				'details' => $event->description,
-      			);
-      			if(empty($event->start->dateTime)) {
-      				$temp['allDay'] = true;
-      				$temp['event_start'] = $event->start->date.' 00:00:00';
-              $ed = new DateTime($event->end->date);
-              $ed->modify("-1 day");
-              $temp['event_end'] = $ed->format("Y-m-d").' 23:59:59';
-      			} else {
-      				$temp['event_start'] = date('Y-m-d H:i:s', strtotime($event->start->dateTime));
-      				$temp['event_end'] = date('Y-m-d H:i:s', strtotime($event->end->dateTime));
-      			}
-            $temp['start'] = formatDateArrays($temp['event_start']);
-            $temp['end'] = formatDateArrays($temp['event_end']);
-            $temp['poc'] = FrcPortal\User::where('email',$event->creator->email)->orWhere('team_email',$event->creator->email)->first();
-
-      			$temp['event_start_unix'] = strtotime($temp['event_start']);
-      			$temp['event_end_unix'] = strtotime($temp['event_end']);
-      			$temp['event_start_iso'] = date('c',strtotime($temp['event_start']));
-      			$temp['event_end_iso'] = date('c',strtotime($temp['event_end']));
-      			$temp['event_start_formatted'] = date('F j, Y',strtotime($temp['event_start']));
-      			$temp['event_end_formatted'] = date('F j, Y',strtotime($temp['event_end'])); */
           	$temp['poc'] = FrcPortal\User::where('email',$event->creator->email)->orWhere('team_email',$event->creator->email)->first();
           	$allEvents[] = $temp;
       		}
@@ -152,6 +115,7 @@ $app->group('/events', function () {
     return $response;
   });
   $this->group('/{event_id:[a-z0-9]{13}}', function () {
+    //Get Event
     $this->get('', function ($request, $response, $args) {
       $event_id = $args['event_id'];
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
@@ -173,6 +137,7 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    //Get Event Requirements
     $this->get('/eventRequirements', function ($request, $response, $args) {
       $event_id = $args['event_id'];
       $event = getUsersEventRequirements($event_id);
@@ -181,12 +146,14 @@ $app->group('/events', function () {
       return $response;
     });
     $this->group('/cars', function () {
+      //Get Event Cars
       $this->get('', function ($request, $response, $args) {
         $event_id = $args['event_id'];
         $responseArr = getEventCarList($event_id);
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Update Event Car passengers
       $this->put('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -225,6 +192,7 @@ $app->group('/events', function () {
       });
     });
     $this->group('/rooms', function () {
+      //Get Event Rooms
       $this->get('', function ($request, $response, $args) {
         $event_id = $args['event_id'];
         $responseArr = array(
@@ -237,12 +205,14 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Get Event Rooms
       $this->get('/adminList', function ($request, $response, $args) {
         $event_id = $args['event_id'];
         $responseArr = getEventRoomList($event_id);
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Add New Event Room
       $this->post('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -273,6 +243,7 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Update Room lists
       $this->put('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -308,6 +279,7 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Delete event room
       $this->delete('/{room_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -334,12 +306,14 @@ $app->group('/events', function () {
       });
     });
     $this->group('/timeSlots', function () {
+      //Get event time slots
       $this->get('', function ($request, $response, $args) {
         $event_id = $args['event_id'];
         $responseArr = getEventTimeSlotList($event_id);
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Update event time slot
       $this->put('/{time_slot_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -357,6 +331,7 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Delete event time slot
       $this->delete('/{time_slot_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -382,6 +357,7 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Add new event time slot
       $this->post('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -398,6 +374,7 @@ $app->group('/events', function () {
       });
     });
     $this->group('/food', function () {
+      //Get Food  Options
       $this->get('', function ($request, $response, $args) {
         $event_id = $args['event_id'];
         $responseArr = array(
@@ -410,6 +387,7 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Get Food  Options
       $this->get('/list', function ($request, $response, $args) {
         $event_id = $args['event_id'];
         $responseArr = array(
@@ -428,6 +406,7 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Edit Food  Option
       $this->put('/{food_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -451,6 +430,7 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Delete Food  Option
       $this->delete('/{food_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -470,6 +450,7 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       });
+      //Add Food  Option
       $this->post('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -492,6 +473,7 @@ $app->group('/events', function () {
         return $response;
       });
     });
+    //Edit Event
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -528,6 +510,7 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    //Sync Google Calendar Event
     $this->put('/syncGoogleCalEvent', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -541,6 +524,7 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    //Toggle Event Requirements per User
     $this->put('/toggleEventReqs', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -576,6 +560,7 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    //Register for Event
     $this->post('/register', function ($request, $response, $args) {
       $loggedInUser = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -714,6 +699,7 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    //Delete Event
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -733,6 +719,7 @@ $app->group('/events', function () {
       return $response;
     });
   });
+  //Add New Event
   $this->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
