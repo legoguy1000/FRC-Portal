@@ -103,7 +103,7 @@ if($version >= '2.11.0') {
     if(!Capsule::schema()->hasColumn('seasons','membership_form_sheet')) {
       try {
         Capsule::schema()->table('seasons', function ($table) {
-          $table->string('membership_form_sheet')->nullable()->default('Form Responses 1');
+          $table->string('membership_form_sheet')->after('membership_form_map')->nullable()->default('Form Responses 1');
         });
       } catch (Exception $e) {
         //Exception will be logged in Monolog
