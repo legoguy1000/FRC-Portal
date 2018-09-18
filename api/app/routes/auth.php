@@ -71,7 +71,7 @@ $app->group('/auth', function () {
       //'app_id'  => '1347987445311447',
       'app_id'  => getSettingsProp('facebook_oauth_client_id'),
       'app_secret' => $secret,
-    	'default_graph_version' => 'v3.0',
+    	'default_graph_version' => 'v3.1',
     ]);
     //$helper = $fb->getRedirectLoginHelper();
     try {
