@@ -674,14 +674,15 @@ $app->group('/events', function () {
         $slackMsgPoc = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name.'.';
       }
      //Send notifications
+     $host = getSettingsProp('env_url');
       $msgData = array(
         'slack' => array(
           'title' => 'Event Registration',
-          'body' => $slackMsg.' Please go to https://'.$_SERVER["HTTP_HOST"].'/events/'.$event->event_id.' for more information.'
+          'body' => $slackMsg.' Please go to '.$host.'/events/'.$event->event_id.' for more information.'
         ),
         'email' => array(
           'subject' => 'Event Registration',
-          'content' =>  $slackMsg.' Please go to https://'.$_SERVER["HTTP_HOST"].'/events/'.$event->event_id.' for more information.'
+          'content' =>  $slackMsg.' Please go to '.$host.'/events/'.$event->event_id.' for more information.'
         )
       );
       sendUserNotification($user_id, 'event_registration', $msgData);
@@ -773,14 +774,15 @@ $app->group('/events', function () {
         $data['maxPage'] = ceil($totalNum/$limit);
         $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$data);
          //Send notifications
+        $host = getSettingsProp('env_url');
         $msgData = array(
           'slack' => array(
             'title' => 'New Event Created',
-            'body' => 'Event '.$event->name.' has been created in the Team Portal.  Please go to https://'.$_SERVER["HTTP_HOST"].'/events/'.$event->event_id.' for more information and registration.'
+            'body' => 'Event '.$event->name.' has been created in the Team Portal.  Please go to '.$host.'/events/'.$event->event_id.' for more information and registration.'
           ),
           'email' => array(
             'subject' => 'New Event Created',
-            'content' =>  'Event '.$event->name.' has been created in the Team Portal.  Please go to https://'.$_SERVER["HTTP_HOST"].'/events/'.$event->event_id.' for more information and registration.'
+            'content' =>  'Event '.$event->name.' has been created in the Team Portal.  Please go to '.$host.'/events/'.$event->event_id.' for more information and registration.'
           )
         );
         sendMassNotifications($type = 'new_event', $msgData);
