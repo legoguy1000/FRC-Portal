@@ -102,7 +102,7 @@ $app->group('/auth', function () {
         if($user != false) {
           $update = updateUserOnLogin($user, $userData);
     			$jwt = generateUserJWT($user);
-          $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+          $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'userInfo' => $me);
         } else {
           $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
         }
