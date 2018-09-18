@@ -68,7 +68,7 @@ function checkTeamLogin($userEmail == '') {
 	$require_team_email = getSettingsProp('require_team_email');
 	if($require_team_email) {
 		$teamDomain = getSettingsProp('team_domain');
-		if(!is_null($teamDomain) && strpos($userEmail,'@'.$teamDomain) === false || $userEmail== '') {
+		if(!is_null($teamDomain) && strpos($userEmail,'@'.$teamDomain) === false || $userEmail == '') {
 			return true; //Not valid email
 		}
 	}
