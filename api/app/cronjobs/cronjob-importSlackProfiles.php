@@ -4,15 +4,8 @@ include(__DIR__ . '/../includes.php');
 
 $users = array();
 $slack_enable = getSettingsProp('slack_enable');
-$slack_token = getSettingsProp('slack_api_token');
-if(!is_null($slack_enable) && $slack_enable == true && !is_null($slack_token)) {
-	$url = 'https://slack.com/api/users.list?token='.$slack_token;
-	$ch = curl_init();
-	curl_setopt($ch,CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-	$result = curl_exec($ch);
-	curl_close($ch);
+if(!is_null($slack_enable) && $slack_enable == true) {
+	$result = slackGetAPI($endpoint = 'users.list');
 	if($result) {
 		$data = (array) json_decode($result, true);
 		if(isset($data['members']) && is_array($data['members']) && count($data['members']) > 0) {

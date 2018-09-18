@@ -126,24 +126,7 @@ function SlackApiPost($data = null) {
 	if(is_null($data) || !is_array($data) || empty($data)) {
 		return $result;
 	}
-	$content = str_replace('#new_line#','\n',json_encode($data));
-	$slack_token = getSettingsProp('slack_api_token');
-	$slack_webhook_url = 'https://slack.com/api/chat.postMessage';
-	$ch = curl_init();
-	//set the url, number of POST vars, POST data
-	//
-	curl_setopt($ch,CURLOPT_URL, $slack_webhook_url);
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-		'Content-Type: application/json',
-		'Content-Length: ' . strlen($content),
-		'Authorization: Bearer '.$slack_token
-	));
-	$result = curl_exec($ch);
-	//close connection
-	curl_close($ch);
+	$result = slackPostAPI($endpoint = 'chat.postMessage', $data);
 	return $result;
 }
 
