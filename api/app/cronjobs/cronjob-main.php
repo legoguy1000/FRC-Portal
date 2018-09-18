@@ -13,7 +13,7 @@ if($changeUserStatus) {
 
 //Import Slack Profiles
 $importSlackProfiles = getSettingsProp('enable_cronjob-importSlackProfiles');
-if($importSlackProfiles && (date('H') == 00 || date('H') == 13)) {
+if($importSlackProfiles) {
   $users = array();
   $slack_enable = getSettingsProp('slack_enable');
   if(!is_null($slack_enable) && $slack_enable == true) {
