@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
+use \Firebase\JWT\JWT;
 function checkAdmin($user) {
 	$return = false;
 	if($user instanceof FrcPortal\User) {
