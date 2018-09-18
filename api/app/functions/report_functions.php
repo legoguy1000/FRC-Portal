@@ -25,14 +25,14 @@ function topHourUsers($year) {
 function checkReportInputs($request, $response, $type = 'range') {
    if($type == 'range') {
 	    if($request->getParam('start_date') == null|| $request->getParam('start_date') == '' || !is_numeric($request->getParam('start_date'))) {
-		return badRequestResponse($response, $msg = 'Invalid Start Date');
+				return badRequestResponse($response, $msg = 'Invalid Start Date');
 	    }
 	    if($request->getParam('end_date') == null || $request->getParam('end_date') == '' || !is_numeric($request->getParam('end_date'))) {
-		return badRequestResponse($response, $msg = 'Invalid End Date');
-	    }    
+				return badRequestResponse($response, $msg = 'Invalid End Date');
+	    }
     } elseif($type == 'single') {
 	    if($request->getParam('year') == null|| $request->getParam('year') == '' || !is_numeric($request->getParam('year'))) {
-		return badRequestResponse($response, $msg = 'Invalid Year');
+				return badRequestResponse($response, $msg = 'Invalid Year');
 	    }
     }
     return true;

@@ -7,11 +7,8 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'google';
-    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','google_login_enable')->first();
-    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
-      $responseData = array('status'=>false, 'msg'=>'Google login is not enabled.  Please select a different option.');
-      $response = $response->withJson($responseArr,400);
-      return $response;
+    if(checkLoginProvider($provider) == false) {
+      return badRequestResponse($response, $msg = 'Google login is not enabled.  Please select a different option.');
     }
     $client = new Google_Client();
     //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
@@ -39,48 +36,14 @@ $app->group('/auth', function () {
     		'lname' => $lname,
     		'profile_image' => $image,
     	);
-      $require_team_email = getSettingsProp('require_team_email');
-      if($require_team_email) {
-        $teamDomain = getSettingsProp('team_domain');
-        if(!is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) === false) {
-          $responseArr = array('status'=>false, 'msg'=>'A '.$teamDomain.' email is required');
-          $response = $response->withJson($responseArr,403);
-          return $response;
-        }
+      if(checkTeamLogin($userData['email'])) {
+        return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
       }
-
 
       $user = checkLogin($userData);
       if($user != false) {
-        $update = false;
-        if($user->profile_image == '') {
-          $user->profile_image = $userData['profile_image'];
-          $update = true;
-        }
-        $teamDomain = getSettingsProp('team_domain');
-        if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
-          $user->team_email = $userData['email'];
-          $update = true;
-        }
-        if($update == true) {
-          $user = $user->save();
-        }
-        $key = getSettingsProp('jwt_key');
-  			$token = array(
-  				"iss" => getSettingsProp('env_url'),
-  				"iat" => time(),
-  				"exp" => time()+60*60,
-  				"jti" => bin2hex(random_bytes(10)),
-  				'data' => array(
-            'user_id' => $user->user_id,
-            'full_name' => $user->full_name,
-            'admin' => $user->admin,
-            'status' => $user->status,
-            'user_type' => $user->user_type,
-            'email' => $user->email,
-          )
-  			);
-  			$jwt = JWT::encode($token, $key);
+        $update = updateUserOnLogin($user, $userData);
+  			$jwt = generateUserJWT($user);
         $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
       } else {
         $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.');
@@ -93,12 +56,10 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'facebook';
-    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','facebook_login_enable')->first();
-    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
-      $responseData = array('status'=>false, 'msg'=>'Facebook login is not enabled.  Please select a different option.');
-      $response = $response->withJson($responseArr,400);
-      return $response;
+    if(checkLoginProvider($provider) == false) {
+      return badRequestResponse($response, $msg = 'Facebook login is not enabled.  Please select a different option.');
     }
+
     $client_id = getSettingsProp('facebook_oauth_client_id');
     $secret = getSettingsProp('facebook_oauth_client_secret');
     $redirect = getSettingsProp('env_url').'/oauth';
@@ -133,47 +94,14 @@ $app->group('/auth', function () {
       		'lname' => $lname,
       		'profile_image' => $image,
       	);
-        $require_team_email = getSettingsProp('require_team_email');
-        if($require_team_email) {
-          $teamDomain = getSettingsProp('team_domain');
-          if(!is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) === false) {
-            $responseArr = array('status'=>false, 'msg'=>'A '.$teamDomain.' email is required');
-            $response = $response->withJson($responseArr,403);
-            return $response;
-          }
+        if(checkTeamLogin($userData['email'])) {
+          return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
         }
 
         $user = checkLogin($userData);
         if($user != false) {
-          $update = false;
-          if($user->profile_image == '') {
-            $user->profile_image = $userData['profile_image'];
-            $update = true;
-          }
-          $teamDomain = getSettingsProp('team_domain');
-          if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
-            $user->team_email = $userData['email'];
-            $update = true;
-          }
-          if($update == true) {
-            $user = $user->save();
-          }
-          $key = getSettingsProp('jwt_key');
-    			$token = array(
-    				"iss" => getSettingsProp('env_url'),
-    				"iat" => time(),
-    				"exp" => time()+60*60,
-    				"jti" => bin2hex(random_bytes(10)),
-    				'data' => array(
-              'user_id' => $user->user_id,
-              'full_name' => $user->full_name,
-              'admin' => $user->admin,
-              'status' => $user->status,
-              'user_type' => $user->user_type,
-              'email' => $user->email,
-            )
-    			);
-    			$jwt = JWT::encode($token, $key);
+          $update = updateUserOnLogin($user, $userData);
+    			$jwt = generateUserJWT($user);
           $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'userInfo' => $user);
         } else {
           $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
@@ -193,11 +121,8 @@ $app->group('/auth', function () {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'microsoft';
-    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','microsoft_login_enable')->first();
-    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
-      $responseData = array('status'=>false, 'msg'=>'Microsoft login is not enabled.  Please select a different option.');
-      $response = $response->withJson($responseArr,400);
-      return $response;
+    if(checkLoginProvider($provider) == false) {
+      return badRequestResponse($response, $msg = 'Microsoft login is not enabled.  Please select a different option.');
     }
     //$secret = getIniProp('microsoft_client_secret');
     $secret = getSettingsProp('microsoft_oauth_client_secret');
@@ -244,48 +169,15 @@ $app->group('/auth', function () {
     		'lname' => $lname,
     		'profile_image' => $image,
     	);
-      $require_team_email = getSettingsProp('require_team_email');
-      if($require_team_email) {
-        $teamDomain = getSettingsProp('team_domain');
-        if(!is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) === false) {
-          $responseArr = array('status'=>false, 'msg'=>'A '.$teamDomain.' email is required');
-          $response = $response->withJson($responseArr,403);
-          return $response;
-        }
+      if(checkTeamLogin($userData['email'])) {
+        return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
       }
 
       $user = checkLogin($userData);
       if($user != false) {
-        $update = false;
-        if($user->profile_image == '') {
-          $user->profile_image = $userData['profile_image'];
-          $update = true;
-        }
-        $teamDomain = getSettingsProp('team_domain');
-        if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
-          $user->team_email = $userData['email'];
-          $update = true;
-        }
-        if($update == true) {
-          $user = $user->save();
-        }
-        $key = getSettingsProp('jwt_key');
-  			$token = array(
-  				"iss" => getSettingsProp('env_url'),
-  				"iat" => time(),
-  				"exp" => time()+60*60,
-  				"jti" => bin2hex(random_bytes(10)),
-  				'data' => array(
-            'user_id' => $user->user_id,
-            'full_name' => $user->full_name,
-            'admin' => $user->admin,
-            'status' => $user->status,
-            'user_type' => $user->user_type,
-            'email' => $user->email,
-          )
-  			);
-  			$jwt = JWT::encode($token, $key);
-        $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+        $update = updateUserOnLogin($user, $userData);
+  			$jwt = generateUserJWT($user);
+        $responseData = array('status'=>true, 'msg'=>'Login with Microsoft Account Successful', 'token'=>$jwt, 'userInfo' => $user);
       } else {
         $responseData = array('status'=>false, 'msg'=>'Microsoft account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
       }
@@ -296,12 +188,9 @@ $app->group('/auth', function () {
   /*$this->post('/slack', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
-    $provider = 'google';
-    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','slack_login_enable')->first();
-    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
-      $responseData = array('status'=>false, 'msg'=>'Slack login is not enabled.  Please select a different option.');
-      $response = $response->withJson($responseArr,400);
-      return $response;
+    $provider = 'slack';
+    if(checkLoginProvider($provider) == false) {
+      return badRequestResponse($response, $msg = 'Slack login is not enabled.  Please select a different option.');
     }
     $client = new Google_Client();
     $client = getSettingsProp('slack_oauth_client_id');
@@ -326,51 +215,18 @@ $app->group('/auth', function () {
         'lname' => $lname,
         'profile_image' => $image,
       );
-      $require_team_email = getSettingsProp('require_team_email');
-      if($require_team_email) {
-        $teamDomain = getSettingsProp('team_domain');
-        if(!is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) === false) {
-          $responseArr = array('status'=>false, 'msg'=>'A '.$teamDomain.' email is required');
-          $response = $response->withJson($responseArr,403);
-          return $response;
-        }
+      if(checkTeamLogin($userData['email'])) {
+        return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
       }
 
 
       $user = checkLogin($userData);
       if($user != false) {
-        $update = false;
-        if($user->profile_image == '') {
-          $user->profile_image = $userData['profile_image'];
-          $update = true;
-        }
-        $teamDomain = getSettingsProp('team_domain');
-        if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
-          $user->team_email = $userData['email'];
-          $update = true;
-        }
-        if($update == true) {
-          $user = $user->save();
-        }
-        $key = getSettingsProp('jwt_key');
-        $token = array(
-          "iss" => getSettingsProp('env_url'),
-          "iat" => time(),
-          "exp" => time()+60*60,
-          "jti" => bin2hex(random_bytes(10)),
-          'data' => array(
-            'user_id' => $user->user_id,
-            'full_name' => $user->full_name,
-            'admin' => $user->admin,
-            'status' => $user->status,
-            'user_type' => $user->user_type,
-            'email' => $user->email,
-          )
-        );
-        $jwt = JWT::encode($token, $key);
-        $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+        $update = updateUserOnLogin($user, $userData);
+        $jwt = generateUserJWT($user);
+        $responseData = array('status'=>true, 'msg'=>'Login with Slack Account Successful', 'token'=>$jwt, 'userInfo' => $user);
       } else {
-        $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.');
+        $responseData = array('status'=>false, 'msg'=>'Slack account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.');
       }
     }
     $response = $response->withJson($responseData);
@@ -380,23 +236,15 @@ $app->group('/auth', function () {
     $responseData = false;
     $formData = $request->getParsedBody();
     $provider = 'local';
-    $loginEnabled = FrcPortal\Setting::where('section','login')->where('setting','local_login_enable')->first();
-    if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
-      $responseData = array('status'=>false, 'msg'=>'Local login is not enabled.  Please select a different option.');
-      $response = $response->withJson($responseArr,400);
-      return $response;
+    if(checkLoginProvider($provider) == false) {
+      return badRequestResponse($response, $msg = 'Local login is not enabled.  Please select a different option.');
     }
 
     $email = $formData['email'];
     $password = $formData['password'];
     $require_team_email = getSettingsProp('require_team_email');
-    if($require_team_email) {
-      $teamDomain = getSettingsProp('team_domain');
-      if(!is_null($teamDomain) && strpos($email,'@'.$teamDomain) === false) {
-        $responseArr = array('status'=>false, 'msg'=>'A '.$teamDomain.' email is required');
-        $response = $response->withJson($responseArr,403);
-        return $response;
-      }
+    if(checkTeamLogin($email)) {
+      return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
     }
 
     $user = null;
@@ -410,22 +258,7 @@ $app->group('/auth', function () {
             ->where('status',true)
             ->first();
     if($user != null) {
-      $key = getSettingsProp('jwt_key');
-			$token = array(
-				"iss" => getSettingsProp('env_url'),
-				"iat" => time(),
-				"exp" => time()+60*60,
-				"jti" => bin2hex(random_bytes(10)),
-				'data' => array(
-          'user_id' => $user->user_id,
-          'full_name' => $user->full_name,
-          'admin' => $user->admin,
-          'status' => $user->status,
-          'user_type' => $user->user_type,
-          'email' => $user->email,
-        )
-			);
-			$jwt = JWT::encode($token, $key);
+			$jwt = generateUserJWT($user);
       $responseData = array('status'=>true, 'msg'=>'Login Successful', 'token'=>$jwt, 'userInfo' => $user);
     } else {
       $responseData = array('status'=>false, 'msg'=>'Username or Password not correct. Please try again.');
