@@ -131,9 +131,10 @@ $app->group('/events', function () {
       }
       //if($request->getParam('users') !== null && $request->getParam('users')==true) {
       if(true) {
-        $withArr['event_requirements.users'] = function ($query) use ($event_id) {
+        $withArr['event_requirements'] = function ($query) use ($event_id) {
           $query->where('event_id','=',$event_id)->where('registration',true);
         };
+	      $withArr[] = 'event_requirements.user';
       }
       $event = FrcPortal\Event::with($withArr)->find($event_id);
       if($reqsBool) {
