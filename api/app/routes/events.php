@@ -129,12 +129,11 @@ $app->group('/events', function () {
       if($request->getParam('event_time_slots') !== null && $request->getParam('event_time_slots')==true) {
         $withArr[] = 'event_time_slots.registrations.user';
       }
-      //if($request->getParam('users') !== null && $request->getParam('users')==true) {
-      if(true) {
+      if($request->getParam('users') !== null && $request->getParam('users')==true) {
         $withArr['all_event_requirements'] = function ($query) use ($event_id) {
-          $query->where('event_id','=',$event_id)->where('registration',true);
+          $query->where('registration',true);
         };
-	      $withArr[] = 'all_event_requirements.user';
+	      $withArr[] = 'all_event_requirements.user:user_id,full_name,email,user_type,gender';
       }
       $event = FrcPortal\Event::with($withArr)->find($event_id);
       if($reqsBool) {
