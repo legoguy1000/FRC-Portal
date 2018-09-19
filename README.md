@@ -5,6 +5,7 @@ This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We ne
 Version 2.12.0 (In Dev)
 * Simplified some code
 * Upgraded Facebook API to 3.1
+* Add master Cronjob
 
 Version 2.11.0
 * Add JSON field to season model to allow customization of google form columns mapping to DB
