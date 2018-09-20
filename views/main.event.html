@@ -70,14 +70,25 @@
 	</div>
 	<div layout="row" layout-align="center center" style="width:100%;">
 		<div layout="column" flex-gt-md="60" flex>
-			<h2 class="mb-30">POC & Venue</h2>
+			<h2 class="mb-30">People & Venue</h2>
 			<div layout-gt-sm="row" style="width:100%;" layout-align-gt-sm="space-between stretch">
 				<md-content layout="column" layout-align="start start" class="md-padding" flex flex-gt-sm="45" style="margin-bottom:10px;">
-					<div>{{vm.event.poc.full_name}}</div>
-					<div><a ng-href="mailto:{{vm.event.poc.email}}" target="_blank">{{vm.event.poc.email}}</div>
-					<div ng-show="vm.event.poc.slackEnabled">
-						<a ng-href="slack://user?team={{vm.slack_team_id}}&id={{vm.event.poc.slack_id}}">Slack App</a><br/>
-						<a ng-href="{{vm.slack_url}}/messages/{{vm.event.poc.slack_id}}" target="_blank">Slack Web</a>
+					<div>
+						<h3>POC</h3>
+						<div>{{vm.event.poc.full_name}}</div>
+						<div><a ng-href="mailto:{{vm.event.poc.email}}" target="_blank">{{vm.event.poc.email}}</div>
+						<div ng-show="vm.event.poc.slackEnabled">
+							<a ng-href="slack://user?team={{vm.slack_team_id}}&id={{vm.event.poc.slack_id}}">Slack App</a><br/>
+							<a ng-href="{{vm.slack_url}}/messages/{{vm.event.poc.slack_id}}" target="_blank">Slack Web</a>
+						</div>
+					</div>
+					<div>
+						<h3>Registered Users</h3>
+						<div>
+							<div ng-repeat="user in vm.event.registered_users">
+								{{user.full_name}}
+							</div>
+						</div>
 					</div>
 				</md-content>
 			 	<div flex flex-gt-sm="45" style="margin-bottom:10px;">
