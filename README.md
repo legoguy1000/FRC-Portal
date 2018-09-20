@@ -6,6 +6,7 @@ Version 2.12.0 (In Dev)
 * Simplified some code
 * Upgraded Facebook API to 3.1
 * Add master Cronjob
+* Add list of registered users to event page
 
 Version 2.11.0
 * Add JSON field to season model to allow customization of google form columns mapping to DB
