@@ -77,7 +77,7 @@
 						<h3>POC</h3>
 						<div>{{vm.event.poc.full_name}}</div>
 						<div><a ng-href="mailto:{{vm.event.poc.email}}" target="_blank">{{vm.event.poc.email}}</div>
-						<div ng-show="vm.event.poc.slackEnabled">
+						<div ng-show="vm.event.poc.slack_enabled">
 							<a ng-href="slack://user?team={{vm.slack_team_id}}&id={{vm.event.poc.slack_id}}">Slack App</a><br/>
 							<a ng-href="{{vm.slack_url}}/messages/{{vm.event.poc.slack_id}}" target="_blank">Slack Web</a>
 						</div>
