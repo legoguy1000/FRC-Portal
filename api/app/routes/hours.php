@@ -287,23 +287,20 @@ $app->group('/hours', function () {
                       'signin_time' => date('M d, Y H:i A', $date),
                       'signin_out' => 'sign_out'
                     );
-                  //  $emailInfo = emailSignInOut($user_id,$emailData);
+                    $emailInfo = emailSignInOut($user_id,$emailData);
                     $msgData = array(
                       'slack' => array(
                         'title' => 'Sign out',
                         'body' => 'You signed out at '.$emailData['signin_time']
                       ),
                       'email' => array(
-                        'subject' => '', //$emailInfo['subject'],
-                        'content' =>  '', //$emailInfo['content'],
+                        'subject' => $emailInfo['subject'],
+                        'content' =>  $emailInfo['content'],
                         'userData' => $user
                       )
                     );
                     sendUserNotification($user_id, 'sign_in_out', $msgData);
-                    $season = FrcPortal\Season::where('year',date('Y'))->first();
-                    $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
-                      $query->where('season_id', $season->season_id); // fields from comments table,
-                    }, 'last_sign_in'])->where('status',true)->get();
+                    $users = getSignInList();
 
                     $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
                   } else {
@@ -316,24 +313,20 @@ $app->group('/hours', function () {
                       'signin_time' => date('M d, Y H:i A', $date),
                       'signin_out' => 'sign_in'
                     );
-                  //  $emailInfo = emailSignInOut($user_id,$emailData);
+                    $emailInfo = emailSignInOut($user_id,$emailData);
                     $msgData = array(
                       'slack' => array(
                         'title' => 'Sign In',
                         'body' => 'You signed in at '.$emailData['signin_time']
                       ),
                       'email' => array(
-                        'subject' => '', //$emailInfo['subject'],
-                        'content' =>  '', //$emailInfo['content'],
+                        'subject' => $emailInfo['subject'],
+                        'content' =>  $emailInfo['content'],
                         'userData' => $user
                       )
                     );
                     sendUserNotification($user_id, 'sign_in_out', $msgData);
-                    $season = FrcPortal\Season::where('year',date('Y'))->first();
-                    $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
-                      $query->where('season_id', $season->season_id); // fields from comments table,
-                    }, 'last_sign_in'])->where('status','1')->get();
-
+                    $users = getSignInList();
                     $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
                   } else {
                     $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');

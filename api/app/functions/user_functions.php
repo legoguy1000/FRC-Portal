@@ -26,7 +26,7 @@ function checkLogin($userData) {
 		$user = $data->users;
 	} else {
 		$data = FrcPortal\User::with(['school']) //'user_categories'
-						->where(function ($query) {
+						->where(function ($query) use ($email) {
 							$query->where('email', $email)
 										->orWhere('team_email', $email);
 						})

@@ -250,17 +250,20 @@ function emailSignInOut($user_id,$emailData) {
 	$signInTime = $emailData['signin_time'] ? $emailData['signin_time']:'';
 	$signInOut= $emailData['signin_out'] ? $emailData['signin_out']:'';
 
-	$seasonInfo = userSeasonInfo($user_id, $year);
-	$userSeasonInfo = $seasonInfo[0];
+	$season = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
+						$query->where('user_id','=',$user_id); // fields from comments table,
+					}])->where('year','=',$year)->get();
+	$userSeasonInfo = $season['annual_requirements'];
 
-	$season = getSeasonByYear($year, $reqs = false);
 	$season_start = $season['start_date'];
 	$season_end = $season['end_date'];
 	$msg = '';
-	if($date >= $season_start && $date <= $season_end) {
-		$msg = ' You have accumulated '.$userSeasonInfo['season_hours_exempt'].' non-exempt season hours.';
-	} else {
-		$msg = ' You have accumulated '.$userSeasonInfo['off_season_hours'].' offseason hours.';
+	if($season->season_period['build_season']) {
+		$msg = ' You have accumulated '.$userSeasonInfo['build_season_hours'].' build season hours.';
+	} elseif($season->season_period['competition_season']) {
+		$msg = ' You have accumulated '.$userSeasonInfo['competition_season_hours'].' competition season hours.';
+	} elseif($season->season_period['off_season']) {
+		$msg = ' You have accumulated '.$userSeasonInfo['build_season_hours'].' offseason hours.';
 	}
 
 	$io = '';
@@ -271,7 +274,8 @@ function emailSignInOut($user_id,$emailData) {
 	}
 	$subject = 'You signed '.$io.' at '.$signInTime;
 	$teamNumber = getSettingsProp('team_number');
-	$content = '<p>You signed '.$io.' using the Team '.$teamNumber.' Portal at '.$signInTime.'.</p><p> '.$msg.' You have accumulated '.$userSeasonInfo['total'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
+	$content = '<p>You signed '.$io.' using the Team '.$teamNumber.' Portal at '.$signInTime.'.</p>';
+	$content .= '<p> '.$msg.' You have accumulated '.$userSeasonInfo['total'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
 
 	return array(
 		'subject' => $subject,
