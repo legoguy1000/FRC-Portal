@@ -297,7 +297,7 @@ $app->group('/hours', function () {
                       )
                     );
                     sendUserNotification($user_id, 'sign_in_out', $msgData);
-                    $users = getSignInList();
+                    $users = getSignInList(date('Y'));
 
                     $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
                   } else {
@@ -323,7 +323,7 @@ $app->group('/hours', function () {
                       )
                     );
                     sendUserNotification($user_id, 'sign_in_out', $msgData);
-                    $users = getSignInList();
+                    $users = getSignInList(date('Y'));
                     $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
                   } else {
                     $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');
