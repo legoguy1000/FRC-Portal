@@ -89,7 +89,7 @@
 					          <md-option ng-value="{{n}}" ng-repeat="n in vm.range(0,10)">{{n}}</md-option>
 					        </md-select>
 								</div>
-								<div layout="row" flex layout-align="space-between start">
+								<div layout="row" flex layout-align="space-between start" ng-show="vm.registrationForm.can_drive || vm.registrationForm.car_bool">
 									<div layout="column">
 										<div layout="row" layout-align="center center" class="bold">
 												<span ng-hide="vm.registrationForm.event_cars.user_id == vm.userInfo.user_id">My </span>
@@ -107,6 +107,9 @@
 											<div>{{user.full_name}}</div>
 										</div>
 									</div>
+								</div>
+								<div layout="row" flex layout-align="space-between start" ng-show="!vm.registrationForm.can_drive && !vm.registrationForm.car_bool">
+									This section will populate once you have identified as a driver or have been assigned a vehicle.
 								</div>
 							</div>
 				    </v-pane-content>
