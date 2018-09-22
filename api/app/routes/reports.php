@@ -46,7 +46,7 @@ $app->group('/reports', function () {
     	$avg = (double) $re->avg;
 
     	$data['Sum'][$year] = $sum;
-    	$data['avg'][$year] = $avg;
+    	$data['Avg'][$year] = $avg;
     }
     $data['Sum'] = array_values($data['Sum']);
     $data['Avg'] = array_values($data['Avg']);

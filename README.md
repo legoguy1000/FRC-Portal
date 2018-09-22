@@ -9,6 +9,7 @@ Version 2.12.0 (In Dev)
 * Add list of registered users to event page
 * Fixed Sign in/out email
 * Event Registration dialog - Only show Transportation section content once there is data
+* Add standardized functions to reports
 
 Version 2.11.0
 * Add JSON field to season model to allow customization of google form columns mapping to DB
