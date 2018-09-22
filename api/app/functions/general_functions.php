@@ -42,8 +42,23 @@ function defaultTableParams() {
 	$params['filter'] = '';
 	$params['limit'] = 5;
 	$params['order'] = '';
-	$params['page'] = 5;
+	$params['page'] = 1;
 	return $params;
+}
+
+function checkSearchInputs($request, $defaults) {
+	$masterDefaults = defaultTableParams();
+	$filter = $request->getParam('filter') !== null ? $request->getParam('filter'):$defaults['filter'];
+	$limit = $request->getParam('limit') !== null ? $request->getParam('limit'):$defaults['limit'];
+	$order = $request->getParam('order') !== null ? $request->getParam('order'):$defaults['order'];
+	$page = $request->getParam('page') !== null ? $request->getParam('page'):$defaults['page'];
+
+	return array(
+		'filter' => $filter,
+		'limit' => $limit,
+		'order' => $order,
+		'page' => $page,
+	);
 }
 
 function transposeData($data)
@@ -277,4 +292,5 @@ function slackGetAPI($endpoint, $params = array()) {
 	curl_close($ch);
 	return $result;
 }
+
 ?>
