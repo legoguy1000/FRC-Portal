@@ -125,10 +125,7 @@ $app->group('/hours', function () {
   $this->group('/signIn', function() {
     //Get the list of users and their last sign/out and hours
     $this->get('/list', function ($request, $response, $args) {
-      $season = FrcPortal\Season::where('year',date('Y'))->first();
-      $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
-        $query->where('season_id', $season->season_id); // fields from comments table,
-      }, 'last_sign_in'])->where('status',true)->get();
+      $users = getSignInList(date('Y'));
       $response = $response->withJson($users);
       return $response;
     });

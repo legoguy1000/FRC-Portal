@@ -252,7 +252,7 @@ function emailSignInOut($user_id,$emailData) {
 
 	$season = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
 						$query->where('user_id','=',$user_id); // fields from comments table,
-					}])->where('year','=',$year)->get();
+					}])->where('year','=',$year)->first();
 	$userSeasonInfo = $season['annual_requirements'];
 
 	$season_start = $season['start_date'];
