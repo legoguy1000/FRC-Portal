@@ -25,6 +25,7 @@ include($root.'/functions/event_functions.php');
 include($root.'/functions/user_functions.php');
 include($root.'/functions/notification_functions.php');
 include($root.'/functions/report_functions.php');
+include($root.'/functions/time_functions.php');
 
 
 ?>
