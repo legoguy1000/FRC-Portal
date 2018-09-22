@@ -124,6 +124,7 @@ if($version >= '2.11.0') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-updateEventsFromGoogle'], ['value' => false]);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-tooLong'], ['value' => false]);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-endOfDayHoursToSlack'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'location'], ['value' => '']);
   }
 }
 

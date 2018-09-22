@@ -185,9 +185,11 @@ function emailUser($userData = array(),$subject = '',$content = '',$attachments 
 	$emailContent = $content ;
 	$teamName = getSettingsProp('team_name');
 	$teamNumber = getSettingsProp('team_number');
+	$teamLocation = getSettingsProp('location');
 	$envUrl = getSettingsProp('env_url');
 	$email = str_replace('###TEAM_NAME###',$teamName,$mergedHtml);
 	$email = str_replace('###TEAM_NUMBER###',$teamNumber,$email);
+	$email = str_replace('###TEAM_LOCATION###',$teamLocation,$email);
 	$email = str_replace('###ENV_URL###',$envUrl,$email);
 	$email = str_replace('###SUBJECT###',$subjectLine,$email);
 	$email = str_replace('###FNAME###',$userData['fname'],$email);
