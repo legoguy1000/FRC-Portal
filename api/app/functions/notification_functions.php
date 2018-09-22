@@ -275,7 +275,7 @@ function emailSignInOut($user_id,$emailData) {
 	$subject = 'You signed '.$io.' at '.$signInTime;
 	$teamNumber = getSettingsProp('team_number');
 	$content = '<p>You signed '.$io.' using the Team '.$teamNumber.' Portal at '.$signInTime.'.</p>';
-	$content .= '<p> '.$msg.' You have accumulated '.$userSeasonInfo['total'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
+	$content .= '<p> '.$msg.' You have accumulated '.$userSeasonInfo['total_hours'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
 
 	return array(
 		'subject' => $subject,
