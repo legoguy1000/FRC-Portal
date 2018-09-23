@@ -74,10 +74,6 @@ angular.module('FrcPortal', [
 	  .state('main.oauthSuccess', {
 		url: '/oauth?clientId&code&redirectUri',
 		templateUrl: 'views/main.oauth.html',
-		controller: function($scope){
-    	var vm = this;
-	  },
-		controllerAs: 'vm',
 		authenticate: false,
 		data: {
 		  title: ''
