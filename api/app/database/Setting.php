@@ -31,6 +31,7 @@ Capsule::schema()->create('settings', function ($table) {
 
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'team_name'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'team_number'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'location'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'env_url'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'team_logo_url'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'team_domain'], ['value' => '']);
@@ -43,5 +44,12 @@ Capsule::schema()->create('settings', function ($table) {
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'slack_api_token'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'slack_team_id'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'notification_email'], ['value' => '']);
+
+$setting = FrcPortal\Setting::updateOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-changeUserStatus'], ['value' => false]);
+$setting = FrcPortal\Setting::updateOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-importSlackProfiles'], ['value' => false]);
+$setting = FrcPortal\Setting::updateOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-pollMembershipFormResponses'], ['value' => false]);
+$setting = FrcPortal\Setting::updateOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-updateEventsFromGoogle'], ['value' => false]);
+$setting = FrcPortal\Setting::updateOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-tooLong'], ['value' => false]);
+$setting = FrcPortal\Setting::updateOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-endOfDayHoursToSlack'], ['value' => false]);
 
 ?>

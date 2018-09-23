@@ -113,6 +113,22 @@ if($version >= '2.11.0') {
   $set = FrcPortal\Setting::where('setting','jwt_key')->orWhere('setting','jwt_signin_key')->update(['section' => 'jwt']);
 }
 
+/**
+* 2.11.2
+**/
+if($version >= '2.11.2') {
+  if(Capsule::schema()->hasTable('settings')) {
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-changeUserStatus'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-importSlackProfiles'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-pollMembershipFormResponses'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-updateEventsFromGoogle'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-tooLong'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-endOfDayHoursToSlack'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'location'], ['value' => '']);
+  }
+}
+
+
 //Create User Category Tables
 /*
 include_once('UserCategory.php');

@@ -1,101 +1,7 @@
 <?php
 use \Firebase\JWT\JWT;
 
-
-function getTokenFromHeaders() {
-	$return = false;
-	$headers = apache_request_headers();
-	if(isset($headers['Authorization'])) {
-		$jwt = str_replace('Bearer ','',$headers['Authorization']);
-		if($jwt != '') {
-			$return = $jwt;
-		}
-	}
-	return $return;
-}
-
-function checkToken($die=true,$die401=false) {
-	$data = false;
-	$jwt = null;
-	$jwt = getTokenFromHeaders();
-	$data = checkTokenManually($jwt,$die,$die401);
-	return $data;
-}
-
-function checkTokenManually($token,$die=true,$die401=false) {
-	$data = array();
-	if(isset($token) && $token != '' && $token != false && $token != null) {
-		$jwt = $token;
-		$key = getSettingsProp('jwt_key');
-		try{
-			$decoded = JWT::decode($jwt, $key, array('HS256'));
-		}catch(\Firebase\JWT\ExpiredException $e){
-			if($die401) {
-				header("HTTP/1.1 401 Unauthorized");
-				exit;
-			} elseif($die) {
-				die(json_encode(array('status'=>false, 'type'=>array('toast'=>'error', 'alert'=>'danger'), 'msg'=>'Authorization Error. '.$e->getMessage())));
-			} else {
-				return false;
-			}
-		} catch(\Firebase\JWT\SignatureInvalidException $e){
-			if($die401) {
-				header("HTTP/1.1 401 Unauthorized");
-				exit;
-			} elseif($die) {
-				die(json_encode(array('status'=>false, 'type'=>array('toast'=>'error', 'alert'=>'danger'), 'msg'=>'Authorization Error. '.$e->getMessage())));
-			} else {
-				return false;
-			}
-		}
-		$decoded_array = json_encode($decoded);
-		$data = json_decode($decoded_array,true);
-		return $data;
-	} else {
-		if($die401) {
-			header("HTTP/1.1 401 Unauthorized");
-			exit;
-		} elseif($die) {
-			die(json_encode(array('status'=>false, 'type'=>array('toast'=>'error', 'alert'=>'danger'), 'msg'=>'Authorization Error.  Please try logging in again.')));
-		} else {
-			return false;
-		}
-	}
-}
-
-function verifyToken($token,$die=true,$die401=false)
-{
-	global $app;
-	$data = array();
-	if(isset($token) && $token != '' && $token != false && $token != null)
-	{
-		$jwt = $token;
-		$key = getSettingsProp('jwt_key');
-		$decoded = JWT::decode($jwt, $key, array('HS256'));
-		$decoded_array = json_encode($decoded);
-		$data = json_decode($decoded_array,true);
-		return $data;
-	}
-	else
-	{
-		if($die401)
-		{
-			header("HTTP/1.1 401 Unauthorized");
-			exit;
-		}
-		elseif($die)
-		{
-			die(json_encode(array('status'=>false, 'type'=>array('toast'=>'error', 'alert'=>'danger'), 'msg'=>'Authorization Error.  Please try logging in again.')));
-		}
-		else
-		{
-			return false;
-		}
-	}
-}
-
-function getRealIpAddr()
-{
+function getRealIpAddr() {
 	$ip = '';
 	if(substr(php_sapi_name(), 0, 3) == 'cli') {
 		global $WEBSOCKET_IP;
@@ -118,8 +24,7 @@ function getRealIpAddr()
     return $ip;
 }
 
-function insertLogs($userId, $type, $status, $msg)
-{
+function insertLogs($userId, $type, $status, $msg) {
 	$db = db_connect();
 	$id = uniqid();
 	$ip = getRealIpAddr();
@@ -128,7 +33,7 @@ function insertLogs($userId, $type, $status, $msg)
 		$user_id = db_quote($userId);
 	}
 	$query = 'INSERT INTO logs (id, user_id, type, status, msg, remote_ip) VALUES ('.db_quote($id).', '.$user_id.', '.db_quote($type).', '.db_quote($status).', '.db_quote($msg).', '.db_quote($ip).')';
-	$result = db_query($query);
+	//$result = db_query($query);
 	return $id;
 }
 
@@ -137,8 +42,23 @@ function defaultTableParams() {
 	$params['filter'] = '';
 	$params['limit'] = 5;
 	$params['order'] = '';
-	$params['page'] = 5;
+	$params['page'] = 1;
 	return $params;
+}
+
+function checkSearchInputs($request, $defaults) {
+	$masterDefaults = defaultTableParams();
+	$filter = $request->getParam('filter') !== null ? $request->getParam('filter'):$defaults['filter'];
+	$limit = $request->getParam('limit') !== null ? $request->getParam('limit'):$defaults['limit'];
+	$order = $request->getParam('order') !== null ? $request->getParam('order'):$defaults['order'];
+	$page = $request->getParam('page') !== null ? $request->getParam('page'):$defaults['page'];
+
+	return array(
+		'filter' => $filter,
+		'limit' => $limit,
+		'order' => $order,
+		'page' => $page,
+	);
 }
 
 function transposeData($data)
@@ -341,4 +261,36 @@ function badRequestResponse($response, $msg = 'Invalid Request') {
 	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
 	return $response->withJson($responseArr,400);
 }
+
+function slackPostAPI($endpoint, $data) {
+	$content = str_replace('#new_line#','\n',json_encode($data));
+	$slack_token = getSettingsProp('slack_api_token');
+	$ch = curl_init();
+	curl_setopt($ch,CURLOPT_URL, 'https://slack.com/api/'.$endpoint);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		'Content-Type: application/json',
+		'Content-Length: ' . strlen($content),
+		'Authorization: Bearer '.$slack_token
+	));
+	$result = curl_exec($ch);
+	//close connection
+	curl_close($ch);
+}
+
+function slackGetAPI($endpoint, $params = array()) {
+	$slack_token = getSettingsProp('slack_api_token');
+	$params['token'] = $slack_token;
+	$url = 'https://slack.com/api/'.$endpoint.'?'.http_build_query($params);
+	$ch = curl_init();
+	curl_setopt($ch,CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	$result = curl_exec($ch);
+	curl_close($ch);
+	return $result;
+}
+
 ?>

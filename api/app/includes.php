@@ -2,7 +2,7 @@
 use Illuminate\Database\Capsule\Manager as Capsule;
 ini_set("error_reporting", E_ALL);
 ini_set("expose_php", false);
-define("VERSION",'2.11.1');
+define("VERSION",'2.11.2');
 
 $root = __DIR__;
 require $root.'/vendor/autoload.php';
@@ -25,6 +25,7 @@ include($root.'/functions/event_functions.php');
 include($root.'/functions/user_functions.php');
 include($root.'/functions/notification_functions.php');
 include($root.'/functions/report_functions.php');
+include($root.'/functions/time_functions.php');
 
 
 ?>

@@ -190,9 +190,10 @@ function itterateMembershipFormData($data = array(), $season = null) {
 				if($user->save()) {
 					$user_id = $user->user_id;
 					setDefaultNotifications($user_id);
+					$host = getSettingsProp('env_url');
 					$msgData = array(
 						'subject' => 'User account created for '.$team_name.'\s team portal',
-						'content' =>  'Congratulations! You have been added to '.$team_name.'\s team portal.  Please go to https://'.$_SERVER["HTTP_HOST"].' to view your annual registration, event registration, season hours and more.',
+						'content' =>  'Congratulations! You have been added to '.$team_name.'\s team portal.  Please go to '.$host.' to view your annual registration, event registration, season hours and more.',
 						'userData' => $user
 					);
 				}

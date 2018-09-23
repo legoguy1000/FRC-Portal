@@ -146,6 +146,9 @@ class Event extends Eloquent {
   public function event_requirements() {
     return $this->hasOne('FrcPortal\EventRequirement', 'event_id', 'event_id')->withDefault();
   }
+  public function registered_users() {
+      return $this->hasManyThrough('FrcPortal\User','FrcPortal\EventRequirement', 'event_id', 'user_id', 'event_id', 'user_id');
+  }
   /**
   * Get the Event Cars.
   */

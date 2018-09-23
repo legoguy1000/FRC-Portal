@@ -21,7 +21,7 @@ class Season extends Eloquent {
   ];
 
 
-  protected $appends = ['date'];
+  protected $appends = ['date', 'season_period'];
   //'start_date_unix','bag_day_unix','end_date_unix','start_date_formatted','bag_day_formatted','end_date_formatted','start_date_formatted','start_date_formatted'
   //$data['requirements'] = array();
   /**
@@ -47,39 +47,8 @@ class Season extends Eloquent {
       $this->season_id = uniqid();
     }
     return parent::save();
-  } /*
-  public static function boot() {
-    parent::boot();
-    static::creating(function ($instance) {
-      $instance->season_id = (string) uniqid();
-    });
-  }*/
+  }
 
-/*
-  public function getStartDateUnixAttribute() {
-    $date = new DateTime($this->attributes['start_date']);
-    return $date->format('U');
-  }
-  public function getEndDateUnixAttribute() {
-    $date = new DateTime($this->attributes['end_date']);
-    return $date->format('U');
-  }
-  public function getBagDayUnixAttribute() {
-    $date = new DateTime($this->attributes['bag_day']);
-    return $date->format('U');
-  }
-  public function getStartDateFormattedAttribute() {
-    $date = new DateTime($this->attributes['start_date']);
-    return $date->format('F j, Y');
-  }
-  public function getEndDateFormattedAttribute() {
-    $date = new DateTime($this->attributes['end_date']);
-    return $date->format('F j, Y');
-  }
-  public function getBagDayFormattedAttribute() {
-    $date = new DateTime($this->attributes['bag_day']);
-    return $date->format('F j, Y');
-  } */
   public function getDateAttribute() {
     $start = formatDateArrays($this->attributes['start_date']);
     $end = formatDateArrays($this->attributes['end_date']);
@@ -88,6 +57,19 @@ class Season extends Eloquent {
       'start' => $start,
       'end' => $end,
       'bag' => $bag
+    );
+  }
+
+  public function getSeasonPeriodAttribute() {
+    $start = $this->attributes['start_date'];
+    $end = $this->attributes['end_date'];
+    $bag = $this->attributes['bag_day'];
+    $eoy = date('Y').'-12-31';
+  	$date = date('Y-m-d');
+    return array(
+      'build_season' => $date >= $start && $date <= $bag,
+      'competition_season' => $date > $bag && $date <= $end,
+      'off_season' => $date > $end && $date <= $eoy
     );
   }
 

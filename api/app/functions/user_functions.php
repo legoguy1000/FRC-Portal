@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
+use \Firebase\JWT\JWT;
 function checkAdmin($user) {
 	$return = false;
 	if($user instanceof FrcPortal\User) {
@@ -25,7 +26,7 @@ function checkLogin($userData) {
 		$user = $data->users;
 	} else {
 		$data = FrcPortal\User::with(['school']) //'user_categories'
-						->where(function ($query) {
+						->where(function ($query) use ($email) {
 							$query->where('email', $email)
 										->orWhere('team_email', $email);
 						})
@@ -39,6 +40,68 @@ function checkLogin($userData) {
 		}
 	}
 	return $user;
+}
+
+function generateUserJWT(FrcPortal\User $user) {
+	/* if(!$user instanceof FrcPortal\User) {
+		return false;
+	} */
+	$key = getSettingsProp('jwt_key');
+	$token = array(
+		"iss" => getSettingsProp('env_url'),
+		"iat" => time(),
+		"exp" => time()+60*60,
+		"jti" => bin2hex(random_bytes(10)),
+		'data' => array(
+			'user_id' => $user->user_id,
+			'full_name' => $user->full_name,
+			'admin' => $user->admin,
+			'status' => $user->status,
+			'user_type' => $user->user_type,
+			'email' => $user->email,
+		)
+	);
+	$jwt = JWT::encode($token, $key);
+	return $jwt;
+}
+
+function checkTeamLogin($userEmail = '') {
+	$require_team_email = getSettingsProp('require_team_email');
+	if($require_team_email) {
+		$teamDomain = getSettingsProp('team_domain');
+		if(!is_null($teamDomain) && strpos($userEmail,'@'.$teamDomain) === false || $userEmail == '') {
+			return true; //Not valid email
+		}
+	}
+	return false;
+}
+
+function updateUserOnLogin(FrcPortal\User $user, $userData) {
+	/* if(!$user instanceof FrcPortal\User) {
+		return false;
+	} */
+	$update = false;
+	if($user->profile_image == '') {
+		$user->profile_image = $userData['profile_image'];
+		$update = true;
+	}
+	$teamDomain = getSettingsProp('team_domain');
+	if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
+		$user->team_email = $userData['email'];
+		$update = true;
+	}
+	if($update == true) {
+		$user = $user->save();
+	}
+	return true;
+}
+
+function checkLoginProvider($provider) {
+	$loginEnabled = FrcPortal\Setting::where('section','login')->where('setting',$provider.'_login_enable')->first();
+	if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
+		return false;
+	}
+	return true;
 }
 
 function getUsersAnnualRequirements($season_id) {

@@ -126,24 +126,7 @@ function SlackApiPost($data = null) {
 	if(is_null($data) || !is_array($data) || empty($data)) {
 		return $result;
 	}
-	$content = str_replace('#new_line#','\n',json_encode($data));
-	$slack_token = getSettingsProp('slack_api_token');
-	$slack_webhook_url = 'https://slack.com/api/chat.postMessage';
-	$ch = curl_init();
-	//set the url, number of POST vars, POST data
-	//
-	curl_setopt($ch,CURLOPT_URL, $slack_webhook_url);
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-		'Content-Type: application/json',
-		'Content-Length: ' . strlen($content),
-		'Authorization: Bearer '.$slack_token
-	));
-	$result = curl_exec($ch);
-	//close connection
-	curl_close($ch);
+	$result = slackPostAPI($endpoint = 'chat.postMessage', $data);
 	return $result;
 }
 
@@ -202,9 +185,11 @@ function emailUser($userData = array(),$subject = '',$content = '',$attachments 
 	$emailContent = $content ;
 	$teamName = getSettingsProp('team_name');
 	$teamNumber = getSettingsProp('team_number');
+	$teamLocation = getSettingsProp('location');
 	$envUrl = getSettingsProp('env_url');
 	$email = str_replace('###TEAM_NAME###',$teamName,$mergedHtml);
 	$email = str_replace('###TEAM_NUMBER###',$teamNumber,$email);
+	$email = str_replace('###TEAM_LOCATION###',$teamLocation,$email);
 	$email = str_replace('###ENV_URL###',$envUrl,$email);
 	$email = str_replace('###SUBJECT###',$subjectLine,$email);
 	$email = str_replace('###FNAME###',$userData['fname'],$email);
@@ -267,17 +252,20 @@ function emailSignInOut($user_id,$emailData) {
 	$signInTime = $emailData['signin_time'] ? $emailData['signin_time']:'';
 	$signInOut= $emailData['signin_out'] ? $emailData['signin_out']:'';
 
-	$seasonInfo = userSeasonInfo($user_id, $year);
-	$userSeasonInfo = $seasonInfo[0];
+	$season = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
+						$query->where('user_id','=',$user_id); // fields from comments table,
+					}])->where('year','=',$year)->first();
+	$userSeasonInfo = $season['annual_requirements'];
 
-	$season = getSeasonByYear($year, $reqs = false);
 	$season_start = $season['start_date'];
 	$season_end = $season['end_date'];
 	$msg = '';
-	if($date >= $season_start && $date <= $season_end) {
-		$msg = ' You have accumulated '.$userSeasonInfo['season_hours_exempt'].' non-exempt season hours.';
-	} else {
-		$msg = ' You have accumulated '.$userSeasonInfo['off_season_hours'].' offseason hours.';
+	if($season->season_period['build_season']) {
+		$msg = ' You have accumulated '.$userSeasonInfo['build_season_hours'].' build season hours.';
+	} elseif($season->season_period['competition_season']) {
+		$msg = ' You have accumulated '.$userSeasonInfo['competition_season_hours'].' competition season hours.';
+	} elseif($season->season_period['off_season']) {
+		$msg = ' You have accumulated '.$userSeasonInfo['build_season_hours'].' offseason hours.';
 	}
 
 	$io = '';
@@ -288,7 +276,8 @@ function emailSignInOut($user_id,$emailData) {
 	}
 	$subject = 'You signed '.$io.' at '.$signInTime;
 	$teamNumber = getSettingsProp('team_number');
-	$content = '<p>You signed '.$io.' using the Team '.$teamNumber.' Portal at '.$signInTime.'.</p><p> '.$msg.' You have accumulated '.$userSeasonInfo['total'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
+	$content = '<p>You signed '.$io.' using the Team '.$teamNumber.' Portal at '.$signInTime.'.</p>';
+	$content .= '<p> '.$msg.' You have accumulated '.$userSeasonInfo['total_hours'].' total annual hours. Do not forget to sign out or your hours will not be recorded.</p>';
 
 	return array(
 		'subject' => $subject,

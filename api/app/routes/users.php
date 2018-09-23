@@ -12,10 +12,17 @@ $app->group('/users', function () {
       'gender' => '',
       'status' => true,
     );
-    $filter = $request->getParam('filter') !== null ? $request->getParam('filter'):'';
-    $limit = $request->getParam('limit') !== null ? $request->getParam('limit'):10;
-    $order = $request->getParam('order') !== null ? $request->getParam('order'):'full_name';
-    $page = $request->getParam('page') !== null ? $request->getParam('page'):1;
+    $defaults = array(
+      'filter' => '',
+      'limit' => 10,
+      'order' => '-full_name',
+      'page' => 1,
+    );
+    $inputs = checkSearchInputs($request, $defaults);
+    $filter = $inputs['filter'];
+    $limit = $inputs['limit'];
+    $order = $inputs['order'];
+    $page = $inputs['page'];
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
     $search = $request->getParam('search') !== null ? $request->getParam('search'):$searchProperties;
 
@@ -30,7 +37,7 @@ $app->group('/users', function () {
     //  die($bool );
     }
     $totalNum = 0;
-    $users = FrcPortal\User::with('school')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->where($queryArr2);
+    $users = FrcPortal\User::with('school')->addSelect('schools.school_name','schools.abv')->leftJoin('schools', 'users.school_id', '=', 'schools.school_id')->where($queryArr2);
   	if($filter != '') {
       $users = $users->orHavingRaw('email LIKE ?',array('%'.$filter.'%'));
       $users = $users->orHavingRaw('full_name LIKE ?',array('%'.$filter.'%'));

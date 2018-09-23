@@ -7,9 +7,10 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
-		getEvent: function (event_id) {
+		getEvent: function (event_id,params) {
 			var event_id = event_id != undefined && event_id != null ? event_id:'';
-			return $http.get('api/events/'+event_id)
+			var paramsStr = params != undefined && params != null ? '?'+$.param(params):'';
+			return $http.get('api/events/'+event_id+paramsStr)
 			.then(function(response) {
 				return response.data;
 			});

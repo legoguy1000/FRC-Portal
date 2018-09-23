@@ -25,15 +25,11 @@ $app->group('/reports', function () {
     $start_date = $request->getParam('start_date');
     $end_date = $request->getParam('end_date');
 
-    $years = array();
-    for($i = $start_date; $i <= $end_date; $i++) {
-    	$years[] = (integer) $i;
-    }
     $series = array('Sum','Avg');
-    $data = array();
-    foreach($series as $se) {
-    	$data[strtolower($se)] = array_fill_keys($years,0);
-    }
+    $init = initializeMultiYearData($start_date, $end_date, $series);
+    $years = $init['years'];
+    $data = $init['data'];
+
     $query = 'SELECT SUM(d.hours) as sum, AVG(d.hours) as avg, d.year
               from (SELECT a.user_id, SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600) as hours, year(a.time_in) as year from meeting_hours a WHERE year(a.time_in) BETWEEN :sd AND :ed GROUP BY user_id,year) d
               GROUP BY year';
@@ -49,11 +45,11 @@ $app->group('/reports', function () {
     	$sum = (double) $re->sum;
     	$avg = (double) $re->avg;
 
-    	$data['sum'][$year] = $sum;
-    	$data['avg'][$year] = $avg;
+    	$data['Sum'][$year] = $sum;
+    	$data['Avg'][$year] = $avg;
     }
-    $data['sum'] = array_values($data['sum']);
-    $data['avg'] = array_values($data['avg']);
+    $data['Sum'] = array_values($data['Sum']);
+    $data['Avg'] = array_values($data['Avg']);
 
     $allData = array(
     	'labels' => $years,
@@ -76,15 +72,11 @@ $app->group('/reports', function () {
     $start_date = $request->getParam('start_date');
     $end_date = $request->getParam('end_date');
 
-    $years = array();
-    for($i = $start_date; $i <= $end_date; $i++) {
-    	$years[] = (integer) $i;
-    }
     $series = array('Students','Mentors','Males','Females','Senior','Junior','Sophmore','Freshman','Pre-Freshman'); //,'Total'
-    $data = array();
-    foreach($series as $se) {
-    	$data[$se] = array_fill_keys($years,0);
-    }
+    $init = initializeMultiYearData($start_date, $end_date, $series);
+    $years = $init['years'];
+    $data = $init['data'];
+
     $query = 'SELECT COUNT(DISTINCT(m.user_id)) as user_count, YEAR(m.time_in) as year, u.user_type
               FROM meeting_hours m
               LEFT JOIN users u USING(user_id)
@@ -142,16 +134,8 @@ $app->group('/reports', function () {
       $uc = (integer) $re->user_count;
       $data[$grade][$year] = $uc;
     }
-    foreach($series as $se) {
-    	$data[$se] = array_values($data[$se]);
-    }
 
-    $allData = array(
-    	'labels' => $years,
-    	'series' => $series,
-    	'data' => array_values($data),
-    	//'csvData' => metricsCreateCsvData($data, $years, $series)
-    );
+    $allData = multiYearReportData($data, $series, $years);
     $response = $response->withJson($allData);
     return $response;
   });
@@ -167,16 +151,11 @@ $app->group('/reports', function () {
     $start_date = $request->getParam('start_date');
     $end_date = $request->getParam('end_date');
 
-    $years = array();
-    for($i = $start_date; $i <= $end_date; $i++) {
-    	$years[] = (integer) $i;
-    }
-
     $series = array('Senior','Junior','Sophmore','Freshman','Pre-Freshman','Mentor');
-    $data = array();
-    foreach($series as $se) {
-    	$data[$se] = array_fill_keys($years,0);
-    }
+    $init = initializeMultiYearData($start_date, $end_date, $series);
+    $years = $init['years'];
+    $data = $init['data'];
+
     $query = 'SELECT CASE
      WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=0  THEN "Graduated"
      WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=12 THEN "Senior"
@@ -208,16 +187,7 @@ $app->group('/reports', function () {
         $data[$student_grade][$year] = $sum;
       }
     }
-    foreach($series as $se) {
-    	$data[$se] = array_values($data[$se]);
-    }
-
-    $allData = array(
-    	'labels' => $years,
-    	'series' => $series,
-    	'data' => array_values($data),
-    	//'csvData' => metricsCreateCsvData($data, $years, $series)
-    );
+    $allData = multiYearReportData($data, $series, $years);
     $response = $response->withJson($allData);
     return $response;
   });
@@ -232,16 +202,11 @@ $app->group('/reports', function () {
     $start_date = $request->getParam('start_date');
     $end_date = $request->getParam('end_date');
 
-    $years = array();
-    for($i = $start_date; $i <= $end_date; $i++) {
-    	$years[] = (integer) $i;
-    }
-
     $series = array('Male - Sum','Male - Avg','Female - Sum','Female - Avg');
-    $data = array();
-    foreach($series as $se) {
-    	$data[$se] = array_fill_keys($years,0);
-    }
+    $init = initializeMultiYearData($start_date, $end_date, $series);
+    $years = $init['years'];
+    $data = $init['data'];
+
     $query = 'SELECT b.gender, SUM(d.hours) as sum, AVG(d.hours) as avg, d.year FROM
     (SELECT a.user_id, IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours, year(a.time_in) as year FROM meeting_hours a WHERE year(a.time_in) BETWEEN :sd AND :ed GROUP BY user_id,year) d
     LEFT JOIN users b USING (user_id)
@@ -262,16 +227,7 @@ $app->group('/reports', function () {
     	$data[$gender.' - Sum'][$year] = $sum;
     	$data[$gender.' - Avg'][$year] = $avg;
     }
-    foreach($series as $se) {
-    	$data[$se] = array_values($data[$se]);
-    }
-
-    $allData = array(
-    	'labels' => $years,
-    	'series' => $series,
-    	'data' => array_values($data),
-    	//'csvData' => metricsCreateCsvData($data, $years, $series)
-    );
+    $allData = multiYearReportData($data, $series, $years);
     $response = $response->withJson($allData);
     return $response;
   });
@@ -430,16 +386,11 @@ $app->group('/reports', function () {
     $start_date = $request->getParam('start_date');
     $end_date = $request->getParam('end_date');
 
-    $years = array();
-    for($i = $start_date; $i <= $end_date; $i++) {
-    	$years[] = (integer) $i;
-    }
-
     $series = array('Mentor - Sum','Mentor - Avg','Student - Sum','Student - Avg');
-    $data = array();
-    foreach($series as $se) {
-    	$data[$se] = array_fill_keys($years,0);
-    }
+    $init = initializeMultiYearData($start_date, $end_date, $series);
+    $years = $init['years'];
+    $data = $init['data'];
+
     $query = 'SELECT b.user_type, SUM(d.hours) as sum, AVG(d.hours) as avg, d.year
               FROM (SELECT a.user_id, IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours, year(a.time_in) as year from meeting_hours a WHERE year(a.time_in) BETWEEN :sd AND :ed GROUP BY user_id,year) d
               LEFT JOIN users b USING (user_id)
@@ -460,16 +411,7 @@ $app->group('/reports', function () {
     	$data[$user_type.' - Sum'][$year] = $sum;
     	$data[$user_type.' - Avg'][$year] = $avg;
     }
-    foreach($series as $se) {
-    	$data[$se] = array_values($data[$se]);
-    }
-
-    $allData = array(
-    	'labels' => $years,
-    	'series' => $series,
-    	'data' => array_values($data),
-    	//'csvData' => metricsCreateCsvData($data, $years, $series)
-    );
+    $allData = multiYearReportData($data, $series, $years);
     $response = $response->withJson($allData);
     return $response;
   });

@@ -7,10 +7,18 @@ $app->group('/hours', function () {
       $users = array();
     	$data = array();
 
-      $filter = $request->getParam('filter') !== null ? $request->getParam('filter'):'';
-      $limit = $request->getParam('limit') !== null ? $request->getParam('limit'):10;
-      $order = $request->getParam('order') !== null ? $request->getParam('order'):'full_name';
-      $page = $request->getParam('page') !== null ? $request->getParam('page'):1;
+      $defaults = array(
+    		'filter' => '',
+    		'limit' => 10,
+    		'order' => 'full_name',
+    		'page' => 1,
+    	);
+      $inputs = checkSearchInputs($request, $defaults);
+      $filter = $inputs['filter'];
+      $limit = $inputs['limit'];
+      $order = $inputs['order'];
+      $page = $inputs['page'];
+
       $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
       $queryArr = array();
@@ -125,10 +133,7 @@ $app->group('/hours', function () {
   $this->group('/signIn', function() {
     //Get the list of users and their last sign/out and hours
     $this->get('/list', function ($request, $response, $args) {
-      $season = FrcPortal\Season::where('year',date('Y'))->first();
-      $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
-        $query->where('season_id', $season->season_id); // fields from comments table,
-      }, 'last_sign_in'])->where('status',true)->get();
+      $users = getSignInList(date('Y'));
       $response = $response->withJson($users);
       return $response;
     });
@@ -158,10 +163,17 @@ $app->group('/hours', function () {
       $users = array();
       $data = array();
 
-      $filter = $request->getParam('filter') !== null ? $request->getParam('filter'):'';
-      $limit = $request->getParam('limit') !== null ? $request->getParam('limit'):10;
-      $order = $request->getParam('order') !== null ? $request->getParam('order'):'full_name';
-      $page = $request->getParam('page') !== null ? $request->getParam('page'):1;
+      $defaults = array(
+        'filter' => '',
+        'limit' => 10,
+        'order' => 'full_name',
+        'page' => 1,
+      );
+      $inputs = checkSearchInputs($request, $defaults);
+      $filter = $inputs['filter'];
+      $limit = $inputs['limit'];
+      $order = $inputs['order'];
+      $page = $inputs['page'];
       $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
       $queryArr = array();
@@ -287,23 +299,20 @@ $app->group('/hours', function () {
                       'signin_time' => date('M d, Y H:i A', $date),
                       'signin_out' => 'sign_out'
                     );
-                  //  $emailInfo = emailSignInOut($user_id,$emailData);
+                    $emailInfo = emailSignInOut($user_id,$emailData);
                     $msgData = array(
                       'slack' => array(
                         'title' => 'Sign out',
                         'body' => 'You signed out at '.$emailData['signin_time']
                       ),
                       'email' => array(
-                        'subject' => '', //$emailInfo['subject'],
-                        'content' =>  '', //$emailInfo['content'],
+                        'subject' => $emailInfo['subject'],
+                        'content' =>  $emailInfo['content'],
                         'userData' => $user
                       )
                     );
                     sendUserNotification($user_id, 'sign_in_out', $msgData);
-                    $season = FrcPortal\Season::where('year',date('Y'))->first();
-                    $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
-                      $query->where('season_id', $season->season_id); // fields from comments table,
-                    }, 'last_sign_in'])->where('status',true)->get();
+                    $users = getSignInList(date('Y'));
 
                     $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
                   } else {
@@ -316,24 +325,20 @@ $app->group('/hours', function () {
                       'signin_time' => date('M d, Y H:i A', $date),
                       'signin_out' => 'sign_in'
                     );
-                  //  $emailInfo = emailSignInOut($user_id,$emailData);
+                    $emailInfo = emailSignInOut($user_id,$emailData);
                     $msgData = array(
                       'slack' => array(
                         'title' => 'Sign In',
                         'body' => 'You signed in at '.$emailData['signin_time']
                       ),
                       'email' => array(
-                        'subject' => '', //$emailInfo['subject'],
-                        'content' =>  '', //$emailInfo['content'],
+                        'subject' => $emailInfo['subject'],
+                        'content' =>  $emailInfo['content'],
                         'userData' => $user
                       )
                     );
                     sendUserNotification($user_id, 'sign_in_out', $msgData);
-                    $season = FrcPortal\Season::where('year',date('Y'))->first();
-                    $users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season)  {
-                      $query->where('season_id', $season->season_id); // fields from comments table,
-                    }, 'last_sign_in'])->where('status','1')->get();
-
+                    $users = getSignInList(date('Y'));
                     $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
                   } else {
                     $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');
