@@ -37,8 +37,8 @@
 			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getEvents">
 				<tr md-row>
 					<th md-column md-order-by="name"><span>Event</span></th>
-					<th md-column md-order-by="event_start" hide-xs><span>Date</span></th>
-					<th md-column md-order-by="num_days" hide-xs hide-sm><span># Days</span></th>
+					<th md-column md-order-by="event_start" hide-xs hide-sm><span>Date</span></th>
+					<th md-column md-order-by="num_days" hide-xs><span># Days</span></th>
 					<th md-column md-order-by="type" hide-xs><span>Event Type</span></th>
 					<th md-column md-order-by="game_name" hide-xs hide-sm><span>Season</span></th>
 					<th md-column></th>
@@ -48,7 +48,7 @@
 				<tr md-row ng-repeat="event in vm.events">
 					<td md-cell>
 						<div>{{event.name}}</div>
-						<div show-xs>
+						<div show-xs show-sm hide>
 							<span ng-show="event.date.single_day" class="hint">
 								{{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
 							</span>
@@ -57,7 +57,7 @@
 							</span>
 						</div>
 					</td>
-					<td md-cell hide-xs>
+					<td md-cell hide-xs hide-sm>
 						<span ng-show="event.date.single_day">
 							{{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
 						</span>
@@ -65,7 +65,7 @@
 							{{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
 						</span>
 					</td>
-					<td md-cell hide-xs hide-sm>{{event.num_days}}</td>
+					<td md-cell hide-xs>{{event.num_days}}</td>
 					<td md-cell hide-xs>{{event.type}}</td>
 					<td md-cell hide-xs hide-sm>
 						<div layout="row" layout-align="start center">
