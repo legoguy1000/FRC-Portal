@@ -46,7 +46,17 @@
 			</thead>
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 				<tr md-row ng-repeat="event in vm.events">
-					<td md-cell>{{event.name}}</td>
+					<td md-cell>
+						<div>{{event.name}}</div>
+						<div show-xs>
+							<span ng-show="event.date.single_day">
+								{{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
+							</span>
+							<span ng-hide="event.date.single_day">
+								{{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
+							</span>
+						</div>
+					</td>
 					<td md-cell hide-xs>
 						<span ng-show="event.date.single_day">
 							{{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
