@@ -31,7 +31,7 @@
 		<table md-table ng-model="selected" md-progress="vm.promise">
 			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getSchools">
 				<tr md-row>
-					<th md-column style="width:56px" hide-xs></th>
+					<th md-column style="width:56px"></th>
 					<th md-column md-order-by="school_name"><span>School Name</span></th>
 					<th md-column md-order-by="abv" hide-xs hide-sm><span>Abreviation</span></th>
 					<th md-column md-order-by="student_count" hide-xs><span># of Students</span></th>
@@ -51,7 +51,7 @@
 						<md-button class="md-icon-button" ui-sref="main.admin.school({'school_id':school.school_id})" ng-click="admin.slideLeft()">
 							<md-icon>open_in_new</md-icon>
 						</md-button>
-						<md-button class="md-icon-button" ng-click="">
+						<md-button class="md-icon-button" ng-click="" hide-xs>
 							<md-icon>delete_forever</md-icon>
 						</md-button>
 					</td>
