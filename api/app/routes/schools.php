@@ -17,7 +17,7 @@ $app->group('/schools', function () {
       $schools = $schools->orHavingRaw('school_name LIKE ?',array('%'.$filter.'%'));
       $schools = $schools->orHavingRaw('abv LIKE ?',array('%'.$filter.'%'));
     }
-    $totalNum = count($events->get());
+    $totalNum = count($schools->get());
 
     $orderBy = '';
   	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
