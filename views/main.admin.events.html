@@ -38,9 +38,9 @@
 				<tr md-row>
 					<th md-column md-order-by="name"><span>Event</span></th>
 					<th md-column md-order-by="event_start" hide-xs><span>Date</span></th>
-					<th md-column md-order-by="num_days" hide-xs><span># Days</span></th>
+					<th md-column md-order-by="num_days" hide-xs hide-sm><span># Days</span></th>
 					<th md-column md-order-by="type" hide-xs><span>Event Type</span></th>
-					<th md-column md-order-by="game_name" hide-xs><span>Season</span></th>
+					<th md-column md-order-by="game_name" hide-xs hide-sm><span>Season</span></th>
 					<th md-column></th>
 				</tr>
 			</thead>
@@ -55,9 +55,9 @@
 							{{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
 						</span>
 					</td>
-					<td md-cell hide-xs>{{event.num_days}}</td>
+					<td md-cell hide-xs hide-sm>{{event.num_days}}</td>
 					<td md-cell hide-xs>{{event.type}}</td>
-					<td md-cell hide-xs>
+					<td md-cell hide-xs hide-sm>
 						<div layout="row" layout-align="start center">
 							<img ng-src="{{event.season.game_logo}}" class="avatar" alt="" ng-if="event.season.game_logo"/>
 							{{event.season.game_name}}
