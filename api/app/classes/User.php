@@ -3,11 +3,10 @@ namespace FrcPortal;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Capsule\Manager as DB;
-use \Illuminate\Notifications\Notifiable;
 use \DateTime;
 
 class User extends Eloquent {
-  use Notifiable;
+
   //table name
   protected $table = 'users';
   //Use Custom Primary Key
