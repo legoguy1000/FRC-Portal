@@ -6,6 +6,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
 
 class User extends Eloquent {
+  use Notifiable;
   //table name
   protected $table = 'users';
   //Use Custom Primary Key
