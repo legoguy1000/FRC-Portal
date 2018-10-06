@@ -4,7 +4,8 @@ require_once(__DIR__.'/includes.php');
 //$version = VERSION;
 
 $iniData = array();
-$line = clinput($question = 'This file will install and configure FRC Portal v'.VERSION.'.  Type "yes" to continue: ', $required = true);
+$question = 'This file will install and configure FRC Portal v'.VERSION.'.  Type "yes" to continue: '
+$line = clinput($question, $required = true);
 if($line != 'yes'){
     echo "Aborting!\n";
     exit;
@@ -26,7 +27,7 @@ $iniData['db'] = $db_data;
 if (!file_exists('secured')) {
   mkdir('secured');
 }
-write_ini_file($iniData, __DIR__.'/secured/data.ini', true);
+write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
 
 shell_exec("composer install");
 shell_exec("composer dump-autoload");
