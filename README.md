@@ -5,11 +5,12 @@ This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We ne
 Version 2.12.0 (In Dev)
 * Simplified some code
 * Upgraded Facebook API to 3.1
-* Add master Cronjob
+* Add master Cronjob - Linked individual cronjobs to main
 * Add list of registered users to event page
 * Fixed Sign in/out email
 * Event Registration dialog - Only show Transportation section content once there is data
 * Add standardized functions to reports
+* update installer with CLI for DB information
 
 Version 2.11.0
 * Add JSON field to season model to allow customization of google form columns mapping to DB
