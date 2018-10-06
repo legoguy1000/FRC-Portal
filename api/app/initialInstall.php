@@ -24,7 +24,7 @@ $db_data['db_name'] = clinput($question, $required = true);
 
 $iniData['db'] = $db_data;
 if (!file_exists('secured')) {
-  mkdir('secured',0666);
+  mkdir('secured');
 }
 write_ini_file($iniData, __DIR__.'/secured/data.ini', true);
 
