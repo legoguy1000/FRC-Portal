@@ -23,6 +23,8 @@ $question =  "Please input the MYSQL DB name: ";
 $db_data['db_name'] = clinput($question, $required = true);
 
 $iniData['db'] = $db_data;
+mkdir("secured");
+
 write_ini_file($iniData, __DIR__.'/secured/data.ini', true);
 
 shell_exec("composer install");
