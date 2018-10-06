@@ -275,7 +275,7 @@ function slackPostAPI($endpoint, $data) {
 	));
 	$code = $response->getStatusCode(); // 200
 	$reason = $response->getReasonPhrase(); // OK
-	
+
 	//$ch = curl_init();
 	//curl_setopt($ch,CURLOPT_URL, 'https://slack.com/api/'.$endpoint);
 	//curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -285,7 +285,7 @@ function slackPostAPI($endpoint, $data) {
 		//'Content-Type: application/json',
 		//'Content-Length: ' . strlen($content),
 		//'Authorization: Bearer '.$slack_token
-	));
+	//));
 	//$result = curl_exec($ch);
 	//close connection
 	//curl_close($ch);
