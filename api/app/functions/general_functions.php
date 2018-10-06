@@ -333,4 +333,18 @@ function write_ini_file($assoc_arr, $path, $has_sections=FALSE) {
     return $success;
 }
 
+function clinput($question, $required = true) {
+	if(substr(trim($question), -1) != ':') {
+		$question .= ': ';
+	}
+	echo $question;
+	$handle = fopen ("php://stdin","r");
+	$line = fgets($handle);
+	if(trim($line) == '' && $required){
+	    echo "No input. Aborting!\n";
+	    exit;
+	}
+	return trim($line);
+}
+
 ?>
