@@ -1,5 +1,5 @@
 <?php
-require_once('app/require_onces.php');
+require_once('app/includes.php');
 require_once('app/libraries/CustomAuthRule.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
