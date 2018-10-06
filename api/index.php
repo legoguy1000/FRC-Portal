@@ -1,6 +1,6 @@
 <?php
-include('app/includes.php');
-include('app/libraries/CustomAuthRule.php');
+require_once('app/require_onces.php');
+require_once('app/libraries/CustomAuthRule.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -100,18 +100,18 @@ $app->get('/config', function ($request, $response, $args) {
 });
 
 
-include('./app/routes/auth.php');
-include('./app/routes/seasons.php');
-include('./app/routes/hours.php');
-include('./app/routes/users.php');
-include('./app/routes/events.php');
-include('./app/routes/reports.php');
-include('./app/routes/schools.php');
-include('./app/routes/slack.php');
-include('./app/routes/settings.php');
-include('./app/routes/public.php');
-include('./app/routes/eventTypes.php');
-include('./app/routes/userCategories.php');
+require_once('./app/routes/auth.php');
+require_once('./app/routes/seasons.php');
+require_once('./app/routes/hours.php');
+require_once('./app/routes/users.php');
+require_once('./app/routes/events.php');
+require_once('./app/routes/reports.php');
+require_once('./app/routes/schools.php');
+require_once('./app/routes/slack.php');
+require_once('./app/routes/settings.php');
+require_once('./app/routes/public.php');
+require_once('./app/routes/eventTypes.php');
+require_once('./app/routes/userCategories.php');
 
 $app->run();
 

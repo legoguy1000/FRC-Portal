@@ -1,5 +1,5 @@
 <?php
-include(__DIR__ . '/../includes.php');
+require_once(__DIR__ . '/../includes.php');
 
 $events = FrcPortal\Event::havingRaw('date(event_start) >= CURDATE()-interval 3 month')->get();
 if(count($events) > 0) {

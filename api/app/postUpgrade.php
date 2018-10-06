@@ -1,5 +1,5 @@
 <?php
-include_once(__DIR__.'/includes.php');
+require_once(__DIR__.'/includes.php');
 use Illuminate\Database\Capsule\Manager as Capsule;
 $version = VERSION;
 
@@ -21,7 +21,7 @@ if($version >= '2.6.0') {
     }
   }
   if(!Capsule::schema()->hasTable('event_types')) {
-    include_once('database/EventType.php');
+    require_once('database/EventType.php');
     try {
       Capsule::schema()->table('events', function ($table) {
         $table->foreign('type')->references('type')->on('event_types')->onDelete('set null')->onUpdate('cascade');
@@ -55,7 +55,7 @@ if($version >= '2.7.0') {
 **/
 if($version >= '2.10.0') {
   if(!Capsule::schema()->hasTable('event_food')) {
-    include_once('database/EventFood.php');
+    require_once('database/EventFood.php');
     try {
       Capsule::schema()->table('event_food', function ($table) {
         $table->foreign('event_id')->references('event_id')->on('events')->onDelete('cascade')->onUpdate('cascade');
@@ -65,7 +65,7 @@ if($version >= '2.10.0') {
     }
   }
   if(!Capsule::schema()->hasTable('event_food_event_requirements')) {
-    include_once('database/EventFoodUser.php');
+    require_once('database/EventFoodUser.php');
     try {
       Capsule::schema()->table('event_food_event_requirements', function ($table) {
         $table->foreign('food_id')->references('food_id')->on('event_food')->onDelete('cascade')->onUpdate('cascade');
@@ -131,8 +131,8 @@ if($version >= '2.11.2') {
 
 //Create User Category Tables
 /*
-include_once('UserCategory.php');
-include_once('UserUserCategory.php');
+require_once('UserCategory.php');
+require_once('UserUserCategory.php');
 */
 
 
