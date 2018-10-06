@@ -265,19 +265,30 @@ function badRequestResponse($response, $msg = 'Invalid Request') {
 function slackPostAPI($endpoint, $data) {
 	$content = str_replace('#new_line#','\n',json_encode($data));
 	$slack_token = getSettingsProp('slack_api_token');
-	$ch = curl_init();
-	curl_setopt($ch,CURLOPT_URL, 'https://slack.com/api/'.$endpoint);
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-		'Content-Type: application/json',
-		'Content-Length: ' . strlen($content),
-		'Authorization: Bearer '.$slack_token
+	$client = new GuzzleHttp\Client(['base_uri' => 'https://slack.com/api/']);
+	$response = $client->request('POST', $endpoint, array(
+		'body' => $content,
+		'headers' => array(
+			'Authorization' => 'Bearer '.$slack_token,
+			'Content-Type' => 'application/json',
+		)
 	));
-	$result = curl_exec($ch);
+	$code = $response->getStatusCode(); // 200
+	$reason = $response->getReasonPhrase(); // OK
+	
+	//$ch = curl_init();
+	//curl_setopt($ch,CURLOPT_URL, 'https://slack.com/api/'.$endpoint);
+	//curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+	//curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
+	//curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	//curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		//'Content-Type: application/json',
+		//'Content-Length: ' . strlen($content),
+		//'Authorization: Bearer '.$slack_token
+	));
+	//$result = curl_exec($ch);
 	//close connection
-	curl_close($ch);
+	//curl_close($ch);
 }
 
 function slackGetAPI($endpoint, $params = array()) {
