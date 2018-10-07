@@ -119,8 +119,8 @@ $app->get('/manifest', function ($request, $response, $args) {
     'short_name' => 'Team '.$constantArr['team_number'],
     'lang' => 'en-US',
     'start_url' => $constantArr['env_url'],
-    'theme_color' => $constantArr['team_color_primary'],
-    'background_color' => $constantArr['team_color_primary'],
+    'theme_color' => $constantArr['team_color_secondary'],
+    'background_color' => $constantArr['team_color_secondary'],
     'display' => 'standalone',
     'icons' => array(
       array(

@@ -11,6 +11,8 @@ Version 2.12.0 (In Dev)
 * Event Registration dialog - Only show Transportation section content once there is data
 * Add standardized functions to reports
 * update installer with CLI for DB information
+* Add dialog to edit Google Form Mapping
+* Add manifest endpoint for dynamic Manifest file.
 
 Version 2.11.0
 * Add JSON field to season model to allow customization of google form columns mapping to DB
