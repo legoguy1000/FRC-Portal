@@ -10,7 +10,7 @@ function serviceAccountModalController($log,$element,$mdDialog,$scope,usersServi
 	}
 	vm.currentMap = seasonInfo.membership_form_map;
 
-	// upload later on form submit or something similar
+
 	vm.submit = function() {
 		$mdDialog.hide(vm.currentMap);
 	};
