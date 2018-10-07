@@ -2,7 +2,7 @@ angular.module('FrcPortal')
 .controller('googleFormMapModalController', ['$log','$element','$mdDialog', '$scope', 'usersService','$mdToast','seasonInfo',
 	googleFormMapModalController
 ]);
-function serviceAccountModalController($log,$element,$mdDialog,$scope,usersService,$mdToast,seasonInfo) {
+function googleFormMapModalController($log,$element,$mdDialog,$scope,usersService,$mdToast,seasonInfo) {
 	var vm = this;
 
 	vm.cancel = function() {
