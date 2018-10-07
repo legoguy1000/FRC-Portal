@@ -211,6 +211,25 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		}, function() {});
 	}
 
+	vm.showGoogleFormMapModal = function(ev) {
+		$mdDialog.show({
+			controller: googleFormMapModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/googleFormMapModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				seasonInfo: vm.season,
+			}
+		})
+		.then(function(currentMap) {
+			vm.season.membership_form_map = currentMap;
+			vm.updateSeason();
+		}, function() { });
+	};
+
 	vm.openMenu = function() {
 		$mdMenu.open();
 	}
