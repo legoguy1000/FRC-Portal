@@ -173,6 +173,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			'hour_requirement': vm.season.hour_requirement,
 			'hour_requirement_week': vm.season.hour_requirement_week,
 			'join_spreadsheet': vm.season.join_spreadsheet,
+			'membership_form_map': vm.season.membership_form_map,
 		};
 		vm.promise = seasonsService.updateSeason(data).then(function(response){
 			if(response.status) {	}

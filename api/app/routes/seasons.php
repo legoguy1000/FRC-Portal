@@ -90,6 +90,8 @@ $app->group('/seasons', function () {
       $season->hour_requirement = $formData['hour_requirement'];
       $season->hour_requirement_week = $formData['hour_requirement_week'];
       $season->game_logo = $formData['game_logo'];
+      $season->membership_form_map = $formData['membership_form_map'];
+      
       if($season->save()) {
         $responseArr = array('status'=>true, 'msg'=>'Season Information Saved', 'data' => $season);
       } else {
