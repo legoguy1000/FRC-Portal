@@ -339,4 +339,58 @@ function clinput($question, $required = true) {
 	return trim($line);
 }
 
+function formatGoogleLoginUserData($me) {
+	$email = $me['emails'][0]['value'];
+	$fname = $me['name']['givenName'];
+	$lname = $me['name']['familyName'];
+	$image = $me['image']['url'];
+	$id = $me['id'];
+
+	$userData = array(
+		'id' => $id,
+		'provider' => 'Google',
+		'email' => $email,
+		'fname' => $fname,
+		'lname' => $lname,
+		'profile_image' => $image,
+	);
+	return $userData;
+}
+
+function formatFacebookLoginUserData($me) {
+	$email = $me['email'];
+	$fname = $me['first_name'];
+	$lname = $me['last_name'];
+	$image = $me['picture']['data']['url'];
+	$id = $me['id'];
+
+	$userData = array(
+		'id' => $id,
+		'provider' => 'Facebook',
+		'email' => $email,
+		'fname' => $fname,
+		'lname' => $lname,
+		'profile_image' => $image,
+	);
+	return $userData;
+}
+
+function formatMicrosoftLoginUserData($me) {
+	$email = $me['userPrincipalName'];
+	$fname = $me['givenName'];
+	$lname = $me['surname'];
+	$image = ''; //$me['image']['url'];\
+	$id = $me['id'];
+
+	$userData = array(
+		'id' => $id,
+		'provider' => 'Microsoft',
+		'email' => $email,
+		'fname' => $fname,
+		'lname' => $lname,
+		'profile_image' => $image,
+	);
+	return $userData;
+}
+
 ?>
