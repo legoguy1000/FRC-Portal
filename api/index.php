@@ -25,7 +25,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     "rules" => [
         new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
           "path" => ['/'],
-          "ignore" => ['/version','/auth','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/config'],
+          "ignore" => ['/version','/manifest','/auth','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/config'],
         ]),
         new Tuupola\Middleware\JwtAuthentication\RequestPathMethodRule([
           "passthrough" => [
@@ -96,6 +96,46 @@ $app->get('/config', function ($request, $response, $args) {
   $responseStr = 'angular.module("FrcPortal").constant("configItems", '.json_encode($constantArr).');';
   $response->getBody()->write($responseStr);
   $response = $response->withHeader('Content-type', 'application/javascript');
+  return $response;
+});
+$app->get('/manifest', function ($request, $response, $args) {
+  $this->logger->addInfo('Called manifest endpoint');
+  $configArr = array(
+    'team_name',
+    'team_number',
+    'team_logo_url',
+    'team_domain',
+    'env_url',
+    'team_color_primary',
+    'team_color_secondary',
+  );
+  $settings = FrcPortal\Setting::whereIn('setting', $configArr)->get();
+  $constantArr = array();
+  foreach($settings as $set) {
+    $constantArr[$set->setting] = formatSettings($set->setting, $set->value);
+  }
+  $responseArr = array(
+    'name' => 'Team '.$constantArr['team_number'].' Portal',
+    'short_name' => 'Team '.$constantArr['team_number'],
+    'lang' => 'en-US',
+    'start_url' => $constantArr['env_url'],
+    'theme_color' => $constantArr['team_color_primary'],
+    'background_color' => $constantArr['team_color_primary'],
+    'display' => 'standalone',
+    'icons' => array(
+      array(
+        'src' => '/favicons/android-chrome-192x192.png?v=47Myd2nElq',
+        'sizes' => '192x192',
+        'type' => 'image/png',
+      ),
+      array(
+        'src' => '/favicons/android-chrome-512x512.png?v=47Myd2nElq',
+        'sizes' => '512x512',
+        'type' => 'image/png',
+      )
+    )
+  );
+  $response = $response->withJson($responseArr);
   return $response;
 });
 
