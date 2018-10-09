@@ -11,6 +11,11 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	vm.userInfo = userInfo;
 	vm.pin = '';
 	vm.users = null;
+	var tick = function() {
+		vm.clock = Date.now();
+	}
+	tick();
+	$interval(tick, 1000);
 	var signInBool = true;
 	vm.signinOut = function($event) {
 		if(signInBool) {
