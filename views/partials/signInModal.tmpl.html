@@ -9,36 +9,36 @@
 		</md-button>
 	  </div>
 	</md-toolbar>
-	<form  ng-submit="vm.signinOut()">
 		<md-dialog-content class="md-margin">
-			<div flex layout="column">
-				<div flex class="backgroundPrimary">
-					<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
-						<div class="" style="color: colorAccent">
-							<h3>{{ vm.clock | date:'medium'}}</h3>
-						</div>
-					</md-toolbar>
-					<md-toolbar flex style="height:30px;border-bottom: var(--accent-color) 1px solid;" class="colorAccent" layout="row" layout-align="center center">
-						<div class="">
-								<input ng-model="vm.pin" placeholder="PIN Number" class="signin-pin backgroundPrimary" pattern="[0-9]{4,8}" type="password">
-						</div>
-					</md-toolbar>
-					<bc-keypad
-						bc-number-model="vm.pin"
-						bc-left-button="backspace"
-						bc-right-button="submit"
-						bc-max-length="8"
-						bc-right-button-method="vm.signinOut($event, numbers)"
-					></bc-keypad>
+			<form  ng-submit="vm.signinOut()">
+				<div flex layout="column">
+					<div flex class="backgroundPrimary">
+						<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
+							<div class="" style="color: colorAccent">
+								<h3>{{ vm.clock | date:'medium'}}</h3>
+							</div>
+						</md-toolbar>
+						<md-toolbar flex style="height:30px;border-bottom: var(--accent-color) 1px solid;" class="colorAccent" layout="row" layout-align="center center">
+							<div class="">
+									<input ng-model="vm.pin" placeholder="PIN Number" class="signin-pin backgroundPrimary" pattern="[0-9]{4,8}" type="text">
+							</div>
+						</md-toolbar>
+						<bc-keypad
+							bc-number-model="vm.pin"
+							bc-left-button="backspace"
+							bc-right-button="submit"
+							bc-max-length="8"
+							bc-right-button-method="vm.signinOut($event, numbers)"
+						></bc-keypad>
+					</div>
 				</div>
-			</div>
+				<md-button class="noprint" type="submit">
+					<md-tooltip md-direction="top">Submit</md-tooltip>
+				  Submit
+				</md-button>
+			</form>
 		</md-dialog-content>
 		<md-dialog-actions layout="row" class="noprint">
 			<span flex></span>
-			<md-button class="noprint" type="submit">
-				<md-tooltip md-direction="top">Submit</md-tooltip>
-			  Submit
-			</md-button>
 		</md-dialog-actions>
-	</form>
 </md-dialog>

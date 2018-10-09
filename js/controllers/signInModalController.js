@@ -9,7 +9,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		$mdDialog.cancel();
 	}
 	vm.userInfo = userInfo;
-
+	vm.pin = '';
 	vm.users = null;
 	var signInBool = true;
 	vm.signinOut = function($event) {
