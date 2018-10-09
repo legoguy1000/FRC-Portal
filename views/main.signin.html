@@ -18,7 +18,7 @@
 			</div>
 		</md-toolbar>
 		<md-table-container>
-			<table md-table md-row-select ng-model="vm.selected_user" md-progress="vm.promise">
+			<table md-table ng-model="vm.selected_user" md-progress="vm.promise">
 				<thead md-head md-order="vm.query.order">
 					<tr md-row>
 						<th md-column md-order-by="lname"><span>Name</span></th>
@@ -31,7 +31,7 @@
 					</tr>
 				</thead>
 				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
-					<tr md-row ng-repeat="user in vm.users | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" md-select="user" md-select-id="user_id" md-auto-select>
+					<tr md-row ng-click="alert('asdf')" ng-repeat="user in vm.users | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 						<td md-cell>
 							<md-list-item style="padding: 0px;">
 								<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
@@ -63,6 +63,7 @@
 			<div>  Mentors/Others: Please log in to the portal by clicking the "Log In" button in the top rght corner.  Please select one of the login providers (It does not have to be your team2363.org email).  Upon successful log in, please complete the new user form.  Here you will set your 4-8 digit PIN number.</div>
 		</div>
 	</div>
+	<!--
 	<div flex class="backgroundPrimary">
 		<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
 			<div class="" style="color: colorAccent">
@@ -77,7 +78,7 @@
 			  </md-list-item>
 			</md-list>
 		</div>
-	</div>
+	</div> -->
 	<!--
 	<div flex class="backgroundPrimary">
 		<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
