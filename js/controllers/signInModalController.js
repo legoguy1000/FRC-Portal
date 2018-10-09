@@ -45,22 +45,4 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 			});
 		}
 	}
-
-	vm.keyDown = function(e) {
-		if(e.keyCode == 46 || e.keyCode == 8) {
-				//console.log('backspace');
-		}
-		//console.log(e.keyCode);
-	}
-	$(document).keyup(function (e) {
-			//console.log(e);
-			if(vm.pin.length >= 4 && vm.pin.length <= 8) {
-				if(e.originalEvent.code == 'Enter') {
-					//e.preventDefault();
-				//	e.stopPropagation()
-					//vm.signinOut();
-				}
-			}
-	});
-
 }
