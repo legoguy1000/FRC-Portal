@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('signInModalController', ['$log','$element','$mdDialog', '$scope', 'usersService','$mdToast','userInfo','signinService',
+.controller('signInModalController', ['$log','$element','$mdDialog', '$scope', 'usersService','$mdToast','userInfo','signinService','$interval',
 	signInModalController
 ]);
-function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdToast,userInfo,signinService) {
+function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdToast,userInfo,signinService,$interval) {
 	var vm = this;
 
 	vm.cancel = function() {
