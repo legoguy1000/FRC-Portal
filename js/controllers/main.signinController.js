@@ -130,4 +130,23 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			}
 	});
 
+	//signInModal
+	vm.showSignInModal = function(userInfo, ev) {
+		$mdDialog.show({
+			controller: signInModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/signInModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				userInfo: userInfo,
+			}
+		})
+		.then(function(currentMap) {
+			vm.season.membership_form_map = currentMap;
+			vm.updateSeason();
+		}, function() { });
+	};
 }
