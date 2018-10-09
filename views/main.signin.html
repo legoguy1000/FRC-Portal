@@ -69,17 +69,27 @@
 				<h3>{{ vm.clock | date:'medium'}}</h3>
 			</div>
 		</md-toolbar>
+		<div>
+			<md-list ng-cloak>
+				<md-list-item ng-repeat="user in vm.users | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" ng-click="vm.showSignInModal(user, $event)" class="noright">
+			    <img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
+			    <div>{{ user.full_name }}</div>
+			  </md-list-item>
+			</md-list>
+		</div>
+	</div>
+	<!--
+	<div flex class="backgroundPrimary">
+		<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
+			<div class="" style="color: colorAccent">
+				<h3>{{ vm.clock | date:'medium'}}</h3>
+			</div>
+		</md-toolbar>
 		<md-toolbar flex style="height:30px;border-bottom: var(--accent-color) 1px solid;" class="colorAccent" layout="row" layout-align="center center">
-		<!--	<div class="">
-				<h1>{{ vm.pin }}</h1>
-			</div> -->
 			<div class="">
 					<input ng-model="vm.pin" placeholder="PIN Number" class="signin-pin backgroundPrimary" pattern="[0-9]{4,8}" type="password">
 			</div>
 		</md-toolbar>
-		<!-- <div flex style="height:30px;"  layout="row" layout-align="center center">
-			<h1>{{ vm.pin }}</h1>
-		</div> -->
 		<bc-keypad
 			bc-number-model="vm.pin"
 			bc-left-button="backspace"
@@ -87,7 +97,7 @@
 			bc-max-length="8"
 			bc-right-button-method="vm.signinOut($event, numbers)"
 		></bc-keypad>
-	</div>
+	</div>-->
 </div>
 
 <!-- Define the keypad: -->
