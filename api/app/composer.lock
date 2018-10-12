@@ -497,16 +497,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.70",
+            "version": "v0.71",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "759a1a246409eae1c723abc72d817205a1d5549f"
+                "reference": "f066aac8c0ea88cf5880611d589fd1e01c4fd082"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/759a1a246409eae1c723abc72d817205a1d5549f",
-                "reference": "759a1a246409eae1c723abc72d817205a1d5549f",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/f066aac8c0ea88cf5880611d589fd1e01c4fd082",
+                "reference": "f066aac8c0ea88cf5880611d589fd1e01c4fd082",
                 "shasum": ""
             },
             "require": {
@@ -530,7 +530,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2018-09-16T00:22:55+00:00"
+            "time": "2018-10-09T00:22:49+00:00"
         },
         {
             "name": "google/auth",
@@ -762,20 +762,21 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.7.8",
+            "version": "v5.7.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "2582a994f2f8a153a4880de757a89ad4eeb083d7"
+                "reference": "73cde7bd4985eefb1d468a745e1d50d03e276121"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/2582a994f2f8a153a4880de757a89ad4eeb083d7",
-                "reference": "2582a994f2f8a153a4880de757a89ad4eeb083d7",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/73cde7bd4985eefb1d468a745e1d50d03e276121",
+                "reference": "73cde7bd4985eefb1d468a745e1d50d03e276121",
                 "shasum": ""
             },
             "require": {
                 "illuminate/contracts": "5.7.*",
+                "illuminate/support": "5.7.*",
                 "php": "^7.1.3",
                 "psr/container": "^1.0"
             },
@@ -802,20 +803,20 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "https://laravel.com",
-            "time": "2018-10-03T15:20:19+00:00"
+            "time": "2018-10-07T15:52:17+00:00"
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.7.8",
+            "version": "v5.7.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "9532d673de305b0c0028c0ce60c8952b807d7bc3"
+                "reference": "64df81d3382d876f1c1d3d5481d89c93b61b8279"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/9532d673de305b0c0028c0ce60c8952b807d7bc3",
-                "reference": "9532d673de305b0c0028c0ce60c8952b807d7bc3",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/64df81d3382d876f1c1d3d5481d89c93b61b8279",
+                "reference": "64df81d3382d876f1c1d3d5481d89c93b61b8279",
                 "shasum": ""
             },
             "require": {
@@ -846,20 +847,20 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "https://laravel.com",
-            "time": "2018-10-03T14:04:39+00:00"
+            "time": "2018-10-08T13:34:14+00:00"
         },
         {
             "name": "illuminate/database",
-            "version": "v5.7.8",
+            "version": "v5.7.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "08324badde1bd55ec60b4fa2720db8fe82c75ba7"
+                "reference": "1f4a0881ca0012732ae7b73809cf50ef8d964547"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/08324badde1bd55ec60b4fa2720db8fe82c75ba7",
-                "reference": "08324badde1bd55ec60b4fa2720db8fe82c75ba7",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/1f4a0881ca0012732ae7b73809cf50ef8d964547",
+                "reference": "1f4a0881ca0012732ae7b73809cf50ef8d964547",
                 "shasum": ""
             },
             "require": {
@@ -905,20 +906,20 @@
                 "orm",
                 "sql"
             ],
-            "time": "2018-10-03T14:16:23+00:00"
+            "time": "2018-10-06T18:48:42+00:00"
         },
         {
             "name": "illuminate/support",
-            "version": "v5.7.8",
+            "version": "v5.7.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "c7583db6703a36b7fa76254073046e0a920ed276"
+                "reference": "ea95697233b06650382eb0f5798be22b4e520dea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/c7583db6703a36b7fa76254073046e0a920ed276",
-                "reference": "c7583db6703a36b7fa76254073046e0a920ed276",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/ea95697233b06650382eb0f5798be22b4e520dea",
+                "reference": "ea95697233b06650382eb0f5798be22b4e520dea",
                 "shasum": ""
             },
             "require": {
@@ -964,7 +965,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "time": "2018-10-04T13:27:30+00:00"
+            "time": "2018-10-07T15:51:39+00:00"
         },
         {
             "name": "microsoft/microsoft-graph",
@@ -1238,7 +1239,7 @@
                     "name": "Jaime Prado"
                 },
                 {
-                    "name": "Roman OÅ¾ana",
+                    "name": "Roman Ožana",
                     "email": "ozana@omdesign.cz"
                 },
                 {
@@ -1246,7 +1247,7 @@
                     "email": "github@oliverklee.de"
                 },
                 {
-                    "name": "Zoli SzabÃ³",
+                    "name": "Zoli Szabó",
                     "email": "zoli.szabo+github@gmail.com"
                 }
             ],
@@ -1384,7 +1385,7 @@
                     "role": "Developer"
                 },
                 {
-                    "name": "Hans-JÃ¼rgen Petrich",
+                    "name": "Hans-Jürgen Petrich",
                     "email": "petrich@tronic-media.com",
                     "role": "Developer"
                 },
@@ -2066,16 +2067,16 @@
         },
         {
             "name": "tuupola/callable-handler",
-            "version": "0.4.0",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuupola/callable-handler.git",
-                "reference": "662744a6a4a52235be5bd73ac04de4375eff3fc9"
+                "reference": "8b9d87f88056d4234af317d65612d7b6307a747a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tuupola/callable-handler/zipball/662744a6a4a52235be5bd73ac04de4375eff3fc9",
-                "reference": "662744a6a4a52235be5bd73ac04de4375eff3fc9",
+                "url": "https://api.github.com/repos/tuupola/callable-handler/zipball/8b9d87f88056d4234af317d65612d7b6307a747a",
+                "reference": "8b9d87f88056d4234af317d65612d7b6307a747a",
                 "shasum": ""
             },
             "require": {
@@ -2087,8 +2088,8 @@
                 "overtrue/phplint": "^1.0",
                 "phpunit/phpunit": "^6.5",
                 "squizlabs/php_codesniffer": "^3.2",
-                "tuupola/http-factory": "^0.4.0",
-                "zendframework/zend-diactoros": "^1.6"
+                "tuupola/http-factory": "^0.4.0|^1.0",
+                "zendframework/zend-diactoros": "^1.6.0|^2.0"
             },
             "type": "library",
             "autoload": {
@@ -2115,25 +2116,28 @@
                 "psr-15",
                 "psr-7"
             ],
-            "time": "2018-08-02T11:15:40+00:00"
+            "time": "2018-10-12T09:59:35+00:00"
         },
         {
             "name": "tuupola/http-factory",
-            "version": "0.4.2",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuupola/http-factory.git",
-                "reference": "c7e2712d5c4f49ddae704ae1f42854f437ddb028"
+                "reference": "dd38c41facebdec20b5b4a120cd6380e30720ce8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tuupola/http-factory/zipball/c7e2712d5c4f49ddae704ae1f42854f437ddb028",
-                "reference": "c7e2712d5c4f49ddae704ae1f42854f437ddb028",
+                "url": "https://api.github.com/repos/tuupola/http-factory/zipball/dd38c41facebdec20b5b4a120cd6380e30720ce8",
+                "reference": "dd38c41facebdec20b5b4a120cd6380e30720ce8",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1",
                 "psr/http-factory": "^1.0"
+            },
+            "conflict": {
+                "nyholm/psr7": "<1.0"
             },
             "require-dev": {
                 "http-interop/http-factory-tests": "^0.5.0",
@@ -2155,7 +2159,7 @@
                 {
                     "name": "Mika Tuupola",
                     "email": "tuupola@appelsiini.net",
-                    "homepage": "http://www.appelsiini.net/",
+                    "homepage": "https://appelsiini.net/",
                     "role": "Developer"
                 }
             ],
@@ -2166,30 +2170,30 @@
                 "psr-17",
                 "psr-7"
             ],
-            "time": "2018-08-09T09:02:33+00:00"
+            "time": "2018-10-12T09:32:20+00:00"
         },
         {
             "name": "tuupola/slim-jwt-auth",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tuupola/slim-jwt-auth.git",
-                "reference": "550e0475c02e1cfef0ec1326d609f563fc3fb48e"
+                "reference": "e50fa3cc6135abdc1b03e88c0425258a4955d01b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tuupola/slim-jwt-auth/zipball/550e0475c02e1cfef0ec1326d609f563fc3fb48e",
-                "reference": "550e0475c02e1cfef0ec1326d609f563fc3fb48e",
+                "url": "https://api.github.com/repos/tuupola/slim-jwt-auth/zipball/e50fa3cc6135abdc1b03e88c0425258a4955d01b",
+                "reference": "e50fa3cc6135abdc1b03e88c0425258a4955d01b",
                 "shasum": ""
             },
             "require": {
-                "firebase/php-jwt": "^3.0 || ^4.0 || ^5.0",
+                "firebase/php-jwt": "^3.0|^4.0|^5.0",
                 "php": "^7.1",
                 "psr/http-message": "^1.0",
                 "psr/http-server-middleware": "^1.0",
                 "psr/log": "^1.0",
-                "tuupola/callable-handler": "^0.3.0|^0.4.0",
-                "tuupola/http-factory": "^0.4.0"
+                "tuupola/callable-handler": "^0.3.0|^0.4.0|^1.0",
+                "tuupola/http-factory": "^0.4.0|^1.0"
             },
             "require-dev": {
                 "codedungeon/phpunit-result-printer": "^0.5.4",
@@ -2198,7 +2202,7 @@
                 "phpstan/phpstan": "^0.9.1",
                 "phpunit/phpunit": "^6.5",
                 "squizlabs/php_codesniffer": "^2.3",
-                "zendframework/zend-diactoros": "^1.3"
+                "zendframework/zend-diactoros": "^1.3|^2.0"
             },
             "type": "library",
             "extra": {
@@ -2233,7 +2237,7 @@
                 "psr-15",
                 "psr-7"
             ],
-            "time": "2018-08-07T10:15:43+00:00"
+            "time": "2018-10-12T11:44:47+00:00"
         }
     ],
     "packages-dev": [],

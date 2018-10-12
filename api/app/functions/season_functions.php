@@ -127,14 +127,14 @@ function itterateMembershipFormData($data = array(), $season = null) {
 	}
 	$season_id = $season->season_id;
 	$form_map = $season->membership_form_map;
-	$email_column = 'email address';
-	$fname_column = 'first name';
-	$lname_column = 'last name';
-	$userType_column = 'member type';
-	$grad_column = 'year of graduation';
-	$school_column = 'school';
-	$pin_column = 'student id';
-	$phone_column = 'phone';
+	$email_column = $form_map['email']; //'email address';
+	$fname_column = $form_map['fname']; //'first name';
+	$lname_column = $form_map['lname']; //'last name';
+	$userType_column = $form_map['user_type']; //'member type';
+	$grad_column = $form_map['grad_year']; //'year of graduation';
+	$school_column = $form_map['school']; //'school';
+	$pin_column = $form_map['pin_number']; //'student id';
+	$phone_column = $form_map['phone']; //'phone';
 
 	//Itterate through data
 	if(count($data) > 0) {
@@ -149,7 +149,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 			$grad_year = $userInfo[$grad_column];
 			$school = $userInfo[$school_column];
 			$student_id = $userInfo[$pin_column];
-			$phone = $userInfo[$phone_column];
+			$phone = isset($userInfo[$phone_column]) ? $userInfo[$phone_column] : '';
 			$clean_phone = preg_replace('/[^0-9]/s', '', $phone);
 
 			$user = null;

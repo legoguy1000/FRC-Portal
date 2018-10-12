@@ -117,37 +117,58 @@ class AnnualRequirement extends Eloquent {
     $data = array();
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
-      $q = DB::table('meeting_hours')
-        ->leftJoin('seasons', function ($join) {
-        $join->where('seasons.season_id', '=', "5a16f3faaebb8")
+      $hours = DB::table('meeting_hours')
+        ->leftJoin('seasons', function ($join) use ($this) {
+        $join->where('seasons.season_id', '=', $this->attributes['season_id'])
           ->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))
           ->on('meeting_hours.time_in', '>=', 'seasons.start_date')
           ->on('meeting_hours.time_in', '<=', 'seasons.bag_day');
         })
-        ->where('meeting_hours.user_id','5a11bd670484e')
-        ->select(DB::raw('user_id, YEAR(meeting_hours.time_in) as year, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week'))->groupBy('meeting_hours.user_id', 'week');
-      $hours = DB::table(DB::raw("(" . $q->toSql() . ") as subtable"))
+        ->where('meeting_hours.user_id',$this->attributes['user_id'])
+        ->select(DB::raw('user_id, YEAR(meeting_hours.time_in) as year, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week'))
+        ->groupBy('meeting_hours.user_id', 'week')
+        ->get();
+  /*    $hours = DB::table(DB::raw("(" . $q->toSql() . ") as subtable"))
         ->mergeBindings($q)
         ->select(DB::raw('seasons.hour_requirement_week, seasons.start_date, seasons.bag_day, subtable.*, (subtable.week_hours >= seasons.hour_requirement_week) as req_complete'))
         ->leftJoin('seasons', function ($join) {
           $join->on('subtable.year', 'seasons.year');
-      })->havingRaw('subtable.week > WEEK(seasons.start_date,1) AND subtable.week < WEEK(seasons.bag_day,1)')->get();
+      })->havingRaw('subtable.week > WEEK(seasons.start_date,1) AND subtable.week < WEEK(seasons.bag_day,1)')->get(); */
     }
     if(!is_null($hours) && !empty($hours)) {
-  		$start = $hours[0]->start_date;
-  		$end = $hours[0]->bag_day;
-  		$end_week = date('W',strtotime($end));
-  		if(time() < strtotime($end)) {
+      $seasonInfo = Season::find($this->attributes['season_id']);
+  		$start = $seasonInfo->start_date;
+  		$end = $seasonInfo->bag_day;
+  		$end_week = date('W',strtotime($end))-1;
+  		if(time() < strtotime($end) && time() > strtotime($start)) {
   			$end_week = date('W');
   		}
-      $end_week = $end_week - 1;
-  		$start_week = date('W',strtotime($start));
+      //$end_week = $end_week - 1;
+      $start_week = date('W',strtotime($start));
+  		$hours_arr = $hours->toArray();
+  		$cols = !is_null($hours_arr) && !empty($hours_arr) ? array_column($hours_arr, 'week') : null;
+  		$hours_data = array();
+  		for($i=$start_week+1; $i <= $end_week; $i++) {
+  			$key = !is_null($cols) ? array_search($i, $cols) : null;
+  			$week_data = !is_null($key) ? $hours_arr[$key] : array();
+  			$week_start = new DateTime();
+  			$week_start->setISODate($seasonInfo->year,$i);
+  			if(is_array($week_data)) {
+  				$week_data['start_date'] = $week_start->format('M, d Y');
+  				$week_data['week_hours'] = isset($week_data['week_hours']) ? (float) $week_data['week_hours'] : 0;
+  				$week_data['req_complete'] = $week_data['week_hours'] >= $hour_req;
+  			} else if(is_object($week_data)) {
+  				$week_data->start_date = $week_start->format('M, d Y');
+  				$week_data->week_hours = (float) $week_data->week_hours;
+  				$week_data->req_complete = $week_data->week_hours >= $hour_req;
+  			}
+  			$hours_data[] = $week_data;
+  		}
   		$num_weeks = floor($end_week - $start_week);
-      $hours_arr = $hours->toArray();
-  		$num_req_com = count(array_filter(array_column($hours_arr,'req_complete')));
-      $all_complete = $num_req_com >= $num_weeks;
-  		$data['hours'] = $hours;
-  		$data['reqs_complete'] = $all_complete;
+    		$num_req_com = count(array_filter(array_column($hours_arr,'req_complete')));
+  		$all_complete = $num_req_com >= $num_weeks;
+    		$data['hours'] = $hours_data;
+    		$data['reqs_complete'] = $all_complete;
     }
     return $data;
   }
