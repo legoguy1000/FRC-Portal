@@ -137,8 +137,9 @@ class AnnualRequirement extends Eloquent {
     }
     if(!is_null($hours) && !empty($hours)) {
       $seasonInfo = Season::find($this->attributes['season_id']);
-  		$start = $seasonInfo->start_date;
+      $start = $seasonInfo->start_date;
   		$end = $seasonInfo->bag_day;
+  		$hour_req = $seasonInfo->hour_requirement_week;
   		$end_week = date('W',strtotime($end))-1;
   		if(time() < strtotime($end) && time() > strtotime($start)) {
   			$end_week = date('W');
