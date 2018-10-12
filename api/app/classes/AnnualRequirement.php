@@ -118,7 +118,7 @@ class AnnualRequirement extends Eloquent {
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
       $hours = DB::table('meeting_hours')
-        ->leftJoin('seasons', function ($join) use ($this) {
+        ->leftJoin('seasons', function ($join) {
         $join->where('seasons.season_id', '=', $this->attributes['season_id'])
           ->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))
           ->on('meeting_hours.time_in', '>=', 'seasons.start_date')
