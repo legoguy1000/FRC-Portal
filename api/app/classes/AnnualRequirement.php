@@ -119,12 +119,11 @@ class AnnualRequirement extends Eloquent {
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
       $hours = DB::table('meeting_hours')
         ->leftJoin('seasons', function ($join) {
-        $join->where('seasons.season_id', '=', $this->season_id)
-          ->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))
+        $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))
           ->on('meeting_hours.time_in', '>=', 'seasons.start_date')
           ->on('meeting_hours.time_in', '<=', 'seasons.bag_day');
         })
-        ->where('meeting_hours.user_id',$this->attributes['user_id'])
+        ->where('meeting_hours.user_id',$this->attributes['user_id'])->where('seasons.season_id', '=', $this->attributes['season_id'])
         ->select(DB::raw('user_id, YEAR(meeting_hours.time_in) as year, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week'))
         ->groupBy('meeting_hours.user_id', 'week')
         ->get();
