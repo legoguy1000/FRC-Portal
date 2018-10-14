@@ -4,7 +4,7 @@ namespace FrcPortal;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Auth {
-  use \FrcPortal\Traits\AdminStuff;
+  //use Traits\AdminStuff;
   /**
   * Public 'is_logged' field
   * @var bool
@@ -33,10 +33,9 @@ class Auth {
     return self::$user;
   }
 
-/*
   public static function isAdmin() {
-  	$user = self::$user;
-  	return checkAdmin($user);
-  } */
+    $user = self::$user;
+    return checkAdmin($user);
+  } 
 
 }
