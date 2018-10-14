@@ -18,3 +18,5 @@ trait AdminStuff
       return $this->status && $this->admin;
     }
 }
+
+?>
