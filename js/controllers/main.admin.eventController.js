@@ -308,7 +308,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		});
 	};
 
-	vm.toggleConfirmAttendance = function (users) {
+	vm.toggleConfirmAttendance = function (user) {
+		var users = [];
+		users.push(user);
 		var data = {
 			'event_id': vm.event_id,
 			'users': users,
