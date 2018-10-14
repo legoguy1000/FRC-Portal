@@ -7,14 +7,12 @@ namespace FrcPortal;
  *
  * @package App
  */
-trait AdminStuff
-{
+trait AdminStuff {
     /**
      * @param Account $account
      * @return $this
      */
-    public function isAdmin()
-    {
+    public function isAdmin() {
       return $this->status && $this->admin;
     }
 }
