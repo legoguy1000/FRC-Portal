@@ -584,9 +584,9 @@ $app->group('/events', function () {
       if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
         return badRequestResponse($response, $msg = 'Please select at least 1 user');
       }
-      if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('registration','permission_slip','payment'))) {
+      /* if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('registration','permission_slip','payment'))) {
         return badRequestResponse($response, $msg = 'Invalid event requirement');
-      }
+      } */
       $event = FrcPortal\Event::find($event_id);
       $array = array();
       $users = $formData['users'];
