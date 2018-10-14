@@ -197,11 +197,11 @@ class AnnualRequirement extends Eloquent {
     //GROUP BY meeting_hours.user_id,seasons.year
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
-    $hours = DB::table('meeting_hours')
+      $hours = DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'))->on('meeting_hours.time_in', '>', 'seasons.end_date');
-            })->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
-              ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
+            })->where('seasons.season_id', $this->attributes['season_id'])
+        		  ->where('meeting_hours.user_id', $this->attributes['user_id'])
               ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as off_season_hours'))->groupBy('meeting_hours.user_id')->first();
     }
     return !is_null($hours) ? (float) $hours->off_season_hours : 0;
@@ -214,16 +214,16 @@ class AnnualRequirement extends Eloquent {
     //GROUP BY meeting_hours.user_id,seasons.year
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
-    $hours =  DB::table('event_requirements')
-		->leftJoin('events', function ($join) {
-			$join->on('events.event_id', 'event_requirements.event_id');
-		})->leftJoin('seasons', function ($join) {
-			$join->on('seasons.year', '=', DB::raw('YEAR(events.event_start)'));
-		})->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
-		  ->whereRaw('event_requirements.user_id = "'.$this->attributes['user_id'].'"')
-		  ->whereRaw('event_requirements.registration = "1"')
-		  ->whereRaw('event_requirements.attendance_confirmed = "1"')
-		  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(events.event_end, events.event_start),0)) / 3600) as event_hours'))->groupBy('event_requirements.user_id')->first();
+      $hours =  DB::table('event_requirements')
+  		->leftJoin('events', function ($join) {
+  			$join->on('events.event_id', 'event_requirements.event_id');
+  		})->leftJoin('seasons', function ($join) {
+  			$join->on('seasons.year', '=', DB::raw('YEAR(events.event_start)'));
+  		})->where('seasons.season_id', $this->attributes['season_id'])
+  		  ->where('event_requirements.user_id', $this->attributes['user_id'])
+  		  ->where('event_requirements.registration', true)
+  		  ->where('event_requirements.attendance_confirmed', true)
+  		  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(events.event_end, events.event_start),0)) / 3600) as event_hours'))->groupBy('event_requirements.user_id')->first();
     }
     return !is_null($hours) ? (float) $hours->off_season_hours : 0;
   }
@@ -237,8 +237,8 @@ class AnnualRequirement extends Eloquent {
     $hours = DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'));
-            })->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
-              ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
+            })->where('seasons.season_id', $this->attributes['season_id'])
+        		  ->where('meeting_hours.user_id', $this->attributes['user_id'])
               ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS total_hours'))->groupBy('meeting_hours.user_id')->first();
     }
     return !is_null($hours) ? (float) $hours->total_hours : 0;

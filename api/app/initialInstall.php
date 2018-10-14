@@ -33,5 +33,19 @@ shell_exec("composer install");
 shell_exec("composer dump-autoload");
 require_once('database/_CreateDatabase.php');
 
+//create Admin Account
+$email = 'admin@local.local';
+$password = bin2hex(openssl_random_pseudo_bytes(4));
+$user = FrcPortal\User::create([
+  'fname' => 'Local',
+  'lname' => 'Admin',
+  'email' => $email,
+  'password' => hash('sha512',$password),
+  'user_type' => 'Mentor',
+  'admin' => true,
+]);
+echo 'Admin Account Created:\n';
+echo 'Email: '.$email.'\n';
+echo 'Password: '.$password.'\n\n';
 
 ?>

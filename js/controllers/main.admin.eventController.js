@@ -47,7 +47,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		}, {
 			divider: true,
-		}, {
+		}, /* {
 			label: 'Toggle Event Registration',
 			onClick: function($event){
 				var user = $event.dataContext;
@@ -55,7 +55,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				var action = true;
 				vm.rcToggleEventReqs(user, req, action);
 			}
-		}, {
+		}, */ {
 			label: 'Toggle Payment',
 			onClick: function($event){
 				var user = $event.dataContext;
@@ -75,9 +75,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			label: 'Confirm Attendance',
 			onClick: function($event){
 				var user = $event.dataContext;
-				var req = 'attendance_confirmed';
 				var action = true;
-				vm.rcToggleEventReqs(user, req, action);
+				vm.toggleConfirmAttendance(user);
 			}
 		},
 	];
@@ -306,6 +305,24 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
+		});
+	};
+
+	vm.toggleConfirmAttendance = function (users) {
+		var data = {
+			'event_id': vm.event_id,
+			'users': users,
+		}
+		vm.promise = eventsService.toggleConfirmAttendance(data).then(function(response){
+			if(response.status && response.data) {
+				vm.users = response.data;
+			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 		});
 	};
 
