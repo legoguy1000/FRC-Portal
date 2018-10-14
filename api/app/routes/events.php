@@ -595,7 +595,7 @@ $app->group('/events', function () {
         $user_id = $user['user_id'];
         $cur = isset($user['event_requirements']['attendance_confirmed']) ? $user['event_requirements']['attendance_confirmed'] : false;
         $new = !$cur;
-        $ereq = FrcPortal\EventRequirement::where('event_id', $event_id)->('user_id', $user_id)->first();
+        $ereq = FrcPortal\EventRequirement::where('event_id', $event_id)->where('user_id', $user_id)->first();
         if(!is_null($ereq) && isset($ereq->registration) && $ereq->registration==true) {
           $ereq->attendance_confirmed = $new;
         } else {
