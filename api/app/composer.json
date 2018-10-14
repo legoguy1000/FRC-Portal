@@ -15,7 +15,8 @@
     },
 	"autoload": {
         "psr-4": {
-          "FrcPortal\\": ["./classes/","./traits/" ]
+          "FrcPortal\\": "./classes/",
+          "FrcPortal\\Traits": "./traits/"            
         }
     }
 }

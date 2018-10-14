@@ -1,6 +1,6 @@
 <?php
 
-namespace FrcPortal;
+namespace FrcPortal\Traits;
 
 /**
  * Class HasAccountTrait
