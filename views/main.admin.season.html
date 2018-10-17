@@ -235,7 +235,7 @@
 								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.min_hours">check_circle</i>
 								<i class="material-icons" style="color:red;" ng-hide="user.annual_requirements.min_hours">remove_circle</i>
 								<span>{{user.annual_requirements.build_season_hours || 0}}</span>
-								<span>(<span ng-repeat="week in user.annual_requirements.weekly_build_season_hours.hours">{{week.week_hours}}<span ng-hide="$last">/</span></span>)</span>
+								<span>(<span ng-repeat="week in user.annual_requirements.weekly_build_season_hours.hours"><span ng-style="(week.week_hours < vm.season.hour_requirement_week ? {color:'red'} : '')">{{week.week_hours}}</span><span ng-hide="$last">/</span></span>)</span>
 							</td>
 							<td md-cell>
 								<i class="material-icons" style="color:green;" ng-show="user.annual_requirements.reqs_complete">check_circle</i>
