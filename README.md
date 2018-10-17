@@ -13,8 +13,8 @@ Version 2.12.0 (In Dev)
 * update installer with CLI for DB information
 * Add dialog to edit Google Form Mapping
 * Add manifest endpoint for dynamic Manifest file.
-* update Composer libraries
-* 
+* Update Composer libraries
+* Update Annual and Event Requirement tables to not show inactive members who are not registered but have a placeholder record in DB
 
 Version 2.11.0
 * Add JSON field to season model to allow customization of google form columns mapping to DB
