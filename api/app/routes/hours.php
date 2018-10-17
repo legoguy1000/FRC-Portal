@@ -239,9 +239,9 @@ $app->group('/hours', function () {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $user = $decoded->data->status && $decoded->data->admin;
         } catch(\Firebase\JWT\ExpiredException $e) {
-          $responseArr = unauthorizedResponse($response, $status = false, $msg = 'Authorization Error. '.$e->getMessage(), $data = null);
+          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
         } catch(\Firebase\JWT\SignatureInvalidException $e){
-          $responseArr = unauthorizedResponse($response, $status = false, $msg = 'Authorization Error. '.$e->getMessage(), $data = null);
+          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
         }
       } elseif(isset($args['auth_code'])) {
         $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status',true)->where('admin',true)->first();
