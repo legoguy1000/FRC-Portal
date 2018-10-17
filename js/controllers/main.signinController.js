@@ -113,26 +113,43 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		}
 	}
 
-	vm.keyDown = function(e) {
-		if(e.keyCode == 46 || e.keyCode == 8) {
-        //console.log('backspace');
-    }
-		//console.log(e.keyCode);
-	}
-	$(document).keyup(function (e) {
-	    //console.log(e);
-			if(vm.pin.length >= 4 && vm.pin.length <= 8) {
-				if(e.originalEvent.code == 'Enter') {
-					//e.preventDefault();
-				//	e.stopPropagation()
-					//vm.signinOut();
-				}
-			}
-	});
-
 	//signInModal
 	vm.showSignInModal = function(userInfo, ev) {
-		$mdDialog.show({
+		signInBool = true;
+		var confirm = $mdDialog.prompt()
+			.title('Sign In/Out for '+userInfo.full_name)
+			.textContent('Please enter your PIN to sign in/out')
+			.placeholder('PIN (eg. 123456)')
+			.ariaLabel('')
+			.initialValue('')
+			.required(true)
+			.ok('Submit')
+			.cancel('Cancel');
+			$mdDialog.show(confirm).then(function(result) {
+				var data = {
+					'user_id': userInfo.user_id,
+					'pin': result,
+					'token': signinService.getToken()
+				};
+				signinService.signInOut(data).then(function(response) {
+					vm.pin = '';
+					vm.selected_user = [];
+					var dialog = $mdDialog.alert()
+											.clickOutsideToClose(true)
+											.textContent(response.msg)
+											.ariaLabel('Time In/Out')
+											.ok('Got it!');
+					$mdDialog.show(dialog);
+					$timeout( function(){
+				      $mdDialog.cancel();
+				    }, 2000 );
+					if(response.status) {
+						vm.users = response.signInList;
+					}
+					signInBool = true;
+				});
+			}, function() {});
+/*		$mdDialog.show({
 			controller: signInModalController,
 			controllerAs: 'vm',
 			templateUrl: 'views/partials/signInModal.tmpl.html',
@@ -147,6 +164,6 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		.then(function(currentMap) {
 			vm.season.membership_form_map = currentMap;
 			vm.updateSeason();
-		}, function() { });
+		}, function() { });*/
 	};
 }
