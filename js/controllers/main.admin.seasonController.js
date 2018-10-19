@@ -110,6 +110,9 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			vm.promise = seasonsService.toggleAnnualReqs(data).then(function(response){
 				if(response.status && response.data) {
 					vm.users = response.data;
+					if(vm.selectUsers.length > 1) {
+						vm.selectUsers = [];
+					}
 				}
 				$mdToast.show(
 		      $mdToast.simple()
@@ -119,25 +122,6 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		    );
 			});
 		};
-
-	vm.toggleAnnualReqs = function (req) {
-		var data = {
-			'season_id': vm.season_id,
-			'users': vm.selectedUsers,
-			'requirement':req
-		}
-		vm.promise = seasonsService.toggleAnnualReqs(data).then(function(response){
-			if(response.status && response.data) {
-				vm.users = response.data;
-			}
-			$mdToast.show(
-	      $mdToast.simple()
-	        .textContent(response.msg)
-	        .position('top right')
-	        .hideDelay(3000)
-	    );
-		});
-	};
 
 	vm.updateSeasonMembershipForm = function () {
 		vm.loading = true;
