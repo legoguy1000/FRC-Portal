@@ -376,3 +376,7 @@ md-list-item.min-height-reset .md-list-item-inner::before {
 .bold {
   font-weight: bold;
 }
+
+.selectRow {
+  background-color: rgba(158,158,158,0.2);
+}
