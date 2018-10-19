@@ -96,7 +96,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 				vm.toggleAnnualReqs2(vm.selectedUsers, req, action);
 			} else if (vm.selectedUsers.length == 0 && user != null) {
 				var users = [];
-				users.push(user);
+				users.push(user.user_id);
 				vm.toggleAnnualReqs2(users, req, action);
 			}
 		}
