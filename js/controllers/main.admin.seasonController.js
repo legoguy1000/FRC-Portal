@@ -234,4 +234,8 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	vm.openMenu = function() {
 		$mdMenu.open();
 	}
+
+	vm.test = function() {
+		alert('asdasdf');
+	}
 }
