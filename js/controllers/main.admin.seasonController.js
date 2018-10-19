@@ -237,7 +237,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 
 	vm.testArr = [];
 	vm.test = function(user_id) {
-		var inc = vm.testArr.includes("user_id");
+		var inc = vm.testArr.includes(user_id);
 		if(!inc) {
 			vm.testArr.push(user_id);
 		} else {
