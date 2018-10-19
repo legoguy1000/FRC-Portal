@@ -378,7 +378,6 @@ md-list-item.min-height-reset .md-list-item-inner::before {
 }
 
 .selectRow {
-  background-color: rgba(158,158,158,0.2);
   cursor: pointer;
 }
 
@@ -386,4 +385,8 @@ md-list-item.min-height-reset .md-list-item-inner::before {
   outline: none;
   text-decoration:none;
   -moz-outline-style: none;
+}
+
+.selectRow.selected {
+  background-color: rgba(158,158,158,0.2);
 }
