@@ -153,7 +153,8 @@ $app->group('/seasons', function () {
       $users = $formData['users'];
       foreach($users as $user) {
         //$user_id = $user['user_id'];
-        $reqArr = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user)->first();
+        $reqArr = FrcPortal\AnnualRequirement::firstOrNew(['season_id' => $season_id, 'user_id' => $user_id]);
+        //$reqArr = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user)->first();
         $cur = isset($reqArr->$req) ? $reqArr->$req : false;
         $reqArr->$req = !$cur;
         $reqArr->save();
