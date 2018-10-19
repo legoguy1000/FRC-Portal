@@ -235,7 +235,9 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		$mdMenu.open();
 	}
 
-	vm.test = function() {
-		alert('asdasdf');
+	vm.testArr = [];
+	vm.test = function(user_id) {
+		vm.testArr.push(user_id);
+		alert(user_id);
 	}
 }
