@@ -242,7 +242,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			vm.testArr.push(user_id);
 		} else {
 			var i = vm.testArr.indexOf(user_id);
-			delete vm.testArr[i];
+			vm.testArr.slice(i,1);
 		}
 		console.log(vm.testArr);
 	}
