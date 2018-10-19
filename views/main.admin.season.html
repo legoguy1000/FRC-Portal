@@ -210,7 +210,7 @@
 						</tr>
 					</thead>
 					<tbody md-body>
-						<tr md-row class="selectRow" ng-class="{'selected': vm.testArr.includes(user.user_id)}" ng-click="vm.test(user.user_id)" ng-repeat="user in vm.users | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered" sh-context-menu menu-options="vm.menuOptions" context-data="user">
+						<tr md-row class="selectRow" ng-class="{'selected': vm.selectedUsers.includes(user.user_id)}" ng-click="vm.test(user.user_id)" ng-repeat="user in vm.users | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered" sh-context-menu menu-options="vm.menuOptions" context-data="user">
 							<td md-cell>
 								<md-list-item style="padding: 0px;">
 									{{user.full_name}}

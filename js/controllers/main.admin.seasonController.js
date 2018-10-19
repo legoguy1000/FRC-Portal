@@ -29,7 +29,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		page: 1
 	};
 	vm.fabOpen = false;
-	vm.selectedUsers = [];
+
 	vm.season_id = $stateParams.season_id;
 	vm.season = {};
 	vm.users = null;
@@ -80,10 +80,21 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			}
 		];
 
+		vm.selectedUsers = [];
+		vm.selectUsers = function(user_id) {
+			var inc = vm.selectedUsers.includes(user_id);
+			if(!inc) {
+				vm.selectedUsers.push(user_id);
+			} else {
+				var i = vm.selectedUsers.indexOf(user_id);
+				vm.selectedUsers.splice(i,1);
+			}
+		}
+
 		vm.rcToggleAnnualReqs = function(user, req, action) {
 			if(vm.selectedUsers.length > 1) {
-
-			} else if ((vm.selectedUsers.length == 1 && vm.selectedUsers[0].user_id == user.user_id) || vm.selectedUsers.length == 0) {
+				vm.toggleAnnualReqs2(vm.selectedUsers, req, action);
+			} else if (vm.selectedUsers.length == 0 && user != null) {
 				var users = [];
 				users.push(user);
 				vm.toggleAnnualReqs2(users, req, action);
@@ -235,15 +246,5 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		$mdMenu.open();
 	}
 
-	vm.testArr = [];
-	vm.test = function(user_id) {
-		var inc = vm.testArr.includes(user_id);
-		if(!inc) {
-			vm.testArr.push(user_id);
-		} else {
-			var i = vm.testArr.indexOf(user_id);
-			vm.testArr.splice(i,1);
-		}
-		console.log(vm.testArr);
-	}
+
 }
