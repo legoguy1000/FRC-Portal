@@ -15,6 +15,7 @@ Version 2.12.0 (In Dev)
 * Add manifest endpoint for dynamic Manifest file.
 * Update Composer libraries
 * Update Annual and Event Requirement tables to not show inactive members who are not registered but have a placeholder record in DB
+* Added ability to select multiple users on Event/Season Requirements tables
 
 Version 2.11.0
 * Add JSON field to season model to allow customization of google form columns mapping to DB
