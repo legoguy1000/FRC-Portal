@@ -556,14 +556,17 @@ $app->group('/events', function () {
       $req = $formData['requirement'];
       $events = $formData['users'];
       foreach($events as $user) {
-        $user_id = $user['user_id'];
-        $cur = isset($user['event_requirements'][$req]) ? $user['event_requirements'][$req] : false;
+        //$user_id = $user['user_id'];
+        $reqArr = FrcPortal\EventRequirement::firstOrNew(['event_id' => $event_id, 'user_id' => $user]);
+        //$reqArr = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user)->first();
+        $cur = isset($reqArr->$req) ? $reqArr->$req : false;
         $new = !$cur;
         if($req == 'registration' && $new == false) {
-          $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->delete();
-          $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
+          $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user)->delete();
+          $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user)->delete();
         } else {
-          $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], [$req => $new]);
+          $reqArr->$req = $new;
+          $reqArr->save();
         }
       }
       $event = getUsersEventRequirements($event_id);

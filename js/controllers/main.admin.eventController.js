@@ -278,10 +278,21 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		}, function() { });
 	};
 
+	vm.selectedUsers = [];
+	vm.selectUsers = function(user_id) {
+		var inc = vm.selectedUsers.includes(user_id);
+		if(!inc) {
+			vm.selectedUsers.push(user_id);
+		} else {
+			var i = vm.selectedUsers.indexOf(user_id);
+			vm.selectedUsers.splice(i,1);
+		}
+	}
+
 	vm.rcToggleEventReqs = function(user, req, action) {
 		if(vm.selectedUsers.length > 1) {
-
-		} else if ((vm.selectedUsers.length == 1 && vm.selectedUsers[0].user_id == user.user_id) || vm.selectedUsers.length == 0) {
+			vm.toggleAnnualReqs2(vm.selectedUsers, req, action);
+		} else if (vm.selectedUsers.length == 0 && user != null) {
 			var users = [];
 			users.push(user);
 			vm.toggleEventReqs2(users, req, action);
