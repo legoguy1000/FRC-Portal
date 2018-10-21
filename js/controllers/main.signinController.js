@@ -116,6 +116,18 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	//signInModal
 	vm.showSignInModal = function(userInfo, ev) {
 		signInBool = true;
+		if(!vm.signInAuthed) {
+			var dialog = $mdDialog.alert()
+									.clickOutsideToClose(true)
+									.textContent('Sign in/out is not authorized from this device at this time.  Please see a mentor.')
+									.ariaLabel('Time In/Out')
+									.ok('Got it!');
+			$mdDialog.show(dialog);
+			$timeout( function(){
+					$mdDialog.cancel();
+				}, 2000 );
+			return;
+		}
 		var confirm = $mdDialog.prompt()
 			.title('Sign In/Out for '+userInfo.full_name)
 			.textContent('Please enter your PIN to sign in/out')
@@ -148,11 +160,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 					}
 					signInBool = true;
 				});
-			}, function() {
-				if(response.status == false) {
-					signinService.logout();
-				}
-			});
+			}, function() {	});
 /*		$mdDialog.show({
 			controller: signInModalController,
 			controllerAs: 'vm',
