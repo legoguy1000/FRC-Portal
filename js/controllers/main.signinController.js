@@ -148,7 +148,11 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 					}
 					signInBool = true;
 				});
-			}, function() {});
+			}, function() {
+				if(response.status == false) {
+					signinService.logout();
+				}
+			});
 /*		$mdDialog.show({
 			controller: signInModalController,
 			controllerAs: 'vm',
