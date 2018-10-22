@@ -53,9 +53,6 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
         $body = $response->getBody();
         return $response->withHeader("X-Token", $body);
       //}
-      //$test = FrcPortal\Auth::user()->user_id;
-      //error_log($test, 0);
-      return $response;
     }
 ]));
 $container = $app->getContainer();
