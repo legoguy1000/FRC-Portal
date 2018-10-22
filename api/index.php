@@ -50,8 +50,10 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
       $exp = $token['exp'];
       $status = $response->getStatusCode();
       //if($exp - time() <= 15*60 && $status == 200) {
-        $body = $response->getBody();
-        return $response->withHeader("X-Token", $body);
+        $body = json_decode($response->getBody(),true);
+        $body['token_new'] = 'asdf';
+        return $response->withJson($body, $status);
+      //  return $response->withHeader("X-Token", $body);
       //}
     }
 ]));
