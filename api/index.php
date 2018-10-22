@@ -37,12 +37,24 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
         ])
     ],
     "before" => function ($request, $arguments) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
-        FrcPortal\Auth::setCurrentUser($userId);
-        //$test = FrcPortal\Auth::user()->user_id;
-        //error_log($test, 0);
-        return $request;
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']->user_id;
+      FrcPortal\Auth::setCurrentUser($userId);
+      FrcPortal\Auth::setCurrentToken($authToken);
+      //$test = FrcPortal\Auth::user()->user_id;
+      //error_log($test, 0);
+      return $request;
+    },
+    "after" => function ($response, $arguments) {
+      $token = FrcPortal\Auth::currentToken();
+      $exp = $token['exp'];
+      $status = $response->getStatusCode();
+      if($exp - time() <= 15*60 && $status == 200) {
+        return $response->withHeader("X-Token", "need new token");
+      }
+      //$test = FrcPortal\Auth::user()->user_id;
+      //error_log($test, 0);
+      return $response;
     }
 ]));
 $container = $app->getContainer();

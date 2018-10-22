@@ -18,6 +18,10 @@ class Auth {
   * @var null
   */
   protected static $user = NULL;
+  /**
+  * @var null
+  */
+  protected static $token = NULL;
 
   public static function setCurrentUser($user_id) {
     self::$currentuser = $user_id;
@@ -36,6 +40,15 @@ class Auth {
   public static function isAdmin() {
     $user = self::$user;
     return checkAdmin($user);
-  } 
+  }
+
+  public static function setCurrentToken($token) {
+    self::$token = $token;
+    return true;
+  }
+
+  public static function currentToken() {
+    return self::$token;
+  }
 
 }
