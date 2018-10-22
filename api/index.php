@@ -49,12 +49,13 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
       $token = FrcPortal\Auth::currentToken();
       $exp = $token['exp'];
       $status = $response->getStatusCode();
-      //if($exp - time() <= 15*60 && $status == 200) {
+      if($exp - time() <= 15*60 && $status == 200) {
         $body = json_decode($response->getBody(),true);
-        $body['token_new'] = 'asdf';
+        $user = FrcPortal\Auth::user();
+        $body['token'] = generateUserJWT(FrcPortal\User $user);
         return $response->withJson($body, $status);
-      //  return $response->withHeader("X-Token", $body);
-      //}
+      }
+      return $response;
     }
 ]));
 $container = $app->getContainer();
