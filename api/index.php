@@ -49,9 +49,10 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
       $token = FrcPortal\Auth::currentToken();
       $exp = $token['exp'];
       $status = $response->getStatusCode();
-      if($exp - time() <= 15*60 && $status == 200) {
-        return $response->withHeader("X-Token", "need new token");
-      }
+      //if($exp - time() <= 15*60 && $status == 200) {
+        $body = $response->getBody();
+        return $response->withHeader("X-Token", $body);
+      //}
       //$test = FrcPortal\Auth::user()->user_id;
       //error_log($test, 0);
       return $response;
