@@ -497,16 +497,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.71",
+            "version": "v0.73",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "f066aac8c0ea88cf5880611d589fd1e01c4fd082"
+                "reference": "df35c41d842f5167654e8f38343a21bfe277aeda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/f066aac8c0ea88cf5880611d589fd1e01c4fd082",
-                "reference": "f066aac8c0ea88cf5880611d589fd1e01c4fd082",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/df35c41d842f5167654e8f38343a21bfe277aeda",
+                "reference": "df35c41d842f5167654e8f38343a21bfe277aeda",
                 "shasum": ""
             },
             "require": {
@@ -530,7 +530,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2018-10-09T00:22:49+00:00"
+            "time": "2018-10-20T00:22:35+00:00"
         },
         {
             "name": "google/auth",
@@ -762,16 +762,16 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.7.9",
+            "version": "v5.7.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "73cde7bd4985eefb1d468a745e1d50d03e276121"
+                "reference": "4c90c3d3ba88e52da152e885d24c9f891a2ec545"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/73cde7bd4985eefb1d468a745e1d50d03e276121",
-                "reference": "73cde7bd4985eefb1d468a745e1d50d03e276121",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/4c90c3d3ba88e52da152e885d24c9f891a2ec545",
+                "reference": "4c90c3d3ba88e52da152e885d24c9f891a2ec545",
                 "shasum": ""
             },
             "require": {
@@ -803,11 +803,11 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "https://laravel.com",
-            "time": "2018-10-07T15:52:17+00:00"
+            "time": "2018-10-18T03:39:45+00:00"
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.7.9",
+            "version": "v5.7.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -851,16 +851,16 @@
         },
         {
             "name": "illuminate/database",
-            "version": "v5.7.9",
+            "version": "v5.7.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "1f4a0881ca0012732ae7b73809cf50ef8d964547"
+                "reference": "95300422e4607bbf1b06baf141d83c2d6e289bd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/1f4a0881ca0012732ae7b73809cf50ef8d964547",
-                "reference": "1f4a0881ca0012732ae7b73809cf50ef8d964547",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/95300422e4607bbf1b06baf141d83c2d6e289bd1",
+                "reference": "95300422e4607bbf1b06baf141d83c2d6e289bd1",
                 "shasum": ""
             },
             "require": {
@@ -906,20 +906,20 @@
                 "orm",
                 "sql"
             ],
-            "time": "2018-10-06T18:48:42+00:00"
+            "time": "2018-10-24T12:48:02+00:00"
         },
         {
             "name": "illuminate/support",
-            "version": "v5.7.9",
+            "version": "v5.7.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "ea95697233b06650382eb0f5798be22b4e520dea"
+                "reference": "45bfc0cd080c51946f61c04e324c2b4c6df58a9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/ea95697233b06650382eb0f5798be22b4e520dea",
-                "reference": "ea95697233b06650382eb0f5798be22b4e520dea",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/45bfc0cd080c51946f61c04e324c2b4c6df58a9d",
+                "reference": "45bfc0cd080c51946f61c04e324c2b4c6df58a9d",
                 "shasum": ""
             },
             "require": {
@@ -965,7 +965,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "time": "2018-10-07T15:51:39+00:00"
+            "time": "2018-10-22T17:36:06+00:00"
         },
         {
             "name": "microsoft/microsoft-graph",
