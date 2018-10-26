@@ -4,7 +4,7 @@ require_once(__DIR__.'/includes.php');
 //$version = VERSION;
 
 $iniData = array();
-$question = 'This file will install and configure FRC Portal v'.VERSION.'.  Type "yes" to continue: '
+$question = 'This file will install and configure FRC Portal v'.VERSION.'.  Type "yes" to continue: ';
 $line = clinput($question, $required = true);
 if($line != 'yes'){
     echo "Aborting!\n";

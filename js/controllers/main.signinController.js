@@ -15,6 +15,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		order: 'lname',
 		page: 1
 	};
+
 	var signInBool = true;
 
 	var tick = function() {
@@ -25,7 +26,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 
 	vm.signInAuthed = signinService.isAuthed();
 	vm.getUsers = function() {
-		signinService.signInUserList().then(function(response) {
+		vm.promise = signinService.signInUserList().then(function(response) {
 			vm.users = response;
 		});
 	}
