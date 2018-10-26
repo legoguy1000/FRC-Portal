@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.userController', ['$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog','$stateParams','$mdToast',
+.controller('main.admin.userController', ['$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog','$stateParams','$mdToast', 'generalService',
 	mainAdminUserController
 ]);
-function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $stateParams,$mdToast) {
+function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $stateParams,$mdToast, generalService) {
     var vm = this;
 
 	vm.user_id = $stateParams.user_id;
@@ -116,7 +116,8 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 	}
 
 	vm.showSeasonHoursGraph = function(ev,year) {
-		$mdDialog.show({
+		generalService.showSeasonHoursGraph(ev, vm.user_id, year);
+		/*$mdDialog.show({
 			controller: SeasonHoursGraphModalController,
 			controllerAs: 'vm',
 			templateUrl: 'views/partials/SeasonHoursGraphModal.tmpl.html',
@@ -131,6 +132,6 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
 				},
 			}
 		})
-		.then(function(answer) {}, function() {});
+		.then(function(answer) {}, function() {}); */
 	}
 }
