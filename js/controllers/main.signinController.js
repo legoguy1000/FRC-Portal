@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$auth', '$scope', 'signinService', '$mdDialog', '$interval', 'usersService', 'signinService',
+.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$auth', '$scope', 'signinService', '$mdDialog', '$interval',
 	mainSigninController
 ]);
-function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinService, $mdDialog, $interval, usersService, signinService) {
+function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinService, $mdDialog, $interval) {
     var vm = this;
 
 	vm.pin = '';
@@ -82,6 +82,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 
+/*
 	vm.signinOut = function($event, numbers) {
 		if(signInBool) {
 			signInBool = false;
@@ -112,10 +113,10 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 				signInBool = true;
 			});
 		}
-	}
+	} */
 
 	//signInModal
-	vm.showSignInModal = function(userInfo, ev) {
+	vm.showSignInModal = function(userInfo) {
 		signInBool = true;
 		if(!vm.signInAuthed) {
 			var dialog = $mdDialog.alert()

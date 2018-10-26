@@ -32,7 +32,7 @@
 				</thead>
 				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 					<tr md-row ng-repeat="user in vm.users | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
-						<td md-cell style="cursor: pointer;" ng-click="vm.showSignInModal(user, $event)">
+						<td md-cell style="cursor: pointer;" ng-click="vm.showSignInModal(user)">
 							<md-list-item style="padding: 0px;" md-ink-ripple>
 								<img ng-src="{{user.profile_image}}" class="md-avatar" alt=""/>
 								{{user.full_name}}
