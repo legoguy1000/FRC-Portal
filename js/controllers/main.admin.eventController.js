@@ -251,9 +251,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				admin: true,
 			}
 		})
-		.then(function(response) {
-			//vm.users = response.data;
-		}, function() { });
+		.then(function() {}, function() {});
 	};
 
 	vm.showFoodListModal = function(ev) {
