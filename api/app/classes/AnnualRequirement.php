@@ -114,9 +114,14 @@ class AnnualRequirement extends Eloquent {
     //ON seasons.year=YEAR(meeting_hours.time_in) AND mh.time_in >= seasons.start_date AND mh.time_in <= seasons.bag_day
     //WHERE week(mh.time_in) = (WEEK(CURDATE())-30)
     //GROUP BY user_id,week
-    $data = array();
+    $data = array(
+      'hours' => array(),
+      'reqs_complete' => false,
+    );
     $hours = null;
-    if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
+    $seasonInfo = Season::find($this->attributes['season_id']);
+    $hour_req = $seasonInfo->hour_requirement_week;
+    if(isset($this->attributes['user_id']) && isset($this->attributes['season_id']) && $hour_req > 0) {
       $hours = DB::table('meeting_hours')
         ->leftJoin('seasons', function ($join) {
         $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))
@@ -135,10 +140,8 @@ class AnnualRequirement extends Eloquent {
       })->havingRaw('subtable.week > WEEK(seasons.start_date,1) AND subtable.week < WEEK(seasons.bag_day,1)')->get(); */
     }
     if(!is_null($hours) && !empty($hours)) {
-      $seasonInfo = Season::find($this->attributes['season_id']);
       $start = $seasonInfo->start_date;
   		$end = $seasonInfo->bag_day;
-  		$hour_req = $seasonInfo->hour_requirement_week;
   		$end_week = date('W',strtotime($end))-1;
   		if(time() < strtotime($end) && time() > strtotime($start)) {
   			$end_week = date('W');
@@ -165,10 +168,10 @@ class AnnualRequirement extends Eloquent {
   			$hours_data[] = $week_data;
   		}
   		$num_weeks = floor($end_week - $start_week);
-    		$num_req_com = count(array_filter(array_column($hours_arr,'req_complete')));
+  		$num_req_com = count(array_filter(array_column($hours_arr,'req_complete')));
   		$all_complete = $num_req_com >= $num_weeks;
-    		$data['hours'] = $hours_data;
-    		$data['reqs_complete'] = $all_complete;
+  		$data['hours'] = $hours_data;
+  		$data['reqs_complete'] = $all_complete;
     }
     return $data;
   }
@@ -245,12 +248,19 @@ class AnnualRequirement extends Eloquent {
   }
   public function getMinHoursAttribute() {
     $hours = $this->build_season_hours;
+    $total_bool = true;
+    $week_bool = true;
     if(isset($hours) && isset($this->attributes['season_id'])) {
       $sid = $this->attributes['season_id'];
       $season = Season::find($sid);
       $hours_req = $season->hour_requirement;
-      $hours_req_week = $this->weekly_build_season_hours;
-      return ($hours_req> 0 && $hours >= $hours_req) && $hours_req_week['reqs_complete'];
+      $hours_week = $this->weekly_build_season_hours;
+      $hour_req_wk = $seasonInfo->hour_requirement_week;
+      if($hours_req > 0 && $hour_req_wk > 0) {
+        return $hours >= $hours_req && $hours_week['reqs_complete'];
+      } else {
+        return ($hours_req> 0 && $hours >= $hours_req) || ($hour_req_wk> 0 && $hours_week['reqs_complete']);
+      }
     } else {
       return false;
     }
