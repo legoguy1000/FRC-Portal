@@ -119,9 +119,7 @@ class AnnualRequirement extends Eloquent {
       'reqs_complete' => false,
     );
     $hours = null;
-    $seasonInfo = Season::find($this->attributes['season_id']);
-    $hour_req = $seasonInfo->hour_requirement_week;
-    if(isset($this->attributes['user_id']) && isset($this->attributes['season_id']) && $hour_req > 0) {
+    if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
       $hours = DB::table('meeting_hours')
         ->leftJoin('seasons', function ($join) {
         $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))
@@ -140,6 +138,8 @@ class AnnualRequirement extends Eloquent {
       })->havingRaw('subtable.week > WEEK(seasons.start_date,1) AND subtable.week < WEEK(seasons.bag_day,1)')->get(); */
     }
     if(!is_null($hours) && !empty($hours)) {
+      $seasonInfo = Season::find($this->attributes['season_id']);
+      $hour_req = $seasonInfo->hour_requirement_week;
       $start = $seasonInfo->start_date;
   		$end = $seasonInfo->bag_day;
   		$end_week = date('W',strtotime($end))-1;
