@@ -153,7 +153,7 @@ class AnnualRequirement extends Eloquent {
   		$hours_data = array();
   		for($i=$start_week+1; $i <= $end_week; $i++) {
   			$key = !is_null($cols) ? array_search($i, $cols) : null;
-  			$week_data = !is_null($key) ? $hours_arr[$key] : array();
+  			$week_data = !is_null($key) && $key !== false ? $hours_arr[$key] : array();
   			$week_start = new DateTime();
   			$week_start->setISODate($seasonInfo->year,$i);
   			if(is_array($week_data)) {
