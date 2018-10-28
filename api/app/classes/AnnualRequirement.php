@@ -255,7 +255,7 @@ class AnnualRequirement extends Eloquent {
       $season = Season::find($sid);
       $hours_req = $season->hour_requirement;
       $hours_week = $this->weekly_build_season_hours;
-      $hour_req_wk = $seasonInfo->hour_requirement_week;
+      $hour_req_wk = $season->hour_requirement_week;
       if($hours_req > 0 && $hour_req_wk > 0) {
         return $hours >= $hours_req && $hours_week['reqs_complete'];
       } elseif($hours_req == 0 && $hour_req_wk == 0) {
