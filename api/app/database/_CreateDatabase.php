@@ -1,26 +1,28 @@
 <?php
 
-include_once('Setting.php');
-include_once('Season.php');
-include_once('School.php');
-include_once('User.php');
-include_once('Oauth.php');
-include_once('NotificationPreference.php');
-include_once('MissingHoursRequest.php');
-include_once('MeetingHour.php');
-include_once('AnnualRequirement.php');
-include_once('EventType.php');
-include_once('Event.php');
-include_once('EventCar.php');
-include_once('EventRoom.php');
-include_once('EventRequirement.php');
-include_once('EventTimeSlot.php');
-include_once('EventTimeSlotUser.php');
-include_once('EventFood.php');
-include_once('EventFoodUser.php');
+require_once('Setting.php');
+require_once('Season.php');
+require_once('School.php');
+require_once('User.php');
+require_once('Oauth.php');
+require_once('NotificationPreference.php');
+require_once('MissingHoursRequest.php');
+require_once('MeetingHour.php');
+require_once('AnnualRequirement.php');
+require_once('EventType.php');
+require_once('Event.php');
+require_once('EventCar.php');
+require_once('EventRoom.php');
+require_once('EventRequirement.php');
+require_once('EventTimeSlot.php');
+require_once('EventTimeSlotUser.php');
+require_once('EventFood.php');
+require_once('EventFoodUser.php');
 
-//include_once('UserCategory.php');
-//include_once('UserUserCategory.php');
+require_once('database/_CreateForeignKeys.php');
+
+//require_once('UserCategory.php');
+//require_once('UserUserCategory.php');
 
 
 

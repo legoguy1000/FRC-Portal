@@ -251,7 +251,7 @@ input.signin-pin:-ms-input-placeholder {
 	fill: var(--accent-color);
 }
 
-md-input-container .hint {
+.hint {
   /*  position: absolute;
     left: 2px;
     right: auto;
@@ -375,4 +375,18 @@ md-list-item.min-height-reset .md-list-item-inner::before {
 
 .bold {
   font-weight: bold;
+}
+
+.selectRow {
+  cursor: pointer;
+}
+
+.selectRow:active, .selectRow:focus  {
+  outline: none;
+  text-decoration:none;
+  -moz-outline-style: none;
+}
+
+.selectRow.selected {
+  background-color: rgba(158,158,158,0.2);
 }

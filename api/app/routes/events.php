@@ -556,14 +556,53 @@ $app->group('/events', function () {
       $req = $formData['requirement'];
       $events = $formData['users'];
       foreach($events as $user) {
-        $user_id = $user['user_id'];
-        $cur = isset($user['event_requirements'][$req]) ? $user['event_requirements'][$req] : false;
+        //$user_id = $user['user_id'];
+        $reqArr = FrcPortal\EventRequirement::firstOrNew(['event_id' => $event_id, 'user_id' => $user]);
+        //$reqArr = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user)->first();
+        $cur = isset($reqArr->$req) ? $reqArr->$req : false;
         $new = !$cur;
         if($req == 'registration' && $new == false) {
-          $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->delete();
-          $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
+          $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user)->delete();
+          $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user)->delete();
         } else {
-          $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], [$req => $new]);
+          $reqArr->$req = $new;
+          $reqArr->save();
+        }
+      }
+      $event = getUsersEventRequirements($event_id);
+      $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $event);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    //Toggle Attendance Confirm per User
+    $this->put('/toggleConfirmAttendance', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+
+      $event_id = $args['event_id'];
+      if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
+        return badRequestResponse($response, $msg = 'Please select at least 1 user');
+      }
+      /* if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('registration','permission_slip','payment'))) {
+        return badRequestResponse($response, $msg = 'Invalid event requirement');
+      } */
+      $event = FrcPortal\Event::find($event_id);
+      $array = array();
+      $users = $formData['users'];
+      $user_ids = array_column($users, 'user_id');
+      foreach($users as $user) {
+        $user_id = $user['user_id'];
+        $cur = isset($user['event_requirements']['attendance_confirmed']) ? $user['event_requirements']['attendance_confirmed'] : false;
+        $new = !$cur;
+        $ereq = FrcPortal\EventRequirement::where('event_id', $event_id)->where('user_id', $user_id)->first();
+        if(!is_null($ereq) && isset($ereq->registration) && $ereq->registration==true) {
+          $ereq->attendance_confirmed = $new;
+        } else {
+          return badRequestResponse($response, $msg = 'User must be registered prior to receiving time credit');
         }
       }
       $event = getUsersEventRequirements($event_id);

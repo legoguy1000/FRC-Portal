@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.profileController', ['$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams', '$window',
+.controller('main.profileController', ['$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams', '$window', 'generalService',
 	mainProfileController
 ]);
-function mainProfileController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams, $window) {
+function mainProfileController($timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams, $window, generalService) {
     var vm = this;
 
   vm.selectedItem  = null;
@@ -68,6 +68,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		return schoolsService.getAllSchoolsFilter($.param(data));
 	}
 
+/*
 	vm.getProfileInfo = function() {
 		vm.loading.note_devices = true;
 		usersService.getProfileInfo($scope.main.userInfo.user_id).then(function(response) {
@@ -79,7 +80,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			vm.loading.note_devices = false;
 		});
 	}
-	vm.getProfileInfo();
+	vm.getProfileInfo(); */
 
 	vm.getUserAnnualRequirements = function() {
 		vm.loading.note_devices = true;
@@ -146,7 +147,8 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	}
 
 	vm.showSeasonHoursGraph = function(ev,year) {
-		$mdDialog.show({
+		generalService.showSeasonHoursGraph(ev, $scope.main.userInfo.user_id, year);
+		/*$mdDialog.show({
 			controller: SeasonHoursGraphModalController,
 			controllerAs: 'vm',
 			templateUrl: 'views/partials/SeasonHoursGraphModal.tmpl.html',
@@ -161,7 +163,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 				},
 			}
 		})
-		.then(function(answer) {}, function() {});
+		.then(function() {}, function() {});*/
 	}
 
 	vm.changePin = function() {
@@ -195,10 +197,16 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		}
 		usersService.updateNotificationPreferences(data).then(function(response){
 			vm.loading.note_types = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 		});
 	}
 
-	vm.requestMissingHours = function(method,type,value) {
+	vm.requestMissingHours = function() {
 		vm.loading.rmh = true;
 		var data = vm.rmhData;
 		data.user_id = $scope.main.userInfo.user_id;
@@ -225,7 +233,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 				vm.linkedAccounts = response.data.linkedAccounts;
 			}
 		})
-		.catch(function(response) {
+		.catch(function() {
 		  // Handle errors here.
 		});
 	};

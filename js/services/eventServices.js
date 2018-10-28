@@ -77,6 +77,13 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		toggleConfirmAttendance: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			return $http.put('api/events/'+event_id+'/toggleConfirmAttendance',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		syncGoogleCalEvent: function (event_id) {
 			var event_id = event_id != undefined && event_id != null ? event_id:'';
 			return $http.put('api/events/'+event_id+'/syncGoogleCalEvent')

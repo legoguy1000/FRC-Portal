@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$auth', '$scope', 'signinService', '$mdDialog', '$interval', 'usersService', 'signinService',
+.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$auth', '$scope', 'signinService', '$mdDialog', '$interval',
 	mainSigninController
 ]);
-function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinService, $mdDialog, $interval, usersService, signinService) {
+function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinService, $mdDialog, $interval) {
     var vm = this;
 
 	vm.pin = '';
@@ -15,6 +15,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		order: 'lname',
 		page: 1
 	};
+
 	var signInBool = true;
 
 	var tick = function() {
@@ -25,7 +26,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 
 	vm.signInAuthed = signinService.isAuthed();
 	vm.getUsers = function() {
-		signinService.signInUserList().then(function(response) {
+		vm.promise = signinService.signInUserList().then(function(response) {
 			vm.users = response;
 		});
 	}
@@ -81,6 +82,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 
+/*
 	vm.signinOut = function($event, numbers) {
 		if(signInBool) {
 			signInBool = false;
@@ -111,23 +113,71 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 				signInBool = true;
 			});
 		}
-	}
+	} */
 
-	vm.keyDown = function(e) {
-		if(e.keyCode == 46 || e.keyCode == 8) {
-        //console.log('backspace');
-    }
-		//console.log(e.keyCode);
-	}
-	$(document).keyup(function (e) {
-	    //console.log(e);
-			if(vm.pin.length >= 4 && vm.pin.length <= 8) {
-				if(e.originalEvent.code == 'Enter') {
-					//e.preventDefault();
-				//	e.stopPropagation()
-					//vm.signinOut();
-				}
+	//signInModal
+	vm.showSignInModal = function(userInfo) {
+		signInBool = true;
+		if(!vm.signInAuthed) {
+			var dialog = $mdDialog.alert()
+									.clickOutsideToClose(true)
+									.textContent('Sign in/out is not authorized from this device at this time.  Please see a mentor.')
+									.ariaLabel('Time In/Out')
+									.ok('Got it!');
+			$mdDialog.show(dialog);
+			$timeout( function(){
+					$mdDialog.cancel();
+				}, 2000 );
+			return;
+		}
+		var confirm = $mdDialog.prompt()
+			.title('Sign In/Out for '+userInfo.full_name)
+			.textContent('Please enter your PIN to sign in/out')
+			.placeholder('PIN (eg. 123456)')
+			.ariaLabel('')
+			.initialValue('')
+			.required(true)
+			.ok('Submit')
+			.cancel('Cancel');
+			$mdDialog.show(confirm).then(function(result) {
+				var data = {
+					'user_id': userInfo.user_id,
+					'pin': result,
+					'token': signinService.getToken()
+				};
+				signinService.signInOut(data).then(function(response) {
+					vm.pin = '';
+					vm.selected_user = [];
+					var dialog = $mdDialog.alert()
+											.clickOutsideToClose(true)
+											.textContent(response.msg)
+											.ariaLabel('Time In/Out')
+											.ok('Got it!');
+					$mdDialog.show(dialog);
+					$timeout( function(){
+				      $mdDialog.cancel();
+				    }, 2000 );
+					if(response.status) {
+						vm.users = response.signInList;
+					}
+					signInBool = true;
+				});
+			}, function() {	});
+/*		$mdDialog.show({
+			controller: signInModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/signInModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				userInfo: userInfo,
 			}
-	});
-
+		})
+		.then(function(currentMap) {
+			vm.season.membership_form_map = currentMap;
+			vm.updateSeason();
+		}, function() { });*/
+	};
 }

@@ -1,0 +1,41 @@
+<md-dialog aria-label="Clock In/Out" style="" flex="50" class="backgroundPrimary ">
+	<md-toolbar layout="row">
+	  <div class="md-toolbar-tools">
+		<h2>Sign In/Out for {{vm.userInfo.full_name}}</h2>
+		<span flex></span>
+		<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
+			<md-tooltip md-direction="top">Close</md-tooltip>
+		  <md-icon class=""> close </md-icon>
+		</md-button>
+	  </div>
+	</md-toolbar>
+		<md-dialog-content class="md-margin">
+			<form  ng-submit="vm.signinOut()">
+				<div flex layout="column">
+					<div flex class="backgroundPrimary">
+						<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
+							<div class="" style="color: colorAccent">
+								<h3>{{ vm.clock | date:'medium'}}</h3>
+							</div>
+						</md-toolbar>
+						<md-toolbar flex style="height:30px;border-bottom: var(--accent-color) 1px solid;" class="colorAccent" layout="row" layout-align="center center">
+							<div class="">
+									<input ng-model="vm.pin" placeholder="PIN Number" class="signin-pin backgroundPrimary" pattern="[0-9]{4,8}" type="text" md-autofocus>
+							</div>
+						</md-toolbar>
+						<bc-keypad
+							bc-number-model="vm.pin"
+							bc-left-button="backspace"
+							bc-right-button="submit"
+							bc-max-length="8"
+							bc-right-button-method="vm.signinOut($event, numbers)"
+						></bc-keypad>
+					</div>
+				</div>
+				<md-button class="noprint" type="submit" hide>
+					<md-tooltip md-direction="top">Submit</md-tooltip>
+				  Submit
+				</md-button>
+			</form>
+		</md-dialog-content>
+</md-dialog>

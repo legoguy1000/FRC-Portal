@@ -112,7 +112,9 @@ function getUsersAnnualRequirements($season_id) {
 										}])->whereExists(function ($query) use ($season_id) {
 											$query->select(DB::raw(1))
 														->from('annual_requirements')
-														->whereRaw('annual_requirements.user_id = users.user_id AND annual_requirements.season_id = ?',[$season_id]);
+														->whereRaw('annual_requirements.user_id = users.user_id')
+														->where('annual_requirements.join_team',true)
+														->where('annual_requirements.season_id',$season_id);
 										})
 										->orWhere('status',true)
 										->get();
@@ -129,7 +131,9 @@ function getUsersEventRequirements($event_id) {
 			->whereExists(function ($query) use ($event_id) {
 			  $query->select(DB::raw(1))
 				->from('event_requirements')
-				->whereRaw('event_requirements.user_id = users.user_id AND event_requirements.event_id = ?',[$event_id]);
+				->whereRaw('event_requirements.user_id = users.user_id')
+				->where('event_requirements.registration',true)
+				->where('event_requirements.event_id',$event_id);
 			})
 			->orWhere('status',true)
 			->get();

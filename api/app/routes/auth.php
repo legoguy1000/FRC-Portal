@@ -21,21 +21,7 @@ $app->group('/auth', function () {
       $client->authenticate($args['code']);
       $accessCode = $client->getAccessToken();
       $me = $plus->people->get("me");
-
-      $email = $me['emails'][0]['value'];
-    	$fname = $me['name']['givenName'];
-    	$lname = $me['name']['familyName'];
-    	$image = $me['image']['url'];
-    	$id = $me['id'];
-
-      $userData = array(
-    		'id' => $id,
-    		'provider' => $provider,
-    		'email' => $email,
-    		'fname' => $fname,
-    		'lname' => $lname,
-    		'profile_image' => $image,
-    	);
+      $userData = formatGoogleLoginUserData($me);
       if(checkTeamLogin($userData['email'])) {
         return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
       }
@@ -80,20 +66,7 @@ $app->group('/auth', function () {
       $FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,picture', $accessToken);
     	$me = $FBresponse->getGraphUser();
       if(isset($me['email']) || $me['email'] != '') {
-        $email = $me['email'];
-      	$fname = $me['first_name'];
-      	$lname = $me['last_name'];
-      	$image = $me['picture']['data']['url'];
-      	$id = $me['id'];
-
-        $userData = array(
-      		'id' => $id,
-      		'provider' => $provider,
-      		'email' => $email,
-      		'fname' => $fname,
-      		'lname' => $lname,
-      		'profile_image' => $image,
-      	);
+        $userData = formatFacebookLoginUserData($me);
         if(checkTeamLogin($userData['email'])) {
           return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
         }
@@ -155,20 +128,7 @@ $app->group('/auth', function () {
     	$me = $graph->createRequest('GET', '/me')->setReturnType(Model\User::class)->execute();
       $me = json_decode(json_encode($me), true);
 
-    	$email = $me['userPrincipalName'];
-    	$fname = $me['givenName'];
-    	$lname = $me['surname'];
-    	$image = ''; //$me['image']['url'];\
-    	$id = $me['id'];
-
-    	$userData = array(
-    		'id' => $id,
-    		'provider' => $provider,
-    		'email' => $email,
-    		'fname' => $fname,
-    		'lname' => $lname,
-    		'profile_image' => $image,
-    	);
+    	$userData = formatMicrosoftLoginUserData($me);
       if(checkTeamLogin($userData['email'])) {
         return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
       }

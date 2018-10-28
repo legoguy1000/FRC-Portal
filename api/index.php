@@ -1,6 +1,6 @@
 <?php
-include('app/includes.php');
-include('app/libraries/CustomAuthRule.php');
+require_once('app/includes.php');
+require_once('app/libraries/CustomAuthRule.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -25,7 +25,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     "rules" => [
         new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
           "path" => ['/'],
-          "ignore" => ['/version','/auth','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/config'],
+          "ignore" => ['/version','/manifest','/auth','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/config'],
         ]),
         new Tuupola\Middleware\JwtAuthentication\RequestPathMethodRule([
           "passthrough" => [
@@ -37,12 +37,25 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
         ])
     ],
     "before" => function ($request, $arguments) {
-        $authToken = $request->getAttribute("token");
-        $userId = $authToken['data']->user_id;
-        FrcPortal\Auth::setCurrentUser($userId);
-        //$test = FrcPortal\Auth::user()->user_id;
-        //error_log($test, 0);
-        return $request;
+      $authToken = $request->getAttribute("token");
+      $userId = $authToken['data']->user_id;
+      FrcPortal\Auth::setCurrentUser($userId);
+      FrcPortal\Auth::setCurrentToken($authToken);
+      //$test = FrcPortal\Auth::user()->user_id;
+      //error_log($test, 0);
+      return $request;
+    },
+    "after" => function ($response, $arguments) {
+      $token = FrcPortal\Auth::currentToken();
+      $exp = $token['exp'];
+      $status = $response->getStatusCode();
+      if($exp - time() <= 15*60 && $status == 200) {
+        $body = json_decode($response->getBody(),true);
+        $user = FrcPortal\Auth::user();
+        $body['token'] = generateUserJWT($user);
+        return $response->withJson($body, $status);
+      }
+      return $response;
     }
 ]));
 $container = $app->getContainer();
@@ -98,20 +111,60 @@ $app->get('/config', function ($request, $response, $args) {
   $response = $response->withHeader('Content-type', 'application/javascript');
   return $response;
 });
+$app->get('/manifest', function ($request, $response, $args) {
+  $this->logger->addInfo('Called manifest endpoint');
+  $configArr = array(
+    'team_name',
+    'team_number',
+    'team_logo_url',
+    'team_domain',
+    'env_url',
+    'team_color_primary',
+    'team_color_secondary',
+  );
+  $settings = FrcPortal\Setting::whereIn('setting', $configArr)->get();
+  $constantArr = array();
+  foreach($settings as $set) {
+    $constantArr[$set->setting] = formatSettings($set->setting, $set->value);
+  }
+  $responseArr = array(
+    'name' => 'Team '.$constantArr['team_number'].' Portal',
+    'short_name' => 'Team '.$constantArr['team_number'],
+    'lang' => 'en-US',
+    'start_url' => $constantArr['env_url'],
+    'theme_color' => $constantArr['team_color_secondary'],
+    'background_color' => $constantArr['team_color_secondary'],
+    'display' => 'standalone',
+    'icons' => array(
+      array(
+        'src' => '/favicons/android-chrome-192x192.png?v=47Myd2nElq',
+        'sizes' => '192x192',
+        'type' => 'image/png',
+      ),
+      array(
+        'src' => '/favicons/android-chrome-512x512.png?v=47Myd2nElq',
+        'sizes' => '512x512',
+        'type' => 'image/png',
+      )
+    )
+  );
+  $response = $response->withJson($responseArr);
+  return $response;
+});
 
 
-include('./app/routes/auth.php');
-include('./app/routes/seasons.php');
-include('./app/routes/hours.php');
-include('./app/routes/users.php');
-include('./app/routes/events.php');
-include('./app/routes/reports.php');
-include('./app/routes/schools.php');
-include('./app/routes/slack.php');
-include('./app/routes/settings.php');
-include('./app/routes/public.php');
-include('./app/routes/eventTypes.php');
-include('./app/routes/userCategories.php');
+require_once('./app/routes/auth.php');
+require_once('./app/routes/seasons.php');
+require_once('./app/routes/hours.php');
+require_once('./app/routes/users.php');
+require_once('./app/routes/events.php');
+require_once('./app/routes/reports.php');
+require_once('./app/routes/schools.php');
+require_once('./app/routes/slack.php');
+require_once('./app/routes/settings.php');
+require_once('./app/routes/public.php');
+require_once('./app/routes/eventTypes.php');
+require_once('./app/routes/userCategories.php');
 
 $app->run();
 

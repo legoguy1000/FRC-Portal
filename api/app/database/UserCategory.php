@@ -1,6 +1,6 @@
 <?php
 
-include_once(__DIR__.'/../includes.php');
+require_once(__DIR__.'/../includes.php');
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 Capsule::schema()->create('user_categories', function ($table) {

@@ -1,10 +1,10 @@
 <?php
-include(__DIR__ . '/../includes.php');
+require_once(__DIR__ . '/../includes.php');
 //
 
 $season_id = null;
 $spreadsheetId = null;
-$season = FrcPortal\Season::where('bag_day','>=',date('Y-m-d'))->first();
+$season = FrcPortal\Season::where('bag_day','>=',date('Y-m-d'))->orderBy('start_date', 'ASC')->first();
 if(!is_null($season)) {
 	$season_id = $season->season_id;
 	$spreadsheetId = $season->join_spreadsheet != '' ? $season->join_spreadsheet:null;

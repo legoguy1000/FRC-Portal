@@ -18,7 +18,7 @@
 			</div>
 		</md-toolbar>
 		<md-table-container>
-			<table md-table md-row-select ng-model="vm.selected_user" md-progress="vm.promise">
+			<table md-table ng-model="vm.selected_user" md-progress="vm.promise">
 				<thead md-head md-order="vm.query.order">
 					<tr md-row>
 						<th md-column md-order-by="lname"><span>Name</span></th>
@@ -31,10 +31,10 @@
 					</tr>
 				</thead>
 				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
-					<tr md-row ng-repeat="user in vm.users | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" md-select="user" md-select-id="user_id" md-auto-select>
-						<td md-cell>
-							<md-list-item style="padding: 0px;">
-								<img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
+					<tr md-row ng-repeat="user in vm.users | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+						<td md-cell style="cursor: pointer;" ng-click="vm.showSignInModal(user)">
+							<md-list-item style="padding: 0px;" md-ink-ripple>
+								<img ng-src="{{user.profile_image}}" class="md-avatar" alt=""/>
 								{{user.full_name}}
 							</md-list-item>
 						</td>
@@ -55,14 +55,31 @@
 			<h3>Sign In Instructions: </h3>
 			<ol>
 				<li>Select your name from the list above*</li>
-				<li>Type your 4-8 digit PIN number in the number pad**</li>
-				<li>Press the submit button under the 9</li>
+				<li>Type your 4-8 digit PIN</li>
+				<li>Press the submit button</li>
 			</ol>
 			<div>* If your name is not listed, Please fill out the Team 2363 Join Team Form (<a href="http://join.team2363.org" target="_blank">Click Here</a>).</div>
 			<div>	 Students: Your default PIN will be your student ID that you entered into the Team 2363 Join Team Form.</div>
 			<div>  Mentors/Others: Please log in to the portal by clicking the "Log In" button in the top rght corner.  Please select one of the login providers (It does not have to be your team2363.org email).  Upon successful log in, please complete the new user form.  Here you will set your 4-8 digit PIN number.</div>
 		</div>
 	</div>
+	<!--
+	<div flex class="backgroundPrimary">
+		<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
+			<div class="" style="color: colorAccent">
+				<h3>{{ vm.clock | date:'medium'}}</h3>
+			</div>
+		</md-toolbar>
+		<div>
+			<md-list ng-cloak>
+				<md-list-item ng-repeat="user in vm.users | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" ng-click="vm.showSignInModal(user, $event)" class="noright">
+			    <img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
+			    <div>{{ user.full_name }}</div>
+			  </md-list-item>
+			</md-list>
+		</div>
+	</div> -->
+	<!--
 	<div flex class="backgroundPrimary">
 		<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
 			<div class="" style="color: colorAccent">
@@ -70,16 +87,10 @@
 			</div>
 		</md-toolbar>
 		<md-toolbar flex style="height:30px;border-bottom: var(--accent-color) 1px solid;" class="colorAccent" layout="row" layout-align="center center">
-		<!--	<div class="">
-				<h1>{{ vm.pin }}</h1>
-			</div> -->
 			<div class="">
 					<input ng-model="vm.pin" placeholder="PIN Number" class="signin-pin backgroundPrimary" pattern="[0-9]{4,8}" type="password">
 			</div>
 		</md-toolbar>
-		<!-- <div flex style="height:30px;"  layout="row" layout-align="center center">
-			<h1>{{ vm.pin }}</h1>
-		</div> -->
 		<bc-keypad
 			bc-number-model="vm.pin"
 			bc-left-button="backspace"
@@ -87,7 +98,7 @@
 			bc-max-length="8"
 			bc-right-button-method="vm.signinOut($event, numbers)"
 		></bc-keypad>
-	</div>
+	</div>-->
 </div>
 
 <!-- Define the keypad: -->

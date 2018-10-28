@@ -1,5 +1,5 @@
 <?php
-include_once(__DIR__.'/../includes.php');
+require_once(__DIR__.'/../includes.php');
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
@@ -9,7 +9,7 @@ $oauth_ids = Capsule::schema()->hasTable('oauth_ids');
 $notification_preferences = Capsule::schema()->hasTable('notification_preferences');
 //Time
 $missing_hours_requests = Capsule::schema()->hasTable('missing_hours_requests');
-$meeting_hours = Capsule::schema()->hasTable('meeting_hours');\
+$meeting_hours = Capsule::schema()->hasTable('meeting_hours');
 //Seasons
 $seasons = Capsule::schema()->hasTable('seasons');
 $annual_requirements = Capsule::schema()->hasTable('annual_requirements');

@@ -33,8 +33,8 @@
 				<tr md-row>
 					<th md-column style="width:56px"></th>
 					<th md-column md-order-by="school_name"><span>School Name</span></th>
-					<th md-column md-order-by="abv"><span>Abreviation</span></th>
-					<th md-column md-order-by="student_count"><span># of Students</span></th>
+					<th md-column md-order-by="abv" hide-xs hide-sm><span>Abreviation</span></th>
+					<th md-column md-order-by="student_count" hide-xs><span># of Students</span></th>
 					<th md-column style="width: 150px;"></th>
 				</tr>
 			</thead>
@@ -45,13 +45,13 @@
 							<img ng-src="{{school.logo_url}}" class="md-avatar" alt="" ng-if="school.logo_url"/>
 						</md-list-item></td>
 					<td md-cell>{{school.school_name}}</td>
-					<td md-cell>{{school.abv}}</td>
-					<td md-cell>{{school.student_count}}</td>
+					<td md-cell hide-xs hide-sm>{{school.abv}}</td>
+					<td md-cell hide-xs>{{school.student_count}}</td>
 					<td md-cell>
 						<md-button class="md-icon-button" ui-sref="main.admin.school({'school_id':school.school_id})" ng-click="admin.slideLeft()">
 							<md-icon>open_in_new</md-icon>
 						</md-button>
-						<md-button class="md-icon-button" ng-click="">
+						<md-button class="md-icon-button" ng-click="" hide-xs>
 							<md-icon>delete_forever</md-icon>
 						</md-button>
 					</td>

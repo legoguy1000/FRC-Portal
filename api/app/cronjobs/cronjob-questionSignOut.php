@@ -1,5 +1,5 @@
 <?php
-include(__DIR__ . '/../includes.php');
+require_once(__DIR__ . '/../includes.php');
 //
 
 if((date('N') <= 5 && date('H') == 21) || (date('N') > 5 && date('H') == 18)) {

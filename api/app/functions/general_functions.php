@@ -265,32 +265,132 @@ function badRequestResponse($response, $msg = 'Invalid Request') {
 function slackPostAPI($endpoint, $data) {
 	$content = str_replace('#new_line#','\n',json_encode($data));
 	$slack_token = getSettingsProp('slack_api_token');
-	$ch = curl_init();
-	curl_setopt($ch,CURLOPT_URL, 'https://slack.com/api/'.$endpoint);
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-		'Content-Type: application/json',
-		'Content-Length: ' . strlen($content),
-		'Authorization: Bearer '.$slack_token
+	$client = new GuzzleHttp\Client(['base_uri' => 'https://slack.com/api/']);
+	$response = $client->request('POST', $endpoint, array(
+		'body' => $content,
+		'headers' => array(
+			'Authorization' => 'Bearer '.$slack_token,
+			'Content-Type' => 'application/json',
+		)
 	));
-	$result = curl_exec($ch);
-	//close connection
-	curl_close($ch);
+	$code = $response->getStatusCode(); // 200
+	$reason = $response->getReasonPhrase(); // OK
 }
 
 function slackGetAPI($endpoint, $params = array()) {
 	$slack_token = getSettingsProp('slack_api_token');
 	$params['token'] = $slack_token;
 	$url = 'https://slack.com/api/'.$endpoint.'?'.http_build_query($params);
-	$ch = curl_init();
-	curl_setopt($ch,CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-	$result = curl_exec($ch);
-	curl_close($ch);
-	return $result;
+	$client = new GuzzleHttp\Client(['base_uri' => 'https://slack.com/api/']);
+	$response = $client->request('GET', $endpoint, array(
+		'query' => $params
+	));
+	$code = $response->getStatusCode(); // 200
+	$reason = $response->getReasonPhrase(); // OK
+	$body = $response->getBody();
+	return $body;
+}
+
+function write_ini_file($assoc_arr, $path, $has_sections=FALSE) {
+    $content = "";
+    if ($has_sections) {
+        foreach ($assoc_arr as $key=>$elem) {
+            $content .= "[".$key."]\n";
+            foreach ($elem as $key2=>$elem2) {
+                if(is_array($elem2)) {
+                    for($i=0;$i<count($elem2);$i++) {
+                        $content .= $key2."[] = \"".$elem2[$i]."\"\n";
+                    }
+                }
+                else if($elem2=="") $content .= $key2." = \n";
+                else $content .= $key2." = \"".$elem2."\"\n";
+            }
+        }
+    } else {
+        foreach ($assoc_arr as $key=>$elem) {
+            if(is_array($elem)) {
+                for($i=0;$i<count($elem);$i++) {
+                    $content .= $key."[] = \"".$elem[$i]."\"\n";
+                }
+            }
+            else if($elem=="") $content .= $key." = \n";
+            else $content .= $key." = \"".$elem."\"\n";
+        }
+    }
+    if (!$handle = fopen($path, 'w')) {
+        return false;
+    }
+    $success = fwrite($handle, $content);
+    fclose($handle);
+    return $success;
+}
+
+function clinput($question, $required = true) {
+	if(substr(trim($question), -1) != ':') {
+		$question .= ': ';
+	}
+	echo $question;
+	$handle = fopen ("php://stdin","r");
+	$line = fgets($handle);
+	if(trim($line) == '' && $required){
+	    echo "No input. Aborting!\n";
+	    exit;
+	}
+	return trim($line);
+}
+
+function formatGoogleLoginUserData($me) {
+	$email = $me['emails'][0]['value'];
+	$fname = $me['name']['givenName'];
+	$lname = $me['name']['familyName'];
+	$image = $me['image']['url'];
+	$id = $me['id'];
+
+	$userData = array(
+		'id' => $id,
+		'provider' => 'Google',
+		'email' => $email,
+		'fname' => $fname,
+		'lname' => $lname,
+		'profile_image' => $image,
+	);
+	return $userData;
+}
+
+function formatFacebookLoginUserData($me) {
+	$email = $me['email'];
+	$fname = $me['first_name'];
+	$lname = $me['last_name'];
+	$image = $me['picture']['data']['url'];
+	$id = $me['id'];
+
+	$userData = array(
+		'id' => $id,
+		'provider' => 'Facebook',
+		'email' => $email,
+		'fname' => $fname,
+		'lname' => $lname,
+		'profile_image' => $image,
+	);
+	return $userData;
+}
+
+function formatMicrosoftLoginUserData($me) {
+	$email = $me['userPrincipalName'];
+	$fname = $me['givenName'];
+	$lname = $me['surname'];
+	$image = ''; //$me['image']['url'];\
+	$id = $me['id'];
+
+	$userData = array(
+		'id' => $id,
+		'provider' => 'Microsoft',
+		'email' => $email,
+		'fname' => $fname,
+		'lname' => $lname,
+		'profile_image' => $image,
+	);
+	return $userData;
 }
 
 ?>

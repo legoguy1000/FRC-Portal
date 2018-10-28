@@ -90,6 +90,8 @@ $app->group('/seasons', function () {
       $season->hour_requirement = $formData['hour_requirement'];
       $season->hour_requirement_week = $formData['hour_requirement_week'];
       $season->game_logo = $formData['game_logo'];
+      $season->membership_form_map = $formData['membership_form_map'];
+
       if($season->save()) {
         $responseArr = array('status'=>true, 'msg'=>'Season Information Saved', 'data' => $season);
       } else {
@@ -150,10 +152,12 @@ $app->group('/seasons', function () {
       $req = $formData['requirement'];
       $users = $formData['users'];
       foreach($users as $user) {
-        $user_id = $user['user_id'];
-        $cur = isset($user['annual_requirements'][$req]) ? $user['annual_requirements'][$req] : false;
-        $new = !$cur;
-        $reqUpdate = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], [$req => $new]);
+        //$user_id = $user['user_id'];
+        $reqArr = FrcPortal\AnnualRequirement::firstOrNew(['season_id' => $season_id, 'user_id' => $user]);
+        //$reqArr = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user)->first();
+        $cur = isset($reqArr->$req) ? $reqArr->$req : false;
+        $reqArr->$req = !$cur;
+        $reqArr->save();
       }
       $season = getUsersAnnualRequirements($season_id);
       $responseArr = array('status'=>true, 'msg'=>'Annual Requirements Updated', 'data' => $season);

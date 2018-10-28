@@ -47,7 +47,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		}, {
 			divider: true,
-		}, {
+		}, /* {
 			label: 'Toggle Event Registration',
 			onClick: function($event){
 				var user = $event.dataContext;
@@ -55,7 +55,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				var action = true;
 				vm.rcToggleEventReqs(user, req, action);
 			}
-		}, {
+		}, */ {
 			label: 'Toggle Payment',
 			onClick: function($event){
 				var user = $event.dataContext;
@@ -75,9 +75,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			label: 'Confirm Attendance',
 			onClick: function($event){
 				var user = $event.dataContext;
-				var req = 'attendance_confirmed';
 				var action = true;
-				vm.rcToggleEventReqs(user, req, action);
+				vm.toggleConfirmAttendance(user);
 			}
 		},
 	];
@@ -252,9 +251,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				admin: true,
 			}
 		})
-		.then(function(response) {
-			//vm.users = response.data;
-		}, function() { });
+		.then(function() {}, function() {});
 	};
 
 	vm.showFoodListModal = function(ev) {
@@ -279,10 +276,21 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		}, function() { });
 	};
 
-	vm.rcToggleEventReqs = function(user, req, action) {
-		if(vm.selectedUsers.length > 1) {
+	vm.selectedUsers = [];
+	vm.selectUsers = function(user_id) {
+		var inc = vm.selectedUsers.includes(user_id);
+		if(!inc) {
+			vm.selectedUsers.push(user_id);
+		} else {
+			var i = vm.selectedUsers.indexOf(user_id);
+			vm.selectedUsers.splice(i,1);
+		}
+	}
 
-		} else if ((vm.selectedUsers.length == 1 && vm.selectedUsers[0].user_id == user.user_id) || vm.selectedUsers.length == 0) {
+	vm.rcToggleEventReqs = function(user, req, action) {
+		if(vm.selectedUsers.length >= 1) {
+			vm.toggleEventReqs2(vm.selectedUsers, req, action);
+		} else if (vm.selectedUsers.length == 0 && user != null) {
 			var users = [];
 			users.push(user);
 			vm.toggleEventReqs2(users, req, action);
@@ -306,6 +314,26 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
+		});
+	};
+
+	vm.toggleConfirmAttendance = function (user) {
+		var users = [];
+		users.push(user);
+		var data = {
+			'event_id': vm.event_id,
+			'users': users,
+		}
+		vm.promise = eventsService.toggleConfirmAttendance(data).then(function(response){
+			if(response.status && response.data) {
+				vm.users = response.data;
+			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
 		});
 	};
 

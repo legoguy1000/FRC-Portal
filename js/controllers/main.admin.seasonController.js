@@ -29,7 +29,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		page: 1
 	};
 	vm.fabOpen = false;
-	vm.selectedUsers = [];
+
 	vm.season_id = $stateParams.season_id;
 	vm.season = {};
 	vm.users = null;
@@ -80,12 +80,23 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			}
 		];
 
-		vm.rcToggleAnnualReqs = function(user, req, action) {
-			if(vm.selectedUsers.length > 1) {
+		vm.selectedUsers = [];
+		vm.selectUsers = function(user_id) {
+			var inc = vm.selectedUsers.includes(user_id);
+			if(!inc) {
+				vm.selectedUsers.push(user_id);
+			} else {
+				var i = vm.selectedUsers.indexOf(user_id);
+				vm.selectedUsers.splice(i,1);
+			}
+		}
 
-			} else if ((vm.selectedUsers.length == 1 && vm.selectedUsers[0].user_id == user.user_id) || vm.selectedUsers.length == 0) {
+		vm.rcToggleAnnualReqs = function(user, req, action) {
+			if(vm.selectedUsers.length >= 1) {
+				vm.toggleAnnualReqs2(vm.selectedUsers, req, action);
+			} else if (vm.selectedUsers.length == 0 && user != null) {
 				var users = [];
-				users.push(user);
+				users.push(user.user_id);
 				vm.toggleAnnualReqs2(users, req, action);
 			}
 		}
@@ -99,6 +110,9 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			vm.promise = seasonsService.toggleAnnualReqs(data).then(function(response){
 				if(response.status && response.data) {
 					vm.users = response.data;
+					if(vm.selectUsers.length > 1) {
+						vm.selectUsers = [];
+					}
 				}
 				$mdToast.show(
 		      $mdToast.simple()
@@ -108,25 +122,6 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		    );
 			});
 		};
-
-	vm.toggleAnnualReqs = function (req) {
-		var data = {
-			'season_id': vm.season_id,
-			'users': vm.selectedUsers,
-			'requirement':req
-		}
-		vm.promise = seasonsService.toggleAnnualReqs(data).then(function(response){
-			if(response.status && response.data) {
-				vm.users = response.data;
-			}
-			$mdToast.show(
-	      $mdToast.simple()
-	        .textContent(response.msg)
-	        .position('top right')
-	        .hideDelay(3000)
-	    );
-		});
-	};
 
 	vm.updateSeasonMembershipForm = function () {
 		vm.loading = true;
@@ -173,6 +168,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			'hour_requirement': vm.season.hour_requirement,
 			'hour_requirement_week': vm.season.hour_requirement_week,
 			'join_spreadsheet': vm.season.join_spreadsheet,
+			'membership_form_map': vm.season.membership_form_map,
 		};
 		vm.promise = seasonsService.updateSeason(data).then(function(response){
 			if(response.status) {	}
@@ -211,7 +207,28 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		}, function() {});
 	}
 
+	vm.showGoogleFormMapModal = function(ev) {
+		$mdDialog.show({
+			controller: googleFormMapModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/googleFormMapModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				seasonInfo: vm.season,
+			}
+		})
+		.then(function(currentMap) {
+			vm.season.membership_form_map = currentMap;
+			vm.updateSeason();
+		}, function() { });
+	};
+
 	vm.openMenu = function() {
 		$mdMenu.open();
 	}
+
+
 }

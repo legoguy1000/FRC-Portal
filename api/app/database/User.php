@@ -1,6 +1,6 @@
 <?php
 
-include_once(__DIR__.'/../includes.php');
+require_once(__DIR__.'/../includes.php');
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 Capsule::schema()->create('users', function ($table) {
@@ -24,18 +24,5 @@ Capsule::schema()->create('users', function ($table) {
   $table->boolean('status')->default(1);
   $table->timestamps();
 });
-//create Admin Account
-$email = 'admin@example.org';
-$password = bin2hex(openssl_random_pseudo_bytes(4));
-$user = FrcPortal\User::create([
-  'fname' => 'admin',
-  'lname' => 'admin',
-  'email' => $email,
-  'password' => hash('sha512',$password),
-  'user_type' => 'Mentor',
-  'admin' => true,
-]);
-echo 'Admin Account Created:\n';
-echo 'Email: '.$email.'\n';
-echo 'Password: '.$password.'\n\n';
+
 ?>

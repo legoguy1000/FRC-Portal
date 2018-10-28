@@ -2,14 +2,20 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-Version 2.12.0 (In Dev)
+Version 2.12.0
 * Simplified some code
 * Upgraded Facebook API to 3.1
-* Add master Cronjob
+* Add master Cronjob - Linked individual cronjobs to main
 * Add list of registered users to event page
 * Fixed Sign in/out email
 * Event Registration dialog - Only show Transportation section content once there is data
 * Add standardized functions to reports
+* update installer with CLI for DB information
+* Add dialog to edit Google Form Mapping
+* Add manifest endpoint for dynamic Manifest file.
+* Update Composer libraries
+* Update Annual and Event Requirement tables to not show inactive members who are not registered but have a placeholder record in DB
+* Added ability to select multiple users on Event/Season Requirements tables
 
 Version 2.11.0
 * Add JSON field to season model to allow customization of google form columns mapping to DB

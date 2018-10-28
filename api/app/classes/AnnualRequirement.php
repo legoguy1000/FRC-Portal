@@ -114,39 +114,63 @@ class AnnualRequirement extends Eloquent {
     //ON seasons.year=YEAR(meeting_hours.time_in) AND mh.time_in >= seasons.start_date AND mh.time_in <= seasons.bag_day
     //WHERE week(mh.time_in) = (WEEK(CURDATE())-30)
     //GROUP BY user_id,week
-    $data = array();
+    $data = array(
+      'hours' => array(),
+      'reqs_complete' => false,
+    );
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
-      $q = DB::table('meeting_hours')
+      $hours = DB::table('meeting_hours')
         ->leftJoin('seasons', function ($join) {
-        $join->where('seasons.season_id', '=', "5a16f3faaebb8")
-          ->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))
+        $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))
           ->on('meeting_hours.time_in', '>=', 'seasons.start_date')
           ->on('meeting_hours.time_in', '<=', 'seasons.bag_day');
         })
-        ->where('meeting_hours.user_id','5a11bd670484e')
-        ->select(DB::raw('user_id, YEAR(meeting_hours.time_in) as year, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week'))->groupBy('meeting_hours.user_id', 'week');
-      $hours = DB::table(DB::raw("(" . $q->toSql() . ") as subtable"))
+        ->where('meeting_hours.user_id',$this->attributes['user_id'])->where('seasons.season_id', '=', $this->attributes['season_id'])
+        ->select(DB::raw('user_id, YEAR(meeting_hours.time_in) as year, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week'))
+        ->groupBy('meeting_hours.user_id', 'week')
+        ->get();
+  /*    $hours = DB::table(DB::raw("(" . $q->toSql() . ") as subtable"))
         ->mergeBindings($q)
         ->select(DB::raw('seasons.hour_requirement_week, seasons.start_date, seasons.bag_day, subtable.*, (subtable.week_hours >= seasons.hour_requirement_week) as req_complete'))
         ->leftJoin('seasons', function ($join) {
           $join->on('subtable.year', 'seasons.year');
-      })->havingRaw('subtable.week > WEEK(seasons.start_date,1) AND subtable.week < WEEK(seasons.bag_day,1)')->get();
+      })->havingRaw('subtable.week > WEEK(seasons.start_date,1) AND subtable.week < WEEK(seasons.bag_day,1)')->get(); */
     }
     if(!is_null($hours) && !empty($hours)) {
-  		$start = $hours[0]->start_date;
-  		$end = $hours[0]->bag_day;
-  		$end_week = date('W',strtotime($end));
-  		if(time() < strtotime($end)) {
+      $seasonInfo = Season::find($this->attributes['season_id']);
+      $hour_req = $seasonInfo->hour_requirement_week;
+      $start = $seasonInfo->start_date;
+  		$end = $seasonInfo->bag_day;
+  		$end_week = date('W',strtotime($end))-1;
+  		if(time() < strtotime($end) && time() > strtotime($start)) {
   			$end_week = date('W');
   		}
-      $end_week = $end_week - 1;
-  		$start_week = date('W',strtotime($start));
+      //$end_week = $end_week - 1;
+      $start_week = date('W',strtotime($start));
+  		$hours_arr = $hours->toArray();
+  		$cols = !is_null($hours_arr) && !empty($hours_arr) ? array_column($hours_arr, 'week') : null;
+  		$hours_data = array();
+  		for($i=$start_week+1; $i <= $end_week; $i++) {
+  			$key = !is_null($cols) ? array_search($i, $cols) : null;
+  			$week_data = !is_null($key) && $key !== false ? $hours_arr[$key] : array();
+  			$week_start = new DateTime();
+  			$week_start->setISODate($seasonInfo->year,$i);
+  			if(is_array($week_data)) {
+  				$week_data['start_date'] = $week_start->format('M, d Y');
+  				$week_data['week_hours'] = isset($week_data['week_hours']) ? (float) $week_data['week_hours'] : 0;
+  				$week_data['req_complete'] = $week_data['week_hours'] >= $hour_req;
+  			} else if(is_object($week_data)) {
+  				$week_data->start_date = $week_start->format('M, d Y');
+  				$week_data->week_hours = (float) $week_data->week_hours;
+  				$week_data->req_complete = $week_data->week_hours >= $hour_req;
+  			}
+  			$hours_data[] = $week_data;
+  		}
   		$num_weeks = floor($end_week - $start_week);
-      $hours_arr = $hours->toArray();
   		$num_req_com = count(array_filter(array_column($hours_arr,'req_complete')));
-      $all_complete = $num_req_com >= $num_weeks;
-  		$data['hours'] = $hours;
+  		$all_complete = $num_req_com >= $num_weeks;
+  		$data['hours'] = $hours_data;
   		$data['reqs_complete'] = $all_complete;
     }
     return $data;
@@ -176,11 +200,11 @@ class AnnualRequirement extends Eloquent {
     //GROUP BY meeting_hours.user_id,seasons.year
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
-    $hours = DB::table('meeting_hours')
+      $hours = DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'))->on('meeting_hours.time_in', '>', 'seasons.end_date');
-            })->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
-              ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
+            })->where('seasons.season_id', $this->attributes['season_id'])
+        		  ->where('meeting_hours.user_id', $this->attributes['user_id'])
               ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as off_season_hours'))->groupBy('meeting_hours.user_id')->first();
     }
     return !is_null($hours) ? (float) $hours->off_season_hours : 0;
@@ -193,16 +217,16 @@ class AnnualRequirement extends Eloquent {
     //GROUP BY meeting_hours.user_id,seasons.year
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
-    $hours =  DB::table('event_requirements')
-		->leftJoin('events', function ($join) {
-			$join->on('events.event_id', 'event_requirements.event_id');
-		})->leftJoin('seasons', function ($join) {
-			$join->on('seasons.year', '=', DB::raw('YEAR(events.event_start)'));
-		})->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
-		  ->whereRaw('event_requirements.user_id = "'.$this->attributes['user_id'].'"')
-		  ->whereRaw('event_requirements.registration = "1"')
-		  ->whereRaw('event_requirements.attendance_confirmed = "1"')
-		  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(events.event_end, events.event_start),0)) / 3600) as event_hours'))->groupBy('event_requirements.user_id')->first();
+      $hours =  DB::table('event_requirements')
+  		->leftJoin('events', function ($join) {
+  			$join->on('events.event_id', 'event_requirements.event_id');
+  		})->leftJoin('seasons', function ($join) {
+  			$join->on('seasons.year', '=', DB::raw('YEAR(events.event_start)'));
+  		})->where('seasons.season_id', $this->attributes['season_id'])
+  		  ->where('event_requirements.user_id', $this->attributes['user_id'])
+  		  ->where('event_requirements.registration', true)
+  		  ->where('event_requirements.attendance_confirmed', true)
+  		  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(events.event_end, events.event_start),0)) / 3600) as event_hours'))->groupBy('event_requirements.user_id')->first();
     }
     return !is_null($hours) ? (float) $hours->off_season_hours : 0;
   }
@@ -216,20 +240,29 @@ class AnnualRequirement extends Eloquent {
     $hours = DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'));
-            })->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
-              ->whereRaw('meeting_hours.user_id = "'.$this->attributes['user_id'].'"')
+            })->where('seasons.season_id', $this->attributes['season_id'])
+        		  ->where('meeting_hours.user_id', $this->attributes['user_id'])
               ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS total_hours'))->groupBy('meeting_hours.user_id')->first();
     }
     return !is_null($hours) ? (float) $hours->total_hours : 0;
   }
   public function getMinHoursAttribute() {
     $hours = $this->build_season_hours;
+    $total_bool = true;
+    $week_bool = true;
     if(isset($hours) && isset($this->attributes['season_id'])) {
       $sid = $this->attributes['season_id'];
       $season = Season::find($sid);
       $hours_req = $season->hour_requirement;
-      $hours_req_week = $this->weekly_build_season_hours;
-      return ($hours_req> 0 && $hours >= $hours_req) && $hours_req_week['reqs_complete'];
+      $hours_week = $this->weekly_build_season_hours;
+      $hour_req_wk = $season->hour_requirement_week;
+      if($hours_req > 0 && $hour_req_wk > 0) {
+        return $hours >= $hours_req && $hours_week['reqs_complete'];
+      } elseif($hours_req == 0 && $hour_req_wk == 0) {
+        return ($hours > $hours_req || $hours_week['reqs_complete']);
+      } else {
+        return ($hours_req > 0 && $hours >= $hours_req) || ($hour_req_wk > 0 && $hours_week['reqs_complete']);
+      }
     } else {
       return false;
     }

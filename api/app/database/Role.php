@@ -1,5 +1,5 @@
 <?php
-include_once(__DIR__.'/../includes.php');
+require_once(__DIR__.'/../includes.php');
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 // Create table for storing roles

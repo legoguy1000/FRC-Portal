@@ -38,7 +38,9 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$ocLazyLoad.load('js/controllers/eventTypesModalController.js');
 	$ocLazyLoad.load('js/controllers/timeSheetModalController.js');
 	$ocLazyLoad.load('js/controllers/userCategoriesModalController.js');
-  $ocLazyLoad.load('js/controllers/serviceAccountModalController.js');
+	$ocLazyLoad.load('js/controllers/serviceAccountModalController.js');
+	$ocLazyLoad.load('js/controllers/googleFormMapModalController.js');
+  $ocLazyLoad.load('js/controllers/signInModalController.js');
 
 	navService
 	  .loadAllItems()
