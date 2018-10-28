@@ -2,7 +2,7 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-Version 2.12.0 (In Dev)
+Version 2.12.0
 * Simplified some code
 * Upgraded Facebook API to 3.1
 * Add master Cronjob - Linked individual cronjobs to main
