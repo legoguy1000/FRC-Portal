@@ -73,8 +73,8 @@ $app->group('/auth', function () {
 
         $user = checkLogin($userData);
         if($user != false) {
-          $user->updateUserOnLogin($userData);
-    			$jwt = $user->generateUserJWT();
+          $update = updateUserOnLogin($user, $userData);
+    			$jwt = generateUserJWT($user);
           $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'userInfo' => $user);
         } else {
           $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
@@ -135,8 +135,8 @@ $app->group('/auth', function () {
 
       $user = checkLogin($userData);
       if($user != false) {
-        $user->updateUserOnLogin($userData);
-  			$jwt = $user->generateUserJWT();
+        $update = updateUserOnLogin($user, $userData);
+  			$jwt = generateUserJWT($user);
         $responseData = array('status'=>true, 'msg'=>'Login with Microsoft Account Successful', 'token'=>$jwt, 'userInfo' => $user);
       } else {
         $responseData = array('status'=>false, 'msg'=>'Microsoft account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.', 'me' => $me);
@@ -218,7 +218,7 @@ $app->group('/auth', function () {
             ->where('status',true)
             ->first();
     if($user != null) {
-      $jwt = $user->generateUserJWT();
+			$jwt = generateUserJWT($user);
       $responseData = array('status'=>true, 'msg'=>'Login Successful', 'token'=>$jwt, 'userInfo' => $user);
     } else {
       $responseData = array('status'=>false, 'msg'=>'Username or Password not correct. Please try again.');
