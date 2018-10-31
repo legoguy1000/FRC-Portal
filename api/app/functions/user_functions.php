@@ -41,11 +41,8 @@ function checkLogin($userData) {
 	}
 	return $user;
 }
-
+/* Added to User Model
 function generateUserJWT(FrcPortal\User $user) {
-	/* if(!$user instanceof FrcPortal\User) {
-		return false;
-	} */
 	$key = getSettingsProp('jwt_key');
 	$token = array(
 		"iss" => getSettingsProp('env_url'),
@@ -63,7 +60,7 @@ function generateUserJWT(FrcPortal\User $user) {
 	);
 	$jwt = JWT::encode($token, $key);
 	return $jwt;
-}
+} */
 
 function checkTeamLogin($userEmail = '') {
 	$require_team_email = getSettingsProp('require_team_email');
@@ -75,11 +72,8 @@ function checkTeamLogin($userEmail = '') {
 	}
 	return false;
 }
-
+/* Added to User Model
 function updateUserOnLogin(FrcPortal\User $user, $userData) {
-	/* if(!$user instanceof FrcPortal\User) {
-		return false;
-	} */
 	$update = false;
 	if($user->profile_image == '') {
 		$user->profile_image = $userData['profile_image'];
@@ -95,6 +89,7 @@ function updateUserOnLogin(FrcPortal\User $user, $userData) {
 	}
 	return true;
 }
+*/
 
 function checkLoginProvider($provider) {
 	$loginEnabled = FrcPortal\Setting::where('section','login')->where('setting',$provider.'_login_enable')->first();
