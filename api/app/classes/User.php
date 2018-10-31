@@ -115,7 +115,7 @@ class User extends Eloquent {
   			'email' => $this->email,
   		)
   	);
-  	$jwt = JWT::encode($token, $key);
+  	$jwt = \JWT::encode($token, $key);
   	return $jwt;
   }
 
