@@ -4,6 +4,7 @@ namespace FrcPortal;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
+use \Firebase\JWT\JWT;
 
 class User extends Eloquent {
   //use Traits\AdminStuff;
@@ -115,7 +116,7 @@ class User extends Eloquent {
   			'email' => $this->email,
   		)
   	);
-  	$jwt = \JWT::encode($token, $key);
+  	$jwt = JWT::encode($token, $key);
   	return $jwt;
   }
 
