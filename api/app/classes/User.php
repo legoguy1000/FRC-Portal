@@ -79,46 +79,6 @@ class User extends Eloquent {
     return $return;
   }
 
-  public function updateUserOnLogin($userData) {
-    $update = false;
-  	if($this->profile_image == '') {
-  		$this->profile_image = $userData['profile_image'];
-  		$update = true;
-  	}
-  	$teamDomain = getSettingsProp('team_domain');
-  	if($this->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
-  		$this->team_email = $userData['email'];
-  		$update = true;
-  	}
-  	if($update == true) {
-  		$this->save();
-  	}
-  	return $this;
-  }
-
-  public function generateUserJWT() {
-  	/* if(!$user instanceof FrcPortal\User) {
-  		return false;
-  	} */
-  	$key = getSettingsProp('jwt_key');
-  	$token = array(
-  		"iss" => getSettingsProp('env_url'),
-  		"iat" => time(),
-  		"exp" => time()+60*60,
-  		"jti" => bin2hex(random_bytes(10)),
-  		'data' => array(
-  			'user_id' => $this->user_id,
-  			'full_name' => $this->full_name,
-  			'admin' => $this->admin,
-  			'status' => $this->status,
-  			'user_type' => $this->user_type,
-  			'email' => $this->email,
-  		)
-  	);
-  	$jwt = JWT::encode($token, $key);
-  	return $jwt;
-  }
-
   /**
   * Get the School.
   */

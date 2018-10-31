@@ -28,8 +28,8 @@ $app->group('/auth', function () {
 
       $user = checkLogin($userData);
       if($user != false) {
-        $user->updateUserOnLogin($userData);
-  			$jwt = $user->generateUserJWT();
+        $update = updateUserOnLogin($user, $userData);
+  			$jwt = generateUserJWT($user);
         $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
       } else {
         $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team 2363 Join form.');
