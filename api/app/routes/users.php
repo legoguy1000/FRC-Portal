@@ -334,9 +334,9 @@ $app->group('/users', function () {
         if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
           return unauthorizedResponse($response);
         }
-
-        $user = getNotificationPreferencesByUser($user_id);
-        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
+        $user = FrcPortal\User::find($user_id);
+        $preferences = $user->getNotificationPreferences();
+        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $preferences);
         $response = $response->withJson($responseArr);
         return $response;
       });
