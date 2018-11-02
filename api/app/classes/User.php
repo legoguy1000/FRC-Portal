@@ -203,7 +203,7 @@ class User extends Eloquent {
   	$queryStr	 = '';
   	foreach($data as $meth=>$types) {
   		foreach($types as $type) {
-  			$note = new FrcPortal\NotificationPreference();
+  			$note = new NotificationPreference();
   			$note->user_id = $this->user_id;
   			$note->method = $meth;
   			$note->type = $type;
@@ -214,7 +214,7 @@ class User extends Eloquent {
 
   public function getNotificationPreferences() {
   	$data = getNotificationOptions();
-  	$result = FrcPortal\NotificationPreference::find($this->user_id);
+  	$result = NotificationPreference::find($this->user_id);
   	if(count($result) > 0) {
   		foreach($result as $re) {
   			$m = $re['method'];
