@@ -735,7 +735,7 @@ $app->group('/events', function () {
           'content' =>  $slackMsg.' Please go to '.$host.'/events/'.$event->event_id.' for more information.'
         )
       );
-      sendUserNotification($user_id, 'event_registration', $msgData);
+      $user->sendUserNotification('event_registration', $msgData);
       //slackMessageToUser($user_id, $slackMsg);
       //notify event POC
       if(!is_null($event->poc_id) && $user_id != $event->poc_id && $loggedInUser != $event->poc_id) {

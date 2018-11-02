@@ -33,6 +33,7 @@ function getNotificationPreferencesByUser($user_id) {
 	return $data;
 }
 
+/*
 function setDefaultNotifications($user_id) {
 	$data = getNotificationOptions();
 	$queryArr = array();
@@ -46,7 +47,7 @@ function setDefaultNotifications($user_id) {
 			$note->save();
 		}
 	}
-}
+} */
 
 function sendUserNotification($user_id, $type, $msgData) {
 	global $db;

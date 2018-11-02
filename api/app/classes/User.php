@@ -80,46 +80,6 @@ class User extends Eloquent {
     return $return;
   }
 
-  public function updateUserOnLogin($userData) {
-    $update = false;
-  	if($this->profile_image == '') {
-  		$this->profile_image = $userData['profile_image'];
-  		$update = true;
-  	}
-  	$teamDomain = getSettingsProp('team_domain');
-  	if($this->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
-  		$this->team_email = $userData['email'];
-  		$update = true;
-  	}
-  	if($update == true) {
-  		$this->save();
-  	}
-  	return $this;
-  }
-
-  public function generateUserJWT() {
-  	/* if(!$user instanceof FrcPortal\User) {
-  		return false;
-  	} */
-  	$key = getSettingsProp('jwt_key');
-  	$token = array(
-  		"iss" => getSettingsProp('env_url'),
-  		"iat" => time(),
-  		"exp" => time()+60*60,
-  		"jti" => bin2hex(random_bytes(10)),
-  		'data' => array(
-  			'user_id' => $this->user_id,
-  			'full_name' => $this->full_name,
-  			'admin' => $this->admin,
-  			'status' => $this->status,
-  			'user_type' => $this->user_type,
-  			'email' => $this->email,
-  		)
-  	);
-  	$jwt = JWT::encode($token, $key);
-  	return $jwt;
-  }
-
   /**
   * Get the School.
   */
@@ -195,4 +155,96 @@ class User extends Eloquent {
   public function user_categories() {
     return $this->belongsToMany('FrcPortal\UserCategory', 'users_user_categories', 'user_id', 'cat_id');
   }
+
+
+  public function updateUserOnLogin($userData) {
+    $update = false;
+  	if($this->profile_image == '') {
+  		$this->profile_image = $userData['profile_image'];
+  		$update = true;
+  	}
+  	$teamDomain = getSettingsProp('team_domain');
+  	if($this->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
+  		$this->team_email = $userData['email'];
+  		$update = true;
+  	}
+  	if($update == true) {
+  		$this->save();
+  	}
+  	return $this;
+  }
+
+  public function generateUserJWT() {
+  	/* if(!$user instanceof FrcPortal\User) {
+  		return false;
+  	} */
+  	$key = getSettingsProp('jwt_key');
+  	$token = array(
+  		"iss" => getSettingsProp('env_url'),
+  		"iat" => time(),
+  		"exp" => time()+60*60,
+  		"jti" => bin2hex(random_bytes(10)),
+  		'data' => array(
+  			'user_id' => $this->user_id,
+  			'full_name' => $this->full_name,
+  			'admin' => $this->admin,
+  			'status' => $this->status,
+  			'user_type' => $this->user_type,
+  			'email' => $this->email,
+  		)
+  	);
+  	$jwt = JWT::encode($token, $key);
+  	return $jwt;
+  }
+
+  public function setDefaultNotifications() {
+  	$data = getNotificationOptions();
+  	$queryArr = array();
+  	$queryStr	 = '';
+  	foreach($data as $meth=>$types) {
+  		foreach($types as $type) {
+  			$note = new FrcPortal\NotificationPreference();
+  			$note->user_id = $this->user_id;
+  			$note->method = $meth;
+  			$note->type = $type;
+  			$note->save();
+  		}
+  	}
+  }
+
+  public function getNotificationPreferences() {
+  	$data = getNotificationOptions();
+  	$result = FrcPortal\NotificationPreference::find($this->user_id);
+  	if(count($result) > 0) {
+  		foreach($result as $re) {
+  			$m = $re['method'];
+  			$t = $re['type'];
+  			$data[$m][$t] = true;
+  		}
+  	}
+  	return $data;
+  }
+
+  public function sendUserNotification($type, $msgData) {
+
+  	$preferences = $this->getNotificationPreferences();
+  	//$preferences = array('push' => true, 'email' => false);
+  	if($preferences['email'][$type] == true) {
+  		$msg = $msgData['email'];
+  		$subject = $msg['subject'];
+  		$content = $msg['content'];
+  		$userData = $msg['userData'];
+  		$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
+  		emailUser($userData,$subject,$content,$attachments);
+  	}
+  	if($preferences['slack'][$type] == true) {
+  		$msg = $msgData['slack'];
+  		$title = $msg['title'];
+  		$body = $msg['body'];
+  		$tag = '';
+  		$note_id = uniqid();
+  		slackMessageToUser($user_id, $body);
+  	}
+  }
+
 }

@@ -189,7 +189,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 				//Insert Data
 				if($user->save()) {
 					$user_id = $user->user_id;
-					setDefaultNotifications($user_id);
+					$user->setDefaultNotifications();
 					$host = getSettingsProp('env_url');
 					$msgData = array(
 						'subject' => 'User account created for '.$team_name.'\s team portal',
@@ -214,7 +214,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 						'userData' => $user
 						)
 					);
-					sendUserNotification($user_id, $type = 'join_team', $msgData);
+					$user->sendUserNotification($type = 'join_team', $msgData);
 				}
 			}
 		}
