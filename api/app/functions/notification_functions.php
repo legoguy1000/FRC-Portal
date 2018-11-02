@@ -20,6 +20,7 @@ function getNotificationOptions() {
 	return $data;
 }
 
+/*
 function getNotificationPreferencesByUser($user_id) {
 	$data = getNotificationOptions();
 	$result = FrcPortal\NotificationPreference::where('user_id',$user_id)->get();
@@ -31,7 +32,7 @@ function getNotificationPreferencesByUser($user_id) {
 		}
 	}
 	return $data;
-}
+} */
 
 /*
 function setDefaultNotifications($user_id) {
@@ -49,6 +50,7 @@ function setDefaultNotifications($user_id) {
 	}
 } */
 
+/*
 function sendUserNotification($user_id, $type, $msgData) {
 	global $db;
 
@@ -77,6 +79,7 @@ function sendUserNotification($user_id, $type, $msgData) {
 		//}
 	}
 }
+*/
 
 function sendMassNotifications($type, $msgData) {
 	global $db;
