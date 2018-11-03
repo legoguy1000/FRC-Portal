@@ -245,20 +245,8 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      $user = FrcPortal\User::find($user_id);
-      if($user) {
-        $currentPIN = $user->signin_pin;
-        if($currentPIN != hash('SHA256', $formData['pin'])) {
-          $user->signin_pin = hash('SHA256', $formData['pin']);
-          if($user->save()) {
-            //$user->load('school');
-            $responseArr = array('status'=>true, 'msg'=>'PIN has been changed', 'data' => $user);
-          }
-        } else {
-          $responseArr['msg'] = 'PIN must be changed to a different number';
-        }
-      }
-      $response = $response->withJson($responseArr);
+      $user = FrcPortal\User::find($user_id)->updateSignInPin($formData['pin']);
+      $response = $response->withJson($user);
       return $response;
     });
     $this->get('/hoursByDate/{year:[0-9]{4}}', function ($request, $response, $args) {
