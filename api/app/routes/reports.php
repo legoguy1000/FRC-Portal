@@ -13,7 +13,7 @@ $app->group('/reports', function () {
             ->from('seasons')
             ->whereRaw('annual_requirements.season_id = seasons.season_id')
             ->where('seasons.year',$year);
-    })->get();
+    })->where('total_hours','>',0)->get();
     //->where('season_id',$season->season_id)->get();
     $seasons = $seasons->sortByDesc('total_hours')->values()->slice(0,5);
     $response = $response->withJson($seasons);
