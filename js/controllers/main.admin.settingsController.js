@@ -24,7 +24,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		'login': {},
 		'notification': {},
 		'other': {},
-		'cron': {},
+		'cronjob': {},
 	};
 	vm.serviceAccountCredentials = {};
 	vm.timezones = [];
