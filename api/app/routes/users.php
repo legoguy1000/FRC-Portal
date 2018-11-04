@@ -265,15 +265,19 @@ $app->group('/users', function () {
       $labels = array();
       $series = array('Sum');
 
-      $query = 'SELECT year(a.time_in) as year, DATE(a.time_in) as date,  ROUND(SUM(time_to_sec(IFNULL(timediff(a.time_out, a.time_in),0)) / 3600),1) as hours FROM `meeting_hours` a
+  /*    $query = 'SELECT year(a.time_in) as year, DATE(a.time_in) as date,  ROUND(SUM(time_to_sec(IFNULL(timediff(a.time_out, a.time_in),0)) / 3600),1) as hours FROM `meeting_hours` a
       WHERE user_id = :uid AND year(a.time_in) = :year
       GROUP BY date
       ORDER BY date ASC';
-
       $dates = DB::select( DB::raw($query), array(
           'uid' => $user_id,
           'year' => $year,
-       ));
+       )); */
+      $dates =  DB::table('meeting_hours')
+      ->where('user_id',$user_id)
+      ->where(DB::raw('year(a.time_in)'),$year)
+      ->select(DB::raw('year(a.time_in) as year, DATE(a.time_in) as date,  ROUND(SUM(time_to_sec(IFNULL(timediff(a.time_out, a.time_in),0)) / 3600),1) as hours'))
+      ->groupBy('date')->orderBy('date','ASC')->get();
 
       if(count($dates) > 0) {
       	foreach($dates as $d) {

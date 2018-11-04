@@ -24,6 +24,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		'login': {},
 		'notification': {},
 		'other': {},
+		'cron': {},
 	};
 	vm.serviceAccountCredentials = {};
 	vm.timezones = [];
@@ -52,6 +53,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 	vm.getSettingBySection('login');
 	vm.getSettingBySection('notification');
 	vm.getSettingBySection('other');
+	vm.getSettingBySection('cron');
 
 	vm.getAllTimezones = function () {
 		settingsService.getAllTimezones().then(function(response){
