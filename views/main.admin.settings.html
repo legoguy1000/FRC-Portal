@@ -258,6 +258,7 @@
 				Automatically send Slack notification at 9pm local with the numberof hours completed that day
 			</md-switch>
 		</div>
+		<pre>{{vm.settings.cronjob | json}}</pre>
 		<div flex layout="row">
 			<span flex></span>
 			<md-button type="button" class="md-raised md-primary"  ng-click="vm.updateSettingBySection(vm.currentMenu)">
