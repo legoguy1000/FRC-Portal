@@ -53,7 +53,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 	vm.getSettingBySection('login');
 	vm.getSettingBySection('notification');
 	vm.getSettingBySection('other');
-	vm.getSettingBySection('cron');
+	vm.getSettingBySection('cronjob');
 
 	vm.getAllTimezones = function () {
 		settingsService.getAllTimezones().then(function(response){
