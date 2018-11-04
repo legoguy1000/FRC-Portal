@@ -83,6 +83,7 @@ $app->group('/reports', function () {
     $years = $init['years'];
     $data = $init['data'];
 
+/*
     $query = 'SELECT COUNT(DISTINCT(m.user_id)) as user_count, YEAR(m.time_in) as year, u.user_type
               FROM meeting_hours m
               LEFT JOIN users u USING(user_id)
@@ -92,7 +93,15 @@ $app->group('/reports', function () {
     $result = DB::select( DB::raw($query), array(
         'sd' => $start_date,
         'ed' => $end_date,
-     ));
+     )); */
+
+   $result =  DB::table('meeting_hours AS a')
+   ->leftJoin('users AS b', function ($join) {
+     $join->on('a.user_id', 'b.user_id');
+   })->where('b.user_type','<>','')
+     ->whereBetween(DB::raw('year(a.time_in)'),[$start_date,$end_date])
+     ->select(DB::raw('COUNT(DISTINCT(a.user_id)) as user_count, YEAR(a.time_in) as year, b.user_type'))
+     ->groupBy('year','gender')->get();
 
     foreach($result as $re) {
       $year = (integer) $re->year;
