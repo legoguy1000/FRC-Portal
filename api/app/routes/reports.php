@@ -12,7 +12,7 @@ $app->group('/reports', function () {
       $query->select(DB::raw(1))
             ->from('seasons')
             ->whereRaw('annual_requirements.season_id = seasons.season_id')
-            ->where('seasons.season_id',$year);
+            ->where('seasons.year',$year);
     })->get();
     //->where('season_id',$season->season_id)->get();
     $seasons = $seasons->sortByDesc('total_hours')->values()->slice(0,5);
