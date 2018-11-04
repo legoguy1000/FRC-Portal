@@ -239,22 +239,22 @@
 			</md-input-container>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'cronjob'" class="layout-padding">
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjob-changeUserStatus" class="md-warn">
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjobchangeUserStatus" class="md-warn">
 				Automatically change user status after graduation
 			</md-switch>
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjob-importSlackProfiles" class="md-warn">
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjobimportSlackProfiles" class="md-warn">
 				Automatically import and link Slack information with user data
 			</md-switch>
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjob-pollMembershipFormResponses" class="md-warn">
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjobpollMembershipFormResponses" class="md-warn">
 				Automatically pull reponses from membership form
 			</md-switch>
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjob-updateEventsFromGoogle" class="md-warn">
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjobupdateEventsFromGoogle" class="md-warn">
 				Automatically update events from Google Calendar
 			</md-switch>
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjob-tooLong" class="md-warn">
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjobtooLong" class="md-warn">
 				Automatically remove sign-ins that haven't signed out after 12 hours
 			</md-switch>
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjob-endOfDayHoursToSlack" class="md-warn">
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob.enable_cronjobendOfDayHoursToSlack" class="md-warn">
 				Automatically send Slack notification at 9pm local with the numberof hours completed that day
 			</md-switch>
 		</div>
