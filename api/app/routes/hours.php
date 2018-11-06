@@ -238,9 +238,9 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $user = $decoded->data->status && $decoded->data->admin;
-        } catch(\Firebase\JWT\ExpiredException $e) {
+        } catch(\ExpiredException $e) {
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
-        } catch(\Firebase\JWT\SignatureInvalidException $e){
+        } catch(\SignatureInvalidException $e){
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
         }
       } elseif(isset($args['auth_code'])) {
@@ -353,13 +353,13 @@ $app->group('/hours', function () {
           } else {
             $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
           }
-        } catch(\Firebase\JWT\ExpiredException $e) {
+        } catch(\ExpiredException $e) {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\Firebase\JWT\SignatureInvalidException $e){
+        } catch(\SignatureInvalidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\Firebase\JWT\BeforeValidException $e){
+        } catch(\BeforeValidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\Firebase\JWT\UnexpectedValueException $e){
+        } catch(\UnexpectedValueException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
         }
       } else {
@@ -440,11 +440,13 @@ $app->group('/hours', function () {
           }
         } catch(\UnexpectedValueException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\Firebase\JWT\ExpiredException $e) {
+        } catch(\ExpiredException $e) {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\Firebase\JWT\SignatureInvalidException $e){
+        } catch(\SignatureInvalidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\Firebase\JWT\BeforeValidException $e){
+        } catch(\BeforeValidException $e){
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        } catch(\Exception $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
         }
       } else {
