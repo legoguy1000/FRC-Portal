@@ -39,11 +39,12 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		}).catch(function (e) {
 			console.error(e);
 		});
+
+		vm.stop = function() {
+			scanner.stop();
+		}
 	});
 
-	vm.stop = function() {
-		scanner.stop();
-	}
 
 	/*
 	var signInBool = true;
