@@ -10,8 +10,8 @@
 	  </div>
 	</md-toolbar>
 		<md-dialog-content class="md-margin" layout="column">
-			<div layout="row" layout-align="center start">
-				<video id="scanner" flex flex-gt-sm="50"></video>
+			<div layout="row" layout-align="center start" >
+				<video id="scanner" flex flex-gt-sm="50" ng-hide="vm.hideVideo"></video>
 			</div>
 			<pre>{{vm.scanContent}}</pre>
 			<pre>{{vm.msg}}</pre>

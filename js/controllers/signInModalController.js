@@ -16,6 +16,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	}
 	vm.loading = false;
 	vm.msg = '';
+	vm.hideVideo = false;
 	tick();
 	$interval(tick, 1000);
 
@@ -60,6 +61,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		});
 
 		vm.stop = function() {
+			vm.hideVideo = true;
 			scanner.stop();
 		}
 
