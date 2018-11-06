@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$auth', '$scope', 'signinService', '$mdDialog', '$interval',
+.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$auth', '$scope', 'signinService', '$mdDialog', '$interval','$sce',
 	mainSigninController
 ]);
-function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinService, $mdDialog, $interval) {
+function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinService, $mdDialog, $interval,$sce) {
     var vm = this;
 
 	vm.pin = '';
@@ -67,6 +67,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			$mdDialog.show(dialog);
 			if(response.status && response.signin_token != undefined) {
 				signinService.saveToken(response.signin_token);
+				vm.qrCodeUrl = $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+response.signin_token+'&chs=360x360&choe=UTF-8&chld=L|2');
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
