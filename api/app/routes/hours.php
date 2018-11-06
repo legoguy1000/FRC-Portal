@@ -364,6 +364,87 @@ $app->group('/hours', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    //Clock in and Out
+    $this->post('/qr', function ($request, $response, $args) {
+      $user = FrcPortal\Auth::user();
+      $args = $request->getParsedBody();
+      if(isset($args['token'])) {
+        $key = getSettingsProp('jwt_signin_key');
+        try{
+          $decoded = JWT::decode($args['token'], $key, array('HS256'));
+          $data = (array) $decoded;
+          if(isset($data['jti']) || $data['jti'] != '') {
+            $jti = $data['jti'];
+            $user_id = $user->user_id;
+            $name = $user->full_name;
+            $date = time();
+            $hours = FrcPortal\MeetingHour::where('user_id',$user_id)->whereNotNull('time_in')->whereNull('time_out')->orderBy('time_in','DESC')->first();
+            if($hours != null) {
+              $hours_id = $hours->hours_id;
+              $hours->time_out = date('Y-m-d H:i:s',$date);
+              if($hours->save()) {
+                $emailData = array(
+                  'signin_time' => date('M d, Y H:i A', $date),
+                  'signin_out' => 'sign_out'
+                );
+                $emailInfo = emailSignInOut($user_id,$emailData);
+                $msgData = array(
+                  'slack' => array(
+                    'title' => 'Sign out',
+                    'body' => 'You signed out at '.$emailData['signin_time']
+                  ),
+                  'email' => array(
+                    'subject' => $emailInfo['subject'],
+                    'content' =>  $emailInfo['content'],
+                    'userData' => $user
+                  )
+                );
+                $user->sendUserNotification('sign_in_out', $msgData);
+                $users = getSignInList(date('Y'));
+                $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
+              } else {
+              $responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out');
+              }
+            } else {
+              $hours = FrcPortal\MeetingHour::create(['user_id' => $user_id, 'time_in' => date('Y-m-d H:i:s',$date)]);
+              if($hours) {
+                $emailData = array(
+                  'signin_time' => date('M d, Y H:i A', $date),
+                  'signin_out' => 'sign_in'
+                );
+                $emailInfo = emailSignInOut($user_id,$emailData);
+                $msgData = array(
+                  'slack' => array(
+                    'title' => 'Sign In',
+                    'body' => 'You signed in at '.$emailData['signin_time']
+                  ),
+                  'email' => array(
+                    'subject' => $emailInfo['subject'],
+                    'content' =>  $emailInfo['content'],
+                    'userData' => $user
+                  )
+                );
+                $user->sendUserNotification($user_id, 'sign_in_out', $msgData);
+                $users = getSignInList(date('Y'));
+                $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
+              } else {
+                $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');
+              }
+            }
+          } else {
+            $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
+          }
+        } catch(\Firebase\JWT\ExpiredException $e) {
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        } catch(\Firebase\JWT\SignatureInvalidException $e){
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        }
+      } else {
+        $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Sign in is not authorized at this time and/or on this device. Please see a mentor.');
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
   });
 });
 

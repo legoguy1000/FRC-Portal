@@ -14,6 +14,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	var tick = function() {
 		vm.clock = Date.now();
 	}
+	vm.loading = false;
 	tick();
 	$interval(tick, 1000);
 
@@ -35,8 +36,20 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		}
 		var scanner = new Instascan.Scanner(config);
 		scanner.addListener('scan', function (content) {
+			vm.loading = true;
 			vm.scanContent = content;
 			vm.stop();
+			var data = {
+				'token': content
+			};
+			signinService.signInOutQR(data).then(function(response) {
+				vm.msg = response.msg;
+				if(response.status) {
+					$timeout( function(){
+						vm.close(response.signInList);
+					}, 2000 );
+				}
+			});
 		});
 		Instascan.Camera.getCameras().then(function (cameras) {
 			vm.cameras = cameras;
@@ -54,9 +67,9 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 			$mdDialog.cancel();
 		}
 
-		vm.close = function() {
+		vm.close = function(data) {
 			vm.stop();
-			$mdDialog.hide();
+			$mdDialog.hide(data);
 		}
 	});
 
