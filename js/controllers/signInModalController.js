@@ -58,7 +58,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 				$mdDialog.show(dialog);
 				$timeout( function(){
 						$mdDialog.cancel();
-					}, 2000 ); */
+					}, 2000 ); /*
 				if(response.status) {
 					vm.users = response.signInList;
 					$mdDialog.hide(vm.users);
