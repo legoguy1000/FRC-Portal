@@ -438,7 +438,7 @@ $app->group('/hours', function () {
           } else {
             $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
           }
-        } catch(\Firebase\JWT\UnexpectedValueException $e){
+        } catch(\UnexpectedValueException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
         } catch(\Firebase\JWT\ExpiredException $e) {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
