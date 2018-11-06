@@ -38,6 +38,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		if(tok != '') {
 			return $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+tok+'&chs=360x360&choe=UTF-8&chld=L|2');
 		}
+		return '';
 	}
 
 	vm.qrCodeUrl = vm.genQrCodeUrl();
