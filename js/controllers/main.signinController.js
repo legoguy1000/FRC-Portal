@@ -31,7 +31,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 	vm.getUsers();
-
+	vm.qrCodeUrl = vm.genQrCodeUrl();
 	//vm.signInAuthed = signinService.isAuthed();
 	vm.authorizeSignIn = function() {
 		var data = {
@@ -67,7 +67,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			$mdDialog.show(dialog);
 			if(response.status && response.signin_token != undefined) {
 				signinService.saveToken(response.signin_token);
-
+				vm.qrCodeUrl = vm.genQrCodeUrl();
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
@@ -83,7 +83,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 
-	vm.qrCodeUrl = function() {
+	vm.genQrCodeUrl = function() {
 		return $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+signinService.getToken()+'&chs=360x360&choe=UTF-8&chld=L|2');
 	}
 /*

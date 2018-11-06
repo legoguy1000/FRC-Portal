@@ -49,7 +49,7 @@
 					</tr>
 				</tbody>
 			</table>
-			<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.users.length}}" md-page-select md-boundary-links></md-table-pagination></md-content>
+			<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.users.length}}" md-page-select md-boundary-links></md-table-pagination>
 		</md-table-container>
 		<div>
 			<h3>Sign In Instructions: </h3>
@@ -71,7 +71,7 @@
 			</div>
 		</md-toolbar>
 		<div>
-			<img ng-src="{{vm.qrCodeUrl()}}" alt='qr code'>
+			<img ng-src="{{vm.qrCodeUrl}}" alt='qr code'>
 		</div>
 	</div>
 	<!--
