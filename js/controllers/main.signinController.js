@@ -31,6 +31,12 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 	vm.getUsers();
+
+
+	vm.genQrCodeUrl = function() {
+		return $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+signinService.getToken()+'&chs=360x360&choe=UTF-8&chld=L|2');
+	}
+
 	vm.qrCodeUrl = vm.genQrCodeUrl();
 	//vm.signInAuthed = signinService.isAuthed();
 	vm.authorizeSignIn = function() {
@@ -83,9 +89,6 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 
-	vm.genQrCodeUrl = function() {
-		return $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+signinService.getToken()+'&chs=360x360&choe=UTF-8&chld=L|2');
-	}
 /*
 	vm.signinOut = function($event, numbers) {
 		if(signInBool) {
