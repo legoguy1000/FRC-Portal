@@ -43,6 +43,16 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		vm.stop = function() {
 			scanner.stop();
 		}
+
+		vm.cancel = function() {
+			vm.stop();
+			$mdDialog.cancel();
+		}
+
+		vm.close = function() {
+			vm.stop();
+			$mdDialog.hide();
+		}
 	});
 
 

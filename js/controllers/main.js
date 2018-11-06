@@ -124,7 +124,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 			templateUrl: 'views/partials/signInModal.tmpl.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
-			clickOutsideToClose:true,
+			//clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
 			locals: {
 				userInfo: main.userInfo,
@@ -133,8 +133,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		.then(function(response) {
 
 		}, function() {
-			var scanner = new Instascan.Scanner();
-			scanner.stop();
+			
 		});
 	}
 
