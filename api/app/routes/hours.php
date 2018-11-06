@@ -387,6 +387,9 @@ $app->group('/hours', function () {
               $hours_id = $hours->hours_id;
               $hours->time_out = date('Y-m-d H:i:s',$date);
               if($hours->save()) {
+                $ti = $hours->time_in;
+                $to = $hours->time_out;
+                $hourTotal = round((strtotime($to) - strtotime($ti))/3600, 2);
                 $emailData = array(
                   'signin_time' => date('M d, Y H:i A', $date),
                   'signin_out' => 'sign_out'
@@ -404,8 +407,8 @@ $app->group('/hours', function () {
                   )
                 );
                 $user->sendUserNotification('sign_in_out', $msgData);
-                $users = getSignInList(date('Y'));
-                $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
+                //$users = getSignInList(date('Y'));
+                $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date).' for a total of '.$hourTotal.' hours');
               } else {
               $responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out');
               }
@@ -429,8 +432,8 @@ $app->group('/hours', function () {
                   )
                 );
                 $user->sendUserNotification('sign_in_out', $msgData);
-                $users = getSignInList(date('Y'));
-                $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
+                //$users = getSignInList(date('Y'));
+                $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date));
               } else {
                 $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');
               }
