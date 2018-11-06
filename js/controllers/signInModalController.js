@@ -45,6 +45,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 				'token': content
 			};
 			signinService.signInOutQR(data).then(function(response) {
+				vm.loading = false;
 				vm.msg = response.msg;
 				if(response.status) {
 					$timeout( function(){

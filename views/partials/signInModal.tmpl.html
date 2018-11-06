@@ -9,9 +9,12 @@
 		</md-button>
 	  </div>
 	</md-toolbar>
-		<md-dialog-content class="md-margin" layout="column">
+		<md-dialog-content class="md-margin" layout="column" layout-align="start center">
 			<div layout="row" layout-align="center start" >
 				<video id="scanner" flex flex-gt-sm="50" ng-hide="vm.hideVideo"></video>
+			</div>
+			<div layout="row" layout-sm="column" layout-align="space-around" ng-show="vm.loading">
+				<md-progress-circular md-mode="indeterminate"></md-progress-circular>
 			</div>
 			<pre>{{vm.scanContent}}</pre>
 			<pre>{{vm.msg}}</pre>
