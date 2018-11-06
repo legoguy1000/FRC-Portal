@@ -353,7 +353,10 @@ $app->group('/hours', function () {
           } else {
             $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
           }
-        } catch(\Firebase\JWT\ExpiredException $e) {
+        } catch(\Firebase\JWT\Exception $e) {
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        }
+        /*catch(\Firebase\JWT\ExpiredException $e) {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
         } catch(\Firebase\JWT\SignatureInvalidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
@@ -361,7 +364,7 @@ $app->group('/hours', function () {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
         } catch(\Firebase\JWT\UnexpectedValueException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        }
+        } */
       } else {
         $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Sign in is not authorized at this time and/or on this device. Please see a mentor.');
       }
