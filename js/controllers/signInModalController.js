@@ -66,7 +66,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 
 		vm.stop = function() {
 			vm.hideVideo = true;
-			scanner.stop();
+			vm.scanner.stop();
 		}
 
 		vm.cancel = function() {
