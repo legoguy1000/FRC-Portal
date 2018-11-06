@@ -10,7 +10,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	}
 	vm.userInfo = userInfo;
 	vm.pin = '';
-	vm.users = null;
+	vm.scanContent = '';
 	var tick = function() {
 		vm.clock = Date.now();
 	}
@@ -25,7 +25,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		};
 		var scanner = new Instascan.Scanner(config);
 		scanner.addListener('scan', function (content) {
-			console.log(content);
+			vm.scanContent = content;
 		});
 		Instascan.Camera.getCameras().then(function (cameras) {
 			vm.cameras = cameras;
