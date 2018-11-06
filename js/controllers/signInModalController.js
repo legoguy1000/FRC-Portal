@@ -49,9 +49,9 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 				vm.loading = false;
 				vm.msg = response.msg;
 				if(response.status) {
-					$timeout( function(){
+					/* $timeout( function(){
 						vm.close(response.signInList);
-					}, 2000 );
+					}, 2000 ); */
 				}
 			}, function(response) {
 				vm.loading = false;
