@@ -438,13 +438,13 @@ $app->group('/hours', function () {
           } else {
             $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
           }
-        } catch(JWT\ExpiredException $e) {
+        } catch(\Firebase\JWT\UnexpectedValueException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(JWT\SignatureInvalidException $e){
+        } catch(\Firebase\JWT\ExpiredException $e) {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(JWT\BeforeValidException $e){
+        } catch(\Firebase\JWT\SignatureInvalidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(JWT\UnexpectedValueException $e){
+        } catch(\Firebase\JWT\BeforeValidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
         }
       } else {
