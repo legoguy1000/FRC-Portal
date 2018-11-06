@@ -36,8 +36,8 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 				console.error('No cameras found.');
 			}
 		}
-		var scanner = new Instascan.Scanner(config);
-		scanner.addListener('scan', function (content) {
+		vm.scanner = new Instascan.Scanner(config);
+		vm.scanner.addListener('scan', function (content) {
 			vm.loading = true;
 			vm.scanContent = content;
 			vm.stop();
@@ -54,12 +54,12 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 				}
 			}, function(response) {
 				vm.loading = false;
-				vm.startCamera(cameras, scanner);
+				vm.startCamera(vm.cameras, scanner);
 			});
 		});
 		Instascan.Camera.getCameras().then(function (cameras) {
 			vm.cameras = cameras;
-			vm.startCamera(cameras, scanner);
+			vm.startCamera(vm.cameras, vm.scanner);
 		}).catch(function (e) {
 			console.error(e);
 		});
