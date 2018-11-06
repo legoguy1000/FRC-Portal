@@ -36,7 +36,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	vm.genQrCodeUrl = function() {
 		var tok = signinService.getToken();
 		if(tok != '') {
-			return $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+tok+'&chs=360x360&choe=UTF-8&chld=L|2');
+			return $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+tok+'&chs=360x360&choe=UTF-8&chld=L|1');
 		}
 		return '';
 	}

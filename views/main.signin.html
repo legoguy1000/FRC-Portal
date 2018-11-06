@@ -64,7 +64,7 @@
 		</div>
 	</div>
 
-	<div flex class="backgroundPrimary">
+	<div class="backgroundPrimary" ng-show="vm.signInAuthed">
 		<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
 			<div class="" style="color: colorAccent">
 				<h3>{{ vm.clock | date:'medium'}}</h3>
