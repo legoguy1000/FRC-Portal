@@ -41,6 +41,9 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		});
 	});
 
+	vm.stop = function() {
+		scanner.stop();
+	}
 
 	/*
 	var signInBool = true;
