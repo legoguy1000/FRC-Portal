@@ -23,12 +23,8 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 			video: document.getElementById('scanner'),
 			mirror: false,
 		};
-		var scanner = new Instascan.Scanner(config);
-		scanner.addListener('scan', function (content) {
-			vm.scanContent = content;
-		});
-		Instascan.Camera.getCameras().then(function (cameras) {
-			vm.cameras = cameras;
+
+		function startCamera(cameras, scanner) {
 			if (cameras.length > 1) {
 				scanner.start(cameras[1]);
 			} else if (cameras.length > 0) {
@@ -36,6 +32,15 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 			} else {
 				console.error('No cameras found.');
 			}
+		}
+		var scanner = new Instascan.Scanner(config);
+		scanner.addListener('scan', function (content) {
+			vm.scanContent = content;
+			vm.stop();
+		});
+		Instascan.Camera.getCameras().then(function (cameras) {
+			vm.cameras = cameras;
+			startCamera(cameras, scanner);
 		}).catch(function (e) {
 			console.error(e);
 		});
