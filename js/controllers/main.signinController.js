@@ -87,6 +87,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		signinService.deauthorizeSignIn(data).then(function(response) {
 			if(response.status == true) {
 				signinService.logout();
+				vm.genQrCodeUrl();
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
