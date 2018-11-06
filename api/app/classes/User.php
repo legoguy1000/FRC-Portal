@@ -243,7 +243,7 @@ class User extends Eloquent {
   		$body = $msg['body'];
   		$tag = '';
   		$note_id = uniqid();
-  		slackMessageToUser($user_id, $body);
+  		slackMessageToUser($this->user_id, $body);
   	}
   }
 
