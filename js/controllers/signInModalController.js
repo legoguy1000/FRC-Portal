@@ -52,6 +52,9 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 						vm.close(response.signInList);
 					}, 2000 );
 				}
+			}, function(response) {
+				vm.loading = false;
+				vm.startCamera(cameras, scanner);
 			});
 		});
 		Instascan.Camera.getCameras().then(function (cameras) {
