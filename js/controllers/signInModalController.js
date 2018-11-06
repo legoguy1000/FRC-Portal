@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('signInModalController', ['$log','$element','$mdDialog', '$scope', 'usersService','$mdToast','userInfo','signinService','$interval',
+.controller('signInModalController', ['$log','$element','$mdDialog', '$scope', 'usersService','$mdToast','userInfo','signinService','$interval','$document',
 	signInModalController
 ]);
-function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdToast,userInfo,signinService,$interval) {
+function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdToast,userInfo,signinService,$interval,$document) {
 	var vm = this;
 
 	vm.cancel = function() {
@@ -17,7 +17,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	tick();
 	$interval(tick, 1000);
 	var config = {
-		video: document.getElementById('scanner'),
+		video: $document[0].getElementById('scanner'),
 		mirror: false,
 	};
 
