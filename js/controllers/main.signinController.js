@@ -94,6 +94,24 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 
+	var es = new EventSource("sse.php");
+	es.addEventListener("open", function (event) {
+		if(typeof event.data !== 'undefined'){
+			console.log(event.data);
+		}
+	});
+	es.addEventListener("message", function (event) {
+		if(typeof event.data !== 'undefined'){
+			console.log(event.data);
+			vm.users = event.data;
+		}
+	});
+	es.addEventListener("error", function (event) {
+		if(typeof event.data !== 'undefined'){
+			console.log(event.data);
+		}
+	});
+
 /*
 	vm.signinOut = function($event, numbers) {
 		if(signInBool) {
