@@ -16,12 +16,13 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	}
 	tick();
 	$interval(tick, 1000);
-	var config = {
-		video: document.getElementById('scanner'),
-		mirror: false,
-	};
+
 
 	$timeout(function() {
+		var config = {
+			video: document.getElementById('scanner'),
+			mirror: false,
+		};
 		var scanner = new Instascan.Scanner(config);
 		scanner.addListener('scan', function (content) {
 			console.log(content);
