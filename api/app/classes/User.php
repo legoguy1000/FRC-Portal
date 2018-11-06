@@ -213,8 +213,8 @@ class User extends Eloquent {
   }
 
   public function getNotificationPreferences() {
-  	$data = getNotificationOptions();
-  	$result = NotificationPreference::find($this->user_id);
+    $data = getNotificationOptions();
+  	$result = NotificationPreference::where('user_id',$this->user_id)->get();
   	if(count($result) > 0) {
   		foreach($result as $re) {
   			$m = $re['method'];
