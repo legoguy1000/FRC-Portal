@@ -129,15 +129,12 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 			locals: {
 				userInfo: main.userInfo,
 			},
-			onComplete: function(scope, element, options) {
-				var scanner = new Instascan.Scanner();
-				scanner.stop();
-			}
 		})
 		.then(function(response) {
 
 		}, function() {
-
+			var scanner = new Instascan.Scanner();
+			scanner.stop();
 		});
 	}
 
