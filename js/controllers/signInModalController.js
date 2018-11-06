@@ -28,6 +28,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		};
 
 		vm.startCamera = function(cameras, scanner) {
+			vm.hideVideo = false;
 			if (cameras.length > 1) {
 				scanner.start(cameras[1]);
 			} else if (cameras.length > 0) {
