@@ -21,26 +21,25 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		mirror: false,
 	};
 
-	console.log(document.getElementById('scanner'));
 	$timeout(function() {
-			console.log('asdf '+document.getElementById('scanner'));
+		var scanner = new Instascan.Scanner(config);
+		scanner.addListener('scan', function (content) {
+			console.log(content);
+		});
+		Instascan.Camera.getCameras().then(function (cameras) {
+			vm.cameras = cameras;
+			if (cameras.length > 1) {
+				scanner.start(cameras[1]);
+			} else if (cameras.length > 0) {
+				scanner.start(cameras[0]);
+			} else {
+				console.error('No cameras found.');
+			}
+		}).catch(function (e) {
+			console.error(e);
+		});
 	});
-	var scanner = new Instascan.Scanner(config);
-  scanner.addListener('scan', function (content) {
-    console.log(content);
-  });
-  Instascan.Camera.getCameras().then(function (cameras) {
-		vm.cameras = cameras;
-		if (cameras.length > 1) {
-      scanner.start(cameras[1]);
-    } else if (cameras.length > 0) {
-      scanner.start(cameras[0]);
-    } else {
-      console.error('No cameras found.');
-    }
-  }).catch(function (e) {
-    console.error(e);
-  });
+
 
 	/*
 	var signInBool = true;
