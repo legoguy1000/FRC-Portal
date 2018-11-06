@@ -15,6 +15,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		vm.clock = Date.now();
 	}
 	vm.loading = false;
+	vm.msg = '';
 	tick();
 	$interval(tick, 1000);
 

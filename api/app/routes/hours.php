@@ -440,7 +440,7 @@ $app->group('/hours', function () {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
         }
       } else {
-        $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Sign in is not authorized at this time and/or on this device. Please see a mentor.');
+        $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid token');
       }
       $response = $response->withJson($responseArr);
       return $response;
