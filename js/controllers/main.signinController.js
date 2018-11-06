@@ -67,7 +67,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			$mdDialog.show(dialog);
 			if(response.status && response.signin_token != undefined) {
 				signinService.saveToken(response.signin_token);
-				vm.qrCodeUrl = $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+response.signin_token+'&chs=360x360&choe=UTF-8&chld=L|2');
+
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
@@ -83,6 +83,9 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 
+	vm.qrCodeUrl = function() {
+		return $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+signinService.getToken()+'&chs=360x360&choe=UTF-8&chld=L|2');
+	}
 /*
 	vm.signinOut = function($event, numbers) {
 		if(signInBool) {
