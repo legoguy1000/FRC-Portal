@@ -17,6 +17,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.toggleRightSidebar = toggleRightSidebar;
 	main.loginModal = loginModal;
 	main.newUserModal = newUserModal;
+	main.signInModal = signInModal;
 	main.isAuthed = authed;
 	main.notifications = [];
 	main.signInAuthed = signinService.isAuthed();
@@ -115,6 +116,25 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		});
 	}
 
+	function signInModal(ev) {
+		$mdDialog.show({
+			controller: signInModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/signInModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true // Only for -xs, -sm breakpoints.
+			locals: {
+				userInfo: main.userInfo,
+			}
+		})
+		.then(function(response) {
+
+		}, function() {
+
+		});
+	}
 
 	main.initServiceWorkerState = function() {
 		console.log('Initializing');

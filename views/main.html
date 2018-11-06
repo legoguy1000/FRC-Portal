@@ -22,44 +22,47 @@
 	</md-button> -->
 </md-sidenav>
 <div layout="column" flex>
-    <md-toolbar layout="row" layout-align="center center">
-        <section layout-align="start center" layout-fill flex class="md-toolbar-tools">
-            <md-button hide-gt-sm ng-click="main.toggleItemsList()" aria-label="Menu">
-                <i class="material-icons">menu</i>
-            </md-button>
-						<div class="" >
-							<span hide-sm hide-xs ng-cloak>Team {{main.team_number}} Portal <span ng-show="main.title != ''"> | </span></span>{{main.title}}
-						</div>
-        </section>
-        <section layout-align="center center" layout="row" ng-show="main.isAuthed">
-            <!-- <md-button class="toolbar-button" aria-label="Search" ng-click="main.showSearch = !main.showSearch">
-                <i class="material-icons">search</i>
-            </md-button> -->
-          <!--  <md-button class="toolbar-button" aria-label="Notifications">
-                <i class="material-icons">notifications</i>
-                <span class="notifications-label">7</span>
-            </md-button> -->
-        <!--    <md-button class="toolbar-button" aria-label="Settings" ng-click="main.toggleRightSidebar()">
+	<md-toolbar layout="row" layout-align="center center">
+		<section layout-align="start center" layout-fill flex class="md-toolbar-tools">
+			<md-button hide-gt-sm ng-click="main.toggleItemsList()" aria-label="Menu">
 				<i class="material-icons">menu</i>
-			</md-button> -->
-			<img class="img-circle" ng-src="{{main.userInfo.profile_image}}" ng-click="main.toggleRightSidebar()">
-        </section>
-		<section layout-align="end center" ng-hide="main.isAuthed">
-            <md-button class="toolbar-button" aria-label="Search" ng-click="main.loginModal($event)">
-               Log In
-            </md-button>
+			</md-button>
+			<div class="" >
+				<span hide-sm hide-xs ng-cloak>Team {{main.team_number}} Portal <span ng-show="main.title != ''"> | </span></span>{{main.title}}
+			</div>
 		</section>
-    </md-toolbar>
-    <md-content flex layout="roww" class="md-padding page-content">
-        <div ui-view flex></div>
-    </md-content>
+		<section layout-align="center center" layout="row" ng-show="main.isAuthed">
+			<!-- <md-button class="toolbar-button" aria-label="Search" ng-click="main.showSearch = !main.showSearch">
+			<i class="material-icons">search</i>
+			</md-button> -->
+			<!--  <md-button class="toolbar-button" aria-label="Notifications">
+			<i class="material-icons">notifications</i>
+			<span class="notifications-label">7</span>
+			</md-button> -->
+			<!--    <md-button class="toolbar-button" aria-label="Settings" ng-click="main.toggleRightSidebar()">
+			<i class="material-icons">menu</i>
+			</md-button> -->
+			<md-button class="md-icon-button" ng-click="vm.signInModal()">
+				<md-icon>photo_camera</md-icon>
+			</md-button>
+			<img class="img-circle" ng-src="{{main.userInfo.profile_image}}" ng-click="main.toggleRightSidebar()">
+		</section>
+		<section layout-align="end center" ng-hide="main.isAuthed">
+			<md-button class="toolbar-button" aria-label="Search" ng-click="main.loginModal($event)">
+				Log In
+			</md-button>
+		</section>
+	</md-toolbar>
+	<md-content flex layout="roww" class="md-padding page-content">
+		<div ui-view flex></div>
+	</md-content>
 	<!--	<footer>
-      <md-toolbar class="md-scroll-shrink">
-        <div layout="row" layout-align="center center" flex>
-          FOOTER INFO
-        </div>
-      </md-toolbar>
-    </footer> -->
+	<md-toolbar class="md-scroll-shrink">
+	<div layout="row" layout-align="center center" flex>
+	FOOTER INFO
+	</div>
+	</md-toolbar>
+	</footer> -->
 </div>
 
 <md-sidenav md-component-id="right" class="md-whiteframe-z2 md-sidenav-right">
