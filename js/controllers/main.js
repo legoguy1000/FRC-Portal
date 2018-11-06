@@ -128,6 +128,10 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 			fullscreen: true, // Only for -xs, -sm breakpoints.
 			locals: {
 				userInfo: main.userInfo,
+			},
+			onComplete: function(scope, element, options) {
+				var scanner = new Instascan.Scanner();
+				scanner.stop();
 			}
 		})
 		.then(function(response) {
