@@ -17,10 +17,14 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	tick();
 	$interval(tick, 1000);
 	var config = {
-		video: $document[0].getElementById('scanner'),
+		video: document.getElementById('scanner'),
 		mirror: false,
 	};
 
+	console.log(document.getElementById('scanner'));
+	$timeout(function() {
+			console.log('asdf '+document.getElementById('scanner'));
+	});
 	var scanner = new Instascan.Scanner(config);
   scanner.addListener('scan', function (content) {
     console.log(content);
