@@ -1,4 +1,4 @@
-<div flex layout="column" layout-gt-sm="row" ng-keydown="vm.keyDown($event)">
+<div flex layout="column" layout-gt-sm="row">
 	<div flex>
 		<md-toolbar class="md-table-toolbar" ng-hide="vm.filter.show">
 			<div class="md-toolbar-tools">
@@ -63,7 +63,7 @@
 			<div>  Mentors/Others: Please log in to the portal by clicking the "Log In" button in the top rght corner.  Please select one of the login providers (It does not have to be your team2363.org email).  Upon successful log in, please complete the new user form.  Here you will set your 4-8 digit PIN number.</div>
 		</div>
 	</div>
-	<!--
+
 	<div flex class="backgroundPrimary">
 		<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
 			<div class="" style="color: colorAccent">
@@ -71,14 +71,9 @@
 			</div>
 		</md-toolbar>
 		<div>
-			<md-list ng-cloak>
-				<md-list-item ng-repeat="user in vm.users | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" ng-click="vm.showSignInModal(user, $event)" class="noright">
-			    <img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
-			    <div>{{ user.full_name }}</div>
-			  </md-list-item>
-			</md-list>
+			<img src='https://chart.googleapis.com/chart?cht=qr&chl=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvcG9ydGFsLWRldi50ZWFtMjM2My5vcmciLCJpYXQiOjE1NDE0NzM3ODIsImV4cCI6MTU0MTUxNjk4MiwianRpIjoiYjgzOTkxZDE2ZmEzNmI3YTZiZjdkZDJjMTY3ZGYwNjAiLCJkYXRhIjp7InNpZ25pbiI6dHJ1ZX19.5hYSjgV41ujyHMGk7jHwGrifUWd3NT_wJgHn7NcaCoQ&chs=180x180&choe=UTF-8&chld=L|2' alt='qr code'>
 		</div>
-	</div> -->
+	</div>
 	<!--
 	<div flex class="backgroundPrimary">
 		<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
