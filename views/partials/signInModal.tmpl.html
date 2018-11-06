@@ -1,4 +1,4 @@
-<md-dialog aria-label="Clock In/Out" style="" flex="50" class="backgroundPrimary ">
+<md-dialog aria-label="Clock In/Out" style="" class="">
 	<md-toolbar layout="row">
 	  <div class="md-toolbar-tools">
 		<h2>Sign In/Out for {{vm.userInfo.full_name}}</h2>
@@ -9,8 +9,10 @@
 		</md-button>
 	  </div>
 	</md-toolbar>
-		<md-dialog-content class="md-margin">
-			<video id="scanner"></video>
+		<md-dialog-content class="md-margin" layout="column">
+			<div layout="row">
+				<video id="scanner" flex="50"></video>
+			</div>
 			<pre>{{vm.scanContent}}</pre>
 		</md-dialog-content>
 </md-dialog>

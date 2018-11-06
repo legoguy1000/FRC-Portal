@@ -24,7 +24,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 			mirror: false,
 		};
 
-		function startCamera(cameras, scanner) {
+		vm.startCamera = function(cameras, scanner) {
 			if (cameras.length > 1) {
 				scanner.start(cameras[1]);
 			} else if (cameras.length > 0) {
@@ -40,7 +40,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		});
 		Instascan.Camera.getCameras().then(function (cameras) {
 			vm.cameras = cameras;
-			startCamera(cameras, scanner);
+			vm.startCamera(cameras, scanner);
 		}).catch(function (e) {
 			console.error(e);
 		});
