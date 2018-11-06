@@ -26,6 +26,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
     console.log(content);
   });
   Instascan.Camera.getCameras().then(function (cameras) {
+		vm.cameras = cameras;
 		if (cameras.length > 1) {
       scanner.start(cameras[1]);
     } else if (cameras.length > 0) {
