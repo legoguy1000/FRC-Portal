@@ -32,7 +32,7 @@ while(true) {
     if(!is_null($hours)) {
       $users = getSignInList(date('Y'));
       echo "id: " . $hours->hours_id . "\n";
-      echo "data: ".json_encode($users)." \n\n";
+      echo "data: ".json_encode($hours->hours_id)." \n\n";
       $lastEventId = $hours->hours_id;
       ob_flush();
       flush();
