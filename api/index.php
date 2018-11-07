@@ -25,7 +25,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     "rules" => [
         new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
           "path" => ['/'],
-          "ignore" => ['/version','/manifest','/auth','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/config'],
+          "ignore" => ['/version','/manifest.json','/auth','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/config'],
         ]),
         new Tuupola\Middleware\JwtAuthentication\RequestPathMethodRule([
           "passthrough" => [
