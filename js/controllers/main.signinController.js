@@ -94,7 +94,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 
-	var es = new EventSource("sse.php");
+	var es = new EventSource("api/sse.php");
 	es.addEventListener("open", function (event) {
 		if(typeof event.data !== 'undefined'){
 			console.log(event.data);
@@ -103,7 +103,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	es.addEventListener("message", function (event) {
 		if(typeof event.data !== 'undefined'){
 			console.log(event.data);
-			vm.users = event.data;
+			//vm.users = event.data;
 		}
 	});
 	es.addEventListener("error", function (event) {
