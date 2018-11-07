@@ -43,7 +43,7 @@ self.addEventListener('fetch', function(event) {
       .then(function(response) {
         // Cache hit - return response
         if (response) {
-          return response;
+          //return response;
         }
         return fetch(event.request);
       }
