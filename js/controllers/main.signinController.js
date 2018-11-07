@@ -15,7 +15,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		order: 'lname',
 		page: 1
 	};
-	vm.eventSource = null;
+	vm.eventSource;
 
 	var signInBool = true;
 
@@ -79,7 +79,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			if(response.status && response.signin_token != undefined) {
 				signinService.saveToken(response.signin_token);
 				vm.qrCodeUrl = vm.genQrCodeUrl();
-				eventSource();
+				startEventSource();
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
@@ -98,7 +98,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 
-	function eventSource() {
+	function startEventSource() {
 		console.log('start ES');
 		vm.eventSource = new EventSource("api/sse.php");
 		vm.eventSource.addEventListener("open", function (event) {
