@@ -99,6 +99,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	}
 
 	function eventSource() {
+		console.log('start ES');
 		vm.eventSource = new EventSource("api/sse.php");
 		vm.eventSource.addEventListener("open", function (event) {
 			if(typeof event.data !== 'undefined'){
