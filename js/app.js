@@ -10,7 +10,7 @@ angular.module('FrcPortal', [
 	'ui.router.default',
 	'chart.js',
 //	'bc.AngularKeypad',
-	'angularRipple',
+//	'angularRipple',
 	'moment-picker',
 	'ngCsv',
 //	'ngMap',
