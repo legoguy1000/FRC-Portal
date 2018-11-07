@@ -23,7 +23,7 @@ echo "retry: 2000\n";
 
 //5a57eeed0b3ab
 // start stream
-while(true){
+while(true) {
   if(connection_aborted()) {
     exit();
   } else {
@@ -39,7 +39,7 @@ while(true){
     } else {
       // no new data to send
       echo ": heartbeat\n\n";
-      ob_flush();
+      //ob_flush();
       flush();
     }
   }
