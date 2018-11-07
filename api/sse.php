@@ -34,7 +34,7 @@ while(true) {
       echo "id: " . $hours->hours_id . "\n";
       echo "data: ".json_encode($hours->hours_id)." \n\n";
       $lastEventId = $hours->hours_id;
-      ob_flush();
+      //ob_flush();
       flush();
     } else {
       // no new data to send
