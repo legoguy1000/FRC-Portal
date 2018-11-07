@@ -133,7 +133,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		.then(function(response) {
 
 		}, function() {
-			
+
 		});
 	}
 
@@ -168,13 +168,14 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	var loginActions = function() {
 		main.isAuthed = $auth.isAuthenticated();
 		main.userInfo = angular.fromJson(window.localStorage['userInfo']);
-		main.checkServiceWorker();
 		//main.StartEventSource();
 		if(main.userInfo.first_login) {
 			//newUserModal();
 			$state.go('main.profile',{'firstLogin': true});
 		}
 	}
+
+	main.checkServiceWorker();
 
 	if(main.isAuthed) {
 		console.info('I\'m Authed');

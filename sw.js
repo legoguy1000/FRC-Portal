@@ -37,66 +37,42 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-self.addEventListener('push', function(event) {
-	console.log('Received a push message', event);
-	console.log(event.data);
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
 
-	var title = 'Yay a message.';
-	var body = 'We have received a push message.';
-	var icon = '/favicons/android-chrome-512x512.png?v=47Myd2nElq';
-	var tag = 'simple-push-demo-notification-tag';
-	var data =  {'title':title, 'body':body, 'tag':tag};
-	data = event.data.json();
-	console.log(data);
+        // IMPORTANT: Clone the request. A request is a stream and
+        // can only be consumed once. Since we are consuming this
+        // once by cache and once by the browser for fetch, we need
+        // to clone the response.
+        var fetchRequest = event.request.clone();
 
-  event.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.body,
-      icon: icon,
-	  tag: data.tag,
-	  actions: [
-		   {action: 'acknowledge', title: '👍Acknowledge'},
-		]
-    })
-  );
+        return fetch(fetchRequest).then(
+          function(response) {
+            // Check if we received a valid response
+            if(!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // IMPORTANT: Clone the response. A response is a stream
+            // and because we want the browser to consume the response
+            // as well as the cache consuming the response, we need
+            // to clone it so we have two streams.
+            var responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then(function(cache) {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          }
+        );
+      })
+    );
 });
-
-self.addEventListener('notificationclick', function(event) {
-    console.log('Notification click: tag ', event.notification);
-    event.notification.close();
-    var url = 'https://portal.team2363.org';
-	tag = event.notification.tag;
-	if (event.action === 'acknowledge') {
-		console.log('acknowledge');
-		fetch(url+'/site/acknowledgeNotification.php',{method: 'post',headers: {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"},body: 'tag='+tag}).then(function(response) {
-			if (response.status !== 200) {
-				console.log('Looks like there was a problem. Status Code: ' +
-				response.status);
-				return;
-			}
-		}).catch(function(err) {
-			console.log('Fetch Error :-S', err);
-		});
-	} else {
-		event.waitUntil(
-			clients.matchAll({includeUncontrolled: true, type: 'window'})
-			.then(function(windowClients) {
-				console.log(windowClients.length);
-				for (var i = 0; i < windowClients.length; i++) {
-					var client = windowClients[i];
-					console.log(client.url);
-					if (client.url.includes(url) && 'focus' in client) {
-						return client.focus();
-						console.log('focus');
-					}
-				}
-				if (clients.openWindow) {
-					console.log('new window');
-					return clients.openWindow(url);
-				}
-			})
-		);
-	}
-});
-
-self.addEventListener('notificationclose', e => console.log(e.notification));
