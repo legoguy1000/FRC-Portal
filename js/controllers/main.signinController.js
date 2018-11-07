@@ -79,7 +79,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			if(response.status && response.signin_token != undefined) {
 				signinService.saveToken(response.signin_token);
 				vm.qrCodeUrl = vm.genQrCodeUrl();
-				startEventSource();
+				//startEventSource();
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
