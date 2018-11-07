@@ -15,6 +15,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		order: 'lname',
 		page: 1
 	};
+	vm.eventSource = null;
 
 	var signInBool = true;
 
@@ -78,6 +79,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			if(response.status && response.signin_token != undefined) {
 				signinService.saveToken(response.signin_token);
 				vm.qrCodeUrl = vm.genQrCodeUrl();
+				eventSource();
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
@@ -89,28 +91,33 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			if(response.status == true) {
 				signinService.logout();
 				vm.genQrCodeUrl();
+				console.log('Connection closed');
+				vm.eventSource.close();
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
 	}
 
-	var es = new EventSource("api/sse.php");
-	es.addEventListener("open", function (event) {
-		if(typeof event.data !== 'undefined'){
-			console.log(event.data);
-		}
-	});
-	es.addEventListener("message", function (event) {
-		if(typeof event.data !== 'undefined'){
-			console.log(event.data);
-			//vm.users = event.data;
-		}
-	});
-	es.addEventListener("error", function (event) {
-		if(typeof event.data !== 'undefined'){
-			console.log(event.data);
-		}
-	});
+	function eventSource() {
+		vm.eventSource = new EventSource("api/sse.php");
+		vm.eventSource.addEventListener("open", function (event) {
+			if(typeof event.data !== 'undefined'){
+				console.log(event.data);
+			}
+		});
+		vm.eventSource.addEventListener("message", function (event) {
+			if(typeof event.data !== 'undefined'){
+				console.log(event.data);
+				//vm.users = event.data;
+			}
+		});
+		vm.eventSource.addEventListener("error", function (event) {
+			if(typeof event.data !== 'undefined'){
+				console.log(event.data);
+			}
+		});
+	}
+
 
 /*
 	vm.signinOut = function($event, numbers) {
