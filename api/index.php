@@ -111,7 +111,7 @@ $app->get('/config', function ($request, $response, $args) {
   $response = $response->withHeader('Content-type', 'application/javascript');
   return $response;
 });
-$app->get('/manifest', function ($request, $response, $args) {
+$app->get('/manifest.json', function ($request, $response, $args) {
   $this->logger->addInfo('Called manifest endpoint');
   $configArr = array(
     'team_name',
@@ -131,7 +131,7 @@ $app->get('/manifest', function ($request, $response, $args) {
     'name' => 'Team '.$constantArr['team_number'].' Portal',
     'short_name' => 'Team '.$constantArr['team_number'],
     'lang' => 'en-US',
-    'start_url' => $constantArr['env_url'],
+    'start_url' => '/home',
     'theme_color' => $constantArr['team_color_secondary'],
     'background_color' => $constantArr['team_color_secondary'],
     'display' => 'standalone',
