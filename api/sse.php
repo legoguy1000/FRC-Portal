@@ -2,9 +2,6 @@
 require_once('app/includes.php');
 require_once('app/libraries/CustomAuthRule.php');
 
-// make session read-only
-session_start();
-session_write_close();
 // disable default disconnect checks
 ignore_user_abort(true);
 // set headers for stream
@@ -32,7 +29,7 @@ while(true) {
     if(!is_null($hours)) {
       $users = getSignInList(date('Y'));
       echo "id: " . $hours->updated_at . "\n";
-      echo "data: ".json_encode($hours->hours_id)." \n\n";
+      echo "data: ".json_encode($users)." \n\n";
       $lastEventTimeStamp = $hours->updated_at;
       //ob_flush();
       flush();
