@@ -27,6 +27,7 @@ while(true) {
     // here you will want to get the latest event id you have created on the server, but for now we will increment and force an update
     $hours = FrcPortal\MeetingHour::where('updated_at','>',$lastEventTimeStamp)->get();
     if(count($hours) > 0) {
+      sleep(2);
       $users = getSignInList(date('Y'));
       $lastEventTimeStamp = date('Y-m-d H:i:s');
       echo "id: " . $lastEventTimeStamp . "\n";
