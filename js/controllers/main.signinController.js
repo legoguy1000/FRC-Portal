@@ -111,7 +111,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 		eventSource.addEventListener("message", function (event) {
 			if(typeof event.data !== 'undefined'){
-				console.log(event.data);
+				console.log(event.lastEventId);
 				vm.users = JSON.parse(event.data);
 			}
 		});
