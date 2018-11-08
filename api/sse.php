@@ -28,9 +28,10 @@ while(true) {
     $hours = FrcPortal\MeetingHour::where('updated_at','>',$lastEventTimeStamp)->orderBy('updated_at', 'desc')->first();
     if(!is_null($hours)) {
       $users = getSignInList(date('Y'));
-      echo "id: " . $hours->updated_at . "\n";
-      echo "data: ".json_encode($users)." \n\n";
       $lastEventTimeStamp = date('Y-m-d H:i:s');
+      echo "id: " . $lastEventTimeStamp . "\n";
+      echo "data: ".json_encode($users)." \n\n";
+
       //ob_flush();
       flush();
     } else {
