@@ -34,12 +34,12 @@ while(true) {
       echo "id: " . $hours->updated_at . "\n";
       echo "data: ".json_encode($hours->hours_id)." \n\n";
       $lastEventTimeStamp = $hours->updated_at;
-      ob_flush();
+      //ob_flush();
       flush();
     } else {
       // no new data to send
       echo ": heartbeat\n\n";
-      ob_flush();
+      //ob_flush();
       flush();
     }
   }
