@@ -112,7 +112,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		eventSource.addEventListener("message", function (event) {
 			if(typeof event.data !== 'undefined'){
 				console.log(event.data);
-				vm.users = event.data;
+				vm.users = JSON.parse(event.data);
 			}
 		});
 		eventSource.addEventListener("error", function (event) {
