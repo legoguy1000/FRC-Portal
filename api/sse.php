@@ -30,7 +30,7 @@ while(true) {
       $users = getSignInList(date('Y'));
       echo "id: " . $hours->updated_at . "\n";
       echo "data: ".json_encode($users)." \n\n";
-      $lastEventTimeStamp = $hours->updated_at;
+      $lastEventTimeStamp = date('Y-m-d H:i:s');
       //ob_flush();
       flush();
     } else {
