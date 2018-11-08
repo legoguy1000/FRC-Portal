@@ -99,26 +99,27 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	}
 
 	function startEventSource() {
-		if(eventSource == undefined) {
-			console.log('start ES');
-			eventSource = new EventSource("api/sse.php");
-			eventSource.addEventListener("open", function (event) {
-				if(typeof event.data !== 'undefined'){
-					console.log(event.data);
-				}
-			});
-			eventSource.addEventListener("message", function (event) {
-				if(typeof event.data !== 'undefined'){
-					console.log(event.data);
-					//vm.users = event.data;
-				}
-			});
-			eventSource.addEventListener("error", function (event) {
-				if(typeof event.data !== 'undefined'){
-					console.log(event.data);
-				}
-			});
+		if(eventSource != undefined) {
+			eventSource.close();
 		}
+		console.log('start ES');
+		eventSource = new EventSource("api/sse.php");
+		eventSource.addEventListener("open", function (event) {
+			if(typeof event.data !== 'undefined'){
+				console.log(event.data);
+			}
+		});
+		eventSource.addEventListener("message", function (event) {
+			if(typeof event.data !== 'undefined'){
+				console.log(event.data);
+				//vm.users = event.data;
+			}
+		});
+		eventSource.addEventListener("error", function (event) {
+			if(typeof event.data !== 'undefined'){
+				console.log(event.data);
+			}
+		});
 	}
 
 
