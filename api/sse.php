@@ -34,11 +34,6 @@ while(true) {
 
       //ob_flush();
       flush();
-    } else {
-      // no new data to send
-      echo ": heartbeat\n\n";
-      //ob_flush();
-      flush();
     }
   }
   // 2 second sleep then carry on
