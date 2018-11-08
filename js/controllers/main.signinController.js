@@ -102,7 +102,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		if(eventSource != undefined) {
 			eventSource.close();
 		}
-		console.log('start ES');
+		/*console.log('start ES');
 		eventSource = new EventSource("api/sse.php");
 		eventSource.addEventListener("open", function (event) {
 			if(typeof event.data !== 'undefined'){
@@ -120,7 +120,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			if(typeof event.data !== 'undefined'){
 				console.log(event.data);
 			}
-		});
+		});*/
 	}
 
 	if(vm.signInAuthed) {
