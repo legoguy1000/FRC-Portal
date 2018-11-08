@@ -273,7 +273,7 @@ $app->group('/users', function () {
           'uid' => $user_id,
           'year' => $year,
        )); */
-      $dates =  DB::table('meeting_hours')
+      $dates =  DB::table('meeting_hours AS a')
       ->where('user_id',$user_id)
       ->where(DB::raw('year(a.time_in)'),$year)
       ->select(DB::raw('year(a.time_in) as year, DATE(a.time_in) as date,  ROUND(SUM(time_to_sec(IFNULL(timediff(a.time_out, a.time_in),0)) / 3600),1) as hours'))
