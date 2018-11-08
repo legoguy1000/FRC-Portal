@@ -124,7 +124,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 
 	if(vm.signInAuthed) {
 		startEventSource();
-	} elseif(!vm.signInAuthed && eventSource != undefined) {
+	} else if(!vm.signInAuthed && eventSource != undefined) {
 		eventSource.close();
 	}
 
