@@ -128,6 +128,22 @@ if($version >= '2.11.2') {
   }
 }
 
+/**
+* 2.13.0
+**/
+if($version >= '2.11.2') {
+  if(Capsule::schema()->hasTable('meeting_hours')) {
+    if(!Capsule::schema()->hasColumn('meeting_hours','created_at') && !Capsule::schema()->hasColumn('meeting_hours','updated_at')) {
+      try {
+        Capsule::schema()->table('meeting_hours', function ($table) {
+          $table->timestamps();
+        });
+      } catch (Exception $e) {
+        //Exception will be logged in Monolog
+      }
+    }
+  }
+}
 
 //Create User Category Tables
 /*
