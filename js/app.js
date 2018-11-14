@@ -227,6 +227,7 @@ angular.module('FrcPortal', [
 	    eventController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
 	             return $ocLazyLoad.load('js/controllers/main.admin.eventController.js');
+
 	    }]
 	  }
 	  })
@@ -242,7 +243,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    timeController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.timeController.js');
+	             return $ocLazyLoad.load(['js/controllers/main.admin.timeController.js','js/directives/humanize-duration.js']);
 	    }]
 	  }
 	  })
