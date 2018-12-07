@@ -70,7 +70,7 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 		});
 	};
 
-	function schoolModal(ev, newSchool, schoolData) {
+	function schoolModal(ev, newSchool, index) {
 		$mdDialog.show({
 			controller: newSchoolModalController,
 			controllerAs: 'vm',
@@ -82,7 +82,7 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 			locals: {
 				schoolInfo: {
 					new: newSchool,
-					data: newSchool ? {} : schoolData,
+					data: newSchool ? {} : vm.schools[index],
 				},
 			}
 		})
@@ -92,7 +92,7 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 				vm.total = response.data.total;
 				vm.maxPage = response.data.maxPage;
 			} else {
-				schoolData = response.data;
+				vm.schools[index] = response.data;
 			}
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
