@@ -43,6 +43,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$ocLazyLoad.load('js/controllers/googleFormMapModalController.js');
 	$ocLazyLoad.load('js/controllers/signInModalController.js');
   $ocLazyLoad.load('js/directives/instascan.min.js');
+	$ocLazyLoad.load('js/controllers/newSchoolModalController.js');
 
 	navService
 	  .loadAllItems()
