@@ -80,7 +80,7 @@ $app->group('/schools', function () {
       $school = FrcPortal\School::find($school_id);
       if($school->school_name != $formData['school_name']) {
         $school_count = FrcPortal\School::where('school_name', $formData['school_name'])->count();
-        if($school == 0) {
+        if($school_count == 0) {
           $school->school_name = $formData['school_name'];
         } else {
           $responseArr = array('status'=>false, 'msg'=>$formData['school_name'].' already exists');
