@@ -109,7 +109,7 @@ $app->group('/schools', function () {
       if($season) {
         $limit = 10;
         $totalNum = FrcPortal\School::count();
-        $schools = FrcPortal\School::orderBy('year','DESC')->limit($limit)->get();
+        $schools = FrcPortal\School::orderBy('student_count','DESC')->limit($limit)->get();
         $data = array();
         $data['results'] = $schools;
         $data['total'] = $totalNum;
@@ -150,7 +150,7 @@ $app->group('/schools', function () {
       if($newSchool->save()) {
         $limit = 10;
         $totalNum = FrcPortal\School::count();
-        $schools = FrcPortal\School::orderBy('year','DESC')->limit($limit)->get();
+        $schools = FrcPortal\School::orderBy('student_count','DESC')->limit($limit)->get();
         $data = array();
         $data['results'] = $schools;
         $data['total'] = $totalNum;
