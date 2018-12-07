@@ -40,7 +40,7 @@ class School extends Eloquent {
   }*/
 
   public function getSchoolCountAttribute() {
-    return FrcPortal\User::where('school_id',$this->attributes['school_id'])->count();
+    return User::where('school_id',$this->attributes['school_id'])->count();
   }
 
   /**
