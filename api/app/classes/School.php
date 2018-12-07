@@ -18,7 +18,7 @@ class School extends Eloquent {
     'school_id', 'school_name', 'abv', 'logo_url'
   ];
 
-  protected $appends = ['school_count'];
+  protected $appends = ['student_count'];
   /**
   * The attributes that should be hidden for arrays.
   *
@@ -39,7 +39,7 @@ class School extends Eloquent {
     });
   }*/
 
-  public function getSchoolCountAttribute() {
+  public function getStudentCountAttribute() {
     return User::where('school_id',$this->attributes['school_id'])->count();
   }
 
