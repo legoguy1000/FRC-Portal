@@ -10,7 +10,7 @@ function newSchoolModalController($log,$mdDialog,$scope,schoolInfo,schoolsServic
 	}
 
 	vm.new = schoolInfo.new && schoolInfo.data.school_id == undefined;
-	vm.data = vm.new ? {} : schoolInfo.data;
+	vm.data = vm.new ? {} : angular.copy(schoolInfo.data);
 
 	vm.addSchool = function() {
 		schoolsService.addSchool(vm.data).then(function(response) {
@@ -29,6 +29,7 @@ function newSchoolModalController($log,$mdDialog,$scope,schoolInfo,schoolsServic
 	vm.updateSchool = function() {
 		schoolsService.updateSchool(vm.data).then(function(response) {
 			if(response.status) {
+				schoolInfo.data = response.data;
 				$mdDialog.hide(response.status);
 			}
 			$mdToast.show(
