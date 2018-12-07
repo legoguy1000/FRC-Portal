@@ -88,7 +88,7 @@ $app->group('/schools', function () {
         }
       }
       $school->abv = $formData['abv'];
-      $school->school_logo = !isset($formData['school_logo']) && !is_null($formData['school_logo']) ? $formData['school_logo']:'';
+      $school->logo_url = !isset($formData['logo_url']) && !is_null($formData['logo_url']) ? $formData['logo_url']:'';
       if($school->save()) {
         $responseArr = array('status'=>true, 'msg'=>$formData['school_name'].' updated', 'data'=>$school);
       } else {
@@ -146,7 +146,7 @@ $app->group('/schools', function () {
       $newSchool = new FrcPortal\School();
       $newSchool->school_name = $formData['school_name'];
       $newSchool->abv = $formData['abv'];
-      $newSchool->school_logo = !isset($formData['school_logo']) && !is_null($formData['school_logo']) ? $formData['school_logo']:'';
+      $newSchool->logo_url = !isset($formData['logo_url']) && !is_null($formData['logo_url']) ? $formData['logo_url']:'';
       if($newSchool->save()) {
         $limit = 10;
         $totalNum = FrcPortal\School::count();
