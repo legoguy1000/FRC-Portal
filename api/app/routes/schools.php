@@ -49,8 +49,119 @@ $app->group('/schools', function () {
     $response = $response->withJson($data);
     return $response;
   });
-  $this->post('', function ($request, $response, $args) {
+  $this->group('/{school_id:[a-z0-9]{13}}', function () {
+    $this->get('', function ($request, $response, $args) {
+      $school_id = $args['school_id'];
+      $school = FrcPortal\School::find($school_id);
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $school);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->put('', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
 
+      if(!isset($formData['school_name']) || $formData['school_name'] == '') {
+        $responseArr = array('status'=>false, 'msg'=>'School name cannot be blank!');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if(!isset($formData['abv']) || $formData['abv'] == '') {
+        $responseArr = array('status'=>false, 'msg'=>'Abbreviation cannot be blank!');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+
+      $school_id = $args['school_id'];
+      $school = FrcPortal\School::find($school_id);
+      if($school->school_name != $formData['school_name']) {
+        $school_count = FrcPortal\School::where('school_name', $formData['school_name'])->count();
+        if($school == 0) {
+          $school->school_name = $formData['school_name'];
+        } else {
+          $responseArr = array('status'=>false, 'msg'=>$formData['school_name'].' already exists');
+          $response = $response->withJson($responseArr,400);
+        }
+      }
+      $school->abv = $formData['abv'];
+      $school->school_logo = !isset($formData['school_logo']) && !is_null($formData['school_logo']) ? $formData['school_logo']:'';
+      if($school->save()) {
+        $responseArr = array('status'=>true, 'msg'=>$formData['school_name'].' updated', 'data'=>$school);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong');
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->delete('', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+      $school_id = $args['school_id'];
+      $school = FrcPortal\School::destroy($school_id);
+      if($season) {
+        $limit = 10;
+        $totalNum = FrcPortal\School::count();
+        $schools = FrcPortal\School::orderBy('year','DESC')->limit($limit)->get();
+        $data = array();
+        $data['results'] = $schools;
+        $data['total'] = $totalNum;
+        $data['maxPage'] = ceil($totalNum/$limit);
+        $responseArr = array('status'=>true, 'msg'=>'School Deleted', 'data' => $data);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $school);
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+  });
+  $this->post('', function ($request, $response, $args) {
+    $userId = FrcPortal\Auth::user()->user_id;
+    $formData = $request->getParsedBody();
+    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+    if(!FrcPortal\Auth::isAdmin()) {
+      return unauthorizedResponse($response);
+    }
+
+    if(!isset($formData['school_name']) || $formData['school_name'] == '') {
+      $responseArr = array('status'=>false, 'msg'=>'School name cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
+    if(!isset($formData['abv']) || $formData['abv'] == '') {
+      $responseArr = array('status'=>false, 'msg'=>'Abbreviation cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
+
+    $school = FrcPortal\School::where('school_name', $formData['school_name'])->count();
+    if($school == 0) {
+      $newSchool = new FrcPortal\School();
+      $newSchool->school_name = $formData['school_name'];
+      $newSchool->abv = $formData['abv'];
+      $newSchool->school_logo = !isset($formData['school_logo']) && !is_null($formData['school_logo']) ? $formData['school_logo']:'';
+      if($newSchool->save()) {
+        $limit = 10;
+        $totalNum = FrcPortal\School::count();
+        $schools = FrcPortal\School::orderBy('year','DESC')->limit($limit)->get();
+        $data = array();
+        $data['results'] = $schools;
+        $data['total'] = $totalNum;
+        $data['maxPage'] = ceil($totalNum/$limit);
+        $responseArr = array('status'=>true, 'msg'=>$formData['school_name'].' created', 'data'=>$data);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong');
+      }
+    } else {
+      $responseArr = array('status'=>false, 'msg'=>$formData['school_name'].' already exists');
+    }
     $response = $response->withJson($responseArr);
     return $response;
   });

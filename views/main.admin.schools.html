@@ -9,7 +9,7 @@
 			<md-button class="md-icon-button" ng-click="vm.getSchools()">
 				<md-icon>refresh</md-icon>
 			</md-button>
-			<md-button class="md-icon-button" ng-click="vm.newSeasonModal()">
+			<md-button class="md-icon-button" ng-click="vm.showSchoolModal($event, true)">
 				<md-icon>add</md-icon>
 			</md-button>
 		</div>
@@ -48,10 +48,10 @@
 					<td md-cell hide-xs hide-sm>{{school.abv}}</td>
 					<td md-cell hide-xs>{{school.student_count}}</td>
 					<td md-cell>
-						<md-button class="md-icon-button" ui-sref="main.admin.school({'school_id':school.school_id})" ng-click="admin.slideLeft()">
+						<md-button class="md-icon-button" ng-click="vm.showSchoolModal($event, false, school)">
 							<md-icon>open_in_new</md-icon>
 						</md-button>
-						<md-button class="md-icon-button" ng-click="" hide-xs>
+						<md-button class="md-icon-button" ng-click="vm.deleteSchool(school.school_id)" hide-xs>
 							<md-icon>delete_forever</md-icon>
 						</md-button>
 					</td>
