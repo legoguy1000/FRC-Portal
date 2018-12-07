@@ -70,7 +70,7 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 		});
 	};
 
-	function schoolModal(ev,new, schoolData) {
+	function schoolModal(ev, newSchool, schoolData) {
 		$mdDialog.show({
 			controller: newSchoolModalController,
 			controllerAs: 'vm',
@@ -81,8 +81,8 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 			fullscreen: true, // Only for -xs, -sm breakpoints.
 			locals: {
 				schoolInfo: {
-					new: new,
-					data: new ? {} : schoolData,
+					new: newSchool,
+					data: newSchool ? {} : schoolData,
 				},
 			}
 		})
