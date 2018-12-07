@@ -14,7 +14,7 @@ angular.module('FrcPortal')
 			});
 		},
 		updateSchool: function (formData) {
-			var schoool_id = formData.school_id != undefined && formData.school_id != null ? formData.school_id:'';
+			var school_id = formData.school_id != undefined && formData.school_id != null ? formData.school_id:'';
 			return $http.put('api/schools/'+school_id,formData)
 			.then(function(response) {
 				return response.data;
