@@ -18,6 +18,7 @@ class School extends Eloquent {
     'school_id', 'school_name', 'abv', 'logo_url'
   ];
 
+  protected $appends = ['school_count'];
   /**
   * The attributes that should be hidden for arrays.
   *
@@ -37,6 +38,10 @@ class School extends Eloquent {
       $instance->school_id = (string) uniqid();
     });
   }*/
+
+  public function getSchoolCountAttribute() {
+    return FrcPortal\User::where('school_id',$this->attributes['school_id'])->count();
+  }
 
   /**
    * Get the user.
