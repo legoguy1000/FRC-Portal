@@ -106,7 +106,7 @@ $app->group('/schools', function () {
       }
       $school_id = $args['school_id'];
       $school = FrcPortal\School::destroy($school_id);
-      if($season) {
+      if($school) {
         $limit = 10;
         $totalNum = FrcPortal\School::count();
         $schools = FrcPortal\School::orderBy('student_count','DESC')->limit($limit)->get();
