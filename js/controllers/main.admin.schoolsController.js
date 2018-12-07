@@ -87,10 +87,13 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 			}
 		})
 		.then(function(response) {
-			vm.seasons = response.data.results;
-			vm.total = response.data.total;
-			vm.maxPage = response.data.maxPage;
-			$log.info('asdf');
+			if(newSchool) {
+				vm.schools = response.data.results;
+				vm.total = response.data.total;
+				vm.maxPage = response.data.maxPage;
+			} else {
+				schoolData = response.data;
+			}
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
