@@ -9,7 +9,7 @@ function newSchoolModalController($log,$mdDialog,$scope,schoolInfo,schoolsServic
 		$mdDialog.cancel();
 	}
 
-	vm.new = schoolInfo.new && schoolInfo.data.school_id != undefined;
+	vm.new = schoolInfo.new && schoolInfo.data.school_id == undefined;
 	vm.data = vm.new ? {} : schoolInfo.data;
 
 	vm.addSchool = function() {
