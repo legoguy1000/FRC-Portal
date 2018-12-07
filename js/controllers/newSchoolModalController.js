@@ -27,7 +27,7 @@ function newSchoolModalController($log,$mdDialog,$scope,schoolInfo,schoolsServic
 	}
 
 	vm.updateSchool = function() {
-		schoolsService.addSchool(vm.data).then(function(response) {
+		schoolsService.updateSchool(vm.data).then(function(response) {
 			if(response.status) {
 				$mdDialog.hide(response.status);
 			}
