@@ -94,14 +94,7 @@ Clone Git Repo
 ```
 git clone https://github.com/legoguy1000/FRC-Portal.git
 ```
-Create a "secured" folder in "/api/app"
-```
-mkdir api/app/secured/
-```
-Copy config.example.ini to "secured"
-```
-cp config.example.ini secured/config.ini
-```
+
 Edit config.ini file with database credentials (/api/app/secured/)
 Run initalInstall.php script located in (/api/app/)
 ```
