@@ -6,7 +6,7 @@ Version 2.13.0
 * Add/edit/delete school
 * Fixed installer
 * fix various typos
-
+* Remove customized items from <head>
 
 Version 2.12.0
 * Simplified some code

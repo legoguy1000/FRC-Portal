@@ -32,6 +32,9 @@ if (!file_exists('secured')) {
 }
 write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
 
+if (!file_exists('favicons')) {
+  mkdir('../favicons');
+}
 require_once(__DIR__.'/includes.php');
 require_once('database/_CreateDatabase.php');
 //create Admin Account
