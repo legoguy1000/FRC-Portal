@@ -729,12 +729,14 @@ $app->group('/events', function () {
       $reg = $registrationBool ? 'registered':'unregistered';
       $slackMsg = 'You successfully '.$reg.' for '.$event->name.'.';
       $slackMsgPoc = $user->full_name.' '.$reg.' for '.$event->name.'.';
+      $msg = $slackMsg;
       if($user_id != $loggedInUser) {
         $slackMsg = $userFullName.' '.$reg.'  you for '.$event->name.'.';
         $slackMsgPoc = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name.'.';
+        $msg = 'You successfully '.$reg.' '.$user->full_name.' for '.$event->name.'.';
       }
-     //Send notifications
-     $host = getSettingsProp('env_url');
+      //Send notifications
+      $host = getSettingsProp('env_url');
       $msgData = array(
         'slack' => array(
           'title' => 'Event Registration',
