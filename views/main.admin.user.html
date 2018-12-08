@@ -30,11 +30,11 @@
 				<input ng-model="vm.userInfo.team_email" type="email" ng-pattern="main.configItems.team_domain != '' ? '[a-z0-9._%+-]+@{{main.configItems.team_domain}}' : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$'">
 			</md-input-container>
 			<div layout="row">
-				<md-input-container>
+				<md-input-container flex>
 					<label>Phone</label>
 					<input ng-model="vm.userInfo.phone" phone-input type='text' required/>
 				</md-input-container>
-				<md-input-container>
+				<md-input-container flex>
 					<label>Slack User</label>
 					<input ng-model="vm.userInfo.slack_id" type='text' readonly disabled/>
 				</md-input-container>
