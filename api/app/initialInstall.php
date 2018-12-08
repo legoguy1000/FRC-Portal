@@ -10,7 +10,7 @@ shell_exec("composer dump-autoload");
 $iniData = array();
 $question = 'This file will install and configure FRC Portal v'.VERSION.'.  Type "yes" to continue: ';
 $line = clinput($question, $required = true);
-if($line != 'yes'){
+if($line != 'yes' || $line != 'y'){
     echo "Aborting!\n";
     exit;
 }
