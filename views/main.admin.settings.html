@@ -218,19 +218,27 @@
 				<label>Google Calendar ID</label>
 				<input ng-model="vm.settings.other.google_calendar_id">
 			</md-input-container>
-			<md-input-container flex>
-				<label>Membership Form Name</label>
-				<input ng-model="vm.settings.other.membership_form_name">
-				<span class="hint">###YEAR### is used a variable.  Default is "###YEAR### Membership (Responses)"</span>
-			</md-input-container>
-			<md-input-container flex>
-				<label>Google Team Drive ID</label>
-				<input ng-model="vm.settings.other.google_drive_id">
-			</md-input-container>
+			<div layout="column" layout-gt-sm="row">
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Membership Form Name</label>
+						<input ng-model="vm.settings.other.membership_form_name">
+						<span class="hint">###YEAR### & ###YEAR-1### can be used as variables.  Default is "###YEAR### Membership (Responses)"</span>
+					</md-input-container>
+				</div>
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Google Team Drive ID</label>
+						<input ng-model="vm.settings.other.google_drive_id">
+						<span class="hint">Optional if Google Form responses are stored within a Google Team Drive</span>
+					</md-input-container>
+				</div>
+			</div>
 			<div flex layout="row" layout-align="start center">
 				<md-input-container flex>
 					<label>Google Service Account</label>
 					<input ng-model="vm.serviceAccountCredentials.client_email" readonly disabled>
+					<span class="hint">Files must be shared with service account either directly of via folder AND/OR be a member of the Google Team Drive (if applicable)</span>
 				</md-input-container>
 				<md-button class="md-icon-button" ngf-select="vm.uploadSAFile($file)" ngf-accept="'.json'" ngf-max-size="2MB" ngf-model-invalid="errorFile">
 					<md-tooltip md-direction="top">Upload New Service Account File</md-tooltip>
