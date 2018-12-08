@@ -7,6 +7,7 @@ Version 2.13.0
 * Fixed installer
 * fix various typos
 * Remove customized items from <head>
+* Update composer dependencies
 
 Version 2.12.0
 * Simplified some code
@@ -86,8 +87,7 @@ Version 2.7.0
 ### Prerequisites
 * PHP 7.0 or greater
 * MySQL
-* Composer
-* 
+*
 
 ### Installing
 Clone Git Repo
