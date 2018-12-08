@@ -4,7 +4,8 @@ This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We ne
 
 Version 2.13.0
 * Add/edit/delete school
-*
+* Fixed installer
+* fix various typos
 
 
 Version 2.12.0

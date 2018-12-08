@@ -254,7 +254,7 @@ class User extends Eloquent {
       $this->signin_pin = hash('SHA256', $pin);
       if($this->save()) {
         //$user->load('school');
-        $responseArr = array('status'=>true, 'msg'=>'PIN has been changed', 'data' => $user);
+        $responseArr = array('status'=>true, 'msg'=>'PIN has been changed', 'data' => $this);
       }
     } else {
       $responseArr['msg'] = 'PIN must be changed to a different number';
