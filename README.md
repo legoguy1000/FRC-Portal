@@ -8,6 +8,7 @@ Version 2.13.0
 * fix various typos
 * Remove customized items from <head>
 * Update composer dependencies
+* Remove last traces of hardcoded "Team 2363"
 
 Version 2.12.0
 * Simplified some code
