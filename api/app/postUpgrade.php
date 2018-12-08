@@ -145,6 +145,7 @@ if($version >= '2.12.0') {
   }
   if(Capsule::schema()->hasTable('settings')) {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'google_form_url'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'membership_form_name'], ['value' => '']);
   }
 }
 

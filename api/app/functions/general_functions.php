@@ -114,7 +114,7 @@ function getServiceAccountFile() {
 
 function getMembershipFormName() {
 	$mfn = getSettingsProp('membership_form_name');
-	if(is_null($mfn)) {
+	if(is_null($mfn) || $mfn == '') {
 		$mfn = '###YEAR### Membership (Responses)';
 	}
 	return $mfn;
