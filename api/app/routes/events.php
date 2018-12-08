@@ -65,12 +65,12 @@ $app->group('/events', function () {
     $calendar = getSettingsProp('google_calendar_id');
     $api_key = getSettingsProp('google_api_key');
     if(!isset($api_key) || $api_key == '') {
-      $responseArr = array('status'=>false, 'msg'=>'Google API Key cannot be blank.  Please got to Site Settings &#8594; Other Settings to set the API Key.');
+      $responseArr = array('status'=>false, 'msg'=>'Google API Key cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the API Key.');
       $response = $response->withJson($responseArr);
       return $response;
     }
     if(!isset($calendar) || $calendar == '') {
-      $responseArr = array('status'=>false, 'msg'=>'Google Calendar ID cannot be blank.  Please got to Site Settings &#8594; Other Settings to set the Google Calendar ID.');
+      $responseArr = array('status'=>false, 'msg'=>'Google Calendar ID cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the Google Calendar ID.');
       $response = $response->withJson($responseArr);
       return $response;
     }
