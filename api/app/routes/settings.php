@@ -137,9 +137,7 @@ $app->group('/settings', function () {
       //Do update or create
       foreach($formData as $setting=>$value) {
         $val = formatSettings($setting, $value);
-        $set = FrcPortal\Setting::updateOrCreate(
-            ['section' => $section, 'setting' => $setting], ['value' => $val]
-        );
+        $set = FrcPortal\Setting::where('section', $section)->where('setting', $setting)->update(['value' => $val]);
       }
       $responseArr['status'] = true;
       $responseArr['msg'] = ucwords($section).' Settings Updated';
