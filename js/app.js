@@ -482,7 +482,7 @@ angular.module('FrcPortal', [
 		var accentPalette = createAjsPaletteJsonObject(computeColors(configItems.team_color_secondary));
 		$mdThemingProvider.definePalette('secondary', accentPalette);
 	} else {
-		var accentPalette = createAjsPaletteJsonObject(omputeColors('#fdb813'));
+		var accentPalette = createAjsPaletteJsonObject(computeColors('#fdb813'));
 		$mdThemingProvider.definePalette('primary', accentPalette);
 	}
 	//CSS
