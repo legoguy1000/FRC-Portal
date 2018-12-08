@@ -2,18 +2,17 @@
 $root = __DIR__;
 require_once($root.'/functions/general_functions.php');
 require_once($root.'/version.php');
-shell_exec("composer install");
-shell_exec("composer dump-autoload");
-//use Illuminate\Database\Capsule\Manager as Capsule;
-//$version = VERSION;
 
 $iniData = array();
 $question = 'This file will install and configure FRC Portal v'.VERSION.'.  Type "yes" to continue: ';
 $line = clinput($question, $required = true);
-if($line != 'yes' || $line != 'y'){
+if($line != 'yes' && $line != 'y'){
     echo "Aborting!\n";
     exit;
 }
+shell_exec("composer install");
+shell_exec("composer dump-autoload");
+
 $db_data = array();
 $question = "Please input the MYSQL DB server (hostname or ip): ";
 $db_data['db_host'] = clinput($question, $required = true);
