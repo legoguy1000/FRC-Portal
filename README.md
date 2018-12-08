@@ -94,8 +94,6 @@ Clone Git Repo
 ```
 git clone https://github.com/legoguy1000/FRC-Portal.git
 ```
-
-Edit config.ini file with database credentials (/api/app/secured/)
 Run initalInstall.php script located in (/api/app/)
 ```
 php initalInstall.php
