@@ -87,7 +87,7 @@ Version 2.7.0
 * PHP 7.0 or greater
 * MySQL
 * Composer
-*
+* 
 
 ### Installing
 Clone Git Repo
@@ -98,6 +98,8 @@ Run initalInstall.php script located in (/api/app/)
 ```
 php initalInstall.php
 ```
+Go to https://realfavicongenerator.net/ and generate your favincons.  place files in /favicons/.
+
 To upgrade an existing install pull the latest version from git and run the postUpgrade.php script
 ```
 git pull
