@@ -64,6 +64,14 @@ $app->group('/events', function () {
   $this->get('/searchGoogleCalendar', function ($request, $response, $args) {
     $calendar = getSettingsProp('google_calendar_id');
     $api_key = getSettingsProp('google_api_key');
+    if(!isset($api_key) || $api_key == '') {
+      $responseArr = array('status'=>false, 'msg'=>'Google API Key cannot be blank.  Please got to Site Settings -> Other Settings to set the API Key.');
+      $response = $response->withJson($responseArr);
+    }
+    if(!isset($calendar) || $calendar == '') {
+      $responseArr = array('status'=>false, 'msg'=>'Google Calendar ID cannot be blank.  Please got to Site Settings -> Other Settings to set the Google Calendar ID.');
+      $response = $response->withJson($responseArr);
+    }
     $optParams = array();
     if($request->getParam('q') != null && $request->getParam('q') != '' && $request->getParam('q') != 'null' && $request->getParam('q') != 'undefined') {
     	$q = trim($request->getParam('q'));
