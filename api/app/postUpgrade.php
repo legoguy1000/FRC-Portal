@@ -131,7 +131,7 @@ if($version >= '2.11.2') {
 /**
 * 2.13.0
 **/
-if($version >= '2.11.2') {
+if($version >= '2.12.0') {
   if(Capsule::schema()->hasTable('meeting_hours')) {
     if(!Capsule::schema()->hasColumn('meeting_hours','created_at') && !Capsule::schema()->hasColumn('meeting_hours','updated_at')) {
       try {
@@ -142,6 +142,9 @@ if($version >= '2.11.2') {
         //Exception will be logged in Monolog
       }
     }
+  }
+  if(Capsule::schema()->hasTable('settings')) {
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'google_form_url'], ['value' => '']);
   }
 }
 

@@ -99,6 +99,7 @@ $app->get('/config', function ($request, $response, $args) {
     'notification_email',
     'env_url',
     'require_team_email',
+    'google_form_url',
   );
 //  $settings = FrcPortal\Setting::where('public',true)->get();
   $settings = FrcPortal\Setting::whereIn('setting', $configArr)->get();
