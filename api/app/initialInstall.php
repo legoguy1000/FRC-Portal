@@ -49,8 +49,8 @@ $user = FrcPortal\User::create([
   'user_type' => 'Mentor',
   'admin' => true,
 ]);
-echo 'Admin Account Created:\n';
-echo 'Email: '.$email.'\n';
-echo 'Password: '.$password.'\n\n';
+echo 'Admin Account Created:' . PHP_EOL;
+echo 'Email: '.$email . PHP_EOL;
+echo 'Password: '.$password . PHP_EOL . PHP_EOL;
 
 ?>
