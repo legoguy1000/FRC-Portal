@@ -1,5 +1,9 @@
 <?php
-require_once(__DIR__.'/includes.php');
+$root = __DIR__;
+require_once($root.'/functions/general_functions.php');
+require_once($root.'/version.php');
+shell_exec("composer install");
+shell_exec("composer dump-autoload");
 //use Illuminate\Database\Capsule\Manager as Capsule;
 //$version = VERSION;
 
@@ -29,8 +33,9 @@ if (!file_exists('secured')) {
 }
 write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
 
-shell_exec("composer install");
-shell_exec("composer dump-autoload");
+
+
+require_once(__DIR__.'/includes.php');
 require_once('database/_CreateDatabase.php');
 
 //create Admin Account

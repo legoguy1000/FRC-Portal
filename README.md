@@ -2,6 +2,11 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
+Version 2.13.0
+* Add/edit/delete school
+*
+
+
 Version 2.12.0
 * Simplified some code
 * Upgraded Facebook API to 3.1
@@ -90,7 +95,7 @@ git clone https://github.com/legoguy1000/FRC-Portal.git
 ```
 Create a "secured" folder in "/api/app"
 ```
-mkdir secured/
+mkdir api/app/secured/
 ```
 Copy config.example.ini to "secured"
 ```
