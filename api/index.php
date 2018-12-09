@@ -100,6 +100,7 @@ $app->get('/config', function ($request, $response, $args) {
     'env_url',
     'require_team_email',
     'google_form_url',
+    'google_analytics_id',
   );
 //  $settings = FrcPortal\Setting::where('public',true)->get();
   $settings = FrcPortal\Setting::whereIn('setting', $configArr)->get();

@@ -99,7 +99,7 @@ Run initalInstall.php script located in (/api/app/)
 ```
 php initalInstall.php
 ```
-Go to https://realfavicongenerator.net/ and generate your favincons.  place files in /favicons/.
+Go to https://realfavicongenerator.net/ and generate your favicons.  place files in /favicons/.
 
 To upgrade an existing install pull the latest version from git and run the postUpgrade.php script
 ```

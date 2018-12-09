@@ -254,6 +254,11 @@
 					 ng-model="vm.school_month_end_full">
 				</input>
 			</md-input-container>
+			<md-input-container flex>
+				<label>Google Analytics ID</label>
+				<input ng-model="vm.settings.other.google_analytics_id">
+				<span class="hint">Optional if you want to use Google Analytics</span>
+			</md-input-container>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'cronjob'" class="layout-padding">
 			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-changeUserStatus']" class="md-warn">

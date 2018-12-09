@@ -582,9 +582,12 @@ angular.module('FrcPortal', [
 		}
 	});
 })
-.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log, $location, $window, $ocLazyLoad) {
+.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log, $location, $window, $ocLazyLoad, configItems) {
 	// initialise google analytics
-  $window.ga('create', 'UA-114656092-1', 'auto');
+	if(configItems.google_analytics_id != '' && configItems.google_analytics_id != undefined) {
+		//$window.ga('create', 'UA-114656092-1', 'auto');
+  	$window.ga('create', configItems.google_analytics_id, 'auto');
+	}
 
   // track pageview on state change
 	$transitions.onSuccess({}, function(transition) {
