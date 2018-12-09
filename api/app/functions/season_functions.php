@@ -154,12 +154,12 @@ function itterateMembershipFormData($data = array(), $season = null) {
 			$email = $userInfo[$email_column];
 			$fname = $userInfo[$fname_column];
 			$lname = $userInfo[$lname_column];
-			$form_user_type = $userInfo[$userType_column];
+			$form_user_type = isset($userInfo[$userType_column]) ? $userInfo[$userType_column]: '';
 			$user_type = $form_user_type == 'Adult' ? 'Mentor' : $form_user_type;
 			//	$birthday = $userInfo['birthday'];
-			$grad_year = $userInfo[$grad_column];
-			$school = $userInfo[$school_column];
-			$student_id = $userInfo[$pin_column];
+			$grad_year = isset($userInfo[$grad_column]) ? $userInfo[$grad_column]: '';
+			$school = isset($userInfo[$school_column]) ? $userInfo[$school_column]: '';
+			$student_id = isset($userInfo[$pin_column]) ? $userInfo[$pin_column]: '';
 			$phone = isset($userInfo[$phone_column]) ? $userInfo[$phone_column] : '';
 			$clean_phone = preg_replace('/[^0-9]/s', '', $phone);
 
