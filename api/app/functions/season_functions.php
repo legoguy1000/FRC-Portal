@@ -81,39 +81,49 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 	$data = false;
 	if(!is_null($spreadsheetId)) {
 		$data = array();
-		$client = new Google_Client();
-		$creds = getServiceAccountFile();
-		if($creds['status'] != false) {
-			$client->setAuthConfigFile($creds['data']['path']);
-			$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
-			$service = new Google_Service_Sheets($client);
-			// The A1 notation of the values to retrieve.
-			$range = 'Form Responses 1';
-			if(!is_null($season) && !$season instanceof FrcPortal\Season && is_string($season)) {
-				$season = FrcPortal\Season::find($season);
-			}
-			$sheet = $season->membership_form_sheet;
-			if(!is_null($sheet) && $sheet != '') {
-				$range = $sheet;
-			}
-
-			$response = $service->spreadsheets_values->get($spreadsheetId, $range);
-			$values = $response->getValues();
-			if (count($values) != 0) {
-				$headers = array_map('strtolower', array_shift($values));
-				foreach ($values as $row) {
-					$temp = array();
-					for($i=0; $i<count($headers);$i++) {
-						$key = $headers[$i];
-						$val = isset($row[$i]) ? $row[$i] : '';
-						$temp[$key] = $val;
-					}
-					$data[] = $temp;
+		try {
+			$client = new Google_Client();
+			$creds = getServiceAccountFile();
+			if($creds['status'] != false) {
+				$client->setAuthConfigFile($creds['data']['path']);
+				$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
+				$service = new Google_Service_Sheets($client);
+				// The A1 notation of the values to retrieve.
+				$range = 'Form Responses 1';
+				if(!is_null($season) && !$season instanceof FrcPortal\Season && is_string($season)) {
+					$season = FrcPortal\Season::find($season);
 				}
+				$sheet = $season->membership_form_sheet;
+				if(!is_null($sheet) && $sheet != '') {
+					$range = $sheet;
+				}
+
+				$response = $service->spreadsheets_values->get($spreadsheetId, $range);
+				$values = $response->getValues();
+				if (count($values) != 0) {
+					$headers = array_map('strtolower', array_shift($values));
+					foreach ($values as $row) {
+						$temp = array();
+						for($i=0; $i<count($headers);$i++) {
+							$key = $headers[$i];
+							$val = isset($row[$i]) ? $row[$i] : '';
+							$temp[$key] = $val;
+						}
+						$data[] = $temp;
+					}
+				}
+			} else {
+				//Credentials file doesn't work
+				$data = false;
 			}
-		} else {
-			//Credentials file doesn't work
-			$data = false;
+		} catch (Exception $e) {
+				$error = json_decode($e->getMessage(), true);
+				//if($error['error']['code'] == 404) {
+				//	$result['msg'] = 'Google Calendar event not found';
+			//} else {
+					$result['msg'] = 'Something went wrong searching Google Drive';
+					$result['error'] = $error;
+			//	}
 		}
 	}
 	return $data;
