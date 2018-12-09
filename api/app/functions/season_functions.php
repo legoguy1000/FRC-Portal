@@ -237,7 +237,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 
 function updateSeasonRegistrationFromForm($season_id) {
 	$data = false;
-	$return = array(
+	$result = array(
 		'status' => false,
 		'msg' => '',
 		'data' => null
