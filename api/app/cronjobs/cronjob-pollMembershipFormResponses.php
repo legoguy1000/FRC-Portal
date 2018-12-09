@@ -30,8 +30,8 @@ if(!is_null($season)) {
 	}
 }
 $data = pollMembershipForm($spreadsheetId, $season);
-if($data != false && !empty($data)) {
-	$return = itterateMembershipFormData($data, $season);
+if($data['status'] != false && !empty($data['data'])) {
+	$return = itterateMembershipFormData($data['data'], $season);
 }
 
 

@@ -78,7 +78,11 @@ function updateSeasonMembershipForm($season_id) {
 }
 
 function pollMembershipForm($spreadsheetId, $season = null) {
-	$data = false;
+	$result = array(
+		'status' => false,
+		'msg' => '',
+		'data' => null
+	);
 	if(!is_null($spreadsheetId)) {
 		$data = array();
 		try {
@@ -111,22 +115,19 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 						}
 						$data[] = $temp;
 					}
+					$result['msg'] = 'Data pulled from Google Spreadsheet';
+					$result['data'] = $data;
 				}
 			} else {
-				//Credentials file doesn't work
-				$data = false;
+				$result['msg'] = 'Error with reading credentials';
 			}
 		} catch (Exception $e) {
 				$error = json_decode($e->getMessage(), true);
-				//if($error['error']['code'] == 404) {
-				//	$result['msg'] = 'Google Calendar event not found';
-			//} else {
-					$result['msg'] = 'Something went wrong searching Google Drive';
-					$result['error'] = $error;
-			//	}
+				$result['msg'] = 'Something went wrong reading the Google Spreadsheet';
+				$result['error'] = $error;
 		}
 	}
-	return $data;
+	return $result;
 }
 
 function itterateMembershipFormData($data = array(), $season = null) {
@@ -242,9 +243,9 @@ function updateSeasonRegistrationFromForm($season_id) {
 		if(!is_null($season)) {
 			$spreadsheetId = $season->join_spreadsheet != '' ? $season->join_spreadsheet:null;
 			if(!is_null($spreadsheetId)) {
-				$data = pollMembershipForm($spreadsheetId, $season);
-				if($data != false && !empty($data)) {
-					$return = itterateMembershipFormData($data, $season);
+				$return = $data = pollMembershipForm($spreadsheetId, $season);
+				if($data['status'] != false && !empty($data['data'])) {
+					$return = itterateMembershipFormData($data['data'], $season);
 				}
 			}
 		}
