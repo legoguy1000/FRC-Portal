@@ -122,9 +122,10 @@ $app->group('/seasons', function () {
       }
       $season_id = $args['season_id'];
 
-      $poll = updateSeasonRegistrationFromForm($season_id);
-      $season = getUsersAnnualRequirements($season_id);
-      $responseArr = array('status'=>true, 'msg'=>'Latest data dowwnloaded from Google form', 'data' => $season);
+      $responseArr = updateSeasonRegistrationFromForm($season_id);
+      if($responseArr['status'] == true) {
+        $responseArr['data'] = getUsersAnnualRequirements($season_id);
+      }
       $response = $response->withJson($responseArr);
       return $response;
     });
