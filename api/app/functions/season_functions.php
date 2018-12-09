@@ -14,6 +14,7 @@ function getSeasonMembershipForm($year) {
 			$service = new Google_Service_Drive($client);
 			$mfn = getMembershipFormName();
 			$mfn = str_replace('###YEAR###',$year,$mfn);
+			$mfn = str_replace('###YEAR-1###',$year-1,$mfn);
 			$query = buildGoogleDriveQuery($mfn);
 			$parameters = array(
 				'corpora' => 'user',
@@ -23,7 +24,7 @@ function getSeasonMembershipForm($year) {
 				'pageSize' => '1'
 			);
 			$teamDrive = getSettingsProp('google_drive_id');
-			if(!is_null($teamDrive)) {
+			if(!is_null($teamDrive) && $teamDrive != '') {
 				$parameters['corpora'] = 'teamDrive';
 				$parameters['teamDriveId'] = $teamDrive;
 				$parameters['includeTeamDriveItems'] = 'true';
@@ -250,7 +251,7 @@ function updateSeasonRegistrationFromForm($season_id) {
 				$result = $data = pollMembershipForm($spreadsheetId, $season);
 				if($data['status'] != false && !empty($data['data'])) {
 					$result['status'] = itterateMembershipFormData($data['data'], $season);
-					$result['msg'] = 'Latest data dowwnloaded from Google form';
+					$result['msg'] = 'Latest data downloaded from Google form';
 				}
 			}
 		}
