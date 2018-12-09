@@ -233,14 +233,14 @@ $app->group('/seasons', function () {
       $newSeason->end_date = $end_date->format('Y-m-d'." 23:59:59");
       $newSeason->join_spreadsheet = $spreadsheetId;
       $newSeason->membership_form_map = json_encode(array(
-        "email" => "email address",
-        "fname" => "first name",
-        "lname" => "last name",
-        "user_type" => "member type",
-        "grad" => "year of graduation",
-        "school" => "school",
-        "pin_number" => "student id",
-        "phone" => "phone"
+        'email' => 'email address',
+        'fname' => 'first name',
+        'lname' => 'last name',
+        'user_type' => 'member type',
+        'grad' => 'year of graduation',
+        'school' => 'school',
+        'pin_number' => 'student id',
+        'phone' => 'phone'
       ));
       $newSeason->membership_form_sheet = 'Form Responses 1';
       $newSeason->game_logo = !isset($formData['game_logo']) && !is_null($formData['game_logo']) ? $formData['game_logo']:'';
