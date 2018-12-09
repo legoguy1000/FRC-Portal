@@ -237,20 +237,25 @@ function itterateMembershipFormData($data = array(), $season = null) {
 
 function updateSeasonRegistrationFromForm($season_id) {
 	$data = false;
-	$return = false;
+	$return = array(
+		'status' => false,
+		'msg' => '',
+		'data' => null
+	);
 	if(!is_null($season_id)) {
 		$season = FrcPortal\Season::find($season_id);
 		if(!is_null($season)) {
 			$spreadsheetId = $season->join_spreadsheet != '' ? $season->join_spreadsheet:null;
 			if(!is_null($spreadsheetId)) {
-				$return = $data = pollMembershipForm($spreadsheetId, $season);
+				$result = $data = pollMembershipForm($spreadsheetId, $season);
 				if($data['status'] != false && !empty($data['data'])) {
-					$return = itterateMembershipFormData($data['data'], $season);
+					$result['status'] = itterateMembershipFormData($data['data'], $season);
+					$result['msg'] = 'Latest data dowwnloaded from Google form';
 				}
 			}
 		}
 	}
-	return $return;
+	return $result;
 }
 
 function createSchoolAbv($name = null) {
