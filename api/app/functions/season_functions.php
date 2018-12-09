@@ -118,6 +118,7 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 					}
 					$result['msg'] = 'Data pulled from Google Spreadsheet';
 					$result['data'] = $data;
+					$result['status'] = true;
 				}
 			} else {
 				$result['msg'] = 'Error with reading credentials';
@@ -249,7 +250,7 @@ function updateSeasonRegistrationFromForm($season_id) {
 			$spreadsheetId = $season->join_spreadsheet != '' ? $season->join_spreadsheet:null;
 			if(!is_null($spreadsheetId)) {
 				$result = $data = pollMembershipForm($spreadsheetId, $season);
-				if($data['status'] != false && !empty($data['data'])) {
+				if($data['status'] == true && !empty($data['data'])) {
 					$result['status'] = itterateMembershipFormData($data['data'], $season);
 					$result['msg'] = 'Latest data downloaded from Google form';
 				}
