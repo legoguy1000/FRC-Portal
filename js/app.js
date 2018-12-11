@@ -527,6 +527,9 @@ angular.module('FrcPortal', [
 				if(res.data.token) {
 					$auth.setToken(res.data.token);
 				}
+				if(res.data.status && res.data.msg != '') {
+					console.log(res.data.msg);
+				}
 				return res;
 			},
 			responseError: function(rejection) {
