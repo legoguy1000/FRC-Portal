@@ -530,6 +530,9 @@ angular.module('FrcPortal', [
 				if(!res.data.status && res.data.msg != '') {
 					console.log(res.data.msg);
 				}
+				if(!res.data.status && res.data.error != '') {
+					console.log(res.data.error);
+				}
 				return res;
 			},
 			responseError: function(rejection) {
