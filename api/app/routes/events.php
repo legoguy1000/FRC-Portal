@@ -543,13 +543,13 @@ $app->group('/events', function () {
       $event_id = $args['event_id'];
       try {
 				$event = syncGoogleCalendarEvent($event_id);
-        $result = array(
+        $responseArr = array(
       		'status' => true,
       		'msg' => $event->name.' synced with Google Calendar',
       		'data' => $event
       	);
 			} catch (Exception $e) {
-        $result = array(
+        $responseArr = array(
       		'status' => false,
       		'msg' => handleExceptionMessage($e),
       		'data' => null
