@@ -96,10 +96,16 @@ function filterArrayData ($inputArray, $filter) {
 function getServiceAccountFile() {
 	$file = __DIR__.'/../secured/service_account_credentials.json';
 	if(!file_exists($file)) {
-		throw new Exception("Credentials file does nto exist");
+		throw new Exception("Credentials file does not exist");
 	}
-	$json = json_decode(file_get_contents($file),true);
-	return array_intersect_key($json,array('client_email'=>''));
+	$valid = json_validate(file_get_contents($file));
+	if(!$valid['status']) {
+		throw new Exception("Credentials file is not valid");
+	}
+	return array(
+		'contents' => $valid['data'],
+		'path' => $file
+	);
 }
 
 function getMembershipFormName() {
