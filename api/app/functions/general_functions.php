@@ -110,12 +110,11 @@ function getServiceAccountFile() {
 
 function handleExceptionMessage($e) {
 	error_log($e);
-	$message = $e->getMessage();
-	if(is_array($message)) {
-		$data = json_decode($message, true);
+	$data = json_decode($e->getMessage(), true);
+	if(json_last_error() == JSON_ERROR_NONE) {
 		return $data['error']['message'];
-	} else if(is_string($message)) {
-		return $message;
+	} else {
+		return $e->getMessage();
 	}
 	return 'Something went wrong';
 }

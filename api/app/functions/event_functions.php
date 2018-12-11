@@ -1,5 +1,5 @@
 <?php
-function syncGoogleCalendarEvent($event_id) {
+	function syncGoogleCalendarEvent($event_id) {
 	$calendar = getSettingsProp('google_calendar_id');
 	$api_key = getSettingsProp('google_api_key');
 	$event = FrcPortal\Event::with('poc')->find($event_id); //, 'event_rooms.users', 'event_cars', 'event_time_slots.registrations.user'
@@ -34,11 +34,15 @@ function getGoogleCalendarEvent($google_cal_id) {
 	if(!isset($google_cal_id) || $google_cal_id == '') {
 		throw new Exception('Google Calendar Event ID not found');
 	}
-	$client = new Google_Client();
-	$client->setDeveloperKey($api_key);
-	$service = new Google_Service_Calendar($client);
-	$gevent = $service->events->get($calendar, $google_cal_id);
-	return formatGoogleCalendarEventData($gevent);
+	try {
+		$client = new Google_Client();
+		$client->setDeveloperKey($api_key);
+		$service = new Google_Service_Calendar($client);
+		$gevent = $service->events->get($calendar, $google_cal_id);
+		return formatGoogleCalendarEventData($gevent);
+	} catch (Exception $e) {
+		throw $e;
+	}
 }
 
 function getEventCarList($event_id) {
