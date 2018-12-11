@@ -9,7 +9,7 @@ function getSeasonMembershipForm($year) {
 		try {
 			$client = new Google_Client();
 			$creds = getServiceAccountFile();
-			$client->setAuthConfigFile($creds['data']['path']);
+			$client->setAuthConfigFile($creds['path']);
 			$client->setScopes(['https://www.googleapis.com/auth/drive.readonly']);
 			$service = new Google_Service_Drive($client);
 			$mfn = getMembershipFormName();
@@ -85,7 +85,7 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 		try {
 			$client = new Google_Client();
 			$creds = getServiceAccountFile();
-			$client->setAuthConfigFile($creds['data']['path']);
+			$client->setAuthConfigFile($creds['path']);
 			$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
 			$service = new Google_Service_Sheets($client);
 			// The A1 notation of the values to retrieve.
