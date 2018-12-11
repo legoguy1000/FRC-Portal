@@ -527,10 +527,10 @@ angular.module('FrcPortal', [
 				if(res.data.token) {
 					$auth.setToken(res.data.token);
 				}
-				if(!res.data.status && res.data.msg != '') {
+				if(res.data.status != undefined && res.data.status == false && res.data.msg != '') {
 					console.log(res.data.msg);
 				}
-				if(!res.data.status && res.data.error != '') {
+				if(res.data.status != undefined && res.data.status == false && res.data.error != '') {
 					console.log(res.data.error);
 				}
 				return res;
