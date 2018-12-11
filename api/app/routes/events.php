@@ -544,7 +544,7 @@ $app->group('/events', function () {
       try {
 				$event = syncGoogleCalendarEvent($event_id);
         $result = array(
-      		'status' => false,
+      		'status' => true,
       		'msg' => $event->name.' synced with Google Calendar',
       		'data' => $event
       	);

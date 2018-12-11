@@ -120,7 +120,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.syncGoogleCalEvent = function () {
 		vm.loading = true;
 		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
-			vm.event = response.data;
+			if(response.status) {
+				vm.event = response.data;
+			}
 			vm.loading = false;
 			$mdToast.show(
 	      $mdToast.simple()
