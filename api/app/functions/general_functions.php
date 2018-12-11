@@ -95,21 +95,11 @@ function filterArrayData ($inputArray, $filter) {
 
 function getServiceAccountFile() {
 	$file = __DIR__.'/../secured/service_account_credentials.json';
-	$result = array(
-		'status' => false,
-		'msg' => 'File Doesn\'t Exist',
-		'data' => array(
-			'path' => $file,
-			'contents' => null
-		)
-	);
-	if(file_exists($file)) {
-		$result['status'] = true;
-		$result['msg'] = 'File Present';
-		$json = json_decode(file_get_contents($file),true);
-		$result['data']['contents'] = array_intersect_key($json,array('client_email'=>''));
+	if(!file_exists($file)) {
+		throw new Exception("Credentials file does nto exist");
 	}
-	return $result;
+	$json = json_decode(file_get_contents($file),true);
+	return array_intersect_key($json,array('client_email'=>''));
 }
 
 function getMembershipFormName() {
