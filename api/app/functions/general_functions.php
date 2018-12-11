@@ -108,6 +108,16 @@ function getServiceAccountFile() {
 	);
 }
 
+function handleExceptionMessage($message) {
+	if(is_array($message)) {
+		$data = json_decode($message, true);
+		return $data['error']['message'];
+	} else if(is_string($message)) {
+		return	$message;
+	}
+	return 'Something went wrong';
+}
+
 function getMembershipFormName() {
 	$mfn = getSettingsProp('membership_form_name');
 	if(is_null($mfn) || $mfn == '') {
