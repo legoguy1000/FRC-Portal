@@ -110,10 +110,9 @@ class Event extends Eloquent {
   public function getRegistrationDeadlineGoogleEventAttribute() {
     $return = null;
     if(!is_null($this->attributes['registration_deadline_gcalid'])) {
-      $event = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
-      if($event['status']) {
-        $return = $event['data'];
-      }
+      try {
+        $return = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
+      } catch (Exception $e) {}
     }
     return $return;
   }

@@ -2,79 +2,43 @@
 function syncGoogleCalendarEvent($event_id) {
 	$calendar = getSettingsProp('google_calendar_id');
 	$api_key = getSettingsProp('google_api_key');
-	$result = array(
-		'status' => false,
-		'msg' => '',
-		'data' => null
-	);
 	$event = FrcPortal\Event::with('poc')->find($event_id); //, 'event_rooms.users', 'event_cars', 'event_time_slots.registrations.user'
-	if(!is_null($event)) {
-		$google_cal_id = $event->google_cal_id;
-		if(isset($google_cal_id) && $google_cal_id != '') {
-			$gevent = getGoogleCalendarEvent($google_cal_id);
-			if($gevent['status'] != false) {
-				$ge = $gevent['data'];
-				$event->name = $ge['name'];
-				$event->details = $ge['details'];
-				$event->location = $ge['location'];
-				$event->event_start = $ge['event_start'];
-				$event->event_end = $ge['event_end'];
-				if(!is_null($event->registration_deadline_gcalid) && $event->registration_deadline_gcalid != '') {
-					$gevent = getGoogleCalendarEvent($event->registration_deadline_gcalid);
-					if($gevent['status'] != false) {
-						$ge = $gevent['data'];
-					 	$event->registration_deadline = $ge['event_end'];
-					}
-				}
-			}
-			if($event->save()) {
-				$result['status'] = true;
-				$result['msg'] = $event->name.' synced with Google Calendar';
-				$result['data'] = $event;
-			} else {
-				$result['msg'] = 'Something went wrong updating the event';
-			}
-		} else {
-			$result['msg'] = 'Google Calendar Event ID not found';
-		}
-	} else {
-		$result['msg'] = 'Event ID not found';
+	if(is_null($event)) {
+		throw new Exception('Event ID not found');
 	}
-	return $result;
+	$google_cal_id = $event->google_cal_id;
+	if(!isset($google_cal_id) || $google_cal_id == '') {
+		throw new Exception('Google Calendar Event ID not found');
+	}
+	$ge = getGoogleCalendarEvent($google_cal_id);
+	$event->name = $ge['name'];
+	$event->details = $ge['details'];
+	$event->location = $ge['location'];
+	$event->event_start = $ge['event_start'];
+	$event->event_end = $ge['event_end'];
+	if(!is_null($event->registration_deadline_gcalid) && $event->registration_deadline_gcalid != '') {
+		try {
+			$ged = getGoogleCalendarEvent($event->registration_deadline_gcalid);
+			$event->registration_deadline = $ged['event_end'];
+		} catch (Exception $e) {}
+	}
+	if(!$event->save()) {
+		throw new Exception('Something went wrong updating the event');
+	}
+	return $event;
 }
 
 function getGoogleCalendarEvent($google_cal_id) {
 	$calendar = getSettingsProp('google_calendar_id');
 	$api_key = getSettingsProp('google_api_key');
-	$result = array(
-		'status' => false,
-		'msg' => '',
-		'data' => null
-	);
-	if(isset($google_cal_id) && $google_cal_id != '') {
-		try {
-			$client = new Google_Client();
-			$client->setDeveloperKey($api_key);
-			$service = new Google_Service_Calendar($client);
-			$gevent = $service->events->get($calendar, $google_cal_id);
-			$event = formatGoogleCalendarEventData($gevent);
-			$result['status'] = true;
-			$result['data'] = $event;
-		} catch (Exception $e) {
-				$error = json_decode($e->getMessage(), true);
-        $result['msg'] = handleExceptionMessage($e);
-				//$result['msg'] = 'Something went wrong searching Google Calendar';
-        /* if($error['error']['code'] == 404) {
-					$result['msg'] = 'Google Calendar event not found';
-					$result['error'] = $error;
-				} else {
-					$result['error'] = $error;
-				} */
-    }
-	} else {
-		$result['msg'] = 'Google Calendar Event ID not found';
+	if(!isset($google_cal_id) || $google_cal_id == '') {
+		throw new Exception('Google Calendar Event ID not found');
 	}
-	return $result;
+	$client = new Google_Client();
+	$client->setDeveloperKey($api_key);
+	$service = new Google_Service_Calendar($client);
+	$gevent = $service->events->get($calendar, $google_cal_id);
+	return formatGoogleCalendarEventData($gevent);
 }
 
 function getEventCarList($event_id) {

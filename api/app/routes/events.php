@@ -541,7 +541,20 @@ $app->group('/events', function () {
       }
 
       $event_id = $args['event_id'];
-      $responseArr = syncGoogleCalendarEvent($event_id);
+      try {
+				$event = syncGoogleCalendarEvent($event_id);
+        $result = array(
+      		'status' => false,
+      		'msg' => $event->name.' synced with Google Calendar',
+      		'data' => $event
+      	);
+			} catch (Exception $e) {
+        $result = array(
+      		'status' => false,
+      		'msg' => handleExceptionMessage($e),
+      		'data' => null
+      	);
+      }
       $response = $response->withJson($responseArr);
       return $response;
     });
