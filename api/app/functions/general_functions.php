@@ -108,12 +108,14 @@ function getServiceAccountFile() {
 	);
 }
 
-function handleExceptionMessage($message) {
+function handleExceptionMessage($e) {
+	error_log($e);
+	$message = $e->getMessage();
 	if(is_array($message)) {
 		$data = json_decode($message, true);
 		return $data['error']['message'];
 	} else if(is_string($message)) {
-		return	$message;
+		return $message;
 	}
 	return 'Something went wrong';
 }

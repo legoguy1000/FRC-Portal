@@ -58,30 +58,18 @@ function getGoogleCalendarEvent($google_cal_id) {
 			$service = new Google_Service_Calendar($client);
 			$gevent = $service->events->get($calendar, $google_cal_id);
 			$event = formatGoogleCalendarEventData($gevent);
-			/*
-			$event['name'] = $gevent->summary;
-			$event['details'] = $gevent->description;
-			$event['location'] = $gevent->location;
-			if(empty($gevent->start->dateTime)) {
-				$event['event_start'] = $gevent->start->date.' 00:00:00';
-				$ed = new DateTime($gevent->end->date);
-				$ed->modify("-1 day");
-				$event['event_end'] = $ed->format("Y-m-d").' 23:59:59';
-			} else {
-				$event['event_start'] = date('Y-m-d H:i:s', strtotime($gevent->start->dateTime));
-				$event['event_end'] =date('Y-m-d H:i:s', strtotime($gevent->end->dateTime));
-			} */
 			$result['status'] = true;
 			$result['data'] = $event;
 		} catch (Exception $e) {
 				$error = json_decode($e->getMessage(), true);
-        if($error['error']['code'] == 404) {
+        $result['msg'] = handleExceptionMessage($e);
+				//$result['msg'] = 'Something went wrong searching Google Calendar';
+        /* if($error['error']['code'] == 404) {
 					$result['msg'] = 'Google Calendar event not found';
 					$result['error'] = $error;
 				} else {
-					$result['msg'] = 'Something went wrong searching Google Calendar';
 					$result['error'] = $error;
-				}
+				} */
     }
 	} else {
 		$result['msg'] = 'Google Calendar Event ID not found';

@@ -160,8 +160,8 @@ $app->group('/settings', function () {
         $responseArr['status'] = true;
         $responseArr['msg'] = '';
       } catch (Exception $e) {
-        $result['error'] = handleExceptionMessage($e->getMessage());
-        $result['msg'] = 'Something went wrong';
+        $result['msg'] = handleExceptionMessage($e);
+        //$result['msg'] = 'Something went wrong';
     	}
       $response = $response->withJson($responseArr);
       return $response;
@@ -197,8 +197,8 @@ $app->group('/settings', function () {
           $responseArr['status'] = true;
           $responseArr['msg'] = 'Service account credentials uploaded';
         } catch (Exception $e) {
-          $result['error'] = handleExceptionMessage($e->getMessage());
-          $result['msg'] = 'Something went wrong';
+          $result['msg'] = handleExceptionMessage($e);
+          //$result['msg'] = 'Something went wrong';
       	}
       }
       $response = $response->withJson($responseArr);
