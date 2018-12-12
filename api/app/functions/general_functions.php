@@ -269,6 +269,11 @@ function badRequestResponse($response, $msg = 'Invalid Request') {
 	return $response->withJson($responseArr,400);
 }
 
+function exceptionResponse($response, $msg = 'Error', $code = 200) {
+	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
+	return $response->withJson($responseArr,$code);
+}
+
 function slackPostAPI($endpoint, $data) {
 	$content = str_replace('#new_line#','\n',json_encode($data));
 	$slack_token = getSettingsProp('slack_api_token');

@@ -169,8 +169,15 @@ $app->group('/events', function () {
     $this->group('/cars', function () {
       //Get Event Cars
       $this->get('', function ($request, $response, $args) {
+        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         $event_id = $args['event_id'];
-        $responseArr = getEventCarList($event_id);
+        try {
+          $responseArr['data'] = getEventCarList($event_id);
+          $responseArr['status'] = true;
+          $responseArr['msg'] = '';
+        } catch (Exception $e) {
+      		$result['msg'] = handleExceptionMessage($e);
+      	}
         $response = $response->withJson($responseArr);
         return $response;
       });
@@ -228,8 +235,15 @@ $app->group('/events', function () {
       });
       //Get Event Rooms
       $this->get('/adminList', function ($request, $response, $args) {
+        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         $event_id = $args['event_id'];
-        $responseArr = getEventRoomList($event_id);
+        try {
+          $responseArr['data'] = getEventRoomList($event_id);
+          $responseArr['status'] = true;
+          $responseArr['msg'] = '';
+        } catch (Exception $e) {
+      		$result['msg'] = handleExceptionMessage($e);
+      	}
         $response = $response->withJson($responseArr);
         return $response;
       });
@@ -256,8 +270,13 @@ $app->group('/events', function () {
         $room->user_type = $formData['user_type'];
         $room->gender = $formData['gender'];
         if($room->save()) {
-          $responseArr = getEventRoomList($event_id);
-          $responseArr['msg'] = 'New room added';
+          try {
+            $responseArr['data'] = getEventRoomList($event_id);
+            $responseArr['status'] = true;
+            $responseArr['msg'] = 'New room added';
+          } catch (Exception $e) {
+        		$result['msg'] = handleExceptionMessage($e);
+        	}
         } else {
           $responseArr = array('status'=>false, 'msg'=>'Event went wrong', 'data' => null);
         }
@@ -311,19 +330,14 @@ $app->group('/events', function () {
 
         $event_id = $args['event_id'];
         $room_id = $args['room_id'];
-        $event = FrcPortal\EventRoom::where('event_id',$event_id)->where('room_id',$room_id)->delete();
-        if($event) {
-          $rooms = getEventRoomList($event_id);
-          if($rooms['status'] != false) {
-            $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms['data']);
-          } else {
-            $responseArr = $rooms;
-          }
-        } else {
-          $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
+        try {
+          deleteEventRoom($event_id, $room_id);
+          $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms['data']);
+          $response = $response->withJson($responseArr);
+          return $response;
+        } catch (Exception $e) {
+          return exceptionResponse($response, $msg = handleExceptionMessage($e), $code = $e->getCode());
         }
-        $response = $response->withJson($responseArr);
-        return $response;
       });
     });
     $this->group('/timeSlots', function () {
