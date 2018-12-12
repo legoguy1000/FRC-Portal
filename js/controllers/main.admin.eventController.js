@@ -249,6 +249,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				eventInfo: {
 					'event_id': vm.event_id,
 					'name':vm.event.name,
+					'date': vm.event.date,
 				},
 				admin: true,
 			}
