@@ -217,13 +217,12 @@ function addTimeSlot($event_id, $formData) {
   $timeSlot->event_id = $event_id;
 	try {
 		$timeSlot = formatTimeSlot($timeSlot, $formData);
-		if(!$timeSlot->save()) {
-			throw new Exception('Time Slot could not be saved', 500);
-		}
-		return true;
 	} catch (Exception $e) {
 		throw $e;
 	}
-
+	if(!$timeSlot->save()) {
+		throw new Exception('Time Slot could not be saved', 500);
+	}
+	return true;
 }
 ?>
