@@ -397,6 +397,7 @@ $app->group('/events', function () {
         if(!FrcPortal\Auth::isAdmin()) {
           return unauthorizedResponse($response);
         }
+        $event_id = $args['event_id'];
         try {
           $add = addTimeSlot($event_id, $formData);
           $slots = getEventTimeSlotList($event_id);
