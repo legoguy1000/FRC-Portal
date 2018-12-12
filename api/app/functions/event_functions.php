@@ -150,6 +150,24 @@ function formatGoogleCalendarEventData($event) {
 	return $temp;
 }
 
+function checkTimeSlotOverlap($timeSlot) {
+	$data = FrcPortal\EventTimeSlot::where('event_id',$timeSlot->event_id)->where(function($query) use ($timeSlot){
+									$query->where('time_start','>',$timeSlot->time_start)
+									->where('time_start','<',$timeSlot->time_end)
+									->orWhere(function($query) use ($timeSlot){
+										 $query->where('time_end', '<', $timeSlot->time_start);
+										 $query->where('time_end', '>', $timeSlot->time_end);
+									 })
+									->orWhere(function($query) use ($timeSlot){
+										 $query->where('time_start', '>=', $timeSlot->time_start);
+										 $query->where('time_end', '<=', $timeSlot->time_end);
+									 });
+								 });
+	if(!is_null($timeSlot->time_slot_id)) {
+		$data->where('time_slot_id','<>',$timeSlot->time_slot_id);
+	}
+	return $data->exists();
+}
 function formatTimeSlot($timeSlot, $formData) {
     $timeSlot->name = $formData['name'];
     $timeSlot->description = isset($formData['description']) ? $formData['description']:'';
@@ -157,6 +175,9 @@ function formatTimeSlot($timeSlot, $formData) {
     $te = new DateTime($formData['time_end']);
     $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
     $timeSlot->time_end = $te->format('Y-m-d H:i:s');
+		if(checkTimeSlotOverlap($timeSlot)) {
+			throw new Exception('Time Slote cannot overlap an existing slot', 400);
+		}
 	  return $timeSlot;
 }
 
@@ -174,13 +195,18 @@ function updateTimeSlot($event_id, $time_slot_id, $formData) {
 	if(is_null($timeSlot)) {
 		throw new Exception('Event Time Slot not found', 404);
 	}
-	$timeSlot = formatTimeSlot($timeSlot, $formData);
-  if(!$timeSlot->save()) {
-		throw new Exception('Time Slot could not be saved', 500);
+	try {
+		$timeSlot = formatTimeSlot($timeSlot, $formData);
+	  if(!$timeSlot->save()) {
+			throw new Exception('Time Slot could not be saved', 500);
+		}
+		return true;
+	} catch (Exception $e) {
+		throw $e;
 	}
-	return true;
 }
-function AddTimeSlot($event_id, $formData) {
+
+function addTimeSlot($event_id, $formData) {
 	if(!isset($event_id) || $event_id == '') {
 		throw new Exception('Event ID is invalid', 400);
 	}
@@ -189,10 +215,15 @@ function AddTimeSlot($event_id, $formData) {
 	}
 	$timeSlot = new FrcPortal\EventTimeSlot();
   $timeSlot->event_id = $event_id;
-	$update = formatTimeSlot($timeSlot, $formData);
-	if(!$timeSlot->save()) {
-		throw new Exception('Time Slot could not be saved', 500);
+	try {
+		$timeSlot = formatTimeSlot($timeSlot, $formData);
+		if(!$timeSlot->save()) {
+			throw new Exception('Time Slot could not be saved', 500);
+		}
+		return true;
+	} catch (Exception $e) {
+		throw $e;
 	}
-	return true;
+
 }
 ?>
