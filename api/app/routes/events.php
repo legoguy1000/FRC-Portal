@@ -332,7 +332,8 @@ $app->group('/events', function () {
         $room_id = $args['room_id'];
         try {
           deleteEventRoom($event_id, $room_id);
-          $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms['data']);
+          $rooms = getEventRoomList($event_id);
+          $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms);
           $response = $response->withJson($responseArr);
           return $response;
         } catch (Exception $e) {
