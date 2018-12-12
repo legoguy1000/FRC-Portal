@@ -336,7 +336,7 @@ $app->group('/events', function () {
           $response = $response->withJson($responseArr);
           return $response;
         } catch (Exception $e) {
-          return exceptionResponse($response, $msg = handleExceptionMessage($e), $code = $e->getCode());
+          return exceptionResponse($response, $msg = handleExceptionMessage($e), $code = 200);
         }
       });
     });

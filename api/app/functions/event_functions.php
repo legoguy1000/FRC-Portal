@@ -99,7 +99,7 @@ function deleteEventRoom($event_id, $room_id) {
 		throw new Exception('Room ID cannot be blank', 400);
 	}
 	$eventRoom = FrcPortal\EventRoom::where('event_id',$event_id)->where('room_id',$room_id)->first();
-	if(is_null($event)) {
+	if(is_null($eventRoom)) {
 		throw new Exception('Event Room not found', 404);
 	}
 	if(!$eventRoom->delete()) {
