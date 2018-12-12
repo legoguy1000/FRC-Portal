@@ -189,8 +189,6 @@ $app->group('/events', function () {
         if(!FrcPortal\Auth::isAdmin()) {
           return unauthorizedResponse($response);
         }
-
-
         $event_id = $args['event_id'];
         $formData = $request->getParsedBody();
         if(!isset($formData['cars']) || !is_array($formData['cars']) || empty($formData['cars'])) {
@@ -211,9 +209,7 @@ $app->group('/events', function () {
         if(!empty($userArr)) {
           $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => null]);
         }
-        $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
-                            $query->where('event_id','=',$event_id);
-                          },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
+        $event = getUsersEventRequirements($event_id);
         $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>$event);
         $response = $response->withJson($responseArr);
         return $response;
@@ -312,9 +308,7 @@ $app->group('/events', function () {
         if(!empty($userArr)) {
           $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
         }
-        $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
-                            $query->where('event_id','=',$event_id);
-                          },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
+        $event = getUsersEventRequirements($event_id);
         $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>$event);
         $response = $response->withJson($responseArr);
         return $response;
@@ -345,7 +339,13 @@ $app->group('/events', function () {
       //Get event time slots
       $this->get('', function ($request, $response, $args) {
         $event_id = $args['event_id'];
-        $responseArr = getEventTimeSlotList($event_id);
+        try {
+          $responseArr['data'] = getEventTimeSlotList($event_id);
+          $responseArr['status'] = true;
+          $responseArr['msg'] = '';
+        } catch (Exception $e) {
+      		$result['msg'] = handleExceptionMessage($e);
+      	}
         $response = $response->withJson($responseArr);
         return $response;
       });
@@ -360,12 +360,14 @@ $app->group('/events', function () {
 
         $event_id = $args['event_id'];
         $time_slot_id = $args['time_slot_id'];
-        $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->first();
-        if($timeSlot) {
-          $responseArr = updateTimeSlot($timeSlot, $formData);
+        try {
+          $update = updateTimeSlot($event_id, $time_slot_id, $formData);
+          $slots = getEventTimeSlotList($event_id);
+          $responseArr = array('status'=>true, 'msg'=>'Time Slot Updated', 'data' => $slots);
+        } catch (Exception $e) {
+          return exceptionResponse($response, $msg = handleExceptionMessage($e), $code = 200);
         }
-        $response = $response->withJson($responseArr);
-        return $response;
+        return $response->withJson($responseArr);
       });
       //Delete event time slot
       $this->delete('/{time_slot_id:[a-z0-9]{13}}', function ($request, $response, $args) {
@@ -381,17 +383,11 @@ $app->group('/events', function () {
         $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->delete();
         if($timeSlot) {
           $slots = getEventTimeSlotList($event_id);
-          if($slots['status'] != false) {
-            $responseArr = array('status'=>true, 'msg'=>'Time Slot Deleted', 'data' => $slots['data']);
-          } else {
-            $responseArr = $rooms;
-          }
+          $responseArr = array('status'=>true, 'msg'=>'Time Slot Deleted', 'data' => $slots['data']);
         } else {
-          $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
+          $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => null);
         }
-
-        $response = $response->withJson($responseArr);
-        return $response;
+        return $response->withJson($responseArr);
       });
       //Add new event time slot
       $this->post('', function ($request, $response, $args) {
@@ -401,12 +397,14 @@ $app->group('/events', function () {
         if(!FrcPortal\Auth::isAdmin()) {
           return unauthorizedResponse($response);
         }
-
-        $event_id = $args['event_id'];
-        $responseArr = AddTimeSlot($event_id, $formData);
-
-        $response = $response->withJson($responseArr);
-        return $response;
+        try {
+          $add = addTimeSlot($event_id, $formData);
+          $slots = getEventTimeSlotList($event_id);
+          $responseArr = array('status'=>true, 'msg'=>'Time Slot Added', 'data' => $slots);
+        } catch (Exception $e) {
+          return exceptionResponse($response, $msg = handleExceptionMessage($e), $code = 200);
+        }
+        return $response->withJson($responseArr);
       });
     });
     $this->group('/food', function () {
