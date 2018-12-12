@@ -176,7 +176,7 @@ function formatTimeSlot($timeSlot, $formData) {
     $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
     $timeSlot->time_end = $te->format('Y-m-d H:i:s');
 		if(checkTimeSlotOverlap($timeSlot)) {
-			throw new Exception('Time Slote cannot overlap an existing slot', 400);
+			throw new Exception('Time Slot cannot overlap an existing slot', 400);
 		}
 	  return $timeSlot;
 }
