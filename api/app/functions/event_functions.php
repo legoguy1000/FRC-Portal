@@ -151,18 +151,27 @@ function formatGoogleCalendarEventData($event) {
 }
 
 function checkTimeSlotOverlap($timeSlot) {
-	$data = FrcPortal\EventTimeSlot::where('event_id',$timeSlot->event_id)->where(function($query) use ($timeSlot){
-									$query->where('time_start','>',$timeSlot->time_start)
-									->where('time_start','<',$timeSlot->time_end)
-									->orWhere(function($query) use ($timeSlot){
-										 $query->where('time_end', '<', $timeSlot->time_start);
-										 $query->where('time_end', '>', $timeSlot->time_end);
-									 })
-									->orWhere(function($query) use ($timeSlot){
-										 $query->where('time_start', '>=', $timeSlot->time_start);
-										 $query->where('time_end', '<=', $timeSlot->time_end);
-									 });
-								 });
+	$data = FrcPortal\EventTimeSlot::where('event_id',$event_id)
+					//Old encompass new
+					->where(function($query) use ($timeSlot){
+						$query->where('time_start','<=',$timeSlot->time_start);
+						$query->where('time_end','>=',$timeSlot->time_end);
+					})
+					//Old straddle new start
+					->orWhere(function($query) use ($timeSlot){
+						 $query->where('time_start', '<=', $timeSlot->time_start);
+						 $query->where('time_end', '>=', $timeSlot->time_start);
+					})
+					//Old straddle new end
+					->orWhere(function($query) use ($timeSlot){
+						 $query->where('time_start', '<=', $timeSlot->time_end);
+						 $query->where('time_end', '>=', $timeSlot->time_end);
+					 })
+					 //New encompass old
+					->orWhere(function($query) use ($timeSlot){
+						 $query->where('time_start', '>=', $timeSlot->time_start);
+						 $query->where('time_end', '<=', $timeSlot->time_end);
+					 });
 	if(!is_null($timeSlot->time_slot_id)) {
 		$data->where('time_slot_id','<>',$timeSlot->time_slot_id);
 	}
