@@ -9,6 +9,9 @@ Version 2.13.0
 * Remove customized items from <head>
 * Update composer dependencies
 * Remove last traces of hardcoded "Team 2363"
+* Add exceptions to functions
+* Prevent overlapping time slots
+* Removed old functions
 
 Version 2.12.0
 * Simplified some code

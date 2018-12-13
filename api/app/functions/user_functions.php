@@ -41,26 +41,6 @@ function checkLogin($userData) {
 	}
 	return $user;
 }
-/* Added to User Model
-function generateUserJWT(FrcPortal\User $user) {
-	$key = getSettingsProp('jwt_key');
-	$token = array(
-		"iss" => getSettingsProp('env_url'),
-		"iat" => time(),
-		"exp" => time()+60*60,
-		"jti" => bin2hex(random_bytes(10)),
-		'data' => array(
-			'user_id' => $user->user_id,
-			'full_name' => $user->full_name,
-			'admin' => $user->admin,
-			'status' => $user->status,
-			'user_type' => $user->user_type,
-			'email' => $user->email,
-		)
-	);
-	$jwt = JWT::encode($token, $key);
-	return $jwt;
-} */
 
 function checkTeamLogin($userEmail = '') {
 	$require_team_email = getSettingsProp('require_team_email');
@@ -72,24 +52,6 @@ function checkTeamLogin($userEmail = '') {
 	}
 	return false;
 }
-/* Added to User Model
-function updateUserOnLogin(FrcPortal\User $user, $userData) {
-	$update = false;
-	if($user->profile_image == '') {
-		$user->profile_image = $userData['profile_image'];
-		$update = true;
-	}
-	$teamDomain = getSettingsProp('team_domain');
-	if($user->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
-		$user->team_email = $userData['email'];
-		$update = true;
-	}
-	if($update == true) {
-		$user = $user->save();
-	}
-	return true;
-}
-*/
 
 function checkLoginProvider($provider) {
 	$loginEnabled = FrcPortal\Setting::where('section','login')->where('setting',$provider.'_login_enable')->first();
@@ -134,18 +96,5 @@ function getUsersEventRequirements($event_id) {
 			->get();
 	}
 	return $event;
-}
-
-function getGenderByFirstName($name) {
-	$return = false;
-	if(!is_null($name) && $name != '') {
-		$base = 'https://api.genderize.io/';
-		$url = $base.'?name='.$name;
-		$contents = json_decode(file_get_contents($url),true);
-		if(isset($contents['gender']) && !is_null($contents['gender']) && $contents['gender'] != '') {
-			$return = $contents['gender'];
-		}
-	}
-	return $return;
 }
 ?>

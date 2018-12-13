@@ -262,4 +262,20 @@ class User extends Eloquent {
     return $responseArr;
   }
 
+  public function getGenderByFirstName() {
+  	$return = false;
+    $name = $this->fname;
+  	if(!is_null($name) && $name != '') {
+  		$base = 'https://api.genderize.io/';
+  		$url = $base.'?name='.$name;
+  		$contents = json_decode(file_get_contents($url),true);
+  		if(isset($contents['gender']) && !is_null($contents['gender']) && $contents['gender'] != '') {
+  			$this->gender = ucfirst($contents['gender']);
+      	return true;
+  		}
+      $this->gender = '';
+  	}
+  	return false;
+  }
+
 }
