@@ -41,7 +41,7 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 			locals: {
 				eventInfo: vm.eventInfo,
 				newTS: newTS,
-				timeSlotInfo: timeSlotInfo
+				timeSlotInfo: angular.copy(timeSlotInfo)
 			}
 		})
 		.then(function(response) {
