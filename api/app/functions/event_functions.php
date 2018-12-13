@@ -161,11 +161,11 @@ function checkTimeSlotOverlap($timeSlot) {
 		//Old straddle new start
 		->orWhere(function($query) use ($timeSlot){
 		 	$query->where('time_start', '<=', $timeSlot->time_start);
-		 	$query->where('time_end', '>=', $timeSlot->time_start);
+		 	$query->where('time_end', '>', $timeSlot->time_start);
 		})
 		//Old straddle new end
 		->orWhere(function($query) use ($timeSlot){
-		 	$query->where('time_start', '<=', $timeSlot->time_end);
+		 	$query->where('time_start', '<', $timeSlot->time_end);
 		 	$query->where('time_end', '>=', $timeSlot->time_end);
 		})
 		//New encompass old
