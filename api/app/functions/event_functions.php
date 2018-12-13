@@ -113,7 +113,7 @@ function getEventTimeSlotList($event_id) {
 	if(!isset($event_id) || $event_id == '') {
 		throw new Exception('Event ID cannot be blank', 400);
 	}
-	return FrcPortal\EventTimeSlot::with('registrations.user')->where('event_id',$event_id)->get();
+	return FrcPortal\EventTimeSlot::with('registrations.user')->where('event_id',$event_id)->orderBy('time_start', 'ASC')->get();
 }
 
 function formatGoogleCalendarEventData($event) {
