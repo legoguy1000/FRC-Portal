@@ -151,7 +151,7 @@ function formatGoogleCalendarEventData($event) {
 }
 
 function checkTimeSlotOverlap($timeSlot) {
-	$data = FrcPortal\EventTimeSlot::where('event_id',$event_id)
+	$data = FrcPortal\EventTimeSlot::where('event_id',$timeSlot->event_id)
 					//Old encompass new
 					->where(function($query) use ($timeSlot){
 						$query->where('time_start','<=',$timeSlot->time_start);
