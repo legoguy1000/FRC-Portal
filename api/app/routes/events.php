@@ -173,7 +173,7 @@ $app->group('/events', function () {
       }
       $event = FrcPortal\Event::with($withArr);
       if(!empty($withCountArr)) {
-        $event->withCount($withArr);
+        $event->withCount($withCountArr);
       }
       $event = $event->find($event_id);
       if($reqsBool) {
