@@ -130,21 +130,17 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 			locals: {
 				userInfo: main.userInfo,
 			},
-		})
-		.then(function(response) {
-
-		}, function() {
-
 		});
 	}
 
 	main.initServiceWorkerState = function() {
 		console.log('Initializing');
-		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+		navigator.serviceWorker.ready.then(function() {
 			console.log('Service Worker Ready');
-				return true;
-			})
-			.catch(function(err) {	});
+		})
+		.catch(function(err) {
+			consol.log(err);
+		});
 	}
 
 	main.checkServiceWorker = function() {

@@ -58,6 +58,35 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
       return $response;
     }
 ]));
+$app->add(function ($request, $response, $next) {
+  $header = "";
+  $message = "Using token from request header";
+  $token = null;
+  $data = null;
+  $authToken = $request->getAttribute("token");
+  if(!is_null($authToken) && $authToken != '') {
+    /* Check for token in header. */
+    $headers = $request->getHeader('Authorization');
+    $header = isset($headers[0]) ? $headers[0] : "";
+    if (preg_match('/Bearer\s+(.*)$/i', $header, $matches)) {
+        $token = $matches[1];
+        try {
+          $decoded = JWT::decode(
+              $token,
+              getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : getIniProp('db_pass'),
+              array("HS256", "HS512", "HS384")
+          );
+          $data = (array) $decoded;
+          $request = $request->withAttribute('token', $data);
+        } catch (Exception $exception) {
+            //throw $exception;
+        }
+    }
+  }
+  /* Everything ok, call next middleware. */
+  $response = $handler->handle($request);
+	return $response;
+});
 $container = $app->getContainer();
 $container['upload_directory'] = __DIR__ . '/app/secured';
 $container['logger'] = function($c) {
