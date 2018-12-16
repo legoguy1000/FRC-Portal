@@ -175,7 +175,7 @@ $app->group('/events', function () {
       if(!empty($withCountArr)) {
         $event->withCount($withArr);
       }
-      $event->find($event_id);
+      $event = $event->find($event_id);
       if($reqsBool) {
         $event->users = getUsersEventRequirements($event_id);
       }
