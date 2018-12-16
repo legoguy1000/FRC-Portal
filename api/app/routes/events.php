@@ -131,9 +131,9 @@ $app->group('/events', function () {
     return $response;
   });
   $this->group('/{event_id:[a-z0-9]{13}}', function () {
-    $authed = FrcPortal\Auth::isAuthenticated();
     //Get Event
     $this->get('', function ($request, $response, $args) {
+      $authed = FrcPortal\Auth::isAuthenticated();
       $event_id = $args['event_id'];
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
       $withArr = array('poc');
