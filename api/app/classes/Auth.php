@@ -27,6 +27,7 @@ class Auth {
     self::$currentuser = $user_id;
     $user = User::with(['school'])->find($user_id);
     if(!is_null($user)) {
+      self::$isAuthenticated = true;
       self::$user = $user;
       return true;
     }
@@ -49,6 +50,10 @@ class Auth {
 
   public static function currentToken() {
     return self::$token;
+  }
+
+  public static function isAuthenticated() {
+    return self::$isAuthenticated;
   }
 
 }

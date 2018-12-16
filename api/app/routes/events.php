@@ -131,6 +131,7 @@ $app->group('/events', function () {
     return $response;
   });
   $this->group('/{event_id:[a-z0-9]{13}}', function () {
+    $authed = FrcPortal\Auth::isAuthenticated();
     //Get Event
     $this->get('', function ($request, $response, $args) {
       $event_id = $args['event_id'];
@@ -145,7 +146,7 @@ $app->group('/events', function () {
       if($request->getParam('event_time_slots') !== null && $request->getParam('event_time_slots')==true) {
         $withArr[] = 'event_time_slots.registrations.user';
       }
-      if($request->getParam('users') !== null && $request->getParam('users')==true) {
+      if($request->getParam('users') !== null && $request->getParam('users')==true && $authed) {
         $withArr['registered_users'] = function ($query) use ($event_id) {
           $query->where('registration',true);
         };
