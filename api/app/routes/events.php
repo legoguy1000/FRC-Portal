@@ -137,21 +137,45 @@ $app->group('/events', function () {
       $event_id = $args['event_id'];
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
       $withArr = array('poc');
+      $withCountArr = array();
       if($request->getParam('event_rooms') !== null && $request->getParam('event_rooms')==true) {
-        $withArr[] = 'event_rooms.users';
+        if($authed) {
+          $withArr[] = 'event_rooms.users';
+        } else {
+          $withArr[] = 'event_rooms';
+        }
       }
       if($request->getParam('event_cars') !== null && $request->getParam('event_cars')==true) {
-        $withArr[] = 'event_cars';
+        if($authed) {
+          $withArr[] = 'event_cars';
+        } else {
+          //$withArr[] = '';
+        }
       }
       if($request->getParam('event_time_slots') !== null && $request->getParam('event_time_slots')==true) {
-        $withArr[] = 'event_time_slots.registrations.user';
+        if($authed) {
+          $withArr[] = 'event_time_slots.registrations.user';
+        } else {
+          $withCountArr[] = 'event_time_slots.registrations';
+        }
       }
-      if($request->getParam('users') !== null && $request->getParam('users')==true && $authed) {
-        $withArr['registered_users'] = function ($query) use ($event_id) {
-          $query->where('registration',true);
-        };
+      if($request->getParam('users') !== null && $request->getParam('users')==true) {
+        if($authed) {
+          $withArr['registered_users'] = function ($query) use ($event_id) {
+            $query->where('registration',true);
+          };
+        } else {
+          $withCountArr['registered_users'] = function ($query) use ($event_id) {
+            $query->where('registration',true);
+          };
+        }
+
       }
-      $event = FrcPortal\Event::with($withArr)->find($event_id);
+      $event = FrcPortal\Event::with($withArr);
+      if(!empty($withCountArr)) {
+        $event->withCount($withArr);
+      }
+      $event->find($event_id);
       if($reqsBool) {
         $event->users = getUsersEventRequirements($event_id);
       }
