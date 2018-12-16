@@ -156,7 +156,9 @@ $app->group('/events', function () {
         if($authed) {
           $withArr[] = 'event_time_slots.registrations.user';
         } else {
-          $withCountArr[] = 'event_time_slots';
+          $withArr['event_time_slots'] = function ($query) use ($event_id) {
+            $query->withCount('registrations');
+          };
         }
       }
       if($request->getParam('users') !== null && $request->getParam('users')==true) {
