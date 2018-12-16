@@ -5,6 +5,7 @@ require_once('app/libraries/CustomAuthRule.php');
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Slim\Http\UploadedFile;
+use \Firebase\JWT\JWT;
 
 $config = array();
 $config['displayErrorDetails'] = true;
@@ -82,7 +83,7 @@ $app->add(function ($request, $response, $next) {
           FrcPortal\Auth::setCurrentUser($userId);
           FrcPortal\Auth::setCurrentToken($authToken);
           /* Everything ok, call next middleware. */
-          $response = $handler->handle($request);
+          $response = $next($request, $response);
         } catch (Exception $exception) {
             //throw $exception;
         }
