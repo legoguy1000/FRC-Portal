@@ -63,8 +63,8 @@ $app->add(function ($request, $response, $next) {
   $message = "Using token from request header";
   $token = null;
   $data = null;
-  $authToken = $request->getAttribute("token");
-  if(!is_null($authToken) && $authToken != '') {
+  $origToken = $request->getAttribute("token");
+  if(!is_null($origToken) && $origToken != '') {
     /* Check for token in header. */
     $headers = $request->getHeader('Authorization');
     $header = isset($headers[0]) ? $headers[0] : "";
@@ -76,16 +76,19 @@ $app->add(function ($request, $response, $next) {
               getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : getIniProp('db_pass'),
               array("HS256", "HS512", "HS384")
           );
-          $data = (array) $decoded;
+          $authToken = (array) $decoded;
           $request = $request->withAttribute('token', $data);
+          $userId = $authToken['data']->user_id;
+          FrcPortal\Auth::setCurrentUser($userId);
+          FrcPortal\Auth::setCurrentToken($authToken);
+          /* Everything ok, call next middleware. */
+          $response = $handler->handle($request);
         } catch (Exception $exception) {
             //throw $exception;
         }
     }
   }
-  /* Everything ok, call next middleware. */
-  $response = $handler->handle($request);
-	return $response;
+  return $response;
 });
 $container = $app->getContainer();
 $container['upload_directory'] = __DIR__ . '/app/secured';
@@ -100,7 +103,9 @@ $app->get('/version', function (Request $request, Response $response, array $arg
   $this->logger->addInfo('Called version endpoint');
   $responseArr = array(
     'version' => VERSION,
-    'host' => $_SERVER["HTTP_HOST"]
+    'host' => $_SERVER["HTTP_HOST"],
+    'user' => FrcPortal\Auth::user(),
+    'token' => FrcPortal\Auth::currentToken(),
   );
   $response = $response->withJson($responseArr);
   return $response;
