@@ -38,10 +38,10 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
         ])
     ],
     "before" => function ($request, $arguments) {
-      $authToken = $request->getAttribute("token");
-      $userId = $authToken['data']->user_id;
-      FrcPortal\Auth::setCurrentUser($userId);
-      FrcPortal\Auth::setCurrentToken($authToken);
+      //$authToken = $request->getAttribute("token");
+      //$userId = $authToken['data']->user_id;
+      //FrcPortal\Auth::setCurrentUser($userId);
+      //FrcPortal\Auth::setCurrentToken($authToken);
       //$test = FrcPortal\Auth::user()->user_id;
       //error_log($test, 0);
       return $request;
@@ -64,8 +64,8 @@ $app->add(function ($request, $response, $next) {
   $message = "Using token from request header";
   $token = null;
   $data = null;
-  $origToken = $request->getAttribute("token");
-  if(!is_null($origToken) && $origToken != '') {
+  $authToken = $request->getAttribute("token");
+  if(is_null($authToken)) {
     /* Check for token in header. */
     $headers = $request->getHeader('Authorization');
     $header = isset($headers[0]) ? $headers[0] : "";
@@ -79,9 +79,6 @@ $app->add(function ($request, $response, $next) {
           );
           $authToken = (array) $decoded;
           $request = $request->withAttribute('token', $data);
-          $userId = $authToken['data']->user_id;
-          FrcPortal\Auth::setCurrentUser($userId);
-          FrcPortal\Auth::setCurrentToken($authToken);
           /* Everything ok, call next middleware. */
           $response = $next($request, $response);
         } catch (Exception $exception) {
@@ -89,6 +86,10 @@ $app->add(function ($request, $response, $next) {
         }
     }
   }
+  $userId = $authToken['data']->user_id;
+  FrcPortal\Auth::setCurrentUser($userId);
+  FrcPortal\Auth::setCurrentToken($authToken);
+
   return $response;
 });
 $container = $app->getContainer();
