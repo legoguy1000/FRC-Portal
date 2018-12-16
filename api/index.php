@@ -79,17 +79,16 @@ $app->add(function ($request, $response, $next) {
           );
           $authToken = (array) $decoded;
           $request = $request->withAttribute('token', $data);
-          /* Everything ok, call next middleware. */
-          $response = $next($request, $response);
         } catch (Exception $exception) {
             //throw $exception;
         }
     }
   }
   $userId = $authToken['data']->user_id;
-  FrcPortal\Auth::setCurrentUser($userId);
-  FrcPortal\Auth::setCurrentToken($authToken);
-
+	FrcPortal\Auth::setCurrentUser($userId);
+	FrcPortal\Auth::setCurrentToken($authToken);
+  /* Everything ok, call next middleware. */
+	$response = $next($request, $response);
   return $response;
 });
 $container = $app->getContainer();
