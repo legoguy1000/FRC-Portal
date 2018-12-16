@@ -107,6 +107,7 @@ $app->get('/version', function (Request $request, Response $response, array $arg
     'host' => $_SERVER["HTTP_HOST"],
     'user' => FrcPortal\Auth::user(),
     'token' => FrcPortal\Auth::currentToken(),
+    'isAuthenticated' => FrcPortal\Auth::isAuthenticated(),
   );
   $response = $response->withJson($responseArr);
   return $response;
