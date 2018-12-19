@@ -15,7 +15,7 @@ $app->group('/events', function () {
     $defaults = array(
       'filter' => '',
       'limit' => 10,
-      'order' => '-year',
+      'order' => '-event_start',
       'page' => 1,
     );
     $inputs = checkSearchInputs($request, $defaults);

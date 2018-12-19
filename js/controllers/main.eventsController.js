@@ -17,6 +17,7 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 		vm.event_start_moment = moment();
 		vm.query = {
 			limit: 0,
+			order: '+event_start'
 			search: {
 				name: '',
 				type: '',
