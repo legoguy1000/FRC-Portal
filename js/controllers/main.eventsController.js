@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.eventsController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','configItems','$sce',
+.controller('main.eventsController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','configItems','$sce',
 	mainEventsController
 ]);
-function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,configItems,$sce) {
+function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,configItems,$sce) {
     var vm = this;
 
 		vm.registrationFormVisible = false;
@@ -12,8 +12,16 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 		vm.slack_url = configItems.slack_url;
 		vm.slack_team_id = configItems.slack_team_id;
 
-		vm.event_id = $stateParams.event_id;
 		vm.events = [];
+		vm.eventTypes = [
+			'Demo',
+			'Community Serivce',
+			'Season Event',
+			'Off Season Event',
+			'Other'
+		];
+		vm.event_start_moment = moment();
+		
 		vm.getEvents = function () {
 			vm.promise = eventsService.getAllEventsFilter().then(function(response){
 				vm.events = response.data;
@@ -21,8 +29,14 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 				vm.maxPage = response.maxPage;
 			});
 		};
+		vm.getEventTypeList = function () {
+			vm.promise =	eventsService.getEventTypes().then(function(response){
+				vm.eventTypes = response.data;
+			});
+		};
 
 		vm.getEvents();
+		vm.getEventTypeList();
 		vm.limitOptions = [5,10,25,50,100];
 		vm.query = {
 			filter: '',

@@ -5,7 +5,12 @@ $app->group('/events', function () {
   $this->get('', function ($request, $response, $args) {
     $events = array();
   	$data = array();
-
+    $searchProperties = array(
+      'name' => '',
+      'type' => '',
+      'event_start' => date('Y-m-d 00:00:00'),
+      'event_end' => '',
+    );
     $defaults = array(
       'filter' => '',
       'limit' => 10,
@@ -18,9 +23,23 @@ $app->group('/events', function () {
     $order = $inputs['order'];
     $page = $inputs['page'];
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
+    $search = $request->getParam('search') !== null ? $request->getParam('search'):$searchProperties;
 
+    $queryArr = array();
+    if(isset($search['name']) && $search['name'] != '') {
+      $queryArr[] = array('name', 'LIKE', '%'.$search['name'].'%');
+    }
+    if(isset($search['type']) && $search['type'] != '') {
+      $queryArr[] = array('type', '=', $search['type']);
+    }
+    if(isset($search['event_start']) && $search['event_start'] != '') {
+      $queryArr[] = array('event_start', '>=', $search['event_start']);
+    }
+    if(isset($search['event_end']) && $search['event_end'] != '') {
+      $queryArr[] = array('event_end', '<=', $search['event_end']);
+    }
     $totalNum = 0;
-    $events = new FrcPortal\Event();
+    $events = FrcPortal\Event()::where($queryArr);
   	if($filter != '') {
       $events = $events->orHavingRaw('name LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('type LIKE ?',array('%'.$filter.'%'));
