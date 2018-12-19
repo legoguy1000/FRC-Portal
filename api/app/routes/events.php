@@ -34,10 +34,14 @@ $app->group('/events', function () {
       $queryArr[] = array('type', '=', $search['type']);
     }
     if(isset($search['event_start']) && $search['event_start'] != '') {
-      $queryArr[] = array('event_start', '>=', $search['event_start']);
+      $es = new DateTime($search['event_start']);
+      $es = $es->format('Y-m-d');
+      $queryArr[] = array('event_start', '>=', $es);
     }
     if(isset($search['event_end']) && $search['event_end'] != '') {
-      $queryArr[] = array('event_end', '<=', $search['event_end']);
+      $ee = new DateTime($search['event_end']);
+      $ee = $ee->format('Y-m-d').' 23:59:59';
+      $queryArr[] = array('event_end', '<=', $ee);
     }
     $totalNum = 0;
     $events = FrcPortal\Event::where($queryArr);
