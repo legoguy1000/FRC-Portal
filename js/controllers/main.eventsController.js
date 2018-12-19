@@ -20,10 +20,18 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 			'Off Season Event',
 			'Other'
 		];
+		vm.query = {
+			search: {
+				name: '',
+				type: '',
+				event_start: '',
+				event_end: '',
+			}
+		};
 		vm.event_start_moment = moment();
-		
+
 		vm.getEvents = function () {
-			vm.promise = eventsService.getAllEventsFilter().then(function(response){
+			vm.promise = eventsService.getAllEventsFilter($.param(vm.query)).then(function(response){
 				vm.events = response.data;
 				vm.total = response.total;
 				vm.maxPage = response.maxPage;
