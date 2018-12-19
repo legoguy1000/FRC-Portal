@@ -13,20 +13,9 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 		vm.slack_team_id = configItems.slack_team_id;
 
 		vm.events = [];
-		vm.eventTypes = [
-			'Demo',
-			'Community Serivce',
-			'Season Event',
-			'Off Season Event',
-			'Other'
-		];
+		vm.eventTypes = [];
 		vm.query = {
-			search: {
-				name: '',
-				type: '',
-				event_start: '',
-				event_end: '',
-			}
+			search: {}
 		};
 		vm.event_start_moment = moment();
 
