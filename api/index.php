@@ -86,10 +86,12 @@ $app->add(function ($request, $response, $next) {
         }
     }
   }
-  $userId = $authToken['data']->user_id;
-	FrcPortal\Auth::setCurrentUser($userId);
-	FrcPortal\Auth::setCurrentToken($authToken);
-  /* Everything ok, call next middleware. */
+  if(is_null($authToken)) {
+    $userId = $authToken['data']->user_id;
+  	FrcPortal\Auth::setCurrentUser($userId);
+  	FrcPortal\Auth::setCurrentToken($authToken);
+    /* Everything ok, call next middleware. */
+  }
 	$response = $next($request, $response);
   return $response;
 });
