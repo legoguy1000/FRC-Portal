@@ -35,7 +35,10 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 		};
 
 		vm.getMapsSrc = function () {
-			return $sce.trustAsResourceUrl('https://maps.google.com/maps?q='+vm.event.location+'&t=m&z=12&output=embed&iwloc=near');
+			if(vm.event.location != undefined && vm.event.location != '') {
+				return $sce.trustAsResourceUrl('https://maps.google.com/maps?q='+vm.event.location+'&t=m&z=12&output=embed&iwloc=near');
+			}
+			return undefined;
 		};
 
 		vm.showRegistrationForm = function(ev) {

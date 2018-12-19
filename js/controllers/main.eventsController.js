@@ -45,17 +45,7 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 
 		vm.getEvents();
 		vm.getEventTypeList();
-		vm.limitOptions = [5,10,25,50,100];
-		vm.query = {
-			filter: '',
-			limit: 5,
-			order: 'full_name',
-			page: 1
-		};
 
-		vm.getMapsSrc = function () {
-			return $sce.trustAsResourceUrl('https://maps.google.com/maps?q='+vm.event.location+'&t=m&z=12&output=embed&iwloc=near');
-		};
 
 		vm.showRegistrationForm = function(ev) {
 			var eventInfo = vm.event;
