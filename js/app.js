@@ -305,6 +305,21 @@ angular.module('FrcPortal', [
 			 title: 'Admin | Eempt Hours'
 		 }
 	 }) */
+	 .state('main.events', {
+	 url: '/events',
+	 templateUrl: 'views/main.events.html',
+	 controller: 'main.eventsController',
+	 controllerAs: 'vm',
+	 data: {
+		 title: 'Events'
+	 },
+	 resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
+		 eventsController: ['$ocLazyLoad', function($ocLazyLoad) {
+			 // you can lazy load files for an existing module
+							return $ocLazyLoad.load('js/controllers/main.eventsController.js');
+		 }]
+	 }
+	 })
  	  .state('main.event', {
  		url: '/events/{event_id}',
  		templateUrl: 'views/main.event.html',
