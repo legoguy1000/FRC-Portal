@@ -39,7 +39,7 @@ $app->group('/events', function () {
       $queryArr[] = array('event_end', '<=', $search['event_end']);
     }
     $totalNum = 0;
-    $events = FrcPortal\Event()::where($queryArr);
+    $events = FrcPortal\Event::where($queryArr);
   	if($filter != '') {
       $events = $events->orHavingRaw('name LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('type LIKE ?',array('%'.$filter.'%'));
