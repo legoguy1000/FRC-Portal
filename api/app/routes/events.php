@@ -72,7 +72,7 @@ $app->group('/events', function () {
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
     $data['status'] = true;
-    $data['msg'] = '';
+    $data['msg'] = json_encode(DB::getQueryLog());
     if($listOnly) {
       $data = $events;
     }
