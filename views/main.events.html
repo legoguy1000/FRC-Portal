@@ -10,7 +10,7 @@
 				<md-input-container class="hide-validation-error" flex>
 					<label>Event Type</label>
 					<md-icon md-font-library="material-icons">info_outline</md-icon>
-					<md-select ng-model="vm.query.search.status" style="min-width:150px;">
+					<md-select ng-model="vm.query.search.type" style="min-width:150px;">
 						<md-option ng-value="null"><em>None</em></md-option>
 						<md-option ng-repeat="event_type in vm.eventTypes" ng-value="event_type.type">
 							{{event_type.type}}
@@ -46,7 +46,7 @@
 			</div>
 		</md-toolbar>
 	</form>
-	<div layout="row" layout-wrap>
+	<div layout="row" layout-wrap style="width:100%;">
 		<div ng-repeat="event in vm.events" flex-gt-md="25">
 			{{event.name}}
 		</div>
