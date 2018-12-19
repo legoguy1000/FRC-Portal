@@ -390,3 +390,7 @@ md-list-item.min-height-reset .md-list-item-inner::before {
 .selectRow.selected {
   background-color: rgba(158,158,158,0.2);
 }
+
+.hide-validation-error .md-errors-spacer {
+  display: none;
+}

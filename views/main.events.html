@@ -2,12 +2,12 @@
 	<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.getEvents()">
 		<md-toolbar class="md-table-toolbar md-default">
 			<div class="md-toolbar-tools" layout="row">
-				<md-input-container class="md-icon-float md-block" flex>
+				<md-input-container class="hide-validation-error" flex>
 					<label>Event Name</label>
 					<md-icon class="material-icons">event</md-icon>
 					<input type="text" ng-model="vm.query.search.name" class="" aria-invalid="false">
 				</md-input-container>
-				<md-input-container class="md-icon-float md-block" flex>
+				<md-input-container class="hide-validation-error" flex>
 					<label>Event Type</label>
 					<md-icon md-font-library="material-icons">info_outline</md-icon>
 					<md-select ng-model="vm.query.search.status" style="min-width:150px;">
@@ -17,7 +17,7 @@
 						</md-option>
 					</md-select>
 				</md-input-container>
-				<md-input-container flex class="md-icon-float md-block">
+				<md-input-container flex class="hide-validation-error">
 					<label>Min Time</label>
 					<md-icon md-font-library="material-icons">event</md-icon>
 					<input moment-picker="vm.query.search.event_start"
@@ -28,7 +28,7 @@
 						ng-model="vm.event_start_moment">
 					</input>
 				</md-input-container>
-				<md-input-container flex class="md-icon-float md-block">
+				<md-input-container flex class="hide-validation-error">
 					<label>Max Time</label>
 					<md-icon md-font-library="material-icons">event</md-icon>
 					<input moment-picker="vm.query.search.event_end"
