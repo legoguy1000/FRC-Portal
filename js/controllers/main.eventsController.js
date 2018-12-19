@@ -22,7 +22,7 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 			});
 		};
 
-		vm.getEvent();
+		vm.getEvents();
 		vm.limitOptions = [5,10,25,50,100];
 		vm.query = {
 			filter: '',
