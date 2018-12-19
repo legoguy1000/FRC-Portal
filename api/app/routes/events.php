@@ -26,7 +26,7 @@ $app->group('/events', function () {
       $events = $events->orHavingRaw('type LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('event_start LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('event_end LIKE ?',array('%'.$filter.'%'));
-      $events = $events->orHavingRaw('YEAR(events.event_start) LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('year LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('MONTHNAME(events.event_start) LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('MONTHNAME(events.event_end) LIKE ?',array('%'.$filter.'%'));
     }
