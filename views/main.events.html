@@ -10,7 +10,7 @@
 				<label>Event Type</label>
 				<md-icon md-font-library="material-icons">info_outline</md-icon>
 				<md-select ng-model="vm.query.search.status" style="min-width:150px;">
-					<md-option ng-value=""><em>None</em></md-option>
+					<md-option ng-value="null"><em>None</em></md-option>
 					<md-option ng-repeat="event_type in vm.eventTypes" ng-value="event_type.type">
 						{{event_type.type}}
 					</md-option>
