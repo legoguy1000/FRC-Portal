@@ -5,6 +5,7 @@ $app->group('/events', function () {
   $this->get('', function ($request, $response, $args) {
     $events = array();
   	$data = array();
+    DB::enableQueryLog();
     $searchProperties = array(
       'name' => '',
       'type' => '',
@@ -72,7 +73,7 @@ $app->group('/events', function () {
     $data['total'] = $totalNum;
     $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
     $data['status'] = true;
-    $data['msg'] = json_encode(DB::getQueryLog());
+    $data['msg'] = DB::getQueryLog();
     if($listOnly) {
       $data = $events;
     }
