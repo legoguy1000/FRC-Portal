@@ -14,10 +14,15 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 
 		vm.events = [];
 		vm.eventTypes = [];
-		vm.query = {
-			search: {}
-		};
 		vm.event_start_moment = moment();
+		vm.query = {
+			search: {
+				name: '',
+				type: '',
+				event_start: vm.event_start_moment.format('MMMM Do YYYY'),
+				event_end: '',
+			}
+		};
 
 		vm.getEvents = function () {
 			vm.promise = eventsService.getAllEventsFilter($.param(vm.query)).then(function(response){
