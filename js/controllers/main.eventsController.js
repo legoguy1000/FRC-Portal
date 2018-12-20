@@ -7,7 +7,7 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 
 		vm.registrationFormVisible = false;
 		vm.state = $state.current.name;
-
+		vm.loading = false;
 
 		vm.slack_url = configItems.slack_url;
 		vm.slack_team_id = configItems.slack_team_id;
@@ -27,7 +27,9 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 		};
 
 		vm.getEvents = function () {
+			vm.loading = true;
 			vm.promise = eventsService.getAllEventsFilter($.param(vm.query)).then(function(response){
+				vm.loading = false;
 				vm.events = response.data;
 				vm.total = response.total;
 				vm.maxPage = response.maxPage;

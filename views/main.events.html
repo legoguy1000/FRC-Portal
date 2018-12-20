@@ -45,6 +45,7 @@
 				</md-button>
 			</div>
 		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 	</form>
 	<div layout="row" layout-align="center stretch" layout-wrap style="width:100%;">
 		<md-card ng-repeat="event in vm.events" flex-gt-md="30">

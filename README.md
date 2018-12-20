@@ -15,6 +15,7 @@ Version 2.13.0
 * Add Middleware to always pull token even if not required
 * Added logic to limit information for event endpoint if not authed
 * Added public /events page to view all events
+* Prevent event registration changes after event starts.  Admins can still make changes in admin section.
 
 Version 2.12.0
 * Simplified some code
