@@ -46,47 +46,45 @@
 			</div>
 		</md-toolbar>
 	</form>
-	<div layout="row" layout-align="center stretch" style="width:100%;">
-		<div layout="row" layout-align="center stretch" layout-wrap>
-			<md-card ng-repeat="event in vm.events" flex-gt-md="30">
-	  <!--    <md-card-header>
-	        <md-card-avatar>
-	          <img src="img/logo.svg"/>
-	        </md-card-avatar>
-	        <md-card-header-text>
-	          <span class="md-title">AngularJS</span>
-	          <span class="md-subhead">Material</span>
-	        </md-card-header-text>
-	      </md-card-header> -->
-	      <!--<img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">-->
-	      <md-card-title>
-	        <md-card-title-text>
-	          <span class="md-headline">{{event.name}}</span>
-						<span class="md-subhead">
-							<span ng-show="event.date.single_day">
-								<md-icon class="material-icons">today</md-icon> {{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
-							</span>
-							<span ng-hide="event.date.single_day">
-								<md-icon class="material-icons">today</md-icon> {{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
-							</span>
+	<div layout="row" layout-align="center stretch" layout-wrap style="width:100%;">
+		<md-card ng-repeat="event in vm.events" flex-gt-md="30">
+  <!--    <md-card-header>
+        <md-card-avatar>
+          <img src="img/logo.svg"/>
+        </md-card-avatar>
+        <md-card-header-text>
+          <span class="md-title">AngularJS</span>
+          <span class="md-subhead">Material</span>
+        </md-card-header-text>
+      </md-card-header> -->
+      <!--<img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">-->
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">{{event.name}}</span>
+					<span class="md-subhead">
+						<span ng-show="event.date.single_day">
+							<md-icon class="material-icons">today</md-icon> {{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
 						</span>
-						<span class="md-subhead" ng-show="event.location != ''">
-							<md-icon class="material-icons">location_on</md-icon> {{event.location}}
+						<span ng-hide="event.date.single_day">
+							<md-icon class="material-icons">today</md-icon> {{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
 						</span>
-	        </md-card-title-text>
-					<md-card-title-media>
-						<div class="md-media-sm card-media">
-							<img ng-src="{{event.season.game_logo}}" class="md-card-image" alt="Washed Out">
-						</div>
-					</md-card-title-media>
-	      </md-card-title>
-	      <md-card-content>
-	        <!--<p ng-bind-html="event.details | parseUrlFilter:'_blank'" style="white-space: pre-wrap;"></p>-->
-	      </md-card-content>
-				<md-card-actions layout="row" layout-align="end center">
-	        <md-button ui-sref="main.event({'event_id':event.event_id})">More Info</md-button>
-	      </md-card-actions>
-	    </md-card>
-		</div>
+					</span>
+					<span class="md-subhead" ng-show="event.location != ''">
+						<md-icon class="material-icons">location_on</md-icon> {{event.location}}
+					</span>
+        </md-card-title-text>
+				<md-card-title-media>
+					<div class="md-media-sm card-media">
+						<img ng-src="{{event.season.game_logo}}" class="md-card-image" alt="Washed Out">
+					</div>
+				</md-card-title-media>
+      </md-card-title>
+      <md-card-content>
+        <!--<p ng-bind-html="event.details | parseUrlFilter:'_blank'" style="white-space: pre-wrap;"></p>-->
+      </md-card-content>
+			<md-card-actions layout="row" layout-align="end center">
+        <md-button ui-sref="main.event({'event_id':event.event_id})">More Info</md-button>
+      </md-card-actions>
+    </md-card>
 	</div>
 </div>
