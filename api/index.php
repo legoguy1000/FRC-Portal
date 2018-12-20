@@ -69,6 +69,7 @@ $app->add(function ($request, $response, $next) {
   $token = null;
   $data = null;
   $authToken = $request->getAttribute("token");
+  error_log($authToken,0);
   if(is_null($authToken)) {
     /* Check for token in header. */
     $headers = $request->getHeader('Authorization');
@@ -88,8 +89,10 @@ $app->add(function ($request, $response, $next) {
         }
     }
   }
+  error_log($authToken,0);
   if(is_null($authToken)) {
     $userId = $authToken['data']->user_id;
+    error_log($userId,0);
   	FrcPortal\Auth::setCurrentUser($userId);
   	FrcPortal\Auth::setCurrentToken($authToken);
     /* Everything ok, call next middleware. */
