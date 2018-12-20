@@ -47,8 +47,27 @@
 		</md-toolbar>
 	</form>
 	<div layout="row" layout-wrap style="width:100%;">
-		<div ng-repeat="event in vm.events" flex-gt-md="25">
-			{{event.name}}
-		</div>
+		<md-card ng-repeat="event in vm.events" flex-gt-md="25">
+      <md-card-header>
+        <md-card-avatar>
+          <!--<img src="img/logo.svg"/>-->
+        </md-card-avatar>
+        <md-card-header-text>
+          <span class="md-title">AngularJS</span>
+          <span class="md-subhead">Material</span>
+        </md-card-header-text>
+      </md-card-header>
+      <!--<img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">-->
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">{{event.name}}</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content>
+        <p md-truncate>
+					{{event.details}}
+        </p>
+      </md-card-content>
+    </md-card>
 	</div>
 </div>
