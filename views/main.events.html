@@ -60,12 +60,23 @@
       <!--<img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">-->
       <md-card-title>
         <md-card-title-text>
-          <span class="md-headline" md-truncate>{{event.name}}</span>
+          <span class="md-headline">{{event.name}}</span>
+					<span class="md-subhead">
+						<span ng-show="event.date.single_day">
+							<md-icon class="material-icons">today</md-icon> {{vm.event.date.start.long_date}} {{vm.event.date.start.time_formatted}} - {{vm.event.date.end.time_formatted}}
+						</span>
+						<span ng-hide="event.date.single_day">
+							<md-icon class="material-icons">today</md-icon> {{vm.event.date.start.multi_day_start}} - {{vm.event.date.end.multi_day_end}}
+						</span>
+					</span>
         </md-card-title-text>
       </md-card-title>
       <md-card-content>
-        <p ng-bind-html="event.details | parseUrlFilter:'_blank'" style="white-space: pre-wrap;"></p>
+        <!--<p ng-bind-html="event.details | parseUrlFilter:'_blank'" style="white-space: pre-wrap;"></p>-->
       </md-card-content>
+			<md-card-actions layout="row" layout-align="end center">
+        <md-button ui-sref="main.event({'event_id':event.event_id})">More Info</md-button>
+      </md-card-actions>
     </md-card>
 	</div>
 </div>
