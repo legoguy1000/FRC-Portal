@@ -55,7 +55,9 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
       if($exp - time() <= 15*60 && $status == 200) {
         $body = json_decode($response->getBody(),true);
         $user = FrcPortal\Auth::user();
-        $body['token'] = $user->generateUserJWT();
+        if(!is_null($user)) {
+          $body['token'] = $user->generateUserJWT();
+        }
         return $response->withJson($body, $status);
       }
       return $response;
