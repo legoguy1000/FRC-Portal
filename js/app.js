@@ -306,7 +306,7 @@ angular.module('FrcPortal', [
 		 }
 	 }) */
 	 .state('main.events', {
-	 url: '/events',
+	 url: '/events?name&type&event_start&event_end',
 	 templateUrl: 'views/main.events.html',
 	 controller: 'main.eventsController',
 	 controllerAs: 'vm',
