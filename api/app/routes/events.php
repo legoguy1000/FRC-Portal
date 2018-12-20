@@ -9,7 +9,7 @@ $app->group('/events', function () {
     $searchProperties = array(
       'name' => '',
       'type' => '',
-      'event_start' => date('Y-m-d 00:00:00'),
+      'event_start' => '',
       'event_end' => '',
     );
     $defaults = array(
