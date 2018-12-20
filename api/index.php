@@ -84,7 +84,7 @@ $app->add(function ($request, $response, $next) {
           $authToken = (array) $decoded;
           $request = $request->withAttribute('token', $data);
         } catch (Exception $exception) {
-            //throw $exception;
+            handleExceptionMessage($exception);
         }
     }
   }
