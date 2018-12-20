@@ -63,11 +63,14 @@
           <span class="md-headline">{{event.name}}</span>
 					<span class="md-subhead">
 						<span ng-show="event.date.single_day">
-							<md-icon class="material-icons">today</md-icon> {{vm.event.date.start.long_date}} {{vm.event.date.start.time_formatted}} - {{vm.event.date.end.time_formatted}}
+							<md-icon class="material-icons">today</md-icon> {{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
 						</span>
 						<span ng-hide="event.date.single_day">
-							<md-icon class="material-icons">today</md-icon> {{vm.event.date.start.multi_day_start}} - {{vm.event.date.end.multi_day_end}}
+							<md-icon class="material-icons">today</md-icon> {{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
 						</span>
+					</span>
+					<span class="md-subhead" ng-show="event.location != ''">
+						<md-icon class="material-icons">location_on</md-icon> {{event.date.location}}
 					</span>
         </md-card-title-text>
       </md-card-title>
