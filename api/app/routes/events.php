@@ -726,12 +726,12 @@ $app->group('/events', function () {
 
       $registrationBool = (bool) $formData['registration'];
       $event = FrcPortal\Event::find($event_id);
+      if(time() > $event->date['start']['unix']) {
+        return badRequestResponse($response, $msg = 'Registration is closed. Event has already started.');
+      } elseif(($event->registration_deadline_date['unix'] != null && time() > $event->registration_deadline_date['unix']) && !FrcPortal\Auth::isAdmin()) {
+        return badRequestResponse($response, $msg = 'Registration is closed. Registration deadline was '.date('F j, Y g:m A',$event->registration_deadline_unix).'.');
+      }
       if($registrationBool) {
-        if(time() > $event->date['start']['unix']) {
-          return badRequestResponse($response, $msg = 'Registration is closed. Event has already started.');
-      	} elseif(($event->registration_deadline_date['unix'] != null && time() > $event->registration_deadline_date['unix']) && !FrcPortal\Auth::isAdmin()) {
-          return badRequestResponse($response, $msg = 'Registration is closed. Registration deadline was '.date('F j, Y g:m A',$event->registration_deadline_unix).'.');
-      	}
         $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['registration' => true, 'comments' => $formData['comments']]);
         $ereq_id = $reqUpdate->ereq_id;
         $can_drive = (bool) $formData['can_drive'];

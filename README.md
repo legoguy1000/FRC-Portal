@@ -14,6 +14,7 @@ Version 2.13.0
 * Removed old functions
 * Add Middleware to always pull token even if not required
 * Added logic to limit information for event endpoint if not authed
+* Added public /events page to view all events
 
 Version 2.12.0
 * Simplified some code
