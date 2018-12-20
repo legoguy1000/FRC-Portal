@@ -396,7 +396,7 @@ md-list-item.min-height-reset .md-list-item-inner::before {
 }
 
 /* styles for '...' */
-.block-with-text {
+.custom-truncate {
   /* hide text if it more than N lines  */
   overflow: hidden;
   /* for set '...' in absolute position */
@@ -412,7 +412,7 @@ md-list-item.min-height-reset .md-list-item-inner::before {
   padding-right: 1em;
 }
 /* create the ... */
-.block-with-text:before {
+.custom-truncate:before {
   /* points in the end */
   content: '...';
   /* absolute position */
@@ -422,7 +422,7 @@ md-list-item.min-height-reset .md-list-item-inner::before {
   bottom: 0;
 }
 /* hide ... if we have text, which is less than or equal to max lines */
-.block-with-text:after {
+.custom-truncate:after {
   /* points in the end */
   content: '';
   /* absolute position */
