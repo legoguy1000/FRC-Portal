@@ -71,7 +71,10 @@
       </md-card-title>
       <md-card-content>
 				<div layout="row">
-					<div ng-show="event.payment_required"><md-icon class="material-icons">attach_money</md-icon></div>
+					<div ng-show="event.payment_required">
+						<md-tooltip md-direction="top">Payment Required</md-tooltip>
+						<md-icon class="material-icons">attach_money</md-icon>
+					</div>
 					<div ng-show="event.permission_slip_required"><md-icon class="material-icons">assignment</md-icon></div>
 					<div ng-show="event.food_required"><md-icon class="material-icons">local_dining</md-icon></div>
 					<div ng-show="event.drivers_required"><md-icon class="material-icons">directions_car</md-icon></div>
