@@ -21,7 +21,7 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 			search: {
 				name: $stateParams.name != undefined ? $stateParams.name:'',
 				type: $stateParams.type != undefined ? $stateParams.type:'',
-				event_start: $stateParams.event_start != undefined ? $stateParams.event_start:vm.event_start_moment.format('MMMM Do YYYY'),
+				event_start: $stateParams.event_start != undefined ? $stateParams.event_start:moment().format('MMMM Do YYYY'),
 				event_end: $stateParams.event_end != undefined ? $stateParams.event_end:'',
 			}
 		};
