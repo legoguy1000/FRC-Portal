@@ -91,8 +91,8 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			if(response.status == true) {
 				signinService.logout();
 				vm.genQrCodeUrl();
-				console.log('Connection closed');
-				eventSource.close();
+				//console.log('Connection closed');
+				//eventSource.close();
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
