@@ -688,7 +688,7 @@ angular.module('FrcPortal', [
 		redirectUri: window.location.origin+'/oauth',
 		requiredUrlParams: ['scope','prompt'],
 		optionalUrlParams: ['display', hdVar],
-		scope: ['profile', 'email','https://www.googleapis.com/auth/plus.login'],
+		scope: ['profile', 'email'], //,'https://www.googleapis.com/auth/plus.login' Remove Google Plus
 		scopePrefix: 'openid',
 		scopeDelimiter: ' ',
 		display: 'popup',

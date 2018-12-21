@@ -20,8 +20,9 @@ $app->group('/auth', function () {
     if(isset($args['code'])) {
       $client->authenticate($args['code']);
       $accessCode = $client->getAccessToken();
-      $me = $plus->people->get("me");
-      $userData = formatGoogleLoginUserData($me);
+      $id_token = $accessCode['id_token'];
+      //$me = $plus->people->get("me");
+      $userData = formatGoogleLoginUserData($id_token);
       if(checkTeamLogin($userData['email'])) {
         return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
       }

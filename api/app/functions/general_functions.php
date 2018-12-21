@@ -352,11 +352,11 @@ function clinput($question, $required = true) {
 }
 
 function formatGoogleLoginUserData($me) {
-	$email = $me['emails'][0]['value'];
-	$fname = $me['name']['givenName'];
-	$lname = $me['name']['familyName'];
-	$image = $me['image']['url'];
-	$id = $me['id'];
+	$email = $me['email'];
+	$fname = $me['given_name'];
+	$lname = $me['family_name'];
+	$image = $me['picture'];
+	$id = $me['sub'];
 
 	$userData = array(
 		'id' => $id,
