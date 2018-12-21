@@ -10,6 +10,9 @@ $app->group('/auth', function () {
     if(checkLoginProvider($provider) == false) {
       return badRequestResponse($response, $msg = 'Google login is not enabled.  Please select a different option.');
     }
+    if(!isset($args['code']) || $args['code'] == '') {
+      return badRequestResponse($response, $msg = 'Invalid code from Google Sign In');
+    }
     $client = new Google_Client();
     //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
     $client->setClientId(getSettingsProp('google_oauth_client_id'));
@@ -17,26 +20,25 @@ $app->group('/auth', function () {
     $client->setRedirectUri(getSettingsProp('env_url').'/oauth');
     $plus = new Google_Service_Plus($client);
     $data = array();
-    if(isset($args['code'])) {
-      $client->authenticate($args['code']);
-      $accessCode = $client->getAccessToken();
-      $id_token = $accessCode['id_token'];
-      $payload = $client->verifyIdToken($id_token);
-      //$me = $plus->people->get("me");
-      $userData = formatGoogleLoginUserData($payload);
-      if(checkTeamLogin($userData['email'])) {
-        return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
-      }
+    $client->authenticate($args['code']);
+    $accessCode = $client->getAccessToken();
+    $id_token = $accessCode['id_token'];
+    $payload = $client->verifyIdToken($id_token);
+    //$me = $plus->people->get("me");
+    $userData = formatGoogleLoginUserData($payload);
+    if(checkTeamLogin($userData['email'])) {
+      $teamDomain = getSettingsProp('team_domain');
+      return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
+    }
 
-      $user = checkLogin($userData);
-      if($user != false) {
-        $user->updateUserOnLogin($userData);
-  			$jwt = $user->generateUserJWT();
-        $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-      } else {
-        $teamNumber = getSettingsProp('team_number');
-        $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
-      }
+    $user = checkLogin($userData);
+    if($user != false) {
+      $user->updateUserOnLogin($userData);
+			$jwt = $user->generateUserJWT();
+      $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+    } else {
+      $teamNumber = getSettingsProp('team_number');
+      $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
     }
     $response = $response->withJson($responseData);
     return $response;
@@ -48,7 +50,9 @@ $app->group('/auth', function () {
     if(checkLoginProvider($provider) == false) {
       return badRequestResponse($response, $msg = 'Facebook login is not enabled.  Please select a different option.');
     }
-
+    if(!isset($args['code']) || $args['code'] == '') {
+      return badRequestResponse($response, $msg = 'Invalid code from Facebook Sign In');
+    }
     $client_id = getSettingsProp('facebook_oauth_client_id');
     $secret = getSettingsProp('facebook_oauth_client_secret');
     $redirect = getSettingsProp('env_url').'/oauth';
@@ -71,6 +75,7 @@ $app->group('/auth', function () {
       if(isset($me['email']) || $me['email'] != '') {
         $userData = formatFacebookLoginUserData($me);
         if(checkTeamLogin($userData['email'])) {
+          $teamDomain = getSettingsProp('team_domain');
           return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
         }
 
@@ -100,50 +105,53 @@ $app->group('/auth', function () {
     if(checkLoginProvider($provider) == false) {
       return badRequestResponse($response, $msg = 'Microsoft login is not enabled.  Please select a different option.');
     }
+    if(!isset($args['code']) || $args['code'] == '') {
+      return badRequestResponse($response, $msg = 'Invalid code from Microsoft Sign In');
+    }
     //$secret = getIniProp('microsoft_client_secret');
     $secret = getSettingsProp('microsoft_oauth_client_secret');
 //    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
     $clientId =  getSettingsProp('microsoft_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth';
-    if(isset($args['code'])) {
-      $data = array(
-    		'client_id'=>$clientId,
-    		'scope'=>'openid email profile User.Read', // User.Read User.ReadBasic.All
-    		'code'=>$args['code'],
-    		'redirect_uri'=>$redirect,
-    		'grant_type'=>'authorization_code',
-    		'client_secret'=>$secret,
-    	);
-    	$url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
-    	$options = array(
-    		'http' => array(
-    			'header'  => "Content-Type: application/x-www-form-urlencoded",
-    			'method'  => 'POST',
-    			'content' => http_build_query($data)
-    		)
-    	);
-      $result = file_get_contents($url, false, stream_context_create($options));
-      $accessTokenArr = json_decode($result, true);
-      $accessToken = $accessTokenArr['access_token'];
-      $graph = new Graph();
-    	$graph->setApiVersion('beta');
-    	$graph->setAccessToken($accessToken); //=mail,aboutMe,birthday,photo
-    	$me = $graph->createRequest('GET', '/me')->setReturnType(Model\User::class)->execute();
-      $me = json_decode(json_encode($me), true);
+    $data = array(
+  		'client_id'=>$clientId,
+  		'scope'=>'openid email profile User.Read', // User.Read User.ReadBasic.All
+  		'code'=>$args['code'],
+  		'redirect_uri'=>$redirect,
+  		'grant_type'=>'authorization_code',
+  		'client_secret'=>$secret,
+  	);
+  	$url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
+  	$options = array(
+  		'http' => array(
+  			'header'  => "Content-Type: application/x-www-form-urlencoded",
+  			'method'  => 'POST',
+  			'content' => http_build_query($data)
+  		)
+  	);
+    $result = file_get_contents($url, false, stream_context_create($options));
+    $accessTokenArr = json_decode($result, true);
+    $accessToken = $accessTokenArr['access_token'];
+    $graph = new Graph();
+  	$graph->setApiVersion('beta');
+  	$graph->setAccessToken($accessToken); //=mail,aboutMe,birthday,photo
+  	$me = $graph->createRequest('GET', '/me')->setReturnType(Model\User::class)->execute();
+    $me = json_decode(json_encode($me), true);
 
-    	$userData = formatMicrosoftLoginUserData($me);
-      if(checkTeamLogin($userData['email'])) {
-        return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
-      }
+  	$userData = formatMicrosoftLoginUserData($me);
+    if(checkTeamLogin($userData['email'])) {
+      $teamDomain = getSettingsProp('team_domain');
+      return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
+    }
 
-      $user = checkLogin($userData);
-      if($user != false) {
-        $user->updateUserOnLogin($userData);
-  			$jwt = $user->generateUserJWT();
-        $responseData = array('status'=>true, 'msg'=>'Login with Microsoft Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-      } else {
-        $teamNumber = getSettingsProp('team_number');
-        $responseData = array('status'=>false, 'msg'=>'Microsoft account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');      }
+    $user = checkLogin($userData);
+    if($user != false) {
+      $user->updateUserOnLogin($userData);
+			$jwt = $user->generateUserJWT();
+      $responseData = array('status'=>true, 'msg'=>'Login with Microsoft Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+    } else {
+      $teamNumber = getSettingsProp('team_number');
+      $responseData = array('status'=>false, 'msg'=>'Microsoft account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
     }
     $response = $response->withJson($responseData);
     return $response;
@@ -203,10 +211,17 @@ $app->group('/auth', function () {
       return badRequestResponse($response, $msg = 'Local login is not enabled.  Please select a different option.');
     }
 
+    if(!isset($formData['email']) || $formData['email'] == '') {
+      return badRequestResponse($response, $msg = 'Email is required');
+    }
+    if(!isset($formData['password']) || $formData['password'] == '') {
+      return badRequestResponse($response, $msg = 'Password is required');
+    }
     $email = $formData['email'];
     $password = $formData['password'];
     $require_team_email = getSettingsProp('require_team_email');
     if(checkTeamLogin($email)) {
+      $teamDomain = getSettingsProp('team_domain');
       return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
     }
 
