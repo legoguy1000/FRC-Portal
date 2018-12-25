@@ -18,6 +18,7 @@ require_once('EventTimeSlot.php');
 require_once('EventTimeSlotUser.php');
 require_once('EventFood.php');
 require_once('EventFoodUser.php');
+require_once('Logs.php');
 
 require_once('database/_CreateForeignKeys.php');
 

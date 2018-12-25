@@ -23,11 +23,15 @@ $event_time_slots = Capsule::schema()->hasTable('event_time_slots');
 $event_time_slots_event_requirements = Capsule::schema()->hasTable('event_time_slots_event_requirements');
 $event_food = Capsule::schema()->hasTable('event_food');
 $event_food_event_requirements = Capsule::schema()->hasTable('event_food_event_requirements');
+//logs
+$logs = Capsule::schema()->hasTable('logs');
 //Roles & Permissions
+/* Not used
 $roles = Capsule::schema()->hasTable('roles');
 $permissions = Capsule::schema()->hasTable('permissions');
 $role_user = Capsule::schema()->hasTable('role_user');
 $permission_role = Capsule::schema()->hasTable('permission_role');
+*/
 
 
 //Users Table
@@ -135,6 +139,14 @@ if($event_food_event_requirements && $event_food && $event_requirements) {
     $table->foreign('ereq_id')->references('ereq_id')->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
   });
 }
+
+//Logs and Users
+if($logs && $users) {
+  Capsule::schema()->table('logs', function ($table) {
+    $table->foreign('user_id')->references('user_id')->on('users')->onDelete('set null')->onUpdate('cascade');
+  });
+}
+/* Not used
 //Roles & Permissions
 if($role_user && $roles && $users) {
   Capsule::schema()->table('role_user', function ($table) {
@@ -148,5 +160,6 @@ if($permission_role && $roles && $permissions) {
     $table->foreign('permission_id')->references('permission_id')->on('permissions')->onUpdate('cascade')->onDelete('cascade');
   });
 }
+*/
 
 ?>

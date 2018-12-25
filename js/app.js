@@ -295,6 +295,22 @@ angular.module('FrcPortal', [
 	    }]
 	  }
 	  })
+	  .state('main.admin.logs', {
+		url: '/logs',
+		templateUrl: 'views/main.admin.logs.html',
+		controller: 'main.admin.logsController',
+		controllerAs: 'vm',
+		authenticate: true,
+		data: {
+		  title: 'Admin | Logs'
+		},
+	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
+	    settingsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
+	      // you can lazy load files for an existing module
+	             return $ocLazyLoad.load('js/controllers/main.admin.logsController.js');
+	    }]
+	  }
+	  })
 	/*	.state('main.admin.exemptHours', {
 		 url: '/exemptHours',
 		 templateUrl: 'views/main.admin.exemptHours.html',
