@@ -49,7 +49,7 @@ class Log extends Eloquent {
    * Get the user.
    */
    public function users() {
-     return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
+     return $this->hasOne('FrcPortal\User', 'user_id', 'user_id');
    }
 
 }

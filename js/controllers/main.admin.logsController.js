@@ -19,7 +19,7 @@ function mainAdminLogsController($timeout, $q, $scope, $state, $timeout, logsSer
 			user_id: '',
 		}
 	};
-	vm.users = [];
+	vm.logs = [];
 	vm.limitOptions = [10,25,50,100];
 
 	vm.showFilter = function () {
@@ -56,7 +56,7 @@ function mainAdminLogsController($timeout, $q, $scope, $state, $timeout, logsSer
 
 	vm.getLogs = function () {
 		vm.promise = logsService.getAllLogsFilter($.param(vm.query)).then(function(response){
-			vm.users = response.data;
+			vm.logs = response.data;
 			vm.total = response.total;
 			vm.maxPage = response.maxPage;
 		});
