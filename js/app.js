@@ -52,6 +52,7 @@ angular.module('FrcPortal', [
 								 'js/services/timeServices.js',
 								 'js/services/settingServices.js',
 								 'js/services/generalServices.js',
+								 'js/services/logServices.js',
 						 ]);
 	    }]
 		},
