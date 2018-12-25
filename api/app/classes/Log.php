@@ -25,6 +25,7 @@ class Log extends Eloquent {
    */
   protected $casts = [];
 
+  protected $appends = ['timestamp'];
   /**
   * The attributes that should be hidden for arrays.
   *
@@ -46,10 +47,14 @@ class Log extends Eloquent {
   } */
 
   /**
-   * Get the user.
+   * Get the log.
    */
    public function user() {
      return $this->hasOne('FrcPortal\User', 'user_id', 'user_id');
+   }
+
+   public function getTimestampAttribute() {
+     return formatDateArrays($this->attributes['created_at']);
    }
 
 }

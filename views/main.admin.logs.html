@@ -59,7 +59,7 @@
 			<tbody md-body>
 				<tr md-row ng-repeat="log in vm.logs">
 					<td md-cell>
-						<span>{{log.created_at}}</span>
+						<span>{{log.timestamp.long_date}} {{log.timestamp.time_formatted}}</span>
 					</td>
 					<td md-cell>
 						<span>{{log.level}}</span>
