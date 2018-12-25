@@ -126,7 +126,7 @@ function sendToLogs($level, $message) {
 		$userId = FrcPortal\Auth::user()->user_id;
 		$log->user_id = $userId;
 	}
-	$log->level = $level;
+	$log->level = ucfirst($level);
 	$log->message = $message;
 	$log->save();
 }
