@@ -119,6 +119,18 @@ function handleExceptionMessage($e) {
 	return 'Something went wrong';
 }
 
+function sendToLogs($level, $message) {
+	$authed = FrcPortal\Auth::isAuthenticated();
+	$log = new FrcPortal\Log();
+	if($authed) {
+		$userId = FrcPortal\Auth::user()->user_id;
+		$log->user_id = $userId;
+	}
+	$log->level = $level;
+	$log->message = $message;
+	$log->save();
+}
+
 function getMembershipFormName() {
 	$mfn = getSettingsProp('membership_form_name');
 	if(is_null($mfn) || $mfn == '') {
