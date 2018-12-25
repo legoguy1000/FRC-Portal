@@ -209,6 +209,7 @@ require_once('./app/routes/settings.php');
 require_once('./app/routes/public.php');
 require_once('./app/routes/eventTypes.php');
 require_once('./app/routes/userCategories.php');
+require_once('./app/routes/logs.php');
 
 $app->run();
 

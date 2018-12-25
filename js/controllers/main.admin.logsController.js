@@ -55,7 +55,7 @@ function mainAdminLogsController($timeout, $q, $scope, $state, $timeout, logsSer
 	});
 
 	vm.getLogs = function () {
-		vm.promise = usersService.getAllLogsFilter($.param(vm.query)).then(function(response){
+		vm.promise = logsService.getAllLogsFilter($.param(vm.query)).then(function(response){
 			vm.users = response.data;
 			vm.total = response.total;
 			vm.maxPage = response.maxPage;
