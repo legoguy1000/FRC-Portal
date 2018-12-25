@@ -48,7 +48,7 @@ class Log extends Eloquent {
   /**
    * Get the user.
    */
-   public function users() {
+   public function user() {
      return $this->hasOne('FrcPortal\User', 'user_id', 'user_id');
    }
 
