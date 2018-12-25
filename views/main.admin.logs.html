@@ -49,32 +49,23 @@
 		<table md-table ng-model="selected" md-progress="vm.promise">
 			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getLogs">
 				<tr md-row>
-					<th md-column style="width:56px"></th>
-					<th md-column md-order-by="full_name"><span>Name</span></th>
-					<th md-column md-order-by="user_type" hide-xs><span>Type - Grade (Grad Year)</span></th>
-					<th md-column md-order-by="school_name" hide-xs hide-sm><span>School</span></th>
-					<th md-column md-order-by="email" hide-xs hide-sm><span>Email</span></th>
-					<th md-column md-order-by="gender" hide-xs hide-sm><span>Gender</span></th>
-					<th md-column md-order-by="status" hide-xs hide-sm><span>Status</span></th>
+					<th md-column md-order-by="created_at"><span>Timestamp</span></th>
+					<th md-column md-order-by="level" hide-xs><span>Log Level</span></th>
+					<th md-column md-order-by="user_id" hide-xs hide-sm><span>User</span></th>
+					<th md-column hide-xs hide-sm><span>Message</span></th>
 					<th md-column></th>
 				</tr>
 			</thead>
 			<tbody md-body>
-				<tr md-row ng-repeat="user in vm.users">
+				<tr md-row ng-repeat="log in vm.logs">
 					<td md-cell>
-						<img ng-src="{{user.profile_image}}" class="avatar" alt=""/>
+						<span>{{log.created_at}}</span>
 					</td>
 					<td md-cell>
-						<span>{{user.full_name}}</span>
+						<span>{{log.level}}</span>
 					</td>
-					<td md-cell hide-xs><span>{{user.user_type}}</span> <span ng-show="user.student_grade!=''"> - {{user.student_grade}}</span><span ng-show="user.grad_year"> ({{user.grad_year}})</td>
-					<td md-cell hide-xs hide-sm><span>{{user.school.school_name}}</span></td>
-					<td md-cell hide-xs hide-sm><span>{{user.email}}</span></td>
-					<td md-cell hide-xs hide-sm><span>{{user.gender}}</span></td>
-					<td md-cell hide-xs hide-sm>
-						<span ng-show="user.status">Active</span>
-						<span ng-hide="user.status">Inactive</span>
-					</td>
+					<td md-cell hide-xs><span>{{log.user_id}}</span></td>
+					<td md-cell hide-xs hide-sm><span>{{log.message}}</span></td>
 					<td md-cell></td>
 				</tr>
 			</tbody>

@@ -32,7 +32,7 @@ $app->group('/logs', function () {
     //  die($bool );
     }
     $totalNum = 0;
-    $logs = FrcPortal\Log::where($queryArr2);
+    $logs = FrcPortal\Log::with('users')->where($queryArr2);
     if($filter != '') {
       $logs = $logs->orHavingRaw('level LIKE ?',array('%'.$filter.'%'));
       $logs = $logs->orHavingRaw('user_id LIKE ?',array('%'.$filter.'%'));
