@@ -8,9 +8,11 @@ $app->group('/auth', function () {
     $args = $request->getParsedBody();
     $provider = 'google';
     if(checkLoginProvider($provider) == false) {
+      insertLogs($level = 'Warning', $message = 'Attempted login with Google OAuth2.  Google login provider not enabled.');
       return badRequestResponse($response, $msg = 'Google login is not enabled.  Please select a different option.');
     }
     if(!isset($args['code']) || $args['code'] == '') {
+      insertLogs($level = 'Warning', $message = 'Invalid code from Google OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Google Sign In');
     }
     $client = new Google_Client();
@@ -28,6 +30,7 @@ $app->group('/auth', function () {
     $userData = formatGoogleLoginUserData($payload);
     if(checkTeamLogin($userData['email'])) {
       $teamDomain = getSettingsProp('team_domain');
+      insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Google OAuth2. A '.$teamDomain.' email is required.');
       return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
     }
 
@@ -36,9 +39,12 @@ $app->group('/auth', function () {
       $user->updateUserOnLogin($userData);
 			$jwt = $user->generateUserJWT();
       $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+      FrcPortal\Auth::setCurrentUser($user->user_id);
+      insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Google OAuth2.');
     } else {
       $teamNumber = getSettingsProp('team_number');
       $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+      insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Google OAuth2. Google account not linked to any current portal user.');
     }
     $response = $response->withJson($responseData);
     return $response;
@@ -48,9 +54,11 @@ $app->group('/auth', function () {
     $args = $request->getParsedBody();
     $provider = 'facebook';
     if(checkLoginProvider($provider) == false) {
+      insertLogs($level = 'Warning', $message = 'Attempted login with Facebook OAuth2.  Facebook login provider not enabled.');
       return badRequestResponse($response, $msg = 'Facebook login is not enabled.  Please select a different option.');
     }
     if(!isset($args['code']) || $args['code'] == '') {
+      insertLogs($level = 'Warning', $message = 'Invalid code from Facebook OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Facebook Sign In');
     }
     $client_id = getSettingsProp('facebook_oauth_client_id');
@@ -76,6 +84,7 @@ $app->group('/auth', function () {
         $userData = formatFacebookLoginUserData($me);
         if(checkTeamLogin($userData['email'])) {
           $teamDomain = getSettingsProp('team_domain');
+          insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Facebook OAuth2. A '.$teamDomain.' email is required.');
           return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
         }
 
@@ -84,16 +93,22 @@ $app->group('/auth', function () {
           $user->updateUserOnLogin($userData);
     			$jwt = $user->generateUserJWT();
           $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+          FrcPortal\Auth::setCurrentUser($user->user_id);
+          insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Facebook OAuth2.');
         } else {
           $teamNumber = getSettingsProp('team_number');
           $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');        }
-    	} else {
+          insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Facebook OAuth2. Facebook account not linked to any current portal user.');
+      } else {
         $responseData = array('status'=>false, 'msg'=>'No email address provided by Facebook OAuth2');
+        insertLogs($level = 'Information', $message = 'Attempted log in using Facebook OAuth2. Facebook did not provide an email address.');
       }
     } catch(Facebook\Exceptions\FacebookResponseException $e) {
       $responseData = array('status'=>false, 'type'=>'error', 'msg'=>'Facebook Login Error', 'error'=>$e->getMessage());
+      insertLogs($level = 'Critical', $message = 'Facebook Login Error. \r\n'.$e->getMessage());
     } catch(Facebook\Exceptions\FacebookSDKException $e) {
       $responseData = array('status'=>false, 'type'=>'error', 'msg'=>'Facebook Login Error', 'error'=>$e->getMessage());
+      insertLogs($level = 'Critical', $message = 'Facebook Login Error. \r\n'.$e->getMessage());
     }
     $response = $response->withJson($responseData);
     return $response;
@@ -103,9 +118,11 @@ $app->group('/auth', function () {
     $args = $request->getParsedBody();
     $provider = 'microsoft';
     if(checkLoginProvider($provider) == false) {
+      insertLogs($level = 'Warning', $message = 'Attempted login with Microsoft OAuth2.  Microsoft login provider not enabled.');
       return badRequestResponse($response, $msg = 'Microsoft login is not enabled.  Please select a different option.');
     }
     if(!isset($args['code']) || $args['code'] == '') {
+      insertLogs($level = 'Warning', $message = 'Invalid code from Microsoft OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Microsoft Sign In');
     }
     //$secret = getIniProp('microsoft_client_secret');
@@ -141,6 +158,7 @@ $app->group('/auth', function () {
   	$userData = formatMicrosoftLoginUserData($me);
     if(checkTeamLogin($userData['email'])) {
       $teamDomain = getSettingsProp('team_domain');
+      insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Microsoft OAuth2. A '.$teamDomain.' email is required.');
       return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
     }
 
@@ -149,9 +167,12 @@ $app->group('/auth', function () {
       $user->updateUserOnLogin($userData);
 			$jwt = $user->generateUserJWT();
       $responseData = array('status'=>true, 'msg'=>'Login with Microsoft Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+      FrcPortal\Auth::setCurrentUser($user->user_id);
+      insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Microsoft OAuth2.');
     } else {
       $teamNumber = getSettingsProp('team_number');
       $responseData = array('status'=>false, 'msg'=>'Microsoft account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+      insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Microsoft OAuth2. Microsoft account not linked to any current portal user.');
     }
     $response = $response->withJson($responseData);
     return $response;
@@ -208,6 +229,7 @@ $app->group('/auth', function () {
     $formData = $request->getParsedBody();
     $provider = 'local';
     if(checkLoginProvider($provider) == false) {
+      insertLogs($level = 'Warning', $message = 'Attempted login with local credentials.  Local login provider not enabled.');
       return badRequestResponse($response, $msg = 'Local login is not enabled.  Please select a different option.');
     }
 
@@ -222,6 +244,7 @@ $app->group('/auth', function () {
     $require_team_email = getSettingsProp('require_team_email');
     if(checkTeamLogin($email)) {
       $teamDomain = getSettingsProp('team_domain');
+      insertLogs($level = 'Warning', $message = $email.' attempted to login using local credentials. A '.$teamDomain.' email is required.');
       return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
     }
 
@@ -238,8 +261,11 @@ $app->group('/auth', function () {
     if($user != null) {
       $jwt = $user->generateUserJWT();
       $responseData = array('status'=>true, 'msg'=>'Login Successful', 'token'=>$jwt, 'userInfo' => $user);
+      FrcPortal\Auth::setCurrentUser($user->user_id);
+      insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using local credentials.');
     } else {
       $responseData = array('status'=>false, 'msg'=>'Username or Password not correct. Please try again.');
+      insertLogs($level = 'Information', $message = $email.' attempted to login using local credentials. Username or Password not correct.');
     }
     $response = $response->withJson($responseData);
     return $response;
