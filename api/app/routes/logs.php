@@ -2,6 +2,9 @@
 use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/logs', function () {
   $this->get('', function ($request, $response, $args) {
+    if(!FrcPortal\Auth::isAdmin()) {
+      return unauthorizedResponse($response);
+    }
     $logs = array();
     $data = array();
     $searchProperties = array(
