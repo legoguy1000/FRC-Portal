@@ -22,6 +22,10 @@ class Auth {
   * @var null
   */
   protected static $token = NULL;
+  /**
+  * @var null
+  */
+  protected static $ip_address = NULL;
 
   public static function setCurrentUser($user_id) {
     self::$currentuser = $user_id;
@@ -56,4 +60,11 @@ class Auth {
     return self::$isAuthenticated;
   }
 
+  public static function setClientIP($ip) {
+    self::$ip_address = $ip;
+    return true;
+  }
+  public static function getClientIP() {
+    return self::$ip_address;
+  }
 }

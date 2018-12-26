@@ -63,6 +63,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
       return $response;
     }
 ]));
+$app->add(new RKA\Middleware\IpAddress($checkProxyHeaders = true, $trustedProxies = array()));
 $app->add(function ($request, $response, $next) {
   $header = "";
   $message = "Using token from request header";
@@ -94,6 +95,8 @@ $app->add(function ($request, $response, $next) {
   	FrcPortal\Auth::setCurrentToken($authToken);
     /* Everything ok, call next middleware. */
   }
+  $ipAddress = $request->getAttribute('ip_address');
+  FrcPortal\Auth::setClientIP($ipAddress);
 	$response = $next($request, $response);
   return $response;
 });
@@ -115,6 +118,7 @@ $app->get('/version', function (Request $request, Response $response, array $arg
     'token' => FrcPortal\Auth::currentToken(),
     'isAuthenticated' => FrcPortal\Auth::isAuthenticated(),
   );
+  insertLogs($level = 'Information', $message = 'Called version endpoint');
   $response = $response->withJson($responseArr);
   return $response;
 });

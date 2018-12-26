@@ -15,7 +15,7 @@ class Log extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'log_id', 'level', 'user_id', 'message'
+    'log_id', 'level', 'user_id', 'message', 'ip_address'
   ];
 
   /**

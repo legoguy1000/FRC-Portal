@@ -24,6 +24,7 @@ function getRealIpAddr() {
     return $ip;
 }
 
+/*
 function insertLogs($userId, $type, $status, $msg) {
 	$db = db_connect();
 	$id = uniqid();
@@ -35,7 +36,7 @@ function insertLogs($userId, $type, $status, $msg) {
 	$query = 'INSERT INTO logs (id, user_id, type, status, msg, remote_ip) VALUES ('.db_quote($id).', '.$user_id.', '.db_quote($type).', '.db_quote($status).', '.db_quote($msg).', '.db_quote($ip).')';
 	//$result = db_query($query);
 	return $id;
-}
+} */
 
 function defaultTableParams() {
 	$params = array();
@@ -119,15 +120,17 @@ function handleExceptionMessage($e) {
 	return 'Something went wrong';
 }
 
-function sendToLogs($level, $message) {
+function insertLogs($level, $message) {
 	$authed = FrcPortal\Auth::isAuthenticated();
 	$log = new FrcPortal\Log();
 	if($authed) {
 		$userId = FrcPortal\Auth::user()->user_id;
 		$log->user_id = $userId;
 	}
+	$ip = FrcPortal\Auth::getClientIP();
 	$log->level = ucfirst($level);
 	$log->message = $message;
+	$log->ip_address = $ip
 	$log->save();
 }
 

@@ -67,7 +67,7 @@ $app->group('/logs', function () {
     if($listOnly) {
       $data = $logs;
     }
-    //sendToLogs('information', 'Loaded /logs endpoint');
+    //insertLogs('information', 'Loaded /logs endpoint');
     $response = $response->withJson($data);
     return $response;
   });
