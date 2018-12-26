@@ -21,6 +21,43 @@ $config['db']['collation'] = 'utf8_unicode_ci';
 $config['db']['prefix'] = '';
  //asdf
 $app = new \Slim\App(['settings' => $config]);
+$app->add(function ($request, $response, $next) {
+  $header = "";
+  $message = "Using token from request header";
+  $token = null;
+  $data = null;
+  $authToken = $request->getAttribute("token");
+  if(is_null($authToken)) {
+    /* Check for token in header. */
+    $headers = $request->getHeader('Authorization');
+    $header = isset($headers[0]) ? $headers[0] : "";
+    if (preg_match('/Bearer\s+(.*)$/i', $header, $matches)) {
+        $token = $matches[1];
+        try {
+          $decoded = JWT::decode(
+              $token,
+              getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : getIniProp('db_pass'),
+              array("HS256", "HS512", "HS384")
+          );
+          $authToken = (array) $decoded;
+          $request = $request->withAttribute('token', $data);
+        } catch (Exception $exception) {
+            handleExceptionMessage($exception);
+        }
+    }
+  }
+  if(!is_null($authToken)) {
+    $userId = $authToken['data']->user_id;
+  	FrcPortal\Auth::setCurrentUser($userId);
+  	FrcPortal\Auth::setCurrentToken($authToken);
+    /* Everything ok, call next middleware. */
+  }
+  $ipAddress = $request->getAttribute('ip_address');
+  FrcPortal\Auth::setClientIP($ipAddress);
+	$response = $next($request, $response);
+  return $response;
+});
+$app->add(new RKA\Middleware\IpAddress($checkProxyHeaders = true, $trustedProxies = array()));
 $app->add(new Tuupola\Middleware\JwtAuthentication([
     "secret" => getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : getIniProp('db_pass'),
     "rules" => [
@@ -63,43 +100,6 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
       return $response;
     }
 ]));
-$app->add(new RKA\Middleware\IpAddress($checkProxyHeaders = true, $trustedProxies = array()));
-$app->add(function ($request, $response, $next) {
-  $header = "";
-  $message = "Using token from request header";
-  $token = null;
-  $data = null;
-  $authToken = $request->getAttribute("token");
-  if(is_null($authToken)) {
-    /* Check for token in header. */
-    $headers = $request->getHeader('Authorization');
-    $header = isset($headers[0]) ? $headers[0] : "";
-    if (preg_match('/Bearer\s+(.*)$/i', $header, $matches)) {
-        $token = $matches[1];
-        try {
-          $decoded = JWT::decode(
-              $token,
-              getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : getIniProp('db_pass'),
-              array("HS256", "HS512", "HS384")
-          );
-          $authToken = (array) $decoded;
-          $request = $request->withAttribute('token', $data);
-        } catch (Exception $exception) {
-            handleExceptionMessage($exception);
-        }
-    }
-  }
-  if(!is_null($authToken)) {
-    $userId = $authToken['data']->user_id;
-  	FrcPortal\Auth::setCurrentUser($userId);
-  	FrcPortal\Auth::setCurrentToken($authToken);
-    /* Everything ok, call next middleware. */
-  }
-  $ipAddress = $request->getAttribute('ip_address');
-  FrcPortal\Auth::setClientIP($ipAddress);
-	$response = $next($request, $response);
-  return $response;
-});
 $container = $app->getContainer();
 $container['upload_directory'] = __DIR__ . '/app/secured';
 $container['logger'] = function($c) {
