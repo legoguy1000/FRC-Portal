@@ -130,7 +130,7 @@ function insertLogs($level, $message) {
 	$ip = FrcPortal\Auth::getClientIP();
 	$log->level = ucfirst($level);
 	$log->message = $message;
-	$log->ip_address = $ip
+	$log->ip_address = $ip;
 	$log->save();
 }
 
