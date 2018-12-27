@@ -97,8 +97,9 @@ $app->group('/auth', function () {
           insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Facebook OAuth2.');
         } else {
           $teamNumber = getSettingsProp('team_number');
-          $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');        }
+          $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
           insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Facebook OAuth2. Facebook account not linked to any current portal user.');
+        }
       } else {
         $responseData = array('status'=>false, 'msg'=>'No email address provided by Facebook OAuth2');
         insertLogs($level = 'Information', $message = 'Attempted log in using Facebook OAuth2. Facebook did not provide an email address.');
