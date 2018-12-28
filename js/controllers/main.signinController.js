@@ -18,8 +18,8 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	};
 	vm.signInAuthed = signinService.isAuthed();
 	var eventSource;
-
 	var signInBool = true;
+	var tokenIntervalTime = 28000;
 
 	var tick = function() {
 		vm.clock = Date.now();
@@ -42,7 +42,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	}
 	if(vm.signInAuthed && vm.qrCode != null) {
 		//getToken();
-		var tokenInterval = $interval(getToken, 28);
+		var tokenInterval = $interval(getToken, tokenIntervalTime);
 	}
 
 
@@ -100,7 +100,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 				signinService.saveToken(response.signin_token);
 				vm.qrCode = response.qr_code;
 				vm.qrCodeUrl = vm.genQrCodeUrl();
-				$interval(getToken, 28);
+				$interval(getToken, tokenIntervalTime);
 				startEventSource();
 			}
 			vm.signInAuthed = signinService.isAuthed();
