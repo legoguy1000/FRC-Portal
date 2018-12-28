@@ -125,6 +125,7 @@ $app->group('/hours', function () {
           if($request->save()) {
              $responseArr['Status'] = true;
              $responseArr['msg'] = 'Missing hours request denied';
+             insertLogs($level = 'Information', $message = 'Missing hours request denied for '.$mhRequest->user->full_name.'. \n\r '.$mhRequest['time_in'].' - '.$mhRequest['time_out']);
           }
         }
         $response = $response->withJson($responseArr);
@@ -248,6 +249,7 @@ $app->group('/hours', function () {
       } elseif(isset($args['auth_code'])) {
         $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status',true)->where('admin',true)->first();
       } else {
+        insertLogs($level = 'Warning', $message = 'Sign In Authorization Failed.');
         return badRequestResponse($response);
       }
       if(!is_null($user)) {
@@ -255,8 +257,10 @@ $app->group('/hours', function () {
         $te = time()+30; //12 hours liftime
         $tokenArr = generateSignInToken($ts, $te);
         $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['token'], 'qr_code'=>$tokenArr['qr_code']);
+        insertLogs($level = 'Information', $message = 'Sign In authorized by '.$user->full_name.'.');
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        insertLogs($level = 'Warning', $message = 'Sign In Authorization Failed.');
       }
       $response = $response->withJson($responseArr);
       return $response;
@@ -299,6 +303,7 @@ $app->group('/hours', function () {
     //Deauthorize the current signin token
     $this->post('/deauthorize', function ($request, $response, $args) {
       $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Deauthorized');
+      insertLogs($level = 'Information', $message = 'Sign In deauthorized.');
       $response = $response->withJson($responseArr);
       return $response;
     });
