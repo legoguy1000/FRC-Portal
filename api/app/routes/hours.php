@@ -252,7 +252,7 @@ $app->group('/hours', function () {
         $ts = time();
         $te = time()+60*60*12; //12 hours liftime
         $tokenArr = generateSignInToken($ts, $te);
-        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['jwt'], 'qr_code'=>>$tokenArr['qr_code']);
+        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['jwt'], 'qr_code'=>$tokenArr['qr_code']);
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
       }
@@ -287,7 +287,7 @@ $app->group('/hours', function () {
       }
       if(FrcPortal\Auth::isAdmin() || $decoded !== false) {
         $tokenArr = generateSignInToken($ts, $te);
-        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['jwt'], 'qr_code'=>>$tokenArr['qr_code']);
+        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['jwt'], 'qr_code'=>$tokenArr['qr_code']);
       } else {
         return unauthorizedResponse($response);
       }
