@@ -18,6 +18,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	};
 	vm.loading = false;
 	vm.signInAuthed = signinService.isAuthed();
+	alert(vm.signInAuthed);
 	var eventSource;
 	var signInBool = true;
 	var tokenIntervalTime = 28000;
