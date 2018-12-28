@@ -71,7 +71,7 @@
 			</div>
 		</md-toolbar>
 		<div ng-hide="vm.loading">
-			<img ng-src="{{vm.genQrCodeUrl()}}" alt='qr code'>
+			<img ng-src="{{vm.qrCodeUrl}}" alt='qr code'>
 		</div>
 		<div layout="row" layout-sm="column" layout-align="space-around" ng-show="vm.loading">
 			<md-progress-circular md-mode="indeterminate"></md-progress-circular>
