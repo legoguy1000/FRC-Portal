@@ -268,6 +268,54 @@ $app->group('/hours', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+    //Create a new signin token
+    $this->post('/token', function ($request, $response, $args) {
+      $args = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+
+      $decoded = false;
+      $ts = time();
+      $te = time()+60*60*12; //12 hours liftime
+      if(isset($args['token'])) {
+        $key = getSettingsProp('jwt_signin_key');
+        $jwt = $args['token'];
+        try {
+          $decoded = JWT::decode($jwt, $key, array('HS256'));
+          $te = time()+30; //12 hours liftime
+        } catch(\ExpiredException $e) {
+          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+        } catch(\SignatureInvalidException $e){
+          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+        }
+      }
+      if($args['time_start']) {
+        $ts = strtotime($args['time_start']);
+      }
+      if($args['time_start']) {
+        $te = strtotime($args['time_start']);
+      }
+      if(FrcPortal\Auth::isAdmin() || $decoded !== false) {
+        $jti = md5(random_bytes(20));
+        $key = getSettingsProp('jwt_signin_key');
+        $token = array(
+          "iss" => getSettingsProp('env_url'),
+          "iat" => $ts,
+          "exp" => $te,
+          "jti" => $jti,
+          'data' => array(
+            'signin' => true
+          )
+        );
+        $jwt = JWT::encode($token, $key);
+        $qr_code = file_get_contents('https://chart.googleapis.com/chart?cht=qr&chl='.$jwt.'&chs=360x360&choe=UTF-8&chld=L|1');
+        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$jwt, 'qr_code'=>$qr_code);
+      } else {
+        return unauthorizedResponse($response);
+      }
+
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
     //Deauthorize the current signin token
     $this->post('/deauthorize', function ($request, $response, $args) {
       $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Deauthorized');
