@@ -16,6 +16,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		order: 'lname',
 		page: 1
 	};
+	vm.loading = false;
 	vm.signInAuthed = signinService.isAuthed();
 	var eventSource;
 	var signInBool = true;
@@ -28,12 +29,14 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	$interval(tick, 1000);
 
 	var getToken = function() {
+		vm.loading = true;
 		var data = {};
 		var tok = signinService.getToken();
 		if(tok != '') {
 			data.token = tok
 		}
-		vm.promise = signinService.generateSignInToken(data).then(function(response) {
+		signinService.generateSignInToken(data).then(function(response) {
+			vm.loading = false;
 			signinService.saveToken(response.signin_token);
 			vm.qrCode = response.qr_code;
 			//vm.qrCodeUrl = vm.genQrCodeUrl();

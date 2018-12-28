@@ -70,8 +70,11 @@
 				<h3>{{ vm.clock | date:'medium'}}</h3>
 			</div>
 		</md-toolbar>
-		<div>
+		<div ng-hide="vm.loading">
 			<img ng-src="data:image/png;base64, {{vm.qrCode}}" alt='qr code'>
+		</div>
+		<div layout="row" layout-sm="column" layout-align="space-around" ng-show="vm.loading">
+			<md-progress-circular md-mode="indeterminate"></md-progress-circular>
 		</div>
 	</div>
 	<!--
