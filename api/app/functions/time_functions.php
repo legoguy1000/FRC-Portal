@@ -1,4 +1,6 @@
 <?php
+use \Firebase\JWT\JWT;
+use Illuminate\Database\Capsule\Manager as DB;
 function getSignInList($year = null) {
 	if(is_null($year)) {
 		$year = date('Y');
