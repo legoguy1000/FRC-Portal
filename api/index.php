@@ -27,13 +27,14 @@ $app->add(function ($request, $response, $next) {
   $token = null;
   $data = null;
   $authToken = $request->getAttribute("token");
-  die($authToken);
+  //die($authToken);
   if(is_null($authToken) || $authToken === '') {
     /* Check for token in header. */
     $headers = $request->getHeader('Authorization');
     $header = isset($headers[0]) ? $headers[0] : "";
     if (preg_match('/Bearer\s+(.*)$/i', $header, $matches)) {
         $token = $matches[1];
+        die($token);
         try {
           $decoded = JWT::decode(
               $token,
