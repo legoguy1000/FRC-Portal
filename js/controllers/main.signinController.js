@@ -6,6 +6,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
     var vm = this;
 
 	vm.pin = '';
+	vm.qrCode = null;
 	vm.selected_user = [];
 	vm.users = [];
 	vm.limitOptions = [5,10,25,50,100];
@@ -78,6 +79,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			$mdDialog.show(dialog);
 			if(response.status && response.signin_token != undefined) {
 				signinService.saveToken(response.signin_token);
+				vm.qrCode = response.qr_code;
 				vm.qrCodeUrl = vm.genQrCodeUrl();
 				startEventSource();
 			}
