@@ -272,7 +272,7 @@ $app->group('/hours', function () {
     $this->post('/token', function ($request, $response, $args) {
       $args = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      //die(FrcPortal\Auth::isAdmin());
+      die(FrcPortal\Auth::isAdmin());
       $decoded = false;
       $ts = time();
       $te = time()+60*60*12; //12 hours liftime
