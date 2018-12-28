@@ -249,19 +249,10 @@ $app->group('/hours', function () {
         return badRequestResponse($response);
       }
       if(!is_null($user)) {
-        $jti = md5(random_bytes(20));
-        $key = getSettingsProp('jwt_signin_key');
-        $token = array(
-          "iss" => getSettingsProp('env_url'),
-          "iat" => time(),
-          "exp" => time()+60*60*12, //12 hours liftime
-          "jti" => $jti,
-          'data' => array(
-            'signin' => true
-          )
-        );
-        $jwt = JWT::encode($token, $key);
-        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$jwt);
+        $ts = time();
+        $te = time()+60*60*12; //12 hours liftime
+        $tokenArr = generateSignInToken($ts, $te);
+        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['jwt'], 'qr_code'=>>$tokenArr['qr_code']);
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
       }
@@ -295,19 +286,8 @@ $app->group('/hours', function () {
         $te = strtotime($args['time_start']);
       }
       if(FrcPortal\Auth::isAdmin() || $decoded !== false) {
-        $jti = md5(random_bytes(20));
-        $token = array(
-          "iss" => getSettingsProp('env_url'),
-          "iat" => $ts,
-          "exp" => $te,
-          "jti" => $jti,
-          'data' => array(
-            'signin' => true
-          )
-        );
-        $jwt = JWT::encode($token, $key);
-        $qr_code = file_get_contents('https://chart.googleapis.com/chart?cht=qr&chl='.$jwt.'&chs=360x360&choe=UTF-8&chld=L|1');
-        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$jwt, 'qr_code'=>base64_encode($qr_code));
+        $tokenArr = generateSignInToken($ts, $te);
+        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['jwt'], 'qr_code'=>>$tokenArr['qr_code']);
       } else {
         return unauthorizedResponse($response);
       }

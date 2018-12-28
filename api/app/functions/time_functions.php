@@ -12,4 +12,29 @@ function getSignInList($year = null) {
 	return $users;
 }
 
+function generateSignInToken($ts = null, $te = null) {
+	if(is_null($ts)) {
+		$ts = time();
+	}
+	if(is_null($te)) {
+		$te = time()+60*60*12; //12 hours liftime
+	}
+	$jti = md5(random_bytes(20));
+	$key = getSettingsProp('jwt_signin_key');
+	$token = array(
+		"iss" => getSettingsProp('env_url'),
+		"iat" => $ts,
+		"exp" => $te,
+		"jti" => $jti,
+		'data' => array(
+			'signin' => true
+		)
+	);
+	$jwt = JWT::encode($token, $key);
+	$qr_code = file_get_contents('https://chart.googleapis.com/chart?cht=qr&chl='.$jwt.'&chs=360x360&choe=UTF-8&chld=L|1');
+	return array(
+		'token' => $jwt,
+		'qr_code' => base64_encode($qr_code),
+	);
+}
  ?>
