@@ -281,7 +281,7 @@ $app->group('/hours', function () {
         $jwt = $args['token'];
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
-          $te = time()+30; //12 hours liftime
+          $te = time()+30; //30 second liftime
         } catch(\ExpiredException $e) {
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
         } catch(\SignatureInvalidException $e){
@@ -307,7 +307,7 @@ $app->group('/hours', function () {
         );
         $jwt = JWT::encode($token, $key);
         $qr_code = file_get_contents('https://chart.googleapis.com/chart?cht=qr&chl='.$jwt.'&chs=360x360&choe=UTF-8&chld=L|1');
-        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$jwt, 'qr_code'=>$qr_code);
+        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$jwt, 'qr_code'=>base64_encode($qr_code));
       } else {
         return unauthorizedResponse($response);
       }
