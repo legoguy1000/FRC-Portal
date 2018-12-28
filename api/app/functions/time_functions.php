@@ -33,10 +33,10 @@ function generateSignInToken($ts = null, $te = null) {
 		)
 	);
 	$jwt = JWT::encode($token, $key);
-	$qr_code = file_get_contents('https://chart.googleapis.com/chart?cht=qr&chl='.$jwt.'&chs=360x360&choe=UTF-8&chld=L|1');
+	//$qr_code = file_get_contents('https://chart.googleapis.com/chart?cht=qr&chl='.$jwt.'&chs=360x360&choe=UTF-8&chld=L|1');
 	return array(
 		'token' => $jwt,
-		'qr_code' => base64_encode($qr_code),
+		'qr_code' => '', //base64_encode($qr_code),
 	);
 }
  ?>

@@ -39,8 +39,8 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		signinService.generateSignInToken(data).then(function(response) {
 			vm.loading = false;
 			signinService.saveToken(response.signin_token);
-			vm.qrCode = response.qr_code;
-			//vm.qrCodeUrl = vm.genQrCodeUrl();
+			//vm.qrCode = response.qr_code;
+			vm.qrCodeUrl = vm.genQrCodeUrl();
 			vm.signInAuthed = signinService.isAuthed();
 		});
 	}
@@ -67,7 +67,6 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	}
 
 	vm.qrCodeUrl = vm.genQrCodeUrl();
-	//vm.signInAuthed = signinService.isAuthed();
 	vm.authorizeSignIn = function() {
 		var data = {
 			auth_token: null,
@@ -102,10 +101,10 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			$mdDialog.show(dialog);
 			if(response.status && response.signin_token != undefined) {
 				signinService.saveToken(response.signin_token);
-				vm.qrCode = response.qr_code;
+				//vm.qrCode = response.qr_code;
 				vm.qrCodeUrl = vm.genQrCodeUrl();
 				vm.tokenInterval = $interval(getToken, tokenIntervalTime);
-				startEventSource();
+				//startEventSource();
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
