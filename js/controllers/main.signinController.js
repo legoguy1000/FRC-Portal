@@ -16,6 +16,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		order: 'lname',
 		page: 1
 	};
+	vm.signInAuthed = signinService.isAuthed();
 	var eventSource;
 
 	var signInBool = true;
@@ -26,7 +27,25 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	tick();
 	$interval(tick, 1000);
 
-	vm.signInAuthed = signinService.isAuthed();
+	var getToken = function() {
+		var data = {};
+		var tok = signinService.getToken();
+		if(tok != '') {
+			data.token = tok
+		}
+		vm.promise = signinService.generateSignInToken(data).then(function(response) {
+			signinService.saveToken(response.signin_token);
+			vm.qrCode = response.qr_code;
+			//vm.qrCodeUrl = vm.genQrCodeUrl();
+			vm.signInAuthed = signinService.isAuthed();
+		});
+	}
+	if(vm.signInAuthed && vm.qrCode != null) {
+		//getToken();
+		var tokenInterval = $interval(getToken, 28);
+	}
+
+
 	vm.getUsers = function() {
 		vm.promise = signinService.signInUserList().then(function(response) {
 			vm.users = response;
@@ -81,6 +100,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 				signinService.saveToken(response.signin_token);
 				vm.qrCode = response.qr_code;
 				vm.qrCodeUrl = vm.genQrCodeUrl();
+				$interval(getToken, 28);
 				startEventSource();
 			}
 			vm.signInAuthed = signinService.isAuthed();
@@ -92,7 +112,9 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		signinService.deauthorizeSignIn(data).then(function(response) {
 			if(response.status == true) {
 				signinService.logout();
-				vm.genQrCodeUrl();
+				//vm.genQrCodeUrl();
+				vm.qr_code = null;
+				$interval.cancel(tokenInterval);
 				//console.log('Connection closed');
 				//eventSource.close();
 			}

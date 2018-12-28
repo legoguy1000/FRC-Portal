@@ -250,7 +250,7 @@ $app->group('/hours', function () {
       }
       if(!is_null($user)) {
         $ts = time();
-        $te = time()+60*60*12; //12 hours liftime
+        $te = time()+30; //12 hours liftime
         $tokenArr = generateSignInToken($ts, $te);
         $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['token'], 'qr_code'=>$tokenArr['qr_code']);
       } else {

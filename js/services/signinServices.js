@@ -66,5 +66,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		generateSignInToken: function (formData) {
+			return $http.post('api/hours/signIn/token',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });
