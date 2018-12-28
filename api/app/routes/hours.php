@@ -80,24 +80,26 @@ $app->group('/hours', function () {
         }
         $request_id = $args['request_id'];
 
-        $request = FrcPortal\MissingHoursRequest::find($request_id);
+        $mhRequest = FrcPortal\MissingHoursRequest::find($request_id);
         $mh = new FrcPortal\MeetingHour();
       	$date = time();
-      	$user_id = $request['user_id'];
-        if(!is_null($request)) {
-          $request->approved = true;
-          $request->approved_date = date('Y-m-d H:i:s',$date);
-          $request->approved_by = $userId;
+      	$user_id = $mhRequest->user_id;
+        if(!is_null($mhRequest)) {
+          $mhRequest->approved = true;
+          $mhRequest->approved_date = date('Y-m-d H:i:s',$date);
+          $mhRequest->approved_by = $userId;
           $mh->user_id = $user_id;
-          $mh->time_in = $request['time_in'];
-          $mh->time_out = $request['time_out'];
+          $mh->time_in = $mhRequest->time_in;
+          $mh->time_out = $mhRequest->time_out;
           try {
              DB::beginTransaction();
-             $request->save();
+             $mhRequest->save();
              $mh->save();
              DB::commit();
              $responseArr['Status'] = true;
              $responseArr['msg'] = 'Missing hours request approved';
+             $mhRequest->load('user');
+             insertLogs($level = 'Information', $message = 'Missing hours request approved for '.$mhRequest->user->full_name.'. \n\r '.$mhRequest['time_in'].' - '.$mhRequest['time_out']);
           } catch(\Exception $e){
              DB::rollback();
           }
@@ -279,11 +281,11 @@ $app->group('/hours', function () {
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
         }
       }
-      if($args['time_start']) {
+      if(isset($args['time_start']) && $args['time_start'] != '') {
         $ts = strtotime($args['time_start']);
       }
-      if($args['time_start']) {
-        $te = strtotime($args['time_start']);
+      if(isset($args['time_end']) && $args['time_end'] != '') {
+        $te = strtotime($args['time_end']);
       }
       if(FrcPortal\Auth::isAdmin() || $decoded !== false) {
         $tokenArr = generateSignInToken($ts, $te);
