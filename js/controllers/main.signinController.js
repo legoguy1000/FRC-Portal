@@ -45,7 +45,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	}
 	if(vm.signInAuthed && vm.qrCode != null) {
 		//getToken();
-		var tokenInterval = $interval(getToken, tokenIntervalTime);
+		vm.tokenInterval = $interval(getToken, tokenIntervalTime);
 	}
 
 
@@ -103,7 +103,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 				signinService.saveToken(response.signin_token);
 				vm.qrCode = response.qr_code;
 				vm.qrCodeUrl = vm.genQrCodeUrl();
-				$interval(getToken, tokenIntervalTime);
+				vm.tokenInterval = $interval(getToken, tokenIntervalTime);
 				startEventSource();
 			}
 			vm.signInAuthed = signinService.isAuthed();
@@ -117,7 +117,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 				signinService.logout();
 				//vm.genQrCodeUrl();
 				vm.qr_code = null;
-				$interval.cancel(tokenInterval);
+				$interval.cancel(vm.tokenInterval);
 				//console.log('Connection closed');
 				//eventSource.close();
 			}
