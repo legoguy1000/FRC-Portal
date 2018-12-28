@@ -272,12 +272,12 @@ $app->group('/hours', function () {
     $this->post('/token', function ($request, $response, $args) {
       $args = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-
+      die(FrcPortal\Auth::isAdmin());
       $decoded = false;
       $ts = time();
       $te = time()+60*60*12; //12 hours liftime
+      $key = getSettingsProp('jwt_signin_key');
       if(isset($args['token'])) {
-        $key = getSettingsProp('jwt_signin_key');
         $jwt = $args['token'];
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
@@ -296,7 +296,6 @@ $app->group('/hours', function () {
       }
       if(FrcPortal\Auth::isAdmin() || $decoded !== false) {
         $jti = md5(random_bytes(20));
-        $key = getSettingsProp('jwt_signin_key');
         $token = array(
           "iss" => getSettingsProp('env_url'),
           "iat" => $ts,
@@ -312,7 +311,6 @@ $app->group('/hours', function () {
       } else {
         return unauthorizedResponse($response);
       }
-
       $response = $response->withJson($responseArr);
       return $response;
     });
