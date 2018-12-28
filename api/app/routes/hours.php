@@ -99,7 +99,7 @@ $app->group('/hours', function () {
              $responseArr['Status'] = true;
              $responseArr['msg'] = 'Missing hours request approved';
              $mhRequest->load('user');
-             insertLogs($level = 'Information', $message = 'Missing hours request approved for '.$mhRequest->user->full_name.'. \n\r '.$mhRequest['time_in'].' - '.$mhRequest['time_out']);
+             insertLogs($level = 'Information', $message = 'Missing hours request approved for '.$mhRequest->user->full_name.'. ('.$mhRequest['time_in'].' - '.$mhRequest['time_out'].')');
           } catch(\Exception $e){
              DB::rollback();
           }
@@ -125,7 +125,7 @@ $app->group('/hours', function () {
           if($request->save()) {
              $responseArr['Status'] = true;
              $responseArr['msg'] = 'Missing hours request denied';
-             insertLogs($level = 'Information', $message = 'Missing hours request denied for '.$mhRequest->user->full_name.'. \n\r '.$mhRequest['time_in'].' - '.$mhRequest['time_out']);
+             insertLogs($level = 'Information', $message = 'Missing hours request denied for '.$mhRequest->user->full_name.'. ('.$mhRequest['time_in'].' - '.$mhRequest['time_out'].')');
           }
         }
         $response = $response->withJson($responseArr);
