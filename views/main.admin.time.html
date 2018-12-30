@@ -95,7 +95,7 @@
 				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 					<tr md-row ng-repeat-start="req in vm.requests">
 						<td md-cell>
-							<span>{{req.full_name}}</span>
+							<span>{{req.user.full_name}}</span>
 						</td>
 						<td md-cell><span ng-if="req.time_in">{{req.time_in_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell><span ng-if="req.time_out">{{req.time_out_unix*1000 | date:'medium'}}</span></td>
