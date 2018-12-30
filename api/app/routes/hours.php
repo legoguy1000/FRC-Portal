@@ -92,7 +92,7 @@ $app->group('/hours', function () {
              $mhRequest->save();
              $mh->save();
              DB::commit();
-             $responseArr['Status'] = true;
+             $responseArr['status'] = true;
              $responseArr['msg'] = 'Missing hours request approved';
              $mhRequest->load('user');
              insertLogs($level = 'Information', $message = 'Missing hours request approved for '.$mhRequest->user->full_name.'. ('.$mhRequest['time_in'].' - '.$mhRequest['time_out'].')');
@@ -119,7 +119,7 @@ $app->group('/hours', function () {
           $request->approved_date = date('Y-m-d H:i:s',$date);
           $request->approved_by = $userId;
           if($request->save()) {
-             $responseArr['Status'] = true;
+             $responseArr['status'] = true;
              $responseArr['msg'] = 'Missing hours request denied';
              insertLogs($level = 'Information', $message = 'Missing hours request denied for '.$mhRequest->user->full_name.'. ('.$mhRequest['time_in'].' - '.$mhRequest['time_out'].')');
           }
