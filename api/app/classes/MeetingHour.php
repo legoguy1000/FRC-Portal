@@ -22,7 +22,7 @@ class MeetingHour extends Eloquent {
   ];
 
 
-  protected $appends = ['time_in_unix','time_out_unix', 'date'];
+  protected $appends = ['date'];
 
   //$data['requirements'] = array();
   /**
@@ -62,24 +62,12 @@ class MeetingHour extends Eloquent {
   public function user() {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
   }
-
-  public function getTimeInUnixAttribute() {
-    $date = new DateTime($this->attributes['time_in']);
-    return $date->format('U');
-  }
-  public function getTimeOutUnixAttribute() {
-    $date = new DateTime($this->attributes['time_out']);
-    return $date->format('U');
-  }
   public function getDateAttribute() {
-    $ti = new DateTime($this->attributes['time_in']);
-    $to = new DateTime($this->attributes['time_out']);
+    $time_in = formatDateArrays($this->attributes['time_in']);
+    $time_out = formatDateArrays($this->attributes['time_out']);
     return array(
-      'date_raw' => $ti->format('Y-m-d'),
-      'date_dow' => $ti->format('D'),
-      'date_formatted' => $ti->format('F j, Y'),
-      'time_in_formatted' => $ti->format('g:i A'),
-      'time_out_formatted' => $to->format('g:i A'),
+      'time_in' => $time_in,
+      'time_out' => $time_out,
     );
   }
 }

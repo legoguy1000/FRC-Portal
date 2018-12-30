@@ -36,6 +36,7 @@
 				<thead md-head md-order="vm.sil.query.order" md-on-reorder="vm.getSignIns">
 					<tr md-row>
 						<th md-column><span>Name</span></th>
+						<th md-column md-order-by="time_in"><span>Date</span></th>
 						<th md-column md-order-by="time_in"><span>Time In</span></th>
 						<th md-column md-order-by="time_out"><span>Time Out</span></th>
 						<th md-column md-order-by="hours"><span>Hours</span></th>
@@ -47,8 +48,9 @@
 						<td md-cell>
 							<span>{{user.user.full_name}}</span>
 						</td>
-						<td md-cell><span ng-if="user.time_in">{{user.time_in_unix*1000 | date:'medium'}}</span></td>
-						<td md-cell><span ng-if="user.time_out">{{user.time_out_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span ng-if="req.time_in">{{user.date.time_in.long_date}}</span></td>
+						<td md-cell><span ng-if="req.time_in">{{user.date.time_in.time_formatted}}</span></td>
+						<td md-cell><span ng-if="req.time_out">{{user.date.time_out.time_formatted}}</span></td>
 						<td md-cell><span>{{user.hours}}</span></td>
 					</tr>
 				</tbody>
