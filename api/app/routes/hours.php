@@ -175,7 +175,7 @@ $app->group('/hours', function () {
       $page = $inputs['page'];
       $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
-      $users = FrcPortal\MeetingHour::with('user')->addSelect(DB::raw('UNIX_TIMESTAMP(time_in) AS time_in_unix, UNIX_TIMESTAMP(time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'));
+      $users = FrcPortal\MeetingHour::with('user')->select()->addSelect(DB::raw('UNIX_TIMESTAMP(time_in) AS time_in_unix, UNIX_TIMESTAMP(time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'));
       $totalNum = 0;
       if($filter != '') {
         $filterArr = explode(' ',$filter);
