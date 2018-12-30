@@ -146,17 +146,11 @@ $app->group('/hours', function () {
       }
 
       $date = $args['date'];
-      /*
-      $users = FrcPortal\User::with(['meeting_hours' => function ($query) use ($date)  {
-        $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
-      }])->where('status',true)->orderBy('fname', 'ASC')->get(); */
-
       $users = FrcPortal\User::with(['meeting_hours' => function ($query) use ($date)  {
         $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
       }])->whereHas('meeting_hours', function ($query) use ($date) {
         $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
       })->orWhere('status',true)->orderBy('fname', 'ASC')->get();
-
 
       $responseArr = array(
         'status' => true,
@@ -184,7 +178,7 @@ $app->group('/hours', function () {
       $page = $inputs['page'];
       $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
-      $users = FrcPortal\MeetingHour::with('user')->select()->addSelect(DB::raw('UNIX_TIMESTAMP(time_in) AS time_in_unix, UNIX_TIMESTAMP(time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'));
+      $users = FrcPortal\MeetingHour::with('user')->select()->addSelect(DB::raw('(time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'));
       $totalNum = 0;
       if($filter != '') {
         $filterArr = explode(' ',$filter);
