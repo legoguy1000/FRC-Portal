@@ -10,7 +10,7 @@ $app->group('/hours', function () {
       $defaults = array(
     		'filter' => '',
     		'limit' => 10,
-    		'order' => 'full_name',
+    		'order' => '-time_in',
     		'page' => 1,
     	);
       $inputs = checkSearchInputs($request, $defaults);
@@ -36,7 +36,6 @@ $app->group('/hours', function () {
         //$users = $users->orHavingRaw('email LIKE ?',array('%'.$filter.'%'));
     	}
       $totalNum = count($users->get());
-//    $users = FrcPortal\MissingHoursRequest::with(['approver','user'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'));
 
       $orderBy = '';
     	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
