@@ -71,7 +71,7 @@
 						<md-input-container flex class="md-icon-float md-block md-icon-left">
 			        <label>Details</label>
 							<md-icon md-font-library="material-icons">event_note</md-icon>
-			        <div ng-bind-html="vm.data.details | linky:'_blank'" style="margin-top: 30px; white-space: pre-wrap;"></div>
+			        <div style="margin-top: 30px; white-space: pre-wrap;">{{vm.data.details | linky:'_blank'}}</div>
 			      </md-input-container>
 				</div>
 				<div layout="column">
