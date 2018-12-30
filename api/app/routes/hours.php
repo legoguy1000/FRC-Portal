@@ -151,7 +151,9 @@ $app->group('/hours', function () {
         $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
       }])->where('status',true)->orderBy('fname', 'ASC')->get(); */
 
-      $users = FrcPortal\User::with(['meeting_hours'])->whereHas('meeting_hours', function ($query) use ($date) {
+      $users = FrcPortal\User::with(['meeting_hours' => function ($query) use ($date)  {
+        $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
+      }])->whereHas('meeting_hours', function ($query) use ($date) {
         $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
       })->orWhere('status',true)->orderBy('fname', 'ASC')->get();
 
