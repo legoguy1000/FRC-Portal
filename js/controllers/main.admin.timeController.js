@@ -121,9 +121,7 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 		vm.approveDenyHoursRequest = function (request) {
 			vm.mhrl.promise = timeService.approveMissingHoursRequest(request).then(function(response){
 				if(response.status) {
-					vm.requests = response.hoursRequestList.data;
-					vm.mhrl.total = response.hoursRequestList.total;
-					vm.mhrl.maxPage = response.hoursRequestList.maxPage;
+					vm.getAllMissingHoursRequestsFilter();
 				}
 				$mdToast.show(
 		      $mdToast.simple()
@@ -136,9 +134,7 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 		vm.denyMissingHoursRequest = function (request) {
 			vm.mhrl.promise = timeService.denyMissingHoursRequest(request).then(function(response){
 				if(response.status) {
-					vm.requests = response.hoursRequestList.data;
-					vm.mhrl.total = response.hoursRequestList.total;
-					vm.mhrl.maxPage = response.hoursRequestList.maxPage;
+					vm.getAllMissingHoursRequestsFilter();
 				}
 				$mdToast.show(
 		      $mdToast.simple()
