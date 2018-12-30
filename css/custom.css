@@ -394,3 +394,15 @@ md-list-item.min-height-reset .md-list-item-inner::before {
 .hide-validation-error .md-errors-spacer {
   display: none;
 }
+
+::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
