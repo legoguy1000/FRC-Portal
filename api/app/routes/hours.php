@@ -112,12 +112,12 @@ $app->group('/hours', function () {
         }
         $request_id = $args['request_id'];
 
-        $request = FrcPortal\MissingHoursRequest::find($request_id);
+        $mhRequest = FrcPortal\MissingHoursRequest::find($request_id);
         $date = time();
         if(!is_null($request)) {
-          $request->approved = false;
-          $request->approved_date = date('Y-m-d H:i:s',$date);
-          $request->approved_by = $userId;
+          $mhRequest->approved = false;
+          $mhRequest->approved_date = date('Y-m-d H:i:s',$date);
+          $mhRequest->approved_by = $userId;
           if($request->save()) {
              $responseArr['status'] = true;
              $responseArr['msg'] = 'Missing hours request denied';
