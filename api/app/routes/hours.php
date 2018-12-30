@@ -141,14 +141,21 @@ $app->group('/hours', function () {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        if(!FrcPortal\Auth::isAdmin()) {
-          return unauthorizedResponse($response);
-        }
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
 
       $date = $args['date'];
+      /*
       $users = FrcPortal\User::with(['meeting_hours' => function ($query) use ($date)  {
         $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
-      }])->where('status',true)->orderBy('fname', 'ASC')->get();
+      }])->where('status',true)->orderBy('fname', 'ASC')->get(); */
+
+      $users = FrcPortal\User::with(['meeting_hours'])->whereHas('meeting_hours', function ($query) use ($date) {
+        $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
+      })->orWhere('status',true)->orderBy('fname', 'ASC')->get();
+
+
       $responseArr = array(
         'status' => true,
         'msg' => '',
