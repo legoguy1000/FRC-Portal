@@ -26,6 +26,7 @@ $app->group('/hours', function () {
     	$queryStr = '';
     	if($filter != '') {
         //$queryArr[] = '(full_name LIKE "%'.$filter.'%")';
+      	$filterArr = explode(' ',$filter);
         $users = $users->whereHas('user', function ($query) use ($filterArr) {
       		foreach($filterArr as $filter) {
       			$query->where('fname', 'like', '%'.$filter.'%');
