@@ -31,7 +31,7 @@ $app->group('/hours', function () {
       			$query->where('fname', 'like', '%'.$filter.'%');
       			$query->orWhere('lname', 'like', '%'.$filter.'%');
       		}
-      	})
+      	});
         //$users = $users->orHavingRaw('email LIKE ?',array('%'.$filter.'%'));
     	}
       $totalNum = count($users->get());
