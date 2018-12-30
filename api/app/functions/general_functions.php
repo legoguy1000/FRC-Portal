@@ -262,6 +262,7 @@ function formatDateArrays($date_raw) {
 		'date_dow' => $date->format('D'),
 		'multi_day_start' => $date->format('F j'),
 		'multi_day_end' => $date->format('j, Y'),
+		'full_formatted' => $date->format('F j, Y g:i A'),
 	);
 }
 

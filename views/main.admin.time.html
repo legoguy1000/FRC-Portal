@@ -97,8 +97,8 @@
 						<td md-cell>
 							<span>{{req.user.full_name}}</span>
 						</td>
-						<td md-cell><span ng-if="req.time_in">{{req.time_in_unix*1000 | date:'medium'}}</span></td>
-						<td md-cell><span ng-if="req.time_out">{{req.time_out_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span ng-if="req.time_in">{{req.date.time_in.full_formatted}}</span></td>
+						<td md-cell><span ng-if="req.time_out">{{req.date.time_out.full_formatted}}</span></td>
 						<td md-cell><span>{{req.hours}}</span></td>
 						<td md-cell ng-switch="req.approved">
 							<span ng-switch-when="true"><md-icon class="material-icons" style="color:green;">check_circle</md-icon></span>
@@ -126,7 +126,7 @@
 					<tr md-row ng-show="vm.requestRow == req.request_id">
 							<td md-cell style="border-top:0px;" colspan="2">
 								<div>Requested: </div>
-								<div>{{req.request_date_unix*1000 | date:'medium'}}</div>
+								<div>{{req.date.request.full_formatted}}</div>
 							</td>
 							<td md-cell style="border-top:0px;" colspan="2">
 								<div>Decision By: </div>
@@ -134,7 +134,7 @@
 							</td>
 							<td md-cell style="border-top:0px;" colspan="2">
 								<div>Decision Date: </div>
-								<div ng-if="req.approved_date">{{req.approved_date_unix*1000 | date:'medium'}}</div>
+								<div ng-if="req.approved_date">{{req.date.approve.full_formatted}}</div>
 							</td>
 
 					</tr>
