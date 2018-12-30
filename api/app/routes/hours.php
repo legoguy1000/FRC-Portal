@@ -20,20 +20,22 @@ $app->group('/hours', function () {
       $page = $inputs['page'];
 
       $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
-
+      $totalNum = 0;
+      $users = FrcPortal\MissingHoursRequest::with(['approver','user']);
       $queryArr = array();
     	$queryStr = '';
     	if($filter != '') {
-        $queryArr[] = '(full_name LIKE "%'.$filter.'%")';
+        //$queryArr[] = '(full_name LIKE "%'.$filter.'%")';
+        $users = $users->whereHas('user', function ($query) use ($filterArr) {
+      		foreach($filterArr as $filter) {
+      			$query->where('fname', 'like', '%'.$filter.'%');
+      			$query->orWhere('lname', 'like', '%'.$filter.'%');
+      		}
+      	})
+        //$users = $users->orHavingRaw('email LIKE ?',array('%'.$filter.'%'));
     	}
-      $totalNum = 0;
-    	if(count($queryArr) > 0) {
-    		$queryStr = implode(' OR ',$queryArr);
-        $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->get();
-        $totalNum = count($users);
-    	} else {
-        $totalNum = FrcPortal\MissingHoursRequest::count();
-      }
+      $totalNum = count($users->get());
+//    $users = FrcPortal\MissingHoursRequest::with(['approver','user'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'));
 
       $orderBy = '';
     	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
@@ -50,13 +52,7 @@ $app->group('/hours', function () {
     	} elseif($limit == 0) {
         $limit = $totalNum;
       }
-
-      if($filter != '' ) {
-        $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-      } else {
-        $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-      }
-
+      $users = $users->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
       $data['data'] = $users;
       $data['total'] = $totalNum;
