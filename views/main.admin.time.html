@@ -35,7 +35,7 @@
 			<table md-table ng-model="selected" md-progress="vm.sil.promise">
 				<thead md-head md-order="vm.sil.query.order" md-on-reorder="vm.getSignIns">
 					<tr md-row>
-						<th md-column md-order-by="full_name"><span>Name</span></th>
+						<th md-column><span>Name</span></th>
 						<th md-column md-order-by="time_in"><span>Time In</span></th>
 						<th md-column md-order-by="time_out"><span>Time Out</span></th>
 						<th md-column md-order-by="hours"><span>Hours</span></th>
@@ -45,7 +45,7 @@
 				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 					<tr md-row ng-repeat="user in vm.users">
 						<td md-cell>
-							<span>{{user.full_name}}</span>
+							<span>{{user.user.full_name}}</span>
 						</td>
 						<td md-cell><span ng-if="user.time_in">{{user.time_in_unix*1000 | date:'medium'}}</span></td>
 						<td md-cell><span ng-if="user.time_out">{{user.time_out_unix*1000 | date:'medium'}}</span></td>

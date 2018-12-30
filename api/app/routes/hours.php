@@ -175,21 +175,20 @@ $app->group('/hours', function () {
       $page = $inputs['page'];
       $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
-      $queryArr = array();
-      $queryStr = '';
-      if($filter != '') {
-        $queryArr[] = '(users.email LIKE "%'.$filter.'%")';
-        $queryArr[] = '(full_name LIKE "%'.$filter.'%")';
-        $queryArr[] = '(hours LIKE "%'.$filter.'%")';
-      }
+      $users = FrcPortal\MeetingHour::with('user')->addSelect(DB::raw('UNIX_TIMESTAMP(time_in) AS time_in_unix, UNIX_TIMESTAMP(time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'));
       $totalNum = 0;
-      if(count($queryArr) > 0) {
-        $queryStr = implode(' OR ',$queryArr);
-        $users = FrcPortal\MeetingHour::leftJoin('users', 'users.user_id', '=', 'meeting_hours.user_id')->select('users.*', 'meeting_hours.*',DB::raw('CONCAT(users.fname," ",users.lname) AS full_name, UNIX_TIMESTAMP(time_in) AS time_in_unix, UNIX_TIMESTAMP(time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'))->havingRaw($queryStr)->get();
-        $totalNum = count($users);
-      } else {
-        $totalNum = FrcPortal\MeetingHour::count();
+      if($filter != '') {
+        $filterArr = explode(' ',$filter);
+        $users = $users->whereHas('user', function ($query) use ($filterArr) {
+      		foreach($filterArr as $filter) {
+      			$query->where('email', 'like', '%'.$filter.'%');
+            $query->orWhere('fname', 'like', '%'.$filter.'%');
+      			$query->orWhere('lname', 'like', '%'.$filter.'%');
+      		}
+      	});
+        $users = $users->orHavingRaw('hours LIKE ?',array('%'.$filter.'%'));
       }
+      $totalNum = count($users->get());
 
       $orderBy = '';
       $orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
@@ -206,12 +205,7 @@ $app->group('/hours', function () {
         $limit = $totalNum;
       }
 
-      if($filter != '' ) {
-        $users = FrcPortal\MeetingHour::leftJoin('users', 'users.user_id', '=', 'meeting_hours.user_id')->select('users.*', 'meeting_hours.*',DB::raw('CONCAT(users.fname," ",users.lname) AS full_name, UNIX_TIMESTAMP(time_in) AS time_in_unix, UNIX_TIMESTAMP(time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-      } else {
-        $users = FrcPortal\MeetingHour::leftJoin('users', 'users.user_id', '=', 'meeting_hours.user_id')->select('users.*', 'meeting_hours.*',DB::raw('CONCAT(users.fname," ",users.lname) AS full_name, UNIX_TIMESTAMP(time_in) AS time_in_unix, UNIX_TIMESTAMP(time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-      }
-
+      $users = $users->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
       $data['data'] = $users;
       $data['total'] = $totalNum;
