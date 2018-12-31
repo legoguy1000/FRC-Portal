@@ -126,7 +126,6 @@ $app->get('/version', function (Request $request, Response $response, array $arg
       'groups' => $route->getGroups(),
       'methods' => $route->getMethods(),
       'arguments' => $route->getArguments(),
-      'path' => $route->getPath(),
     ),
   );
 
