@@ -614,6 +614,16 @@ angular.module('FrcPortal', [
 			        .position('top right')
 			        .hideDelay(3000)
 			    );
+				} else if (rejection.status === 404) {
+					// Return a new promise
+					var $mdToast = $injector.get('$mdToast');
+					//console.log(rejection);
+					$mdToast.show(
+			      $mdToast.simple()
+			        .textContent(rejection.data.msg)
+			        .position('top right')
+			        .hideDelay(3000)
+			    );
 				}
 				return $q.reject(rejection);
 			}
