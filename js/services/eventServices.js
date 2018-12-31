@@ -5,7 +5,7 @@ angular.module('FrcPortal')
 			return $http.get('api/events?'+params)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -15,7 +15,7 @@ angular.module('FrcPortal')
 			return $http.get('api/events/'+event_id+paramsStr)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -24,7 +24,7 @@ angular.module('FrcPortal')
 			return $http.get('api/events/'+event_id+'/eventRequirements')
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -34,7 +34,7 @@ angular.module('FrcPortal')
 			return $http.get('site/getEventRegistrationStatus.php?event_id='+eid+uid)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -42,7 +42,7 @@ angular.module('FrcPortal')
 			return $http.post('api/events',formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -51,7 +51,7 @@ angular.module('FrcPortal')
 			return $http.get('api/events/'+event_id+'/rooms/adminList')
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -60,7 +60,7 @@ angular.module('FrcPortal')
 			return $http.get('api/events/'+event_id+'/rooms')
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -69,7 +69,7 @@ angular.module('FrcPortal')
 			return $http.get('api/events/'+event_id+'/timeSlots')
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -78,7 +78,7 @@ angular.module('FrcPortal')
 			return $http.get('api/events/'+event_id+'/cars')
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -86,7 +86,7 @@ angular.module('FrcPortal')
 			return $http.get('api/events/searchGoogleCalendar?q='+q+'&timeMax='+timeMax+'&timeMin='+timeMin)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -95,7 +95,7 @@ angular.module('FrcPortal')
 			return $http.put('api/events/'+event_id+'/toggleEventReqs',formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -104,7 +104,7 @@ angular.module('FrcPortal')
 			return $http.put('api/events/'+event_id+'/toggleConfirmAttendance',formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -113,7 +113,7 @@ angular.module('FrcPortal')
 			return $http.put('api/events/'+event_id+'/syncGoogleCalEvent')
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -122,7 +122,7 @@ angular.module('FrcPortal')
 			return $http.put('api/events/'+event_id, formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -131,7 +131,7 @@ angular.module('FrcPortal')
 			return $http.post('api/events/'+event_id+'/register', formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -140,7 +140,7 @@ angular.module('FrcPortal')
 			return $http.delete('api/events/'+event_id)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -149,7 +149,7 @@ angular.module('FrcPortal')
 			return $http.put('api/events/'+event_id+'/rooms',formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -158,7 +158,7 @@ angular.module('FrcPortal')
 			return $http.put('api/events/'+event_id+'/cars',formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -167,7 +167,7 @@ angular.module('FrcPortal')
 			return $http.post('api/events/'+event_id+'/rooms',formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -177,7 +177,7 @@ angular.module('FrcPortal')
 			return $http.delete('api/events/'+event_id+'/rooms/'+room_id,formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -186,7 +186,7 @@ angular.module('FrcPortal')
 			return $http.post('api/events/'+event_id+'/timeSlots',formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -196,7 +196,7 @@ angular.module('FrcPortal')
 			return $http.delete('api/events/'+event_id+'/timeSlots/'+time_slot_id,formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -206,7 +206,7 @@ angular.module('FrcPortal')
 			return $http.put('api/events/'+event_id+'/timeSlots/'+time_slot_id,formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -214,7 +214,7 @@ angular.module('FrcPortal')
 			return $http.get('api/eventTypes')
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -222,7 +222,7 @@ angular.module('FrcPortal')
 			return $http.post('api/eventTypes',formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -231,7 +231,7 @@ angular.module('FrcPortal')
 			return $http.put('api/eventTypes/'+type_id,formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -240,7 +240,7 @@ angular.module('FrcPortal')
 			return $http.delete('api/eventTypes/'+type_id,formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -249,7 +249,7 @@ angular.module('FrcPortal')
 			return $http.get('api/events/'+event_id+'/food')
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -258,7 +258,7 @@ angular.module('FrcPortal')
 			return $http.get('api/events/'+event_id+'/food/list')
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -267,7 +267,7 @@ angular.module('FrcPortal')
 			return $http.post('api/events/'+event_id+'/food',formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -277,7 +277,7 @@ angular.module('FrcPortal')
 			return $http.delete('api/events/'+event_id+'/food/'+food_id,formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
@@ -287,7 +287,7 @@ angular.module('FrcPortal')
 			return $http.put('api/events/'+event_id+'/food/'+food_id,formData)
 			.then(function(response) {
 				return response.data;
-			}, function(response) {
+			}).catch(function(response) {
 				return response.data;
 			});
 		},
