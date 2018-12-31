@@ -962,7 +962,7 @@ $app->group('/events', function () {
       }
     } else {
       $responseArr['msg'] = $event->name.' already exists';
-      insertLogs($level = 'Information', $message = 'Attempted to create duplicate event "'$event->name.'"');
+      insertLogs($level = 'Information', $message = 'Attempted to create duplicate event "'.$event->name.'"');
     }
     $response = $response->withJson($responseArr);
     return $response;
