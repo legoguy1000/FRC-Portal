@@ -90,11 +90,13 @@ $app->group('/events', function () {
     $api_key = getSettingsProp('google_api_key');
     if(!isset($api_key) || $api_key == '') {
       $responseArr = array('status'=>false, 'msg'=>'Google API Key cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the API Key.');
+      insertLogs($level = 'Warning', $message = 'Cannot search Google calendar.  Google API Key is blank');
       $response = $response->withJson($responseArr);
       return $response;
     }
     if(!isset($calendar) || $calendar == '') {
       $responseArr = array('status'=>false, 'msg'=>'Google Calendar ID cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the Google Calendar ID.');
+      insertLogs($level = 'Warning', $message = 'Cannot search Google calendar.  Google Calendar ID is blank');
       $response = $response->withJson($responseArr);
       return $response;
     }
@@ -145,6 +147,7 @@ $app->group('/events', function () {
       }
     } catch (Exception $e) {
       $result['msg'] = 'Something went wrong searching Google Calendar';
+      insertLogs($level = 'Critical', $message = 'Something went wrong searching Google Calendar. '.$e->getMessage());
     }
     $data = array(
     	'results'=>$allEvents,
@@ -238,6 +241,7 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Car passengers');
           return unauthorizedResponse($response);
         }
         $event_id = $args['event_id'];
@@ -262,6 +266,7 @@ $app->group('/events', function () {
         }
         $event = getUsersEventRequirements($event_id);
         $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>$event);
+        insertLogs($level = 'Information', $message = 'Event car list updated');
         $response = $response->withJson($responseArr);
         return $response;
       });
@@ -300,6 +305,7 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to add an Event Room');
           return unauthorizedResponse($response);
         }
 
@@ -325,7 +331,8 @@ $app->group('/events', function () {
         		$result['msg'] = handleExceptionMessage($e);
         	}
         } else {
-          $responseArr = array('status'=>false, 'msg'=>'Event went wrong', 'data' => null);
+          insertLogs($level = 'Information', $message = 'Event Room added');
+          $responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
         }
         $response = $response->withJson($responseArr);
         return $response;
@@ -336,6 +343,7 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Room list');
           return unauthorizedResponse($response);
         }
 
@@ -360,6 +368,7 @@ $app->group('/events', function () {
           $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
         }
         $event = getUsersEventRequirements($event_id);
+        insertLogs($level = 'Information', $message = 'Event Room List updated');
         $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>$event);
         $response = $response->withJson($responseArr);
         return $response;
@@ -370,6 +379,7 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to delete Event Room');
           return unauthorizedResponse($response);
         }
 
@@ -406,6 +416,7 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Time slot');
           return unauthorizedResponse($response);
         }
 
@@ -426,6 +437,7 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to delete Event Time slot');
           return unauthorizedResponse($response);
         }
 
@@ -446,6 +458,7 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to add Event Time slot');
           return unauthorizedResponse($response);
         }
         $event_id = $args['event_id'];
@@ -498,6 +511,7 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Food option');
           return unauthorizedResponse($response);
         }
 
@@ -522,6 +536,7 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to delete Event Food option');
           return unauthorizedResponse($response);
         }
 
@@ -542,6 +557,7 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to add Event Food option');
           return unauthorizedResponse($response);
         }
 
@@ -565,6 +581,7 @@ $app->group('/events', function () {
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
+        insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event');
         return unauthorizedResponse($response);
       }
 
@@ -602,6 +619,7 @@ $app->group('/events', function () {
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
+        insertLogs($level = 'Warning', $message = 'Unauthorized attempt to sync event with Google Calendar');
         return unauthorizedResponse($response);
       }
 
@@ -629,6 +647,7 @@ $app->group('/events', function () {
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
+        insertLogs($level = 'Warning', $message = 'Unauthorized attempt to toggle event requirements.');
         return unauthorizedResponse($response);
       }
 
@@ -846,6 +865,7 @@ $app->group('/events', function () {
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
+        insertLogs($level = 'Warning', $message = 'Unauthorized attempt to delete Event.');
         return unauthorizedResponse($response);
       }
 
@@ -866,6 +886,7 @@ $app->group('/events', function () {
     $formData = $request->getParsedBody();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
     if(!FrcPortal\Auth::isAdmin()) {
+      insertLogs($level = 'Warning', $message = 'Unauthorized attempt to add Event.');
       return unauthorizedResponse($response);
     }
 
