@@ -146,8 +146,8 @@ $app->group('/events', function () {
         }
       }
     } catch (Exception $e) {
-      $result['msg'] = 'Something went wrong searching Google Calendar';
       insertLogs($level = 'Critical', $message = 'Something went wrong searching Google Calendar. '.$e->getMessage());
+      return exceptionResponse($response, $msg = 'Something went wrong searching Google Calendar');
     }
     $data = array(
     	'results'=>$allEvents,
@@ -155,6 +155,7 @@ $app->group('/events', function () {
     );
     $responseArr = array('status'=>true, 'msg'=>'', 'data' => $data);
     $response = $response->withJson($responseArr);
+    insertLogs($level = 'Information', $message = 'Successfully searched Google Calendar');
     return $response;
   })->setName('Search Google Calendar');
   $this->group('/{event_id:[a-z0-9]{13}}', function () {
@@ -210,6 +211,7 @@ $app->group('/events', function () {
       }
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
+      insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'"');
       return $response;
     })->setName('Get Event');
     //Get Event Requirements
@@ -218,6 +220,7 @@ $app->group('/events', function () {
       $event = getUsersEventRequirements($event_id);
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
+      insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'" Requirements');
       return $response;
     })->setName('Get Event Requirements');
     $this->group('/cars', function () {
@@ -230,9 +233,11 @@ $app->group('/events', function () {
           $responseArr['status'] = true;
           $responseArr['msg'] = '';
         } catch (Exception $e) {
-      		$result['msg'] = handleExceptionMessage($e);
+          insertLogs($level = 'Warning', $message = 'Something went wrong returning event cars. '.$e->getMessage());
+          return exceptionResponse($response, $msg = 'Something went wrong returning event cars');
       	}
         $response = $response->withJson($responseArr);
+        insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'" Cars');
         return $response;
       })->setName('Get Event Cars');
       //Update Event Car passengers
@@ -938,6 +943,7 @@ $app->group('/events', function () {
         $data['total'] = $totalNum;
         $data['maxPage'] = ceil($totalNum/$limit);
         $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$data);
+        insertLogs($level = 'Information', $message = $event->name.' created');
          //Send notifications
         $host = getSettingsProp('env_url');
         $msgData = array(
@@ -956,6 +962,7 @@ $app->group('/events', function () {
       }
     } else {
       $responseArr['msg'] = $event->name.' already exists';
+      insertLogs($level = 'Information', $message = 'Attempted to create duplicate event "'$event->name.'"');
     }
     $response = $response->withJson($responseArr);
     return $response;
