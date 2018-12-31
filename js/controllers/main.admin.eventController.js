@@ -95,7 +95,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.users = null;
 	vm.getEvent = function () {
 		vm.loading = true;
-		eventsService.getEvent(vm.event_id).then(function(response){
+		eventsService.getEvent(vm.event_id).finally(function(response){
 			vm.event = response.data;
 			vm.loading = false;
 		});
@@ -104,7 +104,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 
 	vm.getEventRequirements = function() {
-		vm.promise = eventsService.getEventRequirements(vm.event_id).then(function(response){
+		vm.promise = eventsService.getEventRequirements(vm.event_id).finally(function(response){
 			vm.users = response.data;
 		});
 	}
