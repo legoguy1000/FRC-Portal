@@ -202,7 +202,7 @@ $app->group('/events', function () {
         }
 
       }
-      $event = $event->with($withArr);
+      $event = $event->load($withArr);
       if(!empty($withCountArr)) {
         $event->withCount($withCountArr);
       }
