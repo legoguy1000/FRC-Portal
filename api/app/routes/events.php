@@ -163,6 +163,7 @@ $app->group('/events', function () {
     $this->get('', function ($request, $response, $args) {
       $authed = FrcPortal\Auth::isAuthenticated();
       $event_id = $args['event_id'];
+      $event = $request->getAttribute('event');
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
       $withArr = array('poc');
       $withCountArr = array();
@@ -201,11 +202,11 @@ $app->group('/events', function () {
         }
 
       }
-      $event = FrcPortal\Event::with($withArr);
+      $event = $event->with($withArr);
       if(!empty($withCountArr)) {
         $event->withCount($withCountArr);
       }
-      $event = $event->find($event_id);
+      //$event = $event->find($event_id);
       if($reqsBool) {
         $event->users = getUsersEventRequirements($event_id);
       }
@@ -217,8 +218,9 @@ $app->group('/events', function () {
     //Get Event Requirements
     $this->get('/eventRequirements', function ($request, $response, $args) {
       $event_id = $args['event_id'];
-      $event = getUsersEventRequirements($event_id);
-      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
+      $event = FrcPortal\Event::find($event_id);
+      $eventReqs = getUsersEventRequirements($event_id);
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $eventReqs);
       $response = $response->withJson($responseArr);
       insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'" Requirements');
       return $response;
@@ -888,6 +890,21 @@ $app->group('/events', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Delete Event');
+  })->add(function ($request, $response, $next) {
+    // get the route from the request
+    $route = FrcPortal\Auth::getRoute();
+    if (!$route) {
+        // no route matched
+        return $next($request, $response);
+    }
+    $args = $route->getArguments();
+    $event_id = $args['event_id'];
+    $event = FrcPortal\Event::find($event_id);
+    if(!is_null($event)) {
+      $request = $request->withAttribute('event', $event);
+    }
+  	$response = $next($request, $response);
+    return $response;
   });
   //Add New Event
   $this->post('', function ($request, $response, $args) {
