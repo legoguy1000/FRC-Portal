@@ -196,16 +196,17 @@ $app->group('/events', function () {
             $query->where('registration',true);
           };
         } else {
-          $withCountArr['registered_users'] = function ($query) use ($event_id) {
+          $event->registered_users_count = $event->users()->count();
+          /* $withCountArr['registered_users'] = function ($query) use ($event_id) {
             $query->where('registration',true);
-          };
+          }; */
         }
 
       }
       $event = $event->load($withArr);
-      if(!empty($withCountArr)) {
-        $event->withCount($withCountArr);
-      }
+      /* if(!empty($withCountArr)) {
+        $event->users()->count(); //->withCount($withCountArr);
+      } */
       //$event = $event->find($event_id);
       if($reqsBool) {
         $event->users = getUsersEventRequirements($event_id);
