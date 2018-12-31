@@ -47,8 +47,10 @@ $app->group('/seasons', function () {
   $this->group('/{season_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
       $season_id = $args['season_id'];
+      //Season passed from middleware
+      $season = $request->getAttribute('season');
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
-      $season = FrcPortal\Season::find($season_id);
+      //$season = FrcPortal\Season::find($season_id);
       if($reqsBool) {
         $season->users = getUsersAnnualRequirements($season_id);
       }
@@ -71,8 +73,9 @@ $app->group('/seasons', function () {
         return unauthorizedResponse($response);
       }
       $season_id = $args['season_id'];
-
-      $season = FrcPortal\Season::find($season_id);
+      //Season passed from middleware
+      $season = $request->getAttribute('season');
+      //$season = FrcPortal\Season::find($season_id);
       if(!is_null($formData['start_date'])) {
         $start_date = new DateTime($formData['start_date']);
         $season->start_date = $start_date->format('Y-m-d');
@@ -138,7 +141,9 @@ $app->group('/seasons', function () {
         return unauthorizedResponse($response);
       }
       $season_id = $args['season_id'];
-
+      //Season passed from middleware
+      $season = $request->getAttribute('season');
+      //$season = FrcPortal\Season::find($season_id);
       if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
         $responseArr = array('status'=>false, 'msg'=>'Please select at least 1 user');
         $response = $response->withJson($responseArr,400);
@@ -149,7 +154,6 @@ $app->group('/seasons', function () {
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      $season = FrcPortal\Season::find($season_id);
       $array = array();
       $req = $formData['requirement'];
       $users = $formData['users'];
@@ -183,6 +187,24 @@ $app->group('/seasons', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
+  })->add(function ($request, $response, $next) {
+    //Season Midddleware to pull season data
+    // get the route from the request
+    $route = FrcPortal\Auth::getRoute();
+    if (!$route) {
+        // no route matched
+        return $next($request, $response);
+    }
+    $args = $route->getArguments();
+    $season_id = $args['season_id'];
+    $season = FrcPortal\Season::find($season_id);
+    if(!is_null($event)) {
+      $request = $request->withAttribute('season', $season);
+      $response = $next($request, $response);
+    } else {
+      $response = notFoundResponse($response, $msg = 'Season not found');
+    }
+  	return $response;
   });
   $this->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
