@@ -158,6 +158,85 @@ $app->group('/events', function () {
     insertLogs($level = 'Information', $message = 'Successfully searched Google Calendar');
     return $response;
   })->setName('Search Google Calendar');
+
+  //Add New Event
+  $this->post('', function ($request, $response, $args) {
+    $userId = FrcPortal\Auth::user()->user_id;
+    $formData = $request->getParsedBody();
+    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+    if(!FrcPortal\Auth::isAdmin()) {
+      insertLogs($level = 'Warning', $message = 'Unauthorized attempt to add Event.');
+      return unauthorizedResponse($response);
+    }
+
+    if(!isset($formData['name']) || $formData['name'] == '') {
+      return badRequestResponse($response, $msg = 'Name cannot be blank');
+    }
+    if(!isset($formData['type']) || $formData['type'] == '') {
+      return badRequestResponse($response, $msg = 'Event type cannot be blank');
+    }
+    if(!isset($formData['event_start']) || $formData['event_start'] == '') {
+      return badRequestResponse($response, $msg = 'Start Date cannot be blank');
+    }
+    if(!isset($formData['event_end']) || $formData['event_end'] == '') {
+      return badRequestResponse($response, $msg = 'End Date cannot be blank');
+    }
+    if(strtotime($formData['event_start']) >= strtotime($formData['event_end'])) {
+      return badRequestResponse($response, $msg = 'Start Date must be before End Date');
+    }
+    if(!isset($formData['google_cal_id']) || $formData['google_cal_id'] == '') {
+      return badRequestResponse($response, $msg = 'Invalid Google calendar ID');
+    }
+    $event = FrcPortal\Event::where('google_cal_id', $formData['google_cal_id'])->first();
+    if(is_null($event)) {
+      $event = new FrcPortal\Event();
+      $event->google_cal_id = $formData['google_cal_id'];
+      $event->name = $formData['name'];
+      $event->type = $formData['type'];
+      $event->event_start = $formData['event_start'];
+      $event->event_end = $formData['event_end'];
+      $event->details = isset($formData['details']) && !is_null($formData['details']) ? $formData['details']:'';
+      $event->location = isset($formData['location']) && !is_null($formData['location']) ? $formData['location']:'';
+      $event->payment_required = isset($formData['requirements']['payment']) && $formData['requirements']['payment'] ? true:false;
+      $event->permission_slip_required = isset($formData['requirements']['permission_slip']) && $formData['requirements']['permission_slip'] ? true:false;
+      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
+      $event->room_required = isset($formData['requirements']['room']) && $formData['requirements']['room'] ? true:false;
+      $event->drivers_required = isset($formData['requirements']['drivers']) && $formData['requirements']['drivers'] ? true:false;
+      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
+      $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
+      if($event->save()) {
+        $limit = 10;
+        $totalNum = FrcPortal\Event::count();
+        $events = FrcPortal\Event::orderBy('event_start','DESC')->limit($limit)->get();
+        $data = array();
+        $data['results'] = $events;
+        $data['total'] = $totalNum;
+        $data['maxPage'] = ceil($totalNum/$limit);
+        $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$data);
+        insertLogs($level = 'Information', $message = $event->name.' created');
+         //Send notifications
+        $host = getSettingsProp('env_url');
+        $msgData = array(
+          'slack' => array(
+            'title' => 'New Event Created',
+            'body' => 'Event '.$event->name.' has been created in the Team Portal.  Please go to '.$host.'/events/'.$event->event_id.' for more information and registration.'
+          ),
+          'email' => array(
+            'subject' => 'New Event Created',
+            'content' =>  'Event '.$event->name.' has been created in the Team Portal.  Please go to '.$host.'/events/'.$event->event_id.' for more information and registration.'
+          )
+        );
+        sendMassNotifications($type = 'new_event', $msgData);
+      } else {
+        $responseArr['msg'] = 'Something went wrong';
+      }
+    } else {
+      $responseArr['msg'] = $event->name.' already exists';
+      insertLogs($level = 'Information', $message = 'Attempted to create duplicate event "'.$event->name.'"');
+    }
+    $response = $response->withJson($responseArr);
+    return $response;
+  })->setName('Add Event');
   $this->group('/{event_id:[a-z0-9]{13}}', function () {
     //Get Event
     $this->get('', function ($request, $response, $args) {
@@ -915,84 +994,6 @@ $app->group('/events', function () {
     }
   	return $response;
   });
-  //Add New Event
-  $this->post('', function ($request, $response, $args) {
-    $userId = FrcPortal\Auth::user()->user_id;
-    $formData = $request->getParsedBody();
-    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-    if(!FrcPortal\Auth::isAdmin()) {
-      insertLogs($level = 'Warning', $message = 'Unauthorized attempt to add Event.');
-      return unauthorizedResponse($response);
-    }
-
-    if(!isset($formData['name']) || $formData['name'] == '') {
-      return badRequestResponse($response, $msg = 'Name cannot be blank');
-    }
-    if(!isset($formData['type']) || $formData['type'] == '') {
-      return badRequestResponse($response, $msg = 'Event type cannot be blank');
-    }
-    if(!isset($formData['event_start']) || $formData['event_start'] == '') {
-      return badRequestResponse($response, $msg = 'Start Date cannot be blank');
-    }
-    if(!isset($formData['event_end']) || $formData['event_end'] == '') {
-      return badRequestResponse($response, $msg = 'End Date cannot be blank');
-    }
-    if(strtotime($formData['event_start']) >= strtotime($formData['event_end'])) {
-      return badRequestResponse($response, $msg = 'Start Date must be before End Date');
-    }
-    if(!isset($formData['google_cal_id']) || $formData['google_cal_id'] == '') {
-      return badRequestResponse($response, $msg = 'Invalid Google calendar ID');
-    }
-    $event = FrcPortal\Event::where('google_cal_id', $formData['google_cal_id'])->first();
-    if(is_null($event)) {
-      $event = new FrcPortal\Event();
-      $event->google_cal_id = $formData['google_cal_id'];
-      $event->name = $formData['name'];
-      $event->type = $formData['type'];
-      $event->event_start = $formData['event_start'];
-      $event->event_end = $formData['event_end'];
-      $event->details = isset($formData['details']) && !is_null($formData['details']) ? $formData['details']:'';
-      $event->location = isset($formData['location']) && !is_null($formData['location']) ? $formData['location']:'';
-      $event->payment_required = isset($formData['requirements']['payment']) && $formData['requirements']['payment'] ? true:false;
-      $event->permission_slip_required = isset($formData['requirements']['permission_slip']) && $formData['requirements']['permission_slip'] ? true:false;
-      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
-      $event->room_required = isset($formData['requirements']['room']) && $formData['requirements']['room'] ? true:false;
-      $event->drivers_required = isset($formData['requirements']['drivers']) && $formData['requirements']['drivers'] ? true:false;
-      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
-      $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
-      if($event->save()) {
-        $limit = 10;
-        $totalNum = FrcPortal\Event::count();
-        $events = FrcPortal\Event::orderBy('event_start','DESC')->limit($limit)->get();
-        $data = array();
-        $data['results'] = $events;
-        $data['total'] = $totalNum;
-        $data['maxPage'] = ceil($totalNum/$limit);
-        $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$data);
-        insertLogs($level = 'Information', $message = $event->name.' created');
-         //Send notifications
-        $host = getSettingsProp('env_url');
-        $msgData = array(
-          'slack' => array(
-            'title' => 'New Event Created',
-            'body' => 'Event '.$event->name.' has been created in the Team Portal.  Please go to '.$host.'/events/'.$event->event_id.' for more information and registration.'
-          ),
-          'email' => array(
-            'subject' => 'New Event Created',
-            'content' =>  'Event '.$event->name.' has been created in the Team Portal.  Please go to '.$host.'/events/'.$event->event_id.' for more information and registration.'
-          )
-        );
-        sendMassNotifications($type = 'new_event', $msgData);
-      } else {
-        $responseArr['msg'] = 'Something went wrong';
-      }
-    } else {
-      $responseArr['msg'] = $event->name.' already exists';
-      insertLogs($level = 'Information', $message = 'Attempted to create duplicate event "'.$event->name.'"');
-    }
-    $response = $response->withJson($responseArr);
-    return $response;
-  })->setName('Add Event');
 });
 
 ?>

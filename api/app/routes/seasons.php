@@ -44,6 +44,96 @@ $app->group('/seasons', function () {
     $response = $response->withJson($data);
     return $response;
   });
+  $this->post('', function ($request, $response, $args) {
+    $userId = FrcPortal\Auth::user()->user_id;
+    $formData = $request->getParsedBody();
+    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+    if(!FrcPortal\Auth::isAdmin()) {
+      return unauthorizedResponse($response);
+    }
+
+    if(!isset($formData['year']) || $formData['year'] == '') {
+      $responseArr = array('status'=>false, 'msg'=>'Year cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
+    if(!isset($formData['game_name']) || $formData['game_name'] == '') {
+      $responseArr = array('status'=>false, 'msg'=>'Name cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
+    if(!isset($formData['start_date']) || $formData['start_date'] == '') {
+      $responseArr = array('status'=>false, 'msg'=>'Start Date cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
+    if(!isset($formData['bag_day']) || $formData['bag_day'] == '') {
+      $responseArr = array('status'=>false, 'msg'=>'Bag Date cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
+    if(!isset($formData['end_date']) || $formData['end_date'] == '') {
+      $responseArr = array('status'=>false, 'msg'=>'End Date cannot be blank!');
+      $response = $response->withJson($responseArr,400);
+      return $response;
+    }
+    $spreadsheetId = getSeasonMembershipForm($formData['year']);
+    $spreadsheetId = $spreadsheetId['status'] != false ? $spreadsheetId['data']['join_spreadsheet']:'';
+    $start_date = new DateTime($formData['start_date']);
+    $bag_day = new DateTime($formData['bag_day']);
+    $end_date = new DateTime($formData['end_date']);
+
+    $season = FrcPortal\Season::where('year', $formData['year'])->count();
+    if($season == 0) {
+      $newSeason = new FrcPortal\Season();
+      $newSeason->year = $formData['year'];
+      $newSeason->game_name = $formData['game_name'];
+      $newSeason->start_date = $start_date->format('Y-m-d');
+      $newSeason->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
+      $newSeason->end_date = $end_date->format('Y-m-d'." 23:59:59");
+      $newSeason->join_spreadsheet = $spreadsheetId;
+      $newSeason->membership_form_map = array(
+        'email' => 'email address',
+        'fname' => 'first name',
+        'lname' => 'last name',
+        'user_type' => 'member type',
+        'grad' => 'year of graduation',
+        'school' => 'school',
+        'pin_number' => 'student id',
+        'phone' => 'phone'
+      );
+      $newSeason->membership_form_sheet = 'Form Responses 1';
+      $newSeason->game_logo = !isset($formData['game_logo']) && !is_null($formData['game_logo']) ? $formData['game_logo']:'';
+      if($newSeason->save()) {
+        $limit = 10;
+        $totalNum = FrcPortal\Season::count();
+        $seasons = FrcPortal\Season::orderBy('year','DESC')->limit($limit)->get();
+        $data = array();
+        $data['results'] = $seasons;
+        $data['total'] = $totalNum;
+        $data['maxPage'] = ceil($totalNum/$limit);
+        $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$data);
+        //Send notifications
+        $msgData = array(
+          'slack' => array(
+            'title' => 'New Season Created',
+            'body' => 'The '.$newSeason->year.' FRC Season '.$newSeason->game_name.' has been created in the Team Portal.'
+          ),
+          'email' => array(
+            'subject' => 'New Season Created',
+            'content' =>  'The '.$newSeason->year.' FRC Season '.$newSeason->game_name.' has been created in the Team Portal.'
+          )
+        );
+        sendMassNotifications($type = 'new_season', $msgData);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong');
+      }
+    } else {
+      $responseArr = array('status'=>false, 'msg'=>'Season for '.$formData['year'].' already exists');
+    }
+    $response = $response->withJson($responseArr);
+    return $response;
+  });
   $this->group('/{season_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
       $season_id = $args['season_id'];
@@ -205,96 +295,6 @@ $app->group('/seasons', function () {
       $response = notFoundResponse($response, $msg = 'Season not found');
     }
   	return $response;
-  });
-  $this->post('', function ($request, $response, $args) {
-    $userId = FrcPortal\Auth::user()->user_id;
-    $formData = $request->getParsedBody();
-    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-    if(!FrcPortal\Auth::isAdmin()) {
-      return unauthorizedResponse($response);
-    }
-
-    if(!isset($formData['year']) || $formData['year'] == '') {
-      $responseArr = array('status'=>false, 'msg'=>'Year cannot be blank!');
-      $response = $response->withJson($responseArr,400);
-      return $response;
-    }
-    if(!isset($formData['game_name']) || $formData['game_name'] == '') {
-      $responseArr = array('status'=>false, 'msg'=>'Name cannot be blank!');
-      $response = $response->withJson($responseArr,400);
-      return $response;
-    }
-    if(!isset($formData['start_date']) || $formData['start_date'] == '') {
-      $responseArr = array('status'=>false, 'msg'=>'Start Date cannot be blank!');
-      $response = $response->withJson($responseArr,400);
-      return $response;
-    }
-    if(!isset($formData['bag_day']) || $formData['bag_day'] == '') {
-      $responseArr = array('status'=>false, 'msg'=>'Bag Date cannot be blank!');
-      $response = $response->withJson($responseArr,400);
-      return $response;
-    }
-    if(!isset($formData['end_date']) || $formData['end_date'] == '') {
-      $responseArr = array('status'=>false, 'msg'=>'End Date cannot be blank!');
-      $response = $response->withJson($responseArr,400);
-      return $response;
-    }
-    $spreadsheetId = getSeasonMembershipForm($formData['year']);
-    $spreadsheetId = $spreadsheetId['status'] != false ? $spreadsheetId['data']['join_spreadsheet']:'';
-    $start_date = new DateTime($formData['start_date']);
-    $bag_day = new DateTime($formData['bag_day']);
-    $end_date = new DateTime($formData['end_date']);
-
-    $season = FrcPortal\Season::where('year', $formData['year'])->count();
-    if($season == 0) {
-      $newSeason = new FrcPortal\Season();
-      $newSeason->year = $formData['year'];
-      $newSeason->game_name = $formData['game_name'];
-      $newSeason->start_date = $start_date->format('Y-m-d');
-      $newSeason->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
-      $newSeason->end_date = $end_date->format('Y-m-d'." 23:59:59");
-      $newSeason->join_spreadsheet = $spreadsheetId;
-      $newSeason->membership_form_map = array(
-        'email' => 'email address',
-        'fname' => 'first name',
-        'lname' => 'last name',
-        'user_type' => 'member type',
-        'grad' => 'year of graduation',
-        'school' => 'school',
-        'pin_number' => 'student id',
-        'phone' => 'phone'
-      );
-      $newSeason->membership_form_sheet = 'Form Responses 1';
-      $newSeason->game_logo = !isset($formData['game_logo']) && !is_null($formData['game_logo']) ? $formData['game_logo']:'';
-      if($newSeason->save()) {
-        $limit = 10;
-        $totalNum = FrcPortal\Season::count();
-        $seasons = FrcPortal\Season::orderBy('year','DESC')->limit($limit)->get();
-        $data = array();
-        $data['results'] = $seasons;
-        $data['total'] = $totalNum;
-        $data['maxPage'] = ceil($totalNum/$limit);
-        $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$data);
-        //Send notifications
-        $msgData = array(
-          'slack' => array(
-            'title' => 'New Season Created',
-            'body' => 'The '.$newSeason->year.' FRC Season '.$newSeason->game_name.' has been created in the Team Portal.'
-          ),
-          'email' => array(
-            'subject' => 'New Season Created',
-            'content' =>  'The '.$newSeason->year.' FRC Season '.$newSeason->game_name.' has been created in the Team Portal.'
-          )
-        );
-        sendMassNotifications($type = 'new_season', $msgData);
-      } else {
-        $responseArr = array('status'=>false, 'msg'=>'Something went wrong');
-      }
-    } else {
-      $responseArr = array('status'=>false, 'msg'=>'Season for '.$formData['year'].' already exists');
-    }
-    $response = $response->withJson($responseArr);
-    return $response;
   });
 });
 

@@ -247,21 +247,6 @@ class User extends Eloquent {
   	}
   }
 
-  public function updateSignInPin($pin) {
-    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-    $currentPIN = $this->signin_pin;
-    if($currentPIN != hash('SHA256', $pin)) {
-      $this->signin_pin = hash('SHA256', $pin);
-      if($this->save()) {
-        //$user->load('school');
-        $responseArr = array('status'=>true, 'msg'=>'PIN has been changed', 'data' => $this);
-      }
-    } else {
-      $responseArr['msg'] = 'PIN must be changed to a different number';
-    }
-    return $responseArr;
-  }
-
   public function getGenderByFirstName() {
   	$return = false;
     $name = $this->fname;
