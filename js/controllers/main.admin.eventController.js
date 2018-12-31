@@ -84,7 +84,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 
 	vm.getEventTypeList = function () {
-		vm.promise =	eventsService.getEventTypes().then(function(response){
+		vm.promise =	eventsService.getEventTypes().finally(function(response){
 			vm.eventTypes = response.data;
 		});
 	};
@@ -119,7 +119,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 	vm.syncGoogleCalEvent = function () {
 		vm.loading = true;
-		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
+		eventsService.syncGoogleCalEvent(vm.event_id).finally(function(response){
 			if(response.status) {
 				vm.event = response.data;
 			}
@@ -150,7 +150,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				'drivers_required': vm.event.drivers_required,
 			}
 		};
-		eventsService.updateEvent(data).then(function(response){
+		eventsService.updateEvent(data).finally(function(response){
 			vm.loading = false;
 			if(response.status) {
 				vm.event = response.data;
@@ -173,7 +173,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 					.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
 			vm.loading = true;
-			eventsService.deleteEvent(vm.event.event_id).then(function(response) {
+			eventsService.deleteEvent(vm.event.event_id).finally(function(response) {
 				if(response.status) {
 					$mdDialog.show(
 						$mdDialog.alert()
@@ -307,7 +307,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'requirement':req,
 			'action': action
 		}
-		vm.promise = eventsService.toggleEventReqs(data).then(function(response){
+		vm.promise = eventsService.toggleEventReqs(data).finally(function(response){
 			if(response.status && response.data) {
 				vm.users = response.data;
 			}
@@ -327,7 +327,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'event_id': vm.event_id,
 			'users': users,
 		}
-		vm.promise = eventsService.toggleConfirmAttendance(data).then(function(response){
+		vm.promise = eventsService.toggleConfirmAttendance(data).finally(function(response){
 			if(response.status && response.data) {
 				vm.users = response.data;
 			}
@@ -346,7 +346,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'users': vm.selectedUsers,
 			'requirement':req
 		}
-		vm.promise = eventsService.toggleEventReqs(data).then(function(response){
+		vm.promise = eventsService.toggleEventReqs(data).finally(function(response){
 			if(response.status && response.data) {
 				vm.users = response.data;
 			}
