@@ -127,6 +127,10 @@ function insertLogs($level, $message) {
 		$userId = FrcPortal\Auth::user()->user_id;
 		$log->user_id = $userId;
 	}
+	$route = FrcPortal\Auth::getRoute();
+	if(!is_null($route)) {
+		$log->route = $route->getName();
+	}
 	$ip = FrcPortal\Auth::getClientIP();
 	$log->level = ucfirst($level);
 	$log->message = $message;

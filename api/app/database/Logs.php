@@ -9,6 +9,7 @@ Capsule::schema()->create('logs', function ($table) {
   $table->char('user_id',13)->index()->nullable()->default(null);
   $table->text('message');
   $table->ipAddress('ip_address')->nullable()->default(null);
+  $table->string('route')->nullable()->default(null);
   $table->timestamps();
 });
 

@@ -170,7 +170,7 @@ $app->get('/config', function ($request, $response, $args) {
   $response->getBody()->write($responseStr);
   $response = $response->withHeader('Content-type', 'application/javascript');
   return $response;
-});
+})->setName('Config');
 $app->get('/manifest.json', function ($request, $response, $args) {
   $this->logger->addInfo('Called manifest endpoint');
   $configArr = array(
@@ -210,7 +210,7 @@ $app->get('/manifest.json', function ($request, $response, $args) {
   );
   $response = $response->withJson($responseArr);
   return $response;
-});
+})->setName('Manifest');
 
 
 require_once('./app/routes/auth.php');

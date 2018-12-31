@@ -48,7 +48,7 @@ $app->group('/auth', function () {
     }
     $response = $response->withJson($responseData);
     return $response;
-  });
+  })->setName('Google OAuth2');
   $this->post('/facebook', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
@@ -113,7 +113,7 @@ $app->group('/auth', function () {
     }
     $response = $response->withJson($responseData);
     return $response;
-  });
+  })->setName('Facebook OAuth2');
   $this->post('/live', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
@@ -177,7 +177,7 @@ $app->group('/auth', function () {
     }
     $response = $response->withJson($responseData);
     return $response;
-  });
+  })->setName('Microsoft OAuth2');
   /*$this->post('/slack', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
@@ -270,7 +270,7 @@ $app->group('/auth', function () {
     }
     $response = $response->withJson($responseData);
     return $response;
-  });
+  })->setName('Local Login');
 });
 
 
