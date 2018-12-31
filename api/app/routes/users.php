@@ -145,9 +145,7 @@ $app->group('/users', function () {
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       $user_id = $args['user_id'];
-      if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
-        return unauthorizedResponse($response);
-      }
+
       //User passed from middleware
       $user = $request->getAttribute('user');
       if(!isset($formData['pin']) || $formData['pin'] == '') {
@@ -175,9 +173,7 @@ $app->group('/users', function () {
 
       $user_id = $args['user_id'];
       $year = $args['year'];
-      if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
-        return unauthorizedResponse($response);
-      }
+
       $data = array('sum'=>array());
       $labels = array();
       $series = array('Sum');
@@ -213,13 +209,8 @@ $app->group('/users', function () {
     $this->get('/linkedAccounts', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
 
       $user_id = $args['user_id'];
-      if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
-        return unauthorizedResponse($response);
-      }
-
       $user = FrcPortal\Oauth::where('user_id',$user_id)->get();
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
       $response = $response->withJson($responseArr);
@@ -230,11 +221,7 @@ $app->group('/users', function () {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-
         $user_id = $args['user_id'];
-        if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
-          return unauthorizedResponse($response);
-        }
         //User passed from middleware
         $user = $request->getAttribute('user');
         //$user = FrcPortal\User::find($user_id);
@@ -247,12 +234,7 @@ $app->group('/users', function () {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-
         $user_id = $args['user_id'];
-        if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
-          return unauthorizedResponse($response);
-        }
-
         if(!isset($formData['method']) || $formData['method'] == '') {
           return badRequestResponse($response, $msg = 'Notification method is required');
         }
@@ -262,7 +244,6 @@ $app->group('/users', function () {
         if(!array_key_exists('value',$formData)) {
           return badRequestResponse($response, $msg = 'Value is required');
         }
-
         if($formData['value'] == true) {
           $pref = new FrcPortal\NotificationPreference();
           $pref->user_id = $user_id;
@@ -287,7 +268,6 @@ $app->group('/users', function () {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-
       $user_id = $args['user_id'];
       if($user_id != $userId) {
         return unauthorizedResponse($response);
@@ -332,7 +312,6 @@ $app->group('/users', function () {
       }
       //User passed from middleware
       $user = $request->getAttribute('user');
-      $user->load('school');
       // $user = FrcPortal\User::with('school')->find($user_id);
       $user->fname = $formData['fname'];
       $user->lname = $formData['lname'];
@@ -355,9 +334,8 @@ $app->group('/users', function () {
         $user->status = $formData['status'];
       }
       if($user->save()) {
+        $user->load('school');
         $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $user);
-      } else {
-        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $user);
       }
       $response = $response->withJson($responseArr);
       return $response;
@@ -374,8 +352,6 @@ $app->group('/users', function () {
       $user = FrcPortal\User::destroy($user_id);
       if($user) {
         $responseArr = array('status'=>true, 'msg'=>'User Deleted', 'data' => $user);
-      } else {
-        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $user);
       }
       $response = $response->withJson($responseArr);
       return $response;
