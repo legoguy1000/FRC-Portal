@@ -163,6 +163,7 @@ $app->group('/events', function () {
     $this->get('', function ($request, $response, $args) {
       $authed = FrcPortal\Auth::isAuthenticated();
       $event_id = $args['event_id'];
+      //Event passed from middleware
       $event = $request->getAttribute('event');
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
       $withArr = array('poc');
@@ -197,17 +198,10 @@ $app->group('/events', function () {
           };
         } else {
           $event->registered_users_count = $event->registered_users()->count();
-          /* $withCountArr['registered_users'] = function ($query) use ($event_id) {
-            $query->where('registration',true);
-          }; */
         }
 
       }
       $event = $event->load($withArr);
-      /* if(!empty($withCountArr)) {
-        $event->users()->count(); //->withCount($withCountArr);
-      } */
-      //$event = $event->find($event_id);
       if($reqsBool) {
         $event->users = getUsersEventRequirements($event_id);
       }
@@ -219,7 +213,8 @@ $app->group('/events', function () {
     //Get Event Requirements
     $this->get('/eventRequirements', function ($request, $response, $args) {
       $event_id = $args['event_id'];
-      $event = FrcPortal\Event::find($event_id);
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
       $eventReqs = getUsersEventRequirements($event_id);
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $eventReqs);
       $response = $response->withJson($responseArr);
@@ -229,6 +224,8 @@ $app->group('/events', function () {
     $this->group('/cars', function () {
       //Get Event Cars
       $this->get('', function ($request, $response, $args) {
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         $event_id = $args['event_id'];
         try {
@@ -245,6 +242,8 @@ $app->group('/events', function () {
       })->setName('Get Event Cars');
       //Update Event Car passengers
       $this->put('', function ($request, $response, $args) {
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -596,10 +595,10 @@ $app->group('/events', function () {
         insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event');
         return unauthorizedResponse($response);
       }
-
       $event_id = $args['event_id'];
-      $event = FrcPortal\Event::find($event_id);
-
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
+      //$event = FrcPortal\Event::find($event_id);
       $event->type = isset($formData['type']) && $formData['type'] != '' ? $formData['type'] : null;
       $event->poc_id = isset($formData['poc']['user_id']) && $formData['poc']['user_id'] != '' ? $formData['poc']['user_id']:null;
       if($formData['registration_deadline'] != null && $formData['registration_deadline'] != '') {
@@ -670,7 +669,9 @@ $app->group('/events', function () {
       if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('registration','permission_slip','payment'))) {
         return badRequestResponse($response, $msg = 'Invalid event requirement');
       }
-      $event = FrcPortal\Event::find($event_id);
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
+      //$event = FrcPortal\Event::find($event_id);
       $array = array();
       $req = $formData['requirement'];
       $events = $formData['users'];
@@ -709,7 +710,9 @@ $app->group('/events', function () {
       /* if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('registration','permission_slip','payment'))) {
         return badRequestResponse($response, $msg = 'Invalid event requirement');
       } */
-      $event = FrcPortal\Event::find($event_id);
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
+      //$event = FrcPortal\Event::find($event_id);
       $array = array();
       $users = $formData['users'];
       $user_ids = array_column($users, 'user_id');
@@ -750,13 +753,15 @@ $app->group('/events', function () {
       if(!is_bool($formData['registration'])) {
         return badRequestResponse($response, $msg = 'Invalid Request, no registration option.');
       }
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
+      //$event = FrcPortal\Event::find($event_id);
 
       $user =  FrcPortal\User::find($user_id);
       $user_type = $user->user_type;
       $gender = $user->gender;
 
       $registrationBool = (bool) $formData['registration'];
-      $event = FrcPortal\Event::find($event_id);
       if(time() > $event->date['start']['unix']) {
         return badRequestResponse($response, $msg = 'Registration is closed. Event has already started.');
       } elseif(($event->registration_deadline_date['unix'] != null && time() > $event->registration_deadline_date['unix']) && !FrcPortal\Auth::isAdmin()) {
@@ -892,6 +897,7 @@ $app->group('/events', function () {
       return $response;
     })->setName('Delete Event');
   })->add(function ($request, $response, $next) {
+    //Event Midddleware to pull event data
     // get the route from the request
     $route = FrcPortal\Auth::getRoute();
     if (!$route) {
@@ -903,9 +909,11 @@ $app->group('/events', function () {
     $event = FrcPortal\Event::find($event_id);
     if(!is_null($event)) {
       $request = $request->withAttribute('event', $event);
+      $response = $next($request, $response);
+    } else {
+      $response = notFoundResponse($response, $msg = 'Event not found');
     }
-  	$response = $next($request, $response);
-    return $response;
+  	return $response;
   });
   //Add New Event
   $this->post('', function ($request, $response, $args) {

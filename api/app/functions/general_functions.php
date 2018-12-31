@@ -289,6 +289,11 @@ function badRequestResponse($response, $msg = 'Invalid Request') {
 	return $response->withJson($responseArr,400);
 }
 
+function notFoundResponse($response, $msg = 'Not Found') {
+	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
+	return $response->withJson($responseArr,404);
+}
+
 function exceptionResponse($response, $msg = 'Error', $code = 200) {
 	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
 	return $response->withJson($responseArr,$code);
