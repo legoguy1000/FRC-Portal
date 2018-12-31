@@ -614,7 +614,7 @@ angular.module('FrcPortal', [
 			        .position('top right')
 			        .hideDelay(3000)
 			    );
-				} /* else if (rejection.status === 404) {
+				} else if (rejection.status === 404) {
 					// Return a new promise
 					var $mdToast = $injector.get('$mdToast');
 					//console.log(rejection);
@@ -624,7 +624,7 @@ angular.module('FrcPortal', [
 			        .position('top right')
 			        .hideDelay(3000)
 			    );
-				} */
+				}
 				return $q.reject(rejection);
 			}
 		}
