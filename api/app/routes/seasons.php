@@ -198,7 +198,7 @@ $app->group('/seasons', function () {
     $args = $route->getArguments();
     $season_id = $args['season_id'];
     $season = FrcPortal\Season::find($season_id);
-    if(!is_null($event)) {
+    if(!is_null($season)) {
       $request = $request->withAttribute('season', $season);
       $response = $next($request, $response);
     } else {
