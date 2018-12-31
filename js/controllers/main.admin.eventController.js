@@ -84,7 +84,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 
 	vm.getEventTypeList = function () {
-		vm.promise =	eventsService.getEventTypes().finally(function(response){
+		vm.promise =	eventsService.getEventTypes().then(function(response){
 			vm.eventTypes = response.data;
 		});
 	};
@@ -95,8 +95,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.users = null;
 	vm.getEvent = function () {
 		vm.loading = true;
-		eventsService.getEvent(vm.event_id).finally(function(response){
+		eventsService.getEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
+		}).finally(function() {
 			vm.loading = false;
 		});
 	};
@@ -104,7 +105,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 
 	vm.getEventRequirements = function() {
-		vm.promise = eventsService.getEventRequirements(vm.event_id).finally(function(response){
+		vm.promise = eventsService.getEventRequirements(vm.event_id).then(function(response){
 			vm.users = response.data;
 		});
 	}
@@ -119,10 +120,11 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 	vm.syncGoogleCalEvent = function () {
 		vm.loading = true;
-		eventsService.syncGoogleCalEvent(vm.event_id).finally(function(response){
+		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
 			if(response.status) {
 				vm.event = response.data;
 			}
+		}).finally(function() {
 			vm.loading = false;
 			$mdToast.show(
 	      $mdToast.simple()
@@ -150,11 +152,12 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				'drivers_required': vm.event.drivers_required,
 			}
 		};
-		eventsService.updateEvent(data).finally(function(response){
-			vm.loading = false;
+		eventsService.updateEvent(data).then(function(response){
 			if(response.status) {
 				vm.event = response.data;
 			}
+		}).finally(function() {
+			vm.loading = false;
 			$mdToast.show(
 	      $mdToast.simple()
 	        .textContent(response.msg)
@@ -173,7 +176,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 					.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
 			vm.loading = true;
-			eventsService.deleteEvent(vm.event.event_id).finally(function(response) {
+			eventsService.deleteEvent(vm.event.event_id).then(function(response) {
 				if(response.status) {
 					$mdDialog.show(
 						$mdDialog.alert()
@@ -186,6 +189,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 						$state.go('main.admin.events');
 					}, function() {});
 				}
+				vm.loading = false;
+			}).finally(function() {
 				vm.loading = false;
 			});
 		}, function() {});
@@ -307,7 +312,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'requirement':req,
 			'action': action
 		}
-		vm.promise = eventsService.toggleEventReqs(data).finally(function(response){
+		vm.promise = eventsService.toggleEventReqs(data).then(function(response){
 			if(response.status && response.data) {
 				vm.users = response.data;
 			}
@@ -327,7 +332,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'event_id': vm.event_id,
 			'users': users,
 		}
-		vm.promise = eventsService.toggleConfirmAttendance(data).finally(function(response){
+		vm.promise = eventsService.toggleConfirmAttendance(data).then(function(response){
 			if(response.status && response.data) {
 				vm.users = response.data;
 			}
@@ -346,7 +351,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			'users': vm.selectedUsers,
 			'requirement':req
 		}
-		vm.promise = eventsService.toggleEventReqs(data).finally(function(response){
+		vm.promise = eventsService.toggleEventReqs(data).then(function(response){
 			if(response.status && response.data) {
 				vm.users = response.data;
 			}
