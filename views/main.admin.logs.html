@@ -51,9 +51,10 @@
 				<tr md-row>
 					<th md-column md-order-by="created_at"><span>Timestamp</span></th>
 					<th md-column md-order-by="level" hide-xs><span>Log Level</span></th>
+					<th md-column md-order-by="route" hide-xs><span>Endpoint</span></th>
 					<th md-column md-order-by="user_id" hide-xs hide-sm><span>User</span></th>
 					<th md-column hide-xs hide-sm><span>Message</span></th>
-					<th md-column></th>
+					<th md-column hide-xs hide-sm><span>IP Address</span></th>
 				</tr>
 			</thead>
 			<tbody md-body>
@@ -64,9 +65,14 @@
 					<td md-cell>
 						<span>{{log.level}}</span>
 					</td>
+					<td md-cell>
+						<span>{{log.route}}</span>
+					</td>
 					<td md-cell hide-xs><span>{{log.user.full_name}}</span></td>
 					<td md-cell hide-xs hide-sm><span style="white-space: pre-wrap;">{{log.message}}</span></td>
-					<td md-cell></td>
+					<td md-cell>
+						<span>{{log.ip_address}}</span>
+					</td>
 				</tr>
 			</tbody>
 		</table>
