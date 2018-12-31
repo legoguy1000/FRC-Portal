@@ -26,6 +26,10 @@ class Auth {
   * @var null
   */
   protected static $ip_address = NULL;
+  /**
+  * @var null
+  */
+  protected static $route = NULL;
 
   public static function setCurrentUser($user_id) {
     self::$currentuser = $user_id;
@@ -66,5 +70,12 @@ class Auth {
   }
   public static function getClientIP() {
     return self::$ip_address;
+  }
+  public static function setRoute($r) {
+    self::$route = $r;
+    return true;
+  }
+  public static function getRoute() {
+    return self::$route;
   }
 }

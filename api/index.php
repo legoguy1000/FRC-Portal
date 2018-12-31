@@ -10,7 +10,7 @@ use \Firebase\JWT\JWT;
 $config = array();
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
-
+$config['determineRouteBeforeAppMiddleware'] = true;
 $config['db']['driver']   = 'mysql'; //your mysql server
 $config['db']['host']   = getIniProp('db_host'); //your mysql server
 $config['db']['user']   = getIniProp('db_user'); //your mysql server username
@@ -54,6 +54,8 @@ $app->add(function ($request, $response, $next) {
   }
   $ipAddress = $request->getAttribute('ip_address');
   FrcPortal\Auth::setClientIP($ipAddress);
+  $route = $request->getAttribute('route');
+  FrcPortal\Auth::setRoute($route);
 	$response = $next($request, $response);
   return $response;
 });
@@ -117,6 +119,8 @@ $app->get('/version', function (Request $request, Response $response, array $arg
     'user' => FrcPortal\Auth::user(),
     'token' => FrcPortal\Auth::currentToken(),
     'isAuthenticated' => FrcPortal\Auth::isAuthenticated(),
+    'ip' => FrcPortal\Auth::getClientIP(),
+    'route' => FrcPortal\Auth::getRoute(),
   );
   insertLogs($level = 'Information', $message = 'Called version endpoint');
   $response = $response->withJson($responseArr);
