@@ -196,7 +196,7 @@ $app->group('/events', function () {
             $query->where('registration',true);
           };
         } else {
-          $event->registered_users_count = $event->users()->count();
+          $event->registered_users_count = $event->registered_users()->count();
           /* $withCountArr['registered_users'] = function ($query) use ($event_id) {
             $query->where('registration',true);
           }; */
