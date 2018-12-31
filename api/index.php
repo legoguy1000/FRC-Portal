@@ -133,7 +133,7 @@ $app->get('/version', function (Request $request, Response $response, array $arg
   insertLogs($level = 'Information', $message = 'Called version endpoint');
   $response = $response->withJson($responseArr);
   return $response;
-});
+})->setName('Version');
 $app->get('/config', function ($request, $response, $args) {
   $configArr = array(
     'google_oauth_client_id',
