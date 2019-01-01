@@ -292,10 +292,10 @@ $app->group('/auth', function () {
     $accessTokenArr = (array) json_decode($body, true);
     $accessToken = $accessTokenArr['access_token'];
 
-    $params = array('access_token'=>$accessToken);
-  	$client = new GuzzleHttp\Client(['base_uri' => 'https://api.github.com/']);
+    //$params = array('access_token'=>$accessToken);
+  	$client = new GuzzleHttp\Client(['base_uri' => 'https://api.github.com/','headers' => array('Authorization'=>'token '.$accessToken)]);
   	$result = $client->request('GET', 'user', array(
-  		'query' => $params
+  		//'query' => $params
   	));
   	$code = $result->getStatusCode(); // 200
   	$reason = $result->getReasonPhrase(); // OK
@@ -311,7 +311,7 @@ $app->group('/auth', function () {
     $user = checkLogin($userData);
     if($user == false && is_null($userData['email'])) {
       $result = $client->request('GET', 'user/emails', array(
-        'query' => $params
+        //'query' => $params
       ));
       $code = $result->getStatusCode(); // 200
       $reason = $result->getReasonPhrase(); // OK
