@@ -23,8 +23,8 @@
 					<tr md-row>
 						<th md-column md-order-by="lname"><span>Name</span></th>
 						<!-- <th md-column md-order-by="user_type"><span>Type</span></th>	 -->
-						<th md-column md-order-by="time_in"><span>Time In</span></th>
-						<th md-column md-order-by="time_out"><span>Time Out</span></th>
+						<th md-column md-order-by="last_sign_in.time_in"><span>Time In</span></th>
+						<th md-column md-order-by="last_sign_in.time_out"><span>Time Out</span></th>
 						<th md-column md-numeric md-order-by="build_season_hours" ng-show="vm.users[0].build_season"><span>Build Season Hours</span></th>
 						<th md-column md-numeric md-order-by="competition_season_hours" ng-show="vm.users[0].competition_season"><span>Competition Season Hours</span></th>
 						<th md-column md-numeric md-order-by="off_season_hours" ng-show="vm.users[0].off_season"><span>Off Season Hours</span></th>
