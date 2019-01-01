@@ -454,12 +454,12 @@ function formatGithubLoginUserData($me) {
 	$name = explode(' ',$me['name']);
 	$fname = $name[0];
 	$lname = $name[1];
-	$image = ''; //$me['image']['url'];\
-	$id = $me['user_id'];
+	$image = $me['avatar_url']; //$me['image']['url'];\
+	$id = $me['id'];
 
 	$userData = array(
 		'id' => $id,
-		'provider' => 'Amazon',
+		'provider' => 'Github',
 		'email' => $email,
 		'fname' => $fname,
 		'lname' => $lname,

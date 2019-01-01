@@ -288,7 +288,6 @@ $app->group('/auth', function () {
   		)
   	);
     $result = file_get_contents($url, false, stream_context_create($options));
-    die($result);
     $me = json_decode($result, true);
     $userData = formatGithubLoginUserData($me);
     if(checkTeamLogin($userData['email'])) {
@@ -298,6 +297,27 @@ $app->group('/auth', function () {
     }
 
     $user = checkLogin($userData);
+    if($user == false && is_null($userData['email'])) {
+      $url = 'https://api.github.com/user/emails';
+      $options = array(
+        'http' => array(
+          'header'  => array("Authorization: token ".$accessToken, "Accept: application/json", "Accept-Language: en-US"),
+          'method'  => 'GET',
+        )
+      );
+      $result = file_get_contents($url, false, stream_context_create($options));
+      $emails = json_decode($result, true);
+      $userData2 = $userData;
+      foreach($emails as $email) {
+        if($email['verified']) {
+          $userData2['email'] = $email['email'];
+          $user = checkLogin($userData);
+          if($user != false) {
+            break;
+          }
+        }
+      }
+    }
     if($user != false) {
       $user->updateUserOnLogin($userData);
       $jwt = $user->generateUserJWT();
