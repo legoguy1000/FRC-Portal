@@ -1,4 +1,4 @@
-<md-dialog aria-label="New Event" style="" layout-wrap flex="50" >
+<md-dialog aria-label="New Event" style="" layout="column" flex="50" >
 	<!--<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.addEvent()">-->
 		<md-toolbar layout="row">
 		  <div class="md-toolbar-tools">
@@ -15,7 +15,7 @@
 		  </div>
 		</md-toolbar>
 		<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.addEvent()">
-			<md-dialog-content layout="column" class="md-margin" style="overflow-y: scroll;">
+			<md-dialog-content layout-wrap class="md-margin" style="overflow-y: scroll;">
 				<div layout="row">
 					<md-input-container flex class="md-icon-float md-block">
 						<label>Event Name</label>
