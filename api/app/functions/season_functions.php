@@ -9,11 +9,12 @@ function getSeasonMembershipForm($year) {
 		try {
 			$client = new Google_Client();
 			$creds = getServiceAccountFile();
-			$client->setAuthConfigFile($creds['data']['path']);
+			$client->setAuthConfigFile($creds['path']);
 			$client->setScopes(['https://www.googleapis.com/auth/drive.readonly']);
 			$service = new Google_Service_Drive($client);
 			$mfn = getMembershipFormName();
 			$mfn = str_replace('###YEAR###',$year,$mfn);
+			$mfn = str_replace('###YEAR-1###',$year-1,$mfn);
 			$query = buildGoogleDriveQuery($mfn);
 			$parameters = array(
 				'corpora' => 'user',
@@ -23,7 +24,7 @@ function getSeasonMembershipForm($year) {
 				'pageSize' => '1'
 			);
 			$teamDrive = getSettingsProp('google_drive_id');
-			if(!is_null($teamDrive)) {
+			if(!is_null($teamDrive) && $teamDrive != '') {
 				$parameters['corpora'] = 'teamDrive';
 				$parameters['teamDriveId'] = $teamDrive;
 				$parameters['includeTeamDriveItems'] = 'true';
@@ -37,13 +38,9 @@ function getSeasonMembershipForm($year) {
 				$result['msg'] = 'No membership form found for '.$year;
 			}
 		} catch (Exception $e) {
-				$error = json_decode($e->getMessage(), true);
-				//if($error['error']['code'] == 404) {
-				//	$result['msg'] = 'Google Calendar event not found';
-			//} else {
-					$result['msg'] = 'Something went wrong searching Google Drive';
-					$result['error'] = $error;
-			//	}
+				$error = handleExceptionMessage($e);
+				$result['msg'] = 'Something went wrong searching Google Drive';
+				$result['error'] = $error;
 		}
 	}
 	return $result;
@@ -78,13 +75,17 @@ function updateSeasonMembershipForm($season_id) {
 }
 
 function pollMembershipForm($spreadsheetId, $season = null) {
-	$data = false;
+	$result = array(
+		'status' => false,
+		'msg' => '',
+		'data' => null
+	);
 	if(!is_null($spreadsheetId)) {
 		$data = array();
-		$client = new Google_Client();
-		$creds = getServiceAccountFile();
-		if($creds['status'] != false) {
-			$client->setAuthConfigFile($creds['data']['path']);
+		try {
+			$client = new Google_Client();
+			$creds = getServiceAccountFile();
+			$client->setAuthConfigFile($creds['path']);
 			$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
 			$service = new Google_Service_Sheets($client);
 			// The A1 notation of the values to retrieve.
@@ -110,13 +111,17 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 					}
 					$data[] = $temp;
 				}
+				$result['msg'] = 'Data pulled from Google Spreadsheet';
+				$result['data'] = $data;
+				$result['status'] = true;
 			}
-		} else {
-			//Credentials file doesn't work
-			$data = false;
+		} catch (Exception $e) {
+				$error = handleExceptionMessage($e);
+				$result['msg'] = 'Something went wrong reading the Google Spreadsheet';
+				$result['error'] = $error;
 		}
 	}
-	return $data;
+	return $result;
 }
 
 function itterateMembershipFormData($data = array(), $season = null) {
@@ -143,12 +148,12 @@ function itterateMembershipFormData($data = array(), $season = null) {
 			$email = $userInfo[$email_column];
 			$fname = $userInfo[$fname_column];
 			$lname = $userInfo[$lname_column];
-			$form_user_type = $userInfo[$userType_column];
+			$form_user_type = isset($userInfo[$userType_column]) ? $userInfo[$userType_column]: '';
 			$user_type = $form_user_type == 'Adult' ? 'Mentor' : $form_user_type;
 			//	$birthday = $userInfo['birthday'];
-			$grad_year = $userInfo[$grad_column];
-			$school = $userInfo[$school_column];
-			$student_id = $userInfo[$pin_column];
+			$grad_year = isset($userInfo[$grad_column]) ? $userInfo[$grad_column]: '';
+			$school = isset($userInfo[$school_column]) ? $userInfo[$school_column]: '';
+			$student_id = isset($userInfo[$pin_column]) ? $userInfo[$pin_column]: '';
 			$phone = isset($userInfo[$phone_column]) ? $userInfo[$phone_column] : '';
 			$clean_phone = preg_replace('/[^0-9]/s', '', $phone);
 
@@ -168,7 +173,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 				$user->email = $email;
 				$user->fname = $fname;
 				$user->lname = $lname;
-				$gender = getGenderByFirstName($fname);
+				$user->getGenderByFirstName();
 				$user->gender = $gender != false ? ucfirst($gender):'';
 				$user->user_type = $user_type;
 				if($user_type == 'Student') {
@@ -189,7 +194,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 				//Insert Data
 				if($user->save()) {
 					$user_id = $user->user_id;
-					setDefaultNotifications($user_id);
+					$user->setDefaultNotifications();
 					$host = getSettingsProp('env_url');
 					$msgData = array(
 						'subject' => 'User account created for '.$team_name.'\s team portal',
@@ -214,7 +219,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 						'userData' => $user
 						)
 					);
-					sendUserNotification($user_id, $type = 'join_team', $msgData);
+					$user->sendUserNotification($type = 'join_team', $msgData);
 				}
 			}
 		}
@@ -226,20 +231,25 @@ function itterateMembershipFormData($data = array(), $season = null) {
 
 function updateSeasonRegistrationFromForm($season_id) {
 	$data = false;
-	$return = false;
+	$result = array(
+		'status' => false,
+		'msg' => '',
+		'data' => null
+	);
 	if(!is_null($season_id)) {
 		$season = FrcPortal\Season::find($season_id);
 		if(!is_null($season)) {
 			$spreadsheetId = $season->join_spreadsheet != '' ? $season->join_spreadsheet:null;
 			if(!is_null($spreadsheetId)) {
-				$data = pollMembershipForm($spreadsheetId, $season);
-				if($data != false && !empty($data)) {
-					$return = itterateMembershipFormData($data, $season);
+				$result = $data = pollMembershipForm($spreadsheetId, $season);
+				if($data['status'] == true && !empty($data['data'])) {
+					$result['status'] = itterateMembershipFormData($data['data'], $season);
+					$result['msg'] = 'Latest data downloaded from Google form';
 				}
 			}
 		}
 	}
-	return $return;
+	return $result;
 }
 
 function createSchoolAbv($name = null) {

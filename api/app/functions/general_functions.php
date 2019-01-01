@@ -24,6 +24,7 @@ function getRealIpAddr() {
     return $ip;
 }
 
+/*
 function insertLogs($userId, $type, $status, $msg) {
 	$db = db_connect();
 	$id = uniqid();
@@ -35,7 +36,7 @@ function insertLogs($userId, $type, $status, $msg) {
 	$query = 'INSERT INTO logs (id, user_id, type, status, msg, remote_ip) VALUES ('.db_quote($id).', '.$user_id.', '.db_quote($type).', '.db_quote($status).', '.db_quote($msg).', '.db_quote($ip).')';
 	//$result = db_query($query);
 	return $id;
-}
+} */
 
 function defaultTableParams() {
 	$params = array();
@@ -95,26 +96,51 @@ function filterArrayData ($inputArray, $filter) {
 
 function getServiceAccountFile() {
 	$file = __DIR__.'/../secured/service_account_credentials.json';
-	$result = array(
-		'status' => false,
-		'msg' => 'File Doesn\'t Exist',
-		'data' => array(
-			'path' => $file,
-			'contents' => null
-		)
-	);
-	if(file_exists($file)) {
-		$result['status'] = true;
-		$result['msg'] = 'File Present';
-		$json = json_decode(file_get_contents($file),true);
-		$result['data']['contents'] = array_intersect_key($json,array('client_email'=>''));
+	if(!file_exists($file)) {
+		throw new Exception("Credentials file does not exist");
 	}
-	return $result;
+	$valid = json_validate(file_get_contents($file));
+	if(!$valid['status']) {
+		throw new Exception("Credentials file is not valid");
+	}
+	return array(
+		'contents' => $valid['data'],
+		'path' => $file
+	);
+}
+
+function handleExceptionMessage($e) {
+	error_log($e);
+	$data = json_decode($e->getMessage(), true);
+	if(json_last_error() == JSON_ERROR_NONE) {
+		return $data['error']['message'];
+	} else {
+		return $e->getMessage();
+	}
+	return 'Something went wrong';
+}
+
+function insertLogs($level, $message) {
+	$authed = FrcPortal\Auth::isAuthenticated();
+	$log = new FrcPortal\Log();
+	if($authed) {
+		$userId = FrcPortal\Auth::user()->user_id;
+		$log->user_id = $userId;
+	}
+	$route = FrcPortal\Auth::getRoute();
+	if(!is_null($route)) {
+		$log->route = $route->getName();
+	}
+	$ip = FrcPortal\Auth::getClientIP();
+	$log->level = ucfirst($level);
+	$log->message = $message;
+	$log->ip_address = $ip;
+	$log->save();
 }
 
 function getMembershipFormName() {
 	$mfn = getSettingsProp('membership_form_name');
-	if(is_null($mfn)) {
+	if(is_null($mfn) || $mfn == '') {
 		$mfn = '###YEAR### Membership (Responses)';
 	}
 	return $mfn;
@@ -240,6 +266,7 @@ function formatDateArrays($date_raw) {
 		'date_dow' => $date->format('D'),
 		'multi_day_start' => $date->format('F j'),
 		'multi_day_end' => $date->format('j, Y'),
+		'full_formatted' => $date->format('F j, Y g:i A'),
 	);
 }
 
@@ -260,6 +287,16 @@ function unauthorizedResponse($response, $msg = 'Unauthorized Action') {
 function badRequestResponse($response, $msg = 'Invalid Request') {
 	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
 	return $response->withJson($responseArr,400);
+}
+
+function notFoundResponse($response, $msg = 'Not Found') {
+	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
+	return $response->withJson($responseArr,404);
+}
+
+function exceptionResponse($response, $msg = 'Error', $code = 200) {
+	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
+	return $response->withJson($responseArr,$code);
 }
 
 function slackPostAPI($endpoint, $data) {
@@ -340,11 +377,11 @@ function clinput($question, $required = true) {
 }
 
 function formatGoogleLoginUserData($me) {
-	$email = $me['emails'][0]['value'];
-	$fname = $me['name']['givenName'];
-	$lname = $me['name']['familyName'];
-	$image = $me['image']['url'];
-	$id = $me['id'];
+	$email = $me['email'];
+	$fname = $me['given_name'];
+	$lname = $me['family_name'];
+	$image = $me['picture'];
+	$id = $me['sub'];
 
 	$userData = array(
 		'id' => $id,
@@ -393,4 +430,41 @@ function formatMicrosoftLoginUserData($me) {
 	return $userData;
 }
 
+function formatAmazonLoginUserData($me) {
+	$email = $me['email'];
+	$name = explode(' ',$me['name']);
+	$fname = $name[0];
+	$lname = $name[1];
+	$image = ''; //$me['image']['url'];\
+	$id = $me['user_id'];
+
+	$userData = array(
+		'id' => $id,
+		'provider' => 'Amazon',
+		'email' => $email,
+		'fname' => $fname,
+		'lname' => $lname,
+		'profile_image' => $image,
+	);
+	return $userData;
+}
+
+function formatGithubLoginUserData($me) {
+	$email = $me['email'];
+	$name = explode(' ',$me['name']);
+	$fname = $name[0];
+	$lname = $name[1];
+	$image = $me['avatar_url']; //$me['image']['url'];\
+	$id = $me['id'];
+
+	$userData = array(
+		'id' => $id,
+		'provider' => 'Github',
+		'email' => $email,
+		'fname' => $fname,
+		'lname' => $lname,
+		'profile_image' => $image,
+	);
+	return $userData;
+}
 ?>

@@ -7,8 +7,14 @@ $app->group('/reports', function () {
   **/
   $this->get('/topHourUsers/{year:[0-9]{4}}', function ($request, $response, $args) {
     $year = $args['year'];
-    $season = FrcPortal\Season::where('year',$year)->first();
-    $seasons = FrcPortal\AnnualRequirement::with('users')->where('season_id',$season->season_id)->get();
+    //$season = FrcPortal\Season::where('year',$year)->first();
+    $seasons = FrcPortal\AnnualRequirement::with('users')->whereExists(function ($query) use ($year) {
+      $query->select(DB::raw(1))
+            ->from('seasons')
+            ->whereRaw('annual_requirements.season_id = seasons.season_id')
+            ->where('seasons.year',$year);
+    })->get();
+    //->where('season_id',$season->season_id)->get();
     $seasons = $seasons->sortByDesc('total_hours')->values()->slice(0,5);
     $response = $response->withJson($seasons);
     return $response;
@@ -77,6 +83,7 @@ $app->group('/reports', function () {
     $years = $init['years'];
     $data = $init['data'];
 
+/*
     $query = 'SELECT COUNT(DISTINCT(m.user_id)) as user_count, YEAR(m.time_in) as year, u.user_type
               FROM meeting_hours m
               LEFT JOIN users u USING(user_id)
@@ -86,7 +93,15 @@ $app->group('/reports', function () {
     $result = DB::select( DB::raw($query), array(
         'sd' => $start_date,
         'ed' => $end_date,
-     ));
+     )); */
+
+   $result =  DB::table('meeting_hours AS a')
+   ->leftJoin('users AS b', function ($join) {
+     $join->on('a.user_id', 'b.user_id');
+   })->where('b.user_type','<>','')
+     ->whereBetween(DB::raw('year(a.time_in)'),[$start_date,$end_date])
+     ->select(DB::raw('COUNT(DISTINCT(a.user_id)) as user_count, YEAR(a.time_in) as year, b.user_type'))
+     ->groupBy('year','gender')->get();
 
     foreach($result as $re) {
       $year = (integer) $re->year;
@@ -94,7 +109,7 @@ $app->group('/reports', function () {
       $uc = (integer) $re->user_count;
       $data[$user_type.'s'][$year] = $uc;
     }
-
+/*
     $query = 'SELECT COUNT(DISTINCT(m.user_id)) as user_count, YEAR(m.time_in) as year, u.gender
               FROM meeting_hours m
               LEFT JOIN users u USING(user_id)
@@ -104,30 +119,57 @@ $app->group('/reports', function () {
     $result = DB::select( DB::raw($query), array(
         'sd' => $start_date,
         'ed' => $end_date,
-     ));
+     )); */
+
+     $result =  DB::table('meeting_hours AS a')
+     ->leftJoin('users AS b', function ($join) {
+       $join->on('a.user_id', 'b.user_id');
+     })->where('b.gender','<>','')
+       ->whereBetween(DB::raw('year(a.time_in)'),[$start_date,$end_date])
+       ->select(DB::raw('COUNT(DISTINCT(a.user_id)) as user_count, YEAR(a.time_in) as year, b.gender'))
+       ->groupBy('year','gender')->get();
+
     foreach($result as $re) {
       $year = (integer) $re->year;
       $gender = $re->gender;
       $uc = (integer) $re->user_count;
       $data[$gender.'s'][$year] = $uc;
     }
+    /*
     $query = 'SELECT CASE
-               WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=12 THEN "Senior"
-               WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=24 THEN "Junior"
-               WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=36 THEN "Sophmore"
-               WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) <=48 THEN "Freshman"
-               WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,m.time_in,CONCAT(u.grad_year,"-07-01")) >48 THEN "Pre-Freshman"
+               WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(u.grad_year,"-07-01")) <=12 THEN "Senior"
+               WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(u.grad_year,"-07-01")) <=24 THEN "Junior"
+               WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(u.grad_year,"-07-01")) <=36 THEN "Sophmore"
+               WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(u.grad_year,"-07-01")) <=48 THEN "Freshman"
+               WHEN u.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(u.grad_year,"-07-01")) >48 THEN "Pre-Freshman"
                ELSE ""
-              END AS student_grade, COUNT(DISTINCT(m.user_id)) as user_count, YEAR(m.time_in) as year
-              FROM meeting_hours m
+              END AS student_grade, COUNT(DISTINCT(a.user_id)) as user_count, YEAR(a.time_in) as year
+              FROM meeting_hours a
               LEFT JOIN users u USING(user_id)
-              WHERE u.user_type="student" AND YEAR(m.time_in)
+              WHERE u.user_type="student" AND YEAR(a.time_in)
               BETWEEN :sd AND :ed
               GROUP BY year,student_grade';
     $result = DB::select( DB::raw($query), array(
         'sd' => $start_date,
         'ed' => $end_date,
-     ));
+     )); */
+
+   $result =  DB::table('meeting_hours AS a')
+   ->leftJoin('users AS b', function ($join) {
+     $join->on('a.user_id', 'b.user_id');
+   })->where('b.user_type','student')
+     ->whereBetween(DB::raw('year(a.time_in)'),[$start_date,$end_date])
+     ->select(DB::raw('CASE
+      WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=0  THEN "Graduated"
+      WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=12 THEN "Senior"
+      WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=24 THEN "Junior"
+      WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=36 THEN "Sophmore"
+      WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=48 THEN "Freshman"
+      WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) >48 THEN "Pre-Freshman"
+      ELSE ""
+     END AS student_grade, COUNT(DISTINCT(a.user_id)) as user_count, YEAR(a.time_in) as year'))
+     ->groupBy('year','student_grade')->get();
+
     foreach($result as $re) {
       $year = (integer) $re->year;
       $grade = $re->student_grade;
@@ -156,6 +198,7 @@ $app->group('/reports', function () {
     $years = $init['years'];
     $data = $init['data'];
 
+/*
     $query = 'SELECT CASE
      WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=0  THEN "Graduated"
      WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=12 THEN "Senior"
@@ -176,6 +219,22 @@ $app->group('/reports', function () {
         'sd' => $start_date,
         'ed' => $end_date,
      ));
+*/
+     $result =  DB::table('meeting_hours AS a')
+     ->leftJoin('users AS b', function ($join) {
+       $join->on('a.user_id', 'b.user_id');
+     })->whereBetween(DB::raw('year(a.time_in)'),[$start_date,$end_date])
+       ->select(DB::raw('CASE
+        WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=0  THEN "Graduated"
+        WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=12 THEN "Senior"
+        WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=24 THEN "Junior"
+        WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=36 THEN "Sophmore"
+        WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) <=48 THEN "Freshman"
+        WHEN b.user_type="student" AND TIMESTAMPDIFF(MONTH,a.time_in,CONCAT(b.grad_year,"-07-01")) >48 THEN "Pre-Freshman"
+        ELSE ""
+       END AS student_grade,
+       IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as sum, year(a.time_in) as year'))
+       ->groupBy('year','student_grade')->get();
 
     foreach($result as $re) {
       $year = (integer) $re->year;

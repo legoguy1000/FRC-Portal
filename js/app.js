@@ -9,11 +9,11 @@ angular.module('FrcPortal', [
 //	'nvd3',
 	'ui.router.default',
 	'chart.js',
-	'bc.AngularKeypad',
-	'angularRipple',
+//	'bc.AngularKeypad',
+//	'angularRipple',
 	'moment-picker',
 	'ngCsv',
-	'ngMap',
+//	'ngMap',
 	'dndLists',
 	'timer',
 	'mdColorPicker',
@@ -52,6 +52,7 @@ angular.module('FrcPortal', [
 								 'js/services/timeServices.js',
 								 'js/services/settingServices.js',
 								 'js/services/generalServices.js',
+								 'js/services/logServices.js',
 						 ]);
 	    }]
 		},
@@ -227,6 +228,7 @@ angular.module('FrcPortal', [
 	    eventController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
 	             return $ocLazyLoad.load('js/controllers/main.admin.eventController.js');
+
 	    }]
 	  }
 	  })
@@ -242,7 +244,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    timeController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.timeController.js');
+	             return $ocLazyLoad.load(['js/controllers/main.admin.timeController.js','js/directives/humanize-duration.js']);
 	    }]
 	  }
 	  })
@@ -294,6 +296,22 @@ angular.module('FrcPortal', [
 	    }]
 	  }
 	  })
+	  .state('main.admin.logs', {
+		url: '/logs',
+		templateUrl: 'views/main.admin.logs.html',
+		controller: 'main.admin.logsController',
+		controllerAs: 'vm',
+		authenticate: true,
+		data: {
+		  title: 'Admin | Logs'
+		},
+	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
+	    settingsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
+	      // you can lazy load files for an existing module
+	             return $ocLazyLoad.load('js/controllers/main.admin.logsController.js');
+	    }]
+	  }
+	  })
 	/*	.state('main.admin.exemptHours', {
 		 url: '/exemptHours',
 		 templateUrl: 'views/main.admin.exemptHours.html',
@@ -304,6 +322,21 @@ angular.module('FrcPortal', [
 			 title: 'Admin | Eempt Hours'
 		 }
 	 }) */
+	 .state('main.events', {
+	 url: '/events?name&type&event_start&event_end',
+	 templateUrl: 'views/main.events.html',
+	 controller: 'main.eventsController',
+	 controllerAs: 'vm',
+	 data: {
+		 title: 'Events'
+	 },
+	 resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
+		 eventsController: ['$ocLazyLoad', function($ocLazyLoad) {
+			 // you can lazy load files for an existing module
+							return $ocLazyLoad.load('js/controllers/main.eventsController.js');
+		 }]
+	 }
+	 })
  	  .state('main.event', {
  		url: '/events/{event_id}',
  		templateUrl: 'views/main.event.html',
@@ -481,7 +514,7 @@ angular.module('FrcPortal', [
 		var accentPalette = createAjsPaletteJsonObject(computeColors(configItems.team_color_secondary));
 		$mdThemingProvider.definePalette('secondary', accentPalette);
 	} else {
-		var accentPalette = createAjsPaletteJsonObject(omputeColors('#fdb813'));
+		var accentPalette = createAjsPaletteJsonObject(computeColors('#fdb813'));
 		$mdThemingProvider.definePalette('primary', accentPalette);
 	}
 	//CSS
@@ -525,6 +558,12 @@ angular.module('FrcPortal', [
 				var $auth = $injector.get('$auth');
 				if(res.data.token) {
 					$auth.setToken(res.data.token);
+				}
+				if(res.data.status != undefined && res.data.status == false && res.data.msg != '') {
+					console.log(res.data.msg);
+				}
+				if(res.data.status != undefined && res.data.status == false && res.data.error != '') {
+					console.log(res.data.error);
 				}
 				return res;
 			},
@@ -575,15 +614,27 @@ angular.module('FrcPortal', [
 			        .position('top right')
 			        .hideDelay(3000)
 			    );
+				} else if (rejection.status === 404) {
+					// Return a new promise
+					var $mdToast = $injector.get('$mdToast');
+					//console.log(rejection);
+					$mdToast.show(
+			      $mdToast.simple()
+			        .textContent(rejection.data.msg)
+			        .position('top right')
+			        .hideDelay(3000)
+			    );
 				}
 				return $q.reject(rejection);
 			}
 		}
 	});
 })
-.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log, $location, $window, $ocLazyLoad) {
+.run(function($transitions, $rootScope, $state, $auth, $mdDialog, $log, $location, $window, $ocLazyLoad, configItems) {
 	// initialise google analytics
-  $window.ga('create', 'UA-114656092-1', 'auto');
+	if(configItems.google_analytics_id != '' && configItems.google_analytics_id != undefined) {
+  	$window.ga('create', configItems.google_analytics_id, 'auto');
+	}
 
   // track pageview on state change
 	$transitions.onSuccess({}, function(transition) {
@@ -664,13 +715,13 @@ angular.module('FrcPortal', [
 		redirectUri: window.location.origin+'/oauth',
 		requiredUrlParams: ['scope','prompt'],
 		optionalUrlParams: ['display', hdVar],
-		scope: ['profile', 'email','https://www.googleapis.com/auth/plus.login'],
+		scope: ['profile', 'email'], //,'https://www.googleapis.com/auth/plus.login' Remove Google Plus
 		scopePrefix: 'openid',
 		scopeDelimiter: ' ',
 		display: 'popup',
 		prompt: 'select_account',
 		hd: hdBool ? configItems.team_domain : '',
-		type: '2.0',
+		oauthType: '2.0',
 		popupOptions: { width: 452, height: 633 }
 	});
  	$authProvider.facebook({
@@ -686,7 +737,7 @@ angular.module('FrcPortal', [
 		auth_type: 'rerequest',
 		scopeDelimiter: ',',
 		display: 'popup',
-		type: '2.0',
+		oauthType: '2.0',
 		popupOptions: { width: 580, height: 400 }
 	});
 	$authProvider.live({
@@ -702,10 +753,53 @@ angular.module('FrcPortal', [
 		responseType: 'id_token+code',
 		responseMode: 'fragment',
 		nonce: '678910',
-		type: '2.0',
+		oauthType: '2.0',
 		popupOptions: { width: 500, height: 560 }
 	});
-
+	$authProvider.oauth2({
+	  name: 'github',
+	  url: '/api/auth/github',
+	  clientId: configItems.github_oauth_client_id,
+	  redirectUri: window.location.origin+'/oauth',
+	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+	  defaultUrlParams: ['client_id', 'redirect_uri'],
+	  requiredUrlParams: ['scope'],
+	  optionalUrlParams: null,
+	  scope: ['read:user', 'user:email'],
+	  scopePrefix: null,
+	  scopeDelimiter: ' ',
+	  state: null,
+	  oauthType: '2.0',
+	  popupOptions: { width: 580, height: 400 },
+	  responseType: 'code',
+	  responseParams: {
+	    code: 'code',
+	    clientId: 'clientId',
+	    redirectUri: 'redirectUri'
+  }
+});
+$authProvider.oauth2({
+	name: 'amazon',
+	url: '/api/auth/amazon',
+	clientId: configItems.amazon_oauth_client_id,
+	redirectUri: window.location.origin+'/oauth',
+	authorizationEndpoint: 'https://www.amazon.com/ap/oa',
+	defaultUrlParams: ['response_type', 'client_id', 'redirect_uri'],
+	requiredUrlParams: ['scope'],
+	optionalUrlParams: null,
+	scope: ['profile'],
+	scopePrefix: null,
+	scopeDelimiter: ' ',
+	state: null,
+	oauthType: '2.0',
+	popupOptions: { width: 580, height: 400 },
+	responseType: 'code',
+	responseParams: {
+		code: 'code',
+		clientId: 'clientId',
+		redirectUri: 'redirectUri'
+}
+});
 	$authProvider.httpInterceptor = function() { return true; },
 	$authProvider.withCredentials = true;
 	$authProvider.tokenRoot = null;

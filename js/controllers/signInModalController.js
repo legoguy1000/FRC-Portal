@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('signInModalController', ['$log','$element','$mdDialog', '$scope', 'usersService','$mdToast','userInfo','signinService','$interval',
+.controller('signInModalController', ['$log','$element','$mdDialog', '$scope', 'usersService','$mdToast','userInfo','signinService','$interval','$document','$timeout',
 	signInModalController
 ]);
-function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdToast,userInfo,signinService,$interval) {
+function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdToast,userInfo,signinService,$interval,$document,$timeout) {
 	var vm = this;
 
 	vm.cancel = function() {
@@ -10,12 +10,81 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	}
 	vm.userInfo = userInfo;
 	vm.pin = '';
-	vm.users = null;
+	vm.scanContent = '';
 	var tick = function() {
 		vm.clock = Date.now();
 	}
+	vm.loading = false;
+	vm.msg = '';
+	vm.hideVideo = false;
 	tick();
 	$interval(tick, 1000);
+
+
+	$timeout(function() {
+		var config = {
+			video: document.getElementById('scanner'),
+			mirror: false,
+		};
+
+		vm.startCamera = function(cameras, scanner) {
+			vm.hideVideo = false;
+			if (cameras.length > 1) {
+				scanner.start(cameras[1]);
+			} else if (cameras.length > 0) {
+				scanner.start(cameras[0]);
+			} else {
+				vm.msg = 'No cameras found.';
+				console.error('No cameras found.');
+			}
+		}
+		vm.scanner = new Instascan.Scanner(config);
+		vm.scanner.addListener('scan', function (content) {
+			vm.msg = '';
+			vm.loading = true;
+			vm.scanContent = content;
+			vm.stop();
+			var data = {
+				'token': content
+			};
+			signinService.signInOutQR(data).then(function(response) {
+				vm.loading = false;
+				vm.msg = response.msg;
+				if(response.status) {
+				$timeout( function() {
+						vm.close(response.signInList);
+					}, 2000 );
+				}
+			}, function(response) {
+				vm.loading = false;
+				vm.startCamera(vm.cameras, vm.scanner);
+			});
+		});
+		Instascan.Camera.getCameras().then(function (cameras) {
+			vm.cameras = cameras;
+			vm.startCamera(vm.cameras, vm.scanner);
+		}).catch(function (e) {
+			console.error(e);
+		});
+
+		vm.stop = function() {
+			vm.hideVideo = true;
+			vm.scanner.stop();
+		}
+
+		vm.cancel = function() {
+			vm.stop();
+			$mdDialog.cancel();
+		}
+
+		vm.close = function(data) {
+			vm.stop();
+			$mdDialog.hide(data);
+		}
+	});
+
+
+	/*
 	var signInBool = true;
 	vm.signinOut = function($event) {
 		if(signInBool) {
@@ -36,7 +105,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 				$mdDialog.show(dialog);
 				$timeout( function(){
 						$mdDialog.cancel();
-					}, 2000 ); */
+					}, 2000 ); /*
 				if(response.status) {
 					vm.users = response.signInList;
 					$mdDialog.hide(vm.users);
@@ -44,5 +113,5 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 				signInBool = true;
 			});
 		}
-	}
+	} */
 }

@@ -1,120 +1,69 @@
 <?php
-function syncGoogleCalendarEvent($event_id) {
+	function syncGoogleCalendarEvent($event_id) {
 	$calendar = getSettingsProp('google_calendar_id');
 	$api_key = getSettingsProp('google_api_key');
-	$result = array(
-		'status' => false,
-		'msg' => '',
-		'data' => null
-	);
 	$event = FrcPortal\Event::with('poc')->find($event_id); //, 'event_rooms.users', 'event_cars', 'event_time_slots.registrations.user'
-	if(!is_null($event)) {
-		$google_cal_id = $event->google_cal_id;
-		if(isset($google_cal_id) && $google_cal_id != '') {
-			$gevent = getGoogleCalendarEvent($google_cal_id);
-			if($gevent['status'] != false) {
-				$ge = $gevent['data'];
-				$event->name = $ge['name'];
-				$event->details = $ge['details'];
-				$event->location = $ge['location'];
-				$event->event_start = $ge['event_start'];
-				$event->event_end = $ge['event_end'];
-				if(!is_null($event->registration_deadline_gcalid) && $event->registration_deadline_gcalid != '') {
-					$gevent = getGoogleCalendarEvent($event->registration_deadline_gcalid);
-					if($gevent['status'] != false) {
-						$ge = $gevent['data'];
-					 	$event->registration_deadline = $ge['event_end'];
-					}
-				}
-			}
-			if($event->save()) {
-				$result['status'] = true;
-				$result['msg'] = $event->name.' synced with Google Calendar';
-				$result['data'] = $event;
-			} else {
-				$result['msg'] = 'Something went wrong updating the event';
-			}
-		} else {
-			$result['msg'] = 'Google Calendar Event ID not found';
-		}
-	} else {
-		$result['msg'] = 'Event ID not found';
+	if(is_null($event)) {
+		throw new Exception('Event ID not found');
 	}
-	return $result;
+	$google_cal_id = $event->google_cal_id;
+	if(!isset($google_cal_id) || $google_cal_id == '') {
+		throw new Exception('Google Calendar Event ID cannot be blank', 400);
+	}
+	$ge = getGoogleCalendarEvent($google_cal_id);
+	$event->name = $ge['name'];
+	$event->details = $ge['details'];
+	$event->location = $ge['location'];
+	$event->event_start = $ge['event_start'];
+	$event->event_end = $ge['event_end'];
+	if(!is_null($event->registration_deadline_gcalid) && $event->registration_deadline_gcalid != '') {
+		try {
+			$ged = getGoogleCalendarEvent($event->registration_deadline_gcalid);
+			$event->registration_deadline = $ged['event_end'];
+		} catch (Exception $e) {}
+	}
+	if(!$event->save()) {
+		throw new Exception('Something went wrong updating the event', 500);
+	}
+	return $event;
 }
 
 function getGoogleCalendarEvent($google_cal_id) {
 	$calendar = getSettingsProp('google_calendar_id');
 	$api_key = getSettingsProp('google_api_key');
-	$result = array(
-		'status' => false,
-		'msg' => '',
-		'data' => null
-	);
-	if(isset($google_cal_id) && $google_cal_id != '') {
-		try {
-			$client = new Google_Client();
-			$client->setDeveloperKey($api_key);
-			$service = new Google_Service_Calendar($client);
-			$gevent = $service->events->get($calendar, $google_cal_id);
-			$event = formatGoogleCalendarEventData($gevent);
-			/*
-			$event['name'] = $gevent->summary;
-			$event['details'] = $gevent->description;
-			$event['location'] = $gevent->location;
-			if(empty($gevent->start->dateTime)) {
-				$event['event_start'] = $gevent->start->date.' 00:00:00';
-				$ed = new DateTime($gevent->end->date);
-				$ed->modify("-1 day");
-				$event['event_end'] = $ed->format("Y-m-d").' 23:59:59';
-			} else {
-				$event['event_start'] = date('Y-m-d H:i:s', strtotime($gevent->start->dateTime));
-				$event['event_end'] =date('Y-m-d H:i:s', strtotime($gevent->end->dateTime));
-			} */
-			$result['status'] = true;
-			$result['data'] = $event;
-		} catch (Exception $e) {
-				$error = json_decode($e->getMessage(), true);
-        if($error['error']['code'] == 404) {
-					$result['msg'] = 'Google Calendar event not found';
-					$result['error'] = $error;
-				} else {
-					$result['msg'] = 'Something went wrong searching Google Calendar';
-					$result['error'] = $error;
-				}
-    }
-	} else {
-		$result['msg'] = 'Google Calendar Event ID not found';
+	if(!isset($google_cal_id) || $google_cal_id == '') {
+		throw new Exception('Google Calendar Event ID cannot be blank', 400);
 	}
-	return $result;
+	try {
+		$client = new Google_Client();
+		$client->setDeveloperKey($api_key);
+		$service = new Google_Service_Calendar($client);
+		$gevent = $service->events->get($calendar, $google_cal_id);
+		return formatGoogleCalendarEventData($gevent);
+	} catch (Exception $e) {
+		throw $e;
+	}
 }
 
 function getEventCarList($event_id) {
-	$result = array(
-		'status' => false,
-		'msg' => '',
-		'data' => null
-	);
 	$cars = array();
 	$carInfo = array();
-	if(isset($event_id) && $event_id != '') {
-		$carInfo = FrcPortal\EventCar::with(['driver','passengers'])->where('event_id',$event_id)->get();
-		if(count($carInfo) > 0) {
-			foreach($carInfo as $car) {
-				$car_id = $car->car_id;
-				$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('car_id','=',$car_id)->get();
-				$cars[$car_id] = $users;
-			}
-		}
-		//no user yet users
-		$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('registration',true)->whereNull('car_id')->get();
-		$cars['non_select'] = $users;
-		$result['status'] = true;
-		$result['data'] = array('cars'=>$carInfo, 'total'=>count($carInfo), 'car_selection'=>$cars);
-	} else {
-		$result['msg'] = 'Event ID cannot be blank';
+	if(!isset($event_id) || $event_id == '') {
+		throw new Exception('Event ID cannot be blank', 400);
 	}
-	return $result;
+	$carInfo = FrcPortal\EventCar::with(['driver','passengers'])->where('event_id',$event_id)->get();
+	if(count($carInfo) > 0) {
+		foreach($carInfo as $car) {
+			$car_id = $car->car_id;
+			$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('car_id','=',$car_id)->get();
+			$cars[$car_id] = $users;
+		}
+	}
+	//no user yet users
+	$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('registration',true)->whereNull('car_id')->get();
+	$cars['non_select'] = $users;
+	return array('cars'=>$carInfo, 'total'=>count($carInfo), 'car_selection'=>$cars);
+
 }
 
 function getEventRoomList($event_id) {
@@ -125,41 +74,46 @@ function getEventRoomList($event_id) {
 	);
 	$rooms = array();
 	$roomInfo = array();
-	if(isset($event_id) && $event_id != '') {
-		$roomInfo = FrcPortal\EventRoom::where('event_id',$event_id)->get();
-		if(count($roomInfo) > 0) {
-			foreach($roomInfo as $room) {
-				$room_id = $room->room_id;
-				$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('room_id','=',$room_id)->get();
-				$rooms[$room_id] = $users;
-			}
-		}
-		//no user yet users
-		$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('registration',true)->whereNull('room_id')->get();
-		$rooms['non_select'] = $users;
-		$result['status'] = true;
-		$result['data'] = array('rooms'=>$roomInfo, 'total'=>count($roomInfo), 'room_selection'=>$rooms);
-	} else {
-		$result['msg'] = 'Event ID cannot be blank';
+	if(!isset($event_id) || $event_id == '') {
+		throw new Exception('Event ID cannot be blank', 400);
 	}
-	return $result;
+	$roomInfo = FrcPortal\EventRoom::where('event_id',$event_id)->get();
+	if(count($roomInfo) > 0) {
+		foreach($roomInfo as $room) {
+			$room_id = $room->room_id;
+			$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('room_id','=',$room_id)->get();
+			$rooms[$room_id] = $users;
+		}
+	}
+	//no user yet users
+	$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('registration',true)->whereNull('room_id')->get();
+	$rooms['non_select'] = $users;
+	return array('rooms'=>$roomInfo, 'total'=>count($roomInfo), 'room_selection'=>$rooms);
+}
+
+function deleteEventRoom($event_id, $room_id) {
+	if(!isset($event_id) || $event_id == '') {
+		throw new Exception('Event ID cannot be blank', 400);
+	}
+	if(!isset($room_id) || $room_id == '') {
+		throw new Exception('Room ID cannot be blank', 400);
+	}
+	$eventRoom = FrcPortal\EventRoom::where('event_id',$event_id)->where('room_id',$room_id)->first();
+	if(is_null($eventRoom)) {
+		throw new Exception('Event Room not found', 404);
+	}
+	if(!$eventRoom->delete()) {
+		throw new Exception('Something went wrong', 500);
+	}
+	return true;
 }
 
 function getEventTimeSlotList($event_id) {
-	$result = array(
-		'status' => false,
-		'msg' => '',
-		'data' => null
-	);
 	$timeSlots = array();
-	if(isset($event_id) && $event_id != '') {
-		$timeSlots = FrcPortal\EventTimeSlot::with('registrations.user')->where('event_id',$event_id)->get();
-		$result['status'] = true;
-		$result['data'] = $timeSlots;
-	} else {
-		$result['msg'] = 'Event ID cannot be blank';
+	if(!isset($event_id) || $event_id == '') {
+		throw new Exception('Event ID cannot be blank', 400);
 	}
-	return $result;
+	return FrcPortal\EventTimeSlot::with('registrations.user')->where('event_id',$event_id)->orderBy('time_start', 'ASC')->get();
 }
 
 function formatGoogleCalendarEventData($event) {
@@ -196,33 +150,91 @@ function formatGoogleCalendarEventData($event) {
 	return $temp;
 }
 
-function updateTimeSlot($timeSlot, $formData) {
-	  $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+function checkTimeSlotOverlap($timeSlot) {
+	$data = FrcPortal\EventTimeSlot::where('event_id',$timeSlot->event_id)
+	->where(function($query) use ($timeSlot){
+		//Old encompass new
+		$query->where(function($query) use ($timeSlot){
+			$query->where('time_start','<=',$timeSlot->time_start);
+			$query->where('time_end','>=',$timeSlot->time_end);
+		})
+		//Old straddle new start
+		->orWhere(function($query) use ($timeSlot){
+		 	$query->where('time_start', '<=', $timeSlot->time_start);
+		 	$query->where('time_end', '>', $timeSlot->time_start);
+		})
+		//Old straddle new end
+		->orWhere(function($query) use ($timeSlot){
+		 	$query->where('time_start', '<', $timeSlot->time_end);
+		 	$query->where('time_end', '>=', $timeSlot->time_end);
+		})
+		//New encompass old
+		->orWhere(function($query) use ($timeSlot){
+		 	$query->where('time_start', '>=', $timeSlot->time_start);
+		 	$query->where('time_end', '<=', $timeSlot->time_end);
+		});
+	});
+	if(!is_null($timeSlot->time_slot_id)) {
+		$data->where('time_slot_id','<>',$timeSlot->time_slot_id);
+	}
+	return $data->exists();
+}
+function formatTimeSlot($timeSlot, $formData) {
     $timeSlot->name = $formData['name'];
     $timeSlot->description = isset($formData['description']) ? $formData['description']:'';
     $ts = new DateTime($formData['time_start']);
     $te = new DateTime($formData['time_end']);
     $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
     $timeSlot->time_end = $te->format('Y-m-d H:i:s');
-    if($timeSlot->save()) {
-      $slots = getEventTimeSlotList($timeSlot->event_id);
-	    if($slots['status']) {
-	       $responseArr = standardResponse($status = true, $msg = 'Time Slot Updated', $data = $slots['data']);
-	    } else {
-				$responseArr = $slots;
-	    }
-	  }
-	  return $responseArr;
+		if(checkTimeSlotOverlap($timeSlot)) {
+			throw new Exception('Time Slot cannot overlap an existing slot', 400);
+		}
+	  return $timeSlot;
 }
 
-function AddTimeSlot($event_id, $formData) {
-	$responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+function updateTimeSlot($event_id, $time_slot_id, $formData) {
+	if(!isset($event_id) || $event_id == '') {
+		throw new Exception('Event ID is invalid', 400);
+	}
+	if(!isset($time_slot_id) || $time_slot_id == '') {
+		throw new Exception('Time Slot ID is invalid', 400);
+	}
+	if(!isset($formData) || empty($formData)) {
+		throw new Exception('Invalid Time Slot data', 400);
+	}
+	$timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->first();
+	if(is_null($timeSlot)) {
+		throw new Exception('Event Time Slot not found', 404);
+	}
+	try {
+		$timeSlot = formatTimeSlot($timeSlot, $formData);
+	  if(!$timeSlot->save()) {
+			throw new Exception('Time Slot could not be saved', 500);
+		}
+		return true;
+	} catch (Exception $e) {
+		throw $e;
+	}
+}
+
+function addTimeSlot($event_id, $formData) {
+	if(!isset($event_id) || $event_id == '') {
+		throw new Exception('Event ID is invalid', 400);
+	}
+	if(!isset($formData) || empty($formData)) {
+		throw new Exception('Invalid Time Slot data', 400);
+	}
 	$timeSlot = new FrcPortal\EventTimeSlot();
   $timeSlot->event_id = $event_id;
-	$update = updateTimeSlot($timeSlot, $formData);
-	if($update['status']) {
-	  $update['msg'] = 'Time Slot Created';
+	try {
+		$timeSlot = formatTimeSlot($timeSlot, $formData);
+		if(!$timeSlot->save()) {
+			throw new Exception('Time Slot could not be saved', 500);
+		}
+		return true;
+	} catch (Exception $e) {
+		throw $e;
 	}
-	return $update;
+
 }
 ?>

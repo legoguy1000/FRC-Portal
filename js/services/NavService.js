@@ -1,5 +1,5 @@
 angular.module('FrcPortal')
-.service('navService', ['$q', 
+.service('navService', ['$q',
 	navService
 ]);
 function navService($q){
@@ -8,6 +8,10 @@ function navService($q){
         name: 'Dashboard',
         icon: 'dashboard',
         sref: 'main.home'
+      }, {
+        name: 'Events',
+        icon: 'event',
+        sref: 'main.events'
       }, {
         name: 'Clock In/Out',
         icon: 'access_time',

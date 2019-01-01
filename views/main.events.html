@@ -1,0 +1,103 @@
+<div flex layout="column" class="md-padding" layout-align="center center">
+	<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.getEvents()">
+		<md-toolbar class="md-table-toolbar md-default">
+			<div class="md-toolbar-tools" layout="row">
+				<md-input-container class="hide-validation-error" flex>
+					<label>Event Name</label>
+					<md-icon class="material-icons">event</md-icon>
+					<input type="text" ng-model="vm.query.search.name" class="" aria-invalid="false">
+				</md-input-container>
+				<md-input-container class="hide-validation-error" flex>
+					<label>Event Type</label>
+					<md-icon md-font-library="material-icons">info_outline</md-icon>
+					<md-select ng-model="vm.query.search.type" style="min-width:150px;">
+						<md-option ng-value="null"><em>None</em></md-option>
+						<md-option ng-repeat="event_type in vm.eventTypes" ng-value="event_type.type">
+							{{event_type.type}}
+						</md-option>
+					</md-select>
+				</md-input-container>
+				<md-input-container flex class="hide-validation-error">
+					<label>Min Time</label>
+					<md-icon md-font-library="material-icons">event</md-icon>
+					<input moment-picker="vm.query.search.event_start"
+						format="LL"
+						min-view="year"
+						max-view="month"
+						locale="en"
+						ng-model="vm.event_start_moment">
+					</input>
+				</md-input-container>
+				<md-input-container flex class="hide-validation-error">
+					<label>Max Time</label>
+					<md-icon md-font-library="material-icons">event</md-icon>
+					<input moment-picker="vm.query.search.event_end"
+							format="LL"
+							min-view="year"
+							max-view="month"
+							locale="en"
+							min-date="vm.event_start_moment"
+							ng-model="vm.event_end_moment">
+					</input>
+				</md-input-container>
+				<md-button type="submit" class="md-icon-button">
+					<md-icon class=""> search </md-icon>
+				</md-button>
+			</div>
+		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
+	</form>
+	<div layout="row" layout-align="center stretch" layout-wrap style="width:100%;">
+		<md-card ng-repeat="event in vm.events" flex-gt-md="30">
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">{{event.name}}</span>
+					<span class="md-subhead">
+						<span ng-show="event.date.single_day">
+							<md-icon class="material-icons">today</md-icon> {{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
+						</span>
+						<span ng-hide="event.date.single_day">
+							<md-icon class="material-icons">today</md-icon> {{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
+						</span>
+					</span>
+					<span class="md-subhead" ng-show="event.location != ''">
+						<md-icon class="material-icons">location_on</md-icon> {{event.location}}
+					</span>
+        </md-card-title-text>
+				<md-card-title-media>
+					<div class="md-media-sm card-media">
+						<img ng-src="{{event.season.game_logo}}" class="md-card-image" alt="Washed Out">
+					</div>
+				</md-card-title-media>
+      </md-card-title>
+      <md-card-content>
+				<div layout="row">
+					<div ng-show="event.payment_required">
+						<md-tooltip md-direction="top">Payment Required</md-tooltip>
+						<md-icon class="material-icons">attach_money</md-icon>
+					</div>
+					<div ng-show="event.permission_slip_required">
+						<md-tooltip md-direction="top">Permission Slip Required</md-tooltip>
+						<md-icon class="material-icons">assignment</md-icon>
+					</div>
+					<div ng-show="event.food_required">
+						<md-tooltip md-direction="top">Food Orders Required</md-tooltip>
+						<md-icon class="material-icons">local_dining</md-icon>
+					</div>
+					<div ng-show="event.drivers_required">
+						<md-tooltip md-direction="top">Drivers Required</md-tooltip>
+						<md-icon class="material-icons">directions_car</md-icon>
+					</div>
+					<div ng-show="event.room_required">
+						<md-tooltip md-direction="top">Hotel Rooms Required</md-tooltip>
+						<md-icon class="material-icons">hotel</md-icon>
+					</div>
+				</div>
+        <!--<p ng-bind-html="event.details | parseUrlFilter:'_blank'" style="white-space: pre-wrap;"></p>-->
+      </md-card-content>
+			<md-card-actions layout="row" layout-align="end center">
+        <md-button ui-sref="main.event({'event_id':event.event_id})">More Info</md-button>
+      </md-card-actions>
+    </md-card>
+	</div>
+</div>

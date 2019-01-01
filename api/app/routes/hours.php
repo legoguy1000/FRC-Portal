@@ -10,7 +10,7 @@ $app->group('/hours', function () {
       $defaults = array(
     		'filter' => '',
     		'limit' => 10,
-    		'order' => 'full_name',
+    		'order' => '-time_in',
     		'page' => 1,
     	);
       $inputs = checkSearchInputs($request, $defaults);
@@ -20,20 +20,22 @@ $app->group('/hours', function () {
       $page = $inputs['page'];
 
       $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
-
+      $totalNum = 0;
+      $users = FrcPortal\MissingHoursRequest::with(['approver','user']);
       $queryArr = array();
     	$queryStr = '';
     	if($filter != '') {
-        $queryArr[] = '(full_name LIKE "%'.$filter.'%")';
+        //$queryArr[] = '(full_name LIKE "%'.$filter.'%")';
+      	$filterArr = explode(' ',$filter);
+        $users = $users->whereHas('user', function ($query) use ($filterArr) {
+      		foreach($filterArr as $filter) {
+      			$query->where('fname', 'like', '%'.$filter.'%');
+      			$query->orWhere('lname', 'like', '%'.$filter.'%');
+      		}
+      	});
+        //$users = $users->orHavingRaw('email LIKE ?',array('%'.$filter.'%'));
     	}
-      $totalNum = 0;
-    	if(count($queryArr) > 0) {
-    		$queryStr = implode(' OR ',$queryArr);
-        $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->get();
-        $totalNum = count($users);
-    	} else {
-        $totalNum = FrcPortal\MissingHoursRequest::count();
-      }
+      $totalNum = count($users->get());
 
       $orderBy = '';
     	$orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
@@ -50,13 +52,7 @@ $app->group('/hours', function () {
     	} elseif($limit == 0) {
         $limit = $totalNum;
       }
-
-      if($filter != '' ) {
-        $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-      } else {
-        $users = FrcPortal\MissingHoursRequest::with(['approver'])->leftJoin('users', 'users.user_id', '=', 'missing_hours_requests.user_id')->addSelect(DB::raw('missing_hours_requests.*, CONCAT(users.fname," ",users.lname) AS full_name'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-      }
-
+      $users = $users->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
       $data['data'] = $users;
       $data['total'] = $totalNum;
@@ -80,24 +76,26 @@ $app->group('/hours', function () {
         }
         $request_id = $args['request_id'];
 
-        $request = FrcPortal\MissingHoursRequest::find($request_id);
+        $mhRequest = FrcPortal\MissingHoursRequest::find($request_id);
         $mh = new FrcPortal\MeetingHour();
       	$date = time();
-      	$user_id = $request['user_id'];
-        if(!is_null($request)) {
-          $request->approved = true;
-          $request->approved_date = date('Y-m-d H:i:s',$date);
-          $request->approved_by = $userId;
+      	$user_id = $mhRequest->user_id;
+        if(!is_null($mhRequest)) {
+          $mhRequest->approved = true;
+          $mhRequest->approved_date = date('Y-m-d H:i:s',$date);
+          $mhRequest->approved_by = $userId;
           $mh->user_id = $user_id;
-          $mh->time_in = $request['time_in'];
-          $mh->time_out = $request['time_out'];
+          $mh->time_in = $mhRequest->time_in;
+          $mh->time_out = $mhRequest->time_out;
           try {
              DB::beginTransaction();
-             $request->save();
+             $mhRequest->save();
              $mh->save();
              DB::commit();
-             $responseArr['Status'] = true;
+             $responseArr['status'] = true;
              $responseArr['msg'] = 'Missing hours request approved';
+             $mhRequest->load('user');
+             insertLogs($level = 'Information', $message = 'Missing hours request approved for '.$mhRequest->user->full_name.'. ('.$mhRequest['time_in'].' - '.$mhRequest['time_out'].')');
           } catch(\Exception $e){
              DB::rollback();
           }
@@ -114,15 +112,16 @@ $app->group('/hours', function () {
         }
         $request_id = $args['request_id'];
 
-        $request = FrcPortal\MissingHoursRequest::find($request_id);
+        $mhRequest = FrcPortal\MissingHoursRequest::find($request_id);
         $date = time();
         if(!is_null($request)) {
-          $request->approved = false;
-          $request->approved_date = date('Y-m-d H:i:s',$date);
-          $request->approved_by = $userId;
+          $mhRequest->approved = false;
+          $mhRequest->approved_date = date('Y-m-d H:i:s',$date);
+          $mhRequest->approved_by = $userId;
           if($request->save()) {
-             $responseArr['Status'] = true;
+             $responseArr['status'] = true;
              $responseArr['msg'] = 'Missing hours request denied';
+             insertLogs($level = 'Information', $message = 'Missing hours request denied for '.$mhRequest->user->full_name.'. ('.$mhRequest['time_in'].' - '.$mhRequest['time_out'].')');
           }
         }
         $response = $response->withJson($responseArr);
@@ -142,14 +141,17 @@ $app->group('/hours', function () {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        if(!FrcPortal\Auth::isAdmin()) {
-          return unauthorizedResponse($response);
-        }
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
 
       $date = $args['date'];
       $users = FrcPortal\User::with(['meeting_hours' => function ($query) use ($date)  {
         $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
-      }])->where('status',true)->orderBy('fname', 'ASC')->get();
+      }])->whereHas('meeting_hours', function ($query) use ($date) {
+        $query->where('time_in', 'LIKE', $date.' %'); // fields from comments table,
+      })->orWhere('status',true)->orderBy('fname', 'ASC')->get();
+
       $responseArr = array(
         'status' => true,
         'msg' => '',
@@ -176,21 +178,20 @@ $app->group('/hours', function () {
       $page = $inputs['page'];
       $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
-      $queryArr = array();
-      $queryStr = '';
-      if($filter != '') {
-        $queryArr[] = '(users.email LIKE "%'.$filter.'%")';
-        $queryArr[] = '(full_name LIKE "%'.$filter.'%")';
-        $queryArr[] = '(hours LIKE "%'.$filter.'%")';
-      }
+      $users = FrcPortal\MeetingHour::with('user')->select()->addSelect(DB::raw('(time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'));
       $totalNum = 0;
-      if(count($queryArr) > 0) {
-        $queryStr = implode(' OR ',$queryArr);
-        $users = FrcPortal\MeetingHour::leftJoin('users', 'users.user_id', '=', 'meeting_hours.user_id')->select('users.*', 'meeting_hours.*',DB::raw('CONCAT(users.fname," ",users.lname) AS full_name, UNIX_TIMESTAMP(time_in) AS time_in_unix, UNIX_TIMESTAMP(time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'))->havingRaw($queryStr)->get();
-        $totalNum = count($users);
-      } else {
-        $totalNum = FrcPortal\MeetingHour::count();
+      if($filter != '') {
+        $filterArr = explode(' ',$filter);
+        $users = $users->whereHas('user', function ($query) use ($filterArr) {
+      		foreach($filterArr as $filter) {
+      			$query->where('email', 'like', '%'.$filter.'%');
+            $query->orWhere('fname', 'like', '%'.$filter.'%');
+      			$query->orWhere('lname', 'like', '%'.$filter.'%');
+      		}
+      	});
+        $users = $users->orHavingRaw('hours LIKE ?',array('%'.$filter.'%'));
       }
+      $totalNum = count($users->get());
 
       $orderBy = '';
       $orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
@@ -207,12 +208,7 @@ $app->group('/hours', function () {
         $limit = $totalNum;
       }
 
-      if($filter != '' ) {
-        $users = FrcPortal\MeetingHour::leftJoin('users', 'users.user_id', '=', 'meeting_hours.user_id')->select('users.*', 'meeting_hours.*',DB::raw('CONCAT(users.fname," ",users.lname) AS full_name, UNIX_TIMESTAMP(time_in) AS time_in_unix, UNIX_TIMESTAMP(time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'))->havingRaw($queryStr)->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-      } else {
-        $users = FrcPortal\MeetingHour::leftJoin('users', 'users.user_id', '=', 'meeting_hours.user_id')->select('users.*', 'meeting_hours.*',DB::raw('CONCAT(users.fname," ",users.lname) AS full_name, UNIX_TIMESTAMP(time_in) AS time_in_unix, UNIX_TIMESTAMP(time_out) AS time_out_unix, (time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'))->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-      }
-
+      $users = $users->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
 
       $data['data'] = $users;
       $data['total'] = $totalNum;
@@ -238,32 +234,61 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $user = $decoded->data->status && $decoded->data->admin;
-        } catch(\Firebase\JWT\ExpiredException $e) {
+        } catch(\ExpiredException $e) {
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
-        } catch(\Firebase\JWT\SignatureInvalidException $e){
+        } catch(\SignatureInvalidException $e){
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
         }
       } elseif(isset($args['auth_code'])) {
         $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status',true)->where('admin',true)->first();
       } else {
+        insertLogs($level = 'Warning', $message = 'Sign In Authorization Failed.');
         return badRequestResponse($response);
       }
       if(!is_null($user)) {
-        $jti = md5(random_bytes(20));
-        $key = getSettingsProp('jwt_signin_key');
-        $token = array(
-          "iss" => getSettingsProp('env_url'),
-          "iat" => time(),
-          "exp" => time()+60*60*12, //12 hours liftime
-          "jti" => $jti,
-          'data' => array(
-            'signin' => true
-          )
-        );
-        $jwt = JWT::encode($token, $key);
-        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$jwt);
+        $ts = time();
+        $te = time()+30; //12 hours liftime
+        $tokenArr = generateSignInToken($ts, $te);
+        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['token'], 'qr_code'=>$tokenArr['qr_code']);
+        insertLogs($level = 'Information', $message = 'Sign In authorized by '.$user->full_name.'.');
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
+        insertLogs($level = 'Warning', $message = 'Sign In Authorization Failed.');
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    //Create a new signin token
+    $this->post('/token', function ($request, $response, $args) {
+      $args = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+
+      $decoded = false;
+      $ts = time();
+      $te = time()+60*60*12; //12 hours liftime
+      $key = getSettingsProp('jwt_signin_key');
+      if(isset($args['token'])) {
+        $jwt = $args['token'];
+        try {
+          $decoded = JWT::decode($jwt, $key, array('HS256'));
+          $te = time()+30; //30 second liftime
+        } catch(\ExpiredException $e) {
+          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+        } catch(\SignatureInvalidException $e){
+          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+        }
+      }
+      if(isset($args['time_start']) && $args['time_start'] != '') {
+        $ts = strtotime($args['time_start']);
+      }
+      if(isset($args['time_end']) && $args['time_end'] != '') {
+        $te = strtotime($args['time_end']);
+      }
+      if(FrcPortal\Auth::isAdmin() || $decoded !== false) {
+        $tokenArr = generateSignInToken($ts, $te);
+        $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['token'], 'qr_code'=>$tokenArr['qr_code']);
+      } else {
+        return unauthorizedResponse($response);
       }
       $response = $response->withJson($responseArr);
       return $response;
@@ -271,6 +296,7 @@ $app->group('/hours', function () {
     //Deauthorize the current signin token
     $this->post('/deauthorize', function ($request, $response, $args) {
       $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Deauthorized');
+      insertLogs($level = 'Information', $message = 'Sign In deauthorized.');
       $response = $response->withJson($responseArr);
       return $response;
     });
@@ -311,7 +337,7 @@ $app->group('/hours', function () {
                         'userData' => $user
                       )
                     );
-                    sendUserNotification($user_id, 'sign_in_out', $msgData);
+                    $user->sendUserNotification('sign_in_out', $msgData);
                     $users = getSignInList(date('Y'));
 
                     $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
@@ -337,7 +363,7 @@ $app->group('/hours', function () {
                         'userData' => $user
                       )
                     );
-                    sendUserNotification($user_id, 'sign_in_out', $msgData);
+                    $user->sendUserNotification('sign_in_out', $msgData);
                     $users = getSignInList(date('Y'));
                     $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
                   } else {
@@ -353,13 +379,107 @@ $app->group('/hours', function () {
           } else {
             $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
           }
-        } catch(\Firebase\JWT\ExpiredException $e) {
+        } catch(\ExpiredException $e) {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\Firebase\JWT\SignatureInvalidException $e){
+        } catch(\SignatureInvalidException $e){
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        } catch(\BeforeValidException $e){
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        } catch(\UnexpectedValueException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
         }
       } else {
         $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Sign in is not authorized at this time and/or on this device. Please see a mentor.');
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    //Clock in and Out
+    $this->post('/qr', function ($request, $response, $args) {
+      $user = FrcPortal\Auth::user();
+      $args = $request->getParsedBody();
+      if(isset($args['token'])) {
+        $key = getSettingsProp('jwt_signin_key');
+        try{
+          $decoded = JWT::decode($args['token'], $key, array('HS256'));
+          $data = (array) $decoded;
+          if(isset($data['jti']) || $data['jti'] != '') {
+            $jti = $data['jti'];
+            $user_id = $user->user_id;
+            $name = $user->full_name;
+            $date = time();
+            $hours = FrcPortal\MeetingHour::where('user_id',$user_id)->whereNotNull('time_in')->whereNull('time_out')->orderBy('time_in','DESC')->first();
+            if($hours != null) {
+              $hours_id = $hours->hours_id;
+              $hours->time_out = date('Y-m-d H:i:s',$date);
+              if($hours->save()) {
+                $ti = $hours->time_in;
+                $to = $hours->time_out;
+                $hourTotal = round((strtotime($to) - strtotime($ti))/3600, 2);
+                $emailData = array(
+                  'signin_time' => date('M d, Y H:i A', $date),
+                  'signin_out' => 'sign_out'
+                );
+                $emailInfo = emailSignInOut($user_id,$emailData);
+                $msgData = array(
+                  'slack' => array(
+                    'title' => 'Sign out',
+                    'body' => 'You signed out at '.$emailData['signin_time']
+                  ),
+                  'email' => array(
+                    'subject' => $emailInfo['subject'],
+                    'content' =>  $emailInfo['content'],
+                    'userData' => $user
+                  )
+                );
+                $user->sendUserNotification('sign_in_out', $msgData);
+                //$users = getSignInList(date('Y'));
+                $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date).' for a total of '.$hourTotal.' hours');
+              } else {
+              $responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out');
+              }
+            } else {
+              $hours = FrcPortal\MeetingHour::create(['user_id' => $user_id, 'time_in' => date('Y-m-d H:i:s',$date)]);
+              if($hours) {
+                $emailData = array(
+                  'signin_time' => date('M d, Y H:i A', $date),
+                  'signin_out' => 'sign_in'
+                );
+                $emailInfo = emailSignInOut($user_id,$emailData);
+                $msgData = array(
+                  'slack' => array(
+                    'title' => 'Sign In',
+                    'body' => 'You signed in at '.$emailData['signin_time']
+                  ),
+                  'email' => array(
+                    'subject' => $emailInfo['subject'],
+                    'content' =>  $emailInfo['content'],
+                    'userData' => $user
+                  )
+                );
+                $user->sendUserNotification('sign_in_out', $msgData);
+                //$users = getSignInList(date('Y'));
+                $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date));
+              } else {
+                $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');
+              }
+            }
+          } else {
+            $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
+          }
+        } catch(\UnexpectedValueException $e){
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        } catch(\ExpiredException $e) {
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        } catch(\SignatureInvalidException $e){
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        } catch(\BeforeValidException $e){
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        } catch(\Exception $e){
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        }
+      } else {
+        $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid token');
       }
       $response = $response->withJson($responseArr);
       return $response;

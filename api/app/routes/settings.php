@@ -137,9 +137,7 @@ $app->group('/settings', function () {
       //Do update or create
       foreach($formData as $setting=>$value) {
         $val = formatSettings($setting, $value);
-        $set = FrcPortal\Setting::updateOrCreate(
-            ['section' => $section, 'setting' => $setting], ['value' => $val]
-        );
+        $set = FrcPortal\Setting::where('section', $section)->where('setting', $setting)->update(['value' => $val]);
       }
       $responseArr['status'] = true;
       $responseArr['msg'] = ucwords($section).' Settings Updated';
@@ -156,12 +154,15 @@ $app->group('/settings', function () {
         return unauthorizedResponse($response);
       }
 
-      $file = getServiceAccountFile();
-      if($file['status']) {
+      try {
+        $file = getServiceAccountFile();
+        $responseArr['data'] = array_intersect_key($file['contents'],array('client_email'=>''));
         $responseArr['status'] = true;
-        $responseArr['msg'] = 'Service account credentials uploaded';
-        $responseArr['data'] = $file['data']['contents'];
-      }
+        $responseArr['msg'] = '';
+      } catch (Exception $e) {
+        $result['msg'] = handleExceptionMessage($e);
+        //$result['msg'] = 'Something went wrong';
+    	}
       $response = $response->withJson($responseArr);
       return $response;
     });
@@ -190,10 +191,15 @@ $app->group('/settings', function () {
         }
         $filename = 'service_account_credentials.json';
         $uploadedFile->moveTo($directory.'/'.$filename);
-        $file = getServiceAccountFile();
-        $responseArr['status'] = true;
-        $responseArr['msg'] = 'Service account credentials uploaded';
-        $responseArr['data'] = $file['data']['contents'];
+        try {
+          $file = getServiceAccountFile();
+          $responseArr['data'] = array_intersect_key($file['contents'],array('client_email'=>''));
+          $responseArr['status'] = true;
+          $responseArr['msg'] = 'Service account credentials uploaded';
+        } catch (Exception $e) {
+          $result['msg'] = handleExceptionMessage($e);
+          //$result['msg'] = 'Something went wrong';
+      	}
       }
       $response = $response->withJson($responseArr);
       return $response;

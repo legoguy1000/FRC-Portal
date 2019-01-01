@@ -44,144 +44,6 @@ $app->group('/seasons', function () {
     $response = $response->withJson($data);
     return $response;
   });
-  $this->group('/{season_id:[a-z0-9]{13}}', function () {
-    $this->get('', function ($request, $response, $args) {
-      $season_id = $args['season_id'];
-      $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
-      $season = FrcPortal\Season::find($season_id);
-      if($reqsBool) {
-        $season->users = getUsersAnnualRequirements($season_id);
-      }
-      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-    $this->get('/annualRequirements', function ($request, $response, $args) {
-      $season_id = $args['season_id'];
-      $season = getUsersAnnualRequirements($season_id);
-      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
-    $response = $response->withJson($responseArr);
-    return $response;
-    });
-    $this->put('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
-      $formData = $request->getParsedBody();
-      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
-        return unauthorizedResponse($response);
-      }
-      $season_id = $args['season_id'];
-
-      $season = FrcPortal\Season::find($season_id);
-      if(!is_null($formData['start_date'])) {
-        $start_date = new DateTime($formData['start_date']);
-        $season->start_date = $start_date->format('Y-m-d');
-      }
-      if(!is_null($formData['bag_day'])) {
-        $bag_day = new DateTime($formData['bag_day']);
-        $season->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
-      }
-      if(!is_null($formData['end_date'])) {
-        $end_date = new DateTime($formData['end_date']);
-        $season->end_date = $end_date->format('Y-m-d'." 23:59:59");
-      }
-      $season->game_logo = $formData['game_logo'];
-      $season->game_name = $formData['game_name'];
-      $season->hour_requirement = $formData['hour_requirement'];
-      $season->hour_requirement_week = $formData['hour_requirement_week'];
-      $season->game_logo = $formData['game_logo'];
-      $season->membership_form_map = $formData['membership_form_map'];
-
-      if($season->save()) {
-        $responseArr = array('status'=>true, 'msg'=>'Season Information Saved', 'data' => $season);
-      } else {
-        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $season);
-      }
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-    $this->put('/updateMembershipForm', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
-      $formData = $request->getParsedBody();
-      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
-        return unauthorizedResponse($response);
-      }
-      $season_id = $args['season_id'];
-
-      $responseArr = updateSeasonMembershipForm($season_id);
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-    $this->put('/pollMembershipForm', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
-      $formData = $request->getParsedBody();
-      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
-        return unauthorizedResponse($response);
-      }
-      $season_id = $args['season_id'];
-
-      $poll = updateSeasonRegistrationFromForm($season_id);
-      $season = getUsersAnnualRequirements($season_id);
-      $responseArr = array('status'=>true, 'msg'=>'Latest data dowwnloaded from Google form', 'data' => $season);
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-    $this->put('/toggleAnnualReqs', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
-      $formData = $request->getParsedBody();
-      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
-        return unauthorizedResponse($response);
-      }
-      $season_id = $args['season_id'];
-
-      if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
-        $responseArr = array('status'=>false, 'msg'=>'Please select at least 1 user');
-        $response = $response->withJson($responseArr,400);
-        return $response;
-      }
-      if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('join_team','stims','dues'))) {
-        $responseArr = array('status'=>false, 'msg'=>'Invalid requirement');
-        $response = $response->withJson($responseArr,400);
-        return $response;
-      }
-      $season = FrcPortal\Season::find($season_id);
-      $array = array();
-      $req = $formData['requirement'];
-      $users = $formData['users'];
-      foreach($users as $user) {
-        //$user_id = $user['user_id'];
-        $reqArr = FrcPortal\AnnualRequirement::firstOrNew(['season_id' => $season_id, 'user_id' => $user]);
-        //$reqArr = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user)->first();
-        $cur = isset($reqArr->$req) ? $reqArr->$req : false;
-        $reqArr->$req = !$cur;
-        $reqArr->save();
-      }
-      $season = getUsersAnnualRequirements($season_id);
-      $responseArr = array('status'=>true, 'msg'=>'Annual Requirements Updated', 'data' => $season);
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-    $this->delete('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
-      $formData = $request->getParsedBody();
-      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
-        return unauthorizedResponse($response);
-      }
-      $season_id = $args['season_id'];
-      $season = FrcPortal\Season::destroy($season_id);
-      if($season) {
-        $responseArr = array('status'=>true, 'msg'=>'Season Deleted', 'data' => $season);
-      } else {
-        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $season);
-      }
-      $response = $response->withJson($responseArr);
-      return $response;
-    });
-  });
   $this->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
@@ -230,16 +92,16 @@ $app->group('/seasons', function () {
       $newSeason->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
       $newSeason->end_date = $end_date->format('Y-m-d'." 23:59:59");
       $newSeason->join_spreadsheet = $spreadsheetId;
-      $newSeason->membership_form_map = json_encode(array(
-        "email" => "email address",
-        "fname" => "first name",
-        "lname" => "last name",
-        "user_type" => "member type",
-        "grad" => "year of graduation",
-        "school" => "school",
-        "pin_number" => "student id",
-        "phone" => "phone"
-      ));
+      $newSeason->membership_form_map = array(
+        'email' => 'email address',
+        'fname' => 'first name',
+        'lname' => 'last name',
+        'user_type' => 'member type',
+        'grad' => 'year of graduation',
+        'school' => 'school',
+        'pin_number' => 'student id',
+        'phone' => 'phone'
+      );
       $newSeason->membership_form_sheet = 'Form Responses 1';
       $newSeason->game_logo = !isset($formData['game_logo']) && !is_null($formData['game_logo']) ? $formData['game_logo']:'';
       if($newSeason->save()) {
@@ -271,6 +133,168 @@ $app->group('/seasons', function () {
     }
     $response = $response->withJson($responseArr);
     return $response;
+  });
+  $this->group('/{season_id:[a-z0-9]{13}}', function () {
+    $this->get('', function ($request, $response, $args) {
+      $season_id = $args['season_id'];
+      //Season passed from middleware
+      $season = $request->getAttribute('season');
+      $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
+      //$season = FrcPortal\Season::find($season_id);
+      if($reqsBool) {
+        $season->users = getUsersAnnualRequirements($season_id);
+      }
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->get('/annualRequirements', function ($request, $response, $args) {
+      $season_id = $args['season_id'];
+      $season = getUsersAnnualRequirements($season_id);
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
+    $response = $response->withJson($responseArr);
+    return $response;
+    });
+    $this->put('', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+      $season_id = $args['season_id'];
+      //Season passed from middleware
+      $season = $request->getAttribute('season');
+      //$season = FrcPortal\Season::find($season_id);
+      if(!is_null($formData['start_date'])) {
+        $start_date = new DateTime($formData['start_date']);
+        $season->start_date = $start_date->format('Y-m-d');
+      }
+      if(!is_null($formData['bag_day'])) {
+        $bag_day = new DateTime($formData['bag_day']);
+        $season->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
+      }
+      if(!is_null($formData['end_date'])) {
+        $end_date = new DateTime($formData['end_date']);
+        $season->end_date = $end_date->format('Y-m-d'." 23:59:59");
+      }
+      $season->game_logo = $formData['game_logo'];
+      $season->game_name = $formData['game_name'];
+      $season->hour_requirement = $formData['hour_requirement'];
+      $season->hour_requirement_week = $formData['hour_requirement_week'];
+      $season->game_logo = $formData['game_logo'];
+      $season->join_spreadsheet = $formData['join_spreadsheet'];
+      $season->membership_form_map = $formData['membership_form_map'];
+
+      if($season->save()) {
+        $responseArr = array('status'=>true, 'msg'=>'Season Information Saved', 'data' => $season);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $season);
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->put('/updateMembershipForm', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+      $season_id = $args['season_id'];
+
+      $responseArr = updateSeasonMembershipForm($season_id);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->put('/pollMembershipForm', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+      $season_id = $args['season_id'];
+
+      $responseArr = updateSeasonRegistrationFromForm($season_id);
+      if($responseArr['status'] == true) {
+        $responseArr['data'] = getUsersAnnualRequirements($season_id);
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->put('/toggleAnnualReqs', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+      $season_id = $args['season_id'];
+      //Season passed from middleware
+      $season = $request->getAttribute('season');
+      //$season = FrcPortal\Season::find($season_id);
+      if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
+        $responseArr = array('status'=>false, 'msg'=>'Please select at least 1 user');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('join_team','stims','dues'))) {
+        $responseArr = array('status'=>false, 'msg'=>'Invalid requirement');
+        $response = $response->withJson($responseArr,400);
+        return $response;
+      }
+      $array = array();
+      $req = $formData['requirement'];
+      $users = $formData['users'];
+      foreach($users as $user) {
+        //$user_id = $user['user_id'];
+        $reqArr = FrcPortal\AnnualRequirement::firstOrNew(['season_id' => $season_id, 'user_id' => $user]);
+        //$reqArr = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user)->first();
+        $cur = isset($reqArr->$req) ? $reqArr->$req : false;
+        $reqArr->$req = !$cur;
+        $reqArr->save();
+      }
+      $season = getUsersAnnualRequirements($season_id);
+      $responseArr = array('status'=>true, 'msg'=>'Annual Requirements Updated', 'data' => $season);
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+    $this->delete('', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+      $season_id = $args['season_id'];
+      $season = FrcPortal\Season::destroy($season_id);
+      if($season) {
+        $responseArr = array('status'=>true, 'msg'=>'Season Deleted', 'data' => $season);
+      } else {
+        $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $season);
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    });
+  })->add(function ($request, $response, $next) {
+    //Season Midddleware to pull season data
+    // get the route from the request
+    $route = FrcPortal\Auth::getRoute();
+    if (!$route) {
+        // no route matched
+        return $next($request, $response);
+    }
+    $args = $route->getArguments();
+    $season_id = $args['season_id'];
+    $season = FrcPortal\Season::find($season_id);
+    if(!is_null($season)) {
+      $request = $request->withAttribute('season', $season);
+      $response = $next($request, $response);
+    } else {
+      $response = notFoundResponse($response, $msg = 'Season not found');
+    }
+  	return $response;
   });
 });
 

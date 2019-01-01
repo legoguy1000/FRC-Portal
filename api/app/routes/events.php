@@ -6,10 +6,16 @@ $app->group('/events', function () {
     $events = array();
   	$data = array();
 
+    $searchProperties = array(
+      'name' => '',
+      'type' => '',
+      'event_start' => '',
+      'event_end' => '',
+    );
     $defaults = array(
       'filter' => '',
       'limit' => 10,
-      'order' => '-year',
+      'order' => '-event_start',
       'page' => 1,
     );
     $inputs = checkSearchInputs($request, $defaults);
@@ -18,15 +24,33 @@ $app->group('/events', function () {
     $order = $inputs['order'];
     $page = $inputs['page'];
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
+    $search = $request->getParam('search') !== null ? $request->getParam('search'):$searchProperties;
 
+    $queryArr = array();
+    if(isset($search['name']) && $search['name'] != '') {
+      $queryArr[] = array('name', 'LIKE', '%'.$search['name'].'%');
+    }
+    if(isset($search['type']) && $search['type'] != '') {
+      $queryArr[] = array('type', '=', $search['type']);
+    }
+    if(isset($search['event_start']) && $search['event_start'] != '') {
+      $es = new DateTime($search['event_start']);
+      $es = $es->format('Y-m-d');
+      $queryArr[] = array('event_start', '>=', $es);
+    }
+    if(isset($search['event_end']) && $search['event_end'] != '') {
+      $ee = new DateTime($search['event_end']);
+      $ee = $ee->format('Y-m-d').' 23:59:59';
+      $queryArr[] = array('event_end', '<=', $ee);
+    }
     $totalNum = 0;
-    $events = new FrcPortal\Event();
+    $events = FrcPortal\Event::where($queryArr);
   	if($filter != '') {
       $events = $events->orHavingRaw('name LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('type LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('event_start LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('event_end LIKE ?',array('%'.$filter.'%'));
-      $events = $events->orHavingRaw('YEAR(events.event_start) LIKE ?',array('%'.$filter.'%'));
+      $events = $events->orHavingRaw('year LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('MONTHNAME(events.event_start) LIKE ?',array('%'.$filter.'%'));
       $events = $events->orHavingRaw('MONTHNAME(events.event_end) LIKE ?',array('%'.$filter.'%'));
     }
@@ -59,11 +83,23 @@ $app->group('/events', function () {
     }
     $response = $response->withJson($data);
     return $response;
-  });
+  })->setName('Get Events');
   //Search Google Calendar for events
   $this->get('/searchGoogleCalendar', function ($request, $response, $args) {
     $calendar = getSettingsProp('google_calendar_id');
     $api_key = getSettingsProp('google_api_key');
+    if(!isset($api_key) || $api_key == '') {
+      $responseArr = array('status'=>false, 'msg'=>'Google API Key cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the API Key.');
+      insertLogs($level = 'Warning', $message = 'Cannot search Google calendar.  Google API Key is blank');
+      $response = $response->withJson($responseArr);
+      return $response;
+    }
+    if(!isset($calendar) || $calendar == '') {
+      $responseArr = array('status'=>false, 'msg'=>'Google Calendar ID cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the Google Calendar ID.');
+      insertLogs($level = 'Warning', $message = 'Cannot search Google calendar.  Google Calendar ID is blank');
+      $response = $response->withJson($responseArr);
+      return $response;
+    }
     $optParams = array();
     if($request->getParam('q') != null && $request->getParam('q') != '' && $request->getParam('q') != 'null' && $request->getParam('q') != 'undefined') {
     	$q = trim($request->getParam('q'));
@@ -110,7 +146,8 @@ $app->group('/events', function () {
         }
       }
     } catch (Exception $e) {
-      $result['msg'] = 'Something went wrong searching Google Calendar';
+      insertLogs($level = 'Critical', $message = 'Something went wrong searching Google Calendar. '.$e->getMessage());
+      return exceptionResponse($response, $msg = 'Something went wrong searching Google Calendar');
     }
     $data = array(
     	'results'=>$allEvents,
@@ -118,62 +155,181 @@ $app->group('/events', function () {
     );
     $responseArr = array('status'=>true, 'msg'=>'', 'data' => $data);
     $response = $response->withJson($responseArr);
+    insertLogs($level = 'Information', $message = 'Successfully searched Google Calendar');
     return $response;
-  });
+  })->setName('Search Google Calendar');
+
+  //Add New Event
+  $this->post('', function ($request, $response, $args) {
+    $userId = FrcPortal\Auth::user()->user_id;
+    $formData = $request->getParsedBody();
+    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+    if(!FrcPortal\Auth::isAdmin()) {
+      insertLogs($level = 'Warning', $message = 'Unauthorized attempt to add Event.');
+      return unauthorizedResponse($response);
+    }
+
+    if(!isset($formData['name']) || $formData['name'] == '') {
+      return badRequestResponse($response, $msg = 'Name cannot be blank');
+    }
+    if(!isset($formData['type']) || $formData['type'] == '') {
+      return badRequestResponse($response, $msg = 'Event type cannot be blank');
+    }
+    if(!isset($formData['event_start']) || $formData['event_start'] == '') {
+      return badRequestResponse($response, $msg = 'Start Date cannot be blank');
+    }
+    if(!isset($formData['event_end']) || $formData['event_end'] == '') {
+      return badRequestResponse($response, $msg = 'End Date cannot be blank');
+    }
+    if(strtotime($formData['event_start']) >= strtotime($formData['event_end'])) {
+      return badRequestResponse($response, $msg = 'Start Date must be before End Date');
+    }
+    if(!isset($formData['google_cal_id']) || $formData['google_cal_id'] == '') {
+      return badRequestResponse($response, $msg = 'Invalid Google calendar ID');
+    }
+    $event = FrcPortal\Event::where('google_cal_id', $formData['google_cal_id'])->first();
+    if(is_null($event)) {
+      $event = new FrcPortal\Event();
+      $event->google_cal_id = $formData['google_cal_id'];
+      $event->name = $formData['name'];
+      $event->type = $formData['type'];
+      $event->event_start = $formData['event_start'];
+      $event->event_end = $formData['event_end'];
+      $event->details = isset($formData['details']) && !is_null($formData['details']) ? $formData['details']:'';
+      $event->location = isset($formData['location']) && !is_null($formData['location']) ? $formData['location']:'';
+      $event->payment_required = isset($formData['requirements']['payment']) && $formData['requirements']['payment'] ? true:false;
+      $event->permission_slip_required = isset($formData['requirements']['permission_slip']) && $formData['requirements']['permission_slip'] ? true:false;
+      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
+      $event->room_required = isset($formData['requirements']['room']) && $formData['requirements']['room'] ? true:false;
+      $event->drivers_required = isset($formData['requirements']['drivers']) && $formData['requirements']['drivers'] ? true:false;
+      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
+      $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
+      if($event->save()) {
+        $limit = 10;
+        $totalNum = FrcPortal\Event::count();
+        $events = FrcPortal\Event::orderBy('event_start','DESC')->limit($limit)->get();
+        $data = array();
+        $data['results'] = $events;
+        $data['total'] = $totalNum;
+        $data['maxPage'] = ceil($totalNum/$limit);
+        $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$data);
+        insertLogs($level = 'Information', $message = $event->name.' created');
+         //Send notifications
+        $host = getSettingsProp('env_url');
+        $msgData = array(
+          'slack' => array(
+            'title' => 'New Event Created',
+            'body' => 'Event '.$event->name.' has been created in the Team Portal.  Please go to '.$host.'/events/'.$event->event_id.' for more information and registration.'
+          ),
+          'email' => array(
+            'subject' => 'New Event Created',
+            'content' =>  'Event '.$event->name.' has been created in the Team Portal.  Please go to '.$host.'/events/'.$event->event_id.' for more information and registration.'
+          )
+        );
+        sendMassNotifications($type = 'new_event', $msgData);
+      } else {
+        $responseArr['msg'] = 'Something went wrong';
+      }
+    } else {
+      $responseArr['msg'] = $event->name.' already exists';
+      insertLogs($level = 'Information', $message = 'Attempted to create duplicate event "'.$event->name.'"');
+    }
+    $response = $response->withJson($responseArr);
+    return $response;
+  })->setName('Add Event');
   $this->group('/{event_id:[a-z0-9]{13}}', function () {
     //Get Event
     $this->get('', function ($request, $response, $args) {
+      $authed = FrcPortal\Auth::isAuthenticated();
       $event_id = $args['event_id'];
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
       $withArr = array('poc');
+      $withCountArr = array();
       if($request->getParam('event_rooms') !== null && $request->getParam('event_rooms')==true) {
-        $withArr[] = 'event_rooms.users';
+        if($authed) {
+          $withArr[] = 'event_rooms.users';
+        } else {
+          $withArr[] = 'event_rooms';
+        }
       }
       if($request->getParam('event_cars') !== null && $request->getParam('event_cars')==true) {
-        $withArr[] = 'event_cars';
+        if($authed) {
+          $withArr[] = 'event_cars';
+        } else {
+          //$withArr[] = '';
+        }
       }
       if($request->getParam('event_time_slots') !== null && $request->getParam('event_time_slots')==true) {
-        $withArr[] = 'event_time_slots.registrations.user';
+        if($authed) {
+          $withArr[] = 'event_time_slots.registrations.user';
+        } else {
+          $withArr['event_time_slots'] = function ($query) use ($event_id) {
+            $query->withCount('registrations');
+          };
+        }
       }
       if($request->getParam('users') !== null && $request->getParam('users')==true) {
-        $withArr['registered_users'] = function ($query) use ($event_id) {
-          $query->where('registration',true);
-        };
+        if($authed) {
+          $withArr['registered_users'] = function ($query) use ($event_id) {
+            $query->where('registration',true);
+          };
+        } else {
+          $event->registered_users_count = $event->registered_users()->count();
+        }
+
       }
-      $event = FrcPortal\Event::with($withArr)->find($event_id);
+      $event = $event->load($withArr);
       if($reqsBool) {
         $event->users = getUsersEventRequirements($event_id);
       }
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
+      insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'"');
       return $response;
-    });
+    })->setName('Get Event');
     //Get Event Requirements
     $this->get('/eventRequirements', function ($request, $response, $args) {
       $event_id = $args['event_id'];
-      $event = getUsersEventRequirements($event_id);
-      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
+      $eventReqs = getUsersEventRequirements($event_id);
+      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $eventReqs);
       $response = $response->withJson($responseArr);
+      insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'" Requirements');
       return $response;
-    });
+    })->setName('Get Event Requirements');
     $this->group('/cars', function () {
       //Get Event Cars
       $this->get('', function ($request, $response, $args) {
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
+        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         $event_id = $args['event_id'];
-        $responseArr = getEventCarList($event_id);
+        try {
+          $responseArr['data'] = getEventCarList($event_id);
+          $responseArr['status'] = true;
+          $responseArr['msg'] = '';
+        } catch (Exception $e) {
+          insertLogs($level = 'Warning', $message = 'Something went wrong returning event cars. '.$e->getMessage());
+          return exceptionResponse($response, $msg = 'Something went wrong returning event cars');
+      	}
         $response = $response->withJson($responseArr);
+        insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'" Cars');
         return $response;
-      });
+      })->setName('Get Event Cars');
       //Update Event Car passengers
       $this->put('', function ($request, $response, $args) {
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Car passengers');
           return unauthorizedResponse($response);
         }
-
-
         $event_id = $args['event_id'];
         $formData = $request->getParsedBody();
         if(!isset($formData['cars']) || !is_array($formData['cars']) || empty($formData['cars'])) {
@@ -194,13 +350,12 @@ $app->group('/events', function () {
         if(!empty($userArr)) {
           $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => null]);
         }
-        $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
-                            $query->where('event_id','=',$event_id);
-                          },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
+        $event = getUsersEventRequirements($event_id);
         $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>$event);
+        insertLogs($level = 'Information', $message = 'Event car list updated');
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Update Event Car Passengers');
     });
     $this->group('/rooms', function () {
       //Get Event Rooms
@@ -215,20 +370,28 @@ $app->group('/events', function () {
         $responseArr['status'] = true;
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get Event Rooms');
       //Get Event Rooms
       $this->get('/adminList', function ($request, $response, $args) {
+        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         $event_id = $args['event_id'];
-        $responseArr = getEventRoomList($event_id);
+        try {
+          $responseArr['data'] = getEventRoomList($event_id);
+          $responseArr['status'] = true;
+          $responseArr['msg'] = '';
+        } catch (Exception $e) {
+      		$result['msg'] = handleExceptionMessage($e);
+      	}
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get Event Rooms Admin List');
       //Add New Event Room
       $this->post('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to add an Event Room');
           return unauthorizedResponse($response);
         }
 
@@ -246,20 +409,27 @@ $app->group('/events', function () {
         $room->user_type = $formData['user_type'];
         $room->gender = $formData['gender'];
         if($room->save()) {
-          $responseArr = getEventRoomList($event_id);
-          $responseArr['msg'] = 'New room added';
+          try {
+            $responseArr['data'] = getEventRoomList($event_id);
+            $responseArr['status'] = true;
+            $responseArr['msg'] = 'New room added';
+          } catch (Exception $e) {
+        		$result['msg'] = handleExceptionMessage($e);
+        	}
         } else {
-          $responseArr = array('status'=>false, 'msg'=>'Event went wrong', 'data' => null);
+          insertLogs($level = 'Information', $message = 'Event Room added');
+          $responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
         }
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Add Event Room');
       //Update Room lists
       $this->put('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Room list');
           return unauthorizedResponse($response);
         }
 
@@ -283,90 +453,92 @@ $app->group('/events', function () {
         if(!empty($userArr)) {
           $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
         }
-        $event = FrcPortal\User::with(['event_requirements' => function ($query) use ($event_id) {
-                            $query->where('event_id','=',$event_id);
-                          },'event_requirements.event_rooms','event_requirements.event_cars'])->get();
+        $event = getUsersEventRequirements($event_id);
+        insertLogs($level = 'Information', $message = 'Event Room List updated');
         $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>$event);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Update Event Room List');
       //Delete event room
       $this->delete('/{room_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to delete Event Room');
           return unauthorizedResponse($response);
         }
 
         $event_id = $args['event_id'];
         $room_id = $args['room_id'];
-        $event = FrcPortal\EventRoom::where('event_id',$event_id)->where('room_id',$room_id)->delete();
-        if($event) {
+        try {
+          deleteEventRoom($event_id, $room_id);
           $rooms = getEventRoomList($event_id);
-          if($rooms['status'] != false) {
-            $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms['data']);
-          } else {
-            $responseArr = $rooms;
-          }
-        } else {
-          $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
+          $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms);
+          $response = $response->withJson($responseArr);
+          return $response;
+        } catch (Exception $e) {
+          return exceptionResponse($response, $msg = handleExceptionMessage($e), $code = 200);
         }
-        $response = $response->withJson($responseArr);
-        return $response;
-      });
+      })->setName('Delete Event Room');
     });
     $this->group('/timeSlots', function () {
       //Get event time slots
       $this->get('', function ($request, $response, $args) {
         $event_id = $args['event_id'];
-        $responseArr = getEventTimeSlotList($event_id);
+        try {
+          $responseArr['data'] = getEventTimeSlotList($event_id);
+          $responseArr['status'] = true;
+          $responseArr['msg'] = '';
+        } catch (Exception $e) {
+      		$result['msg'] = handleExceptionMessage($e);
+      	}
         $response = $response->withJson($responseArr);
         return $response;
-      });
-      //Update event time slot
-      $this->put('/{time_slot_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
-        $formData = $request->getParsedBody();
-        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        if(!FrcPortal\Auth::isAdmin()) {
-          return unauthorizedResponse($response);
-        }
+      })->setName('Get Event Time Slots');
+      $this->group('/{time_slot_id:[a-z0-9]{13}}', function () {
+        //Update event time slot
+        $this->put('', function ($request, $response, $args) {
+          $userId = FrcPortal\Auth::user()->user_id;
+          $formData = $request->getParsedBody();
+          $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+          if(!FrcPortal\Auth::isAdmin()) {
+            insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Time slot');
+            return unauthorizedResponse($response);
+          }
 
-        $event_id = $args['event_id'];
-        $time_slot_id = $args['time_slot_id'];
-        $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->first();
-        if($timeSlot) {
-          $responseArr = updateTimeSlot($timeSlot, $formData);
-        }
-        $response = $response->withJson($responseArr);
-        return $response;
-      });
-      //Delete event time slot
-      $this->delete('/{time_slot_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
-        $formData = $request->getParsedBody();
-        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        if(!FrcPortal\Auth::isAdmin()) {
-          return unauthorizedResponse($response);
-        }
+          $event_id = $args['event_id'];
+          $time_slot_id = $args['time_slot_id'];
+          try {
+            $update = updateTimeSlot($event_id, $time_slot_id, $formData);
+            $slots = getEventTimeSlotList($event_id);
+            $responseArr = array('status'=>true, 'msg'=>'Time Slot Updated', 'data' => $slots);
+          } catch (Exception $e) {
+            return exceptionResponse($response, $msg = handleExceptionMessage($e), $code = 200);
+          }
+          return $response->withJson($responseArr);
+        })->setName('Update Event Time Slot');
+        //Delete event time slot
+        $this->delete('', function ($request, $response, $args) {
+          $userId = FrcPortal\Auth::user()->user_id;
+          $formData = $request->getParsedBody();
+          $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+          if(!FrcPortal\Auth::isAdmin()) {
+            insertLogs($level = 'Warning', $message = 'Unauthorized attempt to delete Event Time slot');
+            return unauthorizedResponse($response);
+          }
 
-        $event_id = $args['event_id'];
-        $time_slot_id = $args['time_slot_id'];
-        $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->delete();
-        if($timeSlot) {
-          $slots = getEventTimeSlotList($event_id);
-          if($slots['status'] != false) {
+          $event_id = $args['event_id'];
+          $time_slot_id = $args['time_slot_id'];
+          $timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->delete();
+          if($timeSlot) {
+            $slots = getEventTimeSlotList($event_id);
             $responseArr = array('status'=>true, 'msg'=>'Time Slot Deleted', 'data' => $slots['data']);
           } else {
-            $responseArr = $rooms;
+            $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => null);
           }
-        } else {
-          $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $event);
-        }
-
-        $response = $response->withJson($responseArr);
-        return $response;
+          return $response->withJson($responseArr);
+        })->setName('Delete Event Time Slot');
       });
       //Add new event time slot
       $this->post('', function ($request, $response, $args) {
@@ -374,15 +546,19 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to add Event Time slot');
           return unauthorizedResponse($response);
         }
-
         $event_id = $args['event_id'];
-        $responseArr = AddTimeSlot($event_id, $formData);
-
-        $response = $response->withJson($responseArr);
-        return $response;
-      });
+        try {
+          $add = addTimeSlot($event_id, $formData);
+          $slots = getEventTimeSlotList($event_id);
+          $responseArr = array('status'=>true, 'msg'=>'Time Slot Added', 'data' => $slots);
+        } catch (Exception $e) {
+          return exceptionResponse($response, $msg = handleExceptionMessage($e), $code = 200);
+        }
+        return $response->withJson($responseArr);
+      })->setName('Add Event Time Slot');
     });
     $this->group('/food', function () {
       //Get Food  Options
@@ -397,7 +573,7 @@ $app->group('/events', function () {
         $responseArr['status'] = true;
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get Event Food Options');
       //Get Food  Options
       $this->get('/list', function ($request, $response, $args) {
         $event_id = $args['event_id'];
@@ -416,50 +592,54 @@ $app->group('/events', function () {
         $responseArr['status'] = true;
         $response = $response->withJson($responseArr);
         return $response;
-      });
-      //Edit Food  Option
-      $this->put('/{food_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
-        $formData = $request->getParsedBody();
-        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        if(!FrcPortal\Auth::isAdmin()) {
-          return unauthorizedResponse($response);
-        }
+      })->setName('Get Event Food Options List');
+      $this->group('/{food_id:[a-z0-9]{13}}', function () {
+        //Edit Food  Option
+        $this->put('', function ($request, $response, $args) {
+          $userId = FrcPortal\Auth::user()->user_id;
+          $formData = $request->getParsedBody();
+          $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+          if(!FrcPortal\Auth::isAdmin()) {
+            insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Food option');
+            return unauthorizedResponse($response);
+          }
 
-        $event_id = $args['event_id'];
-        $food_id = $args['food_id'];
-        $food = FrcPortal\EventFood::where('event_id',$event_id)->where('food_id',$food_id)->first();
-        if($food) {
-          $food->group = isset($formData['group']) ? $formData['group']:'';
-          $food->description = isset($formData['description']) ? $formData['description']:'';
-          if($food->save()) {
+          $event_id = $args['event_id'];
+          $food_id = $args['food_id'];
+          $food = FrcPortal\EventFood::where('event_id',$event_id)->where('food_id',$food_id)->first();
+          if($food) {
+            $food->group = isset($formData['group']) ? $formData['group']:'';
+            $food->description = isset($formData['description']) ? $formData['description']:'';
+            if($food->save()) {
+              $responseArr['status'] = true;
+              $responseArr['msg'] = 'Food option Updated';
+              $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
+            }
+          }
+          $response = $response->withJson($responseArr);
+          return $response;
+        })->setName('Update Event Food Option');
+        //Delete Food  Option
+        $this->delete('', function ($request, $response, $args) {
+          $userId = FrcPortal\Auth::user()->user_id;
+          $formData = $request->getParsedBody();
+          $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+          if(!FrcPortal\Auth::isAdmin()) {
+            insertLogs($level = 'Warning', $message = 'Unauthorized attempt to delete Event Food option');
+            return unauthorizedResponse($response);
+          }
+
+          $event_id = $args['event_id'];
+          $food_id = $args['food_id'];
+          $food = FrcPortal\EventFood::where('event_id',$event_id)->where('food_id',$food_id)->delete();
+          if($food) {
             $responseArr['status'] = true;
-            $responseArr['msg'] = 'Food option Updated';
+            $responseArr['msg'] = 'Food option deleted';
             $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
           }
-        }
-        $response = $response->withJson($responseArr);
-        return $response;
-      });
-      //Delete Food  Option
-      $this->delete('/{food_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
-        $formData = $request->getParsedBody();
-        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        if(!FrcPortal\Auth::isAdmin()) {
-          return unauthorizedResponse($response);
-        }
-
-        $event_id = $args['event_id'];
-        $food_id = $args['food_id'];
-        $food = FrcPortal\EventFood::where('event_id',$event_id)->where('food_id',$food_id)->delete();
-        if($food) {
-          $responseArr['status'] = true;
-          $responseArr['msg'] = 'Food option deleted';
-          $responseArr['data'] = FrcPortal\EventFood::where('event_id',$event_id)->get();
-        }
-        $response = $response->withJson($responseArr);
-        return $response;
+          $response = $response->withJson($responseArr);
+          return $response;
+        })->setName('Delete Event Food Option');
       });
       //Add Food  Option
       $this->post('', function ($request, $response, $args) {
@@ -467,6 +647,7 @@ $app->group('/events', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         if(!FrcPortal\Auth::isAdmin()) {
+          insertLogs($level = 'Warning', $message = 'Unauthorized attempt to add Event Food option');
           return unauthorizedResponse($response);
         }
 
@@ -482,7 +663,7 @@ $app->group('/events', function () {
         }
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Add Event Food Option');
     });
     //Edit Event
     $this->put('', function ($request, $response, $args) {
@@ -490,12 +671,13 @@ $app->group('/events', function () {
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
+        insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event');
         return unauthorizedResponse($response);
       }
-
       $event_id = $args['event_id'];
-      $event = FrcPortal\Event::find($event_id);
-
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
+      //$event = FrcPortal\Event::find($event_id);
       $event->type = isset($formData['type']) && $formData['type'] != '' ? $formData['type'] : null;
       $event->poc_id = isset($formData['poc']['user_id']) && $formData['poc']['user_id'] != '' ? $formData['poc']['user_id']:null;
       if($formData['registration_deadline'] != null && $formData['registration_deadline'] != '') {
@@ -520,27 +702,42 @@ $app->group('/events', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update Event');
     //Sync Google Calendar Event
     $this->put('/syncGoogleCalEvent', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
+        insertLogs($level = 'Warning', $message = 'Unauthorized attempt to sync event with Google Calendar');
         return unauthorizedResponse($response);
       }
 
       $event_id = $args['event_id'];
-      $responseArr = syncGoogleCalendarEvent($event_id);
+      try {
+				$event = syncGoogleCalendarEvent($event_id);
+        $responseArr = array(
+      		'status' => true,
+      		'msg' => $event->name.' synced with Google Calendar',
+      		'data' => $event
+      	);
+			} catch (Exception $e) {
+        $responseArr = array(
+      		'status' => false,
+      		'msg' => handleExceptionMessage($e),
+      		'data' => null
+      	);
+      }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Sync Event with Google Calendar');
     //Toggle Event Requirements per User
     $this->put('/toggleEventReqs', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
+        insertLogs($level = 'Warning', $message = 'Unauthorized attempt to toggle event requirements.');
         return unauthorizedResponse($response);
       }
 
@@ -551,7 +748,9 @@ $app->group('/events', function () {
       if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('registration','permission_slip','payment'))) {
         return badRequestResponse($response, $msg = 'Invalid event requirement');
       }
-      $event = FrcPortal\Event::find($event_id);
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
+      //$event = FrcPortal\Event::find($event_id);
       $array = array();
       $req = $formData['requirement'];
       $events = $formData['users'];
@@ -573,7 +772,7 @@ $app->group('/events', function () {
       $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $event);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Toggle Event Requirements');
     //Toggle Attendance Confirm per User
     $this->put('/toggleConfirmAttendance', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
@@ -590,7 +789,9 @@ $app->group('/events', function () {
       /* if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('registration','permission_slip','payment'))) {
         return badRequestResponse($response, $msg = 'Invalid event requirement');
       } */
-      $event = FrcPortal\Event::find($event_id);
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
+      //$event = FrcPortal\Event::find($event_id);
       $array = array();
       $users = $formData['users'];
       $user_ids = array_column($users, 'user_id');
@@ -609,7 +810,7 @@ $app->group('/events', function () {
       $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $event);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Confirm Event Attendance');
     //Register for Event
     $this->post('/register', function ($request, $response, $args) {
       $loggedInUser = FrcPortal\Auth::user()->user_id;
@@ -631,19 +832,21 @@ $app->group('/events', function () {
       if(!is_bool($formData['registration'])) {
         return badRequestResponse($response, $msg = 'Invalid Request, no registration option.');
       }
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
+      //$event = FrcPortal\Event::find($event_id);
 
       $user =  FrcPortal\User::find($user_id);
       $user_type = $user->user_type;
       $gender = $user->gender;
 
       $registrationBool = (bool) $formData['registration'];
-      $event = FrcPortal\Event::find($event_id);
+      if(time() > $event->date['start']['unix']) {
+        return badRequestResponse($response, $msg = 'Registration is closed. Event has already started.');
+      } elseif(($event->registration_deadline_date['unix'] != null && time() > $event->registration_deadline_date['unix']) && !FrcPortal\Auth::isAdmin()) {
+        return badRequestResponse($response, $msg = 'Registration is closed. Registration deadline was '.date('F j, Y g:m A',$event->registration_deadline_unix).'.');
+      }
       if($registrationBool) {
-        if(time() > $event->date['start']['unix']) {
-          return badRequestResponse($response, $msg = 'Registration is closed. Event has already started.');
-      	} elseif(($event->registration_deadline_date['unix'] != null && time() > $event->registration_deadline_date['unix']) && !FrcPortal\Auth::isAdmin()) {
-          return badRequestResponse($response, $msg = 'Registration is closed. Registration deadline was '.date('F j, Y g:m A',$event->registration_deadline_unix).'.');
-      	}
         $reqUpdate = FrcPortal\EventRequirement::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['registration' => true, 'comments' => $formData['comments']]);
         $ereq_id = $reqUpdate->ereq_id;
         $can_drive = (bool) $formData['can_drive'];
@@ -719,12 +922,14 @@ $app->group('/events', function () {
       $reg = $registrationBool ? 'registered':'unregistered';
       $slackMsg = 'You successfully '.$reg.' for '.$event->name.'.';
       $slackMsgPoc = $user->full_name.' '.$reg.' for '.$event->name.'.';
+      $msg = $slackMsg;
       if($user_id != $loggedInUser) {
         $slackMsg = $userFullName.' '.$reg.'  you for '.$event->name.'.';
         $slackMsgPoc = $userFullName.' '.$reg.'  '.$user->full_name.' for '.$event->name.'.';
+        $msg = 'You successfully '.$reg.' '.$user->full_name.' for '.$event->name.'.';
       }
-     //Send notifications
-     $host = getSettingsProp('env_url');
+      //Send notifications
+      $host = getSettingsProp('env_url');
       $msgData = array(
         'slack' => array(
           'title' => 'Event Registration',
@@ -735,7 +940,7 @@ $app->group('/events', function () {
           'content' =>  $slackMsg.' Please go to '.$host.'/events/'.$event->event_id.' for more information.'
         )
       );
-      sendUserNotification($user_id, 'event_registration', $msgData);
+      $user->sendUserNotification('event_registration', $msgData);
       //slackMessageToUser($user_id, $slackMsg);
       //notify event POC
       if(!is_null($event->poc_id) && $user_id != $event->poc_id && $loggedInUser != $event->poc_id) {
@@ -749,13 +954,14 @@ $app->group('/events', function () {
       $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>$msg, 'data'=>$eventReqs);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Register for Event');
     //Delete Event
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
+        insertLogs($level = 'Warning', $message = 'Unauthorized attempt to delete Event.');
         return unauthorizedResponse($response);
       }
 
@@ -768,82 +974,25 @@ $app->group('/events', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
-  });
-  //Add New Event
-  $this->post('', function ($request, $response, $args) {
-    $userId = FrcPortal\Auth::user()->user_id;
-    $formData = $request->getParsedBody();
-    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-    if(!FrcPortal\Auth::isAdmin()) {
-      return unauthorizedResponse($response);
+    })->setName('Delete Event');
+  })->add(function ($request, $response, $next) {
+    //Event Midddleware to pull event data
+    // get the route from the request
+    $route = FrcPortal\Auth::getRoute();
+    if (!$route) {
+        // no route matched
+        return $next($request, $response);
     }
-
-    if(!isset($formData['name']) || $formData['name'] == '') {
-      return badRequestResponse($response, $msg = 'Name cannot be blank');
-    }
-    if(!isset($formData['type']) || $formData['type'] == '') {
-      return badRequestResponse($response, $msg = 'Event type cannot be blank');
-    }
-    if(!isset($formData['event_start']) || $formData['event_start'] == '') {
-      return badRequestResponse($response, $msg = 'Start Date cannot be blank');
-    }
-    if(!isset($formData['event_end']) || $formData['event_end'] == '') {
-      return badRequestResponse($response, $msg = 'End Date cannot be blank');
-    }
-    if(strtotime($formData['event_start']) >= strtotime($formData['event_end'])) {
-      return badRequestResponse($response, $msg = 'Start Date must be before End Date');
-    }
-    if(!isset($formData['google_cal_id']) || $formData['google_cal_id'] == '') {
-      return badRequestResponse($response, $msg = 'Invalid Google calendar ID');
-    }
-    $event = FrcPortal\Event::where('google_cal_id', $formData['google_cal_id'])->first();
-    if(is_null($event)) {
-      $event = new FrcPortal\Event();
-      $event->google_cal_id = $formData['google_cal_id'];
-      $event->name = $formData['name'];
-      $event->type = $formData['type'];
-      $event->event_start = $formData['event_start'];
-      $event->event_end = $formData['event_end'];
-      $event->details = isset($formData['details']) && !is_null($formData['details']) ? $formData['details']:'';
-      $event->location = isset($formData['location']) && !is_null($formData['location']) ? $formData['location']:'';
-      $event->payment_required = isset($formData['requirements']['payment']) && $formData['requirements']['payment'] ? true:false;
-      $event->permission_slip_required = isset($formData['requirements']['permission_slip']) && $formData['requirements']['permission_slip'] ? true:false;
-      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
-      $event->room_required = isset($formData['requirements']['room']) && $formData['requirements']['room'] ? true:false;
-      $event->drivers_required = isset($formData['requirements']['drivers']) && $formData['requirements']['drivers'] ? true:false;
-      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
-      $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
-      if($event->save()) {
-        $limit = 10;
-        $totalNum = FrcPortal\Event::count();
-        $events = FrcPortal\Event::orderBy('event_start','DESC')->limit($limit)->get();
-        $data = array();
-        $data['results'] = $events;
-        $data['total'] = $totalNum;
-        $data['maxPage'] = ceil($totalNum/$limit);
-        $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$data);
-         //Send notifications
-        $host = getSettingsProp('env_url');
-        $msgData = array(
-          'slack' => array(
-            'title' => 'New Event Created',
-            'body' => 'Event '.$event->name.' has been created in the Team Portal.  Please go to '.$host.'/events/'.$event->event_id.' for more information and registration.'
-          ),
-          'email' => array(
-            'subject' => 'New Event Created',
-            'content' =>  'Event '.$event->name.' has been created in the Team Portal.  Please go to '.$host.'/events/'.$event->event_id.' for more information and registration.'
-          )
-        );
-        sendMassNotifications($type = 'new_event', $msgData);
-      } else {
-        $responseArr['msg'] = 'Something went wrong';
-      }
+    $args = $route->getArguments();
+    $event_id = $args['event_id'];
+    $event = FrcPortal\Event::find($event_id);
+    if(!is_null($event)) {
+      $request = $request->withAttribute('event', $event);
+      $response = $next($request, $response);
     } else {
-      $responseArr['msg'] = $event->name.' already exists';
+      $response = notFoundResponse($response, $msg = 'Event not found');
     }
-    $response = $response->withJson($responseArr);
-    return $response;
+  	return $response;
   });
 });
 

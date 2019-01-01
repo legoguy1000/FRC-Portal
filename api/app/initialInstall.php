@@ -1,15 +1,18 @@
 <?php
-require_once(__DIR__.'/includes.php');
-//use Illuminate\Database\Capsule\Manager as Capsule;
-//$version = VERSION;
+$root = __DIR__;
+require_once($root.'/functions/general_functions.php');
+require_once($root.'/version.php');
 
 $iniData = array();
-$question = 'This file will install and configure FRC Portal v'.VERSION.'.  Type "yes" to continue: ';
+$question = 'This file will install and configure FRC Portal v'.VERSION.'.  Type "yes/y" to continue: ';
 $line = clinput($question, $required = true);
-if($line != 'yes'){
+if($line != 'yes' && $line != 'y'){
     echo "Aborting!\n";
     exit;
 }
+shell_exec("composer install");
+shell_exec("composer dump-autoload");
+
 $db_data = array();
 $question = "Please input the MYSQL DB server (hostname or ip): ";
 $db_data['db_host'] = clinput($question, $required = true);
@@ -29,10 +32,11 @@ if (!file_exists('secured')) {
 }
 write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
 
-shell_exec("composer install");
-shell_exec("composer dump-autoload");
+if (!file_exists('favicons')) {
+  mkdir('../favicons');
+}
+require_once(__DIR__.'/includes.php');
 require_once('database/_CreateDatabase.php');
-
 //create Admin Account
 $email = 'admin@local.local';
 $password = bin2hex(openssl_random_pseudo_bytes(4));
@@ -44,8 +48,10 @@ $user = FrcPortal\User::create([
   'user_type' => 'Mentor',
   'admin' => true,
 ]);
-echo 'Admin Account Created:\n';
-echo 'Email: '.$email.'\n';
-echo 'Password: '.$password.'\n\n';
-
+echo 'Local Admin Account Created:' . PHP_EOL;
+echo 'Email: '.$email . PHP_EOL;
+echo 'Password: '.$password . PHP_EOL . PHP_EOL;
+echo  'Your portal has beeen installed.
+       Please go to the site and login using the local admin account created to configure and customize the site for your team.
+       You can find the settings under "Admin" -> "Site Settings".'.PHP_EOL.PHP_EOL;
 ?>

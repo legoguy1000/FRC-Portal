@@ -1,0 +1,82 @@
+<md-content>
+	<md-toolbar class="md-table-toolbar md-default" ng-hide="vm.filter.show">
+		<div class="md-toolbar-tools">
+			<span>Logs</span>
+			<div flex></div>
+			<md-button class="md-icon-button" ng-click="vm.showFilter()">
+				<md-icon>filter_list</md-icon>
+			</md-button>
+<!--			<md-button class="md-icon-button" ng-click="vm.showUserCategoriessModal($event)">
+				<md-tooltip md-direction="top">View/Edit User Categories</md-tooltip>
+				<md-icon>list</md-icon>
+			</md-button>-->
+			<md-button class="md-icon-button" ng-click="vm.getLogs()">
+				<md-icon>refresh</md-icon>
+			</md-button>
+			</div>
+	</md-toolbar>
+
+	<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
+		<div class="md-toolbar-tools">
+			<md-icon class="material-icons">search</md-icon>
+			<form flex name="filter.form" >
+				<input type="text" ng-model="vm.query.filter" placeholder="search" class="" aria-invalid="false">
+			</form>
+			<md-button class="md-icon-button" ng-click="vm.removeFilter()">
+				<md-icon class="material-icons">close</md-icon>
+			</md-button>
+		</div>
+	</md-toolbar>
+	<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
+		<div class="md-toolbar-tools" layout="row">
+			<md-input-container class="" flex>
+				<label>Log Level</label>
+				<md-icon class="material-icons">person</md-icon>
+				<md-select ng-model="vm.query.search.level">
+					<md-option value="" ></md-option>
+				</md-select>
+			</md-input-container>
+			<md-input-container class="" flex>
+				<label>User</label>
+				<md-icon class="material-icons">person</md-icon>
+				<md-select ng-model="vm.query.search.user_id" >
+					<md-option value="" ></md-option>
+				</md-select>
+			</md-input-container>
+		</div>
+	</md-toolbar>
+	<md-table-container>
+		<table md-table ng-model="selected" md-progress="vm.promise">
+			<thead md-head md-order="vm.query.order" md-on-reorder="vm.getLogs">
+				<tr md-row>
+					<th md-column md-order-by="created_at"><span>Timestamp</span></th>
+					<th md-column md-order-by="level" hide-xs><span>Log Level</span></th>
+					<th md-column md-order-by="route" hide-xs><span>Endpoint</span></th>
+					<th md-column md-order-by="user_id" hide-xs hide-sm><span>User</span></th>
+					<th md-column hide-xs hide-sm><span>Message</span></th>
+					<th md-column hide-xs hide-sm><span>IP Address</span></th>
+				</tr>
+			</thead>
+			<tbody md-body>
+				<tr md-row ng-repeat="log in vm.logs">
+					<td md-cell>
+						<span>{{log.timestamp.long_date}} {{log.timestamp.time_formatted}}</span>
+					</td>
+					<td md-cell>
+						<span>{{log.level}}</span>
+					</td>
+					<td md-cell>
+						<span>{{log.route}}</span>
+					</td>
+					<td md-cell hide-xs><span>{{log.user.full_name}}</span></td>
+					<td md-cell hide-xs hide-sm><span style="white-space: pre-wrap;">{{log.message}}</span></td>
+					<td md-cell>
+						<span>{{log.ip_address}}</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</md-table-container>
+
+	<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.total}}" md-page-select md-boundary-links md-on-paginate="vm.getLogs"></md-table-pagination>
+</md-content>

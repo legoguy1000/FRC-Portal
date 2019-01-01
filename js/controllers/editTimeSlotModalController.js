@@ -13,6 +13,9 @@ function editTimeSlotModalController($log,$element,$mdDialog,$scope,eventInfo,ne
 		$mdDialog.cancel();
 	}
 
+	vm.min_date = moment(vm.eventInfo.date.start.date_time_raw);
+	vm.max_date = moment(vm.eventInfo.date.end.date_time_raw);
+
 	vm.submit = function() {
 		vm.loading = true;
 		var data = {

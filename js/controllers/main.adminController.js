@@ -39,6 +39,10 @@ function mainAdminController($log,$timeout, $q, $scope, $state, eventsService, $
         name: 'Site Settings',
         icon: 'dashboard',
         sref: 'main.admin.settings'
+      }, {
+        name: 'Logs',
+        icon: 'dashboard',
+        sref: 'main.admin.logs'
       }, /* {
         name: 'Exempt Hours',
         icon: 'dashboard',

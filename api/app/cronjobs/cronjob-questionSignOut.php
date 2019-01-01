@@ -9,7 +9,7 @@ if((date('N') <= 5 && date('H') == 21) || (date('N') > 5 && date('H') == 18)) {
 	$where = ' WHERE time_out IS NULL AND time_in > '.db_quote($date);
 	$query = userQuery($sel, $joins, $where, $order='');
 	$result = db_select_user($query); */
-	$result = FrcPortal\MeetingHour::with('users')->whereNull('time_out')->where('time_in','>',$date)->get();
+	$result = FrcPortal\MeetingHour::with('user')->whereNull('time_out')->where('time_in','>',$date)->get();
 	if(count($result) > 0) {
 		foreach($result as $hour) {
 			$user = $hour->users;

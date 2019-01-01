@@ -3,10 +3,10 @@ angular.module('FrcPortal')
 	mainAdminSchoolsController
 ]);
 function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService, $mdDialog, $log) {
-     var vm = this;
+   var vm = this;
 
 
-
+	vm.showSchoolModal = schoolModal;
 	vm.selected = [];
 	vm.filter = {
 		show: false,
@@ -60,7 +60,17 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 		});
 	};
 
-	/*var newSchoolModal =  function (ev) {
+	vm.deleteSchool = function (school_id) {
+		vm.promise = schoolsService.deleteSchool(school_id).then(function(response){
+			if(response.status) {
+				vm.schools = response.data;
+				vm.total = response.total;
+				vm.maxPage = response.maxPage;
+			}
+		});
+	};
+
+	function schoolModal(ev, newSchool, index) {
 		$mdDialog.show({
 			controller: newSchoolModalController,
 			controllerAs: 'vm',
@@ -70,17 +80,23 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 			clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
 			locals: {
-				userInfo: {},
+				schoolInfo: {
+					new: newSchool,
+					data: newSchool ? {} : vm.schools[index],
+				},
 			}
 		})
 		.then(function(response) {
-			vm.schools = response.data.data;
-			vm.total = response.data.total;
-			vm.maxPage = response.data.maxPage;
-			$log.info('asdf');
+			if(newSchool) {
+				vm.schools = response.data.results;
+				vm.total = response.data.total;
+				vm.maxPage = response.data.maxPage;
+			} else {
+				vm.schools[index] = response.data;
+			}
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
-	} */
+	}
 
 }

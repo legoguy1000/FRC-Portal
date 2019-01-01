@@ -17,6 +17,9 @@
 			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('notification')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'notification'}">
 		    <p>Notification Settings</p>
 		  </md-list-item>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('cronjob')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'cronjob'}">
+		    <p>Scheduled Tasks Settings</p>
+		  </md-list-item>
 			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('other')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'other'}">
 		    <p>Other Settings</p>
 		  </md-list-item>
@@ -57,6 +60,10 @@
 			<md-input-container flex required>
 				<label>Team Logo URL</label>
 				<input ng-model="vm.settings.team.team_logo_url">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Google Form URL</label>
+				<input ng-model="vm.settings.team.google_form_url">
 			</md-input-container>
 		<!--	<div flex label="Text Background" md-color-picker has-backdrop="true" click-outside-to-close="true" random="true" ng-model="textBackground" open-on-input="true"></div>-->
 			<div
@@ -142,6 +149,40 @@
 					</md-input-container>
 				</div>
 			</div>
+			<div layout-gt-sm="row">
+				<div>
+					<md-switch md-invert aria-label="Enable Github Login" ng-model="vm.settings.login.github_login_enable" class="md-warn">
+						Enable Github Login
+					</md-switch>
+				</div>
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.github_login_enable">
+					<md-input-container flex ng-show="vm.settings.login.github_login_enable">
+						<label>Github OAuth2 Client ID</label>
+						<input ng-model="vm.settings.login.github_oauth_client_id" ng-disabled="!vm.settings.login.github_login_enable">
+					</md-input-container>
+					<md-input-container flex ng-show="vm.settings.login.github_login_enable">
+						<label>Github OAuth2 Client Secret</label>
+						<input ng-model="vm.settings.login.github_oauth_client_secret" ng-disabled="!vm.settings.login.github_login_enable">
+					</md-input-container>
+				</div>
+			</div>
+			<div layout-gt-sm="row">
+				<div>
+					<md-switch md-invert aria-label="Enable Amazon Login" ng-model="vm.settings.login.amazon_login_enable" class="md-warn">
+						Enable Amazon Login
+					</md-switch>
+				</div>
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.amazon_login_enable">
+					<md-input-container flex ng-show="vm.settings.login.amazon_login_enable">
+						<label>Amazon OAuth2 Client ID</label>
+						<input ng-model="vm.settings.login.amazon_oauth_client_id" ng-disabled="!vm.settings.login.amazon_login_enable">
+					</md-input-container>
+					<md-input-container flex ng-show="vm.settings.login.amazon_login_enable">
+						<label>Amazon OAuth2 Client Secret</label>
+						<input ng-model="vm.settings.login.amazon_oauth_client_secret" ng-disabled="!vm.settings.login.amazon_login_enable">
+					</md-input-container>
+				</div>
+			</div>
 			<div>
 				<div>
 					Reset
@@ -211,14 +252,27 @@
 				<label>Google Calendar ID</label>
 				<input ng-model="vm.settings.other.google_calendar_id">
 			</md-input-container>
-			<md-input-container flex>
-				<label>Google Team Drive ID</label>
-				<input ng-model="vm.settings.other.google_drive_id">
-			</md-input-container>
+			<div layout="column" layout-gt-sm="row">
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Membership Form Name</label>
+						<input ng-model="vm.settings.other.membership_form_name">
+						<span class="hint">###YEAR### & ###YEAR-1### can be used as variables.  Default is "###YEAR### Membership (Responses)"</span>
+					</md-input-container>
+				</div>
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Google Team Drive ID</label>
+						<input ng-model="vm.settings.other.google_drive_id">
+						<span class="hint">Optional if Google Form responses are stored within a Google Team Drive</span>
+					</md-input-container>
+				</div>
+			</div>
 			<div flex layout="row" layout-align="start center">
 				<md-input-container flex>
 					<label>Google Service Account</label>
 					<input ng-model="vm.serviceAccountCredentials.client_email" readonly disabled>
+					<span class="hint">Files must be shared with service account either directly of via folder AND/OR be a member of the Google Team Drive (if applicable)</span>
 				</md-input-container>
 				<md-button class="md-icon-button" ngf-select="vm.uploadSAFile($file)" ngf-accept="'.json'" ngf-max-size="2MB" ngf-model-invalid="errorFile">
 					<md-tooltip md-direction="top">Upload New Service Account File</md-tooltip>
@@ -234,6 +288,31 @@
 					 ng-model="vm.school_month_end_full">
 				</input>
 			</md-input-container>
+			<md-input-container flex>
+				<label>Google Analytics ID</label>
+				<input ng-model="vm.settings.other.google_analytics_id">
+				<span class="hint">Optional if you want to use Google Analytics</span>
+			</md-input-container>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'cronjob'" class="layout-padding">
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-changeUserStatus']" class="md-warn">
+				Automatically change user status after graduation
+			</md-switch>
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-importSlackProfiles']" class="md-warn">
+				Automatically import and link Slack information with user data
+			</md-switch>
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-pollMembershipFormResponses']" class="md-warn">
+				Automatically pull reponses from membership form
+			</md-switch>
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-updateEventsFromGoogle']" class="md-warn">
+				Automatically update events from Google Calendar
+			</md-switch>
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-tooLong']" class="md-warn">
+				Automatically remove sign-ins that haven't signed out after 12 hours
+			</md-switch>
+			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-endOfDayHoursToSlack']" class="md-warn">
+				Automatically send Slack notification at 9pm local with the numberof hours completed that day
+			</md-switch>
 		</div>
 		<div flex layout="row">
 			<span flex></span>

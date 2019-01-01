@@ -1,11 +1,12 @@
 angular.module('FrcPortal')
-.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$auth', '$scope', 'signinService', '$mdDialog', '$interval',
+.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$auth', '$scope', 'signinService', '$mdDialog', '$interval','$sce',
 	mainSigninController
 ]);
-function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinService, $mdDialog, $interval) {
+function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinService, $mdDialog, $interval,$sce) {
     var vm = this;
 
 	vm.pin = '';
+	vm.qrCode = null;
 	vm.selected_user = [];
 	vm.users = [];
 	vm.limitOptions = [5,10,25,50,100];
@@ -15,8 +16,12 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		order: 'lname',
 		page: 1
 	};
-
+	vm.loading = false;
+	vm.signInAuthed = signinService.isAuthed();
+	
+	var eventSource;
 	var signInBool = true;
+	var tokenIntervalTime = 28000;
 
 	var tick = function() {
 		vm.clock = Date.now();
@@ -24,7 +29,27 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	tick();
 	$interval(tick, 1000);
 
-	vm.signInAuthed = signinService.isAuthed();
+	var getToken = function() {
+		vm.loading = true;
+		var data = {};
+		var tok = signinService.getToken();
+		if(tok != '') {
+			data.token = tok
+		}
+		signinService.generateSignInToken(data).then(function(response) {
+			vm.loading = false;
+			signinService.saveToken(response.signin_token);
+			//vm.qrCode = response.qr_code;
+			vm.qrCodeUrl = vm.genQrCodeUrl();
+			vm.signInAuthed = signinService.isAuthed();
+		});
+	}
+	if(vm.signInAuthed && vm.qrCode != null) {
+		//getToken();
+		vm.tokenInterval = $interval(getToken, tokenIntervalTime);
+	}
+
+
 	vm.getUsers = function() {
 		vm.promise = signinService.signInUserList().then(function(response) {
 			vm.users = response;
@@ -32,7 +57,16 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	}
 	vm.getUsers();
 
-	//vm.signInAuthed = signinService.isAuthed();
+
+	vm.genQrCodeUrl = function() {
+		var tok = signinService.getToken();
+		if(tok != '') {
+			return $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+tok+'&chs=360x360&choe=UTF-8&chld=L|1');
+		}
+		return '';
+	}
+
+	vm.qrCodeUrl = vm.genQrCodeUrl();
 	vm.authorizeSignIn = function() {
 		var data = {
 			auth_token: null,
@@ -67,6 +101,10 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			$mdDialog.show(dialog);
 			if(response.status && response.signin_token != undefined) {
 				signinService.saveToken(response.signin_token);
+				//vm.qrCode = response.qr_code;
+				vm.qrCodeUrl = vm.genQrCodeUrl();
+				vm.tokenInterval = $interval(getToken, tokenIntervalTime);
+				//startEventSource();
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
@@ -77,10 +115,47 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		signinService.deauthorizeSignIn(data).then(function(response) {
 			if(response.status == true) {
 				signinService.logout();
+				//vm.genQrCodeUrl();
+				vm.qr_code = null;
+				$interval.cancel(vm.tokenInterval);
+				//console.log('Connection closed');
+				//eventSource.close();
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
 	}
+
+	function startEventSource() {
+		if(eventSource != undefined) {
+			eventSource.close();
+		}
+		/*console.log('start ES');
+		eventSource = new EventSource("api/sse.php");
+		eventSource.addEventListener("open", function (event) {
+			if(typeof event.data !== 'undefined'){
+				console.log(event.data);
+			}
+		});
+		eventSource.addEventListener("message", function (event) {
+			if(typeof event.data !== 'undefined'){
+				console.log('Last ID: '+event.lastEventId);
+				console.log('CUr ID: '+event.id);
+				vm.users = JSON.parse(event.data);
+			}
+		});
+		eventSource.addEventListener("error", function (event) {
+			if(typeof event.data !== 'undefined'){
+				console.log(event.data);
+			}
+		});*/
+	}
+
+	if(vm.signInAuthed) {
+		startEventSource();
+	} else if(!vm.signInAuthed && eventSource != undefined) {
+		eventSource.close();
+	}
+
 
 /*
 	vm.signinOut = function($event, numbers) {

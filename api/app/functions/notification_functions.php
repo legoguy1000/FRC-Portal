@@ -20,66 +20,7 @@ function getNotificationOptions() {
 	return $data;
 }
 
-function getNotificationPreferencesByUser($user_id) {
-	$data = getNotificationOptions();
-	$result = FrcPortal\NotificationPreference::where('user_id',$user_id)->get();
-	if(count($result) > 0) {
-		foreach($result as $re) {
-			$m = $re['method'];
-			$t = $re['type'];
-			$data[$m][$t] = true;
-		}
-	}
-	return $data;
-}
-
-function setDefaultNotifications($user_id) {
-	$data = getNotificationOptions();
-	$queryArr = array();
-	$queryStr	 = '';
-	foreach($data as $meth=>$types) {
-		foreach($types as $type) {
-			$note = new FrcPortal\NotificationPreference();
-			$note->user_id = $user_id;
-			$note->method = $meth;
-			$note->type = $type;
-			$note->save();
-		}
-	}
-}
-
-function sendUserNotification($user_id, $type, $msgData) {
-	global $db;
-
-	$preferences = getNotificationPreferencesByUser($user_id);
-
-	//$preferences = array('push' => true, 'email' => false);
-	if($preferences['email'][$type] == true) {
-		$msg = $msgData['email'];
-		$subject = $msg['subject'];
-		$content = $msg['content'];
-		$userData = $msg['userData'];
-		$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
-		emailUser($userData,$subject,$content,$attachments);
-	}
-	if($preferences['slack'][$type] == true) {
-		$msg = $msgData['slack'];
-		$title = $msg['title'];
-		$body = $msg['body'];
-		$tag = '';
-		$note_id = uniqid();
-		//$query = 'INSERT INTO notifications (note_id,user_id,message) VALUES ('.db_quote($note_id).','.db_quote($user_id).','.db_quote($body).')';
-		//$result = db_query($query);
-		//if($result) {
-			slackMessageToUser($user_id, $body);
-			//sendPushNotificationByUser($user_id, $title, $body, $note_id);
-		//}
-	}
-}
-
 function sendMassNotifications($type, $msgData) {
-	global $db;
-
 	$users = FrcPortal\NotificationPreference::where('type',$type)->get();
 	foreach($users as $user) {
 		if($user['method'] == 'email') {

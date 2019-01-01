@@ -17,6 +17,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.toggleRightSidebar = toggleRightSidebar;
 	main.loginModal = loginModal;
 	main.newUserModal = newUserModal;
+	main.signInModal = signInModal;
 	main.isAuthed = authed;
 	main.notifications = [];
 	main.signInAuthed = signinService.isAuthed();
@@ -40,7 +41,9 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$ocLazyLoad.load('js/controllers/userCategoriesModalController.js');
 	$ocLazyLoad.load('js/controllers/serviceAccountModalController.js');
 	$ocLazyLoad.load('js/controllers/googleFormMapModalController.js');
-  $ocLazyLoad.load('js/controllers/signInModalController.js');
+	$ocLazyLoad.load('js/controllers/signInModalController.js');
+  $ocLazyLoad.load('https://rawgit.com/schmich/instascan-builds/master/instascan.min.js');
+	$ocLazyLoad.load('js/controllers/newSchoolModalController.js');
 
 	navService
 	  .loadAllItems()
@@ -115,14 +118,29 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		});
 	}
 
+	function signInModal(ev) {
+		$mdDialog.show({
+			controller: signInModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/signInModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			//clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				userInfo: main.userInfo,
+			},
+		});
+	}
 
 	main.initServiceWorkerState = function() {
 		console.log('Initializing');
-		navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+		navigator.serviceWorker.ready.then(function() {
 			console.log('Service Worker Ready');
-				return true;
-			})
-			.catch(function(err) {	});
+		})
+		.catch(function(err) {
+			consol.log(err);
+		});
 	}
 
 	main.checkServiceWorker = function() {
@@ -147,13 +165,14 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	var loginActions = function() {
 		main.isAuthed = $auth.isAuthenticated();
 		main.userInfo = angular.fromJson(window.localStorage['userInfo']);
-		main.checkServiceWorker();
 		//main.StartEventSource();
 		if(main.userInfo.first_login) {
 			//newUserModal();
 			$state.go('main.profile',{'firstLogin': true});
 		}
 	}
+
+	main.checkServiceWorker();
 
 	if(main.isAuthed) {
 		console.info('I\'m Authed');

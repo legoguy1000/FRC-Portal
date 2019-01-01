@@ -28,6 +28,7 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 			timeSlotInfo.time_end_moment = moment(timeSlotInfo.time_end);
 			timeSlotInfo.time_start_moment = moment(timeSlotInfo.time_start);
 		}
+		console.log(timeSlotInfo);
 		$mdDialog.show({
 			controller: editTimeSlotModalController,
 			controllerAs: 'vm',
@@ -40,7 +41,7 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 			locals: {
 				eventInfo: vm.eventInfo,
 				newTS: newTS,
-				timeSlotInfo: timeSlotInfo
+				timeSlotInfo: angular.copy(timeSlotInfo)
 			}
 		})
 		.then(function(response) {

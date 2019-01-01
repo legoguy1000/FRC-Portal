@@ -146,6 +146,26 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		});
 	}
 
+	vm.deleteUserLinkedAccount = function(auth_id) {
+		vm.loading.linkedAccounts = true;
+		var data = {
+			user_id: $scope.main.userInfo.user_id,
+			auth_id: auth_id
+		}
+		usersService.deleteUserLinkedAccount(data).then(function(response){
+			if(response.status) {
+				vm.linkedAccounts = response.data;
+			}
+			vm.loading.linkedAccounts = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+		});
+	}
+
 	vm.showSeasonHoursGraph = function(ev,year) {
 		generalService.showSeasonHoursGraph(ev, $scope.main.userInfo.user_id, year);
 		/*$mdDialog.show({

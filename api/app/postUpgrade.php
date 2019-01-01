@@ -128,6 +128,39 @@ if($version >= '2.11.2') {
   }
 }
 
+/**
+* 2.13.0
+**/
+if($version >= '2.12.0') {
+  if(Capsule::schema()->hasTable('meeting_hours')) {
+    if(!Capsule::schema()->hasColumn('meeting_hours','created_at') && !Capsule::schema()->hasColumn('meeting_hours','updated_at')) {
+      try {
+        Capsule::schema()->table('meeting_hours', function ($table) {
+          $table->timestamps();
+        });
+      } catch (Exception $e) {
+        //Exception will be logged in Monolog
+      }
+    }
+  }
+  if(!Capsule::schema()->hasTable('logs')) {
+    require_once('database/Logs.php');
+    Capsule::schema()->table('logs', function ($table) {
+      $table->foreign('user_id')->references('user_id')->on('users')->onDelete('set null')->onUpdate('cascade');
+    });
+  }
+  if(Capsule::schema()->hasTable('settings')) {
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'google_form_url'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'membership_form_name'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'google_analytics_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_login_enable'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_oauth_client_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_oauth_client_secret'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_login_enable'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_oauth_client_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_oauth_client_secret'], ['value' => '']);
+  }
+}
 
 //Create User Category Tables
 /*

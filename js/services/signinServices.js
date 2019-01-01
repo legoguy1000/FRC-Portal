@@ -60,5 +60,17 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		signInOutQR: function (formData) {
+			return $http.post('api/hours/signIn/qr',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		generateSignInToken: function (formData) {
+			return $http.post('api/hours/signIn/token',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

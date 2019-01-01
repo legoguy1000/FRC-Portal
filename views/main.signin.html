@@ -1,4 +1,4 @@
-<div flex layout="column" layout-gt-sm="row" ng-keydown="vm.keyDown($event)">
+<div flex layout="column" layout-gt-sm="row">
 	<div flex>
 		<md-toolbar class="md-table-toolbar" ng-hide="vm.filter.show">
 			<div class="md-toolbar-tools">
@@ -49,7 +49,7 @@
 					</tr>
 				</tbody>
 			</table>
-			<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.users.length}}" md-page-select md-boundary-links></md-table-pagination></md-content>
+			<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.users.length}}" md-page-select md-boundary-links></md-table-pagination>
 		</md-table-container>
 		<div>
 			<h3>Sign In Instructions: </h3>
@@ -58,27 +58,25 @@
 				<li>Type your 4-8 digit PIN</li>
 				<li>Press the submit button</li>
 			</ol>
-			<div>* If your name is not listed, Please fill out the Team 2363 Join Team Form (<a href="http://join.team2363.org" target="_blank">Click Here</a>).</div>
-			<div>	 Students: Your default PIN will be your student ID that you entered into the Team 2363 Join Team Form.</div>
+			<div>* If your name is not listed, Please fill out the Team {{main.configItems.team_number}} Google Form (<a ng-href="{{main.configItems.google_form_url}}" target="_blank">Click Here</a>).</div>
+			<div>	 Students: Your default PIN will be your student ID that you entered into the Team {{main.configItems.team_number}} Google Form.</div>
 			<div>  Mentors/Others: Please log in to the portal by clicking the "Log In" button in the top rght corner.  Please select one of the login providers (It does not have to be your team2363.org email).  Upon successful log in, please complete the new user form.  Here you will set your 4-8 digit PIN number.</div>
 		</div>
 	</div>
-	<!--
-	<div flex class="backgroundPrimary">
+
+	<div class="backgroundPrimary" ng-show="vm.signInAuthed">
 		<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">
 			<div class="" style="color: colorAccent">
 				<h3>{{ vm.clock | date:'medium'}}</h3>
 			</div>
 		</md-toolbar>
-		<div>
-			<md-list ng-cloak>
-				<md-list-item ng-repeat="user in vm.users | filter: vm.filter.search | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" ng-click="vm.showSignInModal(user, $event)" class="noright">
-			    <img ng-src="{{user.profile_image}}" class="md-avatar" alt="" ng-if="user.profile_image"/>
-			    <div>{{ user.full_name }}</div>
-			  </md-list-item>
-			</md-list>
+		<div ng-hide="vm.loading">
+			<img ng-src="{{vm.qrCodeUrl}}" alt='qr code'>
 		</div>
-	</div> -->
+		<div layout="row" layout-sm="column" layout-align="space-around" ng-show="vm.loading">
+			<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+		</div>
+	</div>
 	<!--
 	<div flex class="backgroundPrimary">
 		<md-toolbar flex style="height:30px;" class="md-accent colorPrimary" layout="row" layout-align="center center">

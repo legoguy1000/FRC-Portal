@@ -24,6 +24,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		'login': {},
 		'notification': {},
 		'other': {},
+		'cronjob': {},
 	};
 	vm.serviceAccountCredentials = {};
 	vm.timezones = [];
@@ -52,6 +53,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 	vm.getSettingBySection('login');
 	vm.getSettingBySection('notification');
 	vm.getSettingBySection('other');
+	vm.getSettingBySection('cronjob');
 
 	vm.getAllTimezones = function () {
 		settingsService.getAllTimezones().then(function(response){
@@ -148,7 +150,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 	 * Create filter function for a query string
 	 */
 	function createFilterFor(query) {
-		var lowercaseQuery = angular.lowercase(query);
+		var lowercaseQuery = query.toLowerCase();
 
 		return function filterFn(tz) {
 			return (tz.toLowerCase().indexOf(lowercaseQuery) != -1);

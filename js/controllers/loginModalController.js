@@ -6,9 +6,10 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast) {
 	var vm = this;
 
 	vm.configItems = configItems;
-
+	vm.loading = false;
 	vm.loginForm = {};
 	vm.login = function () {
+		vm.loading = true;
 		$auth.login(vm.loginForm).then(function(response) {
 			$mdToast.show(
 				$mdToast.simple()
@@ -16,6 +17,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast) {
 					.position('top right')
 					.hideDelay(3000)
 			);
+			vm.loading = false;
 			var authed = $auth.isAuthenticated();
 			if(authed) {
 				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);
@@ -29,6 +31,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast) {
   };
 
 	vm.authenticate = function(provider) {
+		vm.loading = true;
 		$auth.authenticate(provider).then(function(response) {
 		//	toastr[response.data.type](response.data.msg, 'Login');
 			//alert(response.data.msg)
@@ -38,6 +41,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast) {
 					.position('top right')
 					.hideDelay(3000)
 			);
+			vm.loading = false;
 			var authed = $auth.isAuthenticated();
 			if(authed) {
 				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);

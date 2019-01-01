@@ -97,6 +97,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 		vm.loading = true;
 		eventsService.getEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
+		}).finally(function() {
 			vm.loading = false;
 		});
 	};
@@ -105,7 +106,9 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 
 	vm.getEventRequirements = function() {
 		vm.promise = eventsService.getEventRequirements(vm.event_id).then(function(response){
-			vm.users = response.data;
+			if(response.status) {
+				vm.users = response.data;
+			}
 		});
 	}
 	vm.getEventRequirements();
@@ -120,14 +123,17 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	vm.syncGoogleCalEvent = function () {
 		vm.loading = true;
 		eventsService.syncGoogleCalEvent(vm.event_id).then(function(response){
-			vm.event = response.data;
-			vm.loading = false;
+			if(response.status) {
+				vm.event = response.data;
+			}
 			$mdToast.show(
 	      $mdToast.simple()
 	        .textContent(response.msg)
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
+		}).finally(function() {
+			vm.loading = false;
 		});
 	};
 
@@ -149,7 +155,6 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			}
 		};
 		eventsService.updateEvent(data).then(function(response){
-			vm.loading = false;
 			if(response.status) {
 				vm.event = response.data;
 			}
@@ -159,6 +164,8 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
+		}).finally(function() {
+			vm.loading = false;
 		});
 	};
 
@@ -184,6 +191,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 						$state.go('main.admin.events');
 					}, function() {});
 				}
+			}).finally(function() {
 				vm.loading = false;
 			});
 		}, function() {});
@@ -247,6 +255,7 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 				eventInfo: {
 					'event_id': vm.event_id,
 					'name':vm.event.name,
+					'date': vm.event.date,
 				},
 				admin: true,
 			}

@@ -22,11 +22,20 @@ class Auth {
   * @var null
   */
   protected static $token = NULL;
+  /**
+  * @var null
+  */
+  protected static $ip_address = NULL;
+  /**
+  * @var null
+  */
+  protected static $route = NULL;
 
   public static function setCurrentUser($user_id) {
     self::$currentuser = $user_id;
     $user = User::with(['school'])->find($user_id);
     if(!is_null($user)) {
+      self::$isAuthenticated = true;
       self::$user = $user;
       return true;
     }
@@ -51,4 +60,22 @@ class Auth {
     return self::$token;
   }
 
+  public static function isAuthenticated() {
+    return self::$isAuthenticated;
+  }
+
+  public static function setClientIP($ip) {
+    self::$ip_address = $ip;
+    return true;
+  }
+  public static function getClientIP() {
+    return self::$ip_address;
+  }
+  public static function setRoute($r) {
+    self::$route = $r;
+    return true;
+  }
+  public static function getRoute() {
+    return self::$route;
+  }
 }

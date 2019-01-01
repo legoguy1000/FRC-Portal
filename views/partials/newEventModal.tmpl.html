@@ -1,4 +1,4 @@
-<md-dialog aria-label="New Event" style="" layout="column" flex="50" >
+<md-dialog aria-label="New Event" style="" layout="column" flex="50">
 	<!--<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.addEvent()">-->
 		<md-toolbar layout="row">
 		  <div class="md-toolbar-tools">
@@ -15,7 +15,7 @@
 		  </div>
 		</md-toolbar>
 		<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.addEvent()">
-			<md-dialog-content layout="column" class="md-margin">
+			<md-dialog-content layout-wrap class="md-margin" style="overflow-y: scroll;">
 				<div layout="row">
 					<md-input-container flex class="md-icon-float md-block">
 						<label>Event Name</label>
@@ -62,20 +62,8 @@
 							<div class="hint">This is autopopulated from the Google Calendar.  Update the Google calendar for changes.</div>
 						</md-input-container>
 				</div>
-				<div layout="row">
-					<!--<md-input-container flex class="md-icon-float md-block" >
-							<label>Details</label>
-							<md-icon md-font-library="material-icons">event_note</md-icon>
-							<textarea ng-model="vm.data.details" required></textarea>
-						</md-input-container> -->
-						<md-input-container flex class="md-icon-float md-block md-icon-left">
-			        <label>Details</label>
-							<md-icon md-font-library="material-icons">event_note</md-icon>
-			        <div ng-bind-html="vm.data.details | linky:'_blank'" style="margin-top: 30px; white-space: pre-wrap;"></div>
-			      </md-input-container>
-				</div>
 				<div layout="column">
-					<div layout="row">
+					<div>
 						Event Requirements
 					</div>
 					<div layout="row" layout-wrap>
@@ -98,6 +86,18 @@
 					   	Time Slots Required
 					  </md-switch>
 					</div>
+				</div>
+				<div layout="row">
+					<!--<md-input-container flex class="md-icon-float md-block" >
+							<label>Details</label>
+							<md-icon md-font-library="material-icons">event_note</md-icon>
+							<textarea ng-model="vm.data.details" required></textarea>
+						</md-input-container> -->
+						<md-input-container flex class="md-icon-float md-block md-icon-left">
+			        <label>Details</label>
+							<md-icon md-font-library="material-icons">event_note</md-icon>
+			        <div ng-bind-html="vm.data.details | linky:'_blank'" style="margin-top: 30px; white-space: pre-wrap;"></div>
+			      </md-input-container>
 				</div>
 				<!--
 				<div layout="column">

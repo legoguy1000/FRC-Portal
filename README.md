@@ -2,6 +2,24 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
+Version 2.13.0
+* Add/edit/delete school
+* Fixed installer
+* fix various typos
+* Remove customized items from <head>
+* Update composer dependencies
+* Remove last traces of hardcoded "Team 2363"
+* Add exceptions to functions
+* Prevent overlapping time slots
+* Removed old functions
+* Add Middleware to always pull token even if not required
+* Added logic to limit information for event endpoint if not authed
+* Added public /events page to view all events
+* Prevent event registration changes after event starts.  Admins can still make changes in admin section.
+* Add logging and view under admin
+* Add route names
+* Add Github and Amazon Login providers
+
 Version 2.12.0
 * Simplified some code
 * Upgraded Facebook API to 3.1
@@ -80,7 +98,6 @@ Version 2.7.0
 ### Prerequisites
 * PHP 7.0 or greater
 * MySQL
-* Composer
 *
 
 ### Installing
@@ -88,19 +105,12 @@ Clone Git Repo
 ```
 git clone https://github.com/legoguy1000/FRC-Portal.git
 ```
-Create a "secured" folder in "/api/app"
-```
-mkdir secured/
-```
-Copy config.example.ini to "secured"
-```
-cp config.example.ini secured/config.ini
-```
-Edit config.ini file with database credentials (/api/app/secured/)
 Run initalInstall.php script located in (/api/app/)
 ```
 php initalInstall.php
 ```
+Go to https://realfavicongenerator.net/ and generate your favicons.  place files in /favicons/.
+
 To upgrade an existing install pull the latest version from git and run the postUpgrade.php script
 ```
 git pull

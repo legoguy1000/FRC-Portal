@@ -34,6 +34,13 @@ function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,
 			if(response.status) {
 					vm.googleEvents.data = response.data.results;
 					vm.googleEvents.total = response.data.count;
+			} else {
+				$mdToast.show(
+					$mdToast.simple()
+						.textContent(response.msg)
+						.position('top right')
+						.hideDelay(3000)
+				);
 			}
 		});
 	}

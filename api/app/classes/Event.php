@@ -48,6 +48,10 @@ class Event extends Eloquent {
     //'single_month' => 'boolean',
   ];
 
+  public function newQuery() {
+      return parent::newQuery()->select('events.*', DB::raw('YEAR(events.event_start) AS year'));
+  }
+
   public function save($options = array()) {
     if(is_null($this->event_id)) {
       $this->event_id = uniqid();
@@ -110,10 +114,9 @@ class Event extends Eloquent {
   public function getRegistrationDeadlineGoogleEventAttribute() {
     $return = null;
     if(!is_null($this->attributes['registration_deadline_gcalid'])) {
-      $event = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
-      if($event['status']) {
-        $return = $event['data'];
-      }
+      try {
+        //$return = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
+      } catch (Exception $e) {}
     }
     return $return;
   }
