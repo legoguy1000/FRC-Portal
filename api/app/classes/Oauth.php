@@ -49,7 +49,7 @@ class Oauth extends Eloquent {
    }
 
    public function getTimestampUnixAttribute() {
-     $date = new DateTime($this->attributes['created_at']);
+     $date = new DateTime($this->attributes['updated_at']);
      return $date->format('U');
    }
 }
