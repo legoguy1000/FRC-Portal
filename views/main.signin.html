@@ -39,8 +39,8 @@
 							</md-list-item>
 						</td>
 						<!-- <td md-cell>{{user.user_type}}</td> -->
-						<td md-cell><span ng-if="user.last_sign_in.time_in">{{user.last_sign_in.time_in_unix*1000 | date:'medium'}}</span></td>
-						<td md-cell><span ng-if="user.last_sign_in.time_out">{{user.last_sign_in.time_out_unix*1000 | date:'medium'}}</span></td>
+						<td md-cell><span ng-if="user.last_sign_in.time_in">{{user.last_sign_in.date.time_in.full_formatted}}</span></td>
+						<td md-cell><span ng-if="user.last_sign_in.time_out">{{user.last_sign_in.date.time_out.full_formatted}}</span></td>
 						<td md-cell>
 							<span ng-if="user.build_season">{{user.annual_requirements.build_season_hours}}</span>
 							<span ng-if="user.competition_season">{{user.annual_requirements.competition_season_hours}}</span>
