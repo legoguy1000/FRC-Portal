@@ -203,7 +203,7 @@ $app->group('/auth', function () {
       'grant_type'=>'authorization_code',
       'client_secret'=>$secret,
     );
-  	$result = $client->request('POST', 'user', array(
+  	$result = $client->request('POST', 'auth/o2/token', array(
   		'query' => $params
   	));
   	$code = $result->getStatusCode(); // 200
