@@ -157,7 +157,7 @@ $app->group('/users', function () {
       if(strlen($formData['pin']) < 4 || strlen($formData['pin']) > 8) {
         return badRequestResponse($response, $msg = 'PIN must be between 4 to 8 numbers');
       }
-      if($currentPIN == hash('SHA256', $formData['pin'])) {
+      if($user->signin_pin == hash('SHA256', $formData['pin'])) {
         return badRequestResponse($response, $msg = 'PIN must be changed to a different number');
       }
       $user->signin_pin = hash('SHA256', $pin);
