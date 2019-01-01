@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('newEventModalController', ['$log','$element','$mdDialog', '$scope', 'usersService', 'schoolsService', 'seasonsService','$mdToast',
+.controller('newEventModalController', ['$log','$element','$mdDialog', '$scope', 'usersService', 'schoolsService', 'seasonsService','$mdToast','$sce',
 	newEventModalController
 ]);
-function newEventModalController($log,$element,$mdDialog,$scope,usersService,eventsService,seasonsService,$mdToast) {
+function newEventModalController($log,$element,$mdDialog,$scope,usersService,eventsService,seasonsService,$mdToast,$sce) {
 	var vm = this;
 
 	vm.cancel = function() {
@@ -11,6 +11,7 @@ function newEventModalController($log,$element,$mdDialog,$scope,usersService,eve
 	//vm.data = eventData;
 	vm.data = null;
 	vm.oldData = null;
+	vm.htmlDetails = '';
 	vm.startDate = moment();
 	vm.loading = {
 		searchGoogle: false,
@@ -36,6 +37,7 @@ function newEventModalController($log,$element,$mdDialog,$scope,usersService,eve
 		})
 		.then(function(event) {
 			vm.data = event;
+			vm.htmlDetails = $sce.trustAsHtml(vm.data.details);
 		}, function() {
 			if(vm.oldData == null) {
 				vm.cancel();
