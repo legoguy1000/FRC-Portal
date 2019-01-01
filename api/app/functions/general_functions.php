@@ -430,4 +430,23 @@ function formatMicrosoftLoginUserData($me) {
 	return $userData;
 }
 
+function formatAmazonLoginUserData($me) {
+	$email = $me['email'];
+	$name = explode(' ',$me['name']);
+	$fname = $name[0];
+	$lname = $name[1];
+	$image = ''; //$me['image']['url'];\
+	$id = $me['user_id'];
+
+	$userData = array(
+		'id' => $id,
+		'provider' => 'Amazon',
+		'email' => $email,
+		'fname' => $fname,
+		'lname' => $lname,
+		'profile_image' => $image,
+	);
+	return $userData;
+}
+
 ?>

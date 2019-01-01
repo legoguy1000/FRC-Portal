@@ -153,6 +153,9 @@ if($version >= '2.12.0') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'google_form_url'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'membership_form_name'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'google_analytics_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_login_enable'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_oauth_client_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_oauth_client_secret'], ['value' => '']);
   }
 }
 

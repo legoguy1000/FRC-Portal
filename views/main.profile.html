@@ -56,7 +56,7 @@
 				</md-select>
 			</md-input-container>
 			</div>
-			<div layout="row">
+			<div layout="row" ng-show="vm.user.user_type=='Student'">
 				<md-autocomplete flex ng-required="vm.user.user_type=='Student'"  ng-disabled="vm.user.user_type!='Student'"
 					md-input-name="autocompleteField"
 					md-no-cache="false"

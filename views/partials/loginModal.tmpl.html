@@ -21,6 +21,10 @@
       <i class="mdi mdi-microsoft"></i>
       Log in with Microsoft
     </md-button>
+    <md-button class="md-raised amazon btn-large social" ng-click="vm.authenticate('amazon')" style="min-width: 300px;" ng-show="vm.configItems.amazon_login_enable">
+      <i class="mdi mdi-amazon"></i>
+      Log in with Amazon
+    </md-button>
     <div layout="column" ng-show="vm.configItems.local_login_enable">
       <form name="Form" ng-submit="vm.login()">
           <md-input-container class="md-block">

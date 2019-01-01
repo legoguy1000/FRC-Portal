@@ -756,7 +756,28 @@ angular.module('FrcPortal', [
 		type: '2.0',
 		popupOptions: { width: 500, height: 560 }
 	});
-
+	$authProvider.oauth2({
+	  name: 'amazon',
+	  url: '/api/auth/amazon',
+	  clientId: configItems.amazon_oauth_client_id,
+	  redirectUri: window.location.origin+'/oauth',
+	  authorizationEndpoint: 'https://www.amazon.com/ap/oa',
+	  defaultUrlParams: ['response_type', 'client_id', 'redirect_uri'],
+	  requiredUrlParams: ['scope'],
+	  optionalUrlParams: null,
+	  scope: ['profile'],
+	  scopePrefix: null,
+	  scopeDelimiter: ' ',
+	  state: null,
+	  oauthType: null,
+	  popupOptions: null,
+	  responseType: 'code',
+	  responseParams: {
+	    code: 'code',
+	    clientId: 'clientId',
+	    redirectUri: 'redirectUri'
+  }
+});
 	$authProvider.httpInterceptor = function() { return true; },
 	$authProvider.withCredentials = true;
 	$authProvider.tokenRoot = null;
