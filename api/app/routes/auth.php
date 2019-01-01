@@ -288,7 +288,7 @@ $app->group('/auth', function () {
   	$code = $result->getStatusCode(); // 200
   	$reason = $result->getReasonPhrase(); // OK
   	$body = $result->getBody();
-    $me = json_decode($result, true);
+    $me = (array) json_decode($body, true);
     $userData = formatGithubLoginUserData($me);
     if(checkTeamLogin($userData['email'])) {
       $teamDomain = getSettingsProp('team_domain');
@@ -304,7 +304,7 @@ $app->group('/auth', function () {
       $code = $result->getStatusCode(); // 200
       $reason = $result->getReasonPhrase(); // OK
       $body = $result->getBody();
-      $emails = json_decode($body, true);
+      $emails = (array) json_decode($body, true);
       $userData2 = $userData;
       foreach($emails as $email) {
         if($email['verified']) {
