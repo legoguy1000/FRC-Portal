@@ -195,34 +195,33 @@ $app->group('/auth', function () {
 //    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
     $clientId =  getSettingsProp('amazon_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth';
-    $data = array(
+    $client = new GuzzleHttp\Client(['base_uri' => 'https://api.amazon.com/']);
+    $params = array(
       'client_id'=>$clientId,
       'code'=>$args['code'],
       'redirect_uri'=>$redirect,
       'grant_type'=>'authorization_code',
       'client_secret'=>$secret,
     );
-    $url = 'https://api.amazon.com/auth/o2/token';
-    $options = array(
-      'http' => array(
-        'header'  => "Content-Type: application/x-www-form-urlencoded",
-        'method'  => 'POST',
-        'content' => http_build_query($data)
-      )
-    );
-    $result = file_get_contents($url, false, stream_context_create($options));
-    $accessTokenArr = json_decode($result, true);
+  	$result = $client->request('POST', 'user', array(
+  		'query' => $params
+  	));
+  	$code = $result->getStatusCode(); // 200
+  	$reason = $result->getReasonPhrase(); // OK
+  	$body = $result->getBody();
+    $accessTokenArr = (array) json_decode($body, true);
     $accessToken = $accessTokenArr['access_token'];
 
-  	$url = 'https://api.amazon.com/user/profile';
-  	$options = array(
-  		'http' => array(
-  			'header'  => array("Authorization: Bearer ".$accessToken, "Accept: application/json", "Accept-Language: en-US"),
-  			'method'  => 'GET',
-  		)
-  	);
-    $result = file_get_contents($url, false, stream_context_create($options));
-    $me = json_decode($result, true);
+    $headers = array(
+      'Authorization' => 'Bearer '.$accessToken,
+      'Accept' => 'application/json',
+      'Accept-Language' => 'en-US'
+    );
+    $result = $client->request('GET', 'user/profile', array('headers' => $headers));
+    $code = $result->getStatusCode(); // 200
+    $reason = $result->getReasonPhrase(); // OK
+    $body = $result->getBody();
+    $me = (array) json_decode($body, true);
     $userData = formatAmazonLoginUserData($me);
     if(checkTeamLogin($userData['email'])) {
       $teamDomain = getSettingsProp('team_domain');
