@@ -721,7 +721,7 @@ angular.module('FrcPortal', [
 		display: 'popup',
 		prompt: 'select_account',
 		hd: hdBool ? configItems.team_domain : '',
-		type: '2.0',
+		oauthType: '2.0',
 		popupOptions: { width: 452, height: 633 }
 	});
  	$authProvider.facebook({
@@ -737,7 +737,7 @@ angular.module('FrcPortal', [
 		auth_type: 'rerequest',
 		scopeDelimiter: ',',
 		display: 'popup',
-		type: '2.0',
+		oauthType: '2.0',
 		popupOptions: { width: 580, height: 400 }
 	});
 	$authProvider.live({
@@ -753,7 +753,7 @@ angular.module('FrcPortal', [
 		responseType: 'id_token+code',
 		responseMode: 'fragment',
 		nonce: '678910',
-		type: '2.0',
+		oauthType: '2.0',
 		popupOptions: { width: 500, height: 560 }
 	});
 	$authProvider.oauth2({
@@ -769,8 +769,8 @@ angular.module('FrcPortal', [
 	  scopePrefix: null,
 	  scopeDelimiter: ' ',
 	  state: null,
-	  oauthType: null,
-	  popupOptions: null,
+	  oauthType: '2.0',
+	  popupOptions: { width: 580, height: 400 },
 	  responseType: 'code',
 	  responseParams: {
 	    code: 'code',
