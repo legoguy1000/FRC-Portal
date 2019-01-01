@@ -222,8 +222,7 @@ $app->group('/auth', function () {
   		)
   	);
     $result = file_get_contents($url, false, stream_context_create($options));
-    $accessTokenArr = json_decode($result, true);
-    $me = json_decode(json_encode($me), true);
+    $me = json_decode($result, true);
     $userData = formatAmazonLoginUserData($me);
     if(checkTeamLogin($userData['email'])) {
       $teamDomain = getSettingsProp('team_domain');
