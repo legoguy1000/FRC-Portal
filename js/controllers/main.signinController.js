@@ -18,7 +18,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	};
 	vm.loading = false;
 	vm.signInAuthed = signinService.isAuthed();
-	
+
 	var eventSource;
 	var signInBool = true;
 	var tokenIntervalTime = 28000;
@@ -44,19 +44,12 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			vm.signInAuthed = signinService.isAuthed();
 		});
 	}
-	if(vm.signInAuthed && vm.qrCode != null) {
-		//getToken();
-		vm.tokenInterval = $interval(getToken, tokenIntervalTime);
-	}
-
 
 	vm.getUsers = function() {
 		vm.promise = signinService.signInUserList().then(function(response) {
 			vm.users = response;
 		});
 	}
-	vm.getUsers();
-
 
 	vm.genQrCodeUrl = function() {
 		var tok = signinService.getToken();
@@ -101,14 +94,23 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			$mdDialog.show(dialog);
 			if(response.status && response.signin_token != undefined) {
 				signinService.saveToken(response.signin_token);
-				//vm.qrCode = response.qr_code;
 				vm.qrCodeUrl = vm.genQrCodeUrl();
 				vm.tokenInterval = $interval(getToken, tokenIntervalTime);
-				//startEventSource();
+				vm.getUsers();
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
 	}
+
+	if($auth.isAuthenticated()) {
+		vm.getUsers();
+	} else if(vm.signInAuthed) {
+		vm.getUsers();
+		vm.tokenInterval = $interval(getToken, tokenIntervalTime);
+	} else {
+		vm.authorizeSignIn();
+	}
+
 	vm.deauthorizeSignIn = function() {
 		var jti = signinService.getTokenJti();
 		var data = {'jti':jti};
