@@ -63,40 +63,53 @@
 						</md-input-container>
 				</div>
 				<div layout="row">
+					<div ng-bind-html="vm.data.details | linky:'_blank'" style="white-space: pre-wrap;"></div>
 					<!--<md-input-container flex class="md-icon-float md-block" >
 							<label>Details</label>
 							<md-icon md-font-library="material-icons">event_note</md-icon>
 							<textarea ng-model="vm.data.details" required></textarea>
 						</md-input-container> -->
-						<md-input-container flex class="md-icon-float md-block md-icon-left" style="overflow-y: scroll;">
+						<!--<md-input-container flex class="md-icon-float md-block md-icon-left" style="overflow-y: scroll;">
 			        <label>Details</label>
 							<md-icon md-font-library="material-icons">event_note</md-icon>
 			        <div ng-bind-html="vm.data.details | linky:'_blank'" style="margin-top: 30px; white-space: pre-wrap;"></div>
-			      </md-input-container>
+			      </md-input-container>-->
 				</div>
 				<div layout="column">
 					<div layout="row">
 						Event Requirements
 					</div>
 					<div layout="row" layout-wrap>
-						<md-switch class="md-primary"  ng-model="vm.data.requirements.payment">
-					   Payment Required
-					  </md-switch>
-						<md-switch class="md-primary"  ng-model="vm.data.requirements.permission_slip">
-					   Permission Slip Required
-					  </md-switch>
-						<md-switch class="md-primary"  ng-model="vm.data.requirements.food">
-					   Food Order Required
-					  </md-switch>
-						<md-switch class="md-primary"  ng-model="vm.data.requirements.room">
-							Lodging Required
-					  </md-switch>
-						<md-switch class="md-primary"  ng-model="vm.data.requirements.drivers">
-					   	Drivers Required
-					  </md-switch>
-						<md-switch class="md-primary"  ng-model="vm.data.requirements.time_slots">
-					   	Time Slots Required
-					  </md-switch>
+						<div flex>
+							<md-switch class="md-primary"  ng-model="vm.data.requirements.payment">
+						   Payment Required
+						  </md-switch>
+						<div>
+						<div flex>
+							<md-switch class="md-primary"  ng-model="vm.data.requirements.permission_slip">
+						   Permission Slip Required
+						  </md-switch>
+						<div>
+						<div flex>
+							<md-switch class="md-primary"  ng-model="vm.data.requirements.food">
+						   Food Order Required
+						  </md-switch>
+						<div>
+						<div flex>
+							<md-switch class="md-primary"  ng-model="vm.data.requirements.room">
+								Lodging Required
+						  </md-switch>
+						<div>
+						<div flex>
+							<md-switch class="md-primary"  ng-model="vm.data.requirements.drivers">
+						   	Drivers Required
+						  </md-switch>
+						<div>
+						<div flex>
+							<md-switch class="md-primary"  ng-model="vm.data.requirements.time_slots">
+						   	Time Slots Required
+						  </md-switch>
+						</div>
 					</div>
 				</div>
 				<!--
