@@ -15,7 +15,7 @@
 		  </div>
 		</md-toolbar>
 		<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.addEvent()">
-			<md-dialog-content layout="column" class="md-margin" style="overflow: initial;">
+			<md-dialog-content layout="column" class="md-margin" style="overflow-y: initial;">
 				<div layout="row">
 					<md-input-container flex class="md-icon-float md-block">
 						<label>Event Name</label>
@@ -68,7 +68,7 @@
 							<md-icon md-font-library="material-icons">event_note</md-icon>
 							<textarea ng-model="vm.data.details" required></textarea>
 						</md-input-container> -->
-						<md-input-container flex class="md-icon-float md-block md-icon-left" style="overflow: scroll;">
+						<md-input-container flex class="md-icon-float md-block md-icon-left" style="overflow-y: scroll;">
 			        <label>Details</label>
 							<md-icon md-font-library="material-icons">event_note</md-icon>
 			        <div ng-bind-html="vm.data.details | linky:'_blank'" style="margin-top: 30px; white-space: pre-wrap;"></div>
