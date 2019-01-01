@@ -160,7 +160,7 @@ $app->group('/users', function () {
       if($user->signin_pin == hash('SHA256', $formData['pin'])) {
         return badRequestResponse($response, $msg = 'PIN must be changed to a different number');
       }
-      $user->signin_pin = hash('SHA256', $pin);
+      $user->signin_pin = hash('SHA256', $formData['pin']);
       $user->save();
       $responseArr = standardResponse($status = true, $msg = 'PIN has been changed', $data = $user);
       $response = $response->withJson($responseArr);
