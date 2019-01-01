@@ -9,46 +9,51 @@
     </div>
   </md-toolbar>
   <md-dialog-content layout="column" layout-align="center center" class="layout-margin">
-    <md-button class="md-raised google btn-large social" ng-click="vm.authenticate('google')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.google_login_enable">
-      <i class="mdi mdi-google"></i>
-      Log in with Google
-    </md-button>
-    <md-button class="md-raised facebook btn-large social" ng-click="vm.authenticate('facebook')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.facebook_login_enable">
-      <i class="mdi mdi-facebook"></i>
-      Log in with Facebook
-    </md-button>
-    <md-button class="md-raised microsoft btn-large social" ng-click="vm.authenticate('live')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.microsoft_login_enable">
-      <i class="mdi mdi-microsoft"></i>
-      Log in with Microsoft
-    </md-button>
-    <md-button class="md-raised github btn-large social" ng-click="vm.authenticate('github')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.github_login_enable">
-      <i class="mdi mdi-github-circle"></i>
-      Log in with Github
-    </md-button>
-    <md-button class="md-raised amazon btn-large social" ng-click="vm.authenticate('amazon')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.amazon_login_enable">
-      <i class="mdi mdi-amazon"></i>
-      Log in with Amazon
-    </md-button>
-    <div layout="column" ng-show="vm.configItems.local_login_enable">
-      <form name="Form" ng-submit="vm.login()">
-          <md-input-container class="md-block">
-            <label>Login</label>
-            <input type="text" name="email" ng-model="vm.loginForm.email" required/>
-            <div ng-messages="Form.email.$error" role="alert" multiple="">
-              <div ng-message="required" class="my-message">Please enter your email.</div>
+    <div layout="row" layout-sm="column" layout-align="space-around" ng-show="vm.loading">
+      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+    <div layout="column" ng-hide="vm.loading">
+      <md-button class="md-raised google btn-large social" ng-click="vm.authenticate('google')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.google_login_enable">
+        <i class="mdi mdi-google"></i>
+        Log in with Google
+      </md-button>
+      <md-button class="md-raised facebook btn-large social" ng-click="vm.authenticate('facebook')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.facebook_login_enable">
+        <i class="mdi mdi-facebook"></i>
+        Log in with Facebook
+      </md-button>
+      <md-button class="md-raised microsoft btn-large social" ng-click="vm.authenticate('live')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.microsoft_login_enable">
+        <i class="mdi mdi-microsoft"></i>
+        Log in with Microsoft
+      </md-button>
+      <md-button class="md-raised github btn-large social" ng-click="vm.authenticate('github')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.github_login_enable">
+        <i class="mdi mdi-github-circle"></i>
+        Log in with Github
+      </md-button>
+      <md-button class="md-raised amazon btn-large social" ng-click="vm.authenticate('amazon')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.amazon_login_enable">
+        <i class="mdi mdi-amazon"></i>
+        Log in with Amazon
+      </md-button>
+      <div layout="column" ng-show="vm.configItems.local_login_enable">
+        <form name="Form" ng-submit="vm.login()">
+            <md-input-container class="md-block">
+              <label>Login</label>
+              <input type="text" name="email" ng-model="vm.loginForm.email" required/>
+              <div ng-messages="Form.email.$error" role="alert" multiple="">
+                <div ng-message="required" class="my-message">Please enter your email.</div>
+              </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+              <label>Password</label>
+              <input type="password" name="password" ng-model="vm.loginForm.password" required/>
+              <div ng-messages="Form.password.$error" role="alert" multiple="">
+                <div ng-message="required" class="my-message">Please enter your password.</div>
+              </div>
+            </md-input-container>
+            <div layout="row" layout-align="center center">
+              <md-button ng-disabled="!Form.$valid" type="submit" class="md-raised md-primary">Login</md-button>
             </div>
-          </md-input-container>
-          <md-input-container class="md-block">
-            <label>Password</label>
-            <input type="password" name="password" ng-model="vm.loginForm.password" required/>
-            <div ng-messages="Form.password.$error" role="alert" multiple="">
-              <div ng-message="required" class="my-message">Please enter your password.</div>
-            </div>
-          </md-input-container>
-          <div layout="row" layout-align="center center">
-            <md-button ng-disabled="!Form.$valid" type="submit" class="md-raised md-primary">Login</md-button>
-          </div>
-        </form>
+          </form>
+      </div>
     </div>
     <!--<div>
       Don't have a <span>Google account, </span><span>Facebook account, </span><span>Microsoft account, </span><span>password </span>? Click <a>here</a> to login with a one time code.
