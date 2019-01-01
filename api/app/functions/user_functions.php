@@ -36,7 +36,7 @@ function checkLogin($userData) {
 			$user = $data;
 		}
 		if($user != false) {
-			$oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => $provider], ['user_id' => $user->user_id, 'oauth_user' => $email]);
+			$oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $user->user_id, 'oauth_user' => $email]);
 		}
 	}
 	return $user;
