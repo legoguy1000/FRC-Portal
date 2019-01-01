@@ -309,7 +309,7 @@ $app->group('/auth', function () {
       foreach($emails as $email) {
         if($email['verified']) {
           $userData2['email'] = $email['email'];
-          $user = checkLogin($userData);
+          $user = checkLogin($userData2);
           if($user != false) {
             break;
           }
