@@ -61,7 +61,7 @@ $app->group('/auth', function () {
       insertLogs($level = 'Warning', $message = 'Invalid code from Facebook OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Facebook Sign In');
     }
-    $client_id = getSettingsProp('facebook_oauth_client_id');
+    $clientId = getSettingsProp('facebook_oauth_client_id');
     $secret = getSettingsProp('facebook_oauth_client_secret');
     $redirect = getSettingsProp('env_url').'/oauth';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://graph.facebook.com/v3.0/oauth/']);
