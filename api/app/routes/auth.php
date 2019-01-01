@@ -143,7 +143,8 @@ $app->group('/auth', function () {
 //    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
     $clientId =  getSettingsProp('microsoft_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth';
-    $data = array(
+    $client = new GuzzleHttp\Client(['base_uri' => 'https://login.microsoftonline.com/common/oauth2/v2.0/']);
+    $params = array(
   		'client_id'=>$clientId,
   		'scope'=>'openid email profile User.Read', // User.Read User.ReadBasic.All
   		'code'=>$args['code'],
@@ -151,13 +152,6 @@ $app->group('/auth', function () {
   		'grant_type'=>'authorization_code',
   		'client_secret'=>$secret,
   	);
-    $client = new GuzzleHttp\Client(['base_uri' => 'https://login.microsoftonline.com/common/oauth2/v2.0/']);
-    $params = array(
-      'client_id'=>$clientId,
-      'code'=>$args['code'],
-      'redirect_uri'=>$redirect,
-      'client_secret'=>$secret,
-    );
     $result = $client->request('POST', 'token', array(
       'form_params' => $params,
       'headers' => array("Content-Type: application/x-www-form-urlencoded","Accept: application/json")
