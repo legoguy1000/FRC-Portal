@@ -280,14 +280,14 @@ $app->group('/auth', function () {
     $accessTokenArr = json_decode($result, true);
     $accessToken = $accessTokenArr['access_token'];
 
-  	$url = 'https://api.github.com/user';
-  	$options = array(
-  		'http' => array(
-  			'header'  => array("Authorization: token ".$accessToken, "Accept: application/json", "Accept-Language: en-US"),
-  			'method'  => 'GET',
-  		)
-  	);
-    $result = file_get_contents($url, false, stream_context_create($options));
+    $params = array('access_token'=>$accessToken);
+  	$client = new GuzzleHttp\Client(['base_uri' => 'https://api.github.com/']);
+  	$result = $client->request('GET', 'user', array(
+  		'query' => $params
+  	));
+  	$code = $result->getStatusCode(); // 200
+  	$reason = $result->getReasonPhrase(); // OK
+  	$body = $result->getBody();
     $me = json_decode($result, true);
     $userData = formatGithubLoginUserData($me);
     if(checkTeamLogin($userData['email'])) {
@@ -298,15 +298,13 @@ $app->group('/auth', function () {
 
     $user = checkLogin($userData);
     if($user == false && is_null($userData['email'])) {
-      $url = 'https://api.github.com/user/emails';
-      $options = array(
-        'http' => array(
-          'header'  => array("Authorization: token ".$accessToken, "Accept: application/json", "Accept-Language: en-US"),
-          'method'  => 'GET',
-        )
-      );
-      $result = file_get_contents($url, false, stream_context_create($options));
-      $emails = json_decode($result, true);
+      $result = $client->request('GET', 'user/emails', array(
+        'query' => $params
+      ));
+      $code = $result->getStatusCode(); // 200
+      $reason = $result->getReasonPhrase(); // OK
+      $body = $result->getBody();
+      $emails = json_decode($body, true);
       $userData2 = $userData;
       foreach($emails as $email) {
         if($email['verified']) {
