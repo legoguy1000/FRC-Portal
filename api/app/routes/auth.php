@@ -204,7 +204,7 @@ $app->group('/auth', function () {
       'client_secret'=>$secret,
     );
   	$result = $client->request('POST', 'auth/o2/token', array(
-  		'body' => $params,
+  		'form_params' => $params,
       'headers' => array('Content-Type' => 'application/x-www-form-urlencoded;charset=UTF-8')
   	));
   	$code = $result->getStatusCode(); // 200
