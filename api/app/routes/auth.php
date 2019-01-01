@@ -64,9 +64,21 @@ $app->group('/auth', function () {
     $client_id = getSettingsProp('facebook_oauth_client_id');
     $secret = getSettingsProp('facebook_oauth_client_secret');
     $redirect = getSettingsProp('env_url').'/oauth';
-    $accessTokenArr = file_get_contents('https://graph.facebook.com/v3.0/oauth/access_token?client_id='.$client_id.'&redirect_uri='.$redirect.'&client_secret='.$secret.'&code='.$args['code']);
-    //die($accessTokenArr);
-    $accessTokenArr = json_decode($accessTokenArr, true);
+    $client = new GuzzleHttp\Client(['base_uri' => 'https://graph.facebook.com/v3.0/oauth/']);
+    $params = array(
+      'client_id'=>$clientId,
+      'code'=>$args['code'],
+      'redirect_uri'=>$redirect,
+      'client_secret'=>$secret,
+    );
+    $result = $client->request('GET', 'access_token', array(
+      'query' => $params,
+      'headers' => array("Accept: application/json")
+    ));
+    $code = $result->getStatusCode(); // 200
+    $reason = $result->getReasonPhrase(); // OK
+    $body = $result->getBody();
+    $accessTokenArr = (array) json_decode($body, true);
     $accessToken = $accessTokenArr['access_token'];
     $fb = new Facebook\Facebook([
       //'app_id'  => '1347987445311447',
@@ -139,17 +151,23 @@ $app->group('/auth', function () {
   		'grant_type'=>'authorization_code',
   		'client_secret'=>$secret,
   	);
-  	$url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
-  	$options = array(
-  		'http' => array(
-  			'header'  => "Content-Type: application/x-www-form-urlencoded",
-  			'method'  => 'POST',
-  			'content' => http_build_query($data)
-  		)
-  	);
-    $result = file_get_contents($url, false, stream_context_create($options));
-    $accessTokenArr = json_decode($result, true);
+    $client = new GuzzleHttp\Client(['base_uri' => 'https://login.microsoftonline.com/common/oauth2/v2.0/']);
+    $params = array(
+      'client_id'=>$clientId,
+      'code'=>$args['code'],
+      'redirect_uri'=>$redirect,
+      'client_secret'=>$secret,
+    );
+    $result = $client->request('POST', 'token', array(
+      'form_params' => $params,
+      'headers' => array("Content-Type: application/x-www-form-urlencoded","Accept: application/json")
+    ));
+    $code = $result->getStatusCode(); // 200
+    $reason = $result->getReasonPhrase(); // OK
+    $body = $result->getBody();
+    $accessTokenArr = (array) json_decode($body, true);
     $accessToken = $accessTokenArr['access_token'];
+
     $graph = new Graph();
   	$graph->setApiVersion('beta');
   	$graph->setAccessToken($accessToken); //=mail,aboutMe,birthday,photo
@@ -262,22 +280,22 @@ $app->group('/auth', function () {
 //    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
     $clientId =  getSettingsProp('github_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth';
-    $data = array(
+
+    $client = new GuzzleHttp\Client(['base_uri' => 'https://github.com/login/oauth/']);
+    $params = array(
       'client_id'=>$clientId,
       'code'=>$args['code'],
       'redirect_uri'=>$redirect,
       'client_secret'=>$secret,
     );
-    $url = 'https://github.com/login/oauth/access_token';
-    $options = array(
-      'http' => array(
-        'header'  => array("Content-Type: application/x-www-form-urlencoded","Accept: application/json"),
-        'method'  => 'POST',
-        'content' => http_build_query($data)
-      )
-    );
-    $result = file_get_contents($url, false, stream_context_create($options));
-    $accessTokenArr = json_decode($result, true);
+    $result = $client->request('POST', 'access_token', array(
+      'form_params' => $params,
+      'headers' => array("Content-Type: application/x-www-form-urlencoded","Accept: application/json")
+    ));
+    $code = $result->getStatusCode(); // 200
+    $reason = $result->getReasonPhrase(); // OK
+    $body = $result->getBody();
+    $accessTokenArr = (array) json_decode($body, true);
     $accessToken = $accessTokenArr['access_token'];
 
     $params = array('access_token'=>$accessToken);
