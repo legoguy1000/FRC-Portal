@@ -757,15 +757,15 @@ angular.module('FrcPortal', [
 		popupOptions: { width: 500, height: 560 }
 	});
 	$authProvider.oauth2({
-	  name: 'amazon',
-	  url: '/api/auth/amazon',
-	  clientId: configItems.amazon_oauth_client_id,
+	  name: 'github',
+	  url: '/api/auth/github',
+	  clientId: configItems.github_oauth_client_id,
 	  redirectUri: window.location.origin+'/oauth',
-	  authorizationEndpoint: 'https://www.amazon.com/ap/oa',
-	  defaultUrlParams: ['response_type', 'client_id', 'redirect_uri'],
+	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+	  defaultUrlParams: ['client_id', 'redirect_uri'],
 	  requiredUrlParams: ['scope'],
 	  optionalUrlParams: null,
-	  scope: ['profile'],
+	  scope: ['read:user', 'user:email'],
 	  scopePrefix: null,
 	  scopeDelimiter: ' ',
 	  state: null,
@@ -777,6 +777,28 @@ angular.module('FrcPortal', [
 	    clientId: 'clientId',
 	    redirectUri: 'redirectUri'
   }
+});
+$authProvider.oauth2({
+	name: 'amazon',
+	url: '/api/auth/amazon',
+	clientId: configItems.amazon_oauth_client_id,
+	redirectUri: window.location.origin+'/oauth',
+	authorizationEndpoint: 'https://www.amazon.com/ap/oa',
+	defaultUrlParams: ['response_type', 'client_id', 'redirect_uri'],
+	requiredUrlParams: ['scope'],
+	optionalUrlParams: null,
+	scope: ['profile'],
+	scopePrefix: null,
+	scopeDelimiter: ' ',
+	state: null,
+	oauthType: '2.0',
+	popupOptions: { width: 580, height: 400 },
+	responseType: 'code',
+	responseParams: {
+		code: 'code',
+		clientId: 'clientId',
+		redirectUri: 'redirectUri'
+}
 });
 	$authProvider.httpInterceptor = function() { return true; },
 	$authProvider.withCredentials = true;

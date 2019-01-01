@@ -151,6 +151,23 @@
 			</div>
 			<div layout-gt-sm="row">
 				<div>
+					<md-switch md-invert aria-label="Enable Github Login" ng-model="vm.settings.login.github_login_enable" class="md-warn">
+						Enable Github Login
+					</md-switch>
+				</div>
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.github_login_enable">
+					<md-input-container flex ng-show="vm.settings.login.github_login_enable">
+						<label>Github OAuth2 Client ID</label>
+						<input ng-model="vm.settings.login.github_oauth_client_id" ng-disabled="!vm.settings.login.github_login_enable">
+					</md-input-container>
+					<md-input-container flex ng-show="vm.settings.login.github_login_enable">
+						<label>Github OAuth2 Client Secret</label>
+						<input ng-model="vm.settings.login.github_oauth_client_secret" ng-disabled="!vm.settings.login.github_login_enable">
+					</md-input-container>
+				</div>
+			</div>
+			<div layout-gt-sm="row">
+				<div>
 					<md-switch md-invert aria-label="Enable Amazon Login" ng-model="vm.settings.login.amazon_login_enable" class="md-warn">
 						Enable Amazon Login
 					</md-switch>

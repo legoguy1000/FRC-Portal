@@ -245,6 +245,73 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Amazon OAuth2');
+  $this->post('/github', function ($request, $response) {
+    $responseData = false;
+    $args = $request->getParsedBody();
+    $provider = 'github';
+    if(checkLoginProvider($provider) == false) {
+      insertLogs($level = 'Warning', $message = 'Attempted login with Github OAuth2.  Github login provider not enabled.');
+      return badRequestResponse($response, $msg = 'Github login is not enabled.  Please select a different option.');
+    }
+    if(!isset($args['code']) || $args['code'] == '') {
+      insertLogs($level = 'Warning', $message = 'Invalid code from Github OAuth2 sign in.');
+      return badRequestResponse($response, $msg = 'Invalid code from Github Sign In');
+    }
+    //$secret = getIniProp('microsoft_client_secret');
+    $secret = getSettingsProp('github_oauth_client_secret');
+//    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
+    $clientId =  getSettingsProp('github_oauth_client_id');
+    $redirect = getSettingsProp('env_url').'/oauth';
+    $data = array(
+      'client_id'=>$clientId,
+      'code'=>$args['code'],
+      'redirect_uri'=>$redirect,
+      'client_secret'=>$secret,
+    );
+    $url = 'https://github.com/login/oauth/access_token';
+    $options = array(
+      'http' => array(
+        'header'  => array("Content-Type: application/x-www-form-urlencoded","Accept: application/json"),
+        'method'  => 'POST',
+        'content' => http_build_query($data)
+      )
+    );
+    $result = file_get_contents($url, false, stream_context_create($options));
+    $accessTokenArr = json_decode($result, true);
+    $accessToken = $accessTokenArr['access_token'];
+
+  	$url = 'https://api.github.com/user';
+  	$options = array(
+  		'http' => array(
+  			'header'  => array("Authorization: token ".$accessToken, "Accept: application/json", "Accept-Language: en-US"),
+  			'method'  => 'GET',
+  		)
+  	);
+    $result = file_get_contents($url, false, stream_context_create($options));
+    die($result);
+    $me = json_decode($result, true);
+    $userData = formatGithubLoginUserData($me);
+    if(checkTeamLogin($userData['email'])) {
+      $teamDomain = getSettingsProp('team_domain');
+      insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Github OAuth2. A '.$teamDomain.' email is required.');
+      return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
+    }
+
+    $user = checkLogin($userData);
+    if($user != false) {
+      $user->updateUserOnLogin($userData);
+      $jwt = $user->generateUserJWT();
+      $responseData = array('status'=>true, 'msg'=>'Login with Github Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+      FrcPortal\Auth::setCurrentUser($user->user_id);
+      insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Github OAuth2.');
+    } else {
+      $teamNumber = getSettingsProp('team_number');
+      $responseData = array('status'=>false, 'msg'=>'Github account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+      insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Github OAuth2. Microsoft account not linked to any current portal user.');
+    }
+    $response = $response->withJson($responseData);
+    return $response;
+  })->setName('Github OAuth2');
   /*$this->post('/slack', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();

@@ -156,6 +156,9 @@ if($version >= '2.12.0') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_login_enable'], ['value' => false]);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_oauth_client_id'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_oauth_client_secret'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_login_enable'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_oauth_client_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_oauth_client_secret'], ['value' => '']);
   }
 }
 
