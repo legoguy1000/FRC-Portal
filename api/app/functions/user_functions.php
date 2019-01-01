@@ -23,6 +23,7 @@ function checkLogin($userData) {
 		$q->where('status',true);
 	}])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
 	if($data != null) {
+		$data->touch();
 		$user = $data->users;
 	} else {
 		$data = FrcPortal\User::with(['school']) //'user_categories'
