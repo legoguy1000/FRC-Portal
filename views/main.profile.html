@@ -305,7 +305,7 @@
 									<h3>{{account.timestamp_unix*1000 | date:'medium'}}</h3>
 									<p>Linked</p>
 								</div>
-								<md-icon class="md-secondary" md-font-set="material-icons" ng-click="vm.showDeviceDelete($event,device)" aria-label="Delete">delete
+								<md-icon class="md-secondary" md-font-set="material-icons" ng-click="vm.deleteUserLinkedAccount(account.auth_id)" aria-label="Delete">delete
 									<md-tooltip md-direction="top">Unlink Account (any email that matches your profile or team email will always work)</md-tooltip>
 								</md-icon>
 							</div>

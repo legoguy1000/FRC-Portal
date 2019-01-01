@@ -206,15 +206,29 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->get('/linkedAccounts', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
-      $formData = $request->getParsedBody();
+    $this->group('/linkedAccounts', function () {
+      $this->get('', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
 
-      $user_id = $args['user_id'];
-      $user = FrcPortal\Oauth::where('user_id',$user_id)->get();
-      $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
-      $response = $response->withJson($responseArr);
-      return $response;
+        $user_id = $args['user_id'];
+        $user = FrcPortal\Oauth::where('user_id',$user_id)->get();
+        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
+      $this->delete('/{auth_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
+
+        $user_id = $args['user_id'];
+        $auth_id = $args['auth_id'];
+        $user = FrcPortal\Oauth::where('user_id',$user_id)->where('auth_id',$auth_id)->delete();
+        $linkedAccount = FrcPortal\Oauth::where('user_id',$user_id)->get();
+        $responseArr = array('status'=>true, 'msg'=>'Linked Account Removed', 'data' => $linkedAccount);
+        $response = $response->withJson($responseArr);
+        return $response;
+      });
     });
     $this->group('/notificationPreferences', function () {
       $this->get('', function ($request, $response, $args) {
