@@ -45,6 +45,16 @@
 .adn:hover {
   background-color: #e29e91 !important;
 }
+.amazon {
+  background-color: #ff9900 !important;
+  color: #fff !important;
+}
+.amazon i {
+  color: #fff !important;
+}
+.amazon:hover {
+  background-color: #4c70ba !important;
+}
 .bitbucket {
   background-color: #205081 !important;
   color: #fff !important;
