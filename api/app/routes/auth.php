@@ -217,7 +217,7 @@ $app->group('/auth', function () {
   	$url = 'https://api.amazon.com/user/profile';
   	$options = array(
   		'http' => array(
-  			'header'  => array("Authorization: Bearer ".urlencode($accessToken), "Accept: application/json", "Accept-Language: en-US"),
+  			'header'  => array("Authorization: Bearer ".$accessToken, "Accept: application/json", "Accept-Language: en-US"),
   			'method'  => 'GET',
   		)
   	);
