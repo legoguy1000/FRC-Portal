@@ -18,6 +18,7 @@ Version 2.13.0
 * Prevent event registration changes after event starts.  Admins can still make changes in admin section.
 * Add logging and view under admin
 * Add route names
+* Add Github and Amazon Login providers
 
 Version 2.12.0
 * Simplified some code
