@@ -62,7 +62,10 @@
 							<div class="hint">This is autopopulated from the Google Calendar.  Update the Google calendar for changes.</div>
 						</md-input-container>
 				</div>
-				<div layout="row">
+				<div layout="column">
+					<div layout="row">
+						Event Requirements
+					</div>
 					<div ng-bind-html="vm.data.details | linky:'_blank'" style="white-space: pre-wrap;"></div>
 					<!--<md-input-container flex class="md-icon-float md-block" >
 							<label>Details</label>
@@ -80,32 +83,32 @@
 						Event Requirements
 					</div>
 					<div layout="row" layout-wrap>
-						<div flex>
+						<div flex="25">
 							<md-switch class="md-primary"  ng-model="vm.data.requirements.payment">
 						   Payment Required
 						  </md-switch>
 						</div>
-						<div flex>
+						<div flex="25">
 							<md-switch class="md-primary"  ng-model="vm.data.requirements.permission_slip">
 						   Permission Slip Required
 						  </md-switch>
 						</div>
-						<div flex>
+						<div flex="25">
 							<md-switch class="md-primary"  ng-model="vm.data.requirements.food">
 						   Food Order Required
 						  </md-switch>
 						</div>
-						<div flex>
+						<div flex="25">
 							<md-switch class="md-primary"  ng-model="vm.data.requirements.room">
 								Lodging Required
 						  </md-switch>
 						</div>
-						<div flex>
+						<div flex="25">
 							<md-switch class="md-primary"  ng-model="vm.data.requirements.drivers">
 						   	Drivers Required
 						  </md-switch>
 						</div>
-						<div flex>
+						<div flex="25">
 							<md-switch class="md-primary"  ng-model="vm.data.requirements.time_slots">
 						   	Time Slots Required
 						  </md-switch>
