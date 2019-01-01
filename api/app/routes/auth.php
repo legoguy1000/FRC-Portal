@@ -284,7 +284,7 @@ $app->group('/auth', function () {
     );
     $result = $client->request('POST', 'access_token', array(
       'form_params' => $params,
-      'headers' => array("Content-Type: application/x-www-form-urlencoded","Accept: application/json")
+      'headers' => array("Content-Type"=>"application/x-www-form-urlencoded","Accept"=>"application/json")
     ));
     $code = $result->getStatusCode(); // 200
     $reason = $result->getReasonPhrase(); // OK
