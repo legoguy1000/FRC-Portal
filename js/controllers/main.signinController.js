@@ -134,6 +134,10 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 
+	$rootScope.$on('afterLoginAction', function(event) {
+		vm.getUsers();
+	});
+
 	function startEventSource() {
 		if(eventSource != undefined) {
 			eventSource.close();
@@ -158,12 +162,12 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			}
 		});*/
 	}
-
+/*
 	if(vm.signInAuthed) {
 		startEventSource();
 	} else if(!vm.signInAuthed && eventSource != undefined) {
 		eventSource.close();
-	}
+	} */
 
 
 /*
