@@ -146,9 +146,6 @@ $app->group('/hours', function () {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
         }
       }
-      if(!$authed && !FrcPortal\Auth::isAuthenticated()) {
-        return unauthorizedResponse($response);
-      }
       $users = getSignInList(date('Y'));
       $response = $response->withJson($users);
       return $response;
