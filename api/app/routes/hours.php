@@ -139,14 +139,12 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($signin_token, $key, array('HS256'));
           $authed = $decoded->data->signin;
-          die($authed);
         } catch(\ExpiredException $e) {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
         } catch(\SignatureInvalidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
         }
-      }
-      if(!$authed) {
+      }else if(!$authed) {
         return unauthorizedResponse($response);
       }
       $users = getSignInList(date('Y'));
