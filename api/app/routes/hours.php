@@ -262,7 +262,7 @@ $app->group('/hours', function () {
         insertLogs($level = 'Warning', $message = 'Sign In Authorization Failed.');
         return badRequestResponse($response);
       }
-      if(!is_null($user) && $user->data->status && $user->data->admin) {
+      if(!is_null($user) && $user->status && $user->admin) {
         $ts = time();
         $te = time()+30; //12 hours liftime
         $tokenArr = generateSignInToken($ts, $te);
