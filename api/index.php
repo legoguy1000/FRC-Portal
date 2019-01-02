@@ -34,7 +34,7 @@ $app->add(function ($request, $response, $next) {
     if (preg_match('/Bearer\s+(.*)$/i', $header, $matches)) {
         $token = $matches[1];
       } else if(!is_null($request->getParam('auth_token'))) {
-        $token = $request->getParam('auth_token');
+        //$token = $request->getParam('auth_token');
       }
       try {
         $decoded = JWT::decode(
