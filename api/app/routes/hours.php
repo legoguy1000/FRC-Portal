@@ -250,7 +250,7 @@ $app->group('/hours', function () {
         $jwt = $args['auth_token'];
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
-          $user = $decoded->data->status && $decoded->data->admin;
+          $user = $decoded->data;
         } catch(\ExpiredException $e) {
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error.');
         } catch(\SignatureInvalidException $e){
@@ -262,7 +262,7 @@ $app->group('/hours', function () {
         insertLogs($level = 'Warning', $message = 'Sign In Authorization Failed.');
         return badRequestResponse($response);
       }
-      if(!is_null($user)) {
+      if(!is_null($user) && $user->data->status && $user->data->admin;) {
         $ts = time();
         $te = time()+30; //12 hours liftime
         $tokenArr = generateSignInToken($ts, $te);
