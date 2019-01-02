@@ -3,7 +3,7 @@
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 Version 2.14.0
 * Prompt for authentication prior to showing sign in list
-*
+* 
 
 Version 2.13.0
 * Add/edit/delete school

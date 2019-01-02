@@ -141,7 +141,7 @@ $app->group('/hours', function () {
           $authed = $decoded->data->signin;
         } catch(\ExpiredException $e) {
           insertLogs($level = 'Warning', $message = 'Authorization Error: '.$e->getMessage());
-          return unauthorizedResponse($response, $msg = 'Authorization Error: ');
+          return unauthorizedResponse($response, $msg = 'Authorization Error.');
         } catch(\SignatureInvalidException $e){
           insertLogs($level = 'Warning', $message = 'Authorization Error: '.$e->getMessage());
           return unauthorizedResponse($response, $msg = 'Authorization Error.');
@@ -251,9 +251,9 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $user = $decoded->data;
-        } catch(\ExpiredException $e) {
+        } catch(\Firebase\JWT\ExpiredException $e) {
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error.');
-        } catch(\SignatureInvalidException $e){
+        } catch(\Firebase\JWT\SignatureInvalidException $e){
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error.');
         }
       } elseif(isset($args['auth_code'])) {
