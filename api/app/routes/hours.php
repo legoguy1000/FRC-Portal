@@ -1,5 +1,10 @@
 <?php
 use \Firebase\JWT\JWT;
+use \Firebase\JWT\JWT\UnexpectedValueException;
+use \Firebase\JWT\JWT\ExpiredException;
+use \Firebase\JWT\JWT\SignatureInvalidException;
+use \Firebase\JWT\JWT\BeforeValidException;
+use \Firebase\JWT\JWT\Exception;
 use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/hours', function () {
   $this->group('/missingHoursRequests', function () {
@@ -139,7 +144,7 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($signin_token, $key, array('HS256'));
           $authed = $decoded->data->signin;
-        } catch(\Firebase\JWT\ExpiredException $e) {
+        } catch(\ExpiredException $e) {
           insertLogs($level = 'Warning', $message = 'Authorization Error: '.$e->getMessage());
           return unauthorizedResponse($response, $msg = 'Authorization Error.');
         } catch(\SignatureInvalidException $e){
@@ -251,9 +256,9 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $user = $decoded->data;
-        } catch(\Firebase\JWT\ExpiredException $e) {
+        } catch(\ExpiredException $e) {
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error.');
-        } catch(\Firebase\JWT\SignatureInvalidException $e){
+        } catch(\SignatureInvalidException $e){
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error.');
         }
       } elseif(isset($args['auth_code'])) {
