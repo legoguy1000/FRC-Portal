@@ -33,18 +33,20 @@ $app->add(function ($request, $response, $next) {
     $header = isset($headers[0]) ? $headers[0] : "";
     if (preg_match('/Bearer\s+(.*)$/i', $header, $matches)) {
         $token = $matches[1];
-        try {
-          $decoded = JWT::decode(
-              $token,
-              getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : getIniProp('db_pass'),
-              array("HS256", "HS512", "HS384")
-          );
-          $authToken = (array) $decoded;
-          $request = $request->withAttribute('token', $data);
-        } catch (Exception $exception) {
-            handleExceptionMessage($exception);
-        }
-    }
+      } else if(isset($request->getParam('auth_token'))) {
+        $token = $request->getParam('auth_token');
+      }
+      try {
+        $decoded = JWT::decode(
+            $token,
+            getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : getIniProp('db_pass'),
+            array("HS256", "HS512", "HS384")
+        );
+        $authToken = (array) $decoded;
+        $request = $request->withAttribute('token', $data);
+      } catch (Exception $exception) {
+          handleExceptionMessage($exception);
+      }
   }
   if(!is_null($authToken)) {
     $userId = $authToken['data']->user_id;
