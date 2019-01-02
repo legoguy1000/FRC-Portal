@@ -1,10 +1,10 @@
 <?php
 use \Firebase\JWT\JWT;
-use \Firebase\JWT\JWT\UnexpectedValueException;
-use \Firebase\JWT\JWT\ExpiredException;
-use \Firebase\JWT\JWT\SignatureInvalidException;
-use \Firebase\JWT\JWT\BeforeValidException;
-use \Firebase\JWT\JWT\Exception;
+use \Firebase\JWT\UnexpectedValueException;
+use \Firebase\JWT\ExpiredException;
+use \Firebase\JWT\SignatureInvalidException;
+use \Firebase\JWT\BeforeValidException;
+use \Firebase\JWT\Exception;
 use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/hours', function () {
   $this->group('/missingHoursRequests', function () {
