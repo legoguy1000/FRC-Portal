@@ -133,9 +133,9 @@ $app->group('/hours', function () {
     //Get the list of users and their last sign/out and hours
     $this->get('/list', function ($request, $response, $args) {
       $authed = FrcPortal\Auth::isAuthenticated() ? true:false;
-      if(!$authed && isset($args['signin_token'])) {
+      if(!$authed && !is_null($request->getParam('signin_token'))) {
         $key = getSettingsProp('jwt_signin_key');
-        $signin_token = $args['signin_token'];
+        $signin_token = $request->getParam('signin_token');
         try {
           $decoded = JWT::decode($signin_token, $key, array('HS256'));
           $authed = $decoded->data->signin;
