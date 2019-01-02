@@ -101,7 +101,7 @@ $app->group('/hours', function () {
              $responseArr['msg'] = 'Missing hours request approved';
              $mhRequest->load('user');
              insertLogs($level = 'Information', $message = 'Missing hours request approved for '.$mhRequest->user->full_name.'. ('.$mhRequest['time_in'].' - '.$mhRequest['time_out'].')');
-          } catch(\Exception $e){
+          } catch(Exception $e){
              DB::rollback();
           }
         }
@@ -144,10 +144,10 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($signin_token, $key, array('HS256'));
           $authed = $decoded->data->signin;
-        } catch(\ExpiredException $e) {
+        } catch(ExpiredException $e) {
           insertLogs($level = 'Warning', $message = 'Authorization Error: '.$e->getMessage());
           return unauthorizedResponse($response, $msg = 'Authorization Error.');
-        } catch(\SignatureInvalidException $e){
+        } catch(SignatureInvalidException $e){
           insertLogs($level = 'Warning', $message = 'Authorization Error: '.$e->getMessage());
           return unauthorizedResponse($response, $msg = 'Authorization Error.');
         }
@@ -256,9 +256,9 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $user = $decoded->data;
-        } catch(\ExpiredException $e) {
+        } catch(ExpiredException $e) {
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error.');
-        } catch(\SignatureInvalidException $e){
+        } catch(SignatureInvalidException $e){
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error.');
         }
       } elseif(isset($args['auth_code'])) {
@@ -294,9 +294,9 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $te = time()+30; //30 second liftime
-        } catch(\ExpiredException $e) {
+        } catch(ExpiredException $e) {
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
-        } catch(\SignatureInvalidException $e){
+        } catch(SignatureInvalidException $e){
           $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
         }
       }
@@ -401,13 +401,13 @@ $app->group('/hours', function () {
           } else {
             $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
           }
-        } catch(\ExpiredException $e) {
+        } catch(ExpiredException $e) {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\SignatureInvalidException $e){
+        } catch(SignatureInvalidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\BeforeValidException $e){
+        } catch(BeforeValidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\UnexpectedValueException $e){
+        } catch(UnexpectedValueException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
         }
       } else {
@@ -489,15 +489,15 @@ $app->group('/hours', function () {
           } else {
             $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
           }
-        } catch(\UnexpectedValueException $e){
+        } catch(UnexpectedValueException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\ExpiredException $e) {
+        } catch(ExpiredException $e) {
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\SignatureInvalidException $e){
+        } catch(SignatureInvalidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\BeforeValidException $e){
+        } catch(BeforeValidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\Exception $e){
+        } catch(Exception $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
         }
       } else {
