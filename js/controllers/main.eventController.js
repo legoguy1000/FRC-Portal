@@ -6,21 +6,21 @@ function mainEventController($rootScope, $timeout, $q, $scope, $state, eventsSer
     var vm = this;
 
 		vm.registrationFormVisible = false;
-		vm.state = $state.current.name;
-
-
 		vm.slack_url = configItems.slack_url;
 		vm.slack_team_id = configItems.slack_team_id;
 
 		vm.event_id = $stateParams.event_id;
-		vm.event = {};
+		vm.event = {
+			name: '',
+		};
+		$scope.main.title += ' - '+vm.event.name;
 		vm.getEvent = function () {
 			var params = {
 				users: true,
 			};
 			vm.promise = eventsService.getEvent(vm.event_id, params).then(function(response){
 				vm.event = response.data;
-				$scope.main.title += ' - '+vm.event.name;
+				//$scope.main.title += ' - '+vm.event.name;
 			});
 
 		};
