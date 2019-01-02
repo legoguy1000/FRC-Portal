@@ -139,7 +139,7 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($signin_token, $key, array('HS256'));
           $authed = $decoded->data->signin;
-        } catch(\ExpiredException $e) {
+        } catch(\Firebase\JWT\ExpiredException $e) {
           insertLogs($level = 'Warning', $message = 'Authorization Error: '.$e->getMessage());
           return unauthorizedResponse($response, $msg = 'Authorization Error.');
         } catch(\SignatureInvalidException $e){
