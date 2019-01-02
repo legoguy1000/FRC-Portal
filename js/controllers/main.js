@@ -13,6 +13,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.selectItem = selectItem;
 	main.toggleItemsList = toggleItemsList;
 	main.title = $state.current.data.title;
+	main.title_extra = '';
 	main.showSimpleToast = showSimpleToast;
 	main.toggleRightSidebar = toggleRightSidebar;
 	main.loginModal = loginModal;

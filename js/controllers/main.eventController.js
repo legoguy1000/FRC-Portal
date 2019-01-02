@@ -10,9 +10,7 @@ function mainEventController($rootScope, $timeout, $q, $scope, $state, eventsSer
 		vm.slack_team_id = configItems.slack_team_id;
 
 		vm.event_id = $stateParams.event_id;
-		vm.event = {
-			name: '',
-		};
+		vm.event = {};
 		$scope.main.title += ' - '+vm.event.name;
 		vm.getEvent = function () {
 			var params = {
@@ -20,6 +18,7 @@ function mainEventController($rootScope, $timeout, $q, $scope, $state, eventsSer
 			};
 			vm.promise = eventsService.getEvent(vm.event_id, params).then(function(response){
 				vm.event = response.data;
+				$scope.main.title_extra = ' - '+vm.event.name;
 				//$scope.main.title += ' - '+vm.event.name;
 			});
 
