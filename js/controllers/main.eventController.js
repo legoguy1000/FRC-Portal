@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','configItems','$sce',
+.controller('main.eventController', ['$timeout', '$q', '$rootScope', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','configItems','$sce',
 	mainEventController
 ]);
-function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,configItems,$sce) {
+function mainEventController($timeout, $rootScope, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,configItems,$sce) {
     var vm = this;
 
 		vm.registrationFormVisible = false;
@@ -63,4 +63,8 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 
 			}, function() { });
 		}
+
+		$rootScope.$on('afterLoginAction', function(event) {
+			vm.getEvent();
+		});
 }
