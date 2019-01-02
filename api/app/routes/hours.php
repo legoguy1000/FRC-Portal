@@ -267,7 +267,7 @@ $app->group('/hours', function () {
         $te = time()+30; //12 hours liftime
         $tokenArr = generateSignInToken($ts, $te);
         $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['token'], 'qr_code'=>$tokenArr['qr_code']);
-        insertLogs($level = 'Information', $message = 'Sign In authorized by '.$user->full_name.'.');
+        insertLogs($level = 'Information', $message = 'Sign In authorized.');
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         insertLogs($level = 'Warning', $message = 'Sign In Authorization Failed.');
