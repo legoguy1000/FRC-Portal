@@ -12,7 +12,7 @@ $app->group('/eventTypes', function () {
     );
     $response = $response->withJson($responseArr);
     return $response;
-  });
+  })->setName('Get Event Types');
   $this->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
@@ -37,7 +37,7 @@ $app->group('/eventTypes', function () {
     }
     $response = $response->withJson($responseArr);
     return $response;
-  });
+  })->setName('Add Event Type');
   $this->group('/{type_id:[a-z0-9]{13}}', function () {
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
@@ -66,7 +66,7 @@ $app->group('/eventTypes', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update Event Types');
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -83,7 +83,7 @@ $app->group('/eventTypes', function () {
 
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Delete Events Types');
   });
 });
 

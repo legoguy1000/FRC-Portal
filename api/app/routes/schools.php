@@ -48,7 +48,7 @@ $app->group('/schools', function () {
 
     $response = $response->withJson($data);
     return $response;
-  });
+  })->setName('Get Schools');
   $this->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
@@ -91,7 +91,7 @@ $app->group('/schools', function () {
     }
     $response = $response->withJson($responseArr);
     return $response;
-  });
+  })->setName('Add School');
   $this->group('/{school_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
       $school_id = $args['school_id'];
@@ -101,7 +101,7 @@ $app->group('/schools', function () {
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $school);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get School');
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -142,7 +142,7 @@ $app->group('/schools', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update School');
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -166,7 +166,7 @@ $app->group('/schools', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Delete School');
   })->add(function ($request, $response, $next) {
     //Event Midddleware to pull event data
     // get the route from the request

@@ -77,7 +77,7 @@ $app->group('/users', function () {
 
     $response = $response->withJson($data);
     return $response;
-  });
+  })->setName('Get Users');
   //$this->post('', function ($request, $response, $args) { });
   $this->group('/{user_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
@@ -95,7 +95,7 @@ $app->group('/users', function () {
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get User');
     $this->group('/annualRequirements', function () {
       $this->get('', function ($request, $response, $args) {
         $user_id = $args['user_id'];
@@ -105,7 +105,7 @@ $app->group('/users', function () {
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get User Annual Requirements');
       $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $user_id = $args['user_id'];
         $season_id = $args['season_id'];
@@ -115,7 +115,7 @@ $app->group('/users', function () {
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get User Annual Requirements by Season');
     });
     $this->group('/eventRequirements', function () {
       $this->get('', function ($request, $response, $args) {
@@ -126,7 +126,7 @@ $app->group('/users', function () {
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get User Event Requirements');
       $this->group('/{event_id:[a-z0-9]{13}}', function () {
         $this->get('', function ($request, $response, $args) {
           $user_id = $args['user_id'];
@@ -137,7 +137,7 @@ $app->group('/users', function () {
           $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
           $response = $response->withJson($responseArr);
           return $response;
-        });
+        })->setName('Get User Event Requirements by Event');
       });
     });
     $this->put('/pin', function ($request, $response, $args) {
@@ -165,7 +165,7 @@ $app->group('/users', function () {
       $responseArr = standardResponse($status = true, $msg = 'PIN has been changed', $data = $user);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update User Sign In PIN');
     $this->get('/hoursByDate/{year:[0-9]{4}}', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -205,7 +205,7 @@ $app->group('/users', function () {
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $allData);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get User Hours by Year');
     $this->group('/linkedAccounts', function () {
       $this->get('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
@@ -216,7 +216,7 @@ $app->group('/users', function () {
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get User Linked Accounts');
       $this->delete('/{auth_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -228,7 +228,7 @@ $app->group('/users', function () {
         $responseArr = array('status'=>true, 'msg'=>'Linked Account Removed', 'data' => $linkedAccount);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Delete User Linked Account');
     });
     $this->group('/notificationPreferences', function () {
       $this->get('', function ($request, $response, $args) {
@@ -243,7 +243,7 @@ $app->group('/users', function () {
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $preferences);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get User Notification Preferences');
       $this->put('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -276,7 +276,7 @@ $app->group('/users', function () {
         }
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Update User Notification Preferences');
     });
     $this->post('/requestMissingHours', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
@@ -312,7 +312,7 @@ $app->group('/users', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Request Missing Hours');
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -353,7 +353,7 @@ $app->group('/users', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update User');
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -369,7 +369,7 @@ $app->group('/users', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Delete User');
   })->add(function ($request, $response, $next) {
     //User Midddleware to pull season data
     // get the route from the request

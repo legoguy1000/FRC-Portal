@@ -65,7 +65,7 @@ $app->group('/hours', function () {
 
       $response = $response->withJson($data);
       return $response;
-    });
+    })->setName('Get Missing Hours Requests');
     $this->group('/{request_id:[a-z0-9]{13}}', function () {
       $this->put('/approve', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
@@ -102,7 +102,7 @@ $app->group('/hours', function () {
         }
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Approve Missing Hours Request');
       $this->put('/deny', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -126,7 +126,7 @@ $app->group('/hours', function () {
         }
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Deny Missing Hours Request');
     });
   });
   $this->group('/signIn', function() {
@@ -140,9 +140,11 @@ $app->group('/hours', function () {
           $decoded = JWT::decode($signin_token, $key, array('HS256'));
           $authed = $decoded->data->signin;
         } catch(\ExpiredException $e) {
-          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+          insertLogs($level = 'Warning', $message = 'Authorization Error: '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error: ');
         } catch(\SignatureInvalidException $e){
-          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+          insertLogs($level = 'Warning', $message = 'Authorization Error: '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error.');
         }
       }else if(!$authed) {
         return unauthorizedResponse($response);
@@ -150,7 +152,7 @@ $app->group('/hours', function () {
       $users = getSignInList(date('Y'));
       $response = $response->withJson($users);
       return $response;
-    });
+    })->setName('Get Sign In List');
     //Time Sheet
     $this->get('/timeSheet/{date:(?:[1-9]\d{3})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])}', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
@@ -174,7 +176,7 @@ $app->group('/hours', function () {
       );
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get Timesheet');
     //Get the list of all sign in/out records
     $this->get('/records', function ($request, $response, $args) {
       $users = array();
@@ -236,7 +238,7 @@ $app->group('/hours', function () {
 
       $response = $response->withJson($data);
       return $response;
-    });
+    })->setName('Get Sign In Records');
     //Create a new signin token
     $this->post('/authorize', function ($request, $response, $args) {
       $args = $request->getParsedBody();
@@ -250,9 +252,9 @@ $app->group('/hours', function () {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $user = $decoded->data->status && $decoded->data->admin;
         } catch(\ExpiredException $e) {
-          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error.');
         } catch(\SignatureInvalidException $e){
-          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error.');
         }
       } elseif(isset($args['auth_code'])) {
         $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status',true)->where('admin',true)->first();
@@ -272,7 +274,7 @@ $app->group('/hours', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Authorize Sign In');
     //Create a new signin token
     $this->post('/token', function ($request, $response, $args) {
       $args = $request->getParsedBody();
@@ -307,14 +309,14 @@ $app->group('/hours', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get Sign In Token');
     //Deauthorize the current signin token
     $this->post('/deauthorize', function ($request, $response, $args) {
       $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Deauthorized');
       insertLogs($level = 'Information', $message = 'Sign In deauthorized.');
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Deauthorize Sign In');
     //Clock in and Out
     $this->post('', function ($request, $response, $args) {
       $args = $request->getParsedBody();
@@ -408,7 +410,7 @@ $app->group('/hours', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Sign In with PIN');
     //Clock in and Out
     $this->post('/qr', function ($request, $response, $args) {
       $user = FrcPortal\Auth::user();
@@ -498,7 +500,7 @@ $app->group('/hours', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Sign In with QR');
   });
 });
 

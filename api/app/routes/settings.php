@@ -33,7 +33,7 @@ $app->group('/settings', function () {
     );
     $response = $response->withJson($responseArr);
     return $response;
-  });
+  })->setName('Get Settings');
 /*  $this->group('/{setting_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
@@ -123,7 +123,7 @@ $app->group('/settings', function () {
       $responseArr['data'] = $data;
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get Settings by Section');
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -144,7 +144,7 @@ $app->group('/settings', function () {
       //$responseArr['data'] = $data;
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update Settings');
   });
   $this->group('/serviceAccountCredentials', function () {
     $this->get('', function ($request, $response, $args) {
@@ -165,7 +165,7 @@ $app->group('/settings', function () {
     	}
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get Service Account Credentials');
     $this->post('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -203,7 +203,7 @@ $app->group('/settings', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update Service Account Credentials');
   });
   $this->post('/testSlack', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
@@ -222,7 +222,7 @@ $app->group('/settings', function () {
     }
     $response = $response->withJson($responseArr);
     return $response;
-  });
+  })->setName('Test Slack');
   $this->post('', function ($request, $response, $args) {
 
     $response = $response->withJson($responseArr);
