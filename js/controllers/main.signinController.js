@@ -46,7 +46,11 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	}
 
 	vm.getUsers = function() {
-		vm.promise = signinService.signInUserList().then(function(response) {
+		var tok = signinService.getToken();
+		if(tok != '') {
+			var token = tok;
+		}
+		vm.promise = signinService.signInUserList(token).then(function(response) {
 			vm.users = response;
 		});
 	}

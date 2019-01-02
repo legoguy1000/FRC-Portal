@@ -132,6 +132,22 @@ $app->group('/hours', function () {
   $this->group('/signIn', function() {
     //Get the list of users and their last sign/out and hours
     $this->get('/list', function ($request, $response, $args) {
+      $authed = false;
+      if(isset($args['signin_token'])) {
+        $key = getSettingsProp('jwt_signin_key');
+        $signin_token = $args['signin_token'];
+        try {
+          $decoded = JWT::decode($signin_token, $key, array('HS256'));
+          $authed = $decoded->data->signin;
+        } catch(\ExpiredException $e) {
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+        } catch(\SignatureInvalidException $e){
+          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+        }
+      }
+      if(!$authed && !FrcPortal\Auth::isAuthenticated()) {
+        return unauthorizedResponse($response);
+      }
       $users = getSignInList(date('Y'));
       $response = $response->withJson($users);
       return $response;

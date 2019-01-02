@@ -35,8 +35,9 @@ angular.module('FrcPortal')
 		logout: function() {
 			$window.localStorage.removeItem('signin_token');
 		},
-		signInUserList: function () {
-			return $http.get('api/hours/signIn/list')
+		signInUserList: function (signin_token) {
+			var token_param = signin_token != undefined ? '?signin_token='+signin_token: '';
+			return $http.get('api/hours/signIn/list'+token_param)
 			.then(function(response) {
 				return response.data;
 			});
