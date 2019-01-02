@@ -71,6 +71,9 @@ angular.module('FrcPortal')
 			return $http.post('api/hours/signIn/token',formData)
 			.then(function(response) {
 				return response.data;
+			})
+			.catch(function(response) {
+				return response.data;
 			});
 		},
 	};

@@ -38,9 +38,12 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		}
 		signinService.generateSignInToken(data).then(function(response) {
 			vm.loading = false;
-			signinService.saveToken(response.signin_token);
-			//vm.qrCode = response.qr_code;
-			vm.qrCodeUrl = vm.genQrCodeUrl();
+			if(!response.status) {
+				signinService.saveToken(response.signin_token);
+				vm.qrCodeUrl = vm.genQrCodeUrl();
+			} else {
+				$interval.cancel(vm.tokenInterval);
+			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
 	}
