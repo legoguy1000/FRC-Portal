@@ -132,8 +132,8 @@ $app->group('/hours', function () {
   $this->group('/signIn', function() {
     //Get the list of users and their last sign/out and hours
     $this->get('/list', function ($request, $response, $args) {
-      $authed = false;
-      if(isset($args['signin_token'])) {
+      $authed = FrcPortal\Auth::isAuthenticated() ? true:false;
+      if(!$authed && isset($args['signin_token'])) {
         $key = getSettingsProp('jwt_signin_key');
         $signin_token = $args['signin_token'];
         try {
@@ -145,6 +145,9 @@ $app->group('/hours', function () {
         } catch(\SignatureInvalidException $e){
           return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
         }
+      }
+      if(!$authed) {
+        return unauthorizedResponse($response);
       }
       $users = getSignInList(date('Y'));
       $response = $response->withJson($users);
