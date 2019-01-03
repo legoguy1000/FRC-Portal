@@ -105,14 +105,7 @@ $app->group('/seasons', function () {
       $newSeason->membership_form_sheet = 'Form Responses 1';
       $newSeason->game_logo = !isset($formData['game_logo']) && !is_null($formData['game_logo']) ? $formData['game_logo']:'';
       if($newSeason->save()) {
-        $limit = 10;
-        $totalNum = FrcPortal\Season::count();
-        $seasons = FrcPortal\Season::orderBy('year','DESC')->limit($limit)->get();
-        $data = array();
-        $data['results'] = $seasons;
-        $data['total'] = $totalNum;
-        $data['maxPage'] = ceil($totalNum/$limit);
-        $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$data);
+        $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$newSeason);
         //Send notifications
         $msgData = array(
           'slack' => array(
