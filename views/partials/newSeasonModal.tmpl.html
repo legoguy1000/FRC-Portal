@@ -29,12 +29,13 @@
 			</div>
 			<div layout="column" layout-gt-xs="row">
 				<md-input-container flex class="md-icon-float md-block">
-					<label>Start Date</label>
+					<label>Start Date/Kickoff</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
 					<input moment-picker="vm.data.start_date" required
 						 format="LL"
 						 min-view="year"
 						 max-view="day"
+ 							min-date="vm.start_min_date"
 						 ng-model="vm.data.start_date_full">
 					</input>
 				</md-input-container>
