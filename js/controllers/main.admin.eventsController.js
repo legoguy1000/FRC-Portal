@@ -73,10 +73,7 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 			}
 		})
 		.then(function(response) {
-			vm.events = response.data.results;
-			vm.total = response.data.total;
-			vm.maxPage = response.data.maxPage;
-			$log.info('asdf');
+			vm.getEvents();
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
 		});

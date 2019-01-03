@@ -205,14 +205,7 @@ $app->group('/events', function () {
       $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
       $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
       if($event->save()) {
-        $limit = 10;
-        $totalNum = FrcPortal\Event::count();
-        $events = FrcPortal\Event::orderBy('event_start','DESC')->limit($limit)->get();
-        $data = array();
-        $data['results'] = $events;
-        $data['total'] = $totalNum;
-        $data['maxPage'] = ceil($totalNum/$limit);
-        $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$data);
+        $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$event);
         insertLogs($level = 'Information', $message = $event->name.' created');
          //Send notifications
         $host = getSettingsProp('env_url');
