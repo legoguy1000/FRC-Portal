@@ -35,7 +35,8 @@
 						 format="LL"
 						 min-view="year"
 						 max-view="day"
- 							min-date="vm.start_min_date"
+						 min-date="vm.start_min_date"
+ 						 change="vm.onStartChange(newValue, oldValue)"
 						 ng-model="vm.data.start_date_full">
 					</input>
 				</md-input-container>
@@ -46,6 +47,7 @@
 						 format="LL"
 						 min-view="year"
 						 max-view="day"
+						 min-date="vm.start_min_date"
 						 ng-model="vm.data.bag_day_full">
 					</input>
 				</md-input-container>
@@ -56,6 +58,7 @@
 						 format="LL"
 						 min-view="year"
 						 max-view="day"
+						 min-date="vm.end_min_date"
 						 ng-model="vm.data.end_date_full">
 					</input>
 				</md-input-container>
