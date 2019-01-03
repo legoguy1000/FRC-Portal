@@ -31,7 +31,7 @@ $app->group('/eventTypes', function () {
     $type->type = $formData['type'];
     $type->description = isset($formData['description']) ? $formData['description']:'';
     if($type->save()) {
-      $responseArr['data'] = FrcPortal\EventType::all();
+      $responseArr['data'] = $type;
       $responseArr['msg'] = 'New event type added';
       $responseArr['status'] = true;
     }
@@ -59,7 +59,7 @@ $app->group('/eventTypes', function () {
         $type->type = $formData['type'];
         $type->description = isset($formData['description']) ? $formData['description']:'';
         if($type->save()) {
-          $responseArr['data'] = FrcPortal\EventType::all();
+          $responseArr['data'] = $type;
           $responseArr['msg'] = 'Event type updated';
           $responseArr['status'] = true;
         }
@@ -77,7 +77,6 @@ $app->group('/eventTypes', function () {
       $type_id = $args['type_id'];
 
       $type = FrcPortal\EventType::destroy($type_id);
-      $responseArr['data'] = FrcPortal\EventType::all();
       $responseArr['msg'] = 'Event type deleted';
       $responseArr['status'] = true;
 
