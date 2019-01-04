@@ -40,7 +40,11 @@ class School extends Eloquent {
   }*/
 
   public function getStudentCountAttribute() {
-    return User::where('school_id',$this->attributes['school_id'])->count();
+    $return = null;
+    if(!is_null($this->attributes['school_id'])) {
+       $return = User::where('school_id',$this->attributes['school_id'])->count();
+    }
+    return $return;
   }
 
   /**
