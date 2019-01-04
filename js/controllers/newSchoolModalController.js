@@ -14,30 +14,26 @@ function newSchoolModalController($log,$mdDialog,$scope,schoolInfo,schoolsServic
 
 	vm.addSchool = function() {
 		schoolsService.addSchool(vm.data).then(function(response) {
-			if(response.status) {
-				$mdDialog.hide(response);
-			}
-			$mdToast.show(
-	      $mdToast.simple()
-	        .textContent(response.msg)
-	        .position('top right')
-	        .hideDelay(3000)
-	    );
+			after(response);
 		});
 	}
 
 	vm.updateSchool = function() {
 		schoolsService.updateSchool(vm.data).then(function(response) {
-			if(response.status) {
-				$mdDialog.hide(response);
-			}
-			$mdToast.show(
-	      $mdToast.simple()
-	        .textContent(response.msg)
-	        .position('top right')
-	        .hideDelay(3000)
-	    );
+			 after(response);
 		});
+	}
+
+	function after(response) {
+		if(response.status) {
+			$mdDialog.hide(response);
+		}
+		$mdToast.show(
+			$mdToast.simple()
+				.textContent(response.msg)
+				.position('top right')
+				.hideDelay(3000)
+		);
 	}
 
 	vm.submitForm = function() {

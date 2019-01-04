@@ -75,14 +75,7 @@ $app->group('/schools', function () {
       $newSchool->abv = $formData['abv'];
       $newSchool->logo_url = !isset($formData['logo_url']) && !is_null($formData['logo_url']) ? $formData['logo_url']:'';
       if($newSchool->save()) {
-        $limit = 10;
-        $totalNum = FrcPortal\School::count();
-        $schools = FrcPortal\School::orderBy('student_count','DESC')->limit($limit)->get();
-        $data = array();
-        $data['results'] = $schools;
-        $data['total'] = $totalNum;
-        $data['maxPage'] = ceil($totalNum/$limit);
-        $responseArr = array('status'=>true, 'msg'=>$formData['school_name'].' created', 'data'=>$data);
+        $responseArr = array('status'=>true, 'msg'=>$formData['school_name'].' created', 'data'=>$newSchool);
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Something went wrong');
       }
@@ -153,14 +146,7 @@ $app->group('/schools', function () {
       $school_id = $args['school_id'];
       $school = FrcPortal\School::destroy($school_id);
       if($school) {
-        $limit = 10;
-        $totalNum = FrcPortal\School::count();
-        $schools = FrcPortal\School::orderBy('student_count','DESC')->limit($limit)->get();
-        $data = array();
-        $data['results'] = $schools;
-        $data['total'] = $totalNum;
-        $data['maxPage'] = ceil($totalNum/$limit);
-        $responseArr = array('status'=>true, 'msg'=>'School Deleted', 'data' => $data);
+        $responseArr = array('status'=>true, 'msg'=>'School Deleted', 'data' => null);
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $school);
       }
