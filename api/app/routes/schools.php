@@ -12,7 +12,7 @@ $app->group('/schools', function () {
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
     $totalNum = 0;
-    $schools = FrcPortal\School::select()->leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'sc.school_id', '=', 'schools.school_id')->addSelect(DB::raw('IFNULL(sc.student_count,0) as student_count'));
+    $schools = FrcPortal\School::select()->leftJoin(DB::raw('(SELECT school_id as sid, COUNT(*) as student_count FROM users GROUP BY sid) sc'), 'sc.sid', '=', 'schools.school_id')->addSelect(DB::raw('IFNULL(sc.student_count,0) as student_count'));
     if($filter != '') {
       $schools = $schools->orHavingRaw('school_name LIKE ?',array('%'.$filter.'%'));
       $schools = $schools->orHavingRaw('abv LIKE ?',array('%'.$filter.'%'));
