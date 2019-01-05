@@ -103,7 +103,9 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			if(response.status && response.signin_token != undefined) {
 				signinService.saveToken(response.signin_token);
 				vm.qrCodeUrl = vm.genQrCodeUrl();
-				vm.tokenInterval = $interval(getToken, vm.tokenIntervalTime);
+				$timeout(function() {
+					vm.tokenInterval = $interval(getToken, vm.tokenIntervalTime);
+				}, vm.tokenIntervalTime);
 				vm.getUsers();
 			}
 			vm.signInAuthed = signinService.isAuthed();
