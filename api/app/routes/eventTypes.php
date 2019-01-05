@@ -12,7 +12,7 @@ $app->group('/eventTypes', function () {
     );
     $response = $response->withJson($responseArr);
     return $response;
-  });
+  })->setName('Get Event Types');
   $this->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
@@ -31,13 +31,13 @@ $app->group('/eventTypes', function () {
     $type->type = $formData['type'];
     $type->description = isset($formData['description']) ? $formData['description']:'';
     if($type->save()) {
-      $responseArr['data'] = FrcPortal\EventType::all();
+      $responseArr['data'] = $type;
       $responseArr['msg'] = 'New event type added';
       $responseArr['status'] = true;
     }
     $response = $response->withJson($responseArr);
     return $response;
-  });
+  })->setName('Add Event Type');
   $this->group('/{type_id:[a-z0-9]{13}}', function () {
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
@@ -59,14 +59,14 @@ $app->group('/eventTypes', function () {
         $type->type = $formData['type'];
         $type->description = isset($formData['description']) ? $formData['description']:'';
         if($type->save()) {
-          $responseArr['data'] = FrcPortal\EventType::all();
+          $responseArr['data'] = $type;
           $responseArr['msg'] = 'Event type updated';
           $responseArr['status'] = true;
         }
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update Event Types');
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -77,13 +77,12 @@ $app->group('/eventTypes', function () {
       $type_id = $args['type_id'];
 
       $type = FrcPortal\EventType::destroy($type_id);
-      $responseArr['data'] = FrcPortal\EventType::all();
       $responseArr['msg'] = 'Event type deleted';
       $responseArr['status'] = true;
 
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Delete Events Types');
   });
 });
 

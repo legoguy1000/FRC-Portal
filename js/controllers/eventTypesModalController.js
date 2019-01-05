@@ -54,7 +54,7 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 				vm.formData = null;
 				vm.newTypeForm.$setPristine();
 				vm.newTypeForm.$setUntouched();
-				vm.event_types = response.data;
+				vm.getEventTypeList();
 			}
 			$mdToast.show(
 				$mdToast.simple()
@@ -68,7 +68,7 @@ function eventTypesModalController($log,$element,$mdDialog,$scope,eventsService,
 	vm.deleteType = function (event_type) {
 		vm.promise =	eventsService.deleteEventType(event_type).then(function(response) {
 			if(response.status) {
-				vm.event_types = response.data;
+				vm.getEventTypeList();
 			}
 			$mdToast.show(
 				$mdToast.simple()

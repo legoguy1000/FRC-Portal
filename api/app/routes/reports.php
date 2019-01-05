@@ -18,7 +18,7 @@ $app->group('/reports', function () {
     $seasons = $seasons->sortByDesc('total_hours')->values()->slice(0,5);
     $response = $response->withJson($seasons);
     return $response;
-  });
+  })->setName('Top User Hours by Year Report');
   /**
   * Average Hours per Person per Year
   **/
@@ -65,7 +65,7 @@ $app->group('/reports', function () {
     );
     $response = $response->withJson($allData);
     return $response;
-  });
+  })->setName('Hours per Person per Year Report');
   /**
   * Active Users per Year
   **/
@@ -180,7 +180,7 @@ $app->group('/reports', function () {
     $allData = multiYearReportData($data, $series, $years);
     $response = $response->withJson($allData);
     return $response;
-  });
+  })->setName('Active Users per Year Report');
   /**
   * Total Hours per Grade per Year
   **/
@@ -249,7 +249,7 @@ $app->group('/reports', function () {
     $allData = multiYearReportData($data, $series, $years);
     $response = $response->withJson($allData);
     return $response;
-  });
+  })->setName('Hours per Grade per Year Report');
   /**
   * Total & average Hours per Gender per Year
   **/
@@ -326,7 +326,7 @@ $app->group('/reports', function () {
     );
     $response = $response->withJson($allData);
     return $response;
-  });
+  })->setName('Hours per Gender per Year Report');
   /**
   * Hours per Event per Year
   **/
@@ -394,7 +394,7 @@ $app->group('/reports', function () {
     );
     $response = $response->withJson($allData);
     return $response;
-  });
+  })->setName('Hours per Event per Year Report');
   /**
   * Hours per Event Type per Year
   **/
@@ -433,7 +433,7 @@ $app->group('/reports', function () {
     );
     $response = $response->withJson($allData);
     return $response;
-  });
+  })->setName('Hours per Event Type per Year Report');
   /**
   * Total & average Hours per User Type per Year
   **/
@@ -473,7 +473,7 @@ $app->group('/reports', function () {
     $allData = multiYearReportData($data, $series, $years);
     $response = $response->withJson($allData);
     return $response;
-  });
+  })->setName('Hours per User Type per Year Report');
 });
 
 

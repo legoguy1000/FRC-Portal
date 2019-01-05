@@ -63,9 +63,7 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 	vm.deleteSchool = function (school_id) {
 		vm.promise = schoolsService.deleteSchool(school_id).then(function(response){
 			if(response.status) {
-				vm.schools = response.data;
-				vm.total = response.total;
-				vm.maxPage = response.maxPage;
+				vm.getSchools();
 			}
 		});
 	};
@@ -88,9 +86,7 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 		})
 		.then(function(response) {
 			if(newSchool) {
-				vm.schools = response.data.results;
-				vm.total = response.data.total;
-				vm.maxPage = response.data.maxPage;
+				vm.getSchools();
 			} else {
 				vm.schools[index] = response.data;
 			}

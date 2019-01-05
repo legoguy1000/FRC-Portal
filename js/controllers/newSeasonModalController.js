@@ -26,6 +26,9 @@ function newSeasonModalController($log,$mdDialog,$scope,userInfo,usersService,se
 	}
 
 	vm.onYearChange = function (newValue, oldValue) {
-		$log.log('Meeting changed from ' + oldValue + ' to ' + newValue);
+		vm.start_min_date = moment(vm.data.year);
+	};
+	vm.onStartChange = function (newValue, oldValue) {
+		vm.end_min_date = moment(vm.data.start_date);
 	};
 }

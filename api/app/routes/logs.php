@@ -70,7 +70,7 @@ $app->group('/logs', function () {
     //insertLogs('information', 'Loaded /logs endpoint');
     $response = $response->withJson($data);
     return $response;
-  });
+  })->setName('Get Logs');
 });
 
 

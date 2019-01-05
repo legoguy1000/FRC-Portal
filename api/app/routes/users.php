@@ -77,7 +77,7 @@ $app->group('/users', function () {
 
     $response = $response->withJson($data);
     return $response;
-  });
+  })->setName('Get Users');
   //$this->post('', function ($request, $response, $args) { });
   $this->group('/{user_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
@@ -95,7 +95,7 @@ $app->group('/users', function () {
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get User');
     $this->group('/annualRequirements', function () {
       $this->get('', function ($request, $response, $args) {
         $user_id = $args['user_id'];
@@ -105,7 +105,7 @@ $app->group('/users', function () {
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get User Annual Requirements');
       $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $user_id = $args['user_id'];
         $season_id = $args['season_id'];
@@ -115,7 +115,7 @@ $app->group('/users', function () {
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get User Annual Requirements by Season');
     });
     $this->group('/eventRequirements', function () {
       $this->get('', function ($request, $response, $args) {
@@ -126,7 +126,7 @@ $app->group('/users', function () {
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get User Event Requirements');
       $this->group('/{event_id:[a-z0-9]{13}}', function () {
         $this->get('', function ($request, $response, $args) {
           $user_id = $args['user_id'];
@@ -137,7 +137,7 @@ $app->group('/users', function () {
           $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
           $response = $response->withJson($responseArr);
           return $response;
-        });
+        })->setName('Get User Event Requirements by Event');
       });
     });
     $this->put('/pin', function ($request, $response, $args) {
@@ -149,23 +149,28 @@ $app->group('/users', function () {
       //User passed from middleware
       $user = $request->getAttribute('user');
       if(!isset($formData['pin']) || $formData['pin'] == '') {
+        insertLogs($level = 'Information', $message = 'PIN update failed. PIN cannot be blank.');
         return badRequestResponse($response, $msg = 'PIN cannot be blank');
       }
       if(!is_numeric($formData['pin'])) {
-        return badRequestResponse($response, $msg = 'PIN must bee numbers only 0-9');
+        insertLogs($level = 'Information', $message = 'PIN update failed. PIN must be numbers only, 0-9.');
+        return badRequestResponse($response, $msg = 'PIN must be numbers only, 0-9');
       }
       if(strlen($formData['pin']) < 4 || strlen($formData['pin']) > 8) {
+        insertLogs($level = 'Information', $message = 'PIN update failed. PIN must be between 4 to 8 numbers.');
         return badRequestResponse($response, $msg = 'PIN must be between 4 to 8 numbers');
       }
-      if($currentPIN == hash('SHA256', $formData['pin'])) {
+      /*if($user->signin_pin == hash('SHA256', $formData['pin'])) {
+        insertLogs($level = 'Information', $message = 'PIN update failed. PIN cannot be the same.');
         return badRequestResponse($response, $msg = 'PIN must be changed to a different number');
-      }
-      $user->signin_pin = hash('SHA256', $pin);
+      } */
+      $user->signin_pin = hash('SHA256', $formData['pin']);
       $user->save();
+      insertLogs($level = 'Information', $message = 'PIN updated');
       $responseArr = standardResponse($status = true, $msg = 'PIN has been changed', $data = $user);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update User Sign In PIN');
     $this->get('/hoursByDate/{year:[0-9]{4}}', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -205,7 +210,7 @@ $app->group('/users', function () {
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $allData);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get User Hours by Year');
     $this->group('/linkedAccounts', function () {
       $this->get('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
@@ -216,7 +221,7 @@ $app->group('/users', function () {
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get User Linked Accounts');
       $this->delete('/{auth_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -224,11 +229,12 @@ $app->group('/users', function () {
         $user_id = $args['user_id'];
         $auth_id = $args['auth_id'];
         $user = FrcPortal\Oauth::where('user_id',$user_id)->where('auth_id',$auth_id)->delete();
+        insertLogs($level = 'Information', $message = 'Linked account removed.');
         $linkedAccount = FrcPortal\Oauth::where('user_id',$user_id)->get();
         $responseArr = array('status'=>true, 'msg'=>'Linked Account Removed', 'data' => $linkedAccount);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Delete User Linked Account');
     });
     $this->group('/notificationPreferences', function () {
       $this->get('', function ($request, $response, $args) {
@@ -243,7 +249,7 @@ $app->group('/users', function () {
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $preferences);
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Get User Notification Preferences');
       $this->put('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -276,24 +282,30 @@ $app->group('/users', function () {
         }
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Update User Notification Preferences');
     });
     $this->post('/requestMissingHours', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       $user_id = $args['user_id'];
+      //User passed from middleware
+      $user = $request->getAttribute('user');
       if($user_id != $userId) {
+        insertLogs($level = 'Warning', $message = 'Attempted to submit a missing hours request for '.$user->full_name);
         return unauthorizedResponse($response);
       }
 
       if(!isset($formData['start_time']) || $formData['start_time'] == '') {
+        insertLogs($level = 'Information', $message = 'Missing hours request failed. Start time cannot be blank.');
         return badRequestResponse($response, $msg = 'Start Time cannot be blank');
       }
       if(!isset($formData['end_time']) || $formData['end_time'] == '') {
+        insertLogs($level = 'Information', $message = 'Missing hours request failed. End time cannot be blank.');
         return badRequestResponse($response, $msg = 'End Time cannot be blank');
       }
       if(!isset($formData['comment']) || $formData['comment'] == '') {
+        insertLogs($level = 'Information', $message = 'Missing hours request failed. Comment cannot be blank.');
         return badRequestResponse($response, $msg = 'Comment cannot be blank');
       }
       $start_time = date('Y-m-d H:i:s',strtotime($formData['start_time']));
@@ -309,10 +321,11 @@ $app->group('/users', function () {
       if($request->save()) {
         $responseArr['status'] = true;
         $responseArr['msg'] = 'Request submited';
+        insertLogs($level = 'Information', $message = 'Missing hours request submitted');
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Request Missing Hours');
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -321,7 +334,8 @@ $app->group('/users', function () {
       $user_id = $args['user_id'];
       $selfUpdate = $user_id == $userId;
       $admin = FrcPortal\Auth::isAdmin();
-      if( !$selfUpdate && !$admin) {
+      if(!$selfUpdate && !$admin) {
+        insertLogs($level = 'Warning', $message = 'User information update failed. Unauthorized user.');
         return unauthorizedResponse($response);
       }
       //User passed from middleware
@@ -349,11 +363,12 @@ $app->group('/users', function () {
       }
       if($user->save()) {
         $user->load('school');
+        insertLogs($level = 'Information', $message = 'User information updated.');
         $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $user);
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update User');
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -361,15 +376,17 @@ $app->group('/users', function () {
 
       $user_id = $args['user_id'];
       if(!FrcPortal\Auth::isAdmin()) {
+        insertLogs($level = 'Warning', $message = 'User deletetion failed. Unauthorized user.');
         return unauthorizedResponse($response);
       }
       $user = FrcPortal\User::destroy($user_id);
       if($user) {
+        insertLogs($level = 'Information', $message = 'User deleted.');
         $responseArr = array('status'=>true, 'msg'=>'User Deleted', 'data' => $user);
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Delete User');
   })->add(function ($request, $response, $next) {
     //User Midddleware to pull season data
     // get the route from the request

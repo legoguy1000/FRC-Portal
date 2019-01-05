@@ -19,6 +19,7 @@ Version 2.13.0
 * Add logging and view under admin
 * Add route names
 * Add Github and Amazon Login providers
+* Prompt for authentication prior to showing sign in list
 
 Version 2.12.0
 * Simplified some code

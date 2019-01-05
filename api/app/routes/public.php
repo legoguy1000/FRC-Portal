@@ -5,7 +5,7 @@ $app->group('/public', function () {
     $tz = timezone_identifiers_list();
     $response = $response->withJson($tz);
     return $response;
-  });
+  })->setName('Get Timezones');
 });
 
 

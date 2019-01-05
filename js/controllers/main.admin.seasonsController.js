@@ -74,10 +74,7 @@ function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService
 			}
 		})
 		.then(function(response) {
-			vm.seasons = response.data.results;
-			vm.total = response.data.total;
-			vm.maxPage = response.data.maxPage;
-			$log.info('asdf');
+			vm.getSeasons();
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
 		});

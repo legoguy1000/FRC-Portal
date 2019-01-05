@@ -1,26 +1,25 @@
 angular.module('FrcPortal')
-.controller('main.eventController', ['$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','configItems','$sce',
+.controller('main.eventController', ['$rootScope','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','configItems','$sce',
 	mainEventController
 ]);
-function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,configItems,$sce) {
+function mainEventController($rootScope, $timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,configItems,$sce) {
     var vm = this;
 
 		vm.registrationFormVisible = false;
-		vm.state = $state.current.name;
-
-
 		vm.slack_url = configItems.slack_url;
 		vm.slack_team_id = configItems.slack_team_id;
 
 		vm.event_id = $stateParams.event_id;
 		vm.event = {};
+		$scope.main.title += ' - '+vm.event.name;
 		vm.getEvent = function () {
 			var params = {
 				users: true,
 			};
 			vm.promise = eventsService.getEvent(vm.event_id, params).then(function(response){
 				vm.event = response.data;
-				$scope.main.title += ' - '+vm.event.name;
+				$scope.main.title_extra = ' - '+vm.event.name;
+				//$scope.main.title += ' - '+vm.event.name;
 			});
 
 		};
@@ -63,4 +62,8 @@ function mainEventController($timeout, $q, $scope, $state, eventsService, $mdDia
 
 			}, function() { });
 		}
+
+		$rootScope.$on('afterLoginAction', function(event) {
+			vm.getEvent();
+		});
 }

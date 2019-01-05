@@ -12,7 +12,7 @@ $app->group('/schools', function () {
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
     $totalNum = 0;
-    $schools = FrcPortal\School::leftJoin(DB::raw('(SELECT school_id, COUNT(*) as student_count FROM users GROUP BY school_id) sc'), 'sc.school_id', '=', 'schools.school_id')->select()->addSelect(DB::raw('IFNULL(sc.student_count,0) as student_count'));
+    $schools = FrcPortal\School::select()->leftJoin(DB::raw('(SELECT school_id as sid, COUNT(*) as student_count FROM users GROUP BY sid) sc'), 'sc.sid', '=', 'schools.school_id')->addSelect(DB::raw('IFNULL(sc.student_count,0) as student_count'));
     if($filter != '') {
       $schools = $schools->orHavingRaw('school_name LIKE ?',array('%'.$filter.'%'));
       $schools = $schools->orHavingRaw('abv LIKE ?',array('%'.$filter.'%'));
@@ -48,7 +48,7 @@ $app->group('/schools', function () {
 
     $response = $response->withJson($data);
     return $response;
-  });
+  })->setName('Get Schools');
   $this->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
@@ -75,14 +75,7 @@ $app->group('/schools', function () {
       $newSchool->abv = $formData['abv'];
       $newSchool->logo_url = !isset($formData['logo_url']) && !is_null($formData['logo_url']) ? $formData['logo_url']:'';
       if($newSchool->save()) {
-        $limit = 10;
-        $totalNum = FrcPortal\School::count();
-        $schools = FrcPortal\School::orderBy('student_count','DESC')->limit($limit)->get();
-        $data = array();
-        $data['results'] = $schools;
-        $data['total'] = $totalNum;
-        $data['maxPage'] = ceil($totalNum/$limit);
-        $responseArr = array('status'=>true, 'msg'=>$formData['school_name'].' created', 'data'=>$data);
+        $responseArr = array('status'=>true, 'msg'=>$formData['school_name'].' created', 'data'=>$newSchool);
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Something went wrong');
       }
@@ -91,7 +84,7 @@ $app->group('/schools', function () {
     }
     $response = $response->withJson($responseArr);
     return $response;
-  });
+  })->setName('Add School');
   $this->group('/{school_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
       $school_id = $args['school_id'];
@@ -101,7 +94,7 @@ $app->group('/schools', function () {
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $school);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get School');
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -142,7 +135,7 @@ $app->group('/schools', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update School');
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -153,20 +146,13 @@ $app->group('/schools', function () {
       $school_id = $args['school_id'];
       $school = FrcPortal\School::destroy($school_id);
       if($school) {
-        $limit = 10;
-        $totalNum = FrcPortal\School::count();
-        $schools = FrcPortal\School::orderBy('student_count','DESC')->limit($limit)->get();
-        $data = array();
-        $data['results'] = $schools;
-        $data['total'] = $totalNum;
-        $data['maxPage'] = ceil($totalNum/$limit);
-        $responseArr = array('status'=>true, 'msg'=>'School Deleted', 'data' => $data);
+        $responseArr = array('status'=>true, 'msg'=>'School Deleted', 'data' => null);
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Something went wrong', 'data' => $school);
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Delete School');
   })->add(function ($request, $response, $next) {
     //Event Midddleware to pull event data
     // get the route from the request

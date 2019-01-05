@@ -1,5 +1,10 @@
 <?php
 use \Firebase\JWT\JWT;
+use \Firebase\JWT\UnexpectedValueException;
+use \Firebase\JWT\ExpiredException;
+use \Firebase\JWT\SignatureInvalidException;
+use \Firebase\JWT\BeforeValidException;
+use \Firebase\JWT\Exception;
 use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/hours', function () {
   $this->group('/missingHoursRequests', function () {
@@ -65,7 +70,7 @@ $app->group('/hours', function () {
 
       $response = $response->withJson($data);
       return $response;
-    });
+    })->setName('Get Missing Hours Requests');
     $this->group('/{request_id:[a-z0-9]{13}}', function () {
       $this->put('/approve', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
@@ -96,13 +101,13 @@ $app->group('/hours', function () {
              $responseArr['msg'] = 'Missing hours request approved';
              $mhRequest->load('user');
              insertLogs($level = 'Information', $message = 'Missing hours request approved for '.$mhRequest->user->full_name.'. ('.$mhRequest['time_in'].' - '.$mhRequest['time_out'].')');
-          } catch(\Exception $e){
+          } catch(Exception $e){
              DB::rollback();
           }
         }
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Approve Missing Hours Request');
       $this->put('/deny', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
@@ -126,16 +131,33 @@ $app->group('/hours', function () {
         }
         $response = $response->withJson($responseArr);
         return $response;
-      });
+      })->setName('Deny Missing Hours Request');
     });
   });
   $this->group('/signIn', function() {
     //Get the list of users and their last sign/out and hours
     $this->get('/list', function ($request, $response, $args) {
+      $authed = FrcPortal\Auth::isAuthenticated() ? true:false;
+      if(!$authed && !is_null($request->getParam('signin_token'))) {
+        $key = getSettingsProp('jwt_signin_key');
+        $signin_token = $request->getParam('signin_token');
+        try {
+          $decoded = JWT::decode($signin_token, $key, array('HS256'));
+          $authed = $decoded->data->signin;
+        } catch(ExpiredException $e) {
+          insertLogs($level = 'Warning', $message = 'Authorization Error: '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error.');
+        } catch(SignatureInvalidException $e){
+          insertLogs($level = 'Warning', $message = 'Authorization Error: '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error.');
+        }
+      }else if(!$authed) {
+        return unauthorizedResponse($response);
+      }
       $users = getSignInList(date('Y'));
       $response = $response->withJson($users);
       return $response;
-    });
+    })->setName('Get Sign In List');
     //Time Sheet
     $this->get('/timeSheet/{date:(?:[1-9]\d{3})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])}', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
@@ -159,7 +181,7 @@ $app->group('/hours', function () {
       );
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get Timesheet');
     //Get the list of all sign in/out records
     $this->get('/records', function ($request, $response, $args) {
       $users = array();
@@ -221,7 +243,7 @@ $app->group('/hours', function () {
 
       $response = $response->withJson($data);
       return $response;
-    });
+    })->setName('Get Sign In Records');
     //Create a new signin token
     $this->post('/authorize', function ($request, $response, $args) {
       $args = $request->getParsedBody();
@@ -233,31 +255,41 @@ $app->group('/hours', function () {
         $jwt = $args['auth_token'];
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
-          $user = $decoded->data->status && $decoded->data->admin;
-        } catch(\ExpiredException $e) {
-          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
-        } catch(\SignatureInvalidException $e){
-          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+          $user = $decoded->data;
+          FrcPortal\Auth::setCurrentUser($user->user_id);
+        } catch(ExpiredException $e) {
+          insertLogs($level = 'WARNING', $message = 'Tried to authorize sign in. User token was expired. '.$e->getMessage());
+          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
+        } catch(SignatureInvalidException $e){
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. Old user token signature was invalid. '.$e->getMessage());
+          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
+        } catch(BeforeValidException $e){
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. '.$e->getMessage());
+          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
+        } catch(UnexpectedValueException $e){
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. '.$e->getMessage());
+          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
         }
       } elseif(isset($args['auth_code'])) {
         $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status',true)->where('admin',true)->first();
+        FrcPortal\Auth::setCurrentUser($user->user_id);
       } else {
-        insertLogs($level = 'Warning', $message = 'Sign In Authorization Failed.');
+        insertLogs($level = 'Warning', $message = 'Sign in authorization failed.');
         return badRequestResponse($response);
       }
-      if(!is_null($user)) {
+      if(!is_null($user) && $user->status && $user->admin) {
         $ts = time();
-        $te = time()+30; //12 hours liftime
+        $te = time()+45; //12 hours liftime
         $tokenArr = generateSignInToken($ts, $te);
         $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['token'], 'qr_code'=>$tokenArr['qr_code']);
-        insertLogs($level = 'Information', $message = 'Sign In authorized by '.$user->full_name.'.');
+        insertLogs($level = 'Information', $message = 'Sign in authorized.');
       } else {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
-        insertLogs($level = 'Warning', $message = 'Sign In Authorization Failed.');
+        insertLogs($level = 'Warning', $message = 'Sign in authorization failed. Unauthorized user');
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Authorize Sign In');
     //Create a new signin token
     $this->post('/token', function ($request, $response, $args) {
       $args = $request->getParsedBody();
@@ -271,11 +303,21 @@ $app->group('/hours', function () {
         $jwt = $args['token'];
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
-          $te = time()+30; //30 second liftime
-        } catch(\ExpiredException $e) {
-          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
-        } catch(\SignatureInvalidException $e){
-          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+          $data = (array) $decoded;
+          $te = time()+45; //30 second liftime
+        } catch(ExpiredException $e) {
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. Old token was expired. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Token was expired. Please Reauthorize sign in.');
+        } catch(SignatureInvalidException $e){
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. Old token signature was invalid. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
+        } catch(BeforeValidException $e){
+          $date = new DateTime($data['nbf']);
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. Old token is not valid before '.$date->format('F j, Y g:i:s A').'. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Token is not valid before '.$date->format('F j, Y g:i:s A').'.');
+        } catch(UnexpectedValueException $e){
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
         }
       }
       if(isset($args['time_start']) && $args['time_start'] != '') {
@@ -292,17 +334,18 @@ $app->group('/hours', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get Sign In Token');
     //Deauthorize the current signin token
     $this->post('/deauthorize', function ($request, $response, $args) {
       $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Deauthorized');
       insertLogs($level = 'Information', $message = 'Sign In deauthorized.');
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Deauthorize Sign In');
     //Clock in and Out
     $this->post('', function ($request, $response, $args) {
       $args = $request->getParsedBody();
+      FrcPortal\Auth::setCurrentUser($args['user_id']);
       if(isset($args['token'])) {
         $key = getSettingsProp('jwt_signin_key');
         try{
@@ -339,7 +382,7 @@ $app->group('/hours', function () {
                     );
                     $user->sendUserNotification('sign_in_out', $msgData);
                     $users = getSignInList(date('Y'));
-
+                    insertLogs($level = 'Information', $message = 'User signed out using PIN');
                     $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
                   } else {
                   $responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out');
@@ -365,35 +408,45 @@ $app->group('/hours', function () {
                     );
                     $user->sendUserNotification('sign_in_out', $msgData);
                     $users = getSignInList(date('Y'));
+                    insertLogs($level = 'Information', $message = 'User signed in using PIN');
                     $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date), 'signInList'=>$users);
                   } else {
                     $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');
+                    insertLogs($level = 'WARNING', $message = 'User tried to sign in using PIN. Something went wrong');
                   }
                 }
               }  else {
                 $responseArr = array('status'=>false, 'msg'=>'PIN is incorrect');
+                  insertLogs($level = 'Information', $message = 'User tried to sign in using PIN. PIN was incorrect.');
               }
             } else {
-              $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'User ID and/or PIN number cannot be blank!');
+              insertLogs($level = 'Information', $message = 'User tried to sign in using PIN. User ID and/or PIN cannot be blank.');
+              $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'User ID and/or PIN cannot be blank!');
             }
           } else {
             $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
           }
-        } catch(\ExpiredException $e) {
-          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\SignatureInvalidException $e){
-          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\BeforeValidException $e){
-          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\UnexpectedValueException $e){
-          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        } catch(ExpiredException $e) {
+          insertLogs($level = 'WARNING', $message = 'User tried to sign in using PIN. Token was expired. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Token was expired.');
+        } catch(SignatureInvalidException $e){
+          insertLogs($level = 'WARNING', $message = 'User tried to sign in using PIN. Token signature was invalid. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
+        } catch(BeforeValidException $e){
+          $date = new DateTime($data['nbf']);
+          insertLogs($level = 'WARNING', $message = 'User tried to sign in using PIN. Token is not valid before '.$date->format('F j, Y g:i:s A').'. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Token is not valid before '.$date->format('F j, Y g:i:s A').'.');
+        } catch(UnexpectedValueException $e){
+          insertLogs($level = 'WARNING', $message = 'User tried to sign in using PIN. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
         }
       } else {
+        insertLogs($level = 'Information', $message = 'User tried to sign in using PIN. Sign in not authorized at this tim on this device.');
         $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Sign in is not authorized at this time and/or on this device. Please see a mentor.');
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Sign In with PIN');
     //Clock in and Out
     $this->post('/qr', function ($request, $response, $args) {
       $user = FrcPortal\Auth::user();
@@ -433,7 +486,7 @@ $app->group('/hours', function () {
                   )
                 );
                 $user->sendUserNotification('sign_in_out', $msgData);
-                //$users = getSignInList(date('Y'));
+                insertLogs($level = 'Information', $message = 'User signed out using QR');
                 $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date).' for a total of '.$hourTotal.' hours');
               } else {
               $responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out');
@@ -458,7 +511,7 @@ $app->group('/hours', function () {
                   )
                 );
                 $user->sendUserNotification('sign_in_out', $msgData);
-                //$users = getSignInList(date('Y'));
+                insertLogs($level = 'Information', $message = 'User signed in using QR');
                 $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date));
               } else {
                 $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');
@@ -467,23 +520,26 @@ $app->group('/hours', function () {
           } else {
             $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
           }
-        } catch(\UnexpectedValueException $e){
-          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\ExpiredException $e) {
-          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\SignatureInvalidException $e){
-          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\BeforeValidException $e){
-          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
-        } catch(\Exception $e){
-          return unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage().'.  Please see Mentor.');
+        } catch(ExpiredException $e) {
+          insertLogs($level = 'WARNING', $message = 'User tried to sign in using QR. Token was expired. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Token was expired.');
+        } catch(SignatureInvalidException $e){
+          insertLogs($level = 'WARNING', $message = 'User tried to sign in using QR. Token signature was invalid. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
+        } catch(BeforeValidException $e){
+          $date = new DateTime($data['nbf']);
+          insertLogs($level = 'WARNING', $message = 'User tried to sign in using QR. Token is not valid before '.$date->format('F j, Y g:i:s A').'. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Token is not valid before '.$date->format('F j, Y g:i:s A').'.');
+        } catch(UnexpectedValueException $e){
+          insertLogs($level = 'WARNING', $message = 'User tried to sign in using QR. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
         }
       } else {
         $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid token');
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Sign In with QR');
   });
 });
 

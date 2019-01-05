@@ -25,7 +25,8 @@ function generateSignInToken($ts = null, $te = null) {
 	$key = getSettingsProp('jwt_signin_key');
 	$token = array(
 		"iss" => getSettingsProp('env_url'),
-		"iat" => $ts,
+		"iat" => time(),
+		"nbf" => $ts,
 		"exp" => $te,
 		"jti" => $jti,
 		'data' => array(

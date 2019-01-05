@@ -43,7 +43,7 @@ $app->group('/seasons', function () {
 
     $response = $response->withJson($data);
     return $response;
-  });
+  })->setName('Get Seasons');
   $this->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $formData = $request->getParsedBody();
@@ -105,14 +105,7 @@ $app->group('/seasons', function () {
       $newSeason->membership_form_sheet = 'Form Responses 1';
       $newSeason->game_logo = !isset($formData['game_logo']) && !is_null($formData['game_logo']) ? $formData['game_logo']:'';
       if($newSeason->save()) {
-        $limit = 10;
-        $totalNum = FrcPortal\Season::count();
-        $seasons = FrcPortal\Season::orderBy('year','DESC')->limit($limit)->get();
-        $data = array();
-        $data['results'] = $seasons;
-        $data['total'] = $totalNum;
-        $data['maxPage'] = ceil($totalNum/$limit);
-        $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$data);
+        $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$newSeason);
         //Send notifications
         $msgData = array(
           'slack' => array(
@@ -133,7 +126,7 @@ $app->group('/seasons', function () {
     }
     $response = $response->withJson($responseArr);
     return $response;
-  });
+  })->setName('Add Season');
   $this->group('/{season_id:[a-z0-9]{13}}', function () {
     $this->get('', function ($request, $response, $args) {
       $season_id = $args['season_id'];
@@ -147,14 +140,14 @@ $app->group('/seasons', function () {
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Get Season');
     $this->get('/annualRequirements', function ($request, $response, $args) {
       $season_id = $args['season_id'];
       $season = getUsersAnnualRequirements($season_id);
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
-    $response = $response->withJson($responseArr);
-    return $response;
-    });
+      $response = $response->withJson($responseArr);
+      return $response;
+    })->setName('Get Season Annual Requirements');
     $this->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -193,7 +186,7 @@ $app->group('/seasons', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update Season');
     $this->put('/updateMembershipForm', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -206,7 +199,7 @@ $app->group('/seasons', function () {
       $responseArr = updateSeasonMembershipForm($season_id);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Update Season Membership Form');
     $this->put('/pollMembershipForm', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -222,7 +215,7 @@ $app->group('/seasons', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Poll Season Membership Form');
     $this->put('/toggleAnnualReqs', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -259,7 +252,7 @@ $app->group('/seasons', function () {
       $responseArr = array('status'=>true, 'msg'=>'Annual Requirements Updated', 'data' => $season);
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Toggle Annual Requirements');
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -276,7 +269,7 @@ $app->group('/seasons', function () {
       }
       $response = $response->withJson($responseArr);
       return $response;
-    });
+    })->setName('Delete Season');
   })->add(function ($request, $response, $next) {
     //Season Midddleware to pull season data
     // get the route from the request

@@ -8,7 +8,7 @@
       </md-button>
     </div>
   </md-toolbar>
-  <md-dialog-content layout="column" layout-align="center center" class="layout-margin">
+  <md-dialog-content layout="column" layout-align="center center" class="layout-margin" style="min-height: 200px;">
     <md-progress-circular md-mode="indeterminate" ng-disabled="!vm.loading" md-diameter="96" ng-show="vm.loading"></md-progress-circular>
     <div layout="column" ng-hide="vm.loading">
       <md-button class="md-raised google btn-large social" ng-click="vm.authenticate('google')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.google_login_enable">

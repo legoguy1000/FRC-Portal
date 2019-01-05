@@ -2,12 +2,12 @@
 	<form ng-cloak layout="column" flex layout-fill ng-submit="vm.submitForm()">
 		<md-toolbar layout="row">
 		  <div class="md-toolbar-tools">
-			<h2><span ng-show="">New School</span></h2>
-			<span flex></span>
-			<md-button class="md-icon-button" ng-click="vm.cancel()">
-			  <md-icon class=""> close </md-icon>
-			</md-button>
-		  </div>
+				<h2><span ng-show="vm.new">New</span><span ng-hide="vm.new">Edit</span> School</h2>
+				<span flex></span>
+				<md-button class="md-icon-button" ng-click="vm.cancel()">
+				  <md-icon class=""> close </md-icon>
+				</md-button>
+	  	</div>
 		</md-toolbar>
 		<md-dialog-content layout="column" layout-margin>
 			<div layout="column" layout-gt-xs="row">
