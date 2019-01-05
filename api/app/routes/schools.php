@@ -73,7 +73,7 @@ $app->group('/schools', function () {
       $newSchool = new FrcPortal\School();
       $newSchool->school_name = $formData['school_name'];
       $newSchool->abv = $formData['abv'];
-      $newSchool->logo_url = !isset($formData['logo_url']) && !is_null($formData['logo_url']) ? $formData['logo_url']:'';
+      $newSchool->logo_url = isset($formData['logo_url']) && !is_null($formData['logo_url']) ? $formData['logo_url']:'';
       if($newSchool->save()) {
         $responseArr = array('status'=>true, 'msg'=>$formData['school_name'].' created', 'data'=>$newSchool);
       } else {
@@ -127,7 +127,7 @@ $app->group('/schools', function () {
         }
       }
       $school->abv = $formData['abv'];
-      $school->logo_url = !isset($formData['logo_url']) && !is_null($formData['logo_url']) ? $formData['logo_url']:'';
+      $school->logo_url = isset($formData['logo_url']) && !is_null($formData['logo_url']) ? $formData['logo_url']:'';
       if($school->save()) {
         $responseArr = array('status'=>true, 'msg'=>$formData['school_name'].' updated', 'data'=>$school);
       } else {

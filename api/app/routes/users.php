@@ -363,7 +363,7 @@ $app->group('/users', function () {
       }
       if($user->save()) {
         $user->load('school');
-        insertLogs($level = 'Information', $message = 'User information updated.');
+        insertLogs($level = 'Information', $message = $user->full_name.'\'s profile information updated.');
         $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $user);
       }
       $response = $response->withJson($responseArr);
