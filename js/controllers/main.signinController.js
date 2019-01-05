@@ -117,7 +117,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	} else if($auth.isAuthenticated()) {
 		vm.getUsers();
 	} else {
-		//vm.authorizeSignIn();
+		vm.authorizeSignIn();
 	}
 
 	vm.deauthorizeSignIn = function() {
