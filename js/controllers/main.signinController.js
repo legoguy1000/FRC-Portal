@@ -110,14 +110,14 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 
-	if($auth.isAuthenticated()) {
-		vm.getUsers();
-	} else if(vm.signInAuthed) {
+	if(vm.signInAuthed) {
 		vm.getUsers();
 		getToken();
 		vm.tokenInterval = $interval(getToken, vm.tokenIntervalTime);
+	} else if($auth.isAuthenticated()) {
+		vm.getUsers();
 	} else {
-		vm.authorizeSignIn();
+		//vm.authorizeSignIn();
 	}
 
 	vm.deauthorizeSignIn = function() {
