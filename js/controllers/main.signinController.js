@@ -47,6 +47,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			}
 			vm.signInAuthed = signinService.isAuthed();
 		});
+		vm.getUsers();
 	}
 
 	vm.getUsers = function() {
@@ -111,7 +112,6 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	}
 
 	if(vm.signInAuthed) {
-		vm.getUsers();
 		getToken();
 		vm.tokenInterval = $interval(getToken, vm.tokenIntervalTime);
 	} else if($auth.isAuthenticated()) {

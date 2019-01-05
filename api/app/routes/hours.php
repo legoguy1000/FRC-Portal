@@ -466,7 +466,7 @@ $app->group('/hours', function () {
                   )
                 );
                 $user->sendUserNotification('sign_in_out', $msgData);
-                //$users = getSignInList(date('Y'));
+                insertLogs($level = 'Information', $message = 'User signed out using QR');
                 $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date).' for a total of '.$hourTotal.' hours');
               } else {
               $responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out');
@@ -491,7 +491,7 @@ $app->group('/hours', function () {
                   )
                 );
                 $user->sendUserNotification('sign_in_out', $msgData);
-                //$users = getSignInList(date('Y'));
+                insertLogs($level = 'Information', $message = 'User signed in using QR');
                 $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date));
               } else {
                 $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');
