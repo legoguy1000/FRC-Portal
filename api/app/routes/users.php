@@ -309,6 +309,7 @@ $app->group('/users', function () {
       if($request->save()) {
         $responseArr['status'] = true;
         $responseArr['msg'] = 'Request submited';
+        insertLogs($level = 'Information', $message = 'Missing hours request submitted');
       }
       $response = $response->withJson($responseArr);
       return $response;
@@ -321,7 +322,8 @@ $app->group('/users', function () {
       $user_id = $args['user_id'];
       $selfUpdate = $user_id == $userId;
       $admin = FrcPortal\Auth::isAdmin();
-      if( !$selfUpdate && !$admin) {
+      if(!$selfUpdate && !$admin) {
+        insertLogs($level = 'Warning', $message = 'User information update failed. Unauthorized user.');
         return unauthorizedResponse($response);
       }
       //User passed from middleware
@@ -349,6 +351,7 @@ $app->group('/users', function () {
       }
       if($user->save()) {
         $user->load('school');
+        insertLogs($level = 'Information', $message = 'User information updated.');
         $responseArr = array('status'=>true, 'msg'=>'User Information Saved', 'data' => $user);
       }
       $response = $response->withJson($responseArr);

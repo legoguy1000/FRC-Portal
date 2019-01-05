@@ -21,7 +21,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 
 	var eventSource;
 	var signInBool = true;
-	var tokenIntervalTime = 28000;
+	var tokenIntervalTime = 30000;
 
 	var tick = function() {
 		vm.clock = Date.now();
