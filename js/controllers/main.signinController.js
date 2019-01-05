@@ -39,7 +39,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		}
 		signinService.generateSignInToken(data).then(function(response) {
 			vm.loading = false;
-			if(!response.status) {
+			if(response.status) {
 				signinService.saveToken(response.signin_token);
 				vm.qrCodeUrl = vm.genQrCodeUrl();
 			} else {
