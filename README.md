@@ -2,7 +2,7 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-Version 2.13.1
+Version 2.13.2
 * Add/edit/delete school
 * Fixed installer
 * fix various typos
