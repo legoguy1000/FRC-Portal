@@ -114,6 +114,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		vm.getUsers();
 	} else if(vm.signInAuthed) {
 		vm.getUsers();
+		getToken();
 		vm.tokenInterval = $interval(getToken, vm.tokenIntervalTime);
 	} else {
 		vm.authorizeSignIn();
