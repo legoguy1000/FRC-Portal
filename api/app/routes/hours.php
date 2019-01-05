@@ -256,13 +256,23 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $user = $decoded->data;
+          FrcPortal\Auth::setCurrentUser($user->user_id);
         } catch(ExpiredException $e) {
-          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error.');
+          insertLogs($level = 'WARNING', $message = 'Tried to authorize sign in. User token was expired. '.$e->getMessage());
+          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
         } catch(SignatureInvalidException $e){
-          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error.');
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. Old user token signature was invalid. '.$e->getMessage());
+          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
+        } catch(BeforeValidException $e){
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. '.$e->getMessage());
+          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
+        } catch(UnexpectedValueException $e){
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. '.$e->getMessage());
+          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
         }
       } elseif(isset($args['auth_code'])) {
         $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status',true)->where('admin',true)->first();
+        FrcPortal\Auth::setCurrentUser($user->user_id);
       } else {
         insertLogs($level = 'Warning', $message = 'Sign in authorization failed.');
         return badRequestResponse($response);
@@ -293,11 +303,21 @@ $app->group('/hours', function () {
         $jwt = $args['token'];
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
+          $data = (array) $decoded;
           $te = time()+45; //30 second liftime
         } catch(ExpiredException $e) {
-          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. Old token was expired. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Token was expired. Please Reauthorize sign in.');
         } catch(SignatureInvalidException $e){
-          $responseArr = unauthorizedResponse($response, $msg = 'Authorization Error. '.$e->getMessage());
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. Old token signature was invalid. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
+        } catch(BeforeValidException $e){
+          $date = new DateTime($data['nbf']);
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. Old token is not valid before '.$date->format('F j, Y g:i:s A').'. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Token is not valid before '.$date->format('F j, Y g:i:s A').'.');
+        } catch(UnexpectedValueException $e){
+          insertLogs($level = 'WARNING', $message = 'Tried to generate sign in token. '.$e->getMessage());
+          return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
         }
       }
       if(isset($args['time_start']) && $args['time_start'] != '') {
