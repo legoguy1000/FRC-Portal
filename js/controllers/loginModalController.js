@@ -18,7 +18,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		'state_params': state_params,
 		'state_from': vm.state_from
 	};
-
+	delete vm.urlState.state_from.params['#'];
 
 	vm.loginForm = {};
 	vm.login = function () {
