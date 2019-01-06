@@ -19,7 +19,7 @@ $app->group('/auth', function () {
     //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
     $client->setClientId(getSettingsProp('google_oauth_client_id'));
     $client->setClientSecret(getSettingsProp('google_oauth_client_secret'));
-    $client->setRedirectUri(getSettingsProp('env_url').'/oauth');
+    $client->setRedirectUri(getSettingsProp('env_url').'/oauth/google');
     $plus = new Google_Service_Plus($client);
     $data = array();
     $client->authenticate($args['code']);
