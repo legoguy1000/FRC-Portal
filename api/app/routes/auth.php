@@ -35,16 +35,31 @@ $app->group('/auth', function () {
     }
 
     $user = checkLogin($userData);
-    if($user != false) {
-      $user->updateUserOnLogin($userData);
-			$jwt = $user->generateUserJWT();
-      $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-      FrcPortal\Auth::setCurrentUser($user->user_id);
-      insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Google OAuth2.');
+    if(FrcPortal\Auth::isAuthenticated()) {
+      $auth_user = FrcPortal\Auth::user()->user_id;
+      if($user != false) {
+        $responseData = array('status'=>false, 'msg'=>'Google account is already linked to another user');
+        insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Google account '.$userData['email'].' to their profile.  Account is linked to another user.');
+      } else {
+        $provider = $userData['provider'];
+      	$id = $userData['id'];
+      	$email = $userData['email'];
+        $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
+          $responseData = array('status'=>false, 'msg'=>'Google account linked');
+          insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Google account '.$userData['email'].' to their profile.');
+      }
     } else {
-      $teamNumber = getSettingsProp('team_number');
-      $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
-      insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Google OAuth2. Google account not linked to any current portal user.');
+      if($user != false) {
+        $user->updateUserOnLogin($userData);
+  			$jwt = $user->generateUserJWT();
+        $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+        FrcPortal\Auth::setCurrentUser($user->user_id);
+        insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Google OAuth2.');
+      } else {
+        $teamNumber = getSettingsProp('team_number');
+        $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+        insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Google OAuth2. Google account not linked to any current portal user.');
+      }
     }
     $response = $response->withJson($responseData);
     return $response;
