@@ -37,6 +37,8 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		amazon: '',
 		github: '',
 	}
+	var state_params = $stateParams;
+	delete state_params['#'];
 	//Google
 	var hdBool = configItems.require_team_email && configItems.team_domain != '';
 	var googleData = {
@@ -48,7 +50,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		hd: hdBool ? '&hd='+configItems.team_domain : '',
 	  state: {
 			'current_state': $state.current.name,
-			'state_params': $state.params
+			'state_params': state_params
 		},
 	}
 	vm.oauth_urls.google = googleData.authorizationEndpoint+'?scope='+googleData.scope.join(googleData.scopeDelimiter)+'&redirect_uri='+googleData.redirectUri+'&response_type=code&client_id='+googleData.clientId+'&state='+JSON.stringify(googleData.state)+googleData.hd;
@@ -62,7 +64,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		scopeDelimiter: ',',
 	  state: {
 			'current_state': $state.current.name,
-			'state_params': $stateParams
+			'state_params': state_params
 		},
 	}
 	vm.oauth_urls.facebook = facebookData.authorizationEndpoint+'?scope='+facebookData.scope.join(facebookData.scopeDelimiter)+'&redirect_uri='+facebookData.redirectUri+'&response_type=code&client_id='+facebookData.clientId+'&state='+JSON.stringify(facebookData.state);
@@ -75,7 +77,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		scopeDelimiter: ' ',
 	  state: {
 			'current_state': $state.current.name,
-			'state_params': $stateParams
+			'state_params': state_params
 		},
 	}
 	vm.oauth_urls.microsoft = microsoftData.authorizationEndpoint+'?scope='+microsoftData.scope.join(microsoftData.scopeDelimiter)+'&redirect_uri='+microsoftData.redirectUri+'&response_type=code&client_id='+microsoftData.clientId+'&state='+JSON.stringify(microsoftData.state);
@@ -88,7 +90,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 	  scopeDelimiter: ' ',
 	  state: {
 			'current_state': $state.current.name,
-			'state_params': $stateParams
+			'state_params': state_params
 		},
 	}
 	vm.oauth_urls.github = githubData.authorizationEndpoint+'?scope='+githubData.scope.join(githubData.scopeDelimiter)+'&redirect_uri='+githubData.redirectUri+'&response_type=code&client_id='+githubData.clientId+'&state='+JSON.stringify(githubData.state);
@@ -101,7 +103,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 	  scopeDelimiter: ' ',
 	  state: {
 			'current_state': $state.current.name,
-			'state_params': $stateParams
+			'state_params': state_params
 		},
 	}
 	vm.oauth_urls.amazon = amazonData.authorizationEndpoint+'?scope='+amazonData.scope.join(amazonData.scopeDelimiter)+'&redirect_uri='+amazonData.redirectUri+'&response_type=code&client_id='+amazonData.clientId+'&state='+JSON.stringify(amazonData.state);
