@@ -83,7 +83,7 @@ angular.module('FrcPortal', [
 		}
 	  })
 	  .state('main.oauth', {
-		url: '/oauth/{provider}?code',
+		url: '/oauth/{provider}?code&state',
 		templateUrl: 'views/main.oauth.html',
 		controller: 'main.oauthController',
 		controllerAs: 'vm',

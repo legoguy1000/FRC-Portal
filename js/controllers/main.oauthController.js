@@ -6,7 +6,8 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
     var vm = this;
 
 		//$stateParams.provider;
-		//$stateParams.code;
+		var state = angular.fromJson($stateParams.state);
+		var redirect = state.current_state;
 		var dialog;
 		function loginModal() {
 			dialog = $mdDialog.show({
@@ -35,7 +36,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 					if(authed) {
 						$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
 						$rootScope.$emit('afterLoginAction');
-						$state.go('main.home').then(function() {
+						$state.go(redirect).then(function() {
 							$mdDialog.cancel();
 						});
 					}

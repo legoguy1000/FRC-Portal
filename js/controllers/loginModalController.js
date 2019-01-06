@@ -59,9 +59,11 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		scope: ['public_profile','email'],
 		auth_type: 'rerequest',
 		scopeDelimiter: ',',
-	  state: null,
+	  state: {
+			'current_state': $state.current.name
+		},
 	}
-	vm.oauth_urls.facebook = facebookData.authorizationEndpoint+'?scope='+facebookData.scope.join(facebookData.scopeDelimiter)+'&redirect_uri='+facebookData.redirectUri+'&response_type=code&client_id='+facebookData.clientId;
+	vm.oauth_urls.facebook = facebookData.authorizationEndpoint+'?scope='+facebookData.scope.join(facebookData.scopeDelimiter)+'&redirect_uri='+facebookData.redirectUri+'&response_type=code&client_id='+facebookData.clientId+'&state='+JSON.stringify(facebookData.state);
 	//microsoft
 	var microsoftData = {
 		clientId: configItems.microsoft_oauth_client_id,
@@ -69,9 +71,11 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		redirectUri: window.location.origin+'/oauth/microsoft',
 		scope: ['openid','email',' profile','User.Read'],
 		scopeDelimiter: ' ',
-	  state: null,
+	  state: {
+			'current_state': $state.current.name
+		},
 	}
-	vm.oauth_urls.microsoft = microsoftData.authorizationEndpoint+'?scope='+microsoftData.scope.join(microsoftData.scopeDelimiter)+'&redirect_uri='+microsoftData.redirectUri+'&response_type=code&client_id='+microsoftData.clientId;
+	vm.oauth_urls.microsoft = microsoftData.authorizationEndpoint+'?scope='+microsoftData.scope.join(microsoftData.scopeDelimiter)+'&redirect_uri='+microsoftData.redirectUri+'&response_type=code&client_id='+microsoftData.clientId+'&state='+JSON.stringify(microsoftData.state);
 	//github
 	var githubData = {
 	  clientId: configItems.github_oauth_client_id,
@@ -79,9 +83,11 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
 	  scope: ['read:user', 'user:email'],
 	  scopeDelimiter: ' ',
-	  state: null,
+	  state: {
+			'current_state': $state.current.name
+		},
 	}
-	vm.oauth_urls.github = githubData.authorizationEndpoint+'?scope='+githubData.scope.join(githubData.scopeDelimiter)+'&redirect_uri='+githubData.redirectUri+'&response_type=code&client_id='+githubData.clientId;
+	vm.oauth_urls.github = githubData.authorizationEndpoint+'?scope='+githubData.scope.join(githubData.scopeDelimiter)+'&redirect_uri='+githubData.redirectUri+'&response_type=code&client_id='+githubData.clientId+'&state='+JSON.stringify(githubData.state);
 	//amazon
 	var amazonData = {
 	  clientId: configItems.amazon_oauth_client_id,
@@ -89,9 +95,11 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		authorizationEndpoint: 'https://www.amazon.com/ap/oa',
 		scope: ['profile'],
 	  scopeDelimiter: ' ',
-	  state: null,
+	  state: {
+			'current_state': $state.current.name
+		},
 	}
-	vm.oauth_urls.amazon = amazonData.authorizationEndpoint+'?scope='+amazonData.scope.join(amazonData.scopeDelimiter)+'&redirect_uri='+amazonData.redirectUri+'&response_type=code&client_id='+amazonData.clientId;
+	vm.oauth_urls.amazon = amazonData.authorizationEndpoint+'?scope='+amazonData.scope.join(amazonData.scopeDelimiter)+'&redirect_uri='+amazonData.redirectUri+'&response_type=code&client_id='+amazonData.clientId+'&state='+JSON.stringify(amazonData.state);
 
 
 
