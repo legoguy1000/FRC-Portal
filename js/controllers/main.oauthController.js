@@ -50,7 +50,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 					$state.go(state_from.name).then(function() {
 						$mdDialog.cancel();
 					});
-				} else  else {
+				} else {
 					$state.go('main.home').then(function() {
 						$mdDialog.cancel();
 					});
