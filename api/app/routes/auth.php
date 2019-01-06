@@ -63,7 +63,7 @@ $app->group('/auth', function () {
     }
     $clientId = getSettingsProp('facebook_oauth_client_id');
     $secret = getSettingsProp('facebook_oauth_client_secret');
-    $redirect = getSettingsProp('env_url').'/oauth';
+    $redirect = getSettingsProp('env_url').'/oauth/facebook';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://graph.facebook.com/v3.0/oauth/']);
     $params = array(
       'client_id'=>$clientId,
