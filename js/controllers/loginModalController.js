@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('loginModalController', ['$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loginData','$state','$stateParams',
+.controller('loginModalController', ['$rootScope','$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loginData','$state','$stateParams',
 	loginModalController
 ]);
-function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, loginData, $state, $stateParams) {
+function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $mdToast, loginData, $state, $stateParams) {
 	var vm = this;
 
 	vm.configItems = configItems;
@@ -30,6 +30,8 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 					'auth': true,
 					'userInfo': response.data.userInfo,
 				}
+				$rootScope.$broadcast('afterLoginAction');
+				$state.go(vm.state, vm.state_params);
 				$mdDialog.hide(data);
 			}
 		});

@@ -92,9 +92,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 			}
 		})
 		.then(function(response) {
-			if(response.auth) {
-				$rootScope.$broadcast('afterLoginAction');
-			}
+
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
 		});

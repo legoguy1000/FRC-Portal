@@ -686,14 +686,7 @@ angular.module('FrcPortal', [
 				})
 				.then(function(data) {
 					if(data.auth) {
-						var data = {
-							'allActions': true,
-						}
-						//$rootScope.$broadcast('afterLoginAction',data);
-						$log.info('Logged in');
-						$log.info(toState.name);
-						$log.info(trans.params());
-						//$state.go(toState.name, trans.params());
+
 					}
 					else if(trans.$from().name == '') {
 						$state.go('main.home');
