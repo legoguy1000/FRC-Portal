@@ -50,7 +50,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 			'current_state': $state.current.name
 		},
 	}
-	vm.oauth_urls.google = googleData.authorizationEndpoint+'?scope='+googleData.scope.join(googleData.scopeDelimiter)+'&redirect_uri='+googleData.redirectUri+'&response_type=code&client_id='+googleData.clientId+'&state='+googleData.state+googleData.hd;
+	vm.oauth_urls.google = googleData.authorizationEndpoint+'?scope='+googleData.scope.join(googleData.scopeDelimiter)+'&redirect_uri='+googleData.redirectUri+'&response_type=code&client_id='+googleData.clientId+'&state='+JSON.stringify(googleData.state)+googleData.hd;
 	//Facebook
 	var facebookData = {
 		clientId: configItems.facebook_oauth_client_id,
