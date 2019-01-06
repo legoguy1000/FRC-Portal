@@ -682,7 +682,10 @@ angular.module('FrcPortal', [
 						loading: false,
 						state: toState.name,
 						state_params: trans.params(),
-						state_from: trans.$from().name,
+						state_from: {
+							'name': trans.$from().name,
+							'params': trans.$from().params,
+						}
 					}
 				})
 				.then(function(data) {
