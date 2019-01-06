@@ -1,9 +1,9 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad',
+	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService',
 	mainController
 ]);
-function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad) {
+function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService) {
 	var main = this;
 
 	main.configItems = configItems;
@@ -23,6 +23,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.notifications = [];
 	main.signInAuthed = signinService.isAuthed();
 	main.browserData = {}
+	main.versionInfo = {}
 
 	//lazy load dialog controllers
 	$ocLazyLoad.load('js/controllers/loginModalController.js');
@@ -46,11 +47,13 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
   $ocLazyLoad.load('https://rawgit.com/schmich/instascan-builds/master/instascan.min.js');
 	$ocLazyLoad.load('js/controllers/newSchoolModalController.js');
 
-	navService
-	  .loadAllItems()
-	  .then(function(menuItems) {
+	navService.loadAllItems().then(function(menuItems) {
 		main.menuItems = [].concat(menuItems);
-	  });
+  });
+
+	generalService.getVersion().then(function(response) {
+		main.versionInfo = response;
+  });
 
 	function toggleRightSidebar() {
 		$mdSidenav('right').toggle();

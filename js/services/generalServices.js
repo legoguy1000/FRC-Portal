@@ -19,5 +19,11 @@ angular.module('FrcPortal')
 			})
 			.then(function() {}, function() {});
 		},
+		getVersion: function () {
+			return $http.get('api/version')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

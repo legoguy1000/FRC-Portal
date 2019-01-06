@@ -56,10 +56,10 @@
 	<md-content flex layout="roww" class="md-padding page-content">
 		<div ui-view flex></div>
 	</md-content>
-	<md-toolbar layout="row" layout-align="center center">
-		<div layout-align="center center" layout-fill flex class="md-toolbar-tools" layout="column">
-			<div>FRC Portal</div>
-			<div>v2.13.1</div>
+	<md-toolbar layout="row" layout-align="center center" style="min-height: 40px;">
+		<div layout-align="center center" layout-fill flex class="md-toolbar-tools" layout="column" style="font-size: small;">
+			<div>Powered by <a href="https://github.com/legoguy1000/FRC-Portal" _target="blank">FRC Portal</a></div>
+			<div ng-show="main.versionInfo.version">v{{main.versionInfo.version}}</div>
 		</div>
 	</md-toolbar>
 </div>
