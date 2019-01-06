@@ -377,7 +377,7 @@ $app->group('/auth', function () {
       } else {
         $provider = $userData['provider'];
         $id = $userData['id'];
-        $email = $userData['email'];
+        $email = is_null($userData['email']) ? '':$userData['email'];
         $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
           $responseData = array('status'=>false, 'msg'=>'Github account linked');
           insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Github account '.$userData['email'].' to their profile.');
