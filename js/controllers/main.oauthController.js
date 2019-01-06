@@ -48,7 +48,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 						$mdDialog.cancel();
 					});
 				} else if(state_from != null) {
-					$state.go(state_from.name).then(function() {
+					$state.go(state_from.name,state_from.params).then(function() {
 						$mdDialog.cancel();
 					});
 				} else {
