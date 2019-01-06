@@ -9,6 +9,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 		var state = angular.fromJson($stateParams.state.replace(/&#34;/g,'"'));
 		var redirect = state.current_state;
 		var params = state.state_params;
+		var state_from = state.state_from;
 		var dialog;
 		function loginModal() {
 			dialog = $mdDialog.show({
@@ -41,11 +42,15 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 						$rootScope.$emit('afterLoginAction');
 					}
 				}
-				if(redirect != '') {
+				if(redirect != '' && state_from.name == null) {
 					$state.go(redirect,params).then(function() {
 						$mdDialog.cancel();
 					});
-				} else {
+				} else if(state_from.name != null) {
+					$state.go(state_from.name).then(function() {
+						$mdDialog.cancel();
+					});
+				} else  else {
 					$state.go('main.home').then(function() {
 						$mdDialog.cancel();
 					});
