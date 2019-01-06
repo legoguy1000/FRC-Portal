@@ -53,6 +53,7 @@ angular.module('FrcPortal', [
 								 'js/services/settingServices.js',
 								 'js/services/generalServices.js',
 								 'js/services/logServices.js',
+								 'js/services/loginServices.js',
 						 ]);
 	    }]
 		},
@@ -89,7 +90,14 @@ angular.module('FrcPortal', [
 		authenticate: false,
 		data: {
 		  title: ''
-		}
+		},
+	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
+	    homeController: ['$ocLazyLoad', function($ocLazyLoad) {
+	      // you can lazy load files for an existing module
+	             return $ocLazyLoad.load('js/controllers/main.oauthController.js');
+	    }]
+	  }
+		})
 	  .state('main.profile', {
 		url: '/profile',
 		templateUrl: 'views/main.profile.html',
