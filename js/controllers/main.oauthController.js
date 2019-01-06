@@ -14,7 +14,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 				templateUrl: 'views/partials/loginModal.tmpl.html',
 				parent: angular.element(document.body),
 				clickOutsideToClose:false,
-				fullscreen: true // Only for -xs, -sm breakpoints.
+				fullscreen: true, // Only for -xs, -sm breakpoints.
 				locals: {
 					loading: true,
 				}
@@ -22,6 +22,9 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 		}
 		function sendCode() {
 			var data = $stateParams;
+			if($stateParams.code == undefined) {
+				return '';
+			}
 			loginService.oauth(data).then(function(response) {
 				$mdToast.show(
 					$mdToast.simple()

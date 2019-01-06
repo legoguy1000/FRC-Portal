@@ -84,7 +84,10 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,
-			fullscreen: true // Only for -xs, -sm breakpoints.
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				loading: false,
+			}
 		})
 		.then(function(response) {
 			if(response.auth) {
