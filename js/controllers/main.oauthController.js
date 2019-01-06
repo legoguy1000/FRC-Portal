@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.oauthController', ['$rootScope', '$state', '$auth', '$mdToast', '$state', '$stateParams', 'configItems', '$sce', 'loginService',
+.controller('main.oauthController', ['$scope', '$state', '$auth', '$mdToast', '$state', '$stateParams', 'configItems', '$sce', 'loginService',
 	mainOauthController
 ]);
-function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $stateParams, configItems, $sce, loginService) {
+function mainOauthController($scope, $state, $auth, $mdToast, $state, $stateParams, configItems, $sce, loginService) {
     var vm = this;
 
 		//$stateParams.provider;
@@ -18,7 +18,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 			var authed = $auth.isAuthenticated();
 			if(authed) {
 				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);
-				$rootScope.$emit('afterLoginAction');
+				$scope.$emit('afterLoginAction');
 				$state.go('main.home');
 			}
 		})

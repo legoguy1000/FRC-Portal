@@ -188,7 +188,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		$auth.logout();
 	}
 
-	$rootScope.$on('afterLoginAction', function(event) {
+	$scope.$on('afterLoginAction', function(event) {
 		console.info('Login Initiated');
 		loginActions();
 	});
