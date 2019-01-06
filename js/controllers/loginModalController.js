@@ -48,7 +48,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		hd: hdBool ? '&hd='+configItems.team_domain : '',
 	  state: {
 			'current_state': $state.current.name,
-			'state_params': $stateParams
+			'state_params': $state.params
 		},
 	}
 	vm.oauth_urls.google = googleData.authorizationEndpoint+'?scope='+googleData.scope.join(googleData.scopeDelimiter)+'&redirect_uri='+googleData.redirectUri+'&response_type=code&client_id='+googleData.clientId+'&state='+JSON.stringify(googleData.state)+googleData.hd;
