@@ -86,7 +86,9 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 			clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
 			locals: {
-				loading: false,
+				loginData: {
+					loading: false,
+				}
 			}
 		})
 		.then(function(response) {

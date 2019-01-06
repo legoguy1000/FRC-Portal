@@ -677,18 +677,23 @@ angular.module('FrcPortal', [
 					templateUrl: 'views/partials/loginModal.tmpl.html',
 					parent: angular.element(document.body),
 					clickOutsideToClose:true,
-					fullscreen: true // Only for -xs, -sm breakpoints.
+					fullscreen: true, // Only for -xs, -sm breakpoints.
+					loginData: {
+						loading: false,
+						state: toState.name,
+						state_params: trans.params(),
+					}
 				})
 				.then(function(data) {
 					if(data.auth) {
 						var data = {
 							'allActions': true,
 						}
-						$rootScope.$broadcast('afterLoginAction',data);
+						//$rootScope.$broadcast('afterLoginAction',data);
 						$log.info('Logged in');
 						$log.info(toState.name);
 						$log.info(trans.params());
-						$state.go(toState.name, trans.params());
+						//$state.go(toState.name, trans.params());
 					}
 					else if(trans.$from().name == '') {
 						$state.go('main.home');
@@ -719,7 +724,8 @@ angular.module('FrcPortal', [
 			}
 		}
 	});
-})
+});
+/*
 .config(function($authProvider, configItems) {
 
 	var hdBool = configItems.require_team_email && configItems.team_domain != '';
@@ -827,7 +833,7 @@ $authProvider.oauth2({
 	$authProvider.authHeader = 'Authorization';
 	$authProvider.authToken = 'Bearer';
 	$authProvider.storageType = 'localStorage';
-});
+});*/
 //.config(['momentPickerProvider', function (momentPickerProvider) {
 	//momentPickerProvider.options({ hoursFormat: 'LT' });
 //}]);

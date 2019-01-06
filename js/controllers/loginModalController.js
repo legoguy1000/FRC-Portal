@@ -1,12 +1,17 @@
 angular.module('FrcPortal')
-.controller('loginModalController', ['$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loading','$state','$stateParams',
+.controller('loginModalController', ['$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loginData','$state','$stateParams',
 	loginModalController
 ]);
-function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, loading, $state, $stateParams) {
+function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, loginData, $state, $stateParams) {
 	var vm = this;
 
 	vm.configItems = configItems;
-	vm.loading = loading != undefined ? loading:false;
+	vm.loading = loginData.loading != undefined ? loginData.loading:false;
+	vm.state = loginData.state != undefined ? loginData.state:$state.current.name;
+	var state_params = $stateParams;
+	delete state_params['#'];
+	vm.state_params = loginData.state_params != undefined ? loginData.state_params:state_params;
+
 	vm.loginForm = {};
 	vm.login = function () {
 		vm.loading = true;
@@ -37,8 +42,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		amazon: '',
 		github: '',
 	}
-	var state_params = $stateParams;
-	delete state_params['#'];
+
 	//Google
 	var hdBool = configItems.require_team_email && configItems.team_domain != '';
 	var googleData = {
@@ -49,7 +53,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		scopeDelimiter: ' ',
 		hd: hdBool ? '&hd='+configItems.team_domain : '',
 	  state: {
-			'current_state': $state.current.name,
+			'current_state': vm.state,
 			'state_params': state_params
 		},
 	}
@@ -63,7 +67,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		auth_type: 'rerequest',
 		scopeDelimiter: ',',
 	  state: {
-			'current_state': $state.current.name,
+			'current_state': vm.state,
 			'state_params': state_params
 		},
 	}
@@ -76,7 +80,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		scope: ['openid','email',' profile','User.Read'],
 		scopeDelimiter: ' ',
 	  state: {
-			'current_state': $state.current.name,
+			'current_state': vm.state,
 			'state_params': state_params
 		},
 	}
@@ -89,7 +93,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 	  scope: ['read:user', 'user:email'],
 	  scopeDelimiter: ' ',
 	  state: {
-			'current_state': $state.current.name,
+			'current_state': vm.state,
 			'state_params': state_params
 		},
 	}
@@ -102,7 +106,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		scope: ['profile'],
 	  scopeDelimiter: ' ',
 	  state: {
-			'current_state': $state.current.name,
+			'current_state': vm.state,
 			'state_params': state_params
 		},
 	}

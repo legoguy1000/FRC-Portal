@@ -19,7 +19,9 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 				clickOutsideToClose:false,
 				fullscreen: true, // Only for -xs, -sm breakpoints.
 				locals: {
-					loading: true,
+					loginData: {
+						loading: true,
+					}
 				}
 			});
 		}
