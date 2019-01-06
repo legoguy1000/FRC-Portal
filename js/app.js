@@ -684,7 +684,7 @@ angular.module('FrcPortal', [
 						state_params: trans.params(),
 						state_from: {
 							'name': trans.$from().name,
-							'params': trans.$from().params(),
+							'params': trans.params('from'),
 						}
 					}
 				})
