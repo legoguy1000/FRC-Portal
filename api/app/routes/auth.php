@@ -116,16 +116,31 @@ $app->group('/auth', function () {
         }
 
         $user = checkLogin($userData);
-        if($user != false) {
-          $user->updateUserOnLogin($userData);
-    			$jwt = $user->generateUserJWT();
-          $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-          FrcPortal\Auth::setCurrentUser($user->user_id);
-          insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Facebook OAuth2.');
+        if(FrcPortal\Auth::isAuthenticated()) {
+          $auth_user = FrcPortal\Auth::user();
+          if($user != false) {
+            $responseData = array('status'=>false, 'msg'=>'Facebook account is already linked to another user');
+            insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Facebook account '.$userData['email'].' to their profile.  Account is linked to another user.');
+          } else {
+            $provider = $userData['provider'];
+          	$id = $userData['id'];
+          	$email = $userData['email'];
+            $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
+              $responseData = array('status'=>false, 'msg'=>'Facebook account linked');
+              insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Facebook account '.$userData['email'].' to their profile.');
+          }
         } else {
-          $teamNumber = getSettingsProp('team_number');
-          $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
-          insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Facebook OAuth2. Facebook account not linked to any current portal user.');
+          if($user != false) {
+            $user->updateUserOnLogin($userData);
+      			$jwt = $user->generateUserJWT();
+            $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+            FrcPortal\Auth::setCurrentUser($user->user_id);
+            insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Facebook OAuth2.');
+          } else {
+            $teamNumber = getSettingsProp('team_number');
+            $responseData = array('status'=>false, 'msg'=>'Facebook account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+            insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Facebook OAuth2. Facebook account not linked to any current portal user.');
+          }
         }
       } else {
         $responseData = array('status'=>false, 'msg'=>'No email address provided by Facebook OAuth2');
@@ -191,16 +206,31 @@ $app->group('/auth', function () {
     }
 
     $user = checkLogin($userData);
-    if($user != false) {
-      $user->updateUserOnLogin($userData);
-			$jwt = $user->generateUserJWT();
-      $responseData = array('status'=>true, 'msg'=>'Login with Microsoft Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-      FrcPortal\Auth::setCurrentUser($user->user_id);
-      insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Microsoft OAuth2.');
+    if(FrcPortal\Auth::isAuthenticated()) {
+      $auth_user = FrcPortal\Auth::user();
+      if($user != false) {
+        $responseData = array('status'=>false, 'msg'=>'Microsoft account is already linked to another user');
+        insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Microsoft account '.$userData['email'].' to their profile.  Account is linked to another user.');
+      } else {
+        $provider = $userData['provider'];
+        $id = $userData['id'];
+        $email = $userData['email'];
+        $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
+          $responseData = array('status'=>false, 'msg'=>'Microsoft account linked');
+          insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Microsoft account '.$userData['email'].' to their profile.');
+      }
     } else {
-      $teamNumber = getSettingsProp('team_number');
-      $responseData = array('status'=>false, 'msg'=>'Microsoft account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
-      insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Microsoft OAuth2. Microsoft account not linked to any current portal user.');
+      if($user != false) {
+        $user->updateUserOnLogin($userData);
+  			$jwt = $user->generateUserJWT();
+        $responseData = array('status'=>true, 'msg'=>'Login with Microsoft Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+        FrcPortal\Auth::setCurrentUser($user->user_id);
+        insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Microsoft OAuth2.');
+      } else {
+        $teamNumber = getSettingsProp('team_number');
+        $responseData = array('status'=>false, 'msg'=>'Microsoft account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+        insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Microsoft OAuth2. Microsoft account not linked to any current portal user.');
+      }
     }
     $response = $response->withJson($responseData);
     return $response;
@@ -258,16 +288,31 @@ $app->group('/auth', function () {
     }
 
     $user = checkLogin($userData);
-    if($user != false) {
-      $user->updateUserOnLogin($userData);
-      $jwt = $user->generateUserJWT();
-      $responseData = array('status'=>true, 'msg'=>'Login with Amazon Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-      FrcPortal\Auth::setCurrentUser($user->user_id);
-      insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Amazon OAuth2.');
+    if(FrcPortal\Auth::isAuthenticated()) {
+      $auth_user = FrcPortal\Auth::user();
+      if($user != false) {
+        $responseData = array('status'=>false, 'msg'=>'Amazon account is already linked to another user');
+        insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Amazon account '.$userData['email'].' to their profile.  Account is linked to another user.');
+      } else {
+        $provider = $userData['provider'];
+        $id = $userData['id'];
+        $email = $userData['email'];
+        $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
+          $responseData = array('status'=>false, 'msg'=>'Amazon account linked');
+          insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Amazon account '.$userData['email'].' to their profile.');
+      }
     } else {
-      $teamNumber = getSettingsProp('team_number');
-      $responseData = array('status'=>false, 'msg'=>'Amazon account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
-      insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Amazon OAuth2. Microsoft account not linked to any current portal user.');
+      if($user != false) {
+        $user->updateUserOnLogin($userData);
+        $jwt = $user->generateUserJWT();
+        $responseData = array('status'=>true, 'msg'=>'Login with Amazon Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+        FrcPortal\Auth::setCurrentUser($user->user_id);
+        insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Amazon OAuth2.');
+      } else {
+        $teamNumber = getSettingsProp('team_number');
+        $responseData = array('status'=>false, 'msg'=>'Amazon account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+        insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Amazon OAuth2. Microsoft account not linked to any current portal user.');
+      }
     }
     $response = $response->withJson($responseData);
     return $response;
@@ -324,35 +369,50 @@ $app->group('/auth', function () {
     }
 
     $user = checkLogin($userData);
-    if($user == false && is_null($userData['email'])) {
-      $result = $client->request('GET', 'user/emails', array(
-        //'query' => $params
-      ));
-      $code = $result->getStatusCode(); // 200
-      $reason = $result->getReasonPhrase(); // OK
-      $body = $result->getBody();
-      $emails = (array) json_decode($body, true);
-      $userData2 = $userData;
-      foreach($emails as $email) {
-        if($email['verified']) {
-          $userData2['email'] = $email['email'];
-          $user = checkLogin($userData2);
-          if($user != false) {
-            break;
+    if(FrcPortal\Auth::isAuthenticated()) {
+      $auth_user = FrcPortal\Auth::user();
+      if($user != false) {
+        $responseData = array('status'=>false, 'msg'=>'Github account is already linked to another user');
+        insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Github account '.$userData['email'].' to their profile.  Account is linked to another user.');
+      } else {
+        $provider = $userData['provider'];
+        $id = $userData['id'];
+        $email = $userData['email'];
+        $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
+          $responseData = array('status'=>false, 'msg'=>'Github account linked');
+          insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Github account '.$userData['email'].' to their profile.');
+      }
+    } else {
+      if($user == false && is_null($userData['email'])) {
+        $result = $client->request('GET', 'user/emails', array(
+          //'query' => $params
+        ));
+        $code = $result->getStatusCode(); // 200
+        $reason = $result->getReasonPhrase(); // OK
+        $body = $result->getBody();
+        $emails = (array) json_decode($body, true);
+        $userData2 = $userData;
+        foreach($emails as $email) {
+          if($email['verified']) {
+            $userData2['email'] = $email['email'];
+            $user = checkLogin($userData2);
+            if($user != false) {
+              break;
+            }
           }
         }
       }
-    }
-    if($user != false) {
-      $user->updateUserOnLogin($userData);
-      $jwt = $user->generateUserJWT();
-      $responseData = array('status'=>true, 'msg'=>'Login with Github Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-      FrcPortal\Auth::setCurrentUser($user->user_id);
-      insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Github OAuth2.');
-    } else {
-      $teamNumber = getSettingsProp('team_number');
-      $responseData = array('status'=>false, 'msg'=>'Github account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
-      insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Github OAuth2. Microsoft account not linked to any current portal user.');
+      if($user != false) {
+        $user->updateUserOnLogin($userData);
+        $jwt = $user->generateUserJWT();
+        $responseData = array('status'=>true, 'msg'=>'Login with Github Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+        FrcPortal\Auth::setCurrentUser($user->user_id);
+        insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Github OAuth2.');
+      } else {
+        $teamNumber = getSettingsProp('team_number');
+        $responseData = array('status'=>false, 'msg'=>'Github account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+        insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Github OAuth2. Microsoft account not linked to any current portal user.');
+      }
     }
     $response = $response->withJson($responseData);
     return $response;
