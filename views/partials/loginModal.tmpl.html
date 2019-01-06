@@ -1,7 +1,7 @@
-<md-dialog aria-label="Mango (Fruit)" style="min-height:300px" layout="column" flex="25" >
+<md-dialog aria-label="Login" style="min-height:300px" layout="column" flex="25" >
   <md-toolbar>
     <div class="md-toolbar-tools">
-      <h2>Log In</h2>
+      <h2><span ng-hide="vm.link_accounts">Log In</span><span ng-show="vm.link_accounts">Link Account</span></h2>
       <span flex></span>
       <md-button class="md-icon-button" ng-click="vm.cancel()">
         <md-icon class=""> close </md-icon>
@@ -31,7 +31,7 @@
         <i class="mdi mdi-amazon"></i>
         Log in with Amazon
       </md-button>
-      <div layout="column" ng-show="vm.configItems.local_login_enable">
+      <div layout="column" ng-show="vm.configItems.local_login_enable && !vm.link_accounts">
         <form name="Form" ng-submit="vm.login()">
             <md-input-container class="md-block">
               <label>Login</label>

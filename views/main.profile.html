@@ -252,32 +252,10 @@
 						<span flex></span>
 						<span>Linked Accounts</span>
 						<span flex></span>
-						<md-menu>
-							<md-button class="md-icon-button" ng-click="$mdMenu.open()"> <!--  -->
-								<md-tooltip md-direction="top">Link new account</md-tooltip>
-								<md-icon>add</md-icon>
-							</md-button>
-							<md-menu-content>
-								<md-menu-item>
-									<md-button class="google social" ng-click="vm.linkAccount('google')">
-										<i class="mdi mdi-google"></i>
-										Link Google Account
-									</md-button>
-								</md-menu-item>
-								<md-menu-item>
-									<md-button class="facebook social" ng-click="vm.linkAccount('facebook')">
-										<i class="mdi mdi-facebook"></i>
-										Link Facebook Account
-									</md-button>
-								</md-menu-item>
-								<md-menu-item>
-									<md-button class="microsoft social" ng-click="vm.linkAccount('live')">
-										<i class="mdi mdi-microsoft"></i>
-										Link Microsoft Account
-									</md-button>
-								</md-menu-item>
-							</md-menu-content>
-						</md-menu>
+						<md-button class="md-icon-button" ng-click="vm.loginModal($event)"> <!--  -->
+							<md-tooltip md-direction="top">Link new account</md-tooltip>
+							<md-icon>add</md-icon>
+						</md-button>
 					</h1>
 					<!-- <md-toolbar layout="row" class="md-hue-3">
 						<div class="md-toolbar-tools">

@@ -105,7 +105,8 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		params: {
-        firstLogin: false
+			firstLogin: false,
+      linkedAccounts: false,
     },
 		data: {
 		  title: 'Profile'

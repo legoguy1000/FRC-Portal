@@ -7,11 +7,12 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 
 	vm.configItems = configItems;
 	vm.loading = loginData.loading != undefined ? loginData.loading:false;
+	vm.link_accounts = loginData.link_accounts != undefined ? loginData.link_accounts:false;
 	vm.state = loginData.state != undefined ? loginData.state:$state.current.name;
 	var state_params = $stateParams;
 	delete state_params['#'];
 	vm.state_params = loginData.state_params != undefined ? loginData.state_params:state_params;
-	vm.state_from = loginData.state_from != undefined ? loginData.state_from:null;	
+	vm.state_from = loginData.state_from != undefined ? loginData.state_from:null;
 	vm.urlState = {
 		'current_state': vm.state,
 		'state_params': state_params,
