@@ -9,7 +9,6 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 		var state = angular.fromJson($stateParams.state.replace(/&#34;/g,'"'));
 		var redirect = state.current_state;
 		var params = state.state_params;
-		var state_from = state.state_from;
 		var dialog;
 		function loginModal() {
 			dialog = $mdDialog.show({
@@ -40,13 +39,15 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 					if(authed) {
 						$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
 						$rootScope.$emit('afterLoginAction');
+					}
+					if(redirect != '') {
 						$state.go(redirect,params).then(function() {
 							$mdDialog.cancel();
 						});
-					} else if(state_from != '') {
-						$state.go(state_from);
 					} else {
-						$state.go('main.home');
+						$state.go('main.home').then(function() {
+							$mdDialog.cancel();
+						});
 					}
 				}
 			});
