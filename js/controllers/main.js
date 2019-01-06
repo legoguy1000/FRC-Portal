@@ -167,7 +167,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		main.isAuthed = $auth.isAuthenticated();
 		main.userInfo = angular.fromJson(window.localStorage['userInfo']);
 		//main.StartEventSource();
-		if(main.userInfo.first_login) {
+		if(main.userInfo != undefined && main.userInfo.first_login) {
 			//newUserModal();
 			$state.go('main.profile',{'firstLogin': true});
 		}
