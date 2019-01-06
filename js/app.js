@@ -81,6 +81,15 @@ angular.module('FrcPortal', [
 		  title: ''
 		}
 	  })
+	  .state('main.oauth', {
+		url: '/oauth/{provider}?code',
+		templateUrl: 'views/main.oauth.html',
+		controller: 'main.oauthController',
+		controllerAs: 'vm',
+		authenticate: false,
+		data: {
+		  title: ''
+		}
 	  .state('main.profile', {
 		url: '/profile',
 		templateUrl: 'views/main.profile.html',
