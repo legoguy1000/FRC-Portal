@@ -669,7 +669,7 @@ angular.module('FrcPortal', [
 			trans.abort();
 			/* event.preventDefault();  */
 			$log.info('Need logged in');
-			//alert(JSON.stringify(fromState, null, 4));
+			alert(JSON.stringify(trans.$from().params(), null, 4));
 			$ocLazyLoad.load('js/controllers/loginModalController.js').then(function() {
 				$mdDialog.show({
 					controller: loginModalController,
