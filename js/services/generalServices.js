@@ -1,5 +1,5 @@
 angular.module('FrcPortal')
-.service('generalService', function ($mdDialog) {
+.service('generalService', function ($mdDialog,$http) {
 	return {
 		showSeasonHoursGraph: function (ev, user_id, year) {
 			$mdDialog.show({
