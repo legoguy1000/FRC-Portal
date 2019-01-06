@@ -17,6 +17,7 @@ function mainOauthController($scope, $state, $auth, $mdToast, $state, $statePara
 			);
 			if(response.status) {
 				var authed = $auth.isAuthenticated();
+				alert(authed);
 				if(authed) {
 					$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
 					$rootScope.$emit('afterLoginAction');
