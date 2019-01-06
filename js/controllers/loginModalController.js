@@ -12,13 +12,13 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	delete state_params['#'];
 	vm.state_params = loginData.state_params != undefined ? loginData.state_params:state_params;
 	vm.state_from = loginData.state_from != undefined ? loginData.state_from:null;
-	delete vm.state_from.params['#'];
+	vm.from_params = vm.state_from.params;
+	delete vm.from_params['#'];
 	vm.urlState = {
 		'current_state': vm.state,
 		'state_params': state_params,
 		'state_from': vm.state_from
 	};
-	delete vm.urlState.state_from.params['#'];
 
 	vm.loginForm = {};
 	vm.login = function () {
