@@ -1,12 +1,12 @@
 angular.module('FrcPortal')
-.controller('loginModalController', ['$auth', '$mdDialog', '$window', 'configItems', '$mdToast',
+.controller('loginModalController', ['$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loading',
 	loginModalController
 ]);
-function loginModalController($auth,$mdDialog,$window, configItems, $mdToast) {
+function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, loading) {
 	var vm = this;
 
 	vm.configItems = configItems;
-	vm.loading = false;
+	vm.loading = loading != undefined ? loading:false;
 	vm.loginForm = {};
 	vm.login = function () {
 		vm.loading = true;
@@ -72,7 +72,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast) {
 
 
 
-
+/*
 	vm.authenticate = function(provider) {
 		vm.loading = true;
 		$auth.authenticate(provider).then(function(response) {
@@ -95,7 +95,7 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast) {
 				$mdDialog.hide(data);
 			}
 		});
-  };
+  }; */
 
 	vm.cancel = function() {
 		$mdDialog.cancel();
