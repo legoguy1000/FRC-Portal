@@ -40,15 +40,15 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 						$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
 						$rootScope.$emit('afterLoginAction');
 					}
-					if(redirect != '') {
-						$state.go(redirect,params).then(function() {
-							$mdDialog.cancel();
-						});
-					} else {
-						$state.go('main.home').then(function() {
-							$mdDialog.cancel();
-						});
-					}
+				}
+				if(redirect != '') {
+					$state.go(redirect,params).then(function() {
+						$mdDialog.cancel();
+					});
+				} else {
+					$state.go('main.home').then(function() {
+						$mdDialog.cancel();
+					});
 				}
 			});
 		}
