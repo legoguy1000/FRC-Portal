@@ -11,9 +11,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	var state_params = $stateParams;
 	delete state_params['#'];
 	vm.state_params = loginData.state_params != undefined ? loginData.state_params:state_params;
-	vm.state_from = loginData.state_from != undefined ? loginData.state_from:null;
-	vm.from_params = vm.state_from.params;
-	delete vm.from_params['#'];
+	vm.state_from = loginData.state_from != undefined ? loginData.state_from:null;	
 	vm.urlState = {
 		'current_state': vm.state,
 		'state_params': state_params,
