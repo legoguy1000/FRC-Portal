@@ -126,7 +126,7 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Facebook OAuth2');
-  $this->post('/live', function ($request, $response) {
+  $this->post('/microsoft', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'microsoft';
@@ -142,7 +142,7 @@ $app->group('/auth', function () {
     $secret = getSettingsProp('microsoft_oauth_client_secret');
 //    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
     $clientId =  getSettingsProp('microsoft_oauth_client_id');
-    $redirect = getSettingsProp('env_url').'/oauth';
+    $redirect = getSettingsProp('env_url').'/oauth/microsoft';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://login.microsoftonline.com/common/oauth2/v2.0/']);
     $params = array(
   		'client_id'=>$clientId,
@@ -206,7 +206,7 @@ $app->group('/auth', function () {
     $secret = getSettingsProp('amazon_oauth_client_secret');
 //    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
     $clientId =  getSettingsProp('amazon_oauth_client_id');
-    $redirect = getSettingsProp('env_url').'/oauth';
+    $redirect = getSettingsProp('env_url').'/oauth/amazon';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://api.amazon.com/']);
     $params = array(
       'client_id'=>$clientId,
@@ -273,7 +273,7 @@ $app->group('/auth', function () {
     $secret = getSettingsProp('github_oauth_client_secret');
 //    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
     $clientId =  getSettingsProp('github_oauth_client_id');
-    $redirect = getSettingsProp('env_url').'/oauth';
+    $redirect = getSettingsProp('env_url').'/oauth/github';
 
     $client = new GuzzleHttp\Client(['base_uri' => 'https://github.com/login/oauth/']);
     $params = array(
