@@ -133,8 +133,6 @@ $app->get('/version', function (Request $request, Response $response, array $arg
       'identifier' => $route->getIdentifier(),
     ),*/
   );
-
-  insertLogs($level = 'Information', $message = 'Called version endpoint');
   $response = $response->withJson($responseArr);
   return $response;
 })->setName('Version');
