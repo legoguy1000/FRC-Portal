@@ -11,6 +11,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 		var params = state.state_params;
 		var state_from = state.state_from;
 		var dialog;
+		var authed = false;
 		function loginModal() {
 			dialog = $mdDialog.show({
 				controller: loginModalController,
@@ -36,13 +37,13 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 						.hideDelay(3000)
 				);
 				if(response.status) {
-					var authed = $auth.isAuthenticated();
+					authed = $auth.isAuthenticated();
 					if(authed) {
 						$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
 						$rootScope.$emit('afterLoginAction');
 					}
 				}
-				if(redirect != '' && state_from == null) {
+				if(redirect != '' && (authed || state_from == null)) {
 					$state.go(redirect,params).then(function() {
 						$mdDialog.cancel();
 					});
