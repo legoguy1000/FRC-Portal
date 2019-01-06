@@ -39,7 +39,6 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast) {
 	}
 	//Google
 	var hdBool = configItems.require_team_email && configItems.team_domain != '';
-	var hdVar = hdBool ?  : '';
 	var googleData = {
 		clientId: configItems.google_oauth_client_id,
 		authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
