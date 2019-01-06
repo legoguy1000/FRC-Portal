@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.oauthController', ['$scope', '$state', '$auth', '$mdToast', '$state', '$stateParams', 'configItems', '$sce', 'loginService',
+.controller('main.oauthController', ['$scope', '$state', '$auth', '$mdToast', '$state', '$stateParams', 'configItems', '$sce', 'loginService','$window',
 	mainOauthController
 ]);
-function mainOauthController($scope, $state, $auth, $mdToast, $state, $stateParams, configItems, $sce, loginService) {
+function mainOauthController($scope, $state, $auth, $mdToast, $state, $stateParams, configItems, $sce, loginService,$window) {
     var vm = this;
 
 		//$stateParams.provider;
@@ -11,15 +11,17 @@ function mainOauthController($scope, $state, $auth, $mdToast, $state, $statePara
 		loginService.oauth(data).then(function(response) {
 			$mdToast.show(
 				$mdToast.simple()
-					.textContent(response.data.msg)
+					.textContent(response.msg)
 					.position('top right')
 					.hideDelay(3000)
 			);
-			var authed = $auth.isAuthenticated();
-			if(authed) {
-				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);
-				$rootScope.$emit('afterLoginAction');
-				$state.go('main.home');
+			if(response.status) {
+				var authed = $auth.isAuthenticated();
+				if(authed) {
+					$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
+					$rootScope.$emit('afterLoginAction');
+					$state.go('main.home');
+				}
 			}
 		})
 }
