@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('loginModalController', ['$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loading',
+.controller('loginModalController', ['$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loading','$state',
 	loginModalController
 ]);
-function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, loading) {
+function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, loading, $state) {
 	var vm = this;
 
 	vm.configItems = configItems;
@@ -46,9 +46,11 @@ function loginModalController($auth,$mdDialog,$window, configItems, $mdToast, lo
 		scope: ['openid', 'profile', 'email'],
 		scopeDelimiter: ' ',
 		hd: hdBool ? '&hd='+configItems.team_domain : '',
-	  state: null,
+	  state: {
+			'current_state': $state.current.name
+		},
 	}
-	vm.oauth_urls.google = googleData.authorizationEndpoint+'?scope='+googleData.scope.join(googleData.scopeDelimiter)+'&redirect_uri='+googleData.redirectUri+'&response_type=code&client_id='+googleData.clientId+googleData.hd;
+	vm.oauth_urls.google = googleData.authorizationEndpoint+'?scope='+googleData.scope.join(googleData.scopeDelimiter)+'&redirect_uri='+googleData.redirectUri+'&response_type=code&client_id='+googleData.clientId+'&state='+googleData.state+googleData.hd;
 	//Facebook
 	var facebookData = {
 		clientId: configItems.facebook_oauth_client_id,
