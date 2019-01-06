@@ -42,11 +42,11 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 						$rootScope.$emit('afterLoginAction');
 					}
 				}
-				if(redirect != '' && state_from.name == null) {
+				if(redirect != '' && state_from == null) {
 					$state.go(redirect,params).then(function() {
 						$mdDialog.cancel();
 					});
-				} else if(state_from.name != null) {
+				} else if(state_from != null) {
 					$state.go(state_from.name).then(function() {
 						$mdDialog.cancel();
 					});
