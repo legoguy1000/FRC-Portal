@@ -18,7 +18,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 			var authed = $auth.isAuthenticated();
 			if(authed) {
 				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);
-				$rootScope.$broadcast('afterLoginAction');
+				$rootScope.$emit('afterLoginAction');
 				$state.go('main.home');
 			}
 		})
