@@ -7,8 +7,9 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 
 		//$stateParams.provider;
 		//$stateParams.code;
+		var dialog;
 		function loginModal() {
-			$mdDialog.show({
+			dialog = $mdDialog.show({
 				controller: loginModalController,
 				controllerAs: 'vm',
 				templateUrl: 'views/partials/loginModal.tmpl.html',
@@ -35,7 +36,9 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 					if(authed) {
 						$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
 						$rootScope.$emit('afterLoginAction');
-						$state.go('main.home');
+						$state.go('main.home').then(function() {
+							dialog.cancel();
+						});
 					}
 				}
 			});
