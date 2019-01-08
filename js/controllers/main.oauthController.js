@@ -6,7 +6,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
     var vm = this;
 
 		//$stateParams.provider;
-		var state = angular.fromJson($stateParams.state);
+		var state = angular.fromJson($stateParams.state.replace(/&#34;/g,'"'));
 		var redirect = state.current_state;
 		var params = state.state_params;
 		var state_from = state.state_from;
