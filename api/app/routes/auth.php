@@ -98,7 +98,7 @@ $app->group('/auth', function () {
     $fb = new Facebook\Facebook([
       'app_id'  => getSettingsProp('facebook_oauth_client_id'),
       'app_secret' => $secret,
-    	'default_graph_version' => 'v3.1',
+    	'default_graph_version' => 'v3.2',
     ]);
     try {
       $data = array();
