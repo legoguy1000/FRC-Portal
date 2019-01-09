@@ -79,27 +79,14 @@ $app->group('/auth', function () {
     $clientId = getSettingsProp('facebook_oauth_client_id');
     $secret = getSettingsProp('facebook_oauth_client_secret');
     $redirect = getSettingsProp('env_url').'/oauth/facebook';
-    $client = new GuzzleHttp\Client(['base_uri' => 'https://graph.facebook.com/v3.2/oauth/']);
-    $params = array(
-      'client_id'=>$clientId,
-      'code'=>$args['code'],
-      'redirect_uri'=>$redirect,
-      'client_secret'=>$secret,
-    );
-    $result = $client->request('GET', 'access_token', array(
-      'query' => $params,
-      'headers' => array("Accept: application/json")
-    ));
-    $code = $result->getStatusCode(); // 200
-    $reason = $result->getReasonPhrase(); // OK
-    $body = $result->getBody();
-    $accessTokenArr = (array) json_decode($body, true);
-    $accessToken = $accessTokenArr['access_token'];
     $fb = new Facebook\Facebook([
       'app_id'  => getSettingsProp('facebook_oauth_client_id'),
       'app_secret' => $secret,
     	'default_graph_version' => 'v3.2',
     ]);
+    $fbc = $fb->getOAuth2Client();
+    $access = $fbc->getAccessTokenFromCode($args['code'],$redirect);
+    $accessToken = $access->getValue();
     try {
       $data = array();
       $FBresponse = $fb->get('/me?locale=en_US&fields=first_name,last_name,name,email,picture', $accessToken);
