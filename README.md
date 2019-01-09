@@ -21,6 +21,7 @@ Version 2.13.2
 * Add Github and Amazon Login providers
 * Prompt for authentication prior to showing sign in list
 * Update OAuth to use direct links and not Satellizer library
+* Enable linking accounts
 
 Version 2.12.0
 * Simplified some code

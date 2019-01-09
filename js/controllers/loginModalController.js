@@ -67,7 +67,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	//Facebook
 	var facebookData = {
 		clientId: configItems.facebook_oauth_client_id,
-		authorizationEndpoint: 'https://www.facebook.com/v3.0/dialog/oauth',
+		authorizationEndpoint: 'https://www.facebook.com/v3.2/dialog/oauth',
 		redirectUri: window.location.origin+'/oauth/facebook',
 		scope: ['public_profile','email'],
 		auth_type: 'rerequest',
