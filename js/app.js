@@ -53,6 +53,7 @@ angular.module('FrcPortal', [
 								 'js/services/settingServices.js',
 								 'js/services/generalServices.js',
 								 'js/services/logServices.js',
+								 'js/services/loginServices.js',
 						 ]);
 	    }]
 		},
@@ -81,6 +82,22 @@ angular.module('FrcPortal', [
 		  title: ''
 		}
 	  })
+	  .state('main.oauth', {
+		url: '/oauth/{provider}?code&state',
+		templateUrl: 'views/main.oauth.html',
+		controller: 'main.oauthController',
+		controllerAs: 'vm',
+		authenticate: false,
+		data: {
+		  title: ''
+		},
+	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
+	    homeController: ['$ocLazyLoad', function($ocLazyLoad) {
+	      // you can lazy load files for an existing module
+       	return $ocLazyLoad.load(['js/controllers/loginModalController.js','js/controllers/main.oauthController.js']);
+	    }]
+	  }
+		})
 	  .state('main.profile', {
 		url: '/profile',
 		templateUrl: 'views/main.profile.html',
@@ -88,7 +105,8 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: true,
 		params: {
-        firstLogin: false
+			firstLogin: false,
+      linkedAccounts: false,
     },
 		data: {
 		  title: 'Profile'
@@ -652,7 +670,10 @@ angular.module('FrcPortal', [
 			trans.abort();
 			/* event.preventDefault();  */
 			$log.info('Need logged in');
-			//alert(JSON.stringify(fromState, null, 4));
+			//alert(JSON.stringify(trans.params('from'), null, 4));
+			var from_params_json = JSON.stringify(trans.params('from'));
+			var from_params = angular.fromJson(from_params_json);
+			delete from_params["#"];
 			$ocLazyLoad.load('js/controllers/loginModalController.js').then(function() {
 				$mdDialog.show({
 					controller: loginModalController,
@@ -660,18 +681,20 @@ angular.module('FrcPortal', [
 					templateUrl: 'views/partials/loginModal.tmpl.html',
 					parent: angular.element(document.body),
 					clickOutsideToClose:true,
-					fullscreen: true // Only for -xs, -sm breakpoints.
+					fullscreen: true, // Only for -xs, -sm breakpoints.
+					loginData: {
+						loading: false,
+						state: toState.name,
+						state_params: trans.params(),
+						state_from: {
+							'name': trans.$from().name,
+							'params': from_params,
+						}
+					}
 				})
 				.then(function(data) {
 					if(data.auth) {
-						var data = {
-							'allActions': true,
-						}
-						$rootScope.$broadcast('afterLoginAction',data);
-						$log.info('Logged in');
-						$log.info(toState.name);
-						$log.info(trans.params());
-						$state.go(toState.name, trans.params());
+
 					}
 					else if(trans.$from().name == '') {
 						$state.go('main.home');
@@ -702,7 +725,8 @@ angular.module('FrcPortal', [
 			}
 		}
 	});
-})
+});
+/*
 .config(function($authProvider, configItems) {
 
 	var hdBool = configItems.require_team_email && configItems.team_domain != '';
@@ -810,7 +834,7 @@ $authProvider.oauth2({
 	$authProvider.authHeader = 'Authorization';
 	$authProvider.authToken = 'Bearer';
 	$authProvider.storageType = 'localStorage';
-});
+});*/
 //.config(['momentPickerProvider', function (momentPickerProvider) {
 	//momentPickerProvider.options({ hoursFormat: 'LT' });
 //}]);

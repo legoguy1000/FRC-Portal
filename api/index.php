@@ -116,7 +116,7 @@ $container['logger'] = function($c) {
 };
 
 $app->get('/version', function (Request $request, Response $response, array $args) {
-  $this->logger->addInfo('Called version endpoint');
+  //$this->logger->addInfo('Called version endpoint');
   $route = FrcPortal\Auth::getRoute();
   $responseArr = array(
     'version' => VERSION,
@@ -125,16 +125,14 @@ $app->get('/version', function (Request $request, Response $response, array $arg
     'token' => FrcPortal\Auth::currentToken(),
     'isAuthenticated' => FrcPortal\Auth::isAuthenticated(),
     'ip' => FrcPortal\Auth::getClientIP(),
-    'route' => array(
+    /*'route' => array(
       'name' => $route->getName(),
       'groups' => $route->getGroups(),
       'methods' => $route->getMethods(),
       'arguments' => $route->getArguments(),
       'identifier' => $route->getIdentifier(),
-    ),
+    ),*/
   );
-
-  insertLogs($level = 'Information', $message = 'Called version endpoint');
   $response = $response->withJson($responseArr);
   return $response;
 })->setName('Version');

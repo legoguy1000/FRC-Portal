@@ -1,9 +1,9 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad',
+	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService',
 	mainController
 ]);
-function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad) {
+function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService) {
 	var main = this;
 
 	main.configItems = configItems;
@@ -23,6 +23,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.notifications = [];
 	main.signInAuthed = signinService.isAuthed();
 	main.browserData = {}
+	main.versionInfo = {}
 
 	//lazy load dialog controllers
 	$ocLazyLoad.load('js/controllers/loginModalController.js');
@@ -46,11 +47,13 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
   $ocLazyLoad.load('https://rawgit.com/schmich/instascan-builds/master/instascan.min.js');
 	$ocLazyLoad.load('js/controllers/newSchoolModalController.js');
 
-	navService
-	  .loadAllItems()
-	  .then(function(menuItems) {
+	navService.loadAllItems().then(function(menuItems) {
 		main.menuItems = [].concat(menuItems);
-	  });
+  });
+
+	generalService.getVersion().then(function(response) {
+		main.versionInfo = response;
+  });
 
 	function toggleRightSidebar() {
 		$mdSidenav('right').toggle();
@@ -84,12 +87,15 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,
-			fullscreen: true // Only for -xs, -sm breakpoints.
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				loginData: {
+					loading: false,
+				}
+			}
 		})
 		.then(function(response) {
-			if(response.auth) {
-				$rootScope.$broadcast('afterLoginAction');
-			}
+
 		}, function() {
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
@@ -167,7 +173,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		main.isAuthed = $auth.isAuthenticated();
 		main.userInfo = angular.fromJson(window.localStorage['userInfo']);
 		//main.StartEventSource();
-		if(main.userInfo.first_login) {
+		if(main.userInfo != undefined && main.userInfo.first_login) {
 			//newUserModal();
 			$state.go('main.profile',{'firstLogin': true});
 		}

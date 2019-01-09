@@ -1,7 +1,7 @@
-<md-dialog aria-label="Mango (Fruit)" style="min-height:300px" layout="column" flex="25" >
+<md-dialog aria-label="Login" style="min-height:300px" layout="column" flex="25" >
   <md-toolbar>
     <div class="md-toolbar-tools">
-      <h2>Log In</h2>
+      <h2><span ng-hide="vm.link_accounts">Log In</span><span ng-show="vm.link_accounts">Link Account</span></h2>
       <span flex></span>
       <md-button class="md-icon-button" ng-click="vm.cancel()">
         <md-icon class=""> close </md-icon>
@@ -10,28 +10,28 @@
   </md-toolbar>
   <md-dialog-content layout="column" layout-align="center center" class="layout-margin" style="min-height: 200px;">
     <md-progress-circular md-mode="indeterminate" ng-disabled="!vm.loading" md-diameter="96" ng-show="vm.loading"></md-progress-circular>
-    <div layout="column" ng-hide="vm.loading">
-      <md-button class="md-raised google btn-large social" ng-click="vm.authenticate('google')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.google_login_enable">
+    <div layout="column" ng-hide="vm.loading"> <!--ng-click="vm.authenticate('google')"-->
+      <md-button class="md-raised google btn-large social" ng-href="{{vm.oauth_urls.google}}" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.google_login_enable">
         <i class="mdi mdi-google"></i>
         Log in with Google
       </md-button>
-      <md-button class="md-raised facebook btn-large social" ng-click="vm.authenticate('facebook')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.facebook_login_enable">
+      <md-button class="md-raised facebook btn-large social" ng-href="{{vm.oauth_urls.facebook}}" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.facebook_login_enable">
         <i class="mdi mdi-facebook"></i>
         Log in with Facebook
       </md-button>
-      <md-button class="md-raised microsoft btn-large social" ng-click="vm.authenticate('live')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.microsoft_login_enable">
+      <md-button class="md-raised microsoft btn-large social" ng-href="{{vm.oauth_urls.microsoft}}" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.microsoft_login_enable">
         <i class="mdi mdi-microsoft"></i>
         Log in with Microsoft
       </md-button>
-      <md-button class="md-raised github btn-large social" ng-click="vm.authenticate('github')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.github_login_enable">
+      <md-button class="md-raised github btn-large social" ng-href="{{vm.oauth_urls.github}}" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.github_login_enable">
         <i class="mdi mdi-github-circle"></i>
         Log in with Github
       </md-button>
-      <md-button class="md-raised amazon btn-large social" ng-click="vm.authenticate('amazon')" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.amazon_login_enable">
+      <md-button class="md-raised amazon btn-large social" ng-href="{{vm.oauth_urls.amazon}}" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.amazon_login_enable">
         <i class="mdi mdi-amazon"></i>
         Log in with Amazon
       </md-button>
-      <div layout="column" ng-show="vm.configItems.local_login_enable">
+      <div layout="column" ng-show="vm.configItems.local_login_enable && !vm.link_accounts">
         <form name="Form" ng-submit="vm.login()">
             <md-input-container class="md-block">
               <label>Login</label>

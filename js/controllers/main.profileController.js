@@ -24,6 +24,8 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 								.ariaLabel('First Login')
 								.ok('OK');
 		$mdDialog.show(dialog);
+	}	else if($stateParams.linkedAccounts) {
+		vm.selectedTab = 1;
 	}
 	console.info($stateParams.selectedTab);
 	vm.querySeasons = {
@@ -246,15 +248,29 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		});
 	}
 
-	vm.linkAccount = function(provider) {
-	  $auth.link(provider,{'link_account':true, 'provider':provider})
-		.then(function(response) {
-			if(response.data.status) {
-				vm.linkedAccounts = response.data.linkedAccounts;
+	vm.loginModal = function(ev) {
+		$mdDialog.show({
+			controller: loginModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/loginModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				loginData: {
+					loading: false,
+					state: 'main.profile',
+					state_params: {
+						linkedAccounts: true
+					}
+				}
 			}
 		})
-		.catch(function() {
-		  // Handle errors here.
+		.then(function(response) {
+
+		}, function() {
+			$log.info('Dialog dismissed at: ' + new Date());
 		});
-	};
+	}
 }

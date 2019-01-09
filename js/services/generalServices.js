@@ -1,5 +1,5 @@
 angular.module('FrcPortal')
-.service('generalService', function ($mdDialog) {
+.service('generalService', function ($mdDialog,$http) {
 	return {
 		showSeasonHoursGraph: function (ev, user_id, year) {
 			$mdDialog.show({
@@ -18,6 +18,12 @@ angular.module('FrcPortal')
 				}
 			})
 			.then(function() {}, function() {});
+		},
+		getVersion: function () {
+			return $http.get('api/version')
+			.then(function(response) {
+				return response.data;
+			});
 		},
 	};
 });

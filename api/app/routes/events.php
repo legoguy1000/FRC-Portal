@@ -907,9 +907,11 @@ $app->group('/events', function () {
             return $response;
           }
         }
+        insertLogs($level = 'Information', $message = $user->full_name.' registered for '.$event->name);
       } else {
         $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user_id)->delete();
         $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
+        insertLogs($level = 'Information', $message = $user->full_name.' unregistered for '.$event->name);
       }
       //notify User
       $reg = $registrationBool ? 'registered':'unregistered';
