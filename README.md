@@ -2,7 +2,7 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-Version 2.13.2
+Version 2.13.3
 * Add/edit/delete school
 * Fixed installer
 * fix various typos
@@ -22,6 +22,7 @@ Version 2.13.2
 * Prompt for authentication prior to showing sign in list
 * Update OAuth to use direct links and not Satellizer library
 * Enable linking accounts
+* Fix Facebook login
 
 Version 2.12.0
 * Simplified some code
