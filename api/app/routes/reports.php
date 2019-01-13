@@ -96,12 +96,15 @@ $app->group('/reports', function () {
      )); */
 
    $result =  DB::table('meeting_hours AS a')
+   ->leftJoin('seasons AS s', function ($join) {
+     $join->on(DB::raw('year(a.time_in)'), 's.year');
+   })
    ->leftJoin('users AS b', function ($join) {
-     $join->on('a.user_id', 'b.user_id');
+     $join->on('a.user_id', 'b.user_id')->on('a.time_in','>=','s.start_date')->on('a.time_in','<=','s.end_date');
    })->where('b.user_type','<>','')
      ->whereBetween(DB::raw('year(a.time_in)'),[$start_date,$end_date])
      ->select(DB::raw('COUNT(DISTINCT(a.user_id)) as user_count, YEAR(a.time_in) as year, b.user_type'))
-     ->groupBy('year','gender')->get();
+     ->groupBy('year','user_type')->get();
 
     foreach($result as $re) {
       $year = (integer) $re->year;
@@ -122,8 +125,11 @@ $app->group('/reports', function () {
      )); */
 
      $result =  DB::table('meeting_hours AS a')
+     ->leftJoin('seasons AS s', function ($join) {
+       $join->on(DB::raw('year(a.time_in)'), 's.year');
+     })
      ->leftJoin('users AS b', function ($join) {
-       $join->on('a.user_id', 'b.user_id');
+       $join->on('a.user_id', 'b.user_id')->on('a.time_in','>=','s.start_date')->on('a.time_in','<=','s.end_date');
      })->where('b.gender','<>','')
        ->whereBetween(DB::raw('year(a.time_in)'),[$start_date,$end_date])
        ->select(DB::raw('COUNT(DISTINCT(a.user_id)) as user_count, YEAR(a.time_in) as year, b.gender'))
@@ -155,8 +161,11 @@ $app->group('/reports', function () {
      )); */
 
    $result =  DB::table('meeting_hours AS a')
+   ->leftJoin('seasons AS s', function ($join) {
+     $join->on(DB::raw('year(a.time_in)'), 's.year');
+   })
    ->leftJoin('users AS b', function ($join) {
-     $join->on('a.user_id', 'b.user_id');
+     $join->on('a.user_id', 'b.user_id')->on('a.time_in','>=','s.start_date')->on('a.time_in','<=','s.end_date');
    })->where('b.user_type','student')
      ->whereBetween(DB::raw('year(a.time_in)'),[$start_date,$end_date])
      ->select(DB::raw('CASE
