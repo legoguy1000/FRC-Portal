@@ -131,7 +131,7 @@ if($version >= '2.11.2') {
 /**
 * 2.13.0
 **/
-if($version >= '2.13.3') {
+if($version >= '2.13.4') {
   if(Capsule::schema()->hasTable('meeting_hours')) {
     if(!Capsule::schema()->hasColumn('meeting_hours','created_at') && !Capsule::schema()->hasColumn('meeting_hours','updated_at')) {
       try {
