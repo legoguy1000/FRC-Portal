@@ -7,7 +7,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 
 		//$stateParams.provider;
 		var stateEncoded = $stateParams.state;
-		var state = angular.fromJson(atob(stateEncoded).replace(/&#34;/g,'"'));
+		var state = angular.fromJson(atob(stateEncoded));
 		var redirect = state.current_state;
 		var params = state.state_params;
 		var state_from = state.state_from;
