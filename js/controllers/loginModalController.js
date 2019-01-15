@@ -18,6 +18,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		'state_params': vm.state_params,
 		'state_from': vm.state_from
 	};
+	vm.urlStateEncode = btoa(JSON.stringify(vm.urlState));
 
 	vm.loginForm = {};
 	vm.login = function () {
@@ -61,9 +62,8 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		scope: ['openid', 'profile', 'email'],
 		scopeDelimiter: ' ',
 		hd: hdBool ? '&hd='+configItems.team_domain : '',
-	  state: vm.urlState,
 	}
-	vm.oauth_urls.google = googleData.authorizationEndpoint+'?scope='+googleData.scope.join(googleData.scopeDelimiter)+'&redirect_uri='+googleData.redirectUri+'&response_type=code&client_id='+googleData.clientId+'&state='+JSON.stringify(googleData.state)+googleData.hd;
+	vm.oauth_urls.google = googleData.authorizationEndpoint+'?scope='+googleData.scope.join(googleData.scopeDelimiter)+'&redirect_uri='+googleData.redirectUri+'&response_type=code&client_id='+googleData.clientId+'&state='+vm.urlStateEncode+googleData.hd;
 	//Facebook
 	var facebookData = {
 		clientId: configItems.facebook_oauth_client_id,
@@ -72,9 +72,8 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		scope: ['public_profile','email'],
 		auth_type: 'rerequest',
 		scopeDelimiter: ',',
-	  state: vm.urlState,
 	}
-	vm.oauth_urls.facebook = facebookData.authorizationEndpoint+'?scope='+facebookData.scope.join(facebookData.scopeDelimiter)+'&redirect_uri='+facebookData.redirectUri+'&response_type=code&client_id='+facebookData.clientId+'&state='+JSON.stringify(facebookData.state);
+	vm.oauth_urls.facebook = facebookData.authorizationEndpoint+'?scope='+facebookData.scope.join(facebookData.scopeDelimiter)+'&redirect_uri='+facebookData.redirectUri+'&response_type=code&client_id='+facebookData.clientId+'&state='+vm.urlStateEncode;
 	//microsoft
 	var microsoftData = {
 		clientId: configItems.microsoft_oauth_client_id,
@@ -82,9 +81,8 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		redirectUri: window.location.origin+'/oauth/microsoft',
 		scope: ['openid','email',' profile','User.Read'],
 		scopeDelimiter: ' ',
-	  state: vm.urlState,
 	}
-	vm.oauth_urls.microsoft = microsoftData.authorizationEndpoint+'?scope='+microsoftData.scope.join(microsoftData.scopeDelimiter)+'&redirect_uri='+microsoftData.redirectUri+'&response_type=code&client_id='+microsoftData.clientId+'&state='+JSON.stringify(microsoftData.state);
+	vm.oauth_urls.microsoft = microsoftData.authorizationEndpoint+'?scope='+microsoftData.scope.join(microsoftData.scopeDelimiter)+'&redirect_uri='+microsoftData.redirectUri+'&response_type=code&client_id='+microsoftData.clientId+'&state='+vm.urlStateEncode;
 	//github
 	var githubData = {
 	  clientId: configItems.github_oauth_client_id,
@@ -92,9 +90,8 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
 	  scope: ['read:user', 'user:email'],
 	  scopeDelimiter: ' ',
-	  state: vm.urlState,
 	}
-	vm.oauth_urls.github = githubData.authorizationEndpoint+'?scope='+githubData.scope.join(githubData.scopeDelimiter)+'&redirect_uri='+githubData.redirectUri+'&response_type=code&client_id='+githubData.clientId+'&state='+JSON.stringify(githubData.state);
+	vm.oauth_urls.github = githubData.authorizationEndpoint+'?scope='+githubData.scope.join(githubData.scopeDelimiter)+'&redirect_uri='+githubData.redirectUri+'&response_type=code&client_id='+githubData.clientId+'&state='+vm.urlStateEncode;
 	//amazon
 	var amazonData = {
 	  clientId: configItems.amazon_oauth_client_id,
@@ -102,9 +99,8 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		authorizationEndpoint: 'https://www.amazon.com/ap/oa',
 		scope: ['profile'],
 	  scopeDelimiter: ' ',
-	  state: vm.urlState,
 	}
-	vm.oauth_urls.amazon = amazonData.authorizationEndpoint+'?scope='+amazonData.scope.join(amazonData.scopeDelimiter)+'&redirect_uri='+amazonData.redirectUri+'&response_type=code&client_id='+amazonData.clientId+'&state='+JSON.stringify(amazonData.state);
+	vm.oauth_urls.amazon = amazonData.authorizationEndpoint+'?scope='+amazonData.scope.join(amazonData.scopeDelimiter)+'&redirect_uri='+amazonData.redirectUri+'&response_type=code&client_id='+amazonData.clientId+'&state='+vm.urlStateEncode;
 
 
 
