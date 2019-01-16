@@ -77,8 +77,10 @@ class User extends Eloquent {
   }
   public function getRoomTypeAttribute() {
     $return = null;
-    if(isset($this->attributes['user_type']) && isset($this->attributes['gender'])) {
-      $return = $this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : 'Adult';
+    if($adult) {
+      $return = 'Adult';
+    } else if(isset($this->attributes['user_type']) && isset($this->attributes['gender'])) {
+      $return = $this->attributes['user_type'].'.'.$this->attributes['gender'];
     }
     return $return;
   }
