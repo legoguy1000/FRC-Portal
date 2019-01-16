@@ -23,7 +23,7 @@
 					<md-list ng-cloak
 						dnd-list="vm.room_list.room_selection[room.room_id]"
 						dnd-allowed-types="room.room_type"
-						dnd-disable-if="!vm.admin || (room.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length >= 4) || (room.user_type == 'Mentor' && vm.room_list.room_selection[room.room_id].length >= 2)"
+						dnd-disable-if="!vm.admin || (room.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length >= 4) || (room.user_type == 'Adult' && vm.room_list.room_selection[room.room_id].length >= 2)"
 						style="min-height:20px;">
 					    <md-list-item ng-repeat="req in vm.room_list.room_selection[room.room_id]"
 					        dnd-draggable="req"

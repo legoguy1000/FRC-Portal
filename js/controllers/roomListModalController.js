@@ -24,7 +24,7 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 			'gender':'Female'
 		},
 		{
-			'user_type':'Mentor',
+			'user_type':'Adult',
 			'gender':''
 		}
 	];

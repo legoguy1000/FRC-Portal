@@ -391,7 +391,7 @@ $app->group('/events', function () {
         if(!isset($formData['user_type']) || $formData['user_type'] == '') {
           return badRequestResponse($response, $msg = 'User Type cannot be blank');
         }
-        if(!isset($formData['gender']) || ($formData['gender'] == '' && $formData['user_type'] != 'Mentor')) {
+        if(!isset($formData['gender']) || ($formData['gender'] == '' && $formData['user_type'] != 'Adult')) {
           return badRequestResponse($response, $msg = 'Gender cannot be blank');
         }
         //Event passed from middleware
@@ -440,7 +440,7 @@ $app->group('/events', function () {
             $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
           }
         }
-        //Not Assigned a car
+        //Not Assigned a room
         $roomArr = $formData['rooms']['non_select'];
         $userArr = array_column($roomArr, 'user_id');
         if(!empty($userArr)) {
@@ -831,6 +831,7 @@ $app->group('/events', function () {
 
       $user =  FrcPortal\User::find($user_id);
       $user_type = $user->user_type;
+      $adult = $user->adult;
       $gender = $user->gender;
 
       $registrationBool = (bool) $formData['registration'];
@@ -844,7 +845,7 @@ $app->group('/events', function () {
         $ereq_id = $reqUpdate->ereq_id;
         $can_drive = (bool) $formData['can_drive'];
         $drivers_req = (bool) $event->drivers_required;
-      	if($drivers_req && $user_type == 'Mentor') {
+      	if($drivers_req && $adult) {
           $car = FrcPortal\EventCar::find($reqUpdate->car_id);
           if($can_drive) {
             $eventCarUpdate = FrcPortal\EventCar::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['car_space' => $formData['event_cars']['car_space']]);

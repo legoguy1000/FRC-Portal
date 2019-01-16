@@ -40,7 +40,7 @@ class User extends Eloquent {
     'status' => 'boolean',
     'first_login' => 'boolean',
     'admin' => 'boolean',
-    'admin' => 'boolean',
+    'adult' => 'boolean',
   ];
 
   public function newQuery() {
@@ -72,10 +72,13 @@ class User extends Eloquent {
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
   }
+  public function getAdultAttribute() {
+    return (bool) isset($this->attributes['user_type']) && ($this->attributes['user_type'] == 'Mentor' || $this->attributes['user_type'] == 'Alumni' || $this->attributes['user_type'] == 'Parent');
+  }
   public function getRoomTypeAttribute() {
     $return = null;
     if(isset($this->attributes['user_type']) && isset($this->attributes['gender'])) {
-      $return = $this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : $this->attributes['user_type'];
+      $return = $this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : 'Adult';
     }
     return $return;
   }
