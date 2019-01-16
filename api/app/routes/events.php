@@ -388,22 +388,22 @@ $app->group('/events', function () {
           return unauthorizedResponse($response);
         }
 
-        if(!isset($formData['event_id']) || $formData['event_id'] == '') {
-          return badRequestResponse($response, $msg = 'Event ID cannot be blank');
-        }
         if(!isset($formData['user_type']) || $formData['user_type'] == '') {
           return badRequestResponse($response, $msg = 'User Type cannot be blank');
         }
         if(!isset($formData['gender']) || ($formData['gender'] == '' && $formData['user_type'] != 'Mentor')) {
           return badRequestResponse($response, $msg = 'Gender cannot be blank');
         }
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
+
         $room = new FrcPortal\EventRoom();
-        $room->event_id = $formData['event_id'];
+        $room->event_id = $event->event_id;
         $room->user_type = $formData['user_type'];
         $room->gender = $formData['gender'];
         if($room->save()) {
           try {
-            $responseArr['data'] = getEventRoomList($event_id);
+            $responseArr['data'] = getEventRoomList($event->event_id);
             $responseArr['status'] = true;
             $responseArr['msg'] = 'New room added';
           } catch (Exception $e) {
