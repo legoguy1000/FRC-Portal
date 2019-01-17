@@ -91,21 +91,21 @@
 					<div>
 						Initial Number of Hotel Rooms
 					</div>
-					<div layout="row" layout-wrap>
+					<div layout="row" layout-wrap layout-align="start center">
 						<md-input-container flex class="md-icon-float md-block md-icon-left">
 			        <label># Student Boys Rooms</label>
 							<!--<md-icon md-font-library="material-icons">event_note</md-icon>-->
-							<input ng-model="vm.data.rooms.boys" ng-required="vm.data.requirements.room"></input>
+							<input ng-model="vm.data.rooms.boys" ng-required="vm.data.requirements.room" type="number" min="0"></input>
 			      </md-input-container>
 						<md-input-container flex class="md-icon-float md-block md-icon-left">
 			        <label># Student Girls Rooms</label>
 							<!--<md-icon md-font-library="material-icons">event_note</md-icon> -->
-							<input ng-model="vm.data.rooms.girls" ng-required="vm.data.requirements.room"></input>
+							<input ng-model="vm.data.rooms.girls" ng-required="vm.data.requirements.room" type="number" min="0"></input>
 			      </md-input-container>
 						<md-input-container flex class="md-icon-float md-block md-icon-left">
 			        <label># Adult Rooms</label>
 							<!--<md-icon md-font-library="material-icons">event_note</md-icon>-->
-							<input ng-model="vm.data.rooms.adults" ng-required="vm.data.requirements.room"></input>
+							<input ng-model="vm.data.rooms.adults" ng-required="vm.data.requirements.room" type="number" min="0"></input>
 			      </md-input-container>
 					</div>
 				</div>
