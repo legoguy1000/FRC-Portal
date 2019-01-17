@@ -144,7 +144,7 @@
 											<i class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</i>
 											<i class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</i>
 										</span>
-										<md-icon class="material-icons" ng-hide="!vm.user.adult && vm.user.user_type == 'Student'">remove_circle_outline</md-icon>
+										<md-icon class="material-icons" ng-hide="!vm.user.adult && vm.user.student">remove_circle_outline</md-icon>
 									</td>
 									<td md-cell>
 										{{season.annual_requirements.build_season_hours}}
@@ -210,14 +210,14 @@
 										<i class="material-icons" style="color:red;" ng-hide="event.event_requirements.registration">remove_circle</i>
 									</td>
 									<td md-cell>
-										<span ng-show="(vm.user.other_adult || vm.user.user_type == 'Student') && event.payment_required">
+										<span ng-show="(vm.user.other_adult || vm.user.student) && event.payment_required">
 											<i class="material-icons" style="color:green;" ng-show="event.event_requirements.payment">check_circle</i>
 											<i class="material-icons" style="color:red;" ng-hide="event.event_requirements.payment">remove_circle</i>
 										</span>
-										<i class="material-icons" style="" ng-show="vm.user.user_type == 'Mentor' || !event.payment_required">remove_circle_outline</i>
+										<i class="material-icons" style="" ng-show="vm.user.mentor || !event.payment_required">remove_circle_outline</i>
 									</td>
 									<td md-cell>
-										<span ng-show="vm.user.user_type == 'Student' && event.permission_slip_required">
+										<span ng-show="vm.user.student && event.permission_slip_required">
 											<i class="material-icons" style="color:green;" ng-show="event.event_requirements.permission_slip">check_circle</i>
 											<i class="material-icons" style="color:red;" ng-hide="event.event_requirements.permission_slip">remove_circle</i>
 										</span>
