@@ -10,11 +10,13 @@ function getSignInList($year = null) {
 		$query->whereHas('seasons', function ($query) use ($year)  {
 			$query->where('year', $year);
 		});
-	}, 'last_sign_in'])->where('status',true)->get();
-	$data = $users->filter(function ($user) {
+	}, 'last_sign_in'])->where(function ($query) {
+      $query->where('user_type','Student')->orWhere('user_type','Mentor');
+  })->where('status',true)->get();
+	/* $data = $users->filter(function ($user) {
 		return $user->student || $user->mentor;
-	});
-	return $data->all();
+	})->all(); */
+	return $users;
 }
 
 function generateSignInToken($ts = null, $te = null) {
