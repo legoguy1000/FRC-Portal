@@ -205,6 +205,27 @@ $app->group('/events', function () {
       $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
       $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
       if($event->save()) {
+        if($event->room_required && isset($formData['rooms'])) {
+          $roomTypes = array('boys','girls','adults');
+          $roomKey = array(
+            'boys' => array('event_id'=>$event->event_id,'user_type'=>'Student','gender'=>'Male'),
+            'girls' => array('event_id'=>$event->event_id,'user_type'=>'Student','gender'=>'Female'),
+            'adults' => array('event_id'=>$event->event_id,'user_type'=>'Adult')
+          );
+          $rooms = array();
+          $filter_options = array(
+              'options' => array( 'min_range' => 0)
+          );
+          foreach($roomTypes as $room) {
+            if(isset($formData['rooms'][$room]) && filter_var($formData['rooms'][$room], FILTER_VALIDATE_INT, $filter_options ) !== FALSE) {
+              $num = $formData['rooms'][$room];
+              for($i=0;$i<$num;$i++) {
+                $rooms[] = $roomKey[$room];
+              }
+            }
+          }
+          $room = FrcPortal\EventRooom::create($rooms);
+        }
         $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$event);
         insertLogs($level = 'Information', $message = $event->name.' created');
          //Send notifications

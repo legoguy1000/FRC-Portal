@@ -87,12 +87,29 @@
 					  </md-switch>
 					</div>
 				</div>
+				<div layout="column" ng-show="vm.data.requirements.room">
+					<div>
+						Initial Number of Hotel Rooms
+					</div>
+					<div layout="row" layout-wrap>
+						<md-input-container flex class="md-icon-float md-block md-icon-left">
+			        <label># Student Boys Rooms</label>
+							<!--<md-icon md-font-library="material-icons">event_note</md-icon>-->
+							<input ng-model="vm.data.rooms.boys" ng-required="vm.data.requirements.room"></input>
+			      </md-input-container>
+						<md-input-container flex class="md-icon-float md-block md-icon-left">
+			        <label># Student Girls Rooms</label>
+							<!--<md-icon md-font-library="material-icons">event_note</md-icon>-->
+							<input ng-model="vm.data.rooms.girls" ng-required="vm.data.requirements.room"></input>
+			      </md-input-container>
+						<md-input-container flex class="md-icon-float md-block md-icon-left">
+			        <label># Adult Rooms</label>
+							<!--<md-icon md-font-library="material-icons">event_note</md-icon>-->
+							<input ng-model="vm.data.rooms.adults" ng-required="vm.data.requirements.room"></input>
+			      </md-input-container>
+					</div>
+				</div>
 				<div layout="row">
-					<!--<md-input-container flex class="md-icon-float md-block" >
-							<label>Details</label>
-							<md-icon md-font-library="material-icons">event_note</md-icon>
-							<textarea ng-model="vm.data.details" required></textarea>
-						</md-input-container> -->
 						<md-input-container flex class="md-icon-float md-block md-icon-left">
 			        <label>Details</label>
 							<md-icon md-font-library="material-icons">event_note</md-icon>
