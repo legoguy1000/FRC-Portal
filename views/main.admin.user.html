@@ -132,11 +132,11 @@
 								<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.stims">remove_circle</md-icon>
 							</td>
 							<td md-cell>
-								<span ng-hide="vm.user.adult">
-									<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</md-icon>
-									<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</md-icon>
+								<span ng-show="vm.userInfo.student">
+									<i class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</i>
+									<i class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</i>
 								</span>
-								<md-icon class="material-icons" ng-hide="!vm.user.adult && vm.userInfo.user_type == 'Student'">indeterminate_check_box</md-icon>
+								<md-icon class="material-icons" ng-show="vm.userInfo.adult">remove_circle_outline</md-icon>
 							</td>
 							<td md-cell>
 								{{season.annual_requirements.build_season_hours}}
