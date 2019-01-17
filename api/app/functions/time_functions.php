@@ -11,7 +11,7 @@ function getSignInList($year = null) {
 			$query->where('year', $year);
 		});
 	}, 'last_sign_in'])->where('status',true)->get();
-	return $users;
+	return $users->where('student', true)->where('mentor', true);
 }
 
 function generateSignInToken($ts = null, $te = null) {
