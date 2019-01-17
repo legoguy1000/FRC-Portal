@@ -82,7 +82,7 @@ class User extends Eloquent {
     return (bool) $this->adult && isset($this->attributes['user_type']) && ($this->attributes['user_type'] == 'Alumni' || $this->attributes['user_type'] == 'Parent');
   }
   public function getStudentAttribute() {
-    return (bool) $this->adult && isset($this->attributes['user_type']) && $this->attributes['user_type'] == 'Student' || $this->attributes['user_type'] == 'Parent';
+    return (bool) isset($this->attributes['user_type']) && $this->attributes['user_type'] == 'Student';
   }
   public function getMentorAttribute() {
     return (bool) $this->adult && isset($this->attributes['user_type']) && $this->attributes['user_type'] == 'Mentor';
