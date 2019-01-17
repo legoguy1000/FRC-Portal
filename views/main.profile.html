@@ -214,14 +214,14 @@
 											<i class="material-icons" style="color:green;" ng-show="event.event_requirements.payment">check_circle</i>
 											<i class="material-icons" style="color:red;" ng-hide="event.event_requirements.payment">remove_circle</i>
 										</span>
-										<i class="material-icons" style="" ng-show="vm.userfo.user_type == 'Mentor' || !event.payment_required">remove_circle_outline</i>
+										<i class="material-icons" style="" ng-show="vm.user.user_type == 'Mentor' || !event.payment_required">remove_circle_outline</i>
 									</td>
 									<td md-cell>
 										<span ng-show="vm.user.user_type == 'Student' && event.permission_slip_required">
 											<i class="material-icons" style="color:green;" ng-show="event.event_requirements.permission_slip">check_circle</i>
 											<i class="material-icons" style="color:red;" ng-hide="event.event_requirements.permission_slip">remove_circle</i>
 										</span>
-										<i class="material-icons" style="" ng-show="vm.userfo.adult || !event.permission_slip_required">remove_circle_outline</i>
+										<i class="material-icons" style="" ng-show="vm.user.adult || !event.permission_slip_required">remove_circle_outline</i>
 									</td>
 									<td md-cell>
 										<span ng-show="event.food_required">
