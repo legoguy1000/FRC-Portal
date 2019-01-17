@@ -208,9 +208,9 @@ $app->group('/events', function () {
         if($event->room_required && isset($formData['rooms'])) {
           $roomTypes = array('boys','girls','adults');
           $roomKey = array(
-            'boys' => array('event_id'=>$event->event_id,'user_type'=>'Student','gender'=>'Male'),
-            'girls' => array('event_id'=>$event->event_id,'user_type'=>'Student','gender'=>'Female'),
-            'adults' => array('event_id'=>$event->event_id,'user_type'=>'Adult')
+            'boys' => array('user_type'=>'Student','gender'=>'Male'),
+            'girls' => array('user_type'=>'Student','gender'=>'Female'),
+            'adults' => array('user_type'=>'Adult')
           );
           $rooms = array();
           $filter_options = array(
@@ -220,11 +220,12 @@ $app->group('/events', function () {
             if(isset($formData['rooms'][$room]) && filter_var($formData['rooms'][$room], FILTER_VALIDATE_INT, $filter_options ) !== FALSE) {
               $num = $formData['rooms'][$room];
               for($i=0;$i<$num;$i++) {
-                $rooms[] = $roomKey[$room];
+                $rm = new FrcPortal\EventRoom($roomKey[$room]);
+                $event->event_rooms()->save($rm);
               }
             }
           }
-          $room = FrcPortal\EventRoom::create($rooms);
+
         }
         $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$event);
         insertLogs($level = 'Information', $message = $event->name.' created');
