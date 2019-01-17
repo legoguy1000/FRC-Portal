@@ -22,7 +22,7 @@ class User extends Eloquent {
     'user_id', 'fname', 'lname', 'email', 'password', 'full_name', 'student_grade', 'grad_year', 'admin', 'user_type'
   ];
 
-  protected $appends = ['slack_enabled','room_type','adult'];
+  protected $appends = ['slack_enabled','room_type','adult','other_adult'];
   /**
   * The attributes that should be hidden for arrays.
   *
@@ -41,6 +41,7 @@ class User extends Eloquent {
     'first_login' => 'boolean',
     'admin' => 'boolean',
     'adult' => 'boolean',
+    'other_adult' => 'boolean',
   ];
 
   public function newQuery() {
@@ -74,6 +75,9 @@ class User extends Eloquent {
   }
   public function getAdultAttribute() {
     return (bool) isset($this->attributes['user_type']) && ($this->attributes['user_type'] == 'Mentor' || $this->attributes['user_type'] == 'Alumni' || $this->attributes['user_type'] == 'Parent');
+  }
+  public function getOtherAdultAttribute() {
+    return (bool) $this->adult && isset($this->attributes['user_type']) && ($this->attributes['user_type'] == 'Alumni' || $this->attributes['user_type'] == 'Parent');
   }
   public function getRoomTypeAttribute() {
     $return = null;
