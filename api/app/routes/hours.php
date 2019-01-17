@@ -356,6 +356,10 @@ $app->group('/hours', function () {
             if(isset($args['pin']) && isset($args['user_id']) && $args['pin'] != '' && $args['user_id'] != '') {
               $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['pin']))->where('user_id',$args['user_id'])->where('status',true)->first();
               if($user != null) {
+                if($user->other_adult) {
+                  insertLogs($level = 'Information', $message = $user->user_type.' user type is not authorized for sign in.');
+                  return unauthorizedResponse($response, $msg = $user->user_type.' user type is not authorized for sign in.');
+                }
                 $user_id = $user->user_id;
                 $name = $user->full_name;
                 $date = time();
@@ -451,6 +455,10 @@ $app->group('/hours', function () {
     $this->post('/qr', function ($request, $response, $args) {
       $user = FrcPortal\Auth::user();
       $args = $request->getParsedBody();
+      if($user->other_adult) {
+        insertLogs($level = 'Information', $message = $user->user_type.' user type is not authorized for sign in.');
+        return unauthorizedResponse($response, $msg = $user->user_type.' user type is not authorized for sign in.');
+      }
       if(isset($args['token'])) {
         $key = getSettingsProp('jwt_signin_key');
         try{
