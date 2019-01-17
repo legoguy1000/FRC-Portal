@@ -144,7 +144,7 @@
 											<i class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</i>
 											<i class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</i>
 										</span>
-										<md-icon class="material-icons" ng-hide="!vm.user.adult && vm.user.student">remove_circle_outline</md-icon>
+										<md-icon class="material-icons" ng-show="!vm.user.adult && vm.user.student">remove_circle_outline</md-icon>
 									</td>
 									<td md-cell>
 										{{season.annual_requirements.build_season_hours}}
