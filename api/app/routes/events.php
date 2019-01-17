@@ -224,7 +224,7 @@ $app->group('/events', function () {
               }
             }
           }
-          $room = FrcPortal\EventRooom::create($rooms);
+          $room = FrcPortal\EventRoom::create($rooms);
         }
         $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$event);
         insertLogs($level = 'Information', $message = $event->name.' created');
