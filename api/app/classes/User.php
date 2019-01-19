@@ -22,7 +22,7 @@ class User extends Eloquent {
     'user_id', 'fname', 'lname', 'email', 'password', 'full_name', 'student_grade', 'grad_year', 'admin', 'user_type'
   ];
 
-  protected $appends = ['slack_enabled','room_type'];
+  protected $appends = ['slack_enabled','room_type','adult','other_adult','student','mentor'];
   /**
   * The attributes that should be hidden for arrays.
   *
@@ -40,7 +40,10 @@ class User extends Eloquent {
     'status' => 'boolean',
     'first_login' => 'boolean',
     'admin' => 'boolean',
-    'admin' => 'boolean',
+    'adult' => 'boolean',
+    'other_adult' => 'boolean',
+    'student' => 'boolean',
+    'mentor' => 'boolean',
   ];
 
   public function newQuery() {
@@ -72,10 +75,24 @@ class User extends Eloquent {
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
   }
+  public function getAdultAttribute() {
+    return (bool) isset($this->attributes['user_type']) && ($this->attributes['user_type'] == 'Mentor' || $this->attributes['user_type'] == 'Alumni' || $this->attributes['user_type'] == 'Parent');
+  }
+  public function getOtherAdultAttribute() {
+    return (bool) $this->adult && isset($this->attributes['user_type']) && ($this->attributes['user_type'] == 'Alumni' || $this->attributes['user_type'] == 'Parent');
+  }
+  public function getStudentAttribute() {
+    return (bool) isset($this->attributes['user_type']) && $this->attributes['user_type'] == 'Student';
+  }
+  public function getMentorAttribute() {
+    return (bool) $this->adult && isset($this->attributes['user_type']) && $this->attributes['user_type'] == 'Mentor';
+  }
   public function getRoomTypeAttribute() {
     $return = null;
-    if(isset($this->attributes['user_type']) && isset($this->attributes['gender'])) {
-      $return = $this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : $this->attributes['user_type'];
+    if($this->adult) {
+      $return = 'Adult';
+    } else if(isset($this->attributes['user_type']) && isset($this->attributes['gender'])) {
+      $return = $this->attributes['user_type'].'.'.$this->attributes['gender'];
     }
     return $return;
   }

@@ -205,6 +205,28 @@ $app->group('/events', function () {
       $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
       $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
       if($event->save()) {
+        if($event->room_required && isset($formData['rooms'])) {
+          $roomTypes = array('boys','girls','adults');
+          $roomKey = array(
+            'boys' => array('user_type'=>'Student','gender'=>'Male'),
+            'girls' => array('user_type'=>'Student','gender'=>'Female'),
+            'adults' => array('user_type'=>'Adult')
+          );
+          $rooms = array();
+          $filter_options = array(
+              'options' => array( 'min_range' => 0)
+          );
+          foreach($roomTypes as $room) {
+            if(isset($formData['rooms'][$room]) && filter_var($formData['rooms'][$room], FILTER_VALIDATE_INT, $filter_options ) !== FALSE) {
+              $num = $formData['rooms'][$room];
+              for($i=0;$i<$num;$i++) {
+                $rm = new FrcPortal\EventRoom($roomKey[$room]);
+                $event->event_rooms()->save($rm);
+              }
+            }
+          }
+
+        }
         $responseArr = array('status'=>true, 'msg'=>$event->name.' created', 'data'=>$event);
         insertLogs($level = 'Information', $message = $event->name.' created');
          //Send notifications
@@ -391,7 +413,7 @@ $app->group('/events', function () {
         if(!isset($formData['user_type']) || $formData['user_type'] == '') {
           return badRequestResponse($response, $msg = 'User Type cannot be blank');
         }
-        if(!isset($formData['gender']) || ($formData['gender'] == '' && $formData['user_type'] != 'Mentor')) {
+        if(!isset($formData['gender']) || ($formData['gender'] == '' && $formData['user_type'] != 'Adult')) {
           return badRequestResponse($response, $msg = 'Gender cannot be blank');
         }
         //Event passed from middleware
@@ -440,7 +462,7 @@ $app->group('/events', function () {
             $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
           }
         }
-        //Not Assigned a car
+        //Not Assigned a room
         $roomArr = $formData['rooms']['non_select'];
         $userArr = array_column($roomArr, 'user_id');
         if(!empty($userArr)) {
@@ -831,6 +853,7 @@ $app->group('/events', function () {
 
       $user =  FrcPortal\User::find($user_id);
       $user_type = $user->user_type;
+      $adult = $user->adult;
       $gender = $user->gender;
 
       $registrationBool = (bool) $formData['registration'];
@@ -844,7 +867,7 @@ $app->group('/events', function () {
         $ereq_id = $reqUpdate->ereq_id;
         $can_drive = (bool) $formData['can_drive'];
         $drivers_req = (bool) $event->drivers_required;
-      	if($drivers_req && $user_type == 'Mentor') {
+      	if($drivers_req && $adult) {
           $car = FrcPortal\EventCar::find($reqUpdate->car_id);
           if($can_drive) {
             $eventCarUpdate = FrcPortal\EventCar::updateOrCreate(['event_id' => $event_id, 'user_id' => $user_id], ['car_space' => $formData['event_cars']['car_space']]);

@@ -279,7 +279,7 @@ $app->group('/hours', function () {
       }
       if(!is_null($user) && $user->status && $user->admin) {
         $ts = time();
-        $te = time()+45; //12 hours liftime
+        $te = time()+60*60*12; //12 hours liftime
         $tokenArr = generateSignInToken($ts, $te);
         $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['token'], 'qr_code'=>$tokenArr['qr_code']);
         insertLogs($level = 'Information', $message = 'Sign in authorized.');
@@ -304,7 +304,7 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $data = (array) $decoded;
-          $te = time()+45; //30 second liftime
+          $te = time()+60*60; //30 second liftime
         } catch(ExpiredException $e) {
           insertLogs($level = 'Warning', $message = 'Tried to generate sign in token. Old token was expired. '.$e->getMessage());
           return unauthorizedResponse($response, $msg = 'Authorization Error. Token was expired. Please Reauthorize sign in.');
@@ -356,6 +356,10 @@ $app->group('/hours', function () {
             if(isset($args['pin']) && isset($args['user_id']) && $args['pin'] != '' && $args['user_id'] != '') {
               $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['pin']))->where('user_id',$args['user_id'])->where('status',true)->first();
               if($user != null) {
+                if($user->other_adult) {
+                  insertLogs($level = 'Information', $message = $user->user_type.' user type is not authorized for sign in.');
+                  return unauthorizedResponse($response, $msg = $user->user_type.' user type is not authorized for sign in.');
+                }
                 $user_id = $user->user_id;
                 $name = $user->full_name;
                 $date = time();
@@ -451,6 +455,10 @@ $app->group('/hours', function () {
     $this->post('/qr', function ($request, $response, $args) {
       $user = FrcPortal\Auth::user();
       $args = $request->getParsedBody();
+      if($user->other_adult) {
+        insertLogs($level = 'Information', $message = $user->user_type.' user type is not authorized for sign in.');
+        return unauthorizedResponse($response, $msg = $user->user_type.' user type is not authorized for sign in.');
+      }
       if(isset($args['token'])) {
         $key = getSettingsProp('jwt_signin_key');
         try{
