@@ -2,9 +2,6 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-Version 2.14.0
-* Create initial rooms during event creation
-
 Version 2.13.5
 * Add/edit/delete school
 * Fixed installer
@@ -27,6 +24,8 @@ Version 2.13.5
 * Enable linking accounts
 * Fix Facebook
 * Fix "active users per Year" report.  Limit time to only build season so there aren't duplicate entries
+* Create initial rooms during event creation
+* Add other user types
 
 Version 2.12.0
 * Simplified some code
