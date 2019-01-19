@@ -279,7 +279,7 @@ $app->group('/hours', function () {
       }
       if(!is_null($user) && $user->status && $user->admin) {
         $ts = time();
-        $te = time()+60*60; //12 hours liftime
+        $te = time()+60*60*12; //12 hours liftime
         $tokenArr = generateSignInToken($ts, $te);
         $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['token'], 'qr_code'=>$tokenArr['qr_code']);
         insertLogs($level = 'Information', $message = 'Sign in authorized.');
