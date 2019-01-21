@@ -53,7 +53,7 @@ function checkTeamLogin($userEmail = '') {
 	return false;
 }
 
-function checkTeamEmail($email == '',$teamDomain == null) {
+function checkTeamEmail($email == '',$teamDomain = null) {
 	if($teamDomain == null) {
 		$teamDomain = getSettingsProp('team_domain');
 	}
