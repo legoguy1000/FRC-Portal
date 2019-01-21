@@ -339,13 +339,13 @@ $app->group('/users', function () {
         return unauthorizedResponse($response);
       }
       if(!isset($formData['email']) || $formData['email'] == '') {
-        insertLogs($level = 'Warning', $message = 'Email is required.');
-        return badRequestResponse($response);
+        insertLogs($level = 'Information', $message = 'User profile update failed. Email is required.');
+        return badRequestResponse($response,$msg = 'Email is required.');
       }
       $teamDomain = getSettingsProp('team_domain');
       if(isset($formData['team_email']) && $formData['team_email'] != '' && !is_null($teamDomain) && strpos($formData['team_email'],'@'.$teamDomain) === false) {
-        insertLogs($level = 'Warning', $message = 'Team Email must be a "@'.$teamDomain.'" email address.');
-        return badRequestResponse($response);
+        insertLogs($level = 'Information', $message = 'User profile update failed. Team Email must be a "@'.$teamDomain.'" email address.');
+        return badRequestResponse($response,$msg = 'Team Email must be a "@'.$teamDomain.'" email address.');
       }
       //User passed from middleware
       $user = $request->getAttribute('user');
@@ -353,7 +353,7 @@ $app->group('/users', function () {
       $user->fname = $formData['fname'];
       $user->lname = $formData['lname'];
       $user->email = $formData['email'];
-      $user->team_email = $formData['team_email'];
+      $user->team_email = isset($formData['team_email']) ? $formData['team_email']:'';
       $user->phone = $formData['phone'];
       $user->user_type = $formData['user_type'];
       $user->gender = $formData['gender'];
