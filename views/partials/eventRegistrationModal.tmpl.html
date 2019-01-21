@@ -140,8 +140,8 @@
 									</div>
 								</div>
 							</div>
-							<div ng-show="" layout="column" layout-align="center center">
-								<md-button type="button" ng-click="vm.addEventRoom()" aria-label="Add Hotel Room" class="md-primary">
+							<div layout="column" layout-align="center center" ng-show="vm.userInfo.user_id==main.userInfo.user_id">
+								<md-button type="button" ng-click="vm.addEventRoom()" aria-label="Add Hotel Room" class="md-primary md-raised">
 									<md-tooltip md-direction="top">Add Room</md-tooltip>
 									<span>Add Room</span>
 								</md-button>
