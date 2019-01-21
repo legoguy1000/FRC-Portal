@@ -246,7 +246,7 @@ class User extends Eloquent {
 
   	$preferences = $this->getNotificationPreferences();
   	//$preferences = array('push' => true, 'email' => false);
-    if(($preferences['email'][$type] == true || $type == '') && isset($msgData['email'])) {
+    if(($type == '' || $preferences['email'][$type] == true) && isset($msgData['email'])) {
   		$msg = $msgData['email'];
   		$subject = $msg['subject'];
   		$content = $msg['content'];
@@ -254,7 +254,7 @@ class User extends Eloquent {
   		$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
   		emailUser($userData,$subject,$content,$attachments);
   	}
-  	if(($preferences['slack'][$type] == true || $type == '') && isset($msgData['slack'])) {
+  	if(($type == '' || $preferences['slack'][$type] == true) && isset($msgData['slack'])) {
   		$msg = $msgData['slack'];
   		$title = $msg['title'];
   		$body = $msg['body'];
@@ -285,7 +285,7 @@ class User extends Eloquent {
     $emails = array($this->email,$this->team_email);
     foreach($emails as $email) {
       if(!is_null($email) && $email != '') {
-        $results = slackGetAPI('users.lookupByEmail', $params = array('email'=>$email));
+        $result = slackGetAPI('users.lookupByEmail', $params = array('email'=>$email));
         $data = json_decode($result);
         if(isset($data->ok) && $data->ok == true) {
           $this->slack_id = $data->user->id;
