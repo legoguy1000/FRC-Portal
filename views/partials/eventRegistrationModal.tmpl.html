@@ -119,9 +119,9 @@
 				      Hotel Room
 				    </v-pane-header>
 				    <v-pane-content>
-							<div flex layout="row" layout-align="center center" ng-show="vm.userInfo.gender == ''">
+							<div flex layout="row" layout-align="center center" ng-show="vm.userInfo.gender == ''" style="margin-bottom: 10px;">
 								<b>Gender is not set.  Please update profile to be able to select rooms.</b>
-							</div> 
+							</div>
 							<div layout="row" ng-repeat="room in vm.room_list" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
 								<div flex layout="row" layout-align="start center" class="" style="border-right: solid;">
 									<span style="margin-left:10px;">{{room.room_title}}</span>
