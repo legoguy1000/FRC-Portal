@@ -338,6 +338,15 @@ $app->group('/users', function () {
         insertLogs($level = 'Warning', $message = 'User information update failed. Unauthorized user.');
         return unauthorizedResponse($response);
       }
+      if(!isset($formData['email']) || $formData['email'] == '') {
+        insertLogs($level = 'Warning', $message = 'Email is required.');
+        return badRequestResponse($response);
+      }
+      $teamDomain = getSettingsProp('team_domain');
+      if(isset($formData['team_email']) && $formData['team_email'] != '' && !is_null($teamDomain) && strpos($email,'@'.$teamDomain) === false) {
+        insertLogs($level = 'Warning', $message = 'Team Email must be a "@'.$teamDomain.'" email address.');
+        return badRequestResponse($response);
+      }
       //User passed from middleware
       $user = $request->getAttribute('user');
       // $user = FrcPortal\User::with('school')->find($user_id);
