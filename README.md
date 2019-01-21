@@ -26,6 +26,7 @@ Version 2.13.6
 * Fix "active users per Year" report.  Limit time to only build season so there aren't duplicate entries
 * Create initial rooms during event creation
 * Add other user types
+* Add ability for users to add additional hotel rooms
 
 Version 2.12.0
 * Simplified some code

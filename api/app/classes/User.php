@@ -280,4 +280,21 @@ class User extends Eloquent {
   	return false;
   }
 
+  public function getGetSlackIdByEmail() {
+    $return = false;
+    $emails = array($this->email,$this->team_email);
+    foreach($emails as $email) {
+      if(!is_null($email) && $email != '') {
+        $results = slackGetAPI('users.lookupByEmail', $params = array('email'=>$email));
+        $data = json_decode($result);
+        if(isset($data->ok) && $data->ok == true) {
+          $this->slack_id = $data->user->id;
+          return true;
+          break;
+        }
+      }
+    }
+    return false;
+  }
+
 }

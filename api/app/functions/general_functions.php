@@ -322,7 +322,7 @@ function slackPostAPI($endpoint, $data) {
 function slackGetAPI($endpoint, $params = array()) {
 	$slack_token = getSettingsProp('slack_api_token');
 	$params['token'] = $slack_token;
-	$url = 'https://slack.com/api/'.$endpoint.'?'.http_build_query($params);
+	//$url = 'https://slack.com/api/'.$endpoint.'?'.http_build_query($params);
 	$client = new GuzzleHttp\Client(['base_uri' => 'https://slack.com/api/']);
 	$response = $client->request('GET', $endpoint, array(
 		'query' => $params
