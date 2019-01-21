@@ -173,10 +173,8 @@ function itterateMembershipFormData($data = array(), $season = null) {
 				$teamDomain = getSettingsProp('team_domain');
 				if(!is_null($teamDomain) && strpos($email,'@'.$teamDomain) !== false) {
 					$user->team_email = $email;
-				} else {
-					$user->email = $email;
 				}
-
+				$user->email = $email;
 				$user->fname = $fname;
 				$user->lname = $lname;
 				$user->getGenderByFirstName();
