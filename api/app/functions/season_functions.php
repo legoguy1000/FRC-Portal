@@ -159,7 +159,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 
 			$user = null;
 			$user_id = null;
-			$user = FrcPortal\User::where('email',$email)->first();
+			$user = FrcPortal\User::where('email',$email)->orWhere('team_email',$email)->first();
 			if(is_null($user)) {
 				$user = FrcPortal\User::where('fname',$fname)->where('lname',$lname)->where('user_type',$user_type)->first();
 			}
