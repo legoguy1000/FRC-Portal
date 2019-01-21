@@ -270,9 +270,9 @@ class User extends Eloquent {
   	if(!is_null($name) && $name != '') {
   		$base = 'https://api.genderize.io/';
   		$url = $base.'?name='.$name;
-  		$contents = json_decode(file_get_contents($url),true);
-  		if(isset($contents['gender']) && !is_null($contents['gender']) && $contents['gender'] != '') {
-  			$this->gender = ucfirst($contents['gender']);
+  		$contents = json_decode(file_get_contents($url));
+  		if(isset($contents->gender) && !is_null($contents->gender) && $contents->gender != '' && $contents->probability > .90) {
+  			$this->gender = ucfirst($contents->gender);
       	return true;
   		}
       $this->gender = '';
