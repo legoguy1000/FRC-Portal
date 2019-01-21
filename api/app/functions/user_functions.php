@@ -46,10 +46,19 @@ function checkLogin($userData) {
 function checkTeamLogin($userEmail = '') {
 	$require_team_email = getSettingsProp('require_team_email');
 	if($require_team_email) {
-		$teamDomain = getSettingsProp('team_domain');
-		if(!is_null($teamDomain) && strpos($userEmail,'@'.$teamDomain) === false || $userEmail == '') {
+		if(!checkTeamEmail($userEmail) || $userEmail == '') {
 			return true; //Not valid email
 		}
+	}
+	return false;
+}
+
+function checkTeamEmail($email == '',$teamDomain == null) {
+	if($teamDomain == null) {
+		$teamDomain = getSettingsProp('team_domain');
+	}
+	if(!is_null($teamDomain) && preg_match('/[a-z0-9._%+-]+@'.$teamDomain.'$/i', $email) != false) {
+		return true;
 	}
 	return false;
 }

@@ -170,8 +170,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 					$school_id = checkSchool($school);
 				}
 				$user = new FrcPortal\User();
-				$teamDomain = getSettingsProp('team_domain');
-				if(!is_null($teamDomain) && strpos($email,'@'.$teamDomain) !== false) {
+				if(checkTeamEmail($email)) {
 					$user->team_email = $email;
 				}
 				$user->email = $email;
