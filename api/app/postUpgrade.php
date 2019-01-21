@@ -161,6 +161,26 @@ if($version >= '2.13.6') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_oauth_client_secret'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'require_team_email'], ['value' => '0']);
   }
+  if(Capsule::schema()->hasTable('annual_requirements')) {
+    if(!Capsule::schema()->hasColumn('annual_requirements','stims_date')) {
+      try {
+        Capsule::schema()->table('meeting_hours', function ($table) {
+          $table->dateTime('stims_date')->after('stims');
+        });
+      } catch (Exception $e) {
+        //Exception will be logged in Monolog
+      }
+    }
+    if(!Capsule::schema()->hasColumn('annual_requirements','dues_date')) {
+      try {
+        Capsule::schema()->table('meeting_hours', function ($table) {
+          $table->dateTime('dues_date')->after('dues');
+        });
+      } catch (Exception $e) {
+        //Exception will be logged in Monolog
+      }
+    }
+  }
 }
 
 //Create User Category Tables

@@ -819,6 +819,7 @@ $app->group('/events', function () {
           $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user)->delete();
         } else {
           $reqArr->$req = $new;
+          $reqArr->{$req.'_date'} = date('Y-m-d H:i:s');
           $reqArr->save();
         }
       }
