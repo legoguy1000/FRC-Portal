@@ -164,7 +164,7 @@ if($version >= '2.13.6') {
   if(Capsule::schema()->hasTable('annual_requirements')) {
     if(!Capsule::schema()->hasColumn('annual_requirements','stims_date')) {
       try {
-        Capsule::schema()->table('meeting_hours', function ($table) {
+        Capsule::schema()->table('annual_requirements', function ($table) {
           $table->dateTime('stims_date')->after('stims');
         });
       } catch (Exception $e) {
@@ -173,7 +173,7 @@ if($version >= '2.13.6') {
     }
     if(!Capsule::schema()->hasColumn('annual_requirements','dues_date')) {
       try {
-        Capsule::schema()->table('meeting_hours', function ($table) {
+        Capsule::schema()->table('annual_requirements', function ($table) {
           $table->dateTime('dues_date')->after('dues');
         });
       } catch (Exception $e) {
