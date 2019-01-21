@@ -343,7 +343,7 @@ $app->group('/users', function () {
         return badRequestResponse($response);
       }
       $teamDomain = getSettingsProp('team_domain');
-      if(isset($formData['team_email']) && $formData['team_email'] != '' && !is_null($teamDomain) && strpos($email,'@'.$teamDomain) === false) {
+      if(isset($formData['team_email']) && $formData['team_email'] != '' && !is_null($teamDomain) && strpos($formData['team_email'],'@'.$teamDomain) === false) {
         insertLogs($level = 'Warning', $message = 'Team Email must be a "@'.$teamDomain.'" email address.');
         return badRequestResponse($response);
       }
