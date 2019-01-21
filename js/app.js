@@ -599,7 +599,12 @@ angular.module('FrcPortal', [
 							templateUrl: 'views/partials/loginModal.tmpl.html',
 							parent: angular.element(document.body),
 							clickOutsideToClose:true,
-							fullscreen: true // Only for -xs, -sm breakpoints.
+							fullscreen: true, // Only for -xs, -sm breakpoints.
+							locals: {
+								loginData: {
+									loading: false,
+								}
+							}
 						})
 						.then(function(data) {
 							if(data.auth) {
