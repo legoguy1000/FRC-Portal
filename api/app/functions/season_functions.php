@@ -174,7 +174,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 				$user->fname = $fname;
 				$user->lname = $lname;
 				$user->getGenderByFirstName();
-				$user->gender = $gender != false ? ucfirst($gender):'';
+				//$user->gender = $gender != false ? ucfirst($gender):'';
 				$user->user_type = $user_type;
 				if($user_type == 'Student') {
 					if($school_id != '') {
@@ -194,13 +194,17 @@ function itterateMembershipFormData($data = array(), $season = null) {
 				//Insert Data
 				if($user->save()) {
 					$user_id = $user->user_id;
+		      insertLogs($level = 'Information', $message = $user->full_name.' imported from Google Form results.');
 					$user->setDefaultNotifications();
 					$host = getSettingsProp('env_url');
 					$msgData = array(
-						'subject' => 'User account created for '.$team_name.'\s team portal',
-						'content' =>  'Congratulations! You have been added to '.$team_name.'\s team portal.  Please go to '.$host.' to view your annual registration, event registration, season hours and more.',
-						'userData' => $user
+						'email' => array(
+							'subject' => 'User account created for '.$team_name.'\s team portal',
+							'content' =>  'Congratulations! You have been added to '.$team_name.'\s team portal.  Please go to '.$host.' to view your annual registration, event registration, season hours and more.',
+							'userData' => $user
+						)
 					);
+					$user->sendUserNotification($type = '', $msgData);
 				}
 			}
 			//Add User info into the Annual Requirements Table

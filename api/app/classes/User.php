@@ -246,7 +246,7 @@ class User extends Eloquent {
 
   	$preferences = $this->getNotificationPreferences();
   	//$preferences = array('push' => true, 'email' => false);
-  	if($preferences['email'][$type] == true) {
+    if(($preferences['email'][$type] == true || $type == '') && isset($msgData['email'])) {
   		$msg = $msgData['email'];
   		$subject = $msg['subject'];
   		$content = $msg['content'];
@@ -254,7 +254,7 @@ class User extends Eloquent {
   		$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
   		emailUser($userData,$subject,$content,$attachments);
   	}
-  	if($preferences['slack'][$type] == true) {
+  	if(($preferences['slack'][$type] == true || $type == '') && isset($msgData['slack'])) {
   		$msg = $msgData['slack'];
   		$title = $msg['title'];
   		$body = $msg['body'];

@@ -165,6 +165,19 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		}
 	}
 
+	vm.addEventRoom = function () {
+		vm.loading = true;
+		var data = {
+			event_id: vm.event.event_id
+		};
+		eventsService.addEventRoomUser(data).then(function(response) {
+			vm.loading = false;
+			if(response.status) {
+				vm.room_list = response.data;
+			}
+		});
+	};
+
 	vm.selectTimeSlot = function(ts_i) {
 		var add_remove = vm.checkTSReg(ts_i);
 		if(!add_remove) {

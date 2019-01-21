@@ -133,6 +133,13 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		addEventRoomUser: function (formData) {
+			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
+			return $http.post('api/events/'+event_id+'/rooms/user')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		deleteEventRoom: function (formData) {
 			var event_id = formData.event_id != undefined && formData.event_id != null ? formData.event_id:'';
 			var room_id = formData.room_id != undefined && formData.room_id != null ? formData.room_id:'';

@@ -114,7 +114,7 @@
 							</div>
 				    </v-pane-content>
 				  </v-pane>
-				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.room_required && vm.userInfo.user_type != 'Mentor'">
+				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.room_required && !vm.userInfo.adult">
 				    <v-pane-header>
 				      Hotel Room
 				    </v-pane-header>
@@ -138,6 +138,15 @@
 											<span>Select Room</span>
 										</md-button>
 									</div>
+								</div>
+							</div>
+							<div ng-show="" layout="column" layout-align="center center">
+								<md-button type="button" ng-click="vm.addEventRoom()" aria-label="Add Hotel Room" class="md-primary">
+									<md-tooltip md-direction="top">Add Room</md-tooltip>
+									<span>Add Room</span>
+								</md-button>
+								<div>
+									*Additional rooms may be consolidated
 								</div>
 							</div>
 			    	</v-pane-content>
