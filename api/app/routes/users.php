@@ -344,7 +344,7 @@ $app->group('/users', function () {
       }
       $teamDomain = getSettingsProp('team_domain');
       $pattern = '/[a-z0-9._%+-]+@'.$teamDomain.'$/i';
-      if(isset($formData['team_email']) && $formData['team_email'] != '' && !is_null($teamDomain) && preg_match($pattern, $formData['team_email']) === false) {
+      if(isset($formData['team_email']) && $formData['team_email'] != '' && !is_null($teamDomain) && preg_match($pattern, $formData['team_email']) == false) {
         insertLogs($level = 'Information', $message = 'User profile update failed. Team Email must be a "@'.$teamDomain.'" email address.');
         return badRequestResponse($response,$msg = 'Team Email must be a "@'.$teamDomain.'" email address.');
       }
