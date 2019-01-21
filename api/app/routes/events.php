@@ -452,7 +452,12 @@ $app->group('/events', function () {
         if(!$event->room_required) {
           return badRequestResponse($response, $msg = 'Hotel rooms not needed for this event');
         }
-
+        if($user->user_type == '') {
+          return badRequestResponse($response, $msg = 'User type cannot be blank.  Please update your profile.');
+        }
+        if($user->gender == '') {
+          return badRequestResponse($response, $msg = 'Gender cannot be blank.  Please update your profile.');
+        }
         $room = new FrcPortal\EventRoom();
         $room->event_id = $event->event_id;
         $room->user_type = $user->adult ? 'Adult':'Student';
