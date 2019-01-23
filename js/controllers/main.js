@@ -185,6 +185,9 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		console.info('I\'m Authed');
 		loginActions();
 	}
+	if(!main.signInAuthed) {
+		signinService.logout();
+	}
 
 	main.logout = function() {
 		$rootScope.$broadcast('logOutAction');
