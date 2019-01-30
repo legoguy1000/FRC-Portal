@@ -68,7 +68,6 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 
 	vm.stop = function() {
 		vm.hideVideo = true;
-		video.pause();
 		vm.localstream.stop();
 		cancelAnimationFrame(vm.aniFrame);
 	}
