@@ -23,7 +23,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	$interval(tick, 1000);
 
 	$timeout(function() {
-		var video = $document[0].getElementById("scanner");
+		vm.video = $document[0].getElementById("scanner");
 	  /* var canvasElement = $document[0].getElementById("canvas");
 	  var canvas = canvasElement.getContext("2d"); */
 	  function drawLine(begin, end, color) {
@@ -36,10 +36,10 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	  }
 	  // Use facingMode: environment to attemt to get the front camera on phones
 	  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-	    video.srcObject = stream;
+	    vm.video.srcObject = stream;
 			vm.localstream = stream;
-	    video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-	    video.play();
+	    vm.video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+	    vm.video.play();
 	    //vm.aniFrame = requestAnimationFrame(tick);
 	  });
 	});
@@ -68,8 +68,9 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 
 	vm.stop = function() {
 		vm.hideVideo = true;
-		vm.localstream.getTracks()[0].stop();
-		cancelAnimationFrame(vm.aniFrame);
+		vm.video.srcObject = null;
+		vm.localstream.getTracks().forEach(function(track) { track.stop(); })
+		//cancelAnimationFrame(vm.aniFrame);
 	}
 
 	vm.cancel = function() {
