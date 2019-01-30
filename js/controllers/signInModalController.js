@@ -22,7 +22,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	$interval(tick, 1000);
 
 	$timeout(function() {
-		var video = $document[0].getElementById("video");
+		var video = $document[0].getElementById("scanner");
 	  /* var canvasElement = $document[0].getElementById("canvas");
 	  var canvas = canvasElement.getContext("2d"); */
 	  function drawLine(begin, end, color) {
