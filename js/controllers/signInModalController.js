@@ -24,7 +24,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 
 	$timeout(function() {
 		vm.video = $document[0].createElement("video");
-		vm.scanner = $document[0].getElementById("scanner");
+		//vm.scanner = $document[0].getElementById("scanner");
 		vm.canvasElement = $document[0].getElementById("canvas");
 	  vm.canvas = vm.canvasElement.getContext("2d")
 	  function drawLine(begin, end, color) {
@@ -37,10 +37,10 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	  }
 	  // Use facingMode: environment to attemt to get the front camera on phones
 	  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-	    vm.scanner.srcObject = stream;
+	    vm.video.srcObject = stream;
 			vm.localstream = stream;
-	    vm.scanner.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-	    vm.scanner.play();
+	    vm.video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+	    vm.video.play();
 	    //vm.aniFrame = requestAnimationFrame(tick1);
 	  });
 
