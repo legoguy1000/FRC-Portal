@@ -18,6 +18,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	vm.msg = '';
 	vm.hideVideo = false;
 	vm.aniFrame;
+	vm.localstream;
 	tick();
 	$interval(tick, 1000);
 
@@ -36,6 +37,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	  // Use facingMode: environment to attemt to get the front camera on phones
 	  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
 	    video.srcObject = stream;
+			vm.localstream = stream;
 	    video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
 	    video.play();
 	    //vm.aniFrame = requestAnimationFrame(tick);
@@ -66,6 +68,8 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 
 	vm.stop = function() {
 		vm.hideVideo = true;
+		video.pause();
+		vm.localstream.stop();
 		cancelAnimationFrame(vm.aniFrame);
 	}
 
