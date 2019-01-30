@@ -21,25 +21,26 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	tick();
 	$interval(tick, 1000);
 
-
-	var video = $document[0].createElement("video");
-  var canvasElement = $document[0].getElementById("canvas");
-  var canvas = canvasElement.getContext("2d");
-  function drawLine(begin, end, color) {
-    canvas.beginPath();
-    canvas.moveTo(begin.x, begin.y);
-    canvas.lineTo(end.x, end.y);
-    canvas.lineWidth = 4;
-    canvas.strokeStyle = color;
-    canvas.stroke();
-  }
-  // Use facingMode: environment to attemt to get the front camera on phones
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-    video.srcObject = stream;
-    video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-    video.play();
-    vm.aniFrame = requestAnimationFrame(tick);
-  });
+	$timeout(function() {
+		var video = $document[0].createElement("video");
+	  var canvasElement = $document[0].getElementById("canvas");
+	  var canvas = canvasElement.getContext("2d");
+	  function drawLine(begin, end, color) {
+	    canvas.beginPath();
+	    canvas.moveTo(begin.x, begin.y);
+	    canvas.lineTo(end.x, end.y);
+	    canvas.lineWidth = 4;
+	    canvas.strokeStyle = color;
+	    canvas.stroke();
+	  }
+	  // Use facingMode: environment to attemt to get the front camera on phones
+	  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+	    video.srcObject = stream;
+	    video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+	    video.play();
+	    vm.aniFrame = requestAnimationFrame(tick);
+	  });
+	}
   function tick() {
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
       vm.hideVideo = false;
