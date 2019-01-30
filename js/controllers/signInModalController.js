@@ -59,13 +59,34 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
         drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
         drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
         drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-        console.log(code.data);
-				vm.stop();
+				vm.scanner(code.data);
       } else {
       }
     }
     vm.aniFrame = requestAnimationFrame(tick1);
   }
+
+	vm.scanner = function(content) {
+		vm.msg = '';
+		vm.loading = true;
+		vm.scanContent = content;
+		vm.stop();
+		var data = {
+			'token': content
+		};
+		signinService.signInOutQR(data).then(function(response) {
+			vm.loading = false;
+			vm.msg = response.msg;
+			if(response.status) {
+			$timeout( function() {
+					vm.close(response.signInList);
+				}, 2000 );
+			}
+		}, function(response) {
+			vm.loading = false;
+			vm.aniFrame = requestAnimationFrame(tick1);
+		});
+	}
 
 	vm.stop = function() {
 		vm.hideVideo = true;
@@ -108,27 +129,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		}
 
 		vm.scanner = new Instascan.Scanner(config);
-		vm.scanner.addListener('scan', function (content) {
-			vm.msg = '';
-			vm.loading = true;
-			vm.scanContent = content;
-			vm.stop();
-			var data = {
-				'token': content
-			};
-			signinService.signInOutQR(data).then(function(response) {
-				vm.loading = false;
-				vm.msg = response.msg;
-				if(response.status) {
-				$timeout( function() {
-						vm.close(response.signInList);
-					}, 2000 );
-				}
-			}, function(response) {
-				vm.loading = false;
-				vm.startCamera(vm.cameras, vm.scanner);
-			});
-		});
+
 		Instascan.Camera.getCameras().then(function (cameras) {
 			vm.cameras = cameras;
 			vm.startCamera(vm.cameras, vm.scanner);
