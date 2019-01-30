@@ -42,7 +42,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	    vm.video.play();
 	    vm.aniFrame = requestAnimationFrame(tick1);
 	  });
-	});
+
   function tick1() {
     if (vm.video.readyState === vm.video.HAVE_ENOUGH_DATA) {
       vm.hideVideo = false;
@@ -59,7 +59,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
         drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
         drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
         //outputData.innerText = code.data;
-				vm.stop();
+				//vm.stop();
       } else {
       }
     }
@@ -83,7 +83,10 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 		$mdDialog.hide(data);
 	}
 
+});
 
+
+/*
 
 	$timeout(function() {
 		var config = {
@@ -137,7 +140,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 
 	});
 
-
+*/
 	/*
 	var signInBool = true;
 	vm.signinOut = function($event) {
