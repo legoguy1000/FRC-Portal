@@ -27,6 +27,7 @@ Version 2.13.6
 * Create initial rooms during event creation
 * Add other user types
 * Add ability for users to add additional hotel rooms
+* Updated Javascript QR code scanning library
 
 Version 2.12.0
 * Simplified some code
