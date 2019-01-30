@@ -24,8 +24,8 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 
 	$timeout(function() {
 		vm.video = $document[0].createElement("video");
-		var canvasElement = $document[0].getElementById("canvas");
-	  var canvas = canvasElement.getContext("2d")
+		vm.canvasElement = $document[0].getElementById("canvas");
+	  vm.canvas = canvasElement.getContext("2d")
 	  function drawLine(begin, end, color) {
 	    canvas.beginPath();
 	    canvas.moveTo(begin.x, begin.y);
@@ -46,10 +46,10 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
   function tick1() {
     if (vm.video.readyState === vm.video.HAVE_ENOUGH_DATA) {
       vm.hideVideo = false;
-      canvasElement.height = vm.video.videoHeight;
-      canvasElement.width = vm.video.videoWidth;
-      canvas.drawImage(vm.video, 0, 0, canvasElement.width, canvasElement.height);
-      var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+      vm.canvasElement.height = vm.video.videoHeight;
+      vm.canvasElement.width = vm.video.videoWidth;
+      vm.canvas.drawImage(vm.video, 0, 0, vm.canvasElement.width, vm.canvasElement.height);
+      var imageData = vm.canvas.getImageData(0, 0, vm.canvasElement.width, vm.canvasElement.height);
       var code = jsQR(imageData.data, imageData.width, imageData.height, {
         inversionAttempts: "dontInvert",
       });
