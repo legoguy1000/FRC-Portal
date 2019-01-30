@@ -25,14 +25,14 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	$timeout(function() {
 		vm.video = $document[0].createElement("video");
 		vm.canvasElement = $document[0].getElementById("canvas");
-	  vm.canvas = canvasElement.getContext("2d")
+	  vm.canvas = vm.canvasElement.getContext("2d")
 	  function drawLine(begin, end, color) {
-	    canvas.beginPath();
-	    canvas.moveTo(begin.x, begin.y);
-	    canvas.lineTo(end.x, end.y);
-	    canvas.lineWidth = 4;
-	    canvas.strokeStyle = color;
-	    canvas.stroke();
+	    vm.canvas.beginPath();
+	    vm.canvas.moveTo(begin.x, begin.y);
+	    vm.canvas.lineTo(end.x, end.y);
+	    vm.canvas.lineWidth = 4;
+	    vm.canvas.strokeStyle = color;
+	    vm.canvas.stroke();
 	  }
 	  // Use facingMode: environment to attemt to get the front camera on phones
 	  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
