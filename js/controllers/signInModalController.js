@@ -17,8 +17,67 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	vm.loading = false;
 	vm.msg = '';
 	vm.hideVideo = false;
+	vm.aniFrame;
 	tick();
 	$interval(tick, 1000);
+
+
+	var video = document.createElement("video");
+  var canvasElement = document.getElementById("canvas");
+  var canvas = canvasElement.getContext("2d");
+  function drawLine(begin, end, color) {
+    canvas.beginPath();
+    canvas.moveTo(begin.x, begin.y);
+    canvas.lineTo(end.x, end.y);
+    canvas.lineWidth = 4;
+    canvas.strokeStyle = color;
+    canvas.stroke();
+  }
+  // Use facingMode: environment to attemt to get the front camera on phones
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+    video.srcObject = stream;
+    video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+    video.play();
+    vm.aniFrame = requestAnimationFrame(tick);
+  });
+  function tick() {
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+      vm.hideVideo = false;
+      canvasElement.height = video.videoHeight;
+      canvasElement.width = video.videoWidth;
+      canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+      var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+      var code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: "dontInvert",
+      });
+      if (code) {
+        drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+        drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+        drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+        drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+        //outputData.innerText = code.data;
+				vm.stop();
+      } else {
+      }
+    }
+    vm.aniFrame = requestAnimationFrame(tick);
+  }
+
+	vm.stop = function() {
+		vm.hideVideo = true;
+		cancelAnimationFrame(vm.aniFrame);
+	}
+
+	vm.cancel = function() {
+		vm.stop();
+		$mdDialog.cancel();
+	}
+
+	vm.close = function(data) {
+		vm.stop();
+		$mdDialog.hide(data);
+	}
+
 
 
 	$timeout(function() {
@@ -38,6 +97,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 				console.error('No cameras found.');
 			}
 		}
+
 		vm.scanner = new Instascan.Scanner(config);
 		vm.scanner.addListener('scan', function (content) {
 			vm.msg = '';
@@ -67,20 +127,9 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 			console.error(e);
 		});
 
-		vm.stop = function() {
-			vm.hideVideo = true;
-			vm.scanner.stop();
-		}
 
-		vm.cancel = function() {
-			vm.stop();
-			$mdDialog.cancel();
-		}
 
-		vm.close = function(data) {
-			vm.stop();
-			$mdDialog.hide(data);
-		}
+
 	});
 
 
