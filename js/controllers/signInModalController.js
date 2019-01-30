@@ -41,7 +41,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 			vm.localstream = stream;
 	    vm.video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
 	    vm.video.play();
-	    //vm.aniFrame = requestAnimationFrame(tick1);
+	    vm.aniFrame = requestAnimationFrame(tick1);
 	  });
 
   function tick1() {
