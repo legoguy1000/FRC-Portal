@@ -59,7 +59,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
         drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
         drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
         drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-        //outputData.innerText = code.data;
+        console.log(code.data);
 				vm.stop();
       } else {
       }
