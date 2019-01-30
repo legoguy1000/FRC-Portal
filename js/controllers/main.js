@@ -44,7 +44,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$ocLazyLoad.load('js/controllers/serviceAccountModalController.js');
 	$ocLazyLoad.load('js/controllers/googleFormMapModalController.js');
 	$ocLazyLoad.load('js/controllers/signInModalController.js');
-  $ocLazyLoad.load('https://rawgit.com/schmich/instascan-builds/master/instascan.min.js');
+  //$ocLazyLoad.load('https://rawgit.com/schmich/instascan-builds/master/instascan.min.js');
 	$ocLazyLoad.load('js/controllers/newSchoolModalController.js');
 
 	navService.loadAllItems().then(function(menuItems) {
