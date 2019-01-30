@@ -40,7 +40,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	    video.play();
 	    vm.aniFrame = requestAnimationFrame(tick);
 	  });
-	}
+	});
   function tick() {
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
       vm.hideVideo = false;
