@@ -22,9 +22,9 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	$interval(tick, 1000);
 
 	$timeout(function() {
-		var video = $document[0].createElement("video");
-	  var canvasElement = $document[0].getElementById("canvas");
-	  var canvas = canvasElement.getContext("2d");
+		var video = $document[0].getElementById("video");
+	  /* var canvasElement = $document[0].getElementById("canvas");
+	  var canvas = canvasElement.getContext("2d"); */
 	  function drawLine(begin, end, color) {
 	    canvas.beginPath();
 	    canvas.moveTo(begin.x, begin.y);
@@ -38,7 +38,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	    video.srcObject = stream;
 	    video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
 	    video.play();
-	    vm.aniFrame = requestAnimationFrame(tick);
+	    //vm.aniFrame = requestAnimationFrame(tick);
 	  });
 	});
   function tick() {
