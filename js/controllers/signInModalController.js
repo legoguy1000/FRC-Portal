@@ -42,50 +42,27 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	    vm.video.play();
 	    //vm.aniFrame = requestAnimationFrame(tick);
 	  });
+
+		vm.stop = function() {
+			vm.hideVideo = true;
+			vm.video.srcObject = null;
+			vm.localstream.getTracks().forEach(function(track) { track.stop(); })
+			//cancelAnimationFrame(vm.aniFrame);
+		}
+
+		vm.cancel = function() {
+			vm.stop();
+			$mdDialog.cancel();
+		}
+
+		vm.close = function(data) {
+			vm.stop();
+			$mdDialog.hide(data);
+		}
 	});
-  function tick() {
-    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-      vm.hideVideo = false;
-      canvasElement.height = video.videoHeight;
-      canvasElement.width = video.videoWidth;
-      canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-      var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-      var code = jsQR(imageData.data, imageData.width, imageData.height, {
-        inversionAttempts: "dontInvert",
-      });
-      if (code) {
-        drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
-        drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
-        drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
-        drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-        //outputData.innerText = code.data;
-				vm.stop();
-      } else {
-      }
-    }
-    vm.aniFrame = requestAnimationFrame(tick);
-  }
-
-	vm.stop = function() {
-		vm.hideVideo = true;
-		vm.video.srcObject = null;
-		vm.localstream.getTracks().forEach(function(track) { track.stop(); })
-		//cancelAnimationFrame(vm.aniFrame);
-	}
-
-	vm.cancel = function() {
-		vm.stop();
-		$mdDialog.cancel();
-	}
-
-	vm.close = function(data) {
-		vm.stop();
-		$mdDialog.hide(data);
-	}
 
 
-
-	$timeout(function() {
+/*	$timeout(function() {
 		var config = {
 			video: document.getElementById('scanner'),
 			mirror: false,
@@ -137,7 +114,7 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 
 	});
 
-
+*/
 	/*
 	var signInBool = true;
 	vm.signinOut = function($event) {
