@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('signInModalController', ['$log','$element','$mdDialog', '$scope', 'usersService','$mdToast','userInfo','signinService','$interval','$document','$timeout',
+.controller('signInModalController', ['$log','$element','$mdDialog', '$scope', 'usersService','$mdToast','userInfo','signinService','$interval','$document','$timeout','$document',
 	signInModalController
 ]);
-function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdToast,userInfo,signinService,$interval,$document,$timeout) {
+function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdToast,userInfo,signinService,$interval,$document,$timeout,$document) {
 	var vm = this;
 
 	vm.cancel = function() {
@@ -22,8 +22,8 @@ function signInModalController($log,$element,$mdDialog,$scope,usersService,$mdTo
 	$interval(tick, 1000);
 
 
-	var video = document.createElement("video");
-  var canvasElement = document.getElementById("canvas");
+	var video = $document[0].createElement("video");
+  var canvasElement = $document[0].getElementById("canvas");
   var canvas = canvasElement.getContext("2d");
   function drawLine(begin, end, color) {
     canvas.beginPath();
