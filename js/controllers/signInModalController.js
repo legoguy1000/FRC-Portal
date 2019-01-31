@@ -102,18 +102,18 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 			$mdDialog.hide(data);
 		}
 
+		$rootScope.$on('400BadRequest', function(event,response) {
+			vm.loading = false;
+			vm.aniFrame = requestAnimationFrame(tick1);
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+		});
 	});
 
-	$rootScope.$on('400BadRequest', function(event,response) {
-		vm.loading = false;
-		vm.aniFrame = requestAnimationFrame(tick1);
-		$mdToast.show(
-			$mdToast.simple()
-				.textContent(response.msg)
-				.position('top right')
-				.hideDelay(3000)
-		);
-	});
 
 
 }
