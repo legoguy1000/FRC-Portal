@@ -472,4 +472,18 @@ function formatGithubLoginUserData($me) {
 	);
 	return $userData;
 }
+
+function checkJwtFormat($token) {
+	if(!is_string($token)) {
+		return false;
+	}
+	$arr = explode('.',$token);
+	if(count($arr) != 3) {
+		return false;
+	}
+	if(preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $arr[0]) != true || preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $arr[1]) != true) {
+     return false;
+  }
+	return true;
+}
 ?>
