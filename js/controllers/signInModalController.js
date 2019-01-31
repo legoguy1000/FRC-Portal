@@ -37,7 +37,7 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 		  }
 		  // Use facingMode: environment to attemt to get the front camera on phones
 			function startStream() {
-			  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: {exact: 640}, height: {exact: 480} } }).then(function(stream) {
+			  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
 			    vm.video.srcObject = stream;
 					vm.localstream = stream;
 			    vm.video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
@@ -52,6 +52,7 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 	      vm.canvasElement.height = vm.video.videoHeight;
 	      vm.canvasElement.width = vm.video.videoWidth;
 	      vm.canvas.drawImage(vm.video, 0, 0, vm.canvasElement.width, vm.canvasElement.height);
+				drawLine({0,vm.canvasElement.height/2}, {vm.canvasElement.width,vm.canvasElement.height/2}, "#FF3B58");
 	      var imageData = vm.canvas.getImageData(0, 0, vm.canvasElement.width, vm.canvasElement.height);
 	      var code = jsQR(imageData.data, imageData.width, imageData.height, {
 	        inversionAttempts: "dontInvert",
