@@ -36,13 +36,15 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 		    vm.canvas.stroke();
 		  }
 		  // Use facingMode: environment to attemt to get the front camera on phones
-		  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-		    vm.video.srcObject = stream;
-				vm.localstream = stream;
-		    vm.video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-		    vm.video.play();
-		    vm.aniFrame = requestAnimationFrame(tick1);
-		  });
+			function startStream() {
+			  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+			    vm.video.srcObject = stream;
+					vm.localstream = stream;
+			    vm.video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+			    vm.video.play();
+			    vm.aniFrame = requestAnimationFrame(tick1);
+			  });
+			}
 
 	  function tick1() {
 	    if (vm.video.readyState === vm.video.HAVE_ENOUGH_DATA) {
@@ -65,6 +67,8 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 	    }
 	    vm.aniFrame = requestAnimationFrame(tick1);
 	  }
+
+		startStream();
 
 		vm.scanner = function(content) {
 			vm.msg = '';
@@ -104,7 +108,7 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 
 		$rootScope.$on('400BadRequest', function(event,response) {
 			vm.loading = false;
-			vm.aniFrame = requestAnimationFrame(tick1);
+			startStream();
 			$mdToast.show(
 				$mdToast.simple()
 					.textContent(response.msg)
