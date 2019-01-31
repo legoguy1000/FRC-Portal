@@ -108,8 +108,10 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 		}
 
 		$rootScope.$on('400BadRequest', function(event,response) {
-			vm.loading = false;
-			startStream();
+			$timeout(function() {
+				vm.loading = false;
+				startStream();
+			}, 2000 );
 			$mdToast.show(
 				$mdToast.simple()
 					.textContent(response.msg)
