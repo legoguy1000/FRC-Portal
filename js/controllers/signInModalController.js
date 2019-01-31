@@ -52,7 +52,7 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 	      vm.canvasElement.height = vm.video.videoHeight;
 	      vm.canvasElement.width = vm.video.videoWidth;
 	      vm.canvas.drawImage(vm.video, 0, 0, vm.canvasElement.width, vm.canvasElement.height);
-				drawLine({0,vm.canvasElement.height/2}, {vm.canvasElement.width,vm.canvasElement.height/2}, "#FF3B58");
+				drawLine({x: 0, y: vm.canvasElement.height/2}, {x: vm.canvasElement.width,y: vm.canvasElement.height/2}, "#FF3B58");
 	      var imageData = vm.canvas.getImageData(0, 0, vm.canvasElement.width, vm.canvasElement.height);
 	      var code = jsQR(imageData.data, imageData.width, imageData.height, {
 	        inversionAttempts: "dontInvert",
