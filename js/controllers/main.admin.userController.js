@@ -115,6 +115,16 @@ function mainAdminUserController($state, $timeout, $q, $scope, schoolsService, u
     }, function() {});
 	}
 
+	$rootScope.$on('400BadRequest', function(event,response) {
+		vm.loadingUser = false;
+		$mdToast.show(
+			$mdToast.simple()
+				.textContent(response.msg)
+				.position('top right')
+				.hideDelay(3000)
+		);
+	});
+
 	vm.showSeasonHoursGraph = function(ev,year) {
 		generalService.showSeasonHoursGraph(ev, vm.user_id, year);
 		/*$mdDialog.show({

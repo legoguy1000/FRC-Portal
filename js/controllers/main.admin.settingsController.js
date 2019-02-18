@@ -112,25 +112,7 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 					console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
 			});
 	};
-/*
-	vm.showServiceAccountModal = function(ev) {
-		$mdDialog.show({
-			controller: serviceAccountModalController,
-			controllerAs: 'vm',
-			templateUrl: 'views/partials/serviceAccountModal.tmpl.html',
-			parent: angular.element(document.body),
-			targetEvent: ev,
-			clickOutsideToClose:true,
-			fullscreen: true, // Only for -xs, -sm breakpoints.
-			locals: {
-				credentials: vm.serviceAccountCredentials
-			}
-		})
-		.then(function(response) {
-			vm.serviceAccountCredentials = response;
-		}, function() { });
-	};
-*/
+
 	vm.testSlack = function() {
 		vm.loading = false;
 		settingsService.testSlack().then(function(response){
@@ -145,6 +127,15 @@ function mainAdminSettingsController($state, $timeout, $q, $scope, schoolsServic
 		});
 	}
 
+	$rootScope.$on('400BadRequest', function(event,response) {
+		vm.loading = false;
+		$mdToast.show(
+			$mdToast.simple()
+				.textContent(response.msg)
+				.position('top right')
+				.hideDelay(3000)
+		);
+	});
 	vm.searchText    = null;
 		/**
 	 * Create filter function for a query string

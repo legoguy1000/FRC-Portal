@@ -68,4 +68,14 @@ function newEventModalController($log,$element,$mdDialog,$scope,usersService,eve
 	    );
 		});
 	}
+
+	$rootScope.$on('400BadRequest', function(event,response) {
+		vm.loading = false;
+		$mdToast.show(
+			$mdToast.simple()
+				.textContent(response.msg)
+				.position('top right')
+				.hideDelay(3000)
+		);
+	});
 }

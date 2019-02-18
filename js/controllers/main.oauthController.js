@@ -8,11 +8,11 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 		//$stateParams.provider;
 		var stateEncoded = $stateParams.state;
 		var state = angular.fromJson(atob(stateEncoded));
-		var redirect = state.current_state;
-		var params = state.state_params;
-		var state_from = state.state_from;
+		vm.redirect = state.current_state;
+		vm.params = state.state_params;
+		vm.state_from = state.state_from;
 		var dialog;
-		var authed = false;
+		vm.authed = false;
 		function loginModal() {
 			dialog = $mdDialog.show({
 				controller: loginModalController,
@@ -28,6 +28,28 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 				}
 			});
 		}
+		function redirectUser(response) {
+			if(response.status) {
+				vm.authed = $auth.isAuthenticated();
+				if(vm.authed) {
+					$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
+					$rootScope.$emit('afterLoginAction');
+				}
+			}
+			if(vm.redirect != '' && (vm.authed || vm.state_from == null)) {
+				$state.go(vm.redirect,vm.params).then(function() {
+					$mdDialog.cancel();
+				});
+			} else if(vm.state_from != null) {
+				$state.go(vm.state_from.name,vm.state_from.params).then(function() {
+					$mdDialog.cancel();
+				});
+			} else {
+				$state.go('main.home').then(function() {
+					$mdDialog.cancel();
+				});
+			}
+		}
 		function sendCode() {
 			var data = $stateParams;
 			loginService.oauth(data).then(function(response) {
@@ -37,31 +59,23 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 						.position('top right')
 						.hideDelay(3000)
 				);
-				if(response.status) {
-					authed = $auth.isAuthenticated();
-					if(authed) {
-						$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
-						$rootScope.$emit('afterLoginAction');
-					}
-				}
-				if(redirect != '' && (authed || state_from == null)) {
-					$state.go(redirect,params).then(function() {
-						$mdDialog.cancel();
-					});
-				} else if(state_from != null) {
-					$state.go(state_from.name,state_from.params).then(function() {
-						$mdDialog.cancel();
-					});
-				} else {
-					$state.go('main.home').then(function() {
-						$mdDialog.cancel();
-					});
-				}
+				redirectUser(response);
 			});
 		}
 
 		loginModal();
 		sendCode();
+
+		$rootScope.$on('400BadRequest', function(event,response) {
+			vm.loading = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+			redirectUser(response);
+		});
 
 
 }

@@ -441,4 +441,14 @@ function mainAdminEventController($timeout, $q, $scope, $state, eventsService, $
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
 	}
+
+	$rootScope.$on('400BadRequest', function(event,response) {
+		vm.loading = false;
+		$mdToast.show(
+			$mdToast.simple()
+				.textContent(response.msg)
+				.position('top right')
+				.hideDelay(3000)
+		);
+	});
 }

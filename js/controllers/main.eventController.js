@@ -66,4 +66,14 @@ function mainEventController($rootScope, $timeout, $q, $scope, $state, eventsSer
 		$rootScope.$on('afterLoginAction', function(event) {
 			vm.getEvent();
 		});
+
+		$rootScope.$on('400BadRequest', function(event,response) {
+			vm.loading = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+		});
 }
