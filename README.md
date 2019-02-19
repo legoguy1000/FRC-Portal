@@ -28,6 +28,7 @@ Version 2.13.6
 * Add other user types
 * Add ability for users to add additional hotel rooms
 * Updated Javascript QR code scanning library
+* Change max sign in length to 18 hours
 
 Version 2.12.0
 * Simplified some code
