@@ -111,9 +111,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 		});
 	}
 
-	if(vm.signInAuthed) {
-		vm.getUsers();
-	} else if($auth.isAuthenticated()) {
+	if(vm.signInAuthed || $auth.isAuthenticated()) {
 		vm.getUsers();
 	} else {
 		vm.authorizeSignIn();
@@ -134,10 +132,6 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 			vm.signInAuthed = signinService.isAuthed();
 		});
 	}
-
-	$rootScope.$on('afterLoginAction', function(event) {
-		vm.getUsers();
-	});
 
 	function startEventSource() {
 		if(eventSource != undefined) {
