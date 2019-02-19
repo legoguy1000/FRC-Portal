@@ -177,7 +177,6 @@ function itterateMembershipFormData($data = array(), $season = null) {
 				$user->fname = $fname;
 				$user->lname = $lname;
 				$user->getGenderByFirstName();
-				//$user->gender = $gender != false ? ucfirst($gender):'';
 				$user->user_type = $user_type;
 				if($user_type == 'Student') {
 					if($school_id != '') {
