@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('roomListModalController', ['$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService','admin','$auth','$mdToast',
+.controller('roomListModalController', ['$rootScope','$log','$element','$mdDialog', '$scope', 'eventInfo', 'usersService', 'schoolsService', 'seasonsService','admin','$auth','$mdToast',
 	roomListModalController
 ]);
-function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,admin,$auth,$mdToast) {
+function roomListModalController($rootScope,$log,$element,$mdDialog,$scope,eventInfo,usersService,eventsService,seasonsService,admin,$auth,$mdToast) {
 	var vm = this;
 
 	vm.eventInfo = eventInfo;
