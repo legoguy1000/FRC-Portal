@@ -47,6 +47,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 		rmh: false,
 		linkedAccounts: false,
 	}
+	vm.loading = false;
 	vm.user = $scope.main.userInfo;
 
 	vm.notificationOptions = {
@@ -85,43 +86,43 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	vm.getProfileInfo(); */
 
 	vm.getUserAnnualRequirements = function() {
-		vm.loading.note_devices = true;
+		vm.loading = true;
 		usersService.getUserAnnualRequirements($scope.main.userInfo.user_id).then(function(response) {
 			vm.seasonInfo = response.data;
-			vm.loading.note_devices = false;
+			vm.loading = false;
 		});
 	}
 	vm.getUserAnnualRequirements();
 
 	vm.getUserEventRequirements = function() {
-		vm.loading.note_devices = true;
+		vm.loading = true;
 		usersService.getUserEventRequirements($scope.main.userInfo.user_id).then(function(response) {
 			vm.eventInfo = response.data;
-			vm.loading.note_devices = false;
+			vm.loading = false;
 		});
 	}
 	vm.getUserEventRequirements();
 
 	vm.getUserLinkedAccounts = function() {
-		vm.loading.linkedAccounts = true;
+		vm.loading = true;
 		usersService.getUserLinkedAccounts($scope.main.userInfo.user_id).then(function(response) {
 			vm.linkedAccounts = response.data;
-			vm.loading.linkedAccounts = false;
+			vm.loading = false;
 		});
 	}
 	vm.getUserLinkedAccounts();
 
 	vm.getUserNotificationPreferences = function() {
-		vm.loading.note_devices = true;
+		vm.loading = true;
 		usersService.getUserNotificationPreferences($scope.main.userInfo.user_id).then(function(response) {
 			vm.notificationPreferences = response.data;
-			vm.loading.note_devices = false;
+			vm.loading = false;
 		});
 	}
 	vm.getUserNotificationPreferences();
 
 	vm.updateUser = function() {
-		vm.loading.profile = true;
+		vm.loading = true;
 		var data = {
 			user_id: vm.user.user_id,
 			fname: vm.user.fname,
@@ -135,7 +136,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			grad_year: vm.user.grad_year,
 		}
 		usersService.updateUserPersonalInfo(data).then(function(response) {
-			vm.loading.profile = false;
+			vm.loading = false;
 			if(response.status) {
 				$window.localStorage['userInfo'] = angular.toJson(response.data);
 			}
@@ -149,7 +150,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	}
 
 	vm.deleteUserLinkedAccount = function(auth_id) {
-		vm.loading.linkedAccounts = true;
+		vm.loading = true;
 		var data = {
 			user_id: $scope.main.userInfo.user_id,
 			auth_id: auth_id
@@ -158,7 +159,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			if(response.status) {
 				vm.linkedAccounts = response.data;
 			}
-			vm.loading.linkedAccounts = false;
+			vm.loading = false;
 			$mdToast.show(
 				$mdToast.simple()
 					.textContent(response.msg)
@@ -189,12 +190,13 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	}
 
 	vm.changePin = function() {
-		vm.loadingDevices = true;
+		vm.loading = true;
 		var data = {
 			user_id: $scope.main.userInfo.user_id,
 			pin: vm.changePinNum
 		}
 		usersService.changePin(data).then(function(response){
+			vm.loading = false;
 			if(response.status) {
 				vm.changePinNum = null;
 				vm.changePinForm.$setPristine();
@@ -210,7 +212,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	}
 
 	vm.updateNotePrefs = function(method,type,value) {
-		vm.loading.note_types = true;
+		vm.loading = true;
 		var data = {
 			'method': method,
 			'type': type,
@@ -218,7 +220,7 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			'user_id': $scope.main.userInfo.user_id
 		}
 		usersService.updateNotificationPreferences(data).then(function(response){
-			vm.loading.note_types = false;
+			vm.loading = false;
 			$mdToast.show(
 				$mdToast.simple()
 					.textContent(response.msg)
@@ -229,11 +231,11 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 	}
 
 	vm.requestMissingHours = function() {
-		vm.loading.rmh = true;
+		vm.loading = true;
 		var data = vm.rmhData;
 		data.user_id = $scope.main.userInfo.user_id;
 		usersService.requestMissingHours(data).then(function(response){
-			vm.loading.rmh = false;
+			vm.loading = false;
 			if(response.status) {
 				vm.rmhData = {};
 				vm.rmhForm.$setPristine();
@@ -273,4 +275,14 @@ function mainProfileController($timeout, $q, $scope, schoolsService, usersServic
 			$log.info('Dialog dismissed at: ' + new Date());
 		});
 	}
+
+	$rootScope.$on('400BadRequest', function(event,response) {
+		vm.loading = false;
+		$mdToast.show(
+			$mdToast.simple()
+				.textContent(response.msg)
+				.position('top right')
+				.hideDelay(3000)
+		);
+	});
 }

@@ -9,7 +9,9 @@ Capsule::schema()->create('annual_requirements', function ($table) {
   $table->char('season_id',13);
   $table->boolean('join_team')->default(0);
   $table->boolean('stims')->default(0);
+  $table->dateTime('stims_date');
   $table->boolean('dues')->default(0);
+  $table->dateTime('dues_date');
   $table->timestamps();
 
   $table->unique(['season_id','user_id']);

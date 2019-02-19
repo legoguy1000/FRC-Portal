@@ -409,15 +409,18 @@ $app->group('/events', function () {
           insertLogs($level = 'Warning', $message = 'Unauthorized attempt to add an Event Room');
           return unauthorizedResponse($response);
         }
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
 
+        if(!$event->room_required) {
+          return badRequestResponse($response, $msg = 'Hotel rooms not needed for this event');
+        }
         if(!isset($formData['user_type']) || $formData['user_type'] == '') {
           return badRequestResponse($response, $msg = 'User Type cannot be blank');
         }
         if(!isset($formData['gender']) || ($formData['gender'] == '' && $formData['user_type'] != 'Adult')) {
           return badRequestResponse($response, $msg = 'Gender cannot be blank');
         }
-        //Event passed from middleware
-        $event = $request->getAttribute('event');
 
         $room = new FrcPortal\EventRoom();
         $room->event_id = $event->event_id;
@@ -431,6 +434,42 @@ $app->group('/events', function () {
           } catch (Exception $e) {
         		$result['msg'] = handleExceptionMessage($e);
         	}
+        } else {
+          insertLogs($level = 'Information', $message = 'Event Room added');
+          $responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
+        }
+        $response = $response->withJson($responseArr);
+        return $response;
+      })->setName('Add Event Room');
+      //Add New Event Room
+      $this->post('/user', function ($request, $response, $args) {
+        $user = FrcPortal\Auth::user();
+        $formData = $request->getParsedBody();
+        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
+        if(!$event->room_required) {
+          return badRequestResponse($response, $msg = 'Hotel rooms not needed for this event');
+        }
+        if($user->user_type == '') {
+          return badRequestResponse($response, $msg = 'User type cannot be blank.  Please update your profile.');
+        }
+        if($user->gender == '') {
+          return badRequestResponse($response, $msg = 'Gender cannot be blank.  Please update your profile.');
+        }
+        $room = new FrcPortal\EventRoom();
+        $room->event_id = $event->event_id;
+        $room->user_type = $user->adult ? 'Adult':'Student';
+        $room->gender = $user->adult ? '':$user->gender;
+        if($room->save()) {
+          try {
+            $responseArr['data'] = FrcPortal\EventRoom::with('users')->where('event_id',$event_id)->get();
+            $responseArr['status'] = true;
+            $responseArr['msg'] = 'New room added';
+          } catch (Exception $e) {
+            $result['msg'] = handleExceptionMessage($e);
+          }
         } else {
           insertLogs($level = 'Information', $message = 'Event Room added');
           $responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
@@ -855,6 +894,7 @@ $app->group('/events', function () {
       $user_type = $user->user_type;
       $adult = $user->adult;
       $gender = $user->gender;
+      $roomType = $user->room_type;
 
       $registrationBool = (bool) $formData['registration'];
       if(time() > $event->date['start']['unix']) {
@@ -884,7 +924,7 @@ $app->group('/events', function () {
           }
         }
         $room_required = (bool) $event->room_required;
-        if($room_required && $user_type == 'Student') {
+        if($room_required && $user_type == 'Student' && isset($formData['room_id'])) {
           $room_id = $formData['room_id'];
           $room = FrcPortal\EventRoom::where('room_id',$room_id)->where('event_id',$event_id)->first();
           if(is_null($room)) {
@@ -892,13 +932,8 @@ $app->group('/events', function () {
             $response = $response->withJson($responseArr);
             return $response;
           }
-          if($room->user_type != $user_type) {
-            $responseArr['msg'] = 'Room User Type does not match User Type';
-            $response = $response->withJson($responseArr);
-            return $response;
-          }
-          if($room->user_type != 'Mentor' && $room->gender != $gender) {
-            $responseArr['msg'] = 'Room Gender does not match User Gender';
+          if(!in_array($roomType,$room->user_type)) {
+            $responseArr['msg'] = 'Invalid Room Selection.  Please select a room that matches your user type and gender.';
             $response = $response->withJson($responseArr);
             return $response;
           }

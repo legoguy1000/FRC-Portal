@@ -246,6 +246,9 @@ $app->group('/seasons', function () {
         //$reqArr = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user)->first();
         $cur = isset($reqArr->$req) ? $reqArr->$req : false;
         $reqArr->$req = !$cur;
+        if($req == 'stims' || $req == 'dues') {
+          $reqArr->{$req.'_date'} = date('Y-m-d H:i:s');
+        }
         $reqArr->save();
       }
       $season = getUsersAnnualRequirements($season_id);

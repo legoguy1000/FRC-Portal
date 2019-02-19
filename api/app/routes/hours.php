@@ -460,6 +460,10 @@ $app->group('/hours', function () {
         return unauthorizedResponse($response, $msg = $user->user_type.' user type is not authorized for sign in.');
       }
       if(isset($args['token'])) {
+        if(!checkJwtFormat($args['token'])) {
+          insertLogs($level = 'Information', $message = 'Invalid QR code value. "'.$args['token'].'" is not a valid token.');
+          return badRequestResponse($response, $msg = 'Invalid token. QR code value ('.$args['token'].') is not a valid token.');
+        }
         $key = getSettingsProp('jwt_signin_key');
         try{
           $decoded = JWT::decode($args['token'], $key, array('HS256'));

@@ -131,7 +131,7 @@ if($version >= '2.11.2') {
 /**
 * 2.13.0
 **/
-if($version >= '2.13.6') {
+if($version >= '2.13.7') {
   if(Capsule::schema()->hasTable('meeting_hours')) {
     if(!Capsule::schema()->hasColumn('meeting_hours','created_at') && !Capsule::schema()->hasColumn('meeting_hours','updated_at')) {
       try {
@@ -159,6 +159,27 @@ if($version >= '2.13.6') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_login_enable'], ['value' => false]);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_oauth_client_id'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_oauth_client_secret'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'require_team_email'], ['value' => '0']);
+  }
+  if(Capsule::schema()->hasTable('annual_requirements')) {
+    if(!Capsule::schema()->hasColumn('annual_requirements','stims_date')) {
+      try {
+        Capsule::schema()->table('annual_requirements', function ($table) {
+          $table->dateTime('stims_date')->after('stims');
+        });
+      } catch (Exception $e) {
+        //Exception will be logged in Monolog
+      }
+    }
+    if(!Capsule::schema()->hasColumn('annual_requirements','dues_date')) {
+      try {
+        Capsule::schema()->table('annual_requirements', function ($table) {
+          $table->dateTime('dues_date')->after('dues');
+        });
+      } catch (Exception $e) {
+        //Exception will be logged in Monolog
+      }
+    }
   }
 }
 

@@ -159,7 +159,7 @@ function itterateMembershipFormData($data = array(), $season = null) {
 
 			$user = null;
 			$user_id = null;
-			$user = FrcPortal\User::where('email',$email)->first();
+			$user = FrcPortal\User::where('email',$email)->orWhere('team_email',$email)->first();
 			if(is_null($user)) {
 				$user = FrcPortal\User::where('fname',$fname)->where('lname',$lname)->where('user_type',$user_type)->first();
 			}
@@ -170,11 +170,13 @@ function itterateMembershipFormData($data = array(), $season = null) {
 					$school_id = checkSchool($school);
 				}
 				$user = new FrcPortal\User();
+				if(checkTeamEmail($email)) {
+					$user->team_email = $email;
+				}
 				$user->email = $email;
 				$user->fname = $fname;
 				$user->lname = $lname;
 				$user->getGenderByFirstName();
-				$user->gender = $gender != false ? ucfirst($gender):'';
 				$user->user_type = $user_type;
 				if($user_type == 'Student') {
 					if($school_id != '') {
@@ -191,16 +193,21 @@ function itterateMembershipFormData($data = array(), $season = null) {
 				if($clean_phone != '' && is_numeric($clean_phone)) {
 					$user->phone = $clean_phone;
 				}
+				$user->getGetSlackIdByEmail();
 				//Insert Data
 				if($user->save()) {
 					$user_id = $user->user_id;
+					insertLogs($level = 'Information', $message = $user->full_name.' imported from Google Form results.');
 					$user->setDefaultNotifications();
 					$host = getSettingsProp('env_url');
 					$msgData = array(
+						'email' => array(
 						'subject' => 'User account created for '.$team_name.'\s team portal',
 						'content' =>  'Congratulations! You have been added to '.$team_name.'\s team portal.  Please go to '.$host.' to view your annual registration, event registration, season hours and more.',
 						'userData' => $user
+						)
 					);
+					$user->sendUserNotification($type = '', $msgData);
 				}
 			}
 			//Add User info into the Annual Requirements Table
@@ -209,14 +216,14 @@ function itterateMembershipFormData($data = array(), $season = null) {
 				$season_join = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
 				if($season_join) {
 					$msgData = array(
-						'slack' => array(
-						'title' => 'Annual Registration Complete',
-						'body' => 'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$season->year.' FRC season.'
+							'slack' => array(
+							'title' => 'Annual Registration Complete',
+							'body' => 'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$season->year.' FRC season.'
 						),
-					'email' => array(
-						'subject' => 'Annual Registration Complete',
-						'content' =>  'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$season->year.' FRC season.',
-						'userData' => $user
+							'email' => array(
+							'subject' => 'Annual Registration Complete',
+							'content' =>  'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$season->year.' FRC season.',
+							'userData' => $user
 						)
 					);
 					$user->sendUserNotification($type = 'join_team', $msgData);

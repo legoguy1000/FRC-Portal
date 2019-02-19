@@ -338,13 +338,22 @@ $app->group('/users', function () {
         insertLogs($level = 'Warning', $message = 'User information update failed. Unauthorized user.');
         return unauthorizedResponse($response);
       }
+      if(!isset($formData['email']) || $formData['email'] == '') {
+        insertLogs($level = 'Information', $message = 'User profile update failed. Email is required.');
+        return badRequestResponse($response,$msg = 'Email is required.');
+      }
+      $teamDomain = getSettingsProp('team_domain');
+      if(isset($formData['team_email']) && $formData['team_email'] != '' && !is_null($teamDomain) && preg_match('/[a-z0-9._%+-]+@'.$teamDomain.'$/i', $formData['team_email']) == false) {
+        insertLogs($level = 'Information', $message = 'User profile update failed. Team Email must be a "@'.$teamDomain.'" email address.');
+        return badRequestResponse($response,$msg = 'Team Email must be a "@'.$teamDomain.'" email address.');
+      }
       //User passed from middleware
       $user = $request->getAttribute('user');
       // $user = FrcPortal\User::with('school')->find($user_id);
       $user->fname = $formData['fname'];
       $user->lname = $formData['lname'];
       $user->email = $formData['email'];
-      $user->team_email = $formData['team_email'];
+      $user->team_email = isset($formData['team_email']) ? $formData['team_email']:'';
       $user->phone = $formData['phone'];
       $user->user_type = $formData['user_type'];
       $user->gender = $formData['gender'];

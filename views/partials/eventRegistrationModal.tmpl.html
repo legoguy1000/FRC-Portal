@@ -114,11 +114,14 @@
 							</div>
 				    </v-pane-content>
 				  </v-pane>
-				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.room_required && vm.userInfo.user_type != 'Mentor'">
+				  <v-pane ng-disabled="!vm.registrationForm.registration" ng-if="vm.event.room_required && !vm.userInfo.adult">
 				    <v-pane-header>
 				      Hotel Room
 				    </v-pane-header>
 				    <v-pane-content>
+							<div flex layout="row" layout-align="center center" ng-show="vm.userInfo.gender == ''" style="margin-bottom: 10px;">
+								<b>Gender is not set.  Please update profile to be able to select rooms.</b>
+							</div>
 							<div layout="row" ng-repeat="room in vm.room_list" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
 								<div flex layout="row" layout-align="start center" class="" style="border-right: solid;">
 									<span style="margin-left:10px;">{{room.room_title}}</span>
@@ -138,6 +141,15 @@
 											<span>Select Room</span>
 										</md-button>
 									</div>
+								</div>
+							</div>
+							<div layout="column" layout-align="center center" ng-show="vm.userInfo.user_id==main.userInfo.user_id">
+								<md-button type="button" ng-click="vm.addEventRoom()" aria-label="Add Hotel Room" class="md-primary md-raised">
+									<md-tooltip md-direction="top">Add Room</md-tooltip>
+									<span>Add Room</span>
+								</md-button>
+								<div>
+									*Additional rooms may be consolidated
 								</div>
 							</div>
 			    	</v-pane-content>

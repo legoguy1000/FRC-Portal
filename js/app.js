@@ -599,7 +599,12 @@ angular.module('FrcPortal', [
 							templateUrl: 'views/partials/loginModal.tmpl.html',
 							parent: angular.element(document.body),
 							clickOutsideToClose:true,
-							fullscreen: true // Only for -xs, -sm breakpoints.
+							fullscreen: true, // Only for -xs, -sm breakpoints.
+							locals: {
+								loginData: {
+									loading: false,
+								}
+							}
 						})
 						.then(function(data) {
 							if(data.auth) {
@@ -614,14 +619,16 @@ angular.module('FrcPortal', [
 					});
 				} else if (rejection.status === 400) {
 					// Return a new promise
-					var $mdToast = $injector.get('$mdToast');
+					var $rootScope = $injector.get('$rootScope');
+					$rootScope.$broadcast('400BadRequest', rejection.data);
+					//var $mdToast = $injector.get('$mdToast');
 					//console.log(rejection);
-					$mdToast.show(
+					/*$mdToast.show(
 			      $mdToast.simple()
 			        .textContent(rejection.data.msg)
 			        .position('top right')
 			        .hideDelay(3000)
-			    );
+			    );*/
 				} else if (rejection.status === 403) {
 					// Return a new promise
 					var $mdToast = $injector.get('$mdToast');

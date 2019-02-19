@@ -117,4 +117,14 @@ function roomListModalController($log,$element,$mdDialog,$scope,eventInfo,usersS
 	vm.save = function() {
 		$mdDialog.hide(vm.myRoom.users);
 	}
+
+	$rootScope.$on('400BadRequest', function(event,response) {
+		vm.loading = false;
+		$mdToast.show(
+			$mdToast.simple()
+				.textContent(response.msg)
+				.position('top right')
+				.hideDelay(3000)
+		);
+	});
 }

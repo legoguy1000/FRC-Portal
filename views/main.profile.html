@@ -7,7 +7,7 @@
 			</md-button>
 			My Profile
 		</h1>
-		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading.profile"></md-progress-linear>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 		<form class="md-margin" flex layout="column" ng-submit="vm.updateUser()">
 			<md-input-container flex>
 				<label>First Name</label>
@@ -267,7 +267,6 @@
 
 						</div>
 					</md-toolbar> -->
-					<md-progress-linear md-mode="indeterminate" ng-show="vm.loading.linkedAccounts"></md-progress-linear>
 					<md-list flex>
 						<md-list-item class="md-2-line" ng-repeat = "account in vm.linkedAccounts track by $index" ng-click="null">
 							<div style="margin-right:10px">
@@ -290,7 +289,7 @@
 								</md-icon>
 							</div>
 						</md-list-item>
-						<div ng-show="vm.user.notificationEndpoints.length == 0 && !vm.loadingDevices" layout="row" layout-align="center center">
+						<div ng-show="vm.user.notificationEndpoints.length == 0 && !vm.loading" layout="row" layout-align="center center">
 							<h4>No Devices</h4>
 						</div>
 					</md-list>
@@ -304,7 +303,6 @@
 							<span>Notification Types</span>
 							<span flex></span>
 						</h1>
-						<md-progress-linear md-mode="indeterminate" ng-show="vm.loading.note_types"></md-progress-linear>
 						<div class="md-margin">
 							<div layout="row" flex  layout-align="start center" ng-repeat="(key,title) in vm.notificationOptions track by $index">
 								<span flex="50">{{title}}</span>

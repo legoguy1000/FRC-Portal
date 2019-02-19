@@ -322,7 +322,7 @@ function slackPostAPI($endpoint, $data) {
 function slackGetAPI($endpoint, $params = array()) {
 	$slack_token = getSettingsProp('slack_api_token');
 	$params['token'] = $slack_token;
-	$url = 'https://slack.com/api/'.$endpoint.'?'.http_build_query($params);
+	//$url = 'https://slack.com/api/'.$endpoint.'?'.http_build_query($params);
 	$client = new GuzzleHttp\Client(['base_uri' => 'https://slack.com/api/']);
 	$response = $client->request('GET', $endpoint, array(
 		'query' => $params
@@ -471,5 +471,19 @@ function formatGithubLoginUserData($me) {
 		'profile_image' => $image,
 	);
 	return $userData;
+}
+
+function checkJwtFormat($token) {
+	if(!is_string($token)) {
+		return false;
+	}
+	$arr = explode('.',$token);
+	if(count($arr) != 3) {
+		return false;
+	}
+	if(preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $arr[0]) != true || preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $arr[1]) != true) {
+     return false;
+  }
+	return true;
 }
 ?>
