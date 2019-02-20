@@ -2,7 +2,7 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-Version 2.13.7
+Version 2.13.8
 * Add/edit/delete school
 * Fixed installer
 * fix various typos
@@ -29,6 +29,7 @@ Version 2.13.7
 * Add ability for users to add additional hotel rooms
 * Updated Javascript QR code scanning library
 * Change max sign in length to 18 hours
+* Fixed issue with submitting and denying missing hours requests
 
 Version 2.12.0
 * Simplified some code
