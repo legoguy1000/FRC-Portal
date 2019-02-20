@@ -296,6 +296,10 @@ $app->group('/users', function () {
         return unauthorizedResponse($response);
       }
 
+      if(!isset($formData['date']) || $formData['date'] == '') {
+        insertLogs($level = 'Information', $message = 'Missing hours request failed. Date cannot be blank.');
+        return badRequestResponse($response, $msg = 'Date cannot be blank');
+      }
       if(!isset($formData['start_time']) || $formData['start_time'] == '') {
         insertLogs($level = 'Information', $message = 'Missing hours request failed. Start time cannot be blank.');
         return badRequestResponse($response, $msg = 'Start Time cannot be blank');
@@ -308,14 +312,15 @@ $app->group('/users', function () {
         insertLogs($level = 'Information', $message = 'Missing hours request failed. Comment cannot be blank.');
         return badRequestResponse($response, $msg = 'Comment cannot be blank');
       }
+      $date = date('Y-m-d',strtotime($formData['date']));
       $start_time = date('Y-m-d H:i:s',strtotime($formData['start_time']));
-      $end_time = date('Y-m-d H:i:s',strtotime($formData['end_time']));;
-      $request_date = date('Y-m-d H:i:s');
+      $end_time = date('H:i:s',strtotime($formData['end_time']));;
+      $request_date = date('H:i:s');
 
       $request = new FrcPortal\MissingHoursRequest();
       $request->user_id = $user_id;
-      $request->time_in = $start_time;
-      $request->time_out = $end_time;
+      $request->time_in = $date.' '.$start_time;
+      $request->time_out = $date.' '.$end_time;
       $request->comment = $formData['comment'];
       $request->request_date = $request_date;
       if($request->save()) {

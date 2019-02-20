@@ -360,13 +360,22 @@
 								<md-card-content layout="column">
 									<div flex layout="row">
 										<md-input-container flex class="md-icon-float md-icon-left md-block">
+											<label>Date</label>
+											<md-icon md-font-library="material-icons">today</md-icon>
+											<input moment-picker="vm.rmhData.date" required
+												 format="LL"
+												 min-view="year"
+												 max-view="month"
+												 today="true"
+												 ng-model="vm.rmhData.date_full">
+											</input>
+										</md-input-container>
+										<md-input-container flex class="md-icon-float md-icon-left md-block">
 											<label>Start Time</label>
 											<md-icon md-font-library="material-icons">today</md-icon>
 											<input moment-picker="vm.rmhData.start_time" required
-												 format="LLL"
-												 min-view="year"
-												 max-view="minute"
-												 today="true"
+												 format="LT"
+												 min-view="day"
 												 ng-model="vm.rmhData.start_time_full">
 											</input>
 										</md-input-container>
@@ -374,11 +383,9 @@
 											<label>End Time</label>
 											<md-icon md-font-library="material-icons">today</md-icon>
 											<input moment-picker="vm.rmhData.end_time" required
-												 format="LLL"
-												 min-view="year"
-												 max-view="minute"
+												 format="LT"
+												 min-view="day"
 												 min-date="vm.rmhData.start_time_full"
-												 today="true"
 												 ng-model="vm.rmhData.end_time_full">
 											</input>
 										</md-input-container>
