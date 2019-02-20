@@ -123,7 +123,7 @@ $app->group('/hours', function () {
           $mhRequest->approved = false;
           $mhRequest->approved_date = date('Y-m-d H:i:s',$date);
           $mhRequest->approved_by = $userId;
-          if($request->save()) {
+          if($mhRequest->save()) {
              $responseArr['status'] = true;
              $responseArr['msg'] = 'Missing hours request denied';
              insertLogs($level = 'Information', $message = 'Missing hours request denied for '.$mhRequest->user->full_name.'. ('.$mhRequest['time_in'].' - '.$mhRequest['time_out'].')');
