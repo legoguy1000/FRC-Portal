@@ -313,9 +313,9 @@ $app->group('/users', function () {
         return badRequestResponse($response, $msg = 'Comment cannot be blank');
       }
       $date = date('Y-m-d',strtotime($formData['date']));
-      $start_time = date('Y-m-d H:i:s',strtotime($formData['start_time']));
-      $end_time = date('H:i:s',strtotime($formData['end_time']));;
-      $request_date = date('H:i:s');
+      $start_time = date('H:i:s',strtotime($formData['start_time']));
+      $end_time = date('H:i:s',strtotime($formData['end_time']));
+      $request_date = date('Y-m-d H:i:s');
 
       $request = new FrcPortal\MissingHoursRequest();
       $request->user_id = $user_id;
