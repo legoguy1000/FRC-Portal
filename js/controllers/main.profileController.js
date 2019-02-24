@@ -26,6 +26,33 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 		$mdDialog.show(dialog);
 	}	else if($stateParams.linkedAccounts) {
 		vm.selectedTab = 1;
+	} else if($stateParams.signin) {
+		var confirm = $mdDialog.confirm()
+					.title('Do you want to sign in/out?')
+					.textContent('Please confirm that you want to sign in or out.')
+					.ariaLabel('Sign In/Out')
+					.ok('Yes')
+					.cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+			var data = {
+				'token': $stateParams.signin
+			};
+			signinService.signInOutQR(data).then(function(response) {
+				if(response.status) {
+					var dialog = $mdDialog.alert()
+											.clickOutsideToClose(true)
+											.textContent(response.msg)
+											.ariaLabel('Time In/Out')
+											.ok('Close');
+					$mdDialog.show(dialog);
+					$timeout( function(){
+				      $mdDialog.cancel();
+				    }, 2000 );
+				}
+			});
+		}, function() {
+
+		});
 	}
 	console.info($stateParams.selectedTab);
 	vm.querySeasons = {
