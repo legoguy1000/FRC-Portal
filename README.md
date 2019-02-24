@@ -2,6 +2,9 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
+Version 2.14.0
+* changed sign in QR code to a url to allow native qr scanners
+
 Version 2.13.8
 * Add/edit/delete school
 * Fixed installer
