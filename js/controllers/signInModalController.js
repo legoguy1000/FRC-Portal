@@ -76,8 +76,10 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 			vm.loading = true;
 			vm.scanContent = content;
 			vm.stop();
+			var url = new URL(content);
+			var token = url.searchParams.get("signin");
 			var data = {
-				'token': content
+				'token': token
 			};
 			signinService.signInOutQR(data).then(function(response) {
 				vm.loading = false;
