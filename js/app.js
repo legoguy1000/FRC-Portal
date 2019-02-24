@@ -99,7 +99,7 @@ angular.module('FrcPortal', [
 	  }
 		})
 	  .state('main.profile', {
-		url: '/profile',
+		url: '/profile?signin',
 		templateUrl: 'views/main.profile.html',
 		controller: 'main.profileController',
 		controllerAs: 'vm',

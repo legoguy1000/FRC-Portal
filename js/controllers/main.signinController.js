@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$auth', '$scope', 'signinService', '$mdDialog', '$interval','$sce',
+.controller('main.signinController', ['$rootScope', '$timeout', '$q', '$auth', '$scope', 'signinService', '$mdDialog', '$interval','$sce','configItems',
 	mainSigninController
 ]);
-function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinService, $mdDialog, $interval,$sce) {
+function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinService, $mdDialog, $interval,$sce,configItems) {
     var vm = this;
 
 	vm.pin = '';
@@ -18,6 +18,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	};
 	vm.loading = false;
 	vm.signInAuthed = signinService.isAuthed();
+	vm.configItems = configItems;
 	//vm.tokenInterval
 
 	var eventSource;
@@ -63,7 +64,8 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	vm.genQrCodeUrl = function() {
 		var tok = signinService.getToken();
 		if(tok != '') {
-			return $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+tok+'&chs=360x360&choe=UTF-8&chld=L|1');
+			var qr_value = vm.configItems.env_url+'/profile?signin='+tok;
+			return $sce.trustAsResourceUrl('https://chart.googleapis.com/chart?cht=qr&chl='+qr_value+'&chs=360x360&choe=UTF-8&chld=L|1');
 		}
 		return '';
 	}
