@@ -77,7 +77,7 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 			vm.scanContent = content;
 			vm.stop();
 			var url = new URL(content);
-			var token = url.searchParams.get("signin");
+			var token = url.searchParams.get("token");
 			var data = {
 				'token': token
 			};
