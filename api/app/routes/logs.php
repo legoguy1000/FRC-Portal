@@ -41,7 +41,7 @@ $app->group('/logs', function () {
       $logs = $logs->orHavingRaw('user_id LIKE ?',array('%'.$filter.'%'));
     }
     $totalNum = count($logs->get());
-    $orderBy = '';
+    $orderBy = 'DESC';
     $orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
     if(in_array($orderCol,array('level','user_id','created_at'))) {
       $orderBy = 'ASC';
