@@ -118,6 +118,23 @@ angular.module('FrcPortal', [
 	    }]
 	  }
 	  })
+		.state('main.timein', {
+		url: '/timein?token',
+		templateUrl: 'views/main.timein.html',
+		controller: 'main.timeinController',
+		controllerAs: 'vm',
+		authenticate: true,
+		params: {},
+		data: {
+			title: 'Sign In'
+		},
+		resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
+			profileController: ['$ocLazyLoad', function($ocLazyLoad) {
+				// you can lazy load files for an existing module
+							 return $ocLazyLoad.load('js/controllers/main.timeinController.js');
+			}]
+		}
+		})
 	  .state('main.signin', {
 		url: '/signin',
 		templateUrl: 'views/main.signin.html',
@@ -125,7 +142,7 @@ angular.module('FrcPortal', [
 		controllerAs: 'vm',
 		authenticate: false,
 		data: {
-		  title: 'Sign In'
+		  title: 'Hours Sign In Dashboard'
 		},
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    signinController: ['$ocLazyLoad', function($ocLazyLoad) {
@@ -731,6 +748,12 @@ angular.module('FrcPortal', [
 				$state.go('main.home');
 			}
 		}
+	});
+	$transitions.onStart({to: 'main.timein'}, function(trans) {
+		var toState = trans.$to();
+		event.preventDefault();
+		var $state = trans.router.stateService;
+		return $state.target("main.home");
 	});
 });
 /*

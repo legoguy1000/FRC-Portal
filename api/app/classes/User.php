@@ -219,7 +219,7 @@ class User extends Eloquent {
   	$queryArr = array();
   	$queryStr	 = '';
   	foreach($data as $meth=>$types) {
-  		foreach($types as $type) {
+  		foreach($types as $type=>$status) {
   			$note = new NotificationPreference();
   			$note->user_id = $this->user_id;
   			$note->method = $meth;
