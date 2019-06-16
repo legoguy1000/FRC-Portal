@@ -43,7 +43,7 @@ $app->group('/logs', function () {
     $totalNum = count($logs->get());
     $orderBy = '';
     $orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
-    if(in_array($orderCol,array('level','user_id','create_at'))) {
+    if(in_array($orderCol,array('level','user_id','created_at'))) {
       $orderBy = 'ASC';
       if($order[0] == '-') {
         $orderBy = 'DESC';
