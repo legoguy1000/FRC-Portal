@@ -105,19 +105,17 @@
 				<md-card ng-repeat="season in vm.seasonInfo | orderBy: vm.query.order" flex-gt-md="30">
 		      <md-card-title>
 		        <md-card-title-text>
-		          <span class="md-headline">{{event.name}}</span>
+		          <span class="md-headline">{{season.year}}</span>
 							<span class="md-subhead">
-								<span>
 									{{season.game_name}}
-								</span>
 							</span>
-							<span class="md-subhead" ng-show="event.location != ''">
-								{{season.year}}
+							<span class="md-subhead">
+									Total Hours: {{season.annual_requirements.total_hours}}
 							</span>
 		        </md-card-title-text>
 						<md-card-title-media>
 							<div class="md-media-sm card-media">
-								<img ng-src="{{season.game_logo}}" class="md-card-image" alt="Washed Out">
+								<img ng-src="{{season.game_logo}}" class="md-card-image" alt="{{season.game_name}} Logo">
 							</div>
 						</md-card-title-media>
 		      </md-card-title>
@@ -139,16 +137,16 @@
 			          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</md-icon>
 							</div>
 						</div>
-						<div layout="row" layout-align="space-around center">
-							<div layout="column">
+						<div layout="row" layout-align="space-around center" style="margin-top: 10px;">
+							<div layout="column" layout-align="center center">
 								<div>Build Season</div>
 								{{season.annual_requirements.build_season_hours}}
 							</div>
-							<div layout="column">
+							<div layout="column" layout-align="center center">
 								<div>Comp Season</div>
 								{{season.annual_requirements.competition_season_hours}}
 							</div>
-							<div layout="column">
+							<div layout="column" layout-align="center center">
 								<div>Off Season</div>
 								{{season.annual_requirements.off_season_hours}}
 							</div>
