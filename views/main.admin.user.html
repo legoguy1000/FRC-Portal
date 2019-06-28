@@ -123,12 +123,16 @@
 		      </md-card-title>
 		      <md-card-content>
 						<div layout="row">
-
+							<div layout="column">
+								<div>Join Team</div>
+								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.join_team">check_circle</md-icon>
+			          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.join_team">remove_circle</md-icon>
+							</div>
 						</div>
 		      </md-card-content>
-					<md-card-actions layout="row" layout-align="end center">
+					<!--<md-card-actions layout="row" layout-align="end center">
 		        <md-button ui-sref="">More Info</md-button>
-		      </md-card-actions>
+		      </md-card-actions>-->
 		    </md-card>
 			</div>
 		</div>
