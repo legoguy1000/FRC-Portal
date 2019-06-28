@@ -124,9 +124,19 @@
 		      <md-card-content>
 						<div layout="row">
 							<div layout="column">
-								<div>Join Team</div>
+								<div>STIMS/TIMS</div>
 								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.join_team">check_circle</md-icon>
 			          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.join_team">remove_circle</md-icon>
+							</div>
+							<div layout="column">
+								<div>Join Team</div>
+								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.stims">check_circle</md-icon>
+			          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.stims">remove_circle</md-icon>
+							</div>
+							<div layout="column">
+								<div>Dues</div>
+								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</md-icon>
+			          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</md-icon>
 							</div>
 						</div>
 		      </md-card-content>
