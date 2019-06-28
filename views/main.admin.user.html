@@ -110,7 +110,7 @@
 									{{season.game_name}}
 							</span>
 							<span class="md-subhead">
-									Total Hours: {{season.annual_requirements.total_hours}}
+									Total Hours: {{season.annual_requirements.total_hours | round:1}}
 							</span>
 		        </md-card-title-text>
 						<md-card-title-media>
@@ -140,15 +140,15 @@
 						<div layout="row" layout-align="space-around center" style="margin-top: 10px;">
 							<div layout="column" layout-align="center center">
 								<div>Build Season</div>
-								{{season.annual_requirements.build_season_hours}}
+								{{season.annual_requirements.build_season_hours | round:1}}
 							</div>
 							<div layout="column" layout-align="center center">
 								<div>Comp Season</div>
-								{{season.annual_requirements.competition_season_hours}}
+								{{season.annual_requirements.competition_season_hours | round:1}}
 							</div>
 							<div layout="column" layout-align="center center">
 								<div>Off Season</div>
-								{{season.annual_requirements.off_season_hours}}
+								{{season.annual_requirements.off_season_hours | round:1}}
 							</div>
 						</div>
 		      </md-card-content>
