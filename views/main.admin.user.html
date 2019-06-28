@@ -102,7 +102,7 @@
 				</md-button>
 			</div>
 			<div layout="row" layout-align="center stretch" layout-wrap style="width:100%;">
-				<md-card ng-repeat="season in vm.seasonInfo" flex-gt-md="30">
+				<md-card ng-repeat="season in vm.seasonInfo | orderBy: vm.query.order" flex-gt-md="30">
 		      <md-card-title>
 		        <md-card-title-text>
 		          <span class="md-headline">{{event.name}}</span>
@@ -117,7 +117,7 @@
 		        </md-card-title-text>
 						<md-card-title-media>
 							<div class="md-media-sm card-media">
-								<img ng-src="{{event.season.game_logo}}" class="md-card-image" alt="Washed Out">
+								<img ng-src="{{season.game_logo}}" class="md-card-image" alt="Washed Out">
 							</div>
 						</md-card-title-media>
 		      </md-card-title>
