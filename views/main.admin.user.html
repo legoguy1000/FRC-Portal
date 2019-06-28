@@ -122,14 +122,14 @@
 						</md-card-title-media>
 		      </md-card-title>
 		      <md-card-content>
-						<div layout="row">
+						<div layout="row" layout-align="space-around center">
 							<div layout="column">
-								<div>STIMS/TIMS</div>
+								<div>Join Team</div>
 								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.join_team">check_circle</md-icon>
 			          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.join_team">remove_circle</md-icon>
 							</div>
 							<div layout="column">
-								<div>Join Team</div>
+								<div>STIMS/TIMS</div>
 								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.stims">check_circle</md-icon>
 			          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.stims">remove_circle</md-icon>
 							</div>
@@ -137,6 +137,20 @@
 								<div>Dues</div>
 								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</md-icon>
 			          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</md-icon>
+							</div>
+						</div>
+						<div layout="row" layout-align="space-around center">
+							<div layout="column">
+								<div>Build Season</div>
+								{{season.annual_requirements.build_season_hours}}
+							</div>
+							<div layout="column">
+								<div>Comp Season</div>
+								{{season.annual_requirements.competition_season_hours}}
+							</div>
+							<div layout="column">
+								<div>Off Season</div>
+								{{season.annual_requirements.off_season_hours}}
 							</div>
 						</div>
 		      </md-card-content>
