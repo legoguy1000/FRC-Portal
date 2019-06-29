@@ -41,7 +41,7 @@ angular.module('FrcPortal') //https://codepen.io/rpdasilva/pen/DpbFf
 		restrict: 'E',
 		transclude: true,
 		scope: { seasons:'@' },
-		templateUrl: 'seasonCards.html',
+		templateUrl: 'js/directives/seasonCards/seasonCards.html',
     controller: function($scope) {
       $scope.limit = 3;
     },
