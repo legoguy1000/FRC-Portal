@@ -102,70 +102,7 @@
 		<md-tabs md-border-bottom md-autoselect md-swipe-content md-dynamic-height style="margin-bottom: 10px;" flex md-selected="vm.selectedTab">
 			<md-tab label="Season Info">
 				<md-content  flex layout="column">
-					<md-toolbar class="md-table-toolbar md-default">
-						<div class="md-toolbar-tools">
-							<span>Seasons</span>
-							<div flex></div>
-						</div>
-					</md-toolbar>
-					<md-table-container>
-						<table md-table md-progress="vm.promise">
-							<thead md-head md-order="vm.query.order">
-								<tr md-row>
-									<th md-column md-order-by="year"><span>Season</span></th>
-									<th md-column md-order-by="annual_requirements.join_team"><span>Join Team</span></th>
-									<th md-column md-order-by="annual_requirements.stims"><span>STIMS/TIMS</span></th>
-									<th md-column md-order-by="annual_requirements.dues"><span>Pay Dues</span></th>
-									<th md-column md-order-by="annual_requirements.build_season_hours" style="text-align: left;"><span>Build Season Hours</span></th>
-									<th md-column md-order-by="annual_requirements.competition_season_hours" style="text-align: left;"><span>Competetition Season Hours</span></th>
-									<th md-column md-order-by="annual_requirements.off_season_hours" style="text-align: left;"><span>Off Season Hours</span></th>
-									<th md-column md-order-by="annual_requirements.event_hours" style="text-align: left;"><span>Event Hours</span></th>
-									<th md-column md-order-by="annual_requirements.total_hours" style="text-align: left;"><span>Total Hours</span></th>
-								</tr>
-							</thead>
-							<tbody md-body>
-								<tr md-row ng-repeat="season in vm.seasonInfo | filter: vm.querySeasons.filter | orderBy: vm.querySeasons.order | limitTo: vm.querySeasons.limit : (vm.querySeasons.page -1) * vm.querySeasons.limit as filtered">
-									<td md-cell>
-										<md-list-item style="padding: 0px;">
-											<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
-											{{season.year}} - {{season.game_name}}
-										</md-list-item>
-									</td>
-									<td md-cell>
-										<i class="material-icons" style="color:green;" ng-show="season.annual_requirements.join_team">check_circle</i>
-										<i class="material-icons" style="color:red;" ng-hide="season.annual_requirements.join_team">remove_circle</i>
-									</td>
-									<td md-cell>
-										<i class="material-icons" style="color:green;" ng-show="season.annual_requirements.stims">check_circle</i>
-										<i class="material-icons" style="color:red;" ng-hide="season.annual_requirements.stims">remove_circle</i>
-									</td>
-									<td md-cell>
-										<span ng-show="vm.user.student">
-											<i class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</i>
-											<i class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</i>
-										</span>
-										<md-icon class="material-icons" ng-show="vm.user.adult">remove_circle_outline</md-icon>
-									</td>
-									<td md-cell>
-										{{season.annual_requirements.build_season_hours}}
-									</td>
-									<td md-cell>
-										{{season.annual_requirements.competition_season_hours}}
-									</td>
-									<td md-cell>
-										{{season.annual_requirements.off_season_hours}}
-									</td>
-									<td md-cell>
-										{{season.annual_requirements.event_hours}}
-									</td>
-									<td md-cell>
-										<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.annual_requirements.total_hours}}</md-button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</md-table-container>
-					<md-table-pagination md-limit="vm.querySeasons.limit" md-limit-options="vm.limitOptions" md-page="vm.querySeasons.page" md-total="{{(vm.seasonInfo | filter: vm.querySeasons.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
+
 				</md-content>
 				<md-content  flex layout="column">
 					<md-toolbar class="md-table-toolbar md-default">

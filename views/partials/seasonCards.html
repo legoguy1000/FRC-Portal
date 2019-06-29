@@ -1,0 +1,66 @@
+<div layout="row" layout-align="center stretch" style="width:100%;">
+  <div layout="column" layout-align="center center">
+    <md-button class="md-icon-button" aria-label="back" ng-click="vm.query.limit=vm.query.limit-1" ng-disabled="vm.query.limit==3">
+      <i class="material-icons">arrow_back</i>
+    </md-button>
+  </div>
+  <md-card ng-repeat="season in vm.seasonInfo | orderBy: vm.query.order | limitTo: vm.query.limit : vm.query.limit-3" flex-gt-md="30">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-headline">{{season.year}}</span>
+        <span class="md-subhead">
+            {{season.game_name}}
+        </span>
+        <span class="md-subhead">
+            Total Hours: {{season.annual_requirements.total_hours | number:1}}
+        </span>
+      </md-card-title-text>
+      <md-card-title-media>
+        <div class="md-media-sm card-media">
+          <img ng-src="{{season.game_logo}}" class="md-card-image" alt="{{season.game_name}} Logo">
+        </div>
+      </md-card-title-media>
+    </md-card-title>
+    <md-card-content>
+      <div layout="row" layout-align="space-around center">
+        <div layout="column">
+          <div>Join Team</div>
+          <md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.join_team">check_circle</md-icon>
+          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.join_team">remove_circle</md-icon>
+        </div>
+        <div layout="column">
+          <div>STIMS/TIMS</div>
+          <md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.stims">check_circle</md-icon>
+          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.stims">remove_circle</md-icon>
+        </div>
+        <div layout="column">
+          <div>Dues</div>
+          <md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</md-icon>
+          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</md-icon>
+        </div>
+      </div>
+      <div layout="row" layout-align="space-around center" style="margin-top: 10px;">
+        <div layout="column" layout-align="center center">
+          <div>Build Season</div>
+          {{season.annual_requirements.build_season_hours | number:1}}
+        </div>
+        <div layout="column" layout-align="center center">
+          <div>Comp Season</div>
+          {{season.annual_requirements.competition_season_hours | number:1}}
+        </div>
+        <div layout="column" layout-align="center center">
+          <div>Off Season</div>
+          {{season.annual_requirements.off_season_hours | number:1}}
+        </div>
+      </div>
+    </md-card-content>
+    <!--<md-card-actions layout="row" layout-align="end center">
+      <md-button ui-sref="">More Info</md-button>
+    </md-card-actions>-->
+  </md-card>
+  <div layout="column" layout-align="center center">
+    <md-button class="md-icon-button" aria-label="back" ng-click="vm.query.limit=vm.query.limit+1" ng-disabled="vm.query.limit==vm.seasonInfo.length">
+      <i class="material-icons">arrow_forward</i>
+    </md-button>
+  </div>
+</div>
