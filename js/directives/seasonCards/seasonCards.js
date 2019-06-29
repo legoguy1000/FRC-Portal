@@ -3,7 +3,7 @@ angular.module('FrcPortal')
 	return {
 		restrict: 'E',
 		transclude: true,
-		scope: { seasons:'=' },
+		scope: { seasons:'=', user:'=' },
 		templateUrl: 'js/directives/seasonCards/seasonCards.html',
     controller: function($scope) {
       $scope.limit = 3;
