@@ -101,7 +101,7 @@
 	<md-content flex="grow" class="md-margin" layout="column">
 		<md-tabs md-border-bottom md-autoselect md-swipe-content md-dynamic-height style="margin-bottom: 10px;" flex md-selected="vm.selectedTab">
 			<md-tab label="Season Info">
-				<div ng-include="'views/partials/seasonCards.html'"></div>
+				<season-cards seasons="vm.seasonInfo" user="vm.user"></season-cards>
 				<md-content  flex layout="column">
 					<md-toolbar class="md-table-toolbar md-default">
 						<div class="md-toolbar-tools">
