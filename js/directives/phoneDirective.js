@@ -35,6 +35,18 @@ angular.module('FrcPortal') //https://codepen.io/rpdasilva/pen/DpbFf
         }
 
     };
+})
+.directive('seasonCards', function() {
+	return {
+		restrict: 'E',
+		transclude: true,
+		scope: { seasons:'@' },
+		templateUrl: 'seasonCards.html',
+    controller: function($scope) {
+      $scope.limit = 3;
+    },
+    link: function ($scope, element, attrs) { } //DOM manipulation
+	};
 });
 /*
 .filter('tel', function () {
