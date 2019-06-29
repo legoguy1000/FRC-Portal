@@ -35,8 +35,9 @@
         </div>
         <div layout="column">
           <div>Dues</div>
-          <md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</md-icon>
-          <md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</md-icon>
+          <md-icon class="material-icons" style="color:green;" ng-show="vm.user.student && season.annual_requirements.dues">check_circle</md-icon>
+          <md-icon class="material-icons" style="color:red;" ng-hide="vm.user.student && season.annual_requirements.dues">remove_circle</md-icon>
+          <md-icon class="material-icons" ng-show="vm.user.adult">remove_circle_outline</md-icon>
         </div>
       </div>
       <div layout="row" layout-align="space-around center" style="margin-top: 10px;">
