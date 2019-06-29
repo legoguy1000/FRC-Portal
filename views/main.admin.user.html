@@ -102,7 +102,7 @@
 				</md-button>
 			</div>
 			<div layout="row" layout-align="center stretch" layout-wrap style="width:100%;">
-				<md-card ng-repeat="season in vm.seasonInfo | orderBy: vm.query.order | limitTo: 3" flex-gt-md="30">
+				<md-card ng-repeat="season in vm.seasonInfo | orderBy: vm.query.order | limitTo: 3 : (vm.query.page -1) * vm.query.limit" flex-gt-md="30">
 		      <md-card-title>
 		        <md-card-title-text>
 		          <span class="md-headline">{{season.year}}</span>
@@ -157,6 +157,8 @@
 		      </md-card-actions>-->
 		    </md-card>
 			</div>
+			<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.seasonInfo.length}}" md-page-select md-boundary-links></md-table-pagination>
+
 		</div>
 	<!--	<div>
 			<pre>{{vm.seasonInfo | orderBy: '-year' | json}}
