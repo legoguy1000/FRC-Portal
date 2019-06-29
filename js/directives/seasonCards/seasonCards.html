@@ -4,7 +4,7 @@
       <i class="material-icons">arrow_back</i>
     </md-button>
   </div>
-  <md-card ng-repeat="season in dir.seasons | orderBy: '-year' | limitTo: dir.limit : dir.limit-3" flex-gt-md="30">
+  <md-card ng-repeat="season in seasons | orderBy: '-year' | limitTo: dir.limit : dir.limit-3" flex-gt-md="30">
     <md-card-title>
       <md-card-title-text>
         <span class="md-headline">{{season.year}}</span>
