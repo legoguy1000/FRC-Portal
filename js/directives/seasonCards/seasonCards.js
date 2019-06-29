@@ -1,6 +1,7 @@
 angular.module('FrcPortal')
 .directive('seasonCards', function() {
 	return {
+		require: 'ngModel',
 		restrict: 'E',
 		transclude: true,
 		scope: { seasons:'=' },
