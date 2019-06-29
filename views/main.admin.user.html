@@ -101,7 +101,7 @@
 					<md-icon>refresh</md-icon>
 				</md-button>
 			</div>
-			<div layout="row" layout-align="center stretch" layout-wrap style="width:100%;">
+			<div layout="row" layout-align="center stretch" layout-wrap style="width:100%;" md-table>
 				<md-card ng-repeat="season in vm.seasonInfo | orderBy: vm.query.order | limitTo: 3 : (vm.query.page -1) * vm.query.limit" flex-gt-md="30">
 		      <md-card-title>
 		        <md-card-title-text>
