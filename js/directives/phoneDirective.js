@@ -43,8 +43,10 @@ angular.module('FrcPortal') //https://codepen.io/rpdasilva/pen/DpbFf
 		scope: { seasons:'@' },
 		templateUrl: 'js/directives/seasonCards/seasonCards.html',
     controller: function($scope) {
-      $scope.limit = 3;
+      var dir = this;
+      dir.limit = 3;
     },
+    controllerAs: 'dir',
     link: function ($scope, element, attrs) { } //DOM manipulation
 	};
 });
