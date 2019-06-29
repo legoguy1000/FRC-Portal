@@ -7,7 +7,7 @@ angular.module('FrcPortal')
 		templateUrl: 'seasonCards.html',
     controller: function($scope) {
       $scope.limit = 3;
-    }
+    },
     link: function ($scope, element, attrs) { } //DOM manipulation
 	};
 });
