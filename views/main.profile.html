@@ -1,4 +1,4 @@
-<div flex layout-gt-sm="row" layout-gt-md="row" layout="column">
+<div flex layout-gt-md="row" layout="column">
 	<md-content flex flex-gt-sm="50" flex-gt-md="20" layout="column" class="md-margin">
 		<h1 class="md-headline" layout="row" layout-align="center center">
 			<md-button class="md-icon-button profile" ng-click="alert('asdf')">
@@ -29,7 +29,7 @@
 				<md-tooltip md-direction="top">Change Password</md-tooltip>
 				Change Password
 			</md-button>
-			<div layout="row">
+			<div layout-gt-md="row" layout="column">
 				<md-input-container flex>
 					<label>Phone</label>
 					<input ng-model="vm.user.phone" phone-input type='text' required/>
@@ -39,24 +39,24 @@
 					<input ng-model="vm.user.slack_id" type='text' readonly disabled/>
 				</md-input-container>
 			</div>
-			<div layout="row">
-			<md-input-container flex>
-				<label>User Type</label>
-				<md-select ng-model="vm.user.user_type" required>
-					<md-option ng-value="'Student'">Student</md-option>
-					<md-option ng-value="'Mentor'">Mentor</md-option>
-					<md-option ng-value="'Alumni'">Alumni</md-option>
-					<md-option ng-value="'Parent'">Parent</md-option>
-				</md-select>
-			</md-input-container>
-			<md-input-container flex>
-				<label>Gender</label>
-				<md-select ng-model="vm.user.gender" required>
-					<md-option value=""><em>Not Set</em></md-option>
-					<md-option value="Male">Male</md-option>
-					<md-option value="Female">Female</md-option>
-				</md-select>
-			</md-input-container>
+			<div layout-gt-md="row" layout="column">
+				<md-input-container flex>
+					<label>User Type</label>
+					<md-select ng-model="vm.user.user_type" required>
+						<md-option ng-value="'Student'">Student</md-option>
+						<md-option ng-value="'Mentor'">Mentor</md-option>
+						<md-option ng-value="'Alumni'">Alumni</md-option>
+						<md-option ng-value="'Parent'">Parent</md-option>
+					</md-select>
+				</md-input-container>
+				<md-input-container flex>
+					<label>Gender</label>
+					<md-select ng-model="vm.user.gender" required>
+						<md-option value=""><em>Not Set</em></md-option>
+						<md-option value="Male">Male</md-option>
+						<md-option value="Female">Female</md-option>
+					</md-select>
+				</md-input-container>
 			</div>
 			<div layout="row" ng-show="vm.user.user_type=='Student'">
 				<md-autocomplete flex ng-required="vm.user.user_type=='Student'"  ng-disabled="vm.user.user_type!='Student'"
