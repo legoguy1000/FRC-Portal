@@ -1,6 +1,6 @@
 <div layout="row" layout-align="space-between stretch" style="width:100%;">
   <div layout="column" layout-align="center center">
-    <md-button class="md-icon-button" aria-label="back" ng-click="limit=limit-1" ng-disabled="limit==max">
+    <md-button class="md-icon-button" aria-label="back" ng-click="increase()" ng-disabled="limit==max">
       <i class="material-icons">keyboard_arrow_left</i>
     </md-button>
   </div>
@@ -62,7 +62,7 @@
     </md-card-actions>-->
   </md-card>
   <div layout="column" layout-align="center center">
-    <md-button class="md-icon-button" aria-label="back" ng-click="limit=limit+1" ng-disabled="limit==seasons.length">
+    <md-button class="md-icon-button" aria-label="back" ng-click="decrease()" ng-disabled="limit==seasons.length">
       <i class="material-icons">keyboard_arrow_right</i>
     </md-button>
   </div>
