@@ -101,7 +101,8 @@
 	<md-content flex="grow" class="md-margin" layout="column">
 		<md-tabs md-border-bottom md-autoselect md-swipe-content md-dynamic-height style="margin-bottom: 10px;" flex md-selected="vm.selectedTab">
 			<md-tab label="Season Info">
-				<season-cards seasons="vm.seasonInfo" user="vm.user"></season-cards>
+				<season-cards seasons="vm.seasonInfo" user="vm.user" max="3" show-xl></season-cards>
+				<season-cards seasons="vm.seasonInfo" user="vm.user" max="2" show-lg></season-cards>
 				<md-content  flex layout="column">
 					<md-toolbar class="md-table-toolbar md-default">
 						<div class="md-toolbar-tools">
