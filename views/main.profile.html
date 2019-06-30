@@ -1,5 +1,5 @@
 <div flex layout-gt-md="row" layout="column">
-	<md-content flex flex-gt-sm="50" flex-gt-md="20" layout="column" class="md-margin">
+	<md-content flex flex-gt-sm="50" flex-gt-md="25" layout="column" class="md-margin">
 		<h1 class="md-headline" layout="row" layout-align="center center">
 			<md-button class="md-icon-button profile" ng-click="alert('asdf')">
 				<img class="" ng-src="{{vm.user.profile_image  || 'images/blank_user.png'}}">
@@ -62,7 +62,7 @@
 					</md-select>
 				</md-input-container>
 			</div>
-			<div layout="row" ng-show="vm.user.user_type=='Student'">
+			<div layout="column" layout-sm="row" layout-md="row" layout-gt-lg="row" ng-show="vm.user.user_type=='Student'">
 				<md-autocomplete flex ng-required="vm.user.user_type=='Student'"  ng-disabled="vm.user.user_type!='Student'"
 					md-input-name="autocompleteField"
 					md-no-cache="false"
