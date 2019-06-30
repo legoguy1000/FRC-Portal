@@ -101,7 +101,9 @@
 					<md-icon>refresh</md-icon>
 				</md-button>
 			</div>
-			<season-cards seasons="vm.seasonInfo" user="vm.user" max="3"></season-cards>
+			<season-cards seasons="vm.seasonInfo" user="vm.user" max="3" hide show-xl></season-cards>
+			<season-cards seasons="vm.seasonInfo" user="vm.user" max="2" hide show-lg show-md></season-cards>
+			<season-cards seasons="vm.seasonInfo" user="vm.user" max="1" hide-gt-sm></season-cards>
 		</div>
 	<!--	<div>
 			<pre>{{vm.seasonInfo | orderBy: '-year' | json}}
