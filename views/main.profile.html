@@ -77,14 +77,8 @@
 				</md-autocomplete>
 				<md-input-container flex-gt-sm="33" flex-gt-md="33" flex-gt-lg="33">
 					<label>Graduation Year</label>
-					<input moment-picker="vm.user.grad_year" ng-required="vm.user.user_type=='Student'" ng-disabled="vm.user.user_type!='Student'"
-						 format="YYYY"
-						 ng-model="vm.grad_year_full">
-					</input>
+					<input ng-model="vm.user.grad_year" type="number" clear-input ng-required="vm.user.user_type=='Student'" ng-disabled="vm.user.user_type!='Student'"/>
 				</md-input-container>
-				<!--<md-input-container flex-gt-sm="33" flex-gt-md="33" flex-gt-lg="33">
-					<input ng-model="vm.user.grad_year" type="number" ng-required="vm.user.user_type=='Student'" ng-disabled="vm.user.user_type!='Student'"/>
-				</md-input-container>-->
 			</div>
 <!--			<div layout="column">
 				<md-list class="md-dense">
