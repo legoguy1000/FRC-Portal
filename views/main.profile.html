@@ -33,7 +33,7 @@
 				<md-tooltip md-direction="top">Change Password</md-tooltip>
 				Change Password
 			</md-button>
-			<div layout="row" layout-gt-md="column">
+			<div layout="row" layout-gt-md="column" layout-gt-lg="row">
 				<md-input-container flex>
 					<label>Phone</label>
 					<input ng-model="vm.user.phone" phone-input type='text' required/>
@@ -43,7 +43,7 @@
 					<input ng-model="vm.user.slack_id" type='text' readonly disabled/>
 				</md-input-container>
 			</div>
-			<div layout="row" layout-gt-md="column">
+			<div layout="row" layout-gt-md="column" layout-gt-lg="row">
 				<md-input-container flex>
 					<label>User Type</label>
 					<md-select ng-model="vm.user.user_type" required>
