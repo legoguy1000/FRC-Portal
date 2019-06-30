@@ -9,7 +9,7 @@
 		</h1>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 		<form class="md-margin" flex layout="column" ng-submit="vm.updateUser()">
-			<div layout-gt-md="row" layout="column">
+			<div layout="row" layout-gt-md="column">
 				<md-input-container flex>
 					<label>First Name</label>
 					<input ng-model="vm.user.fname" required>
@@ -19,7 +19,7 @@
 					<input ng-model="vm.user.lname" required>
 				</md-input-container>
 			</div>
-			<div layout-gt-md="row" layout="column">
+			<div layout="row" layout-gt-md="column">
 				<md-input-container flex>
 					<label>Alt Email</label>
 					<input ng-model="vm.user.email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]+$" required>
@@ -33,7 +33,7 @@
 				<md-tooltip md-direction="top">Change Password</md-tooltip>
 				Change Password
 			</md-button>
-			<div layout-gt-md="row" layout="column">
+			<div layout="row" layout-gt-md="column">
 				<md-input-container flex>
 					<label>Phone</label>
 					<input ng-model="vm.user.phone" phone-input type='text' required/>
@@ -43,7 +43,7 @@
 					<input ng-model="vm.user.slack_id" type='text' readonly disabled/>
 				</md-input-container>
 			</div>
-			<div layout-gt-md="row" layout="column">
+			<div layout="row" layout-gt-md="column">
 				<md-input-container flex>
 					<label>User Type</label>
 					<md-select ng-model="vm.user.user_type" required>
