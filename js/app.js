@@ -21,7 +21,7 @@ angular.module('FrcPortal', [
 	'vAccordion',
 	'shContextMenu',
 	'ngFileUpload',
-	'dcbClearInput',
+	//'dcbClearInput',
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider, $locationProvider) {
 
 	$locationProvider.html5Mode({ enabled: true, requireBase: true });
