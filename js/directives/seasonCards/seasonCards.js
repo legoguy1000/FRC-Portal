@@ -11,12 +11,12 @@ angular.module('FrcPortal')
 			$scope.increase = function() {
 				$scope.limit = $scope.limit+1;
 				console.log('limit: '+$scope.limit);
-				console.log('upper: '+($scope.limit-$scope.max));
+				console.log('begin: '+($scope.limit-$scope.max));
 			}
 			$scope.decrease = function() {
 				$scope.limit = $scope.limit-1;
 				console.log('limit: '+$scope.limit);
-				console.log('upper: '+($scope.limit-$scope.max));
+				console.log('begin: '+($scope.limit-$scope.max));
 			}
     },
     link: function ($scope, element, attrs) { } //DOM manipulation
