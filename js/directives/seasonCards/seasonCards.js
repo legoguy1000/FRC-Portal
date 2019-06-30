@@ -6,7 +6,7 @@ angular.module('FrcPortal')
 		scope: { seasons:'=', user:'=', max:'=' },
 		templateUrl: 'js/directives/seasonCards/seasonCards.html',
     controller: function($scope) {
-      $scope.limit = $scope.max;
+      $scope.limit = 0;
 
 			$scope.increase = function() {
 				$scope.limit = $scope.limit+1;

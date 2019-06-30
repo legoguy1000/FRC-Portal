@@ -1,10 +1,10 @@
 <div layout="row" layout-align="space-between stretch" style="width:100%;">
   <div layout="column" layout-align="center center">
-    <md-button class="md-icon-button" aria-label="back" ng-click="decrease()" ng-disabled="limit==max">
+    <md-button class="md-icon-button" aria-label="back" ng-click="decrease()" ng-disabled="limit==0">
       <i class="material-icons">keyboard_arrow_left</i>
     </md-button>
   </div>
-  <md-card ng-repeat="season in seasons | orderBy: '-year' | limitTo: limit : limit-max" flex-gt-md="50" flex-gt-lg="30">
+  <md-card ng-repeat="season in seasons | orderBy: '-year' | limitTo: max : limit" flex-lg="50" flex-gt-lg="30">
     <md-card-title>
       <md-card-title-text>
         <span class="md-headline">{{season.year}}</span>
@@ -62,7 +62,7 @@
     </md-card-actions>-->
   </md-card>
   <div layout="column" layout-align="center center">
-    <md-button class="md-icon-button" aria-label="back" ng-click="increase()" ng-disabled="limit==seasons.length">
+    <md-button class="md-icon-button" aria-label="back" ng-click="increase()" ng-disabled="limit+max==seasons.length">
       <i class="material-icons">keyboard_arrow_right</i>
     </md-button>
   </div>
