@@ -115,13 +115,14 @@
 							<div flex></div>
 						</div>
 					</md-toolbar>
-					<md-table-container>
+					<event-cards events="vm.eventInfo" user="vm.user" max="3" hide show-xl></event-cards>
+					<!--<md-table-container>
 						<table md-table>
 							<thead md-head md-order="vm.queryEvents.order">
 								<tr md-row>
 									<th md-column md-order-by="name"><span>Event</span></th>
 									<th md-column md-order-by="event_start"><span>Date</span></th>
-									<!--<th md-column md-order-by="num_days"><span># Days</span></th>-->
+									<!--<th md-column md-order-by="num_days"><span># Days</span></th>--
 									<th md-column md-order-by="type"><span>Event Type</span></th>
 									<th md-column md-order-by="event_requirements.registration"><span>Registration</span></th>
 									<th md-column md-order-by="event_requirements.payment"><span>Payment</span></th>
@@ -144,7 +145,7 @@
 											{{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
 										</span>
 									</td>
-									<!--<td md-cell>{{event.num_days}}</td>-->
+									<!--<td md-cell>{{event.num_days}}</td>--
 									<td md-cell>{{event.type}}</td>
 									<td md-cell>
 										<i class="material-icons" style="color:green;" ng-show="event.event_requirements.registration">check_circle</i>
@@ -186,7 +187,7 @@
 							</tbody>
 						</table>
 					</md-table-container>
-					<md-table-pagination md-limit="vm.queryEvents.limit" md-limit-options="vm.limitOptions" md-page="vm.queryEvents.page" md-total="{{(vm.eventInfo | filter: vm.queryEvents.filter).length}}" md-page-select md-boundary-links></md-table-pagination>
+					<md-table-pagination md-limit="vm.queryEvents.limit" md-limit-options="vm.limitOptions" md-page="vm.queryEvents.page" md-total="{{(vm.eventInfo | filter: vm.queryEvents.filter).length}}" md-page-select md-boundary-links></md-table-pagination>-->
 				</md-content>
 			</md-tab>
 			<md-tab label="Linked Accounts">
