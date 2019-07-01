@@ -30,19 +30,19 @@
         </div>
         <div ng-show="event.permission_slip_required">
           <md-tooltip md-direction="top">Permission Slip</md-tooltip>
-          <md-icon class="material-icons">assignment</md-icon>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.permission_slip, 'incomplete':!event.event_requirements.permission_slip}">assignment</md-icon>
         </div>
         <div ng-show="event.food_required">
           <md-tooltip md-direction="top">Food Order</md-tooltip>
-          <md-icon class="material-icons">local_dining</md-icon>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.food, 'incomplete':!event.event_requirements.food}">local_dining</md-icon>
         </div>
         <div ng-show="event.drivers_required">
           <md-tooltip md-direction="top">Car</md-tooltip>
-          <md-icon class="material-icons">directions_car</md-icon>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.car_bool, 'incomplete':!event.event_requirements.car_bool}">directions_car</md-icon>
         </div>
         <div ng-show="event.room_required">
           <md-tooltip md-direction="top">Hotel Room</md-tooltip>
-          <md-icon class="material-icons">hotel</md-icon>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.room_bool, 'incomplete':!event.event_requirements.room_bool}">hotel</md-icon>
         </div>
       </div>
     </md-card-content>
