@@ -48,9 +48,9 @@
         </div>
       </div>
     </md-card-content>
-    <!--<md-card-actions layout="row" layout-align="end center">
-      <md-button ui-sref="">More Info</md-button>
-    </md-card-actions>-->
+    <md-card-actions layout="row" layout-align="end center">
+      <md-button ui-sref="main.event({'event_id':event.event_id})">More Info</md-button>
+    </md-card-actions>
   </md-card>
   <div layout="column" layout-align="center center">
     <md-button class="md-icon-button" aria-label="back" ng-click="increase()" ng-disabled="limit+max==seasons.length">
