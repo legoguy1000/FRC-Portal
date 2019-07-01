@@ -43,10 +43,12 @@
 			<i class="material-icons">menu</i>
 			</md-button> -->
 			<md-button class="md-icon-button" ng-click="main.signInModal()">
+				<md-tooltip md-direction="bottom">Scan barcode for hours</md-tooltip>
 				<md-icon>photo_camera</md-icon>
 			</md-button>
-			<img class="img-circle" ng-src="{{main.userInfo.profile_image || 'images/blank_user.png'}}" ui-sref="main.profile"/> <!--ng-click="main.toggleRightSidebar()"-->
+			<img class="img-circle" style="cursor:pointer;" ng-src="{{main.userInfo.profile_image || 'images/blank_user.png'}}" ui-sref="main.profile"/> <!--ng-click="main.toggleRightSidebar()"-->
 			<md-button class="md-icon-button"  ng-click="main.logout()">
+				<md-tooltip md-direction="bottom">Log Out</md-tooltip>
 				<md-icon>exit_to_app</md-icon>
 			</md-button>
 		</section>
