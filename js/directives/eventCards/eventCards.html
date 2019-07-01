@@ -22,11 +22,11 @@
       <div layout="row" layout-align="space-around center">
         <div>
           <md-tooltip md-direction="top">Event Registration</md-tooltip>
-          <md-icon class="material-icons">how_to_reg</md-icon>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.registration, 'incomplete':!event.event_requirements.registration}">how_to_reg</md-icon>
         </div>
         <div ng-show="event.payment_required">
           <md-tooltip md-direction="top">Payment</md-tooltip>
-          <md-icon class="material-icons">attach_money</md-icon>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.payment, 'incomplete':!event.event_requirements.payment}">attach_money</md-icon>
         </div>
         <div ng-show="event.permission_slip_required">
           <md-tooltip md-direction="top">Permission Slip</md-tooltip>

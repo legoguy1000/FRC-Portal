@@ -406,3 +406,10 @@ md-list-item.min-height-reset .md-list-item-inner::before {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     background-color: #F5F5F5;
 }
+
+.check-status.complete {
+  color:green;
+}
+.check-status.incomplete {
+  color:red;
+}
