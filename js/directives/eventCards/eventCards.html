@@ -1,6 +1,6 @@
 <div layout="row" layout-align="space-between stretch" style="width:100%;">
   <div layout="column" layout-align="center center">
-    <md-button class="md-icon-button" flex aria-label="back" ng-click="decrease()" ng-disabled="limit==0">
+    <md-button style="height:100%; min-width: 0;" aria-label="back" ng-click="decrease()" ng-disabled="limit==0">
       <i class="material-icons">keyboard_arrow_left</i>
     </md-button>
   </div>
@@ -53,7 +53,7 @@
     </md-card-actions>
   </md-card>
   <div layout="column" layout-align="center center">
-    <md-button class="md-icon-button" flex aria-label="back" ng-click="increase()" ng-disabled="limit+max==events.length">
+    <md-button style="height:100%; min-width: 0;" aria-label="back" ng-click="increase()" ng-disabled="limit+max==events.length">
       <i class="material-icons">keyboard_arrow_right</i>
     </md-button>
   </div>
