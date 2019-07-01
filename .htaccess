@@ -1,8 +1,6 @@
 AddHandler fcgid-script .php
 FCGIWrapper "/dh/cgi-system/php72.cgi" .php
 
-Protocols h2 http/1.1
-
 RewriteEngine on
 RewriteCond %{HTTPS} !=on
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
