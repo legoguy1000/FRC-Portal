@@ -4,7 +4,7 @@
       <i class="material-icons">keyboard_arrow_left</i>
     </md-button>
   </div>
-  <md-card ng-repeat="event in events | orderBy: '-year' | limitTo: max : limit" flex flex-gt-sm="50" flex-gt-lg="30">
+  <md-card ng-repeat="event in events | orderBy: '-event_start' | limitTo: max : limit" flex flex-gt-sm="50" flex-gt-lg="30">
     <md-card-title>
       <md-card-title-text>
         <span class="md-headline">{{event.name}}</span>
