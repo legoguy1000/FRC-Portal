@@ -7,7 +7,7 @@
   <md-card ng-repeat="event in events | orderBy: '-event_start' | limitTo: max : limit" flex flex-gt-sm="50" flex-gt-lg="30">
     <md-card-title>
       <md-card-title-text>
-        <span class="md-headline">{{event.name}}</span>
+        <md-truncate class="md-headline">{{event.name}}</md-truncate>
         <span class="md-subhead" ng-show="event.date.single_day">
             {{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
         </span>
@@ -23,27 +23,27 @@
     <md-card-content>
       <div layout="row" layout-align="space-around center">
         <div>
-          <md-tooltip md-direction="top">Event Registration</md-tooltip>
+          <md-tooltip md-direction="bottom">Event Registration</md-tooltip>
           <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.registration, 'incomplete':!event.event_requirements.registration}">how_to_reg</md-icon>
         </div>
         <div ng-show="event.payment_required">
-          <md-tooltip md-direction="top">Payment</md-tooltip>
+          <md-tooltip md-direction="bottom">Payment</md-tooltip>
           <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.payment && (user.other_adult || user.student), 'incomplete':!event.event_requirements.payment && (user.other_adult || user.student)}">attach_money</md-icon>
         </div>
         <div ng-show="event.permission_slip_required">
-          <md-tooltip md-direction="top">Permission Slip</md-tooltip>
+          <md-tooltip md-direction="bottom">Permission Slip</md-tooltip>
           <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.permission_slip && user.student, 'incomplete':!event.event_requirements.permission_slip && user.student}">assignment</md-icon>
         </div>
         <div ng-show="event.food_required">
-          <md-tooltip md-direction="top">Food Order</md-tooltip>
+          <md-tooltip md-direction="bottom">Food Order</md-tooltip>
           <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.food, 'incomplete':!event.event_requirements.food}">local_dining</md-icon>
         </div>
         <div ng-show="event.drivers_required">
-          <md-tooltip md-direction="top">Car</md-tooltip>
+          <md-tooltip md-direction="bottom">Car</md-tooltip>
           <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.car_bool, 'incomplete':!event.event_requirements.car_bool}">directions_car</md-icon>
         </div>
         <div ng-show="event.room_required">
-          <md-tooltip md-direction="top">Hotel Room</md-tooltip>
+          <md-tooltip md-direction="bottom">Hotel Room</md-tooltip>
           <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.room_bool, 'incomplete':!event.event_requirements.room_bool}">hotel</md-icon>
         </div>
       </div>
