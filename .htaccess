@@ -1,6 +1,6 @@
-AddHandler fcgid-script .php
-FCGIWrapper "/dh/cgi-system/php72.cgi" .php
-FcgidBusyTimeout 600
+#AddHandler fcgid-script .php
+#FCGIWrapper "/dh/cgi-system/php72.cgi" .php
+
 
 RewriteEngine on
 RewriteCond %{HTTPS} !=on
