@@ -18,7 +18,7 @@ class AnnualRequirement extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'user_id', 'season_id', 'join_team', 'stims','dues', 'user_type'
+    'user_id', 'season_id', 'join_team', 'stims','dues'
   ];
 
 
