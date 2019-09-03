@@ -18,11 +18,11 @@ class AnnualRequirement extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'user_id', 'season_id', 'join_team', 'stims','dues'
+    'user_id', 'season_id', 'join_team', 'stims','dues', 'user_type'
   ];
 
 
-  protected $appends = ['off_season_hours','build_season_hours','weekly_build_season_hours','competition_season_hours','event_hours','total_hours','min_hours','reqs_complete', 'user_type'];
+  protected $appends = ['off_season_hours','build_season_hours','weekly_build_season_hours','competition_season_hours','event_hours','total_hours','min_hours','reqs_complete'];
 
   protected $attributes = [
     'join_team' => false,
