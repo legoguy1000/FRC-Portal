@@ -1,5 +1,5 @@
 <?php
-	function syncGoogleCalendarEvent($event_id) {
+function syncGoogleCalendarEvent($event_id) {
 	$calendar = getSettingsProp('google_calendar_id');
 	$api_key = getSettingsProp('google_api_key');
 	$event = FrcPortal\Event::with('poc')->find($event_id); //, 'event_rooms.users', 'event_cars', 'event_time_slots.registrations.user'
