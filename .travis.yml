@@ -6,7 +6,7 @@ php:
 services:
   - mysql
 install:
-  - ./build_script.sh
+  - cp ./api/app/secured/config.example.ini ./api/app/secured/config.ini
   - composer install -d ./api/app/
   - composer dump-autoload -d ./api/app/
   - php ./app/api/atabase/_CreateDatabase.php
