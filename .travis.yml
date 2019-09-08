@@ -2,7 +2,8 @@ language: php
 php:
   - '7.0'
   - nightly
-before_script:
-  - php api/app/initalInstall.php
+services:
+  - mysql
 install:
-  - composer install
+  - composer install -d ./api/app/
+  - composer dump-autoload -d ./api/app/
