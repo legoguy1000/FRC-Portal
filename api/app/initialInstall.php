@@ -33,7 +33,7 @@ if (!file_exists('favicons')) {
   mkdir('../favicons');
 }
 require_once(__DIR__.'/includes.php');
-require_once('database/_CreateDatabase.php');
+require_once(__DIR__.'/database/_CreateDatabase.php');
 //create Admin Account
 $email = 'admin@local.local';
 $password = bin2hex(openssl_random_pseudo_bytes(4));

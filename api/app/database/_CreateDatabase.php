@@ -21,7 +21,7 @@ require_once('EventFood.php');
 require_once('EventFoodUser.php');
 require_once('Logs.php');
 
-require_once('database/_CreateForeignKeys.php');
+require_once(__DIR__.'/_CreateForeignKeys.php');
 
 //require_once('UserCategory.php');
 //require_once('UserUserCategory.php');
