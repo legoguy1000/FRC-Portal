@@ -6,7 +6,8 @@ php:
 services:
   - mysql
 install:
-  - cp ./api/app/secured/config.example.ini ./api/app/secured/config.ini
   - composer install -d ./api/app/
   - composer dump-autoload -d ./api/app/
+before_script:
+  - cp ./api/app/secured/config.example.ini ./api/app/secured/config.ini
   - php ./app/api/database/_CreateDatabase.php
