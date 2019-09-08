@@ -5,6 +5,8 @@ php:
 #  - nightly
 services:
   - mysql
+before_install:
+- mysql -u root --password="" < "CREATE DATABASE IF NOT EXISTS `FRC-Portal` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
 install:
   - composer install -d ./api/app/
   - composer dump-autoload -d ./api/app/
