@@ -27,9 +27,6 @@ $question =  "Please input the MYSQL DB name: ";
 $db_data['db_name'] = clinput($question, $required = true);
 
 $iniData['db'] = $db_data;
-if (!file_exists('secured')) {
-  mkdir('secured');
-}
 write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
 
 if (!file_exists('favicons')) {

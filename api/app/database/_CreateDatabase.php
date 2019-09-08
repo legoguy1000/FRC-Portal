@@ -1,4 +1,5 @@
 <?php
+require_once(__DIR__.'/../includes.php');
 
 require_once('Setting.php');
 require_once('Season.php');

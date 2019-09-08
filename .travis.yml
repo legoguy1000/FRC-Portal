@@ -2,9 +2,11 @@ language: php
 php:
   - '7.3'
   - '7.4'
-  - nightly
+#  - nightly
 services:
   - mysql
 install:
+  - ./build_script.sh
   - composer install -d ./api/app/
   - composer dump-autoload -d ./api/app/
+  - php ./app/api/atabase/_CreateDatabase.php
