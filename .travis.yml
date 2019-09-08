@@ -6,7 +6,7 @@ php:
 services:
   - mysql
 before_install:
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS FRC-Portal;'
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS `FRC-Portal`;'
 install:
   - composer install -d ./api/app/
   - composer dump-autoload -d ./api/app/
