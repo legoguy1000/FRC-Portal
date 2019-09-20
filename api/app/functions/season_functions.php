@@ -213,20 +213,23 @@ function itterateMembershipFormData($data = array(), $season = null) {
 			//Add User info into the Annual Requirements Table
 			if(!is_null($season_id) && !is_null($user)) {
 				$user_id = $user->user_id;
-				$season_join = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
-				if($season_join) {
-					$msgData = array(
-							'slack' => array(
-							'title' => 'Annual Registration Complete',
-							'body' => 'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$season->year.' FRC season.'
-						),
-							'email' => array(
-							'subject' => 'Annual Registration Complete',
-							'content' =>  'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$season->year.' FRC season.',
-							'userData' => $user
-						)
-					);
-					$user->sendUserNotification($type = 'join_team', $msgData);
+				$season_reg = $user->annual_requirements()->where('season_id' => $season_id)-first();
+				if(is_null($season_reg) || !$season_reg->join_team) {
+					$season_join = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
+					if($season_join) {
+						$msgData = array(
+								'slack' => array(
+								'title' => 'Annual Registration Complete',
+								'body' => 'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$season->year.' FRC season.'
+							),
+								'email' => array(
+								'subject' => 'Annual Registration Complete',
+								'content' =>  'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$season->year.' FRC season.',
+								'userData' => $user
+							)
+						);
+						$user->sendUserNotification($type = 'join_team', $msgData);
+					}
 				}
 			}
 		}
