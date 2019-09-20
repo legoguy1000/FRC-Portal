@@ -188,7 +188,7 @@ if($version >= '2.13.7') {
 **/
 if($version >= '2.14.2') {
   if(Capsule::schema()->hasTable('seasons')) {
-    if(!Capsule::schema()->hasColumn('seasons','bag_day')) {
+    if(Capsule::schema()->hasColumn('seasons','bag_day')) {
       try {
         Capsule::schema()->table('seasons', function ($table) {
           $table->string('bag_day')->nullable()->default(null)->change();
