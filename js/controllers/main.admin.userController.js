@@ -16,7 +16,7 @@ function mainAdminUserController($rootScope, $state, $timeout, $q, $scope, schoo
 
 	vm.query = {
 		filter: '',
-		limit: 1,
+		limit: 3,
 		order: '-year',
 		page: 1
 	};

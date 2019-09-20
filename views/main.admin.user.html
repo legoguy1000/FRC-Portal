@@ -1,5 +1,5 @@
-<div flex layout-gt-sm="row" layout="column">
-	<md-content flex flex-gt-sm="50" flex-gt-md="33" layout="column" class="md-margin">
+<div flex layout-gt-md="row" layout="column">
+	<md-content flex flex-gt-sm="50" flex-gt-md="25" layout="column" class="md-margin">
 		<h1 class="md-headline" layout="row" layout-align="start center">
 			<md-button class="md-icon-button" ui-sref="main.admin.users" ng-click="admin.clickBack()">
 				<md-tooltip md-direction="top">Go Back to User List</md-tooltip>
@@ -13,23 +13,31 @@
 		</h1>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingUser"></md-progress-linear>
 		<form class="md-margin" flex layout="column" ng-submit="vm.updateUser()">
-			<md-input-container>
-				<label>First Name</label>
-				<input ng-model="vm.userInfo.fname" required>
-			</md-input-container>
-			<md-input-container>
-				<label>Last Name</label>
-				<input ng-model="vm.userInfo.lname" required>
-			</md-input-container>
-			<md-input-container>
-				<label>Alt Email</label>
-				<input ng-model="vm.userInfo.email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]+$" required>
-			</md-input-container>
-			<md-input-container>
-				<label>Team Email <span ng-if="main.configItems.team_domain != ''">(@{{main.configItems.team_domain}})</span></label>
-				<input ng-model="vm.userInfo.team_email" type="email" ng-pattern="main.configItems.team_domain != '' ? '[a-z0-9._%+-]+@{{main.configItems.team_domain}}' : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$'">
-			</md-input-container>
-			<div layout="row">
+			<div layout="row" layout-gt-md="column">
+				<md-input-container flex>
+					<label>First Name</label>
+					<input ng-model="vm.userInfo.fname" required>
+				</md-input-container>
+				<md-input-container flex>
+					<label>Last Name</label>
+					<input ng-model="vm.userInfo.lname" required>
+				</md-input-container>
+			</div>
+			<div layout="row" layout-gt-md="column">
+				<md-input-container flex>
+					<label>Alt Email</label>
+					<input ng-model="vm.userInfo.email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]+$" required>
+				</md-input-container>
+				<md-input-container flex>
+					<label>Team Email <span ng-if="main.configItems.team_domain != ''">(@{{main.configItems.team_domain}})</span></label>
+					<input ng-model="vm.userInfo.team_email" type="email" ng-pattern="main.configItems.team_domain != '' ? '[a-z0-9._%+-]+@{{main.configItems.team_domain}}' : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$'">
+				</md-input-container>
+			</div>
+			<md-button class="md-raised" ng-click="" ng-show="">
+				<md-tooltip md-direction="top">Change Password</md-tooltip>
+				Change Password
+			</md-button>
+			<div layout="row" layout-gt-md="column" layout-gt-lg="row">
 				<md-input-container flex>
 					<label>Phone</label>
 					<input ng-model="vm.userInfo.phone" phone-input type='text' required/>
@@ -39,26 +47,26 @@
 					<input ng-model="vm.userInfo.slack_id" type='text' readonly disabled/>
 				</md-input-container>
 			</div>
-			<div layout="row">
-			<md-input-container flex>
-				<label>User Type</label>
-				<md-select ng-model="vm.userInfo.user_type" required>
-					<md-option ng-value="'Student'">Student</md-option>
-					<md-option ng-value="'Mentor'">Mentor</md-option>
-					<md-option ng-value="'Alumni'">Alumni</md-option>
-					<md-option ng-value="'Parent'">Parent</md-option>
-				</md-select>
-			</md-input-container>
-			<md-input-container flex>
-				<label>Gender</label>
-				<md-select ng-model="vm.userInfo.gender" required>
-					<md-option value=""><em>Not Set</em></md-option>
-					<md-option value="Male">Male</md-option>
-					<md-option value="Female">Female</md-option>
-				</md-select>
-			</md-input-container>
+			<div layout="row" layout-gt-md="column" layout-gt-lg="row">
+				<md-input-container flex>
+					<label>User Type</label>
+					<md-select ng-model="vm.userInfo.user_type" required>
+						<md-option ng-value="'Student'">Student</md-option>
+						<md-option ng-value="'Mentor'">Mentor</md-option>
+						<md-option ng-value="'Alumni'">Alumni</md-option>
+						<md-option ng-value="'Parent'">Parent</md-option>
+					</md-select>
+				</md-input-container>
+				<md-input-container flex>
+					<label>Gender</label>
+					<md-select ng-model="vm.userInfo.gender" required>
+						<md-option value=""><em>Not Set</em></md-option>
+						<md-option value="Male">Male</md-option>
+						<md-option value="Female">Female</md-option>
+					</md-select>
+				</md-input-container>
 			</div>
-			<div layout="row" ng-show="vm.userInfo.user_type=='Student'">
+			<div layout="column" layout-sm="row" layout-md="row" layout-gt-lg="row" ng-show="vm.userInfo.user_type=='Student'">
 				<md-autocomplete flex ng-required="vm.userInfo.user_type=='Student'"  ng-disabled="vm.userInfo.user_type!='Student'"
 					md-input-name="autocompleteField"
 					md-no-cache="false"
@@ -71,9 +79,9 @@
 						<span md-highlight-text="vm.searchText">{{item.school_name}}</span>
 					</md-item-template>
 				</md-autocomplete>
-				<md-input-container flex="33">
+				<md-input-container flex-gt-sm="33" flex-gt-md="33" flex-gt-lg="33">
 					<label>Graduation Year</label>
-					<input ng-model="vm.userInfo.grad_year" ng-required="vm.userInfo.user_type=='Student'" ng-disabled="vm.userInfo.user_type!='Student'"/>
+					<input ng-model="vm.userInfo.grad_year" type="number" ng-required="vm.userInfo.user_type=='Student'" ng-disabled="vm.userInfo.user_type!='Student'"/>
 				</md-input-container>
 			</div>
 			<div layout="row" flex  layout-align="start center">
@@ -101,60 +109,9 @@
 					<md-icon>refresh</md-icon>
 				</md-button>
 			</div>
-			<md-table-container>
-				<table md-table md-progress="vm.loadingReqs">
-					<thead md-head md-order="vm.query.order">
-						<tr md-row>
-							<th md-column md-order-by="year"><span>Season</span></th>
-							<th md-column md-order-by="annual_requirements.join_team"><span>Join Team</span></th>
-							<th md-column md-order-by="annual_requirements.stims"><span>STIMS/TIMS</span></th>
-							<th md-column md-order-by="annual_requirements.dues"><span>Pay Dues</span></th>
-							<th md-column md-order-by="annual_requirements.build_season_hours"><span>Build Season Hours</span></th>
-							<th md-column md-order-by="annual_requirements.competition_season_hours"><span>Competition Season Hours</span></th>
-							<th md-column md-order-by="annual_requirements.off_season_hours"><span>Off Season Hours</span></th>
-							<th md-column md-order-by="annual_requirements.total_hours"><span>Total Annual Hours</span></th>
-						</tr>
-					</thead>
-					<tbody md-body>
-						<tr md-row ng-repeat="season in vm.seasonInfo | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
-							<td md-cell>
-								<md-list-item style="padding: 0px;">
-									<img ng-src="{{season.game_logo}}" class="md-avatar" alt="" ng-if="season.game_logo"/>
-									{{season.year}} - {{season.game_name}}
-								</md-list-item>
-							</td>
-							<td md-cell>
-								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.join_team">check_circle</md-icon>
-								<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.join_team">remove_circle</md-icon>
-							</td>
-							<td md-cell>
-								<md-icon class="material-icons" style="color:green;" ng-show="season.annual_requirements.stims">check_circle</md-icon>
-								<md-icon class="material-icons" style="color:red;" ng-hide="season.annual_requirements.stims">remove_circle</md-icon>
-							</td>
-							<td md-cell>
-								<span ng-show="vm.userInfo.student">
-									<i class="material-icons" style="color:green;" ng-show="season.annual_requirements.dues">check_circle</i>
-									<i class="material-icons" style="color:red;" ng-hide="season.annual_requirements.dues">remove_circle</i>
-								</span>
-								<md-icon class="material-icons" ng-show="vm.userInfo.adult">remove_circle_outline</md-icon>
-							</td>
-							<td md-cell>
-								{{season.annual_requirements.build_season_hours}}
-							</td>
-							<td md-cell>
-								{{season.annual_requirements.competition_season_hours}}
-							</td>
-							<td md-cell>
-								{{season.annual_requirements.off_season_hours}}
-							</td>
-							<td md-cell>
-								<md-button ng-click="vm.showSeasonHoursGraph($event,season.year)"><md-tooltip>Click to see graph Hours/Day</md-tooltip>{{season.annual_requirements.total_hours}}</md-button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</md-table-container>
-			<md-table-pagination md-limit="vm.query.limit" md-limit-options="vm.limitOptions" md-page="vm.query.page" md-total="{{vm.seasonInfo.length}}" md-page-select md-boundary-links></md-table-pagination>
+			<season-cards seasons="vm.seasonInfo" user="vm.userInfo" max="3" hide show-xl></season-cards>
+			<season-cards seasons="vm.seasonInfo" user="vm.userInfo" max="2" hide show-lg show-md></season-cards>
+			<season-cards seasons="vm.seasonInfo" user="vm.userInfo" max="1" hide-gt-sm></season-cards>
 		</div>
 	<!--	<div>
 			<pre>{{vm.seasonInfo | orderBy: '-year' | json}}

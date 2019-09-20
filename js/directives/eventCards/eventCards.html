@@ -1,0 +1,60 @@
+<div layout="row" layout-align="space-between stretch" style="width:100%;">
+  <div layout="column" layout-align="center center">
+    <md-button style="height:100%; min-width: 0;" aria-label="back" ng-click="decrease()" ng-disabled="limit==0">
+      <i class="material-icons">keyboard_arrow_left</i>
+    </md-button>
+  </div>
+  <md-card ng-repeat="event in events | orderBy: '-event_start' | limitTo: max : limit" flex flex-gt-sm="50" flex-gt-lg="30">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-headline" style="font-size: 20px;">{{event.name}}</span>
+        <span class="md-subhead" ng-show="event.date.single_day">
+            {{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
+        </span>
+        <span class="md-subhead" ng-hide="event.date.single_day">
+          {{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
+        </span>
+        <span class="md-subhead">
+          {{event.location}}
+        </span>
+      </md-card-title-text>
+      <md-card-title-media></md-card-title-media>
+    </md-card-title>
+    <md-card-content>
+      <div layout="row" layout-align="space-around center">
+        <div>
+          <md-tooltip md-direction="bottom">Event Registration</md-tooltip>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.registration, 'incomplete':!event.event_requirements.registration}">how_to_reg</md-icon>
+        </div>
+        <div ng-show="event.payment_required">
+          <md-tooltip md-direction="bottom">Payment</md-tooltip>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.payment && (user.other_adult || user.student), 'incomplete':!event.event_requirements.payment && (user.other_adult || user.student)}">attach_money</md-icon>
+        </div>
+        <div ng-show="event.permission_slip_required">
+          <md-tooltip md-direction="bottom">Permission Slip</md-tooltip>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.permission_slip && user.student, 'incomplete':!event.event_requirements.permission_slip && user.student}">assignment</md-icon>
+        </div>
+        <div ng-show="event.food_required">
+          <md-tooltip md-direction="bottom">Food Order</md-tooltip>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.food, 'incomplete':!event.event_requirements.food}">local_dining</md-icon>
+        </div>
+        <div ng-show="event.drivers_required">
+          <md-tooltip md-direction="bottom">Car</md-tooltip>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.car_bool, 'incomplete':!event.event_requirements.car_bool}">directions_car</md-icon>
+        </div>
+        <div ng-show="event.room_required">
+          <md-tooltip md-direction="bottom">Hotel Room</md-tooltip>
+          <md-icon class="material-icons check-status" ng-class="{'complete': event.event_requirements.room_bool, 'incomplete':!event.event_requirements.room_bool}">hotel</md-icon>
+        </div>
+      </div>
+    </md-card-content>
+    <md-card-actions layout="row" layout-align="end center">
+      <md-button ui-sref="main.event({'event_id':event.event_id})">More Info</md-button>
+    </md-card-actions>
+  </md-card>
+  <div layout="column" layout-align="center center">
+    <md-button style="height:100%; min-width: 0;" aria-label="back" ng-click="increase()" ng-disabled="limit+max==events.length">
+      <i class="material-icons">keyboard_arrow_right</i>
+    </md-button>
+  </div>
+</div>

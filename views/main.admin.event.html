@@ -226,7 +226,7 @@
 							<md-option value="False">False</md-option>
 						</md-select>
 					</md-input-container>
-					<md-input-container class="" flex>
+					<md-input-container class="" flex ng-show="vm.event.payment_required">
 						<label>Payment</label>
 						<md-icon class="material-icons">person</md-icon>
 						<md-select ng-model="vm.query.filter.event_requirements.payment">
@@ -235,7 +235,7 @@
 							<md-option value="False">False</md-option>
 						</md-select>
 					</md-input-container>
-					<md-input-container class="" flex>
+					<md-input-container class="" flex ng-show="vm.event.permission_slip_required">
 						<label>Permission Slip</label>
 						<md-icon class="material-icons">person</md-icon>
 						<md-select ng-model="vm.query.filter.event_requirements.permission_slip">
@@ -244,7 +244,7 @@
 							<md-option value="False">False</md-option>
 						</md-select>
 					</md-input-container>
-					<md-input-container class="" flex>
+					<md-input-container class="" flex ng-show="vm.event.food_required">
 						<label>Food Order</label>
 						<md-icon class="material-icons">person</md-icon>
 						<md-select ng-model="vm.query.filter.event_requirements.food">
@@ -253,7 +253,7 @@
 							<md-option value="False">False</md-option>
 						</md-select>
 					</md-input-container>
-					<md-input-container class="" flex>
+					<md-input-container class="" flex ng-show="vm.event.room_required">
 						<label>Room</label>
 						<md-icon class="material-icons">person</md-icon>
 						<md-select ng-model="vm.query.filter.event_requirements.room_bool">
@@ -262,7 +262,7 @@
 							<md-option value="False">False</md-option>
 						</md-select>
 					</md-input-container>
-					<md-input-container class="" flex>
+					<md-input-container class="" flex ng-show="vm.event.drivers_required">
 						<label>Car</label>
 						<md-icon class="material-icons">person</md-icon>
 						<md-select ng-model="vm.query.filter.event_requirements.car_bool">
@@ -271,7 +271,7 @@
 							<md-option value="False">False</md-option>
 						</md-select>
 					</md-input-container>
-					<md-input-container class="" flex>
+					<md-input-container class="" flex ng-show="vm.event.drivers_required">
 						<label>Driving</label>
 						<md-icon class="material-icons">person</md-icon>
 						<md-select ng-model="vm.query.filter.event_requirements.can_drive">

@@ -204,6 +204,7 @@ $app->group('/events', function () {
       $event->drivers_required = isset($formData['requirements']['drivers']) && $formData['requirements']['drivers'] ? true:false;
       $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
       $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
+      $event->poc = $userId;
       if($event->save()) {
         if($event->room_required && isset($formData['rooms'])) {
           $roomTypes = array('boys','girls','adults');
