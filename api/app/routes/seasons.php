@@ -102,7 +102,7 @@ $app->group('/seasons', function () {
         'phone' => 'phone'
       );
       $newSeason->membership_form_sheet = 'Form Responses 1';
-      $newSeason->game_logo = !isset($formData['game_logo']) && !is_null($formData['game_logo']) ? $formData['game_logo']:'';
+      $newSeason->game_logo = isset($formData['game_logo']) && !is_null($formData['game_logo']) ? $formData['game_logo']:'';
       if($newSeason->save()) {
         $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$newSeason);
         //Send notifications
