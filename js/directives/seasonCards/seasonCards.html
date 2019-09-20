@@ -47,7 +47,7 @@
           <div>Build Season</div>
           {{season.annual_requirements.build_season_hours | number:1}}
         </div>
-        <div layout="column" layout-align="center center">
+        <div layout="column" layout-align="center center" ng-show="season.year <= 2019">
           <div>Comp Season</div>
           {{season.annual_requirements.competition_season_hours | number:1}}
         </div>

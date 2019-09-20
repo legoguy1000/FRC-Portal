@@ -254,6 +254,9 @@ function updateComposer() {
 }
 
 function formatDateArrays($date_raw) {
+	if(is_null($date_raw)) {
+		return null;
+	}
 	$date = new DateTime($date_raw);
 	return array(
 		'year' => $date->format('Y'),

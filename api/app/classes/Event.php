@@ -183,4 +183,23 @@ class Event extends Eloquent {
       return $this->hasMany('FrcPortal\EventFood', 'event_id', 'event_id');
   }
 
+  public function getEventCarList() {
+  	$cars = array();
+  	$carInfo = array();
+    $event_id = $this->event_id;
+  	$carInfo = FrcPortal\EventCar::with(['driver','passengers'])->where('event_id',$event_id)->get();
+  	if(count($carInfo) > 0) {
+  		foreach($carInfo as $car) {
+  			$car_id = $car->car_id;
+  			$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('car_id','=',$car_id)->get();
+  			$cars[$car_id] = $users;
+  		}
+  	}
+  	//no user yet users
+  	$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('registration',true)->whereNull('car_id')->get();
+  	$cars['non_select'] = $users;
+  	return array('cars'=>$carInfo, 'total'=>count($carInfo), 'car_selection'=>$cars);
+
+  }
+
 }

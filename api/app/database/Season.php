@@ -9,7 +9,7 @@ Capsule::schema()->create('seasons', function ($table) {
        $table->string('game_name');
        $table->string('game_logo',500);
        $table->dateTime('start_date');
-       $table->dateTime('bag_day');
+       $table->dateTime('bag_day')->nullable()->default(null);
        $table->dateTime('end_date');
        $table->integer('hour_requirement');
        $table->integer('hour_requirement_week');

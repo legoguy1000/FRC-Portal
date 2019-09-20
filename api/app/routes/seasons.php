@@ -51,12 +51,12 @@ $app->group('/seasons', function () {
     if(!FrcPortal\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
-
     if(!isset($formData['year']) || $formData['year'] == '') {
       $responseArr = array('status'=>false, 'msg'=>'Year cannot be blank!');
       $response = $response->withJson($responseArr,400);
       return $response;
     }
+    $no_bagday = $formData['year'] > 2019 ? true:false;
     if(!isset($formData['game_name']) || $formData['game_name'] == '') {
       $responseArr = array('status'=>false, 'msg'=>'Name cannot be blank!');
       $response = $response->withJson($responseArr,400);
@@ -67,7 +67,7 @@ $app->group('/seasons', function () {
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    if(!isset($formData['bag_day']) || $formData['bag_day'] == '') {
+    if(!$no_bagday && (!isset($formData['bag_day']) || $formData['bag_day'] == '')) {
       $responseArr = array('status'=>false, 'msg'=>'Bag Date cannot be blank!');
       $response = $response->withJson($responseArr,400);
       return $response;
@@ -80,16 +80,15 @@ $app->group('/seasons', function () {
     $spreadsheetId = getSeasonMembershipForm($formData['year']);
     $spreadsheetId = $spreadsheetId['status'] != false ? $spreadsheetId['data']['join_spreadsheet']:'';
     $start_date = new DateTime($formData['start_date']);
-    $bag_day = new DateTime($formData['bag_day']);
     $end_date = new DateTime($formData['end_date']);
-
+    $bag_day = $no_bagday ? null:new DateTime($formData['bag_day']);
     $season = FrcPortal\Season::where('year', $formData['year'])->count();
     if($season == 0) {
       $newSeason = new FrcPortal\Season();
       $newSeason->year = $formData['year'];
       $newSeason->game_name = $formData['game_name'];
       $newSeason->start_date = $start_date->format('Y-m-d');
-      $newSeason->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
+      $newSeason->bag_day = $no_bagday ? null:$bag_day->format('Y-m-d'." 23:59:59");
       $newSeason->end_date = $end_date->format('Y-m-d'." 23:59:59");
       $newSeason->join_spreadsheet = $spreadsheetId;
       $newSeason->membership_form_map = array(
@@ -159,11 +158,12 @@ $app->group('/seasons', function () {
       //Season passed from middleware
       $season = $request->getAttribute('season');
       //$season = FrcPortal\Season::find($season_id);
+      $no_bagday = $season->year > 2019 ? true:false;
       if(!is_null($formData['start_date'])) {
         $start_date = new DateTime($formData['start_date']);
         $season->start_date = $start_date->format('Y-m-d');
       }
-      if(!is_null($formData['bag_day'])) {
+      if(!$no_bagday && !is_null($formData['bag_day'])) {
         $bag_day = new DateTime($formData['bag_day']);
         $season->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
       }
