@@ -448,41 +448,21 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   }); */
-  $this->post('/login', function ($request, $response) {
+  $this->post('/admin', function ($request, $response) {
     $responseData = false;
     $formData = $request->getParsedBody();
-    $provider = 'local';
-    if(checkLoginProvider($provider) == false) {
-      insertLogs($level = 'Warning', $message = 'Attempted login with local credentials.  Local login provider not enabled.');
-      return badRequestResponse($response, $msg = 'Local login is not enabled.  Please select a different option.');
-    }
+    $provider = 'local_admin';
 
-    if(!isset($formData['email']) || $formData['email'] == '') {
-      return badRequestResponse($response, $msg = 'Email is required');
+    if(!isset($formData['user']) || $formData['user'] == '') {
+      return badRequestResponse($response, $msg = 'Username is required');
     }
     if(!isset($formData['password']) || $formData['password'] == '') {
       return badRequestResponse($response, $msg = 'Password is required');
     }
-    $email = $formData['email'];
+    $username = $formData['user'];
     $password = $formData['password'];
-    $require_team_email = getSettingsProp('require_team_email');
-    if(checkTeamLogin($email)) {
-      $teamDomain = getSettingsProp('team_domain');
-      insertLogs($level = 'Warning', $message = $email.' attempted to login using local credentials. A '.$teamDomain.' email is required.');
-      return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
-    }
-
-    $user = null;
-    $user = FrcPortal\User::with(['school']) //,'user_categories'
-            ->where(function ($query) use ($email) {
-              $query->where('email', $email)
-                    ->orWhere('team_email', $email);
-            })
-            ->where('password', hash('sha512',$password))
-            ->whereNotNull('password')
-            ->where('status',true)
-            ->first();
-    if($user != null) {
+    if($username != getIniProp('admin_user') || hash('sha512',$password) != getIniProp('admin_pass')) {
+      $user = localAdminModel();
       $jwt = $user->generateUserJWT();
       $responseData = array('status'=>true, 'msg'=>'Login Successful', 'token'=>$jwt, 'userInfo' => $user);
       FrcPortal\Auth::setCurrentUser($user->user_id);

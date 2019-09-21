@@ -19,6 +19,8 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		'state_from': vm.state_from
 	};
 	vm.urlStateEncode = btoa(JSON.stringify(vm.urlState));
+	vm.showlocallogin = false;
+
 
 	vm.loginForm = {};
 	vm.login = function () {
@@ -102,33 +104,9 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	}
 	vm.oauth_urls.amazon = amazonData.authorizationEndpoint+'?scope='+amazonData.scope.join(amazonData.scopeDelimiter)+'&redirect_uri='+amazonData.redirectUri+'&response_type=code&client_id='+amazonData.clientId+'&state='+vm.urlStateEncode;
 
-
-
-
-/*
-	vm.authenticate = function(provider) {
-		vm.loading = true;
-		$auth.authenticate(provider).then(function(response) {
-		//	toastr[response.data.type](response.data.msg, 'Login');
-			//alert(response.data.msg)
-			$mdToast.show(
-				$mdToast.simple()
-					.textContent(response.data.msg)
-					.position('top right')
-					.hideDelay(3000)
-			);
-			vm.loading = false;
-			var authed = $auth.isAuthenticated();
-			if(authed) {
-				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);
-				var data = {
-					'auth': true,
-					'userInfo': response.data.userInfo,
-				}
-				$mdDialog.hide(data);
-			}
-		});
-  }; */
+	vm.showlocal = function() {
+		vm.showlocallogin = !vm.showlocallogin;
+	}
 
 	vm.cancel = function() {
 		$mdDialog.cancel();

@@ -23,7 +23,7 @@ Capsule::schema()->create('settings', function ($table) {
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'google_oauth_client_id'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'facebook_oauth_client_id'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'microsoft_oauth_client_id'], ['value' => '']);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'local_login_enable'], ['value' => '1']);
+ //$setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'local_login_enable'], ['value' => '1']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'google_login_enable'], ['value' => '0']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'facebook_login_enable'], ['value' => '0']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'microsoft_login_enable'], ['value' => '0']);

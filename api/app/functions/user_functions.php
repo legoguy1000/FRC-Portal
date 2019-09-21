@@ -107,4 +107,16 @@ function getUsersEventRequirements($event_id) {
 	}
 	return $event;
 }
+
+function localAdminModel() {
+	$user = new User();
+	$user->user_id = getIniProp('admin_user');
+	$user->email = '';
+	$user->fname = 'Local';
+	$user->lname = 'Admin';
+	$user->admin = true;
+	$user->status = true;
+
+	return $user;
+}
 ?>
