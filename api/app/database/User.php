@@ -13,7 +13,7 @@ Capsule::schema()->create('users', function ($table) {
   $table->string('user_type');
   $table->boolean('former_student')->default(0);
   $table->integer('grad_year')->nullable()->default(null);
-  $table->string('team_email');
+  $table->string('team_email')->nullable()->default(null);
   $table->char('phone',10)->nullable()->default(null);
   $table->string('gender');
   $table->string('profile_image',500);
