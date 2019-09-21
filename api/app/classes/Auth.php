@@ -34,12 +34,7 @@ class Auth {
   public static function setCurrentUser($user_id) {
     self::$currentuser = $user_id;
     if($user_id == getIniProp('admin_user')) {
-      $user = new User();
-      $user->email = '';
-      $user->fname = 'Local';
-      $user->lname = 'Admin';
-      $user->admin = true;
-
+      $user = localAdminModel();
       self::$isAuthenticated = true;
       self::$user = $user;
       return true;

@@ -461,7 +461,7 @@ $app->group('/auth', function () {
     }
     $username = $formData['user'];
     $password = $formData['password'];
-    if($username != getIniProp('admin_user') || hash('sha512',$password) != getIniProp('admin_pass')) {
+    if($username == getIniProp('admin_user') && hash('sha512',$password) == getIniProp('admin_pass')) {
       $user = localAdminModel();
       $jwt = $user->generateUserJWT();
       $responseData = array('status'=>true, 'msg'=>'Login Successful', 'token'=>$jwt, 'userInfo' => $user);
