@@ -44,7 +44,7 @@ $iniData['admin'] = $admin_data;
 write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
 
 if (!file_exists(__DIR__.'/../../favicons')) {
-  mkdir((__DIR__.'/../../favicons');
+  mkdir(__DIR__.'/../../favicons');
 }
 require_once(__DIR__.'/database/_CreateDatabase.php');
 
