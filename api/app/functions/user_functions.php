@@ -109,7 +109,7 @@ function getUsersEventRequirements($event_id) {
 }
 
 function localAdminModel() {
-	$user = new User();
+	$user = new FrcPortal\User();
 	$user->user_id = getIniProp('admin_user');
 	$user->email = '';
 	$user->fname = 'Local';
