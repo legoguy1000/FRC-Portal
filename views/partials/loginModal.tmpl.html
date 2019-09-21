@@ -31,8 +31,11 @@
         <i class="mdi mdi-amazon"></i>
         Log in with Amazon
       </md-button>
-      <div style="text-align: center; cursor: pointer;">
-          <a ng-click="vm.showlocal()">Local Login</a>
+      <div style="text-align: center; cursor: pointer; margin-top:10px;">
+          <a ng-click="vm.showlocal()">
+            <span ng-show="!vm.showlocallogin">Local Login</span>
+            <span ng-show="!vm.showlocallogin">Social Logins</span>
+          </a>
       </div>
       <div layout="column" ng-show="vm.showlocallogin && !vm.link_accounts">
         <form name="Form" ng-submit="vm.login()">
