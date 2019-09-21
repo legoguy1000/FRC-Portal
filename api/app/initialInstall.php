@@ -17,19 +17,19 @@ if(file_exists(__DIR__.'/secured/config.ini')) {
   $db_data = parse_ini_file(__DIR__.'/secured/config.ini');
 }
 
-if($db_data['db_host'] != '') {
+if($db_data['db_host'] == '') {
   $question = "Please input the MYSQL DB server (hostname or ip): ";
   $db_data['db_host'] = clinput($question, $required = true);
 }
-if($db_data['db_user'] != '') {
+if($db_data['db_user'] == '') {
   $question =  "Please input the MYSQL DB user: ";
   $db_data['db_user'] = clinput($question, $required = true);
 }
-if($db_data['db_pass'] != '') {
+if($db_data['db_pass'] == '') {
   $question =  "Please input the MYSQL DB password: ";
   $db_data['db_pass'] = clinput($question, $required = true);
 }
-if($db_data['db_name'] != '') {
+if($db_data['db_name'] == '') {
   $question =  "Please input the MYSQL DB name: ";
   $db_data['db_name'] = clinput($question, $required = true);
 }
