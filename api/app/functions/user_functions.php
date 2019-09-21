@@ -114,6 +114,7 @@ function localAdminModel() {
 	$user->email = '';
 	$user->fname = 'Local';
 	$user->lname = 'Admin';
+	$user->full_name = $user->fname.' '.$user->lname;
 	$user->admin = true;
 	$user->status = true;
 
