@@ -125,7 +125,9 @@ function insertLogs($level, $message) {
 	$log = new FrcPortal\Log();
 	if($authed) {
 		$userId = FrcPortal\Auth::user()->user_id;
-		$log->user_id = $userId;
+		if($userId != getIniProp('admin_user')) {
+			$log->user_id = $userId;
+		}
 	}
 	$route = FrcPortal\Auth::getRoute();
 	if(!is_null($route)) {
