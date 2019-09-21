@@ -178,7 +178,7 @@ $app->get('/config', function ($request, $response, $args) {
   return $response;
 })->setName('Config');
 $app->get('/manifest.json', function ($request, $response, $args) {
-  $this->logger->addInfo('Called manifest endpoint');
+  //$this->logger->addInfo('Called manifest endpoint');
   $configArr = array(
     'team_name',
     'team_number',
