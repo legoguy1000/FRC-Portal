@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('loginModalController', ['$rootScope','$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loginData','$state','$stateParams',
+.controller('loginModalController', ['$rootScope','$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loginData','$state','$stateParams', 'loginService',
 	loginModalController
 ]);
-function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $mdToast, loginData, $state, $stateParams) {
+function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $mdToast, loginData, $state, $stateParams, loginService) {
 	var vm = this;
 
 	vm.configItems = configItems;
@@ -25,7 +25,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	vm.loginForm = {};
 	vm.login = function () {
 		vm.loading = true;
-		$auth.login(vm.loginForm).then(function(response) {
+		loginService.localadmin(vm.loginForm).then(function(response) {
 			$mdToast.show(
 				$mdToast.simple()
 					.textContent(response.data.msg)
@@ -35,10 +35,10 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 			vm.loading = false;
 			var authed = $auth.isAuthenticated();
 			if(authed) {
-				$window.localStorage['userInfo'] = angular.toJson(response.data.userInfo);
+				$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
 				var data = {
 					'auth': true,
-					'userInfo': response.data.userInfo,
+					'userInfo': response.userInfo,
 				}
 				$rootScope.$broadcast('afterLoginAction');
 				$state.go(vm.state, vm.state_params);

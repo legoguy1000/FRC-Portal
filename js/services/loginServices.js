@@ -14,6 +14,12 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		localadmin: function (formData) {
+			return $http.post('api/auth/admin',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		google: function (formData) {
 			return $http.post('api/auth/google',formData)
 			.then(function(response) {
