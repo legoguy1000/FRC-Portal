@@ -215,12 +215,14 @@ if($version >= '2.14.2') {
   //create Admin Account
   if(file_exists(__DIR__.'/secured/config.ini')) {
     $iniData = parse_ini_file(__DIR__.'/secured/config.ini', true);
-    $admin_data = array();
-    $admin_data['admin_user'] = 'admin';
-    $password = bin2hex(openssl_random_pseudo_bytes(10));
-    $admin_data['admin_pass'] = hash('sha512',$password);
-    $iniData['admin'] = $admin_data;
-    write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
+    if(is_null($iniData['admin']['admin_user']) || $iniData['admin']['admin_user'] == '' || is_null($iniData['admin']['admin_pass']) || $iniData['admin']['admin_pass'] == '') {
+      $admin_data = array();
+      $admin_data['admin_user'] = 'admin';
+      $password = bin2hex(openssl_random_pseudo_bytes(10));
+      $admin_data['admin_pass'] = hash('sha512',$password);
+      $iniData['admin'] = $admin_data;
+      write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
+    }
   }
 
 }
