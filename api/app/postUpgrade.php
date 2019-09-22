@@ -203,7 +203,7 @@ if($version >= '2.14.2') {
   }
   //create Admin Account
   if(file_exists(__DIR__.'/secured/config.ini')) {
-    $db_data = parse_ini_file(__DIR__.'/secured/config.ini');
+    $iniData = parse_ini_file(__DIR__.'/secured/config.ini');
     $admin_data = array();
     $admin_data['admin_user'] = 'admin';
     $password = bin2hex(openssl_random_pseudo_bytes(10));
