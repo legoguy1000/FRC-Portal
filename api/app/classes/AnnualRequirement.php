@@ -94,12 +94,14 @@ class AnnualRequirement extends Eloquent {
     //WHERE meeting_hours.time_in>=seasons.start_date AND meeting_hours.time_in<=seasons.bag_day  AND exempt_hours.exempt_id IS NULL GROUP BY meeting_hours.user_id,seasons.year
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
+      $seasonInfo = Season::find($this->attributes['season_id']);
+      $no_bagday = $seasonInfo->no_bagday;
       $hours = DB::table('meeting_hours')
               //->leftJoin('exempt_hours', function ($join) {
               //    $join->on('meeting_hours.time_in', '>=', DB::raw('DATE_SUB(exempt_hours.time_start, INTERVAL 1 HOUR)'))->on('meeting_hours.time_out', '<=', DB::raw('DATE_ADD(exempt_hours.time_end, INTERVAL 1 HOUR)'));
             //  })
               ->leftJoin('seasons', function ($join) {
-                  $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))->on('meeting_hours.time_in', '>=', 'seasons.start_date')->on('meeting_hours.time_in', '<=', 'seasons.bag_day');
+                  $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))->on('meeting_hours.time_in', '>=', 'seasons.start_date')->on('meeting_hours.time_in', '<=', $no_bagday ? 'seasons.end_date':'seasons.bag_day');
               })
                 //->whereNull('exempt_hours.exempt_id')
                 ->whereRaw('seasons.season_id = "'.$this->attributes['season_id'].'"')
@@ -120,11 +122,13 @@ class AnnualRequirement extends Eloquent {
     );
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
+      $seasonInfo = Season::find($this->attributes['season_id']);
+      $no_bagday = $seasonInfo->no_bagday;
       $hours = DB::table('meeting_hours')
         ->leftJoin('seasons', function ($join) {
         $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))
           ->on('meeting_hours.time_in', '>=', 'seasons.start_date')
-          ->on('meeting_hours.time_in', '<=', 'seasons.bag_day');
+          ->on('meeting_hours.time_in', '<=', $no_bagday ? 'seasons.end_date':'seasons.bag_day');
         })
         ->where('meeting_hours.user_id',$this->attributes['user_id'])->where('seasons.season_id', '=', $this->attributes['season_id'])
         ->select(DB::raw('user_id, YEAR(meeting_hours.time_in) as year, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as week_hours, week(meeting_hours.time_in,1) as week'))
@@ -138,10 +142,9 @@ class AnnualRequirement extends Eloquent {
       })->havingRaw('subtable.week > WEEK(seasons.start_date,1) AND subtable.week < WEEK(seasons.bag_day,1)')->get(); */
     }
     if(!is_null($hours) && !empty($hours)) {
-      $seasonInfo = Season::find($this->attributes['season_id']);
       $hour_req = $seasonInfo->hour_requirement_week;
       $start = $seasonInfo->start_date;
-  		$end = $seasonInfo->bag_day;
+  		$end = $no_bagday ? $seasonInfo->end_date:$seasonInfo->bag_day;
   		$end_week = date('W',strtotime($end))-1;
   		if(time() < strtotime($end) && time() > strtotime($start)) {
   			$end_week = date('W');
@@ -182,7 +185,9 @@ class AnnualRequirement extends Eloquent {
     //WHERE meeting_hours.time_in>seasons.bag_day AND meeting_hours.time_in<=seasons.end_date
     //GROUP BY meeting_hours.user_id,seasons.year
     $hours = null;
-    if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
+    $seasonInfo = Season::find($this->attributes['season_id']);
+    $no_bagday = $seasonInfo->no_bagday;
+    if(!$no_bagday && isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
     $hours = DB::table('meeting_hours')
             ->leftJoin('seasons', function ($join) {
                 $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'))->on('meeting_hours.time_in', '>', 'seasons.bag_day')->on('meeting_hours.time_in', '<=', 'seasons.end_date');

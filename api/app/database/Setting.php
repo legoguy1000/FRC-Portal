@@ -39,6 +39,7 @@ Capsule::schema()->create('settings', function ($table) {
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'team_domain'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'team_color_primary'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'team_color_secondary'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'team', 'setting' => 'team_emails'], ['value' => false]);
 
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'slack_enable'], ['value' => '0']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'email_enable'], ['value' => '0']);
