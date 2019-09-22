@@ -28,7 +28,7 @@
 					<label>Email</label>
 					<input ng-model="vm.userInfo.email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]+$" required>
 				</md-input-container>
-				<md-input-container flex ng-show="main.configItems.team_emails">
+				<md-input-container flex ng-show="main.configItems.enable_team_emails">
 					<label>Team Email <span ng-if="main.configItems.team_domain != ''">(@{{main.configItems.team_domain}})</span></label>
 					<input ng-model="vm.userInfo.team_email" type="email" ng-pattern="main.configItems.team_domain != '' ? '[a-z0-9._%+-]+@{{main.configItems.team_domain}}' : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$'">
 				</md-input-container>
