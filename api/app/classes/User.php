@@ -19,7 +19,7 @@ class User extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'user_id', 'fname', 'lname', 'email', 'password', 'full_name', 'student_grade', 'grad_year', 'admin', 'user_type'
+    'user_id', 'fname', 'lname', 'email', 'full_name', 'student_grade', 'grad_year', 'admin', 'user_type'
   ];
 
   protected $appends = ['slack_enabled','room_type','adult','other_adult','student','mentor'];
@@ -28,7 +28,7 @@ class User extends Eloquent {
   *
   * @var array
   */
-  protected $hidden = ['signin_pin','password'];
+  protected $hidden = ['signin_pin'];
 
   /**
    * The attributes that should be cast to native types.

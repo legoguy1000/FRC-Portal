@@ -8,7 +8,6 @@ Capsule::schema()->create('users', function ($table) {
   $table->string('fname')->default('');
   $table->string('lname')->default('');
   $table->string('email')->default('')->unique();
-  $table->char('password',128)->nullable()->default(null);
   $table->char('school_id',13)->nullable()->default(null)->index();
   $table->string('user_type')->default('');
   $table->boolean('former_student')->default(0);

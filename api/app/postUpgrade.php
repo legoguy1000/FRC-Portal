@@ -198,6 +198,17 @@ if($version >= '2.14.2') {
       }
     }
   }
+  if(Capsule::schema()->hasTable('users')) {
+    if(Capsule::schema()->hasColumn('users','password')) {
+      try {
+        Capsule::schema()->table('users', function ($table) {
+          $table->dropColumn('password');
+        });
+      } catch (Exception $e) {
+        //Exception will be logged in Monolog
+      }
+    }
+  }
   if(Capsule::schema()->hasTable('settings')) {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'team_emails'], ['value' => false]);
   }
