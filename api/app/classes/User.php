@@ -208,6 +208,7 @@ class User extends Eloquent {
   			'status' => $this->status,
   			'user_type' => $this->user_type,
   			'email' => $this->email,
+        'localadmin' => $this->user_id == getIniProp('admin_user'),
   		)
   	);
   	$jwt = JWT::encode($token, $key);

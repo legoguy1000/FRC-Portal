@@ -117,7 +117,7 @@ function localAdminModel() {
 	$user->full_name = $user->fname.' '.$user->lname;
 	$user->admin = true;
 	$user->status = true;
-
+	$user->localadmin = true;
 	return $user;
 }
 ?>
