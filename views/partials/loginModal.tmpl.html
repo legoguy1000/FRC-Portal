@@ -34,7 +34,7 @@
       <div style="text-align: center; cursor: pointer; margin-top:10px;">
           <a ng-click="vm.showlocal()">
             <span ng-show="!vm.showlocallogin">Local Login</span>
-            <span ng-show="!vm.showlocallogin">Social Logins</span>
+            <span ng-show="vm.showlocallogin">Social Logins</span>
           </a>
       </div>
       <div layout="column" ng-show="vm.showlocallogin && !vm.link_accounts">
