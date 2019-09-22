@@ -198,6 +198,9 @@ if($version >= '2.14.2') {
       }
     }
   }
+  if(Capsule::schema()->hasTable('settings')) {
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'team_emails'], ['value' => false]);
+  }
 }
 
 
