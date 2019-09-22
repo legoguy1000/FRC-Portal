@@ -201,6 +201,17 @@ if($version >= '2.14.2') {
   if(Capsule::schema()->hasTable('settings')) {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'team_emails'], ['value' => false]);
   }
+  //create Admin Account
+  if(file_exists(__DIR__.'/secured/config.ini')) {
+    $db_data = parse_ini_file(__DIR__.'/secured/config.ini');
+    $admin_data = array();
+    $admin_data['admin_user'] = 'admin';
+    $password = bin2hex(openssl_random_pseudo_bytes(10));
+    $admin_data['admin_pass'] = hash('sha512',$password);
+    $iniData['admin'] = $admin_data;
+    write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
+  }
+
 }
 
 
