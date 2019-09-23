@@ -28,7 +28,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		loginService.localadmin(vm.loginForm).then(function(response) {
 			$mdToast.show(
 				$mdToast.simple()
-					.textContent(response.data.msg)
+					.textContent(response.msg)
 					.position('top right')
 					.hideDelay(3000)
 			);
