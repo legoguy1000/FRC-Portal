@@ -155,7 +155,7 @@ $app->group('/settings', function () {
       }
       $gsa_data = FrcPortal\Setting::where('section', 'service_account')->where('setting', 'google_service_account_data')->first();
       if(!is_null($gsa_data)) {
-        $gsa_arr = explode(',',$gsa_data);
+        $gsa_arr = explode(',',$gsa_data->value);
         $responseArr['data'] = array('client_email' => $gsa_arr[0]);
         $responseArr['status'] = true;
         $responseArr['msg'] = '';
