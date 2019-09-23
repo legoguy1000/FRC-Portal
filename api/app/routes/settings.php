@@ -188,7 +188,7 @@ $app->group('/settings', function () {
                                                            || !isset($validJson['data']['private_key']) || $validJson['data']['private_key'] == '') {
           return badRequestResponse($response, $msg = 'File is not a valid Google Serice Account Credential JSON file.');
         }
-        $file_data = json_encode($validJson['data']);
+        $json = json_encode($validJson['data']);
         $client_email = $validJson['data']['client_email'];
         $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
         $key = hex2bin(getIniProp('encryption_key'));
