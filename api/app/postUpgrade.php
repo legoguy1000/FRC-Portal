@@ -198,7 +198,7 @@ if($version >= '2.14.2') {
       $iniData['admin'] = $admin_data;
       write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
     }
-    if(is_null($iniData['encryption']['encryption_key'])) {
+    if(is_null($iniData['encryption']) || is_null($iniData['encryption']['encryption_key'])) {
       $enc_data = array();
       $enc_data['encryption_key'] = bin2hex(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES));
       $iniData['encryption'] = $enc_data;
