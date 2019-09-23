@@ -128,6 +128,9 @@ function handleGoogleAPIException($e, $google_service) {
 	$data = json_decode($e->getMessage(), true);
 	if(json_last_error() == JSON_ERROR_NONE) {
 		$msg = $google_service.' Error: '.$data['error']['message'];
+		if(substr($msg,-1) != '.') {
+			$msg = $msg.'.';
+		}
 		$msg = $msg.' Please check API key and/or Service Account Credentials.';
 		if(isset($data['error']['extendedHelp'])) {
 			$msg = $msg.' See '.$data['error']['extendedHelp'].' for more information.';
