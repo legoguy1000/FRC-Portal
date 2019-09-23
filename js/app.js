@@ -763,6 +763,7 @@ angular.module('FrcPortal', [
 			if(trans.$from().name == '') {
 				$state.go('main.home');
 			}
+		}
 	});
 	$transitions.onStart({to: 'main.timein'}, function(trans) {
 		var toState = trans.$to();
