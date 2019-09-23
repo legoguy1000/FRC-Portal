@@ -342,8 +342,9 @@ function notFoundResponse($response, $msg = 'Not Found') {
 	return $response->withJson($responseArr,404);
 }
 
-function exceptionResponse($response, $msg = 'Error', $code = 200) {
+function exceptionResponse($response, $msg = 'Error', $code = 200, $error = null) {
 	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
+	$responseArr['error'] = $error;
 	return $response->withJson($responseArr,$code);
 }
 

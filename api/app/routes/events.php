@@ -148,7 +148,7 @@ $app->group('/events', function () {
     } catch (Exception $e) {
       $error = handleGoogleAPIException($e, 'Google Calendar');
       insertLogs($level = 'Warning', $error);
-      return exceptionResponse($response, $msg = 'Something went wrong searching Google Calendar');
+      return exceptionResponse($response, $msg = 'Something went wrong searching Google Calendar', $error = $error);
     }
     $data = array(
     	'results'=>$allEvents,
