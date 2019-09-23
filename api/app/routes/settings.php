@@ -153,16 +153,15 @@ $app->group('/settings', function () {
       if(!FrcPortal\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
-
-      try {
-        $file = getServiceAccountFile();
-        $responseArr['data'] = array_intersect_key($file['contents'],array('client_email'=>''));
+      $gsa_data = FrcPortal\Setting::where('section', 'service_account')->where('setting', 'google_service_account_data')->first();
+      if(!is_null($gsa_data)) {
+        $gsa_arr = explode(',',$gsa_data);
+        $responseArr['data'] = array('client_email' => $gsa_arr[0]);
         $responseArr['status'] = true;
         $responseArr['msg'] = '';
-      } catch (Exception $e) {
-        $result['msg'] = handleExceptionMessage($e);
-        //$result['msg'] = 'Something went wrong';
-    	}
+      } else {
+        $responseArr['msg'] = 'No Google Service Account information';
+      }
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get Service Account Credentials');
