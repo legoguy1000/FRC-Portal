@@ -235,7 +235,7 @@ if($version >= '2.14.2') {
   	if(file_exists($file)) {
   		$json = file_get_contents($file);
       $file_data = json_decode($json);
-      $client_email = $file_data['client_email'];
+      $client_email = $file_data->client_email;
       $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
       $key = hex2bin(getIniProp('encryption_key'));
       $json_encypt = sodium_crypto_secretbox($json, $nonce, $key);
