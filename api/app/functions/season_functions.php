@@ -85,7 +85,7 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 		try {
 			$client = new Google_Client();
 			$creds = getServiceAccountData();
-			$client->setAuthConfigFile($creds['path']);
+			$client->setAuthConfig($creds);
 			$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
 			$service = new Google_Service_Sheets($client);
 			// The A1 notation of the values to retrieve.
