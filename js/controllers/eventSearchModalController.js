@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('eventSearchModalController', ['$log','$element','$mdDialog', '$scope', 'usersService', 'schoolsService', 'seasonsService','$mdToast', 'logsService',
+.controller('eventSearchModalController', ['$log','$element','$mdDialog', '$scope', 'usersService', 'schoolsService', 'seasonsService','$mdToast', 'otherService',
 	eventSearchModalController
 ]);
-function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,eventsService,seasonsService,$mdToast, logsService) {
+function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,eventsService,seasonsService,$mdToast, otherService) {
 	var vm = this;
 
 	vm.cancel = function() {
@@ -35,7 +35,7 @@ function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,
 					vm.googleEvents.data = response.data.results;
 					vm.googleEvents.total = response.data.count;
 			} else {
-				logsService.showErrorToast(response);
+				otherService.showErrorToast(response);
 			}
 		});
 	}

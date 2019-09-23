@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.seasonController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log','$stateParams','$mdToast','$mdMenu',
+.controller('main.admin.seasonController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log','$stateParams','$mdToast','$mdMenu', 'otherService',
 	mainAdminSeasonController
 ]);
-function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log,$stateParams,$mdToast,$mdMenu) {
+function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log,$stateParams,$mdToast,$mdMenu, otherService) {
     var vm = this;
 
 	vm.loading = false;
@@ -129,14 +129,16 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		seasonsService.updateSeasonMembershipForm(vm.season.season_id).then(function(response){
 			if(response.status) {
 				vm.season.join_spreadsheet = response.data.join_spreadsheet;
+				$mdToast.show(
+		      $mdToast.simple()
+		        .textContent(response.msg)
+		        .position('top right')
+		        .hideDelay(3000)
+		    );
+			} else {
+				otherService.showErrorToast(response);
 			}
 			vm.loading = false;
-			$mdToast.show(
-	      $mdToast.simple()
-	        .textContent(response.msg)
-	        .position('top right')
-	        .hideDelay(3000)
-	    );
 		});
 	};
 
@@ -145,14 +147,17 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		seasonsService.pollMembershipForm(vm.season.season_id).then(function(response){
 			if(response.status) {
 				vm.users = response.data;
+				$mdToast.show(
+					$mdToast.simple()
+						.textContent(response.msg)
+						.position('top right')
+						.hideDelay(3000)
+				);
+			} else {
+				otherService.showErrorToast(response);
 			}
 			vm.loading = false;
-			$mdToast.show(
-				$mdToast.simple()
-					.textContent(response.msg)
-					.position('top right')
-					.hideDelay(3000)
-			);
+
 		});
 	};
 
