@@ -6,7 +6,7 @@ angular.module('FrcPortal')
 				.textContent(responseData.msg)
 				.position('top right')
 				.hideDelay(3000);
-			if($auth.getPayload().data.admin) {
+			if($auth.getPayload().data.admin && responseData.error != undefined && responseData.error != '') {
 				toast.action('Show Error');
 				$mdToast.show(toast).then(function(resp) {
 					if (resp === 'ok') {
