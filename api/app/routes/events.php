@@ -146,7 +146,8 @@ $app->group('/events', function () {
         }
       }
     } catch (Exception $e) {
-      insertLogs($level = 'Critical', $message = 'Something went wrong searching Google Calendar. '.$e->getMessage());
+      $error = handleGoogleAPIException($e, 'Google Calendar');
+      insertLogs($level = 'Warning', $error);
       return exceptionResponse($response, $msg = 'Something went wrong searching Google Calendar');
     }
     $data = array(

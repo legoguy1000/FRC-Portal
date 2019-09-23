@@ -38,7 +38,8 @@ function getSeasonMembershipForm($year) {
 				$result['msg'] = 'No membership form found for '.$year;
 			}
 		} catch (Exception $e) {
-				$error = handleExceptionMessage($e);
+				$error = handleGoogleAPIException($e, 'Google Drive');
+				insertLogs('Warning', $error);
 				$result['msg'] = 'Something went wrong searching Google Drive';
 				$result['error'] = $error;
 		}
@@ -116,7 +117,8 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 				$result['status'] = true;
 			}
 		} catch (Exception $e) {
-				$error = handleExceptionMessage($e);
+				$error = handleGoogleAPIException($e, 'Google Sheets');
+				insertLogs('Warning', $error);
 				$result['msg'] = 'Something went wrong reading the Google Spreadsheet';
 				$result['error'] = $error;
 		}

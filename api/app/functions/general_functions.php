@@ -123,14 +123,30 @@ function getServiceAccountData() {
 	}
 }
 
+function handleGoogleAPIException($e, $google_service) {
+	error_log($e);
+	$data = json_decode($e->getMessage(), true);
+	if(json_last_error() == JSON_ERROR_NONE) {
+		$msg = $google_service.' Error: '.$data['error']['message'];
+		$msg = $msg.' Please check API key and/or Service Account Credentials.';
+		if(isset($data['error']['extendedHelp'])) {
+			$msg = $msg.' See '.$data['error']['extendedHelp'].' for more information.';
+		}
+		return $msg;
+	} else {
+		return $e->getMessage();
+	}
+	return 'Something went wrong';
+}
+
 function handleExceptionMessage($e) {
 	error_log($e);
 	$data = json_decode($e->getMessage(), true);
 	if(json_last_error() == JSON_ERROR_NONE) {
-		insertLogs('warning', $data['error']['message']);
+		//insertLogs('warning', $data['error']['message']);
 		return $data['error']['message'];
 	} else {
-		insertLogs('warning', $e->getMessage());
+		//insertLogs('warning', $e->getMessage());
 		return $e->getMessage();
 	}
 	return 'Something went wrong';
