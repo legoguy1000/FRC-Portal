@@ -9,7 +9,7 @@ function getSeasonMembershipForm($year) {
 		try {
 			$client = new Google_Client();
 			$creds = getServiceAccountData();
-			$client->setAuthConfigFile($creds['path']);
+			$client->setAuthConfig($creds);
 			$client->setScopes(['https://www.googleapis.com/auth/drive.readonly']);
 			$service = new Google_Service_Drive($client);
 			$mfn = getMembershipFormName();
