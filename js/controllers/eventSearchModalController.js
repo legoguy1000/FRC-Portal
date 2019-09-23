@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('eventSearchModalController', ['$log','$element','$mdDialog', '$scope', 'usersService', 'schoolsService', 'seasonsService','$mdToast',
+.controller('eventSearchModalController', ['$log','$element','$mdDialog', '$scope', 'usersService', 'schoolsService', 'seasonsService','$mdToast', '$auth',
 	eventSearchModalController
 ]);
-function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,eventsService,seasonsService,$mdToast) {
+function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,eventsService,seasonsService,$mdToast, $auth) {
 	var vm = this;
 
 	vm.cancel = function() {
@@ -35,12 +35,20 @@ function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,
 					vm.googleEvents.data = response.data.results;
 					vm.googleEvents.total = response.data.count;
 			} else {
-				$mdToast.show(
-					$mdToast.simple()
-						.textContent(response.msg)
-						.position('top right')
-						.hideDelay(3000)
-				);
+				var toast = $mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000);
+				if($auth.getPayload().data.admin) {
+					toast.action('Show Error');
+					$mdToast.show(toast).then(function(response) {
+						if (response === 'ok') {
+		          alert(response.error);
+		        }
+					});
+				} else {
+					$mdToast.show(toast);
+				}
 			}
 		});
 	}
