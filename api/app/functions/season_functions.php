@@ -8,7 +8,7 @@ function getSeasonMembershipForm($year) {
 	if(!is_null($year)) {
 		try {
 			$client = new Google_Client();
-			$creds = getServiceAccountFile();
+			$creds = getServiceAccountData();
 			$client->setAuthConfigFile($creds['path']);
 			$client->setScopes(['https://www.googleapis.com/auth/drive.readonly']);
 			$service = new Google_Service_Drive($client);
@@ -84,7 +84,7 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 		$data = array();
 		try {
 			$client = new Google_Client();
-			$creds = getServiceAccountFile();
+			$creds = getServiceAccountData();
 			$client->setAuthConfigFile($creds['path']);
 			$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
 			$service = new Google_Service_Sheets($client);

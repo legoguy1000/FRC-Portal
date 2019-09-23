@@ -109,6 +109,20 @@ function getServiceAccountFile() {
 	);
 }
 
+function getServiceAccountData() {
+	$gsa_data = FrcPortal\Setting::where('section', 'service_account')->where('setting', 'google_service_account_data')->first();
+	if(!is_null($gsa_data)) {
+		$gsa_arr = explode(',',$gsa_data->value);
+		$encypted_json = $gsa_arr[1];
+		$decoded = base64_decode($encypted_json);
+		$nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
+		$ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
+		$key = hex2bin(getIniProp('encryption_key'));
+		$json = sodium_crypto_secretbox_open($ciphertext, $nonce, $key);
+		return json_decode($json, true);
+	}
+}
+
 function handleExceptionMessage($e) {
 	error_log($e);
 	$data = json_decode($e->getMessage(), true);
