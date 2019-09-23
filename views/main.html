@@ -42,7 +42,7 @@
 			<!--    <md-button class="toolbar-button" aria-label="Settings" ng-click="main.toggleRightSidebar()">
 			<i class="material-icons">menu</i>
 			</md-button> -->
-			<md-button class="md-icon-button" ng-click="main.signInModal()">
+			<md-button class="md-icon-button" ng-click="main.signInModal()" ng-hide="main.userInfo.localadmin">
 				<md-tooltip md-direction="bottom">Scan barcode for hours</md-tooltip>
 				<md-icon>photo_camera</md-icon>
 			</md-button>
