@@ -690,7 +690,6 @@ angular.module('FrcPortal', [
 	});
 	$transitions.onStart({to: function(state) { return state != null && state.authenticate;}}, function(trans) {
 		var toState = trans.$to();
-
 		if (!$auth.isAuthenticated()){
 			trans.abort();
 			/* event.preventDefault();  */
@@ -749,6 +748,21 @@ angular.module('FrcPortal', [
 				$state.go('main.home');
 			}
 		}
+		if(toState.name == 'main.profile' && $auth.getPayload().data.localadmin) {
+			trans.abort();
+			$log.info('Local Admin does not have a profile');
+			$mdDialog.show(
+				$mdDialog.alert()
+				.parent(angular.element(document.body))
+				.clickOutsideToClose(true)
+				.title('404')
+				.textContent('Local Admin does not have a profile')
+				.ariaLabel('404')
+				.ok('Got it!')
+			);
+			if(trans.$from().name == '') {
+				$state.go('main.home');
+			}
 	});
 	$transitions.onStart({to: 'main.timein'}, function(trans) {
 		var toState = trans.$to();
