@@ -141,7 +141,9 @@ function insertLogs($level, $message) {
 	$log = new FrcPortal\Log();
 	if($authed) {
 		$userId = FrcPortal\Auth::user()->user_id;
-		if($userId != getIniProp('admin_user')) {
+		if($userId == getIniProp('admin_user')) {
+			$message = '(Local Admin) '.$message;
+		} else {
 			$log->user_id = $userId;
 		}
 	}
