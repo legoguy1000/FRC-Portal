@@ -127,10 +127,10 @@ function handleExceptionMessage($e) {
 	error_log($e);
 	$data = json_decode($e->getMessage(), true);
 	if(json_last_error() == JSON_ERROR_NONE) {
-		insertLogs('notice', $data['error']['message']);
+		insertLogs('warning', $data['error']['message']);
 		return $data['error']['message'];
 	} else {
-		insertLogs('notice', $e->getMessage());
+		insertLogs('warning', $e->getMessage());
 		return $e->getMessage();
 	}
 	return 'Something went wrong';
