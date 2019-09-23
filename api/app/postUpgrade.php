@@ -238,7 +238,8 @@ if($version >= '2.14.2') {
       $client_email = $file_data->client_email;
       $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
       $key = hex2bin(getIniProp('encryption_key'));
-      $json_encypt = sodium_crypto_secretbox($json, $nonce, $key);
+      $ciphertext = sodium_crypto_secretbox($json, $nonce, $key);
+      $json_encypt = base64_encode($nonce . $ciphertext);
   	}
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'google_service_account_client_email'], ['value' => $client_email]);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'google_service_account_data'], ['value' => $json_encypt]);
