@@ -188,17 +188,17 @@ $app->group('/settings', function () {
                                                            || !isset($validJson['data']['private_key']) || $validJson['data']['private_key'] == '') {
           return badRequestResponse($response, $msg = 'File is not a valid Google Serice Account Credential JSON file.');
         }
-        $filename = 'service_account_credentials.json';
-        $uploadedFile->moveTo($directory.'/'.$filename);
-        try {
-          $file = getServiceAccountFile();
-          $responseArr['data'] = array_intersect_key($file['contents'],array('client_email'=>''));
-          $responseArr['status'] = true;
-          $responseArr['msg'] = 'Service account credentials uploaded';
-        } catch (Exception $e) {
-          $result['msg'] = handleExceptionMessage($e);
-          //$result['msg'] = 'Something went wrong';
-      	}
+        $file_data = json_encode($validJson['data']);
+        $client_email = $validJson['data']['client_email'];
+        $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+        $key = hex2bin(getIniProp('encryption_key'));
+        $ciphertext = sodium_crypto_secretbox($json, $nonce, $key);
+        $json_encypt = base64_encode($nonce . $ciphertext);
+        $data = $client_email.','.$json_encypt;
+        $setting = FrcPortal\Setting::updateOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => $data]);
+        $responseArr['data'] = array('client_email'=>$client_email);
+        $responseArr['status'] = true;
+        $responseArr['msg'] = 'Service account credentials uploaded';
       }
       $response = $response->withJson($responseArr);
       return $response;
