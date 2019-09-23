@@ -187,6 +187,24 @@ if($version >= '2.13.7') {
 * 2.15.0
 **/
 if($version >= '2.14.2') {
+  //create Admin Account
+  if(file_exists(__DIR__.'/secured/config.ini')) {
+    $iniData = parse_ini_file(__DIR__.'/secured/config.ini', true);
+    if(is_null($iniData['admin']['admin_user']) || $iniData['admin']['admin_user'] == '' || is_null($iniData['admin']['admin_pass']) || $iniData['admin']['admin_pass'] == '') {
+      $admin_data = array();
+      $admin_data['admin_user'] = 'admin';
+      $password = bin2hex(openssl_random_pseudo_bytes(10));
+      $admin_data['admin_pass'] = hash('sha512',$password);
+      $iniData['admin'] = $admin_data;
+      write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
+    }
+    if(is_null($iniData['encryption']['encryption_key'])) {
+      $enc_data = array();
+      $enc_data['encryption_key'] = bin2hex(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES));
+      $iniData['encryption'] = $enc_data;
+      write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
+    }
+  }
   if(Capsule::schema()->hasTable('seasons')) {
     if(Capsule::schema()->hasColumn('seasons','bag_day')) {
       try {
@@ -211,26 +229,20 @@ if($version >= '2.14.2') {
   }
   if(Capsule::schema()->hasTable('settings')) {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'enable_team_emails'], ['value' => false]);
+    $file = __DIR__.'/secured/service_account_credentials.json';
+    $client_email = '';
+    $json_encypt = '';
+  	if(file_exists($file)) {
+  		$json = file_get_contents($file);
+      $file_data = json_decode($json);
+      $client_email = $file_data['client_email'];
+      $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+      $key = hex2bin(getIniProp('encryption_key'));
+      $json_encypt = sodium_crypto_secretbox($json, $nonce, $key);
+  	}
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'google_service_account_client_email'], ['value' => $client_email]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'google_service_account_data'], ['value' => $json_encypt]);
   }
-  //create Admin Account
-  if(file_exists(__DIR__.'/secured/config.ini')) {
-    $iniData = parse_ini_file(__DIR__.'/secured/config.ini', true);
-    if(is_null($iniData['admin']['admin_user']) || $iniData['admin']['admin_user'] == '' || is_null($iniData['admin']['admin_pass']) || $iniData['admin']['admin_pass'] == '') {
-      $admin_data = array();
-      $admin_data['admin_user'] = 'admin';
-      $password = bin2hex(openssl_random_pseudo_bytes(10));
-      $admin_data['admin_pass'] = hash('sha512',$password);
-      $iniData['admin'] = $admin_data;
-      write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
-    }
-    if(is_null($iniData['encryption']['key'])) {
-      $enc_data = array();
-      $enc_data['key'] = bin2hex(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES));
-      $iniData['encryption'] = $enc_data;
-      write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
-    }
-  }
-
 }
 
 

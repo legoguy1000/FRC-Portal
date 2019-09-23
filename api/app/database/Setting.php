@@ -16,6 +16,8 @@ Capsule::schema()->create('settings', function ($table) {
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'other', 'setting' => 'timezone'], ['value' => date_default_timezone_get()]);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'other', 'setting' => 'school_month_end'], ['value' => 'June']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'other', 'setting' => 'google_analytics_id'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'other', 'setting' => 'google_service_account_client_email'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'other', 'setting' => 'google_service_account_data'], ['value' => '']);
 
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'facebook_oauth_client_secret'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'microsoft_oauth_client_secret'], ['value' => '']);
