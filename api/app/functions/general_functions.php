@@ -120,6 +120,8 @@ function getServiceAccountData() {
 		$key = hex2bin(getIniProp('encryption_key'));
 		$json = sodium_crypto_secretbox_open($ciphertext, $nonce, $key);
 		return json_decode($json, true);
+	} else {
+		throw new Exception("Google Service Account credentials do not exist");
 	}
 }
 

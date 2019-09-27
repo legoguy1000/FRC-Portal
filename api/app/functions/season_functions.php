@@ -5,10 +5,17 @@ function getSeasonMembershipForm($year) {
 		'msg' => '',
 		'data' => null
 	);
+	try {
+		$creds = getServiceAccountData();
+	} catch (Exception $e) {
+			$error = handleExceptionMessage($e);
+			insertLogs('Warning', $error);
+			$result['msg'] = 'Something went wrong searching Google Drive';
+			$result['error'] = $error;
+	}
 	if(!is_null($year)) {
 		try {
 			$client = new Google_Client();
-			$creds = getServiceAccountData();
 			$client->setAuthConfig($creds);
 			$client->setScopes(['https://www.googleapis.com/auth/drive.readonly']);
 			$service = new Google_Service_Drive($client);
@@ -84,8 +91,15 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 	if(!is_null($spreadsheetId)) {
 		$data = array();
 		try {
-			$client = new Google_Client();
 			$creds = getServiceAccountData();
+		} catch (Exception $e) {
+				$error = handleExceptionMessage($e);
+				insertLogs('Warning', $error);
+				$result['msg'] = 'Something went wrong searching Google Drive';
+				$result['error'] = $error;
+		}
+		try {
+			$client = new Google_Client();
 			$client->setAuthConfig($creds);
 			$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
 			$service = new Google_Service_Sheets($client);
