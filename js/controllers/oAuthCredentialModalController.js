@@ -31,7 +31,7 @@ function oAuthCredentialModalController($log,$mdDialog,$scope,settingsService,$m
 	}
 
 	vm.getOAuthCredentialsByProvider = function() {
-		settingsService.updateOAuthCredentialsByProvider(provider).then(function(response) {
+		settingsService.getOAuthCredentialsByProvider(provider).then(function(response) {
 			if(response.status) {
 				vm.data = response.data
 			} else {
