@@ -169,6 +169,10 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 			locals: {
 				provider: provider,
 			}
+		}).then(function(response){
+			if(response.status) {
+				vm.updateSettingBySection('login');
+			}
 		});
 	}
 }
