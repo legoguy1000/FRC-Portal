@@ -234,6 +234,7 @@ $app->group('/settings', function () {
       if(!FrcPortal\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
+      $provider = $args['provider'];
       $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => $provider.'_oauth_client_id'], ['value' => $formData['client_id']]);
       if($formData['client_secret'] != '') {
         $client_secret = encryptItems($formData['client_secret']);
