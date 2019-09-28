@@ -243,8 +243,10 @@ if($version >= '2.14.2') {
   	}
     $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_secret%')->get();
     foreach($settings as $secret) {
-      $sec_encypt = encryptItems($secret->value);
-      $set = FrcPortal\Setting::where('section', 'login')->where('setting', $secret->setting)->update(['section' => 'oauth', 'value' => $sec_encypt]);
+      if($secret->value != '') {
+        $sec_encypt = encryptItems($secret->value);
+        $set = FrcPortal\Setting::where('section', 'login')->where('setting', $secret->setting)->update(['section' => 'oauth', 'value' => $sec_encypt]);
+      }
     }
   }
 }

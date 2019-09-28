@@ -218,7 +218,7 @@ $app->group('/settings', function () {
       if(!is_null($client_id)) {
         $data['client_id'] = $client_id->value;
       }
-      if(!is_null($client_secret)) {
+      if(!is_null($client_secret) && $client_secret->value != '') {
         $data['client_secret'] = decryptItems($client_secret->value);
       }
       $responseArr['status'] = true;
@@ -235,8 +235,10 @@ $app->group('/settings', function () {
         return unauthorizedResponse($response);
       }
       $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => $provider.'_oauth_client_id'], ['value' => $formData['client_id']]);
-      $client_secret = encryptItems($formData['client_secret']);
-      $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => $provider.'_oauth_client_id'], ['value' => $client_secret]);
+      if($formData['client_secret'] != '') {
+        $client_secret = encryptItems($formData['client_secret']);
+        $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => $provider.'_oauth_client_id'], ['value' => $client_secret]);
+      }
 
       $responseArr['status'] = true;
       $responseArr['msg'] = ucfirst($provider).' OAuth credentials updated';
