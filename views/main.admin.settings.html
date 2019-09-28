@@ -110,6 +110,12 @@
 					</md-switch>
 				</div>
 				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.google_login_enable">
+					<md-button class="md-icon-button"  ng-click="">
+						<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+						<md-icon>vpn_key</md-icon>
+					</md-button>
+				</div>
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.google_login_enable">
 					<md-input-container flex ng-show="vm.settings.login.google_login_enable">
 						<label>Google OAuth2 Client ID</label>
 						<input ng-model="vm.settings.login.google_oauth_client_id" ng-disabled="!vm.settings.login.google_login_enable">
@@ -125,6 +131,12 @@
 					<md-switch md-invert aria-label="Enable Facebook Login" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
 						Enable Facebook Login
 					</md-switch>
+				</div>
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.facebook_login_enable">
+					<md-button class="md-icon-button"  ng-click="">
+						<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+						<md-icon>vpn_key</md-icon>
+					</md-button>
 				</div>
 				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.facebook_login_enable">
 					<md-input-container flex ng-show="vm.settings.login.facebook_login_enable">
