@@ -18,7 +18,7 @@ $app->group('/auth', function () {
     $client = new Google_Client();
     //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
     $client->setClientId(getSettingsProp('google_oauth_client_id'));
-    $client->setClientSecret(getSettingsProp('google_oauth_client_secret'));
+    $client->setClientSecret(decryptItems(getSettingsProp('google_oauth_client_secret')));
     $client->setRedirectUri(getSettingsProp('env_url').'/oauth/google');
     $plus = new Google_Service_Plus($client);
     $data = array();
@@ -77,7 +77,7 @@ $app->group('/auth', function () {
       return badRequestResponse($response, $msg = 'Invalid code from Facebook Sign In');
     }
     $clientId = getSettingsProp('facebook_oauth_client_id');
-    $secret = getSettingsProp('facebook_oauth_client_secret');
+    $secret = decryptItems(getSettingsProp('facebook_oauth_client_secret'));
     $redirect = getSettingsProp('env_url').'/oauth/facebook';
     $fb = new Facebook\Facebook([
       'app_id'  => getSettingsProp('facebook_oauth_client_id'),
@@ -152,9 +152,7 @@ $app->group('/auth', function () {
       insertLogs($level = 'Warning', $message = 'Invalid code from Microsoft OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Microsoft Sign In');
     }
-    //$secret = getIniProp('microsoft_client_secret');
-    $secret = getSettingsProp('microsoft_oauth_client_secret');
-//    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
+    $secret = decryptItems(getSettingsProp('microsoft_oauth_client_secret'));
     $clientId =  getSettingsProp('microsoft_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/microsoft';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://login.microsoftonline.com/common/oauth2/v2.0/']);
@@ -231,9 +229,7 @@ $app->group('/auth', function () {
       insertLogs($level = 'Warning', $message = 'Invalid code from Amazon OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Amazon Sign In');
     }
-    //$secret = getIniProp('microsoft_client_secret');
-    $secret = getSettingsProp('amazon_oauth_client_secret');
-//    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
+    $secret = decryptItems(getSettingsProp('amazon_oauth_client_secret'));
     $clientId =  getSettingsProp('amazon_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/amazon';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://api.amazon.com/']);
@@ -313,9 +309,7 @@ $app->group('/auth', function () {
       insertLogs($level = 'Warning', $message = 'Invalid code from Github OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Github Sign In');
     }
-    //$secret = getIniProp('microsoft_client_secret');
-    $secret = getSettingsProp('github_oauth_client_secret');
-//    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
+    $secret = decryptItems(getSettingsProp('github_oauth_client_secret'));
     $clientId =  getSettingsProp('github_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/github';
 
