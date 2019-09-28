@@ -241,12 +241,16 @@ if($version >= '2.14.2') {
       $data = $client_email.','.$json_encypt;
       $setting = FrcPortal\Setting::firstOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => $data]);
   	}
-    $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_secret%')->get();
+    $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_secret')->get();
     foreach($settings as $secret) {
       if($secret->value != '') {
         $sec_encypt = encryptItems($secret->value);
         $set = FrcPortal\Setting::where('section', 'login')->where('setting', $secret->setting)->update(['section' => 'oauth', 'value' => $sec_encypt]);
       }
+    }
+    $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_id')->get();
+    foreach($settings as $secret) {
+      $set = FrcPortal\Setting::where('section', 'login')->where('setting', $secret->setting)->update(['section' => 'oauth']);
     }
   }
 }
