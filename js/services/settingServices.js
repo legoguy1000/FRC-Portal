@@ -64,5 +64,19 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getOAuthCredentialsByProvider: function (provider) {
+			var provider = provider != undefined && provider != null ? provider:'';
+			return $http.get('api/settings/oauth/'+provider)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		updateOAuthCredentialsByProvider: function (formData) {
+			var provider = formData.provider != undefined && formData.provider != null ? formData.provider:'';
+			return $http.put('api/settings/oauth/'+provider,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

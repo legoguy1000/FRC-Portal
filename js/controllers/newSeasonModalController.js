@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('newSeasonModalController', ['$log','$mdDialog', '$scope', 'userInfo', 'usersService', 'schoolsService','$mdToast',
+.controller('newSeasonModalController', ['$log','$mdDialog', '$scope', 'userInfo', 'seasonsService','$mdToast',
 	newSeasonModalController
 ]);
-function newSeasonModalController($log,$mdDialog,$scope,userInfo,usersService,seasonsService,$mdToast) {
+function newSeasonModalController($log,$mdDialog,$scope,userInfo,seasonsService,$mdToast) {
 	var vm = this;
 
 	vm.cancel = function() {

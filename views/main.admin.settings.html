@@ -109,12 +109,13 @@
 						Enable Google Login
 					</md-switch>
 				</div>
-				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.google_login_enable">
-					<md-button class="md-icon-button"  ng-click="">
+				<div layout="column" flex layout-align="center start" ng-show="vm.settings.login.google_login_enable">
+					<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'google')">
 						<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
 						<md-icon>vpn_key</md-icon>
 					</md-button>
 				</div>
+				<!--
 				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.google_login_enable">
 					<md-input-container flex ng-show="vm.settings.login.google_login_enable">
 						<label>Google OAuth2 Client ID</label>
@@ -125,6 +126,7 @@
 						<input ng-model="vm.settings.login.google_oauth_client_secret" ng-disabled="!vm.settings.login.google_login_enable">
 					</md-input-container>
 				</div>
+				-->
 			</div>
 			<div layout-gt-sm="row">
 				<div>
@@ -132,12 +134,13 @@
 						Enable Facebook Login
 					</md-switch>
 				</div>
-				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.facebook_login_enable">
-					<md-button class="md-icon-button"  ng-click="">
+				<div layout="column" flex layout-align="center start" ng-show="vm.settings.login.facebook_login_enable">
+					<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'facebook')">
 						<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
 						<md-icon>vpn_key</md-icon>
 					</md-button>
 				</div>
+				<!--
 				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.facebook_login_enable">
 					<md-input-container flex ng-show="vm.settings.login.facebook_login_enable">
 						<label>Facebook OAuth2 Client ID</label>
@@ -148,6 +151,7 @@
 						<input ng-model="vm.settings.login.facebook_oauth_client_secret" ng-disabled="!vm.settings.login.facebook_login_enable">
 					</md-input-container>
 				</div>
+				-->
 			</div>
 			<div layout-gt-sm="row">
 				<div>
@@ -155,6 +159,13 @@
 						Enable Microsoft Login
 					</md-switch>
 				</div>
+				<div layout="column" flex layout-align="center start" ng-show="vm.settings.login.microsoft_login_enable">
+					<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'microsoft')">
+						<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+						<md-icon>vpn_key</md-icon>
+					</md-button>
+				</div>
+				<!--
 				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.microsoft_login_enable">
 					<md-input-container flex ng-show="vm.settings.login.microsoft_login_enable">
 						<label>Microsoft OAuth2 Client ID</label>
@@ -165,6 +176,7 @@
 						<input ng-model="vm.settings.login.microsoft_oauth_client_secret" ng-disabled="!vm.settings.login.microsoft_login_enable">
 					</md-input-container>
 				</div>
+				-->
 			</div>
 			<div layout-gt-sm="row">
 				<div>
@@ -172,6 +184,13 @@
 						Enable Github Login
 					</md-switch>
 				</div>
+				<div layout="column" flex layout-align="center start" ng-show="vm.settings.login.github_login_enable">
+					<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'github')">
+						<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+						<md-icon>vpn_key</md-icon>
+					</md-button>
+				</div>
+				<!--
 				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.github_login_enable">
 					<md-input-container flex ng-show="vm.settings.login.github_login_enable">
 						<label>Github OAuth2 Client ID</label>
@@ -182,6 +201,7 @@
 						<input ng-model="vm.settings.login.github_oauth_client_secret" ng-disabled="!vm.settings.login.github_login_enable">
 					</md-input-container>
 				</div>
+				-->
 			</div>
 			<div layout-gt-sm="row">
 				<div>
@@ -189,6 +209,13 @@
 						Enable Amazon Login
 					</md-switch>
 				</div>
+				<div layout="column" flex layout-align="center start" ng-show="vm.settings.login.amazon_login_enable">
+					<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'amazon')">
+						<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+						<md-icon>vpn_key</md-icon>
+					</md-button>
+				</div>
+				<!--
 				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.amazon_login_enable">
 					<md-input-container flex ng-show="vm.settings.login.amazon_login_enable">
 						<label>Amazon OAuth2 Client ID</label>
@@ -199,22 +226,8 @@
 						<input ng-model="vm.settings.login.amazon_oauth_client_secret" ng-disabled="!vm.settings.login.amazon_login_enable">
 					</md-input-container>
 				</div>
+				-->
 			</div>
-			<div>
-				<div>
-					Reset
-				</div>
-			</div>
-			<!--
-			<md-input-container flex required>
-				<label>JSON Web Token Secret Key</label>
-				<input ng-model="vm.settings.login.jwt_key">
-			</md-input-container>
-			<md-input-container flex required>
-				<label>JSON Web Token Time Secret Key</label>
-				<input ng-model="vm.settings.login.jwt_signin_key">
-			</md-input-container>
-		-->
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'notification'" class="layout-padding">
 			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.notification.slack_enable" class="md-warn">

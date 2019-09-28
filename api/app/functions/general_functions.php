@@ -114,15 +114,28 @@ function getServiceAccountData() {
 	if(!is_null($gsa_data)) {
 		$gsa_arr = explode(',',$gsa_data->value);
 		$encypted_json = $gsa_arr[1];
-		$decoded = base64_decode($encypted_json);
-		$nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
-		$ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
-		$key = hex2bin(getIniProp('encryption_key'));
-		$json = sodium_crypto_secretbox_open($ciphertext, $nonce, $key);
+		$json = decryptItems($encypted_json);
 		return json_decode($json, true);
 	} else {
 		throw new Exception("Google Service Account credentials do not exist");
 	}
+}
+
+function encryptItems($decrypted) {
+	$nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+	$key = hex2bin(getIniProp('encryption_key'));
+	$ciphertext = sodium_crypto_secretbox($decrypted, $nonce, $key);
+	$encrypted = base64_encode($nonce.$ciphertext);
+	return $encrypted;
+}
+
+function decryptItems($encrypted) {
+	$decoded = base64_decode($encrypted);
+	$nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
+	$ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
+	$key = hex2bin(getIniProp('encryption_key'));
+	$decrypted = sodium_crypto_secretbox_open($ciphertext, $nonce, $key);
+	return $decrypted;
 }
 
 function handleGoogleAPIException($e, $google_service) {

@@ -313,7 +313,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    metricsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.metricsController.js');
+         	return $ocLazyLoad.load('js/controllers/main.admin.metricsController.js');
 	    }]
 	  }
 	  })
@@ -329,7 +329,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    settingsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.settingsController.js');
+           return $ocLazyLoad.load(['js/controllers/main.admin.settingsController.js','js/controllers/oAuthCredentialModalController.js']);
 	    }]
 	  }
 	  })

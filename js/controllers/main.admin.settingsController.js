@@ -157,4 +157,18 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		return results;
 	}
 
+	vm.showOAuthCredentialsModal = function(ev,provider) {
+		$mdDialog.show({
+			controller: oAuthCredentialModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/oAuthCredentialModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				provider: provider,
+			}
+		});
+	}
 }
