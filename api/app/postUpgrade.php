@@ -244,13 +244,15 @@ if($version >= '2.14.2') {
     $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_secret')->get();
     foreach($settings as $secret) {
       if($secret->value != '') {
-        $sec_encypt = encryptItems($secret->value);
-        $set = $secret->update(['section' => 'oauth', 'value' => $sec_encypt]);
+        $secret->value = encryptItems($secret->value);
       }
+      $secret->section = 'oauth';
+      $secret->save();
     }
     $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_id')->get();
     foreach($settings as $client_id) {
-      $set = $client_id->update(['section' => 'oauth']);
+      $client_id->section = 'oauth';
+      $client_id->save();
     }
   }
 }
