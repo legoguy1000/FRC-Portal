@@ -237,7 +237,7 @@ $app->group('/settings', function () {
       $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => $provider.'_oauth_client_id'], ['value' => $formData['client_id']]);
       if($formData['client_secret'] != '') {
         $client_secret = encryptItems($formData['client_secret']);
-        $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => $provider.'_oauth_client_id'], ['value' => $client_secret]);
+        $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => $provider.'_oauth_client_secret'], ['value' => $client_secret]);
       }
 
       $responseArr['status'] = true;
