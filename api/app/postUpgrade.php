@@ -230,16 +230,22 @@ if($version >= '2.14.2') {
   if(Capsule::schema()->hasTable('settings')) {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'enable_team_emails'], ['value' => false]);
     $file = __DIR__.'/secured/service_account_credentials.json';
-    $client_email = '';
-    $json_encypt = '';
-  	if(file_exists($file)) {
+    $setting = FrcPortal\Setting::where('section', 'service_account')->where('setting','google_service_account_data')->first();
+  	if(file_exists($file) && $setting->value == '') {
+      $client_email = '';
+      $json_encypt = '';
   		$json = file_get_contents($file);
       $file_data = json_decode($json);
       $client_email = $file_data->client_email;
-      $json_encypt = encryptItems($json) ;
+      $json_encypt = encryptItems($json);
       $data = $client_email.','.$json_encypt;
+      $setting = FrcPortal\Setting::firstOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => $data]);
   	}
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => $data]);
+    $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_secret%')->get();
+    foreach($settings as $secret) {
+      $sec_encypt = encryptItems($secret->value);
+      $set = FrcPortal\Setting::where('section', 'login')->where('setting', $secret->setting)->update(['section' => 'oauth', 'value' => $sec_encypt]);
+    }
   }
 }
 

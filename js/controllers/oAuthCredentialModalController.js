@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('oAuthCredentialModalController', ['$log','$mdDialog', '$scope', 'userInfo', 'settingsService','$mdToast','provider',
+.controller('oAuthCredentialModalController', ['$log','$mdDialog', '$scope', 'settingsService','$mdToast','provider',
 	oAuthCredentialModalController
 ]);
-function oAuthCredentialModalController($log,$mdDialog,$scope,userInfo,settingsService,$mdToast,provider) {
+function oAuthCredentialModalController($log,$mdDialog,$scope,settingsService,$mdToast,provider) {
 	var vm = this;
 
 	vm.cancel = function() {
