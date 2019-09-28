@@ -57,7 +57,7 @@ class Season extends Eloquent {
   public function getDateAttribute() {
     $start = formatDateArrays($this->attributes['start_date']);
     $end = formatDateArrays($this->attributes['end_date']);
-    $bag = $this->attributes['no_bagday'] ? null:formatDateArrays($this->attributes['bag_day']);
+    $bag = $this->no_bagday ? null:formatDateArrays($this->no_bagday);
     return array(
       'start' => $start,
       'end' => $end,
