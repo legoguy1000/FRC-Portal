@@ -71,7 +71,7 @@ class Season extends Eloquent {
     $bag = $this->attributes['bag_day'];
     $eoy = date('Y').'-12-31';
   	$date = date('Y-m-d');
-    if($this->attributes['no_bagday']) {
+    if($this->no_bagday) {
       return array(
         'build_season' => $date >= $start && $date <= $end,
         'off_season' => $date > $end && $date <= $eoy
