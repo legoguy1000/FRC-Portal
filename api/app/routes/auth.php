@@ -435,7 +435,7 @@ $app->group('/auth', function () {
       'Accept' => 'application/json',
       'Accept-Language' => 'en-US'
     );
-    print_r(json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $accessTokenArr['id_token'])[1])))));
+    die(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $accessTokenArr['id_token'])[1]))));
     die($accessToken);
 
 
