@@ -435,6 +435,7 @@ $app->group('/auth', function () {
       'Accept' => 'application/json',
       'Accept-Language' => 'en-US'
     );
+    die($accessToken);
     $client = new GuzzleHttp\Client(['base_uri' => 'https://social.yahooapis.com']);
     $result = $client->request('GET', 'v1/user/me/profile', array('headers' => $headers));
     $code = $result->getStatusCode(); // 200
