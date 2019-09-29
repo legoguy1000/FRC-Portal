@@ -228,6 +228,31 @@
 				</div>
 				-->
 			</div>
+			<div layout="row" layout-align="space-between center">
+				<div>
+					<md-switch aria-label="Enable Yahoo Login" ng-model="vm.settings.login.yahoo_login_enable" class="md-warn">
+						Enable Yahoo Login
+					</md-switch>
+				</div>
+				<div ng-show="vm.settings.login.yahoo_login_enable">
+					<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'yahoo')">
+						<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+						<md-icon>vpn_key</md-icon>
+					</md-button>
+				</div>
+				<!--
+				<div layout="column" flex flex-offset-gt-sm="5" ng-show="vm.settings.login.amazon_login_enable">
+					<md-input-container flex ng-show="vm.settings.login.amazon_login_enable">
+						<label>Amazon OAuth2 Client ID</label>
+						<input ng-model="vm.settings.login.amazon_oauth_client_id" ng-disabled="!vm.settings.login.amazon_login_enable">
+					</md-input-container>
+					<md-input-container flex ng-show="vm.settings.login.amazon_login_enable">
+						<label>Amazon OAuth2 Client Secret</label>
+						<input ng-model="vm.settings.login.amazon_oauth_client_secret" ng-disabled="!vm.settings.login.amazon_login_enable">
+					</md-input-container>
+				</div>
+				-->
+			</div>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'notification'" class="layout-padding">
 			<md-switch aria-label="Enable Slack Notifications" ng-model="vm.settings.notification.slack_enable" class="md-warn">

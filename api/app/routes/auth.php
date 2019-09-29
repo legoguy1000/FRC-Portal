@@ -395,6 +395,90 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Github OAuth2');
+  $this->post('/yahoo', function ($request, $response) {
+    $responseData = false;
+    $args = $request->getParsedBody();
+    $provider = 'yahoo';
+    if(checkLoginProvider($provider) == false) {
+      insertLogs($level = 'Warning', $message = 'Attempted login with Yahoo OAuth2.  Github login provider not enabled.');
+      return badRequestResponse($response, $msg = 'Yahoo login is not enabled.  Please select a different option.');
+    }
+    if(!isset($args['code']) || $args['code'] == '') {
+      insertLogs($level = 'Warning', $message = 'Invalid code from Yahoo OAuth2 sign in.');
+      return badRequestResponse($response, $msg = 'Invalid code from Yahoo Sign In');
+    }
+    $secret = decryptItems(getSettingsProp('yahoo_oauth_client_secret'));
+    $clientId =  getSettingsProp('yahoo_oauth_client_id');
+    $redirect = getSettingsProp('env_url').'/oauth/yahoo';
+
+    $client = new GuzzleHttp\Client(['base_uri' => 'https://api.login.yahoo.com/oauth2/']);
+    $params = array(
+      'client_id'=>$clientId,
+      'code'=>$args['code'],
+      'redirect_uri'=>$redirect,
+      'client_secret'=>$secret,
+  		'grant_type'=>'authorization_code',
+    );
+    $result = $client->request('POST', 'get_token', array(
+      'form_params' => $params,
+      'headers' => array("Content-Type"=>"application/x-www-form-urlencoded","Accept"=>"application/json")
+    ));
+    $code = $result->getStatusCode(); // 200
+    $reason = $result->getReasonPhrase(); // OK
+    $body = $result->getBody();
+    $accessTokenArr = (array) json_decode($body, true);
+    $accessToken = $accessTokenArr['access_token'];
+
+
+    $headers = array(
+      'Authorization' => 'Bearer '.$accessToken,
+      'Accept' => 'application/json',
+      'Accept-Language' => 'en-US'
+    );
+    $client = new GuzzleHttp\Client(['base_uri' => 'https://social.yahooapis.com']);
+    $result = $client->request('GET', 'v1/user/me/profile', array('headers' => $headers));
+    $code = $result->getStatusCode(); // 200
+    $reason = $result->getReasonPhrase(); // OK
+    $body = $result->getBody();
+    $me = (array) json_decode($body, true);
+    $userData = formatYahooLoginUserData($me);
+    if(checkTeamLogin($userData['email'])) {
+      $teamDomain = getSettingsProp('team_domain');
+      insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Yahoo OAuth2. A '.$teamDomain.' email is required.');
+      return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
+    }
+
+    $user = checkLogin($userData);
+    if(FrcPortal\Auth::isAuthenticated()) {
+      $auth_user = FrcPortal\Auth::user();
+      if($user != false) {
+        $responseData = array('status'=>false, 'msg'=>'Yahoo account is already linked to another user');
+        insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Yahoo account '.$userData['email'].' to their profile.  Account is linked to another user.');
+      } else {
+        $provider = $userData['provider'];
+        $id = $userData['id'];
+        $email = $userData['email'];
+        $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
+          $responseData = array('status'=>false, 'msg'=>'Yahoo account linked');
+          insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Yahoo account '.$userData['email'].' to their profile.');
+      }
+    } else {
+      if($user != false) {
+        $user->updateUserOnLogin($userData);
+        $jwt = $user->generateUserJWT();
+        $responseData = array('status'=>true, 'msg'=>'Login with Yahoo Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+        FrcPortal\Auth::setCurrentUser($user->user_id);
+        insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Yahoo OAuth2.');
+      } else {
+        $teamNumber = getSettingsProp('team_number');
+        $responseData = array('status'=>false, 'msg'=>'Amazon account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+        insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Yahoo OAuth2. Microsoft account not linked to any current portal user.');
+      }
+    }
+
+    $response = $response->withJson($responseData);
+    return $response;
+  })->setName('Yahoo OAuth2');
   /*$this->post('/slack', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();

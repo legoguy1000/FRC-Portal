@@ -31,6 +31,10 @@
         <i class="mdi mdi-amazon"></i>
         Log in with Amazon
       </md-button>
+      <md-button class="md-raised yahoo btn-large social" ng-href="{{vm.oauth_urls.yahoo}}" style="min-width: 300px; text-align: left;" ng-show="!vm.showlocallogin && vm.configItems.yahoo_login_enable">
+        <i class="mdi mdi-yahoo"></i>
+        Log in with Yahoo
+      </md-button>
       <div style="text-align: center; cursor: pointer; margin-top:10px;">
           <a ng-click="vm.showlocal()">
             <span ng-show="!vm.showlocallogin">Local Login</span>
