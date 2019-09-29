@@ -214,7 +214,7 @@
 					<md-list flex>
 						<md-list-item class="md-2-line" ng-repeat = "account in vm.linkedAccounts track by $index" ng-click="null">
 							<div style="margin-right:10px">
-								<i class="mdi mdi-36px md-icon-avatar" ng-class="{'mdi-google': account.oauth_provider=='google','mdi-facebook':  account.oauth_provider=='facebook','mdi-microsoft':  account.oauth_provider=='microsoft','mdi-amazon':  account.oauth_provider=='amazon','mdi-github-circle':  account.oauth_provider=='github'}">
+								<i class="mdi mdi-36px md-icon-avatar" ng-class="{'mdi-google': account.oauth_provider=='google','mdi-facebook':  account.oauth_provider=='facebook','mdi-microsoft':  account.oauth_provider=='microsoft','mdi-amazon':  account.oauth_provider=='amazon','mdi-github-circle': account.oauth_provider=='github','mdi-discord': account.oauth_provider=='discord'}">
 									<md-tooltip md-direction="left">Google Chrome</md-tooltip>
 								</i>
 							</div>
