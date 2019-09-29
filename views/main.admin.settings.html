@@ -279,25 +279,46 @@
 			</md-input-container>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'other'" class="layout-padding">
-			<md-autocomplete flex
-				md-no-cache="false"
-				md-selected-item="vm.settings.other.timezone"
-				md-search-text="vm.searchText"
-				md-items="item in vm.TzSearch(vm.searchText)"
-				md-item-text="item"
-				md-floating-label="Timezone">
-				<md-item-template>
-					<span md-highlight-text="vm.searchText" md-highlight-flags="i">{{item}}</span>
-				</md-item-template>
-			</md-autocomplete>
-			<md-input-container flex>
-				<label>Google API Key</label>
-				<input ng-model="vm.settings.other.google_api_key">
-			</md-input-container>
-			<md-input-container flex>
-				<label>Google Calendar ID</label>
-				<input ng-model="vm.settings.other.google_calendar_id">
-			</md-input-container>
+			<div layout="column" layout-gt-sm="row">
+				<div flex>
+					<md-autocomplete flex style="width: 100%;"
+						md-no-cache="false"
+						md-selected-item="vm.settings.other.timezone"
+						md-search-text="vm.searchText"
+						md-items="item in vm.TzSearch(vm.searchText)"
+						md-item-text="item"
+						md-floating-label="Timezone">
+						<md-item-template>
+							<span md-highlight-text="vm.searchText" md-highlight-flags="i">{{item}}</span>
+						</md-item-template>
+					</md-autocomplete>
+				</div>
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>School Year Month End</label>
+						<input moment-picker="vm.settings.other.school_month_end" required
+					     format="MMMM"
+					     min-view="year"
+					     max-view="year"
+							 ng-model="vm.school_month_end_full">
+						</input>
+					</md-input-container>
+				</div>
+			</div>
+			<div layout="column" layout-gt-sm="row">
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Google API Key</label>
+						<input ng-model="vm.settings.other.google_api_key">
+					</md-input-container>
+				</div>
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Google Calendar ID</label>
+						<input ng-model="vm.settings.other.google_calendar_id">
+					</md-input-container>
+				</div>
+			</div>
 			<div layout="column" layout-gt-sm="row">
 				<div flex>
 					<md-input-container flex style="width: 100%;">
@@ -325,15 +346,6 @@
 					<md-icon md-font-library="material-icons">cloud_upload </md-icon>
 				</md-button>
 			</div>
-			<md-input-container flex>
-				<label>School Year Month End</label>
-				<input moment-picker="vm.settings.other.school_month_end" required
-			     format="MMMM"
-			     min-view="year"
-			     max-view="year"
-					 ng-model="vm.school_month_end_full">
-				</input>
-			</md-input-container>
 			<md-input-container flex>
 				<label>Google Analytics ID</label>
 				<input ng-model="vm.settings.other.google_analytics_id">
