@@ -108,7 +108,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	  clientId: configItems.yahoo_oauth_client_id,
 	  redirectUri: window.location.origin+'/oauth/yahoo',
 		authorizationEndpoint: 'https://api.login.yahoo.com/oauth2/request_auth',
-		scope: ['openid','sdps-r','sdpp-r'],
+		scope: ['openid','sdps-r'],
 	  scopeDelimiter: ' ',
 	}
 	vm.oauth_urls.yahoo = yahooData.authorizationEndpoint+'?scope='+yahooData.scope.join(yahooData.scopeDelimiter)+'&redirect_uri='+yahooData.redirectUri+'&response_type=code&client_id='+yahooData.clientId+'&state='+vm.urlStateEncode;
