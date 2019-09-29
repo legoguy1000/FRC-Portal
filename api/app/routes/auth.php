@@ -417,7 +417,8 @@ $app->group('/auth', function () {
       'code'=>$args['code'],
       'redirect_uri'=>$redirect,
       'client_secret'=>$secret,
-  		'grant_type'=>'authorization_code',
+      'grant_type'=>'authorization_code',
+  		'scope'=>'idetify email',
     );
     $result = $client->request('POST', 'token', array(
       'form_params' => $params,
@@ -428,7 +429,7 @@ $app->group('/auth', function () {
     $body = $result->getBody();
     $accessTokenArr = (array) json_decode($body, true);
     $accessToken = $accessTokenArr['access_token'];
-    die(json_encode($accessTokenArr));
+    die($body);
 
     $headers = array(
       'Authorization' => 'Bearer '.$accessToken,
