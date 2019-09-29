@@ -411,7 +411,7 @@ $app->group('/auth', function () {
     $clientId =  getSettingsProp('discord_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/discord';
 
-    $client = new GuzzleHttp\Client(['base_uri' => 'https://discordapp.com/api/oauth2/']);
+    $client = new GuzzleHttp\Client(['base_uri' => 'https://discordapp.com/api/']);
     $params = array(
       'client_id'=>$clientId,
       'code'=>$args['code'],
@@ -420,7 +420,7 @@ $app->group('/auth', function () {
       'grant_type'=>'authorization_code',
   		'scope'=>'idetify email',
     );
-    $result = $client->request('POST', 'token', array(
+    $result = $client->request('POST', 'oauth2/token', array(
       'form_params' => $params,
       'headers' => array("Content-Type"=>"application/x-www-form-urlencoded","Accept"=>"application/json")
     ));
@@ -429,16 +429,12 @@ $app->group('/auth', function () {
     $body = $result->getBody();
     $accessTokenArr = (array) json_decode($body, true);
     $accessToken = $accessTokenArr['access_token'];
-    die($body);
-
     $headers = array(
       'Authorization' => 'Bearer '.$accessToken,
       'Accept' => 'application/json',
       'Accept-Language' => 'en-US'
     );
-    //die(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $accessTokenArr['id_token'])[1]))));
-    $client = new GuzzleHttp\Client(['base_uri' => 'https://social.discordapis.com']);
-    $result = $client->request('GET', 'v1/user/me/profile', array('headers' => $headers));
+    $result = $client->request('GET', 'users/@me', array('headers' => $headers));
     $code = $result->getStatusCode(); // 200
     $reason = $result->getReasonPhrase(); // OK
     $body = $result->getBody();

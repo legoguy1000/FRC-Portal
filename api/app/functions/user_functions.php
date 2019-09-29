@@ -19,14 +19,15 @@ function checkLogin($userData) {
 
 	$user = false;
 	$data = array();
-	$data = FrcPortal\Oauth::with(['users.school', 'users' => function($q){ //,'users.user_categories'
+	$data = FrcPortal\Oauth::with(['users' => function($q){ //,'users.user_categories'
 		$q->where('status',true);
 	}])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
 	if($data != null) {
 		$data->touch();
 		$user = $data->users;
+		$user->school();
 	} else {
-		$data = FrcPortal\User::with(['school']) //'user_categories'
+		$data = FrcPortal\User:: //'user_categories'
 						->where(function ($query) use ($email) {
 							$query->where('email', $email)
 										->orWhere('team_email', $email);
@@ -35,6 +36,7 @@ function checkLogin($userData) {
 						->first();
 		if($data != null) {
 			$user = $data;
+			$user->school();
 		}
 		if($user != false) {
 			$oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $user->user_id, 'oauth_user' => $email]);

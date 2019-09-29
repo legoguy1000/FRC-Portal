@@ -532,6 +532,26 @@ function formatGithubLoginUserData($me) {
 	return $userData;
 }
 
+function formatDiscordLoginUserData($me) {
+	$email = $me['email'];
+	//$name = explode(' ',$me['name']);
+	$fname = '';
+	$lname = '';
+	$id = $me['id'];
+	$image = 'https://cdn.discordapp.com/avatars/'.$id.'/.'$me['avatar'].'.png'; //$me['image']['url'];\
+	$username = $me['username'];
+
+	$userData = array(
+		'id' => $id,
+		'provider' => 'Discord',
+		'email' => $email,
+		'fname' => $fname,
+		'lname' => $lname,
+		'profile_image' => $image,
+	);
+	return $userData;
+}
+
 function checkJwtFormat($token) {
 	if(!is_string($token)) {
 		return false;
