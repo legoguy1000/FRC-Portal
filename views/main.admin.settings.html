@@ -230,12 +230,12 @@
 			</div>
 			<div layout="row" layout-align="space-between center">
 				<div>
-					<md-switch aria-label="Enable Yahoo Login" ng-model="vm.settings.login.yahoo_login_enable" class="md-warn">
-						Enable Yahoo Login
+					<md-switch aria-label="Enable Discord Login" ng-model="vm.settings.login.discord_login_enable" class="md-warn">
+						Enable Discord Login
 					</md-switch>
 				</div>
-				<div ng-show="vm.settings.login.yahoo_login_enable">
-					<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'yahoo')">
+				<div ng-show="vm.settings.login.discord_login_enable">
+					<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'discord')">
 						<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
 						<md-icon>vpn_key</md-icon>
 					</md-button>
