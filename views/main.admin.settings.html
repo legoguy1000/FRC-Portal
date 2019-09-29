@@ -103,8 +103,8 @@
 					Require Team Email For Login
 				</md-switch>
 			</div>
-			<div layout="column" layout-gt-sm="row">
-				<div layout="column" class="layout-padding">
+			<div layout="column" layout-gt-sm="row" layout-align-gt-sm="space-between center">
+				<div layout="column" flex flex-gt-sm="45">
 					<div layout="row" layout-align="space-between center">
 						<div>
 							<md-switch aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn">
@@ -145,7 +145,7 @@
 						</div>
 					</div>
 				</div>
-				<div layout="column" class="layout-padding">
+				<div layout="column" flex flex-gt-sm="45">
 					<div layout="row" layout-align="space-between center">
 						<div>
 							<md-switch aria-label="Enable Github Login" ng-model="vm.settings.login.github_login_enable" class="md-warn">
