@@ -54,7 +54,7 @@
 				<input ng-model="vm.settings.team.team_domain">
 			</md-input-container>
 			<div layout="row">
-				<md-switch md-invert aria-label="Team email accounts" ng-model="vm.settings.team.enable_team_emails" class="md-warn">
+				<md-switch aria-label="Team email accounts" ng-model="vm.settings.team.enable_team_emails" class="md-warn">
 					Do team members have their own team email accounts?
 				</md-switch>
 			</div>
@@ -96,16 +96,16 @@
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">
 			<div layout="row">
-				<!--<md-switch md-invert aria-label="Enable Local Login" ng-model="vm.settings.login.local_login_enable" class="md-warn">
+				<!--<md-switch aria-label="Enable Local Login" ng-model="vm.settings.login.local_login_enable" class="md-warn">
 					Enable Local Login
 				</md-switch>-->
-				<md-switch md-invert aria-label="Require Team Email For Login" ng-model="vm.settings.login.require_team_email" class="md-warn">
+				<md-switch aria-label="Require Team Email For Login" ng-model="vm.settings.login.require_team_email" class="md-warn">
 					Require Team Email For Login
 				</md-switch>
 			</div>
 			<div layout="row" layout-align="space-between center">
 				<div>
-					<md-switch md-invert aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn">
+					<md-switch aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn">
 						Enable Google Login
 					</md-switch>
 				</div>
@@ -130,7 +130,7 @@
 			</div>
 			<div layout="row" layout-align="space-between center">
 				<div>
-					<md-switch md-invert aria-label="Enable Facebook Login" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
+					<md-switch aria-label="Enable Facebook Login" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
 						Enable Facebook Login
 					</md-switch>
 				</div>
@@ -155,7 +155,7 @@
 			</div>
 			<div layout="row" layout-align="space-between center">
 				<div>
-					<md-switch md-invert aria-label="Enable Microsoft Login" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn">
+					<md-switch aria-label="Enable Microsoft Login" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn">
 						Enable Microsoft Login
 					</md-switch>
 				</div>
@@ -180,7 +180,7 @@
 			</div>
 			<div layout="row" layout-align="space-between center">
 				<div>
-					<md-switch md-invert aria-label="Enable Github Login" ng-model="vm.settings.login.github_login_enable" class="md-warn">
+					<md-switch aria-label="Enable Github Login" ng-model="vm.settings.login.github_login_enable" class="md-warn">
 						Enable Github Login
 					</md-switch>
 				</div>
@@ -205,7 +205,7 @@
 			</div>
 			<div layout="row" layout-align="space-between center">
 				<div>
-					<md-switch md-invert aria-label="Enable Amazon Login" ng-model="vm.settings.login.amazon_login_enable" class="md-warn">
+					<md-switch aria-label="Enable Amazon Login" ng-model="vm.settings.login.amazon_login_enable" class="md-warn">
 						Enable Amazon Login
 					</md-switch>
 				</div>
@@ -230,7 +230,7 @@
 			</div>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'notification'" class="layout-padding">
-			<md-switch md-invert aria-label="Enable Slack Notifications" ng-model="vm.settings.notification.slack_enable" class="md-warn">
+			<md-switch aria-label="Enable Slack Notifications" ng-model="vm.settings.notification.slack_enable" class="md-warn">
 				Enable Slack Notifications
 			</md-switch>
 			<md-input-container flex>
@@ -254,7 +254,7 @@
 					</md-button>
 				</div>
 			</div>
-			<md-switch md-invert aria-label="Enable Email Notifications" ng-model="vm.settings.notification.email_enable" class="md-warn">
+			<md-switch aria-label="Enable Email Notifications" ng-model="vm.settings.notification.email_enable" class="md-warn">
 				Enable Email Notifications
 			</md-switch>
 			<md-input-container flex>
@@ -325,22 +325,22 @@
 			</md-input-container>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'cronjob'" class="layout-padding">
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-changeUserStatus']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-changeUserStatus']" class="md-warn">
 				Automatically change user status after graduation
 			</md-switch>
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-importSlackProfiles']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-importSlackProfiles']" class="md-warn">
 				Automatically import and link Slack information with user data
 			</md-switch>
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-pollMembershipFormResponses']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-pollMembershipFormResponses']" class="md-warn">
 				Automatically pull reponses from membership form
 			</md-switch>
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-updateEventsFromGoogle']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-updateEventsFromGoogle']" class="md-warn">
 				Automatically update events from Google Calendar
 			</md-switch>
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-tooLong']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-tooLong']" class="md-warn">
 				Automatically remove sign-ins that haven't signed out after 12 hours
 			</md-switch>
-			<md-switch md-invert aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-endOfDayHoursToSlack']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-endOfDayHoursToSlack']" class="md-warn">
 				Automatically send Slack notification at 9pm local with the numberof hours completed that day
 			</md-switch>
 		</div>
