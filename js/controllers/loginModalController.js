@@ -108,7 +108,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	  clientId: configItems.discord_oauth_client_id,
 	  redirectUri: window.location.origin+'/oauth/discord',
 		authorizationEndpoint: 'https://discordapp.com/api/oauth2/authorize',
-		scope: ['identity','email'],
+		scope: ['identify','email'],
 	  scopeDelimiter: ' ',
 	}
 	vm.oauth_urls.discord = discordData.authorizationEndpoint+'?scope='+discordData.scope.join(discordData.scopeDelimiter)+'&redirect_uri='+discordData.redirectUri+'&response_type=code&client_id='+discordData.clientId+'&state='+vm.urlStateEncode;
