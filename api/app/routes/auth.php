@@ -395,23 +395,23 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Github OAuth2');
-  $this->post('/yahoo', function ($request, $response) {
+  $this->post('/discord', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
-    $provider = 'yahoo';
+    $provider = 'discord';
     if(checkLoginProvider($provider) == false) {
-      insertLogs($level = 'Warning', $message = 'Attempted login with Yahoo OAuth2.  Github login provider not enabled.');
-      return badRequestResponse($response, $msg = 'Yahoo login is not enabled.  Please select a different option.');
+      insertLogs($level = 'Warning', $message = 'Attempted login with Discord OAuth2.  Github login provider not enabled.');
+      return badRequestResponse($response, $msg = 'Discord login is not enabled.  Please select a different option.');
     }
     if(!isset($args['code']) || $args['code'] == '') {
-      insertLogs($level = 'Warning', $message = 'Invalid code from Yahoo OAuth2 sign in.');
-      return badRequestResponse($response, $msg = 'Invalid code from Yahoo Sign In');
+      insertLogs($level = 'Warning', $message = 'Invalid code from Discord OAuth2 sign in.');
+      return badRequestResponse($response, $msg = 'Invalid code from Discord Sign In');
     }
-    $secret = decryptItems(getSettingsProp('yahoo_oauth_client_secret'));
-    $clientId =  getSettingsProp('yahoo_oauth_client_id');
-    $redirect = getSettingsProp('env_url').'/oauth/yahoo';
+    $secret = decryptItems(getSettingsProp('discord_oauth_client_secret'));
+    $clientId =  getSettingsProp('discord_oauth_client_id');
+    $redirect = getSettingsProp('env_url').'/oauth/discord';
 
-    $client = new GuzzleHttp\Client(['base_uri' => 'https://api.login.yahoo.com/oauth2/']);
+    $client = new GuzzleHttp\Client(['base_uri' => 'https://discordapp.com/api/oauth2/']);
     $params = array(
       'client_id'=>$clientId,
       'code'=>$args['code'],
@@ -419,7 +419,7 @@ $app->group('/auth', function () {
       'client_secret'=>$secret,
   		'grant_type'=>'authorization_code',
     );
-    $result = $client->request('POST', 'get_token', array(
+    $result = $client->request('POST', 'token', array(
       'form_params' => $params,
       'headers' => array("Content-Type"=>"application/x-www-form-urlencoded","Accept"=>"application/json")
     ));
@@ -428,7 +428,7 @@ $app->group('/auth', function () {
     $body = $result->getBody();
     $accessTokenArr = (array) json_decode($body, true);
     $accessToken = $accessTokenArr['access_token'];
-
+    die(json_encode($accessTokenArr));
 
     $headers = array(
       'Authorization' => 'Bearer '.$accessToken,
@@ -436,20 +436,16 @@ $app->group('/auth', function () {
       'Accept-Language' => 'en-US'
     );
     //die(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $accessTokenArr['id_token'])[1]))));
-    die($accessToken);
-
-
-
-    $client = new GuzzleHttp\Client(['base_uri' => 'https://social.yahooapis.com']);
+    $client = new GuzzleHttp\Client(['base_uri' => 'https://social.discordapis.com']);
     $result = $client->request('GET', 'v1/user/me/profile', array('headers' => $headers));
     $code = $result->getStatusCode(); // 200
     $reason = $result->getReasonPhrase(); // OK
     $body = $result->getBody();
     $me = (array) json_decode($body, true);
-    $userData = formatYahooLoginUserData($me);
+    $userData = formatDiscordLoginUserData($me);
     if(checkTeamLogin($userData['email'])) {
       $teamDomain = getSettingsProp('team_domain');
-      insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Yahoo OAuth2. A '.$teamDomain.' email is required.');
+      insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Discord OAuth2. A '.$teamDomain.' email is required.');
       return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
     }
 
@@ -457,33 +453,33 @@ $app->group('/auth', function () {
     if(FrcPortal\Auth::isAuthenticated()) {
       $auth_user = FrcPortal\Auth::user();
       if($user != false) {
-        $responseData = array('status'=>false, 'msg'=>'Yahoo account is already linked to another user');
-        insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Yahoo account '.$userData['email'].' to their profile.  Account is linked to another user.');
+        $responseData = array('status'=>false, 'msg'=>'Discord account is already linked to another user');
+        insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Discord account '.$userData['email'].' to their profile.  Account is linked to another user.');
       } else {
         $provider = $userData['provider'];
         $id = $userData['id'];
         $email = $userData['email'];
         $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
-          $responseData = array('status'=>false, 'msg'=>'Yahoo account linked');
-          insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Yahoo account '.$userData['email'].' to their profile.');
+          $responseData = array('status'=>false, 'msg'=>'Discord account linked');
+          insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Discord account '.$userData['email'].' to their profile.');
       }
     } else {
       if($user != false) {
         $user->updateUserOnLogin($userData);
         $jwt = $user->generateUserJWT();
-        $responseData = array('status'=>true, 'msg'=>'Login with Yahoo Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+        $responseData = array('status'=>true, 'msg'=>'Login with Discord Account Successful', 'token'=>$jwt, 'userInfo' => $user);
         FrcPortal\Auth::setCurrentUser($user->user_id);
-        insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Yahoo OAuth2.');
+        insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Discord OAuth2.');
       } else {
         $teamNumber = getSettingsProp('team_number');
         $responseData = array('status'=>false, 'msg'=>'Amazon account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
-        insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Yahoo OAuth2. Microsoft account not linked to any current portal user.');
+        insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Discord OAuth2. Microsoft account not linked to any current portal user.');
       }
     }
 
     $response = $response->withJson($responseData);
     return $response;
-  })->setName('Yahoo OAuth2');
+  })->setName('Discord OAuth2');
   /*$this->post('/slack', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();

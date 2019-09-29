@@ -254,9 +254,9 @@ if($version >= '2.14.2') {
       $client_id->section = 'oauth';
       $client_id->save();
     }
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'yahoo_login_enable'], ['value' => false]);
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'yahoo_oauth_client_id'], ['value' => '']);
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'yahoo_oauth_client_secret'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'discord_login_enable'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_secret'], ['value' => '']);
   }
 }
 
