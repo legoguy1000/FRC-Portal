@@ -37,7 +37,7 @@ $app->group('/auth', function () {
     $user = checkLogin($userData);
     if(FrcPortal\Auth::isAuthenticated()) {
       $auth_user = FrcPortal\Auth::user();
-      if($user != false && $user->user_id != $auth_user) {
+      if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Google account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Google account '.$userData['email'].' to their profile.  Account is linked to another user.');
       } else {
@@ -102,7 +102,7 @@ $app->group('/auth', function () {
         $user = checkLogin($userData);
         if(FrcPortal\Auth::isAuthenticated()) {
           $auth_user = FrcPortal\Auth::user();
-          if($user != false) {
+          if($user != false && $user->user_id != $auth_user->user_id) {
             $responseData = array('status'=>false, 'msg'=>'Facebook account is already linked to another user');
             insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Facebook account '.$userData['email'].' to their profile.  Account is linked to another user.');
           } else {
@@ -190,7 +190,7 @@ $app->group('/auth', function () {
     $user = checkLogin($userData);
     if(FrcPortal\Auth::isAuthenticated()) {
       $auth_user = FrcPortal\Auth::user();
-      if($user != false) {
+      if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Microsoft account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Microsoft account '.$userData['email'].' to their profile.  Account is linked to another user.');
       } else {
@@ -270,7 +270,7 @@ $app->group('/auth', function () {
     $user = checkLogin($userData);
     if(FrcPortal\Auth::isAuthenticated()) {
       $auth_user = FrcPortal\Auth::user();
-      if($user != false) {
+      if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Amazon account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Amazon account '.$userData['email'].' to their profile.  Account is linked to another user.');
       } else {
@@ -349,7 +349,7 @@ $app->group('/auth', function () {
     $user = checkLogin($userData);
     if(FrcPortal\Auth::isAuthenticated()) {
       $auth_user = FrcPortal\Auth::user();
-      if($user != false) {
+      if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Github account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Github account '.$userData['email'].' to their profile.  Account is linked to another user.');
       } else {
