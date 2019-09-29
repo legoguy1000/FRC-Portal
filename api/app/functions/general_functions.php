@@ -538,7 +538,7 @@ function formatDiscordLoginUserData($me) {
 	$fname = '';
 	$lname = '';
 	$id = $me['id'];
-	$image = 'https://cdn.discordapp.com/avatars/'.$id.'/.'$me['avatar'].'.png'; //$me['image']['url'];\
+	$image = 'https://cdn.discordapp.com/avatars/'.$id.'/'.$me['avatar'].'.png'; //$me['image']['url'];\
 	$username = $me['username'];
 
 	$userData = array(
