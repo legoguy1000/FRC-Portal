@@ -37,7 +37,7 @@ $app->group('/auth', function () {
     $user = checkLogin($userData);
     if(FrcPortal\Auth::isAuthenticated()) {
       $auth_user = FrcPortal\Auth::user();
-      if($user != false) {
+      if($user != false && $user->user_id != $auth_user) {
         $responseData = array('status'=>false, 'msg'=>'Google account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Google account '.$userData['email'].' to their profile.  Account is linked to another user.');
       } else {
@@ -449,7 +449,7 @@ $app->group('/auth', function () {
     $user = checkLogin($userData);
     if(FrcPortal\Auth::isAuthenticated()) {
       $auth_user = FrcPortal\Auth::user();
-      if($user != false) {
+      if($user != false && $user->user_id != $auth_user) {
         $responseData = array('status'=>false, 'msg'=>'Discord account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Discord account '.$userData['email'].' to their profile.  Account is linked to another user.');
       } else {
