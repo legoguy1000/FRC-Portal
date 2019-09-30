@@ -111,7 +111,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		scope: ['identify','email'],
 	  scopeDelimiter: ' ',
 	}
-	vm.oauth_urls.discord = discordData.authorizationEndpoint+'?scope='+discordData.scope.join(discordData.scopeDelimiter)+'&redirect_uri='+discordData.redirectUri+'&response_type=code&client_id='+discordData.clientId+'&state='+vm.urlStateEncode;
+	vm.oauth_urls.discord = discordData.authorizationEndpoint+'?scope='+discordData.scope.join(discordData.scopeDelimiter)+'&redirect_uri='+discordData.redirectUri+'&response_type=code&client_id='+discordData.clientId+'&state='+vm.urlStateEncode+'&prompt=none';
 
 	vm.showlocal = function() {
 		vm.showlocallogin = !vm.showlocallogin;
