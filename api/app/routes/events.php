@@ -768,6 +768,13 @@ $app->group('/events', function () {
         insertLogs($level = 'Warning', $message = 'Unauthorized attempt to sync event with Google Calendar');
         return unauthorizedResponse($response);
       }
+      $api_key = getSettingsProp('google_api_key');
+      if(!isset($api_key) || $api_key == '') {
+        $responseArr = array('status'=>false, 'msg'=>'Google API Key cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the API Key.');
+        insertLogs($level = 'Warning', $message = 'Cannot search Google calendar.  Google API Key is blank');
+        $response = $response->withJson($responseArr);
+        return $response;
+      }
 
       $event_id = $args['event_id'];
       try {
