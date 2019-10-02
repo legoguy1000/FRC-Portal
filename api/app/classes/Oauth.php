@@ -53,7 +53,7 @@ class Oauth extends Eloquent {
      return $date->format('U');
    }
 
-   public function getOauthProviderCap() {
+   public function getOauthProviderCapAttribute() {
      return ucfirst($this->attributes['oauth_provider_cap']);
    }
 }
