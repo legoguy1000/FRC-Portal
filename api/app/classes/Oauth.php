@@ -54,6 +54,6 @@ class Oauth extends Eloquent {
    }
 
    public function getOauthProviderCapAttribute() {
-     return ucfirst($this->attributes['oauth_provider_cap']);
+     return ucfirst($this->attributes['oauth_provider']);
    }
 }
