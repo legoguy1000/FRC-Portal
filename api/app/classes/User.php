@@ -303,7 +303,7 @@ class User extends Eloquent {
   }
 
   public function deleteLinkedAccount($auth_id) {
-    $auth = $this->oauth()->where('auth_id',$auth_id);
+    $auth = $this->oauth()->where('auth_id',$auth_id)->first();
     $auth->delete();
     if($delete) {
       $message = $auth->oauth_provider_cap.' account "'.$auth->oauth_user.'" unlinked.';
