@@ -160,10 +160,6 @@ $app->group('/users', function () {
         insertLogs($level = 'Information', $message = 'PIN update failed. PIN must be between 4 to 8 numbers.');
         return badRequestResponse($response, $msg = 'PIN must be between 4 to 8 numbers');
       }
-      /*if($user->signin_pin == hash('SHA256', $formData['pin'])) {
-        insertLogs($level = 'Information', $message = 'PIN update failed. PIN cannot be the same.');
-        return badRequestResponse($response, $msg = 'PIN must be changed to a different number');
-      } */
       $user->signin_pin = hash('SHA256', $formData['pin']);
       $user->save();
       insertLogs($level = 'Information', $message = 'PIN updated');
@@ -216,8 +212,7 @@ $app->group('/users', function () {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $user = $request->getAttribute('user');
-        $accounts = $user->oauth()->get();
-        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $accounts);
+        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user->oauth()->get());
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get User Linked Accounts');
@@ -226,8 +221,7 @@ $app->group('/users', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong unlinking the account', $data = null);
         $user = $request->getAttribute('user');
-        $delete = $user->deleteLinkedAccount($args['auth_id']);
-        if($delete) {
+        if($user->deleteLinkedAccount($args['auth_id'])) {
           $responseArr['status'] = true;
           $responseArr['msg'] ='Linked Account Removed';
           $responseArr['data'] = $user->oauth()->get();
@@ -241,12 +235,8 @@ $app->group('/users', function () {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        $user_id = $args['user_id'];
-        //User passed from middleware
         $user = $request->getAttribute('user');
-        //$user = FrcPortal\User::find($user_id);
-        $preferences = $user->getNotificationPreferences();
-        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $preferences);
+        $responseArr = standardResponse($status = true, $msg = '', $data = $user->getNotificationPreferences());
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get User Notification Preferences');
@@ -255,6 +245,7 @@ $app->group('/users', function () {
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         $user_id = $args['user_id'];
+        $user = $request->getAttribute('user');
         if(!isset($formData['method']) || $formData['method'] == '') {
           return badRequestResponse($response, $msg = 'Notification method is required');
         }
@@ -274,7 +265,7 @@ $app->group('/users', function () {
             $responseArr['msg'] ='Notification Preferences updated';
           }
         } else if($formData['value'] == false) {
-          $pref = FrcPortal\NotificationPreference::where('user_id',$user_id)->where('method',$formData['method'])->where('type',$formData['type'])->delete();
+          $pref = $user->notification_preferences()->where('method',$formData['method'])->where('type',$formData['type'])->delete();
           if($pref) {
             $responseArr['status'] = true;
             $responseArr['msg'] ='Notification Preferences updated';

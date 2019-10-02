@@ -236,7 +236,7 @@ class User extends Eloquent {
       'slack' => getSettingsProp('slack_enable'),
       'email' => getSettingsProp('email_enable')
     );
-  	$result = NotificationPreference::where('user_id',$this->user_id)->get();
+  	$result = $this->notification_preferences()->get();
   	if(count($result) > 0) {
   		foreach($result as $re) {
   			$m = $re['method'];
