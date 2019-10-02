@@ -232,12 +232,16 @@ class User extends Eloquent {
 
   public function getNotificationPreferences() {
     $data = getNotificationOptions();
+    $method_enable = array(
+      'slack' => getSettingsProp('slack_enable'),
+      'email' => getSettingsProp('email_enable')
+    );
   	$result = NotificationPreference::where('user_id',$this->user_id)->get();
   	if(count($result) > 0) {
   		foreach($result as $re) {
   			$m = $re['method'];
   			$t = $re['type'];
-  			$data[$m][$t] = true;
+  			$data[$m][$t] = true && $method_enable[$m];
   		}
   	}
   	return $data;
