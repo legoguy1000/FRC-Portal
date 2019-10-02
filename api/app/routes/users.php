@@ -215,23 +215,23 @@ $app->group('/users', function () {
       $this->get('', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
-
-        $user_id = $args['user_id'];
-        $user = FrcPortal\Oauth::where('user_id',$user_id)->get();
-        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user);
+        $user = $request->getAttribute('user');
+        $accounts = $user->oauth()->get();
+        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $accounts);
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get User Linked Accounts');
       $this->delete('/{auth_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Auth::user()->user_id;
         $formData = $request->getParsedBody();
-
-        $user_id = $args['user_id'];
-        $auth_id = $args['auth_id'];
-        $user = FrcPortal\Oauth::where('user_id',$user_id)->where('auth_id',$auth_id)->delete();
-        insertLogs($level = 'Information', $message = 'Linked account removed.');
-        $linkedAccount = FrcPortal\Oauth::where('user_id',$user_id)->get();
-        $responseArr = array('status'=>true, 'msg'=>'Linked Account Removed', 'data' => $linkedAccount);
+        $responseArr = standardResponse($status = false, $msg = 'Something went wrong unlinking the account', $data = null);
+        $user = $request->getAttribute('user');
+        $delete = $user->deleteLinkedAccount($args['auth_id']);
+        if($delete) {
+          $responseArr['status'] = true;
+          $responseArr['msg'] ='Linked Account Removed';
+          $responseArr['data'] = $user->oauth()->get();
+        }
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Delete User Linked Account');
