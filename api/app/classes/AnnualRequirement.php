@@ -118,7 +118,7 @@ class AnnualRequirement extends Eloquent {
     );
     $hours = null;
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
-      $seasonInfo = Season::find($this->attributes['season_id']);
+      $seasonInfo = $this->seasons()->first();
       $no_bagday = $seasonInfo->no_bagday;
       $hours = DB::table('meeting_hours')
         ->leftJoin('seasons', function ($join) use ($no_bagday) {
@@ -253,8 +253,7 @@ class AnnualRequirement extends Eloquent {
     $total_bool = true;
     $week_bool = true;
     if(isset($hours) && isset($this->attributes['season_id'])) {
-      $sid = $this->attributes['season_id'];
-      $season = Season::find($sid);
+      $season = $this->seasons()->first();
       $hours_req = $season->hour_requirement;
       $hours_week = $this->weekly_build_season_hours;
       $hour_req_wk = $season->hour_requirement_week;
@@ -276,7 +275,7 @@ class AnnualRequirement extends Eloquent {
     $dues = $this->dues;
     $mh = $this->min_hours;
     if(isset($this->attributes['user_id'])) {
-      $userInfo = User::find($this->attributes['user_id']);
+      $userInfo = $this->users()->first();
       $stu = $userInfo->user_type == 'Student';
       $men = $userInfo->user_type == 'Mentor';
       return $jt && $stims && (($stu && $dues) || $men) && $mh;
