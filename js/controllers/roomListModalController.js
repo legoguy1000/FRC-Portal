@@ -38,11 +38,9 @@ function roomListModalController($rootScope,$log,$element,$mdDialog,$scope,event
 
 	vm.updateEventRoomList = function (close) {
 		vm.loading = true;
-		var rooms = vm.room_list.rooms.map(x=> x.users);
-		rooms.non_select = vm.room_list.non_select;
 		var data = {
 			event_id: vm.eventInfo.event_id,
-			rooms: rooms
+			rooms: vm.room_list
 		};
 		eventsService.updateEventRoomList(data).then(function(response) {
 			vm.loading = false;
