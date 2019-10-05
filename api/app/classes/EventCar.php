@@ -81,9 +81,7 @@ class EventCar extends Eloquent {
    * Get the users in room.
    */
   public function passengers() {
-      return $this->hasManyThrough('FrcPortal\User','FrcPortal\EventRequirement', 'car_id', 'user_id', 'car_id', 'user_id')->whereHas('users', function($product){
-          $product->where('user_id', '>', 23);
-      });
+      return $this->hasManyThrough('FrcPortal\User','FrcPortal\EventRequirement', 'car_id', 'user_id', 'car_id', 'user_id')->where('users.user_id', '<>', $this->attributes['user_id']);
   }
   public function getCarTitleAttribute() {
     return isset($this->user_id) && isset($this->car_space) ? $this->driver->full_name.' ('.$this->car_space.')' : null;
