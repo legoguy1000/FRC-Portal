@@ -476,11 +476,11 @@ $app->group('/events', function () {
         }
         //Not Assigned a room
         $roomArr = $formData['rooms']['non_select'];
-        $userArr = array_column($roomArr['users'], 'user_id');
+        $userArr = array_column($roomArr, 'user_id');
         if(!empty($userArr)) {
           $events = $event->event_requirements()->whereIn('user_id', $userArr)->update(['room_id' => null]);
         }
-        $event = getUsersEventRequirements($event_id);
+        //$event = getUsersEventRequirements($event_id);
         insertLogs($level = 'Information', $message = 'Event Room List updated');
         $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>$event);
         $response = $response->withJson($responseArr);
