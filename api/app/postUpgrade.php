@@ -197,6 +197,8 @@ if($version >= '2.14.2') {
       $admin_data['admin_pass'] = hash('sha512',$password);
       $iniData['admin'] = $admin_data;
       write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
+      echo 'New Admin User: admin' . PHP_EOL . PHP_EOL;
+      echo 'New Admin Password: '.$password . PHP_EOL . PHP_EOL;
     }
     if(is_null($iniData['encryption']) || is_null($iniData['encryption']['encryption_key'])) {
       $enc_data = array();
@@ -231,7 +233,7 @@ if($version >= '2.14.2') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'enable_team_emails'], ['value' => false]);
     $file = __DIR__.'/secured/service_account_credentials.json';
     $setting = FrcPortal\Setting::where('section', 'service_account')->where('setting','google_service_account_data')->first();
-  	if(file_exists($file) && $setting->value == '') {
+  	if(file_exists($file) && (is_null($setting) || $setting->value == '')) {
       $client_email = '';
       $json_encypt = '';
   		$json = file_get_contents($file);
@@ -240,6 +242,7 @@ if($version >= '2.14.2') {
       $json_encypt = encryptItems($json);
       $data = $client_email.','.$json_encypt;
       $setting = FrcPortal\Setting::firstOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => $data]);
+      echo 'Google Drive service account credentials are now encrypted' . PHP_EOL . PHP_EOL;
   	}
     $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_secret')->get();
     foreach($settings as $secret) {
@@ -249,6 +252,7 @@ if($version >= '2.14.2') {
       $secret->section = 'oauth';
       $secret->save();
     }
+    echo 'OAuth client secrets are now encrypted' . PHP_EOL . PHP_EOL;
     $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_id')->get();
     foreach($settings as $client_id) {
       $client_id->section = 'oauth';
@@ -258,6 +262,7 @@ if($version >= '2.14.2') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_id'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_secret'], ['value' => '']);
   }
+  echo 'FRC Portal has been sucessfully upgrade to version '.VERSION . PHP_EOL . PHP_EOL;
 }
 
 
