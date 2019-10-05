@@ -348,14 +348,14 @@ $app->group('/events', function () {
           $carArr = $formData['cars'][$car_id];
           $userArr = array_column($carArr, 'user_id');
           if(!empty($userArr) && count($userArr) <= $car['car_space']) {
-            $events = $event->event_cars()->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
+            $events = $event->event_requirements()->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
         	}
         }
         //Not Assigned a car
         $carArr = $formData['cars']['non_select'];
         $userArr = array_column($carArr, 'user_id');
         if(!empty($userArr)) {
-          $events = $event->event_cars()->whereIn('user_id', $userArr)->update(['car_id' => null]);
+          $events = $event->event_requirements()->whereIn('user_id', $userArr)->update(['car_id' => null]);
         }
         //$event = getUsersEventRequirements($event_id);
         $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>null);
