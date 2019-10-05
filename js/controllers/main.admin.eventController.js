@@ -152,6 +152,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 				'food_required': vm.event.food_required,
 				'room_required': vm.event.room_required,
 				'drivers_required': vm.event.drivers_required,
+				'time_slots_required': vm.event.time_slots_required,
 			}
 		};
 		eventsService.updateEvent(data).then(function(response){
