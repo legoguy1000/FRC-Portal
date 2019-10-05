@@ -40,7 +40,7 @@ function roomListModalController($rootScope,$log,$element,$mdDialog,$scope,event
 		vm.loading = true;
 		var data = {
 			event_id: vm.eventInfo.event_id,
-			rooms: vm.room_list.room_selection
+			rooms: vm.room_list
 		};
 		eventsService.updateEventRoomList(data).then(function(response) {
 			vm.loading = false;

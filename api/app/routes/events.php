@@ -419,7 +419,7 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Add Event Room');
-      //Add New Event Room
+      //Add New Event Room for a user
       $this->post('/user', function ($request, $response, $args) {
         $user = FrcPortal\Auth::user();
         $formData = $request->getParsedBody();
@@ -459,26 +459,26 @@ $app->group('/events', function () {
           insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Room list');
           return unauthorizedResponse($response);
         }
-
-        $event_id = $args['event_id'];
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
         $formData = $request->getParsedBody();
         if(!isset($formData['rooms']) || !is_array($formData['rooms']) || empty($formData['rooms'])) {
           return badRequestResponse($response);
         }
-        $rooms = FrcPortal\EventRoom::where('event_id',$event_id)->get();
+        $rooms = $event->event_rooms()->get();
         foreach($rooms as $room) {
           $room_id = $room->room_id;
           $roomArr = $formData['rooms'][$room_id];
-          $userArr = array_column($roomArr, 'user_id');
+          $userArr = array_column($roomArr['users'], 'user_id');
           if(!empty($userArr) && count($userArr) <= 4) {
-            $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
+            $events = $event->event_requirements()->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
           }
         }
         //Not Assigned a room
         $roomArr = $formData['rooms']['non_select'];
-        $userArr = array_column($roomArr, 'user_id');
+        $userArr = array_column($roomArr['users'], 'user_id');
         if(!empty($userArr)) {
-          $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
+          $events = $event->event_requirements()->whereIn('user_id', $userArr)->update(['room_id' => null]);
         }
         $event = getUsersEventRequirements($event_id);
         insertLogs($level = 'Information', $message = 'Event Room List updated');
