@@ -202,7 +202,7 @@ class Event extends Eloquent {
   	$rooms = array();
   	$roomInfo = array();
   	$roomInfo = $this->event_rooms()->with('users')->get();
-  	$rooms = $roomInfo->keyBy('room_id')->all();
+  	$rooms['rooms'] = $roomInfo->keyBy('room_id')->all();
   	//no user yet users
   	$users = User::whereHas('event_requirements', function($q) {
       $q->where('event_id',$this->event_id)->where('registration',true)->whereNull('room_id');
