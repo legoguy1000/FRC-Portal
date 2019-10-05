@@ -20,7 +20,7 @@
 						dnd-list="car.passengers"
 						dnd-disable-if="car.passengers.length >= car.car_space"
 						style="min-height:20px;">
-					    <md-list-item ng-repeat="user in car.passengers | filter: { user_id: !car.user_id }"
+					    <md-list-item ng-repeat="user in car.passengers | filter: { user_id: '!car.user_id' }"
 					        dnd-draggable="user"
 					        dnd-moved="car.passengers.splice($index, 1)"
 					        dnd-effect-allowed="move"
