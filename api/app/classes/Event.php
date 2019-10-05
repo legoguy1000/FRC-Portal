@@ -183,6 +183,22 @@ class Event extends Eloquent {
       return $this->hasMany('FrcPortal\EventFood', 'event_id', 'event_id');
   }
 
+  public function getUsersEventRequirements() {
+		$eventReqs = User::with(['event_requirements' => function ($query) {
+			  $query->where('event_id','=',$this->event_id);
+			},'event_requirements.event_rooms','event_requirements.event_cars'])
+			->whereExists(function ($query) {
+			  $query->select(DB::raw(1))
+				->from('event_requirements')
+				->whereRaw('event_requirements.user_id = users.user_id')
+				->where('event_requirements.registration',true)
+				->where('event_requirements.event_id',$this->event_id);
+			})
+			->orWhere('status',true)
+			->get();
+  	return $eventReqs;
+  }
+
   public function getEventCarList() {
   	$cars = array();
   	$carInfo = array();

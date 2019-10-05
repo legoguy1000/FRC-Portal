@@ -299,7 +299,7 @@ $app->group('/events', function () {
       }
       $event = $event->load($withArr);
       if($reqsBool) {
-        $event->users = getUsersEventRequirements($event_id);
+        $event->users = $event->getUsersEventRequirements();
       }
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
@@ -311,7 +311,7 @@ $app->group('/events', function () {
       $event_id = $args['event_id'];
       //Event passed from middleware
       $event = $request->getAttribute('event');
-      $eventReqs = getUsersEventRequirements($event_id);
+      $eventReqs = $event->getUsersEventRequirements();
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $eventReqs);
       $response = $response->withJson($responseArr);
       insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'" Requirements');
@@ -358,8 +358,8 @@ $app->group('/events', function () {
         if(!empty($userArr)) {
           $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => null]);
         }
-        $event = getUsersEventRequirements($event_id);
-        $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>$event);
+        //$event = getUsersEventRequirements($event_id);
+        $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>null);
         insertLogs($level = 'Information', $message = 'Event car list updated');
         $response = $response->withJson($responseArr);
         return $response;
@@ -801,7 +801,7 @@ $app->group('/events', function () {
           $reqArr->save();
         }
       }
-      $event = getUsersEventRequirements($event_id);
+      $event = $event->getUsersEventRequirements();
       $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $event);
       $response = $response->withJson($responseArr);
       return $response;
@@ -839,7 +839,7 @@ $app->group('/events', function () {
           return badRequestResponse($response, $msg = 'User must be registered prior to receiving time credit');
         }
       }
-      $event = getUsersEventRequirements($event_id);
+      $event = $event->getUsersEventRequirements();
       $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $event);
       $response = $response->withJson($responseArr);
       return $response;

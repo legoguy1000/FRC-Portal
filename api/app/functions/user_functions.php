@@ -90,6 +90,7 @@ function getUsersAnnualRequirements($season_id) {
 	return $season;
 }
 
+/*
 function getUsersEventRequirements($event_id) {
 	$event = false;
 	if(!is_null($event_id)) {
@@ -107,7 +108,7 @@ function getUsersEventRequirements($event_id) {
 			->get();
 	}
 	return $event;
-}
+} */
 
 function localAdminModel() {
 	$user = new FrcPortal\User();
