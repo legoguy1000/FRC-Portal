@@ -39,7 +39,7 @@
 						min-view="month"
 						max-view="hour"
 						start-view="month"
-						min-date="vm.timeSlotInfo.time_start_moment"
+						min-date="vm.timeSlotInfo.time_start_moment ? vm.timeSlotInfo.time_start_moment : vm.min_date"
 						max-date="vm.max_date"
 						ng-model="vm.timeSlotInfo.time_end_moment">
 					</input>
