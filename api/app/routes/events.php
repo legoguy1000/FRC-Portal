@@ -469,7 +469,7 @@ $app->group('/events', function () {
         foreach($rooms as $room) {
           $room_id = $room->room_id;
           $roomArr = $formData['rooms'][$room_id];
-          $userArr = array_column($roomArr['users'], 'user_id');
+          $userArr = array_column($roomArr, 'user_id');
           if(!empty($userArr) && count($userArr) <= 4) {
             $events = $event->event_requirements()->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
           }

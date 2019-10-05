@@ -38,9 +38,14 @@ function roomListModalController($rootScope,$log,$element,$mdDialog,$scope,event
 
 	vm.updateEventRoomList = function (close) {
 		vm.loading = true;
+		var rooms = {};
+		angular.forEach(vm.room_list.rooms, function(room, room_id) {
+		  rooms[room_id] = room.users;
+		});
+		rooms.non_select = vm.room_list.non_select;
 		var data = {
 			event_id: vm.eventInfo.event_id,
-			rooms: vm.room_list
+			rooms: rooms
 		};
 		eventsService.updateEventRoomList(data).then(function(response) {
 			vm.loading = false;
