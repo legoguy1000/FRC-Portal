@@ -25,7 +25,7 @@ function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersSe
 		vm.loading = true;
 		var cars = {};
 		angular.forEach(vm.car_list.cars, function(car, car_id) {
-		  cars[car_id] = car.users;
+		  cars[car_id] = car.passengers;
 		});
 		cars.non_select = vm.car_list.non_select;
 		var data = {
