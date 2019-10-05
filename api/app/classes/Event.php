@@ -228,4 +228,28 @@ class Event extends Eloquent {
   	return $rooms;
   }
 
+  public function syncGoogleCalendarEvent() {
+  	$calendar = getSettingsProp('google_calendar_id');
+  	$google_cal_id = $this->google_cal_id;
+  	if(!isset($google_cal_id) || $google_cal_id == '') {
+  		throw new Exception('Google Calendar Event ID cannot be blank', 400);
+  	}
+  	$ge = getGoogleCalendarEvent($google_cal_id);
+  	$this->name = $ge['name'];
+  	$this->details = $ge['details'];
+  	$this->location = $ge['location'];
+  	$this->event_start = $ge['event_start'];
+  	$this->event_end = $ge['event_end'];
+  	if(!is_null($this->registration_deadline_gcalid) && $this->registration_deadline_gcalid != '') {
+  		try {
+  			$ged = getGoogleCalendarEvent($this->registration_deadline_gcalid);
+  			$this->registration_deadline = $ged['event_end'];
+  		} catch (Exception $e) {}
+  	}
+  	if(!$this->save()) {
+  		throw new Exception('Something went wrong updating the event', 500);
+  	}
+  	return $this;
+  }
+
 }

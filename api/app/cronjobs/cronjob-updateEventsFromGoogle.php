@@ -6,7 +6,7 @@ if(count($events) > 0) {
 	foreach($events as $event) {
 		if(isset($event->google_cal_id) && $event->google_cal_id != '') {
 			try {
-				syncGoogleCalendarEvent($event->event_id);
+				$event->syncGoogleCalendarEvent();
 			} catch (Exception $e) {}
 		}
 	}
