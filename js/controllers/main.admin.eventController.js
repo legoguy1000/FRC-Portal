@@ -216,7 +216,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 			}
 		})
 		.then(function(response) {
-			vm.users = response.data;
+			vm.getEventRequirements();
 		}, function() { });
   };
 
@@ -238,7 +238,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 			}
 		})
 		.then(function(response) {
-			vm.users = response.data;
+			vm.getEventRequirements();
 		}, function() { });
   };
 
