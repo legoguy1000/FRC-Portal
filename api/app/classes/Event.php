@@ -188,18 +188,28 @@ class Event extends Eloquent {
   	$carInfo = array();
     $event_id = $this->event_id;
   	$carInfo = $this->event_cars()->with(['driver','passengers'])->get();
-  	if(count($carInfo) > 0) {
-  		foreach($carInfo as $car) {
-  			$car_id = $car->car_id;
-  			$users = $this->event_requirements()->with(['user'])->where('car_id','=',$car_id)->get();
-  			$cars[$car_id] = $users;
-  		}
-  	}
+  	$cars = $carInfo->keyBy('car_id')->all();
   	//no user yet users
-  	$users = $this->event_requirements()->with(['user'])->where('registration',true)->whereNull('car_id')->get();
+    $users = FrcPortal\User::whereHas('event_requirements', function($q) {
+      $q->where('event_id',$this->event_id)->where('registration',true)->whereNull('car_id');
+    })->get();
   	$cars['non_select'] = $users;
-  	return array('cars'=>$carInfo, 'total'=>count($carInfo), 'car_selection'=>$cars);
+  	return $cars;
 
+  }
+
+  public function getEventRoomList() {
+  	$rooms = array();
+  	$roomInfo = array();
+  	$roomInfo = $this->event_rooms()->with('users')->get();
+  	$rooms = $roomInfo->keyBy('room_id')->all();
+  	//no user yet users
+  	$users = FrcPortal\User::whereHas('event_requirements', function($q) {
+      $q->where('event_id',$this->event_id)->where('registration',true)->whereNull('room_id');
+  	})->get();
+  	$rooms['non_select'] = $users;
+    #return array('rooms'=>$roomInfo, 'total'=>count($roomInfo), 'room_selection'=>$rooms);
+  	return $rooms;
   }
 
 }

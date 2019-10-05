@@ -322,16 +322,7 @@ $app->group('/events', function () {
       $this->get('', function ($request, $response, $args) {
         //Event passed from middleware
         $event = $request->getAttribute('event');
-        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        $event_id = $args['event_id'];
-        try {
-          $responseArr['data'] = getEventCarList($event_id);
-          $responseArr['status'] = true;
-          $responseArr['msg'] = '';
-        } catch (Exception $e) {
-          insertLogs($level = 'Warning', $message = 'Something went wrong returning event cars. '.$e->getMessage());
-          return exceptionResponse($response, $msg = 'Something went wrong returning event cars');
-      	}
+        $responseArr = standardResponse($status = true, $msg = '', $data = $event->getEventCarList());
         $response = $response->withJson($responseArr);
         insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'" Cars');
         return $response;
@@ -377,28 +368,18 @@ $app->group('/events', function () {
     $this->group('/rooms', function () {
       //Get Event Rooms
       $this->get('', function ($request, $response, $args) {
-        $event_id = $args['event_id'];
-        $responseArr = array(
-          'status' => false,
-          'msg' => '',
-          'data' => null
-        );
-        $responseArr['data'] = FrcPortal\EventRoom::with('users')->where('event_id',$event_id)->get();
-        $responseArr['status'] = true;
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
+        $data = $event->event_rooms()->with('users')->get();
+        $responseArr = standardResponse($status = true, $msg = '', $data);
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get Event Rooms');
       //Get Event Rooms
       $this->get('/adminList', function ($request, $response, $args) {
-        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        $event_id = $args['event_id'];
-        try {
-          $responseArr['data'] = getEventRoomList($event_id);
-          $responseArr['status'] = true;
-          $responseArr['msg'] = '';
-        } catch (Exception $e) {
-      		$result['msg'] = handleExceptionMessage($e);
-      	}
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
+        $responseArr = standardResponse($status = true, $msg = '', $data = $event->getEventRoomList());
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get Event Rooms Admin List');
@@ -413,7 +394,6 @@ $app->group('/events', function () {
         }
         //Event passed from middleware
         $event = $request->getAttribute('event');
-
         if(!$event->room_required) {
           return badRequestResponse($response, $msg = 'Hotel rooms not needed for this event');
         }
@@ -423,22 +403,18 @@ $app->group('/events', function () {
         if(!isset($formData['gender']) || ($formData['gender'] == '' && $formData['user_type'] != 'Adult')) {
           return badRequestResponse($response, $msg = 'Gender cannot be blank');
         }
-
         $room = new FrcPortal\EventRoom();
         $room->event_id = $event->event_id;
         $room->user_type = $formData['user_type'];
         $room->gender = $formData['gender'];
         if($room->save()) {
-          try {
-            $responseArr['data'] = getEventRoomList($event->event_id);
-            $responseArr['status'] = true;
-            $responseArr['msg'] = 'New room added';
-          } catch (Exception $e) {
-        		$result['msg'] = handleExceptionMessage($e);
-        	}
+          $responseArr['data'] = $event->getEventRoomList();
+          $responseArr['status'] = true;
+          $responseArr['msg'] = 'New room added';
+          insertLogs($level = 'Information', $message = 'Event Room added for '.$event->name);
         } else {
-          insertLogs($level = 'Information', $message = 'Event Room added');
-          $responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
+          #insertLogs($level = 'Information', $message = 'Event Room added');
+          #$responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
         }
         $response = $response->withJson($responseArr);
         return $response;
@@ -448,7 +424,6 @@ $app->group('/events', function () {
         $user = FrcPortal\Auth::user();
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-
         //Event passed from middleware
         $event = $request->getAttribute('event');
         if(!$event->room_required) {
@@ -465,16 +440,12 @@ $app->group('/events', function () {
         $room->user_type = $user->adult ? 'Adult':'Student';
         $room->gender = $user->adult ? '':$user->gender;
         if($room->save()) {
-          try {
-            $responseArr['data'] = FrcPortal\EventRoom::with('users')->where('event_id',$event_id)->get();
-            $responseArr['status'] = true;
-            $responseArr['msg'] = 'New room added';
-          } catch (Exception $e) {
-            $result['msg'] = handleExceptionMessage($e);
-          }
+          $responseArr['data'] = $event->event_rooms()->with('users')->get();
+          $responseArr['status'] = true;
+          $responseArr['msg'] = 'New room added';
         } else {
-          insertLogs($level = 'Information', $message = 'Event Room added');
-          $responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
+          #insertLogs($level = 'Information', $message = 'Event Room added');
+          #$responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
         }
         $response = $response->withJson($responseArr);
         return $response;
@@ -524,18 +495,17 @@ $app->group('/events', function () {
           insertLogs($level = 'Warning', $message = 'Unauthorized attempt to delete Event Room');
           return unauthorizedResponse($response);
         }
-
-        $event_id = $args['event_id'];
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
         $room_id = $args['room_id'];
-        try {
-          deleteEventRoom($event_id, $room_id);
-          $rooms = getEventRoomList($event_id);
+        //deleteEventRoom($event_id, $room_id);
+        if($event->event_rooms()->find($room_id)->delete()) {
+      		$rooms = $event->getEventRoomList();
           $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms);
-          $response = $response->withJson($responseArr);
-          return $response;
-        } catch (Exception $e) {
-          return exceptionResponse($response, $msg = handleExceptionMessage($e), $code = 200);
+      	} else {
+          //throw new Exception('Something went wrong', 500);
         }
+        $response = $response->withJson($responseArr);
       })->setName('Delete Event Room');
     });
     $this->group('/timeSlots', function () {
