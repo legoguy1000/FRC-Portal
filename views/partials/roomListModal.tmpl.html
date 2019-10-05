@@ -11,7 +11,7 @@
 		</md-toolbar>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 		<md-dialog-content class="md-margin">
-			<div layout="row" ng-repeat="room in vm.room_list.rooms" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': !vm.admin && $last}">
+			<div layout="row" ng-repeat="room in vm.room_list.rooms track by room.room_id | orderBy room_title" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': !vm.admin && $last}">
 				<div flex layout="row" layout-align="start center" class="" style="border-right: solid;">
 					<md-button class="md-icon-button noprint" ng-click="vm.deleteEventRoom(room.room_id)" ng-hide="!vm.admin">
 						<md-tooltip md-direction="top">Delete Room</md-tooltip>
@@ -25,7 +25,7 @@
 						dnd-allowed-types="room.room_type"
 						dnd-disable-if="(room.user_type == 'Student' && room.users.length >= 4) || (room.user_type == 'Adult' && room.users.length >= 2)"
 						style="min-height:20px;">
-					    <md-list-item ng-repeat="user in room.users"
+					    <md-list-item ng-repeat="user in room.users track by user.user_id"
 					        dnd-draggable="user"
 					        dnd-moved="room.users.splice($index, 1)"
 					        dnd-effect-allowed="move"
@@ -33,7 +33,6 @@
 					        ng-class="{'selected': models.selected === user}"
 									dnd-type="user.room_type"
 									class="min-height-reset"
-									dnd-disable-if = "!vm.admin"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint" ng-hide="!vm.admin">:::</div>
@@ -62,7 +61,7 @@
 					<md-list ng-cloak
 						dnd-list="vm.room_list['non_select']"
 						style="min-height:20px;">
-					    <md-list-item ng-repeat="user in vm.room_list['non_select']"
+					    <md-list-item ng-repeat="user in vm.room_list['non_select'] track by user.user_id"
 					        dnd-draggable="user"
 					        dnd-moved="vm.room_list['non_select'].splice($index, 1)"
 					        dnd-effect-allowed="move"
