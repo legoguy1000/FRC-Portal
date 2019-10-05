@@ -49,8 +49,8 @@ function roomListModalController($rootScope,$log,$element,$mdDialog,$scope,event
 		};
 		eventsService.updateEventRoomList(data).then(function(response) {
 			vm.loading = false;
-			if(close) {
-				$mdDialog.hide();
+			if(response.status && close) {
+				$mdDialog.hide(true);
 			}
 		});
 	};

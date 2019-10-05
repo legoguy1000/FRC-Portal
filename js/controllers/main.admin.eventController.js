@@ -238,7 +238,9 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 			}
 		})
 		.then(function(response) {
-			vm.getEventRequirements();
+			if(response) {
+				vm.getEventRequirements();
+			}
 		}, function() { });
   };
 

@@ -40,8 +40,8 @@ function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersSe
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
-			if(close) {
-				$mdDialog.hide();
+			if(response.status && close) {
+				$mdDialog.hide(true);
 			}
 		});
 	};
