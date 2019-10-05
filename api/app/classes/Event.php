@@ -190,7 +190,7 @@ class Event extends Eloquent {
   	$carInfo = $this->event_cars()->with(['driver','passengers'])->get();
   	$cars = $carInfo->keyBy('car_id')->all();
   	//no user yet users
-    $users = FrcPortal\User::whereHas('event_requirements', function($q) {
+    $users = User::whereHas('event_requirements', function($q) {
       $q->where('event_id',$this->event_id)->where('registration',true)->whereNull('car_id');
     })->get();
   	$cars['non_select'] = $users;
@@ -204,7 +204,7 @@ class Event extends Eloquent {
   	$roomInfo = $this->event_rooms()->with('users')->get();
   	$rooms = $roomInfo->keyBy('room_id')->all();
   	//no user yet users
-  	$users = FrcPortal\User::whereHas('event_requirements', function($q) {
+  	$users = User::whereHas('event_requirements', function($q) {
       $q->where('event_id',$this->event_id)->where('registration',true)->whereNull('room_id');
   	})->get();
   	$rooms['non_select'] = $users;
