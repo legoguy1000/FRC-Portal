@@ -204,7 +204,7 @@ class Event extends Eloquent {
   	$carInfo = array();
     $event_id = $this->event_id;
   	$carInfo = $this->event_cars()->with(['driver','passengers'])->get();
-  	$cars = $carInfo->keyBy('car_id')->all();
+  	$cars['cars'] = $carInfo->keyBy('car_id')->all();
   	//no user yet users
     $users = User::whereHas('event_requirements', function($q) {
       $q->where('event_id',$this->event_id)->where('registration',true)->whereNull('car_id');
