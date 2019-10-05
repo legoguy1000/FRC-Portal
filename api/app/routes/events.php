@@ -338,25 +338,24 @@ $app->group('/events', function () {
           insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Car passengers');
           return unauthorizedResponse($response);
         }
-        $event_id = $args['event_id'];
         $formData = $request->getParsedBody();
         if(!isset($formData['cars']) || !is_array($formData['cars']) || empty($formData['cars'])) {
           return badRequestResponse($response);
         }
-        $cars = FrcPortal\EventCar::where('event_id',$event_id)->get();
+        $cars = $event->event_cars()->get();
         foreach($cars as $car) {
           $car_id = $car->car_id;
           $carArr = $formData['cars'][$car_id];
           $userArr = array_column($carArr, 'user_id');
           if(!empty($userArr) && count($userArr) <= $car['car_space']) {
-            $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
+            $events = $event->event_cars()->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
         	}
         }
         //Not Assigned a car
         $carArr = $formData['cars']['non_select'];
         $userArr = array_column($carArr, 'user_id');
         if(!empty($userArr)) {
-          $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => null]);
+          $events = $event->event_cars()->whereIn('user_id', $userArr)->update(['car_id' => null]);
         }
         //$event = getUsersEventRequirements($event_id);
         $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>null);
@@ -482,7 +481,7 @@ $app->group('/events', function () {
         }
         //$event = getUsersEventRequirements($event_id);
         insertLogs($level = 'Information', $message = 'Event Room List updated');
-        $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>$event);
+        $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>null);
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Update Event Room List');
