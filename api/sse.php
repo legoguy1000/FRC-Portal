@@ -17,7 +17,9 @@ while(true) {
   echo "id: " . $lastEventTimeStamp['time'] . "\n";
   echo "data: ".json_encode($lastEventTimeStamp)." \n\n";
   echo PHP_EOL;
-  ob_end_flush();
+  if (ob_get_contents()) {
+    ob_end_flush();
+  }
   flush();
   // 2 second sleep then carry on
   sleep(2);
