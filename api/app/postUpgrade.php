@@ -245,14 +245,16 @@ if($version >= '2.14.2') {
       echo 'Google Drive service account credentials are now encrypted' . PHP_EOL . PHP_EOL;
   	}
     $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_secret')->get();
-    foreach($settings as $secret) {
-      if($secret->value != '') {
-        $secret->value = encryptItems($secret->value);
+    if(count($setting) > 0) {
+      foreach($settings as $secret) {
+        if($secret->value != '') {
+          $secret->value = encryptItems($secret->value);
+        }
+        $secret->section = 'oauth';
+        $secret->save();
       }
-      $secret->section = 'oauth';
-      $secret->save();
-    }
-    echo 'OAuth client secrets are now encrypted' . PHP_EOL . PHP_EOL;
+      echo 'OAuth client secrets are now encrypted' . PHP_EOL . PHP_EOL;
+    }    
     $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_id')->get();
     foreach($settings as $client_id) {
       $client_id->section = 'oauth';
