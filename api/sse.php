@@ -3,7 +3,7 @@ require_once('app/includes.php');
 require_once('app/libraries/CustomAuthRule.php');
 
 // disable default disconnect checks
-ignore_user_abort(true);
+//ignore_user_abort(true);
 // set headers for stream
 header("Content-Type: text/event-stream");
 header("Cache-Control: no-cache");
