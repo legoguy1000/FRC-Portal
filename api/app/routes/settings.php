@@ -247,6 +247,23 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Update OAuth Credentials');
   });
+  $this->post('/resetAdminPass', function ($request, $response, $args) {
+    $userId = FrcPortal\Auth::user()->user_id;
+    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+    if(!FrcPortal\Auth::isAdmin()) {
+      return unauthorizedResponse($response);
+    }
+    $password = bin2hex(openssl_random_pseudo_bytes(10));
+    $iniData = array();
+    if(file_exists(__DIR__.'/secured/config.ini')) {
+      $iniData = parse_ini_file(__DIR__.'/secured/config.ini');
+    }
+    $iniData['admin']['admin_pass'] = hash('sha512',$password);
+    write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
+    $responseArr = standardResponse($status = true, $msg = 'Admin password reset', $data = array('password'=>$password));
+    $response = $response->withJson($responseArr);
+    return $response;
+  })->setName('Test Slack');
   $this->post('/testSlack', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -265,10 +282,19 @@ $app->group('/settings', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Test Slack');
-  $this->post('', function ($request, $response, $args) {
+  $this->group('/update', function () {
+    $this->get('check', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
 
-    $response = $response->withJson($responseArr);
-    return $response;
+      
+
+      $response = $response->withJson($responseArr);
+      return $response;
+    })->setName('Check for update');
   });
 });
 

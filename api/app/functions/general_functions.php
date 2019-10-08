@@ -570,7 +570,7 @@ function getGitVersion() {
 	$cur_commit_hash = null;
 	$remote_name = null;
 	$branch_name = null;
-	if(is_dir(__DIR__ . '/../../../.git'))
+	if(is_dir(__DIR__ . '/../../../.git')) {
 		$installType = 'git';
 		$cur_commit_hash  = str_replace("\r\n",'',shell_exec("git rev-parse HEAD"));
 		//if(!preg_match('^[a-z0-9]+$', $cur_commit_hash)){
@@ -597,8 +597,7 @@ function getGitVersion() {
 			'remote_name' => $remote_name,
 			'branch_name' => $branch_name,
 		);
-	}
-	else {
+	}	else {
 		$installType = 'source';
 		$version = getVersion();
 		return array(
