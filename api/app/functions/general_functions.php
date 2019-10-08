@@ -570,14 +570,14 @@ function getGitVersion() {
 	$cur_commit_hash = null;
 	$remote_name = null;
 	$branch_name = null;
-	if(is_dir(__DIR__ . '/../../../.git')) {
+	if(is_dir(__DIR__ . '/../../../.git'))
 		$installType = 'git';
-		$cur_commit_hash  = shell_exec("git rev-parse HEAD");
+		$cur_commit_hash  = str_replace("\r\n",'',shell_exec("git rev-parse HEAD"));
 		//if(!preg_match('^[a-z0-9]+$', $cur_commit_hash)){
 			//logger.error('Output does not look like a hash, not using it.')
 		//	$cur_commit_hash = null;
 		//}
-		$remote_branch  = shell_exec("git rev-parse --abbrev-ref --symbolic-full-name @{u}");
+		$remote_branch  = str_replace("\r\n",'',shell_exec("git rev-parse --abbrev-ref --symbolic-full-name @{u}"));
 		$remote_branch = explode('/',$remote_branch);
 		if(count($remote_branch) == 2) {
 			$remote_name = $remote_branch[0];
@@ -675,7 +675,7 @@ function check_github() {
 function update() {
 	$versionInfo = check_github();
 	if($versionInfo['install_type'] == 'git') {
-		$output = shell_exec("git pull ".$versionInfo['remote_name']." ".$versionInfo['branch_name']);
+		$output = str_replace("\r\n",'',shell_exec("git pull ".$versionInfo['remote_name']." ".$versionInfo['branch_name']));
 		$outArr = explode('\n',$output);
 		foreach($outArr as $line) {
 			if(strpos($line, 'Already up-to-date.') !== false) {
