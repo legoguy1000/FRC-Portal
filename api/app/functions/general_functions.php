@@ -637,7 +637,7 @@ function check_github() {
 		return $versionInfo;
 	}
 	$commitsBehind = $gitData->behind_by;
-	//logger.debug("In total, %d commits behind", plexpy.COMMITS_BEHIND)
+	echo "In total, ".$commitsBehind." commits behind";
 	if($commitsBehind > 0 && $gitData->status == "behind") {
 		//logger.info('New version is available. You are %s commits behind' % plexpy.COMMITS_BEHIND)
 		$response = $client->request('GET', 'repos/legoguy1000/frc-portal/releases');
@@ -664,7 +664,7 @@ function check_github() {
 		}
 		$latestRelease = $release->tag_name;
 	} else if($commitsBehind == 0 && $gitData->status == "identical") {
-		//logger.info('Tautulli is up to date')
+		echo 'Tautulli is up to date';
 	}
 	$versionInfo['latest_version'] = $latestVersion;
 	$versionInfo['latest_release'] = $latestRelease;
