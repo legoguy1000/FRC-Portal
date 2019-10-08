@@ -573,10 +573,10 @@ function getGitVersion() {
 	if(is_dir(__DIR__ . '/../../../.git')) {
 		$installType = 'git';
 		$cur_commit_hash  = shell_exec("git rev-parse HEAD");
-		if(!preg_match('^[a-z0-9]+$', $cur_commit_hash)){
+		//if(!preg_match('^[a-z0-9]+$', $cur_commit_hash)){
 			//logger.error('Output does not look like a hash, not using it.')
-			$cur_commit_hash = null;
-		}
+		//	$cur_commit_hash = null;
+		//}
 		$remote_branch  = shell_exec("git rev-parse --abbrev-ref --symbolic-full-name @{u}");
 		$remote_branch = explode('/',$remote_branch);
 		if(count($remote_branch) == 2) {
