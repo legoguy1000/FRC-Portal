@@ -303,9 +303,10 @@ function exportDB() {
 }
 
 function updateComposer() {
-  exec("composer install");
-  exec("composer dump-autoload");
-	sleep(2);
+	exec('cd '. __DIR__ .'/../ && composer install && composer dump-autoload');
+  //exec("composer install");
+  //exec("composer dump-autoload");
+	sleep(.5);
 }
 
 function formatDateArrays($date_raw) {
