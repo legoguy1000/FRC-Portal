@@ -661,7 +661,7 @@ function check_github() {
 			//});
 			$release = $gitData[0];
 		} else {
-			$release = $filteredRleases[0];
+			$release = $gitData[0];
 		}
 		$latestRelease = $release->tag_name;
 	} else if($commitsBehind == 0 && $gitData->status == "identical") {
