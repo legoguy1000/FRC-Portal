@@ -656,10 +656,10 @@ function check_github() {
 			});
 			$release = $filteredRleases[0];
 		} else if($versionInfo['branch_name'] == 'dev') {
-			$filteredRleases = array_filter($gitData, function($obj){
-				return !substr_compare($obj->tag_name, '-nightly', -strlen('-nightly')) === 0 ? true:false;
-			});
-			$release = $filteredRleases[0];
+			//$filteredRleases = array_filter($gitData, function($obj){
+			//	return !substr_compare($obj->tag_name, '-nightly', -strlen('-nightly')) === 0 ? true:false;
+			//});
+			$release = $gitData[0];
 		} else {
 			$release = $filteredRleases[0];
 		}

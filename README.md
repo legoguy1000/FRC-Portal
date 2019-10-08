@@ -8,7 +8,7 @@ Version 2.15.0
 * Removed local login (create local admin)
 * Add encryption for sensitive items in the database
 * Remove bag day for seasons >= 2020
-*
+* Add internal update function
 
 Version 2.14.1
 * changed sign in QR code to a url to allow native qr scanners
