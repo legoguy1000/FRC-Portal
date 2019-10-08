@@ -118,8 +118,9 @@ $container['logger'] = function($c) {
 $app->get('/version', function (Request $request, Response $response, array $args) {
   //$this->logger->addInfo('Called version endpoint');
   $route = FrcPortal\Auth::getRoute();
+  $version = getVersion();
   $responseArr = array(
-    'version' => VERSION,
+    'version' => $version,
     'host' => $_SERVER["HTTP_HOST"],
     'user' => FrcPortal\Auth::user(),
     'token' => FrcPortal\Auth::currentToken(),

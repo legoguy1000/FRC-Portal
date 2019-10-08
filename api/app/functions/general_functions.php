@@ -565,4 +565,146 @@ function checkJwtFormat($token) {
   }
 	return true;
 }
+
+function getGitVersion() {
+	$cur_commit_hash = null;
+	$remote_name = null;
+	$branch_name = null;
+	if(is_dir(__DIR__ . '/../../../.git')) {
+		$installType = 'git';
+		$cur_commit_hash  = shell_exec("git rev-parse HEAD");
+		if(!preg_match('^[a-z0-9]+$', $cur_commit_hash)){
+			//logger.error('Output does not look like a hash, not using it.')
+			$cur_commit_hash = null;
+		}
+		$remote_branch  = shell_exec("git rev-parse --abbrev-ref --symbolic-full-name @{u}");
+		$remote_branch = explode('/',$remote_branch);
+		if(count($remote_branch) == 2) {
+			$remote_name = $remote_branch[0];
+			$branch_name = $remote_branch[1];
+		}
+		if(is_null($remote_name)) {
+			//logger.error('Could not retrieve remote name from git. Defaulting to origin.')
+			$remote_name = 'origin';
+		}
+		if(is_null($branch_name)) {
+			//logger.error('Could not retrieve branch name from git. Defaulting to master.')
+			$branch_name = 'master';
+		}
+		return array(
+			'install_type' => $installType,
+			'version' => $cur_commit_hash,
+			'remote_name' => $remote_name,
+			'branch_name' => $branch_name,
+		);
+	}
+	else {
+		$installType = 'source';
+		$version = getVersion();
+		return array(
+			'install_type' => $installType,
+			'version' => 'v'.$version,
+			'remote_name' => 'origin',
+			'branch_name' => 'master',
+		);
+	}
+}
+
+function check_github() {
+	$versionInfo = getGitVersion();
+	$latestVersion = $versionInfo['version'];
+	$commitsBehind = 0;
+	$latestRelease = NULL;
+	# Get the latest version available from github
+	//logger.info('Retrieving latest version information from GitHub')
+	$client = new GuzzleHttp\Client(['base_uri' => 'https://api.github.com/']);
+	$response = $client->request('GET', 'repos/legoguy1000/frc-portal/commits/'.$versionInfo['branch_name']);
+	$code = $response->getStatusCode(); // 200
+	$reason = $response->getReasonPhrase(); // OK
+	$gitData = json_decode($response->getBody());
+	if(is_null($gitData)) {
+		//logger.warn('Could not get the latest version from GitHub. Are you running a local development version?')
+		return $versionInfo['version'];
+	}
+	$latestVersion = $gitData->sha;
+	//logger.info('Comparing currently installed version with latest GitHub version')
+	$response = $client->request('GET', 'repos/legoguy1000/frc-portal/compare/'.$latestVersion.'...'.$versionInfo['version']);
+	$code = $response->getStatusCode(); // 200
+	$reason = $response->getReasonPhrase(); // OK
+	$gitData = json_decode($response->getBody());
+	if(is_null($gitData)) {
+		//logger.warn('Could not get commits behind from GitHub.')
+		$versionInfo['latest_version'] = $latestVersion;
+		return $versionInfo;
+	}
+	$commitsBehind = $gitData->behind_by;
+	//logger.debug("In total, %d commits behind", plexpy.COMMITS_BEHIND)
+	if($commitsBehind > 0 && $gitData->status == "behind") {
+		//logger.info('New version is available. You are %s commits behind' % plexpy.COMMITS_BEHIND)
+		$response = $client->request('GET', 'repos/legoguy1000/frc-portal/releases');
+		$code = $response->getStatusCode(); // 200
+		$reason = $response->getReasonPhrase(); // OK
+		$gitData = json_decode($response->getBody());
+		if(is_null($gitData)) {
+			//logger.warn('Could not get releases from GitHub.')
+			$versionInfo['latest_version'] = $latestVersion;
+			return $versionInfo;
+		}
+		if($versionInfo['branch_name'] == 'master') {
+			$filteredRleases = array_filter($gitData, function($obj){
+				return $obj->prerelease == false ? true:false;
+			});
+			$release = $filteredRleases[0];
+		} else if($versionInfo['branch_name'] == 'dev') {
+			$filteredRleases = array_filter($gitData, function($obj){
+				return substr_compare($obj->tag_name, '-nightly', -strlen('-nightly')) === 0 ? true:false;
+			});
+			$release = $filteredRleases[0];
+		} else {
+			$release = $filteredRleases[0];
+		}
+		$latestRelease = $release->tag_name;
+	} else if($commitsBehind == 0 && $gitData->status == "identical") {
+		//logger.info('Tautulli is up to date')
+	}
+	$versionInfo['latest_version'] = $latestVersion;
+	$versionInfo['latest_release'] = $latestRelease;
+	return $versionInfo;
+}
+
+function update() {
+	$versionInfo = check_github();
+	if($versionInfo['install_type'] == 'git') {
+		$output = shell_exec("git pull ".$versionInfo['remote_name']." ".$versionInfo['branch_name']);
+		$outArr = explode('\n',$output);
+		foreach($outArr as $line) {
+			if(strpos($line, 'Already up-to-date.') !== false) {
+				//logger.info('No update available, not updating')
+				//logger.info('Output: ' + str(output))
+			} elseif (substr_compare($line, 'Aborting', -strlen('Aborting')) === 0) {
+				//logger.error('Unable to update from git: ' + line)
+				//logger.info('Output: ' + str(output))
+			}
+		}
+	} else {
+		$client = new GuzzleHttp\Client(['base_uri' => 'https://github.com/']);
+		$filePath = __DIR__ . '/../secured/'.date('Y-m-d').'-'.$versionInfo['branch_name'].'-github';
+		$response = $client->request('GET', 'legoguy1000/frc-portal/tarball/'.$versionInfo['branch_name'], ['sink' => $filePath.'.tar.gz']);
+		$code = $response->getStatusCode(); // 200
+		$reason = $response->getReasonPhrase(); // OK
+		//update_dir = os.path.join(plexpy.PROG_DIR, 'update')
+		//version_path = os.path.join(plexpy.PROG_DIR, 'version.txt')
+		//logger.info('Downloading update from: ' + tar_download_url)
+		try {
+				//logger.info('Extracting file: ' + tar_download_path)
+		    $phar = new PharData($filePath.'.tar.gz');
+		    $phar->extractTo($filePath, null, true); // extract all files
+		} catch (Exception $e) {
+		    // handle errors
+		}
+		# Delete the tar.gz
+		unlink($filePath.'.tar.gz');
+		//file_put_contents($file, $current);
+	}
+}
 ?>
