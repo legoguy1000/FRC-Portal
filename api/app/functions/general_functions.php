@@ -577,7 +577,7 @@ function getGitVersion() {
 			//logger.error('Output does not look like a hash, not using it.')
 		//	$cur_commit_hash = null;
 		//}
-		$remote_branch  = str_replace("\r\n",'',shell_exec("git rev-parse --abbrev-ref --symbolic-full-name @{u}"));
+		$remote_branch  = trim(str_replace("\r\n",'',shell_exec("git rev-parse --abbrev-ref --symbolic-full-name @{u}")));
 		$remote_branch = explode('/',$remote_branch);
 		if(count($remote_branch) == 2) {
 			$remote_name = $remote_branch[0];
