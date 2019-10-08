@@ -637,9 +637,9 @@ function check_github() {
 		return $versionInfo;
 	}
 	$commitsBehind = $gitData->behind_by;
-	echo "In total, ".$commitsBehind." commits behind";
+	//echo "In total, ".$commitsBehind." commits behind";
 	if($commitsBehind > 0 && $gitData->status == "behind") {
-		//logger.info('New version is available. You are %s commits behind' % plexpy.COMMITS_BEHIND)
+		echo 'New version is available. You are '.$commitsBehind.' commits behind';
 		$response = $client->request('GET', 'repos/legoguy1000/frc-portal/releases');
 		$code = $response->getStatusCode(); // 200
 		$reason = $response->getReasonPhrase(); // OK
