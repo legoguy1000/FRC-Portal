@@ -664,7 +664,7 @@ function check_github() {
 		}
 		$latestRelease = $release->tag_name;
 	} else if($commitsBehind == 0 && $gitData->status == "identical") {
-		echo 'Tautulli is up to date';
+		echo 'FRC Portal is up to date';
 	}
 	$versionInfo['latest_version'] = $latestVersion;
 	$versionInfo['latest_release'] = $latestRelease;
