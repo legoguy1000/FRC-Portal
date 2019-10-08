@@ -19,7 +19,11 @@ function getSettingsProp($prop) {
 	return $value;
 }
 
-
+function getVersionFile() {
+	$value = '';
+	$version = file_get_contents(__DIR__.'/../secured/version.txt');
+	return $version;
+}
 
 
 ?>

@@ -2,7 +2,7 @@
 require_once(__DIR__.'/includes.php');
 use Illuminate\Database\Capsule\Manager as Capsule;
 $version = VERSION;
-
+//$version = getVersionFile();
 //always update composer after pull
 updateComposer();
 
@@ -264,7 +264,9 @@ if($version >= '2.14.2') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_id'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_secret'], ['value' => '']);
   }
-  echo 'FRC Portal has been sucessfully upgrade to version '.VERSION . PHP_EOL . PHP_EOL;
+  file_put_contents(__DIR__.'/secured/version.txt', VERSION);
+  $version = getVersionFile();
+  echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
 
 
