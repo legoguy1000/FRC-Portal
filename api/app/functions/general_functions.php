@@ -671,7 +671,7 @@ function check_github() {
 	return $versionInfo;
 }
 
-function update() {
+function updatePortal() {
 	$versionInfo = check_github();
 	if($versionInfo['install_type'] == 'git') {
 		$output = trim(str_replace("\r\n",'',shell_exec("git pull ".$versionInfo['remote_name']." ".$versionInfo['branch_name'])));
