@@ -620,8 +620,8 @@ function getGitVersion() {
 		$version = getVersion();
 		return array(
 			'install_type' => $installType,
-			'hash' => $cur_commit_hash,
-			'version' => 'v'.$version,
+			'version' => $cur_commit_hash,
+			'current_version' => 'v'.$version,
 			'remote_name' => $remote_name,
 			'branch_name' => $branch_name,
 		);
@@ -631,6 +631,7 @@ function getGitVersion() {
 			'install_type' => $installType,
 			'hash' => null,
 			'version' => 'v'.$version,
+			'current_version' => 'v'.$version,
 			'remote_name' => 'origin',
 			'branch_name' => 'master',
 		);
