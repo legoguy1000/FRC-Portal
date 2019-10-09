@@ -567,18 +567,44 @@ function checkJwtFormat($token) {
 	return true;
 }
 
+function getInstallSource() {
+	$installType = 'source';
+	if(is_dir(__DIR__ . '/../../../.git')) {
+		$installType = 'git';
+	}
+	return $installType;
+}
+
+function getBranchOptions() {
+	$installType = getInstallSource();
+	$options = array('master');
+	if($installType == 'git') {
+		$options[] = 'dev';
+	}
+	return $options;
+}
+
+function executeGit($params, $trim=true) {
+	$output = shell_exec("git ".$params);
+	if($trim) {
+		$output = trim(str_replace("\r\n",'',$output));
+	}
+	return $output;
+}
+
 function getGitVersion() {
 	$cur_commit_hash = null;
 	$remote_name = null;
 	$branch_name = null;
-	if(is_dir(__DIR__ . '/../../../.git')) {
-		$installType = 'git';
+	$installType = getInstallSource();
+	if($installType == 'git') {
 		$cur_commit_hash  = trim(str_replace("\r\n",'',shell_exec("git rev-parse HEAD")));
 		//if(!preg_match('^[a-z0-9]+$', $cur_commit_hash)){
 			//logger.error('Output does not look like a hash, not using it.')
 		//	$cur_commit_hash = null;
 		//}
-		$remote_branch  = trim(str_replace("\r\n",'',shell_exec("git rev-parse --abbrev-ref --symbolic-full-name @{u}")));
+
+		$remote_branch  = executeGit('rev-parse --abbrev-ref --symbolic-full-name @{u}', $trim=true);
 		$remote_branch = explode('/',$remote_branch);
 		if(count($remote_branch) == 2) {
 			$remote_name = $remote_branch[0];
@@ -599,7 +625,6 @@ function getGitVersion() {
 			'branch_name' => $branch_name,
 		);
 	}	else {
-		$installType = 'source';
 		$version = getVersion();
 		return array(
 			'install_type' => $installType,
