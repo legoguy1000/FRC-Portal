@@ -598,12 +598,11 @@ function getGitVersion() {
 	$branch_name = null;
 	$installType = getInstallSource();
 	if($installType == 'git') {
-		$cur_commit_hash  = trim(str_replace("\r\n",'',shell_exec("git rev-parse HEAD")));
+		$cur_commit_hash  = executeGit('rev-parse HEAD', $trim=true);
 		//if(!preg_match('^[a-z0-9]+$', $cur_commit_hash)){
 			//logger.error('Output does not look like a hash, not using it.')
 		//	$cur_commit_hash = null;
 		//}
-
 		$remote_branch  = executeGit('rev-parse --abbrev-ref --symbolic-full-name @{u}', $trim=true);
 		$remote_branch = explode('/',$remote_branch);
 		if(count($remote_branch) == 2) {
@@ -618,9 +617,11 @@ function getGitVersion() {
 			//logger.error('Could not retrieve branch name from git. Defaulting to master.')
 			$branch_name = 'master';
 		}
+		$version = getVersion();
 		return array(
 			'install_type' => $installType,
-			'version' => $cur_commit_hash,
+			'hash' => $cur_commit_hash,
+			'version' => 'v'.$version,
 			'remote_name' => $remote_name,
 			'branch_name' => $branch_name,
 		);
@@ -628,6 +629,7 @@ function getGitVersion() {
 		$version = getVersion();
 		return array(
 			'install_type' => $installType,
+			'hash' => null,
 			'version' => 'v'.$version,
 			'remote_name' => 'origin',
 			'branch_name' => 'master',
@@ -689,9 +691,12 @@ function check_github() {
 			$release = $gitData[0];
 		}
 		$latestRelease = $release->tag_name;
+		$versionInfo['update_available'] = true;
 	} else if($commitsBehind == 0 && $gitData->status == "identical") {
-		echo 'FRC Portal is up to date';
+		echo 'FRC Portal is up to date';;
+		$versionInfo['update_available'] = false;
 	}
+	$versionInfo['commits_behind'] = $commitsBehind;
 	$versionInfo['latest_version'] = $latestVersion;
 	$versionInfo['latest_release'] = $latestRelease;
 	return $versionInfo;
@@ -700,7 +705,7 @@ function check_github() {
 function updatePortal() {
 	$versionInfo = check_github();
 	if($versionInfo['install_type'] == 'git') {
-		$output = trim(str_replace("\r\n",'',shell_exec("git pull ".$versionInfo['remote_name']." ".$versionInfo['branch_name'])));
+		$output = shell_exec("git pull ".$versionInfo['remote_name']." ".$versionInfo['branch_name']);
 		$outArr = explode('\n',$output);
 		foreach($outArr as $line) {
 			if(strpos($line, 'Already up-to-date.') !== false) {
