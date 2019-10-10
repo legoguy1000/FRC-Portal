@@ -283,7 +283,7 @@ $app->group('/settings', function () {
     return $response;
   })->setName('Test Slack');
   $this->group('/update', function () {
-    $this->get('branches', function ($request, $response, $args) {
+    $this->get('/branches', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
@@ -293,7 +293,7 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get Version Branch Options');
-    $this->get('check', function ($request, $response, $args) {
+    $this->get('/check', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
