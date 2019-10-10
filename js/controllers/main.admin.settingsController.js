@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.settingsController', ['$rootScope', '$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'settingsService', '$mdDialog','$stateParams','$mdToast','Upload',
+.controller('main.admin.settingsController', ['$rootScope', '$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'settingsService', '$mdDialog','$stateParams','$mdToast','Upload','generalService',
 	mainAdminSettingsController
 ]);
-function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, schoolsService, usersService, settingsService, $mdDialog, $stateParams,$mdToast,Upload) {
+function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, schoolsService, usersService, settingsService, $mdDialog, $stateParams,$mdToast,Upload,generalService) {
 	var vm = this;
 
 	vm.userInfo = {};
