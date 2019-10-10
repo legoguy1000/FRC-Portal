@@ -32,6 +32,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	vm.selectSettingMenu = function(menu) {
 		vm.currentMenu = menu;
 	}
+	vm.branchOptions = ['master','dev'];
 
 /*	vm.getAllSettings = function () {
 		vm.loading = true;

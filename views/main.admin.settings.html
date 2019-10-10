@@ -23,6 +23,9 @@
 			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('other')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'other'}">
 		    <p>Other Settings</p>
 		  </md-list-item>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('update')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'update'}">
+		    <p>Update</p>
+		  </md-list-item>
 		</md-list>
 	</md-content>
 	<md-content flex="grow" class="md-margin" layout="column">
@@ -330,6 +333,14 @@
 			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-endOfDayHoursToSlack']" class="md-warn">
 				Automatically send Slack notification at 9pm local with the numberof hours completed that day
 			</md-switch>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'update'" class="layout-padding">
+			<md-input-container flex>
+				<label>Git Branch</label>
+				<md-select ng-model="vm.update.branch" required>
+					<md-option ng-repeat="opt in vm.branchOptions" ng-value="{{opt}}">{{opt}}</md-option>
+				</md-select>
+			</md-input-container>
 		</div>
 		<div flex layout="row">
 			<span flex></span>

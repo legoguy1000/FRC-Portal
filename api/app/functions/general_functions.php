@@ -737,6 +737,6 @@ function updatePortal() {
 		unlink($filePath.'.tar.gz');
 		//file_put_contents($file, $current);
 	}
-	include(__DIR__ . '/../postUpgrade.php');
+	//include(__DIR__ . '/../postUpgrade.php');
 }
 ?>
