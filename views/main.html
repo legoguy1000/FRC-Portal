@@ -67,7 +67,7 @@
 			<div ng-show="main.versionInfo.current_version">
 				<span ng-if="main.versionInfo.branch_name=='dev'">Dev - </span>
 				<span>{{main.versionInfo.current_version}}</span>
-				<span ng-if="main.versionInfo.branch_name=='dev'"> - {{main.versionInfo.tag}}</span>
+				<span ng-if="main.versionInfo.branch_name=='dev'"> - {{main.versionInfo.tag | limitTo: 7 }}</span>
 			</div>
 		</div>
 	</md-toolbar>
