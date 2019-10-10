@@ -668,7 +668,7 @@ function check_github() {
 	$commitsBehind = $gitData->behind_by;
 	//echo "In total, ".$commitsBehind." commits behind";
 	if($commitsBehind > 0 && $gitData->status == "behind") {
-		echo 'New version is available. You are '.$commitsBehind.' commits behind';
+		//echo 'New version is available. You are '.$commitsBehind.' commits behind';
 		$response = $client->request('GET', 'repos/legoguy1000/frc-portal/releases');
 		$code = $response->getStatusCode(); // 200
 		$reason = $response->getReasonPhrase(); // OK
@@ -694,7 +694,7 @@ function check_github() {
 		$latestRelease = $release->tag_name;
 		$versionInfo['update_available'] = true;
 	} else if($commitsBehind == 0 && $gitData->status == "identical") {
-		echo 'FRC Portal is up to date';;
+		//echo 'FRC Portal is up to date';;
 		$versionInfo['update_available'] = false;
 	}
 	$versionInfo['commits_behind'] = $commitsBehind;

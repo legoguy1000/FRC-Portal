@@ -264,7 +264,7 @@ if($version >= '2.14.2') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_id'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_secret'], ['value' => '']);
   }
-  file_put_contents(__DIR__.'/secured/version.txt', $version);
+  file_put_contents(__DIR__.'/secured/version.txt', '2.15.0');
   $version = getVersion();
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
