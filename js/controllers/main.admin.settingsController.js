@@ -133,6 +133,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 			vm.branchOptions = response.data;
 		});
 	}
+	vm.getUpdateBranches();
 
 	$rootScope.$on('400BadRequest', function(event,response) {
 		vm.loading = false;
