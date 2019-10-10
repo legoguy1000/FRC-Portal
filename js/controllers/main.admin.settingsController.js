@@ -26,9 +26,15 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		'other': {},
 		'cronjob': {},
 	};
-	alert($scope.main.versionInfo.branch_name);
 	vm.update = {
 		branch_name: $scope.main.versionInfo.branch_name,
+	}
+	vm.versionInfo = {};
+	if(vm.update.branch_name == undefined) {
+		generalService.getVersion().then(function(response) {
+			vm.versionInfo = response;
+			vm.update.branch_name = vm.versionInfo.branch_name;
+		});
 	}
 	vm.serviceAccountCredentials = {};
 	vm.timezones = [];
