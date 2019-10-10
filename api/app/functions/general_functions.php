@@ -620,8 +620,8 @@ function getGitVersion() {
 		$version = getVersion();
 		return array(
 			'install_type' => $installType,
-			'version' => $cur_commit_hash,
-			'current_version' => 'v'.$version,
+			'tag' => $cur_commit_hash,
+			'current_version' => $version,
 			'remote_name' => $remote_name,
 			'branch_name' => $branch_name,
 		);
@@ -630,8 +630,8 @@ function getGitVersion() {
 		return array(
 			'install_type' => $installType,
 			'hash' => null,
-			'version' => 'v'.$version,
-			'current_version' => 'v'.$version,
+			'tag' => 'v'.$version,
+			'current_version' => $version,
 			'remote_name' => 'origin',
 			'branch_name' => 'master',
 		);
@@ -640,7 +640,7 @@ function getGitVersion() {
 
 function check_github() {
 	$versionInfo = getGitVersion();
-	$latestVersion = $versionInfo['version'];
+	$latestVersion = $versionInfo['tag'];
 	$commitsBehind = 0;
 	$latestRelease = NULL;
 	# Get the latest version available from github
@@ -652,11 +652,11 @@ function check_github() {
 	$gitData = json_decode($response->getBody());
 	if(is_null($gitData)) {
 		//logger.warn('Could not get the latest version from GitHub. Are you running a local development version?')
-		return $versionInfo['version'];
+		return $versionInfo['tag'];
 	}
 	$latestVersion = $gitData->sha;
 	//logger.info('Comparing currently installed version with latest GitHub version')
-	$response = $client->request('GET', 'repos/legoguy1000/frc-portal/compare/'.$latestVersion.'...'.$versionInfo['version']);
+	$response = $client->request('GET', 'repos/legoguy1000/frc-portal/compare/'.$latestVersion.'...'.$versionInfo['tag']);
 	$code = $response->getStatusCode(); // 200
 	$reason = $response->getReasonPhrase(); // OK
 	$gitData = json_decode($response->getBody());
