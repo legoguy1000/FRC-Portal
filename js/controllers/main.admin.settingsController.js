@@ -26,6 +26,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		'other': {},
 		'cronjob': {},
 	};
+	alert($scope.main.versionInfo.branch_name);
 	vm.update = {
 		branch_name: $scope.main.versionInfo.branch_name,
 	}
