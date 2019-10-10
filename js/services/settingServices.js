@@ -78,5 +78,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getUpdateBranches: function () {
+			return $http.get('api/settings/update/branches')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

@@ -32,7 +32,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	vm.selectSettingMenu = function(menu) {
 		vm.currentMenu = menu;
 	}
-	vm.branchOptions = ['master','dev'];
+	vm.branchOptions = [];
 
 /*	vm.getAllSettings = function () {
 		vm.loading = true;
@@ -125,6 +125,12 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 					.hideDelay(3000)
 			);
 			//vm.settings[section] = response.data;
+		});
+	}
+
+	vm.getUpdateBranches = function() {
+		settingsService.getUpdateBranches().then(function(response){
+			vm.branchOptions = response.data;
 		});
 	}
 
