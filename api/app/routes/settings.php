@@ -300,7 +300,7 @@ $app->group('/settings', function () {
         return unauthorizedResponse($response);
       }
     	$branch = $request->getParam('branch') !== null ? $request->getParam('filter'):null;
-
+      $responseArr = standardResponse($status = true, $msg = '', $data = check_github($branch=null));
 
 
       $response = $response->withJson($responseArr);

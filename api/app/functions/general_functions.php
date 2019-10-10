@@ -638,7 +638,7 @@ function getGitVersion() {
 	}
 }
 
-function check_github() {
+function check_github($branch=null) {
 	$versionInfo = getGitVersion();
 	$latestVersion = $versionInfo['tag'];
 	$commitsBehind = 0;
