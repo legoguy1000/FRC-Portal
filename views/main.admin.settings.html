@@ -337,7 +337,7 @@
 		<div layout="column" ng-show="vm.currentMenu == 'update'" class="layout-padding">
 			<md-input-container flex>
 				<label>Git Branch</label>
-				<md-select ng-model="vm.update.branch" required>
+				<md-select ng-model="vm.update.branch_name" required>
 					<md-option ng-repeat="opt in vm.branchOptions" ng-value="{{opt}}">{{opt}}</md-option>
 				</md-select>
 			</md-input-container>
