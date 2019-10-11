@@ -29,12 +29,16 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	vm.update = {
 		branch_name: $scope.main.versionInfo.branch_name,
 		latest_version: null,
+		current_version: 'v'+$scope.main.versionInfo.current_version+'-'+$scope.main.versionInfo.tag.latest_version.substring(0, 6),
 	}
 	vm.versionInfo = {};
 	if(vm.update.branch_name == undefined) {
 		generalService.getVersion().then(function(response) {
 			vm.versionInfo = response;
 			vm.update.branch_name = vm.versionInfo.branch_name;
+			var current_version = response.current_version;
+			var current_tag = response.tag;
+			vm.update.current_version = current_version+'-'+current_tag.substring(0, 6);
 		});
 	}
 	vm.serviceAccountCredentials = {};
