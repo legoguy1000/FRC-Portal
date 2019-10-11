@@ -29,7 +29,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	vm.update = {
 		branch_name: $scope.main.versionInfo.branch_name,
 		latest_version: null,
-		current_version: 'v'+$scope.main.versionInfo.current_version+'-'+$scope.main.versionInfo.tag.latest_version.substring(0, 6),
+		current_version: 'v'+$scope.main.versionInfo.current_version+'-'+$scope.main.versionInfo.tag.substring(0, 6),
 	}
 	vm.versionInfo = {};
 	if(vm.update.branch_name == undefined) {
