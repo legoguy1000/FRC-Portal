@@ -90,5 +90,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		updatePortal: function () {
+			return $http.post('api/settings/update')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });
