@@ -28,6 +28,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	};
 	vm.update = {
 		branch_name: $scope.main.versionInfo.branch_name,
+		latest_version: null,
 	}
 	vm.versionInfo = {};
 	if(vm.update.branch_name == undefined) {
@@ -141,6 +142,15 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	vm.getUpdateBranches = function() {
 		settingsService.getUpdateBranches().then(function(response){
 			vm.branchOptions = response.data;
+		});
+	}
+	vm.getUpdateBranches();
+
+	vm.checkUpdates = function() {
+		settingsService.checkUpdates().then(function(response){
+			var latest_release = response.data.latest_release;
+			var latest_version = response.data.latest_version;
+			vm.update.latest_version = latest_release+'-'+latest_version.substring(0, 6);
 		});
 	}
 	vm.getUpdateBranches();
