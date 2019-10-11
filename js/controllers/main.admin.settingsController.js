@@ -156,7 +156,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 			var latest_release = response.data.latest_release;
 			var latest_version = response.data.latest_version;
 			if(!latest_release && response.data.update_available==false) {
-				latest_release = vm.update.current_version;
+				latest_release = 'v'+vm.update.current_version;
 			}
 			vm.update.latest_version = latest_release+'-'+latest_version.substring(0, 6);
 			if(manual == true) { vm.loading = false; }
