@@ -153,7 +153,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 			vm.update.latest_version = latest_release+'-'+latest_version.substring(0, 6);
 		});
 	}
-	vm.getUpdateBranches();
+	vm.checkUpdates();
 
 	$rootScope.$on('400BadRequest', function(event,response) {
 		vm.loading = false;
