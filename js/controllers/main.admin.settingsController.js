@@ -150,7 +150,8 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	}
 	vm.getUpdateBranches();
 
-	vm.checkUpdates = function() {
+	vm.checkUpdates = function(manual) {
+		if(manual == true) { vm.loading = true; }
 		settingsService.checkUpdates().then(function(response){
 			var latest_release = response.data.latest_release;
 			var latest_version = response.data.latest_version;
@@ -158,6 +159,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 				latest_release = vm.update.current_version;
 			}
 			vm.update.latest_version = latest_release+'-'+latest_version.substring(0, 6);
+			if(manual == true) { vm.loading = false; }
 		});
 	}
 	vm.checkUpdates();
