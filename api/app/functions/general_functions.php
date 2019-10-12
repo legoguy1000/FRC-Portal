@@ -645,11 +645,19 @@ function check_github($branch=null) {
 	$latestRelease = NULL;
 	# Get the latest version available from github
 	//logger.info('Retrieving latest version information from GitHub')
-	$client = new GuzzleHttp\Client(['base_uri' => 'https://api.github.com/']);
-	$response = $client->request('GET', 'repos/legoguy1000/frc-portal/commits/'.$versionInfo['branch_name']);
-	$code = $response->getStatusCode(); // 200
-	$reason = $response->getReasonPhrase(); // OK
-	$gitData = json_decode($response->getBody());
+	try {
+		$client = new GuzzleHttp\Client(['base_uri' => 'https://api.github.com/']);
+		$response = $client->request('GET', 'repos/legoguy1000/frc-portal/commits/'.$versionInfo['branch_name']);
+		$code = $response->getStatusCode(); // 200
+		$reason = $response->getReasonPhrase(); // OK
+		$gitData = json_decode($response->getBody());
+	} catch (Exception $e) {
+			$error = handleExceptionMessage($e);
+			insertLogs('Warning', $error);
+			$result['msg'] = 'Something went wrong getting info from GitHub';
+			$result['error'] = $error;
+	}
+
 	if(is_null($gitData)) {
 		//logger.warn('Could not get the latest version from GitHub. Are you running a local development version?')
 		return $versionInfo['tag'];
