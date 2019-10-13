@@ -60,6 +60,7 @@ function mainAdminController($rootScope,$log,$timeout, $q, $scope, $state, event
 		if(!$rootScope.pageRefresh) {
 			$state.go(sref);
 		}
+		$rootScope.pageRefresh = false;
 		console.log(sref);
 	}
 	admin.clickTab = function(tab) {
