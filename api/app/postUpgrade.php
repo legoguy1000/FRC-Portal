@@ -154,11 +154,11 @@ if($version >= '2.13.7') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'membership_form_name'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'google_analytics_id'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_login_enable'], ['value' => false]);
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_oauth_client_id'], ['value' => '']);
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_oauth_client_secret'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'amazon_oauth_client_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'amazon_oauth_client_secret'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_login_enable'], ['value' => false]);
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_oauth_client_id'], ['value' => '']);
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_oauth_client_secret'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'github_oauth_client_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'github_oauth_client_secret'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'require_team_email'], ['value' => '0']);
   }
   if(Capsule::schema()->hasTable('annual_requirements')) {

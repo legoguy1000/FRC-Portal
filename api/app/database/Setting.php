@@ -18,17 +18,27 @@ Capsule::schema()->create('settings', function ($table) {
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'other', 'setting' => 'google_analytics_id'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => '']);
 
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'facebook_oauth_client_secret'], ['value' => '']);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'microsoft_oauth_client_secret'], ['value' => '']);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'google_oauth_client_secret'], ['value' => '']);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'google_oauth_client_id'], ['value' => '']);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'facebook_oauth_client_id'], ['value' => '']);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'microsoft_oauth_client_id'], ['value' => '']);
- //$setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'local_login_enable'], ['value' => '1']);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'google_login_enable'], ['value' => '0']);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'facebook_login_enable'], ['value' => '0']);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'microsoft_login_enable'], ['value' => '0']);
- $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'require_team_email'], ['value' => '0']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => 'google_oauth_client_id'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => 'google_oauth_client_secret'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => 'facebook_oauth_client_id'], ['value' => '']);
+  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => 'facebook_oauth_client_secret'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => 'microsoft_oauth_client_id'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'oauth', 'setting' => 'microsoft_oauth_client_secret'], ['value' => '']);
+ $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'amazon_oauth_client_id'], ['value' => '']);
+ $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'amazon_oauth_client_secret'], ['value' => '']);
+ $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'github_oauth_client_id'], ['value' => '']);
+ $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'github_oauth_client_secret'], ['value' => '']);
+ $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_id'], ['value' => '']);
+ $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_secret'], ['value' => '']);
+
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'google_login_enable'], ['value' => false]);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'facebook_login_enable'], ['value' => false]);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'microsoft_login_enable'], ['value' => false]);
+ $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_login_enable'], ['value' => false]);
+ $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_login_enable'], ['value' => false]);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'login', 'setting' => 'require_team_email'], ['value' => false]);
+ $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'discord_login_enable'], ['value' => false]);
+
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'jwt', 'setting' => 'jwt_key'], ['value' => hash('sha512',bin2hex(random_bytes(64)))]);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'jwt', 'setting' => 'jwt_signin_key'], ['value' => hash('sha512',bin2hex(random_bytes(64)))]);
 
