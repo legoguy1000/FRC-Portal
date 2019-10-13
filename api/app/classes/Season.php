@@ -91,16 +91,21 @@ class Season extends Eloquent {
   public function annual_requirements() {
     return $this->hasOne('FrcPortal\AnnualRequirement', 'season_id', 'season_id')->withDefault();
   }
-  /**
-  * Get the Annual requirements.
-  */
-  /*public function getAllAnnualRequirementsAttribute() {
-    return User::crossJoin('seasons')
-					->leftJoin('annual_requirements', function ($join) {
-						$join->on('annual_requirements.user_id', '=', 'users.user_id')->on('annual_requirements.season_id', '=', 'seasons.season_id');
-					})->where(function ($query) {
-						$query->where('users.status', '=', true)->orWhereNotNull('annual_requirements.req_id');
-					})->where('seasons.season_id','=',$this->attributes['season_id'])->select('annual_requirements.join_team','annual_requirements.stims','annual_requirements.dues')->get();
-  } */
+
+  function updateSeasonMembershipForm() {
+    $result = false;
+    try {
+		    $searchResult = getSeasonMembershipForm($this->year);
+        $result = $searchResult;
+        if(is_array($searchResult) && array_key_exists('join_spreadsheet',$searchResult)) {
+          $this->join_spreadsheet = $searchResult['join_spreadsheet'];
+          $result = $this->save();
+        }
+    } catch (Exception $e) {
+      $error = 'Something went wrong updating season membership form';
+      insertLogs('Warning', $error);
+    }
+  	return $result;
+  }
 
 }

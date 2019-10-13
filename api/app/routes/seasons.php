@@ -194,9 +194,14 @@ $app->group('/seasons', function () {
       if(!FrcPortal\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
-      $season_id = $args['season_id'];
+      //Season passed from middleware
+      $season = $request->getAttribute('season');
 
-      $responseArr = updateSeasonMembershipForm($season_id);
+      if($season->updateSeasonMembershipForm()) {
+        $responseArr = standardResponse($status = true, $msg = $season->year.' membership form added', $data = $season);
+      } else {
+        $responseArr['msg'] = 'Something went wrong updating season membership form';
+      }
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update Season Membership Form');

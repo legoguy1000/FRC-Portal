@@ -1,17 +1,14 @@
 <?php
 function getSeasonMembershipForm($year) {
-	$result = array(
-		'status' => false,
-		'msg' => '',
-		'data' => null
-	);
+	$result = false;
 	try {
 		$creds = getServiceAccountData();
 	} catch (Exception $e) {
-			$error = handleExceptionMessage($e);
-			insertLogs('Warning', $error);
-			$result['msg'] = 'Something went wrong searching Google Drive';
-			$result['error'] = $error;
+		$error = handleExceptionMessage($e);
+		insertLogs('Warning', $error);
+		throw new Exception($error);
+		//$result['msg'] = 'Something went wrong searching Google Drive';
+		//$result['error'] = $error;
 	}
 	if(!is_null($year)) {
 		try {
@@ -39,45 +36,17 @@ function getSeasonMembershipForm($year) {
 			$files = $service->files->listFiles($parameters);
 			$fileList = $files->getFiles();
 			if(count($fileList) > 0) {
-				$result['status'] = true;
-				$result['data'] = array('join_spreadsheet' => $fileList[0]['id']);
+				$result = array('join_spreadsheet' => $fileList[0]['id']);
 			} else {
-				$result['msg'] = 'No membership form found for '.$year;
+				$result = 0;
 			}
 		} catch (Exception $e) {
 				$error = handleGoogleAPIException($e, 'Google Drive');
 				insertLogs('Warning', $error);
-				$result['msg'] = 'Something went wrong searching Google Drive';
-				$result['error'] = $error;
+				throw new Exception($error);
+				//$result['msg'] = 'Something went wrong searching Google Drive';
+				//$result['error'] = $error;
 		}
-	}
-	return $result;
-}
-
-function updateSeasonMembershipForm($season_id) {
-	$result = array(
-		'status' => false,
-		'msg' => '',
-		'data' => null
-	);
-	$season = FrcPortal\Season::find($season_id);
-	if(!is_null($season)) {
-		$year = $season->year;
-		$searchResult = getSeasonMembershipForm($year);
-		if($searchResult['status'] != false) {
-			$season->join_spreadsheet = $searchResult['data']['join_spreadsheet'];
-			if($season->save()) {
-				$result['status'] = true;
-				$result['msg'] = $season->year.' membership form added';
-				$result['data'] = $season;
-			} else {
-				$result['msg'] = 'Something went wrong adding the membership form';
-			}
-		} else {
-			$result = $searchResult;
-		}
-	} else {
-		$result['msg'] = 'Season not found';
 	}
 	return $result;
 }
