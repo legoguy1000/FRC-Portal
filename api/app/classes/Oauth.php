@@ -26,7 +26,7 @@ class Oauth extends Eloquent {
   */
   protected $hidden = [];
 
-  protected $appends = ['timestamp_unix'];
+  protected $appends = ['timestamp_unix', 'oauth_provider_cap'];
 
   public function save($options = array()) {
     if(is_null($this->auth_id)) {
@@ -51,5 +51,9 @@ class Oauth extends Eloquent {
    public function getTimestampUnixAttribute() {
      $date = new DateTime($this->attributes['updated_at']);
      return $date->format('U');
+   }
+
+   public function getOauthProviderCapAttribute() {
+     return ucfirst($this->attributes['oauth_provider']);
    }
 }

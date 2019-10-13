@@ -109,12 +109,63 @@ function getServiceAccountFile() {
 	);
 }
 
+function getServiceAccountData() {
+	$gsa_data = FrcPortal\Setting::where('section', 'service_account')->where('setting', 'google_service_account_data')->first();
+	if(!is_null($gsa_data)) {
+		$gsa_arr = explode(',',$gsa_data->value);
+		$encypted_json = $gsa_arr[1];
+		$json = decryptItems($encypted_json);
+		return json_decode($json, true);
+	} else {
+		throw new Exception("Google Service Account credentials do not exist");
+	}
+}
+
+function encryptItems($decrypted) {
+	$nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+	$key = hex2bin(getIniProp('encryption_key'));
+	$ciphertext = sodium_crypto_secretbox($decrypted, $nonce, $key);
+	$encrypted = base64_encode($nonce.$ciphertext);
+	return $encrypted;
+}
+
+function decryptItems($encrypted) {
+	$decoded = base64_decode($encrypted);
+	$nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
+	$ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
+	$key = hex2bin(getIniProp('encryption_key'));
+	$decrypted = sodium_crypto_secretbox_open($ciphertext, $nonce, $key);
+	return $decrypted;
+}
+
+function handleGoogleAPIException($e, $google_service) {
+	error_log($e);
+	$data = json_decode($e->getMessage(), true);
+	if(json_last_error() == JSON_ERROR_NONE) {
+		$errorRoot = $data['error']['errors'][0];
+		$msg = $google_service.' Error: '.$errorRoot['message'];
+		if(substr($msg,-1) != '.') {
+			$msg = $msg.'.';
+		}
+		$msg = $msg.' Please check API key and/or Service Account Credentials.';
+		if(isset($errorRoot['extendedHelp'])) {
+			$msg = $msg.' See '.$errorRoot['extendedHelp'].' for more information.';
+		}
+		return $msg;
+	} else {
+		return $e->getMessage();
+	}
+	return 'Something went wrong';
+}
+
 function handleExceptionMessage($e) {
 	error_log($e);
 	$data = json_decode($e->getMessage(), true);
 	if(json_last_error() == JSON_ERROR_NONE) {
+		//insertLogs('warning', $data['error']['message']);
 		return $data['error']['message'];
 	} else {
+		//insertLogs('warning', $e->getMessage());
 		return $e->getMessage();
 	}
 	return 'Something went wrong';
@@ -125,7 +176,11 @@ function insertLogs($level, $message) {
 	$log = new FrcPortal\Log();
 	if($authed) {
 		$userId = FrcPortal\Auth::user()->user_id;
-		$log->user_id = $userId;
+		if($userId == getIniProp('admin_user')) {
+			$message = '(Local Admin) '.$message;
+		} else {
+			$log->user_id = $userId;
+		}
 	}
 	$route = FrcPortal\Auth::getRoute();
 	if(!is_null($route)) {
@@ -248,12 +303,16 @@ function exportDB() {
 }
 
 function updateComposer() {
-  exec("composer install");
-  exec("composer dump-autoload");
-	sleep(2);
+	exec('cd '. __DIR__ .'/../ && composer install && composer dump-autoload');
+  //exec("composer install");
+  //exec("composer dump-autoload");
+	sleep(.5);
 }
 
 function formatDateArrays($date_raw) {
+	if(is_null($date_raw)) {
+		return null;
+	}
 	$date = new DateTime($date_raw);
 	return array(
 		'year' => $date->format('Y'),
@@ -299,8 +358,9 @@ function notFoundResponse($response, $msg = 'Not Found') {
 	return $response->withJson($responseArr,404);
 }
 
-function exceptionResponse($response, $msg = 'Error', $code = 200) {
+function exceptionResponse($response, $msg = 'Error', $code = 200, $error = null) {
 	$responseArr = standardResponse($status = false, $msg = $msg, $data = null);
+	$responseArr['error'] = $error;
 	return $response->withJson($responseArr,$code);
 }
 
@@ -473,6 +533,26 @@ function formatGithubLoginUserData($me) {
 	return $userData;
 }
 
+function formatDiscordLoginUserData($me) {
+	$email = $me['email'];
+	//$name = explode(' ',$me['name']);
+	$fname = '';
+	$lname = '';
+	$id = $me['id'];
+	$image = 'https://cdn.discordapp.com/avatars/'.$id.'/'.$me['avatar'].'.png'; //$me['image']['url'];\
+	$username = $me['username'];
+
+	$userData = array(
+		'id' => $id,
+		'provider' => 'Discord',
+		'email' => $email,
+		'fname' => $fname,
+		'lname' => $lname,
+		'profile_image' => $image,
+	);
+	return $userData;
+}
+
 function checkJwtFormat($token) {
 	if(!is_string($token)) {
 		return false;
@@ -485,5 +565,191 @@ function checkJwtFormat($token) {
      return false;
   }
 	return true;
+}
+
+function getInstallSource() {
+	$installType = 'source';
+	if(is_dir(__DIR__ . '/../../../.git')) {
+		$installType = 'git';
+	}
+	return $installType;
+}
+
+function getBranchOptions() {
+	$installType = getInstallSource();
+	$options = array('master');
+	if($installType == 'git') {
+		$options[] = 'dev';
+	}
+	return $options;
+}
+
+function executeGit($params, $trim=true) {
+	$output = shell_exec("git ".$params);
+	if($trim) {
+		$output = trim(str_replace("\r\n",'',$output));
+	}
+	return $output;
+}
+
+function getGitVersion() {
+	$cur_commit_hash = null;
+	$remote_name = null;
+	$branch_name = null;
+	$installType = getInstallSource();
+	if($installType == 'git') {
+		$cur_commit_hash  = executeGit('rev-parse HEAD', $trim=true);
+		//if(!preg_match('^[a-z0-9]+$', $cur_commit_hash)){
+			//logger.error('Output does not look like a hash, not using it.')
+		//	$cur_commit_hash = null;
+		//}
+		$remote_branch  = executeGit('rev-parse --abbrev-ref --symbolic-full-name @{u}', $trim=true);
+		$remote_branch = explode('/',$remote_branch);
+		if(count($remote_branch) == 2) {
+			$remote_name = $remote_branch[0];
+			$branch_name = $remote_branch[1];
+		}
+		if(is_null($remote_name)) {
+			//logger.error('Could not retrieve remote name from git. Defaulting to origin.')
+			$remote_name = 'origin';
+		}
+		if(is_null($branch_name)) {
+			//logger.error('Could not retrieve branch name from git. Defaulting to master.')
+			$branch_name = 'master';
+		}
+		$version = getVersion();
+		return array(
+			'install_type' => $installType,
+			'tag' => $cur_commit_hash,
+			'current_version' => $version,
+			'remote_name' => $remote_name,
+			'branch_name' => $branch_name,
+		);
+	}	else {
+		$version = getVersion();
+		return array(
+			'install_type' => $installType,
+			'hash' => null,
+			'tag' => 'v'.$version,
+			'current_version' => $version,
+			'remote_name' => 'origin',
+			'branch_name' => 'master',
+		);
+	}
+}
+
+function check_github($branch=null) {
+	$versionInfo = getGitVersion();
+	$latestVersion = $versionInfo['tag'];
+	$commitsBehind = 0;
+	$latestRelease = NULL;
+	# Get the latest version available from github
+	//logger.info('Retrieving latest version information from GitHub')
+	try {
+		$client = new GuzzleHttp\Client(['base_uri' => 'https://api.github.com/']);
+		$response = $client->request('GET', 'repos/legoguy1000/frc-portal/commits/'.$versionInfo['branch_name']);
+		$code = $response->getStatusCode(); // 200
+		$reason = $response->getReasonPhrase(); // OK
+		$gitData = json_decode($response->getBody());
+	} catch (ClientException $e) {
+		$error = Psr7\str($e->getResponse());
+		insertLogs('Warning', $error);
+		$result['msg'] = 'Something went wrong getting info from GitHub';
+		$result['error'] = $error;
+	} catch (Exception $e) {
+			$error = handleExceptionMessage($e);
+			insertLogs('Warning', $error);
+			$result['msg'] = 'Something went wrong getting info from GitHub';
+			$result['error'] = $error;
+	}
+
+	if(is_null($gitData)) {
+		//logger.warn('Could not get the latest version from GitHub. Are you running a local development version?')
+		return $versionInfo['tag'];
+	}
+	$latestVersion = $gitData->sha;
+	//logger.info('Comparing currently installed version with latest GitHub version')
+	$response = $client->request('GET', 'repos/legoguy1000/frc-portal/compare/'.$latestVersion.'...'.$versionInfo['tag']);
+	$code = $response->getStatusCode(); // 200
+	$reason = $response->getReasonPhrase(); // OK
+	$gitData = json_decode($response->getBody());
+	if(is_null($gitData)) {
+		//logger.warn('Could not get commits behind from GitHub.')
+		$versionInfo['latest_version'] = $latestVersion;
+		return $versionInfo;
+	}
+	$commitsBehind = $gitData->behind_by;
+	//echo "In total, ".$commitsBehind." commits behind";
+	if($commitsBehind > 0 && $gitData->status == "behind") {
+		//echo 'New version is available. You are '.$commitsBehind.' commits behind';
+		$response = $client->request('GET', 'repos/legoguy1000/frc-portal/releases');
+		$code = $response->getStatusCode(); // 200
+		$reason = $response->getReasonPhrase(); // OK
+		$gitData = json_decode($response->getBody());
+		if(is_null($gitData)) {
+			//logger.warn('Could not get releases from GitHub.')
+			$versionInfo['latest_version'] = $latestVersion;
+			return $versionInfo;
+		}
+		if($versionInfo['branch_name'] == 'master') {
+			$filteredRleases = array_filter($gitData, function($obj){
+				return $obj->prerelease == false ? true:false;
+			});
+			$release = $filteredRleases[0];
+		} else if($versionInfo['branch_name'] == 'dev') {
+			//$filteredRleases = array_filter($gitData, function($obj){
+			//	return !substr_compare($obj->tag_name, '-nightly', -strlen('-nightly')) === 0 ? true:false;
+			//});
+			$release = $gitData[0];
+		} else {
+			$release = $gitData[0];
+		}
+		$latestRelease = $release->tag_name;
+		$versionInfo['update_available'] = true;
+	} else if($commitsBehind == 0 && $gitData->status == "identical") {
+		//echo 'FRC Portal is up to date';;
+		$versionInfo['update_available'] = false;
+	}
+	$versionInfo['commits_behind'] = $commitsBehind;
+	$versionInfo['latest_version'] = $latestVersion;
+	$versionInfo['latest_release'] = $latestRelease;
+	return $versionInfo;
+}
+
+function updatePortal() {
+	$versionInfo = check_github();
+	if($versionInfo['install_type'] == 'git') {
+		$output = shell_exec("git pull ".$versionInfo['remote_name']." ".$versionInfo['branch_name']);
+		$outArr = explode('\n',$output);
+		foreach($outArr as $line) {
+			if(strpos($line, 'Already up-to-date.') !== false) {
+				//logger.info('No update available, not updating')
+				//logger.info('Output: ' + str(output))
+			} elseif (substr_compare($line, 'Aborting', -strlen('Aborting')) === 0) {
+				//logger.error('Unable to update from git: ' + line)
+				//logger.info('Output: ' + str(output))
+			}
+		}
+	} else {
+		$client = new GuzzleHttp\Client(['base_uri' => 'https://github.com/']);
+		$filePath = __DIR__ . '/../secured/'.date('Y-m-d').'-'.$versionInfo['branch_name'].'-github';
+		$response = $client->request('GET', 'legoguy1000/frc-portal/tarball/'.$versionInfo['branch_name'], ['sink' => $filePath.'.tar.gz']);
+		$code = $response->getStatusCode(); // 200
+		$reason = $response->getReasonPhrase(); // OK
+		//update_dir = os.path.join(plexpy.PROG_DIR, 'update')
+		//version_path = os.path.join(plexpy.PROG_DIR, 'version.txt')
+		//logger.info('Downloading update from: ' + tar_download_url)
+		try {
+				//logger.info('Extracting file: ' + tar_download_path)
+		    $phar = new PharData($filePath.'.tar.gz');
+		    $phar->extractTo($filePath, null, true); // extract all files
+		} catch (Exception $e) {
+		    // handle errors
+		}
+		# Delete the tar.gz
+		unlink($filePath.'.tar.gz');
+		//file_put_contents($file, $current);
+	}
+	//include(__DIR__ . '/../postUpgrade.php');
 }
 ?>

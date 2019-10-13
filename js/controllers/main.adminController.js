@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.adminController', ['$log','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog',
+.controller('main.adminController', ['$rootScope','$log','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog',
 	mainAdminController
 ]);
-function mainAdminController($log,$timeout, $q, $scope, $state, eventsService, $mdDialog) {
+function mainAdminController($rootScope,$log,$timeout, $q, $scope, $state, eventsService, $mdDialog) {
     var admin = this;
 
 	//$log.log($state.current)
@@ -49,8 +49,21 @@ function mainAdminController($log,$timeout, $q, $scope, $state, eventsService, $
         sref: 'main.admin.exemptHours'
       }, */
     ];
-	admin.slide = 'slide-left';
 
+		var altStates = [
+			'main.admin.user',
+			'main.admin.event',
+			'main.admin.season',
+		]
+	admin.slide = 'slide-left';
+	admin.go = function(sref) {
+		if(!$rootScope.pageRefresh) {
+			$state.go(sref);
+		}
+		if($rootScope.pageRefresh) {
+			$rootScope.pageRefresh = false;
+		}
+	}
 	admin.clickTab = function(tab) {
 		var clicked = admin.tabs.indexOf(tab);
 		var cur = admin.tabs.map(function(e) { return e.sref; }).indexOf($state.current.name);

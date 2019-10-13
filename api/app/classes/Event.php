@@ -183,4 +183,73 @@ class Event extends Eloquent {
       return $this->hasMany('FrcPortal\EventFood', 'event_id', 'event_id');
   }
 
+  public function getUsersEventRequirements() {
+		$eventReqs = User::with(['event_requirements' => function ($query) {
+			  $query->where('event_id','=',$this->event_id);
+			},'event_requirements.event_rooms','event_requirements.event_cars'])
+			->whereExists(function ($query) {
+			  $query->select(DB::raw(1))
+				->from('event_requirements')
+				->whereRaw('event_requirements.user_id = users.user_id')
+				->where('event_requirements.registration',true)
+				->where('event_requirements.event_id',$this->event_id);
+			})
+			->orWhere('status',true)
+			->get();
+  	return $eventReqs;
+  }
+
+  public function getEventCarList() {
+  	$cars = array();
+  	$carInfo = array();
+    $event_id = $this->event_id;
+  	$carInfo = $this->event_cars()->with(['driver','passengers'])->get();
+  	$cars['cars'] = $carInfo->keyBy('car_id')->all();
+  	//no user yet users
+    $users = User::whereHas('event_requirements', function($q) {
+      $q->where('event_id',$this->event_id)->where('registration',true)->whereNull('car_id');
+    })->get();
+  	$cars['non_select'] = $users;
+  	return $cars;
+
+  }
+
+  public function getEventRoomList() {
+  	$rooms = array();
+  	$roomInfo = array();
+  	$roomInfo = $this->event_rooms()->with('users')->get();
+  	$rooms['rooms'] = $roomInfo->keyBy('room_id')->all();
+  	//no user yet users
+  	$users = User::whereHas('event_requirements', function($q) {
+      $q->where('event_id',$this->event_id)->where('registration',true)->whereNull('room_id');
+  	})->get();
+  	$rooms['non_select'] = $users;
+    #return array('rooms'=>$roomInfo, 'total'=>count($roomInfo), 'room_selection'=>$rooms);
+  	return $rooms;
+  }
+
+  public function syncGoogleCalendarEvent() {
+  	$calendar = getSettingsProp('google_calendar_id');
+  	$google_cal_id = $this->google_cal_id;
+  	if(!isset($google_cal_id) || $google_cal_id == '') {
+  		throw new Exception('Google Calendar Event ID cannot be blank', 400);
+  	}
+  	$ge = getGoogleCalendarEvent($google_cal_id);
+  	$this->name = $ge['name'];
+  	$this->details = $ge['details'];
+  	$this->location = $ge['location'];
+  	$this->event_start = $ge['event_start'];
+  	$this->event_end = $ge['event_end'];
+  	if(!is_null($this->registration_deadline_gcalid) && $this->registration_deadline_gcalid != '') {
+  		try {
+  			$ged = getGoogleCalendarEvent($this->registration_deadline_gcalid);
+  			$this->registration_deadline = $ged['event_end'];
+  		} catch (Exception $e) {}
+  	}
+  	if(!$this->save()) {
+  		throw new Exception('Something went wrong updating the event', 500);
+  	}
+  	return $this;
+  }
+
 }

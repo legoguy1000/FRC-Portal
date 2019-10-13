@@ -19,15 +19,15 @@ function checkLogin($userData) {
 
 	$user = false;
 	$data = array();
-	$data = FrcPortal\Oauth::with(['users.school', 'users' => function($q){ //,'users.user_categories'
+	$data = FrcPortal\Oauth::with(['users' => function($q){ //,'users.user_categories'
 		$q->where('status',true);
 	}])->where('oauth_id', $id)->where('oauth_provider', $provider)->first();
 	if($data != null) {
 		$data->touch();
 		$user = $data->users;
+		$user->school();
 	} else {
-		$data = FrcPortal\User::with(['school']) //'user_categories'
-						->where(function ($query) use ($email) {
+		$data = FrcPortal\User::where(function ($query) use ($email) {
 							$query->where('email', $email)
 										->orWhere('team_email', $email);
 						})
@@ -35,6 +35,7 @@ function checkLogin($userData) {
 						->first();
 		if($data != null) {
 			$user = $data;
+			$user->school();
 		}
 		if($user != false) {
 			$oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $user->user_id, 'oauth_user' => $email]);
@@ -89,6 +90,7 @@ function getUsersAnnualRequirements($season_id) {
 	return $season;
 }
 
+/*
 function getUsersEventRequirements($event_id) {
 	$event = false;
 	if(!is_null($event_id)) {
@@ -106,5 +108,18 @@ function getUsersEventRequirements($event_id) {
 			->get();
 	}
 	return $event;
+} */
+
+function localAdminModel() {
+	$user = new FrcPortal\User();
+	$user->user_id = getIniProp('admin_user');
+	$user->email = '';
+	$user->fname = 'Local';
+	$user->lname = 'Admin';
+	$user->full_name = $user->fname.' '.$user->lname;
+	$user->admin = true;
+	$user->status = true;
+	$user->localadmin = true;
+	return $user;
 }
 ?>

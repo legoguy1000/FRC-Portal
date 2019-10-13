@@ -146,8 +146,9 @@ $app->group('/events', function () {
         }
       }
     } catch (Exception $e) {
-      insertLogs($level = 'Critical', $message = 'Something went wrong searching Google Calendar. '.$e->getMessage());
-      return exceptionResponse($response, $msg = 'Something went wrong searching Google Calendar');
+      $error = handleGoogleAPIException($e, 'Google Calendar');
+      insertLogs($level = 'Warning', $error);
+      return exceptionResponse($response, $msg = 'Something went wrong searching Google Calendar', $code = 200, $error);
     }
     $data = array(
     	'results'=>$allEvents,
@@ -204,6 +205,7 @@ $app->group('/events', function () {
       $event->drivers_required = isset($formData['requirements']['drivers']) && $formData['requirements']['drivers'] ? true:false;
       $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
       $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
+      $event->poc = $userId;
       if($event->save()) {
         if($event->room_required && isset($formData['rooms'])) {
           $roomTypes = array('boys','girls','adults');
@@ -297,7 +299,7 @@ $app->group('/events', function () {
       }
       $event = $event->load($withArr);
       if($reqsBool) {
-        $event->users = getUsersEventRequirements($event_id);
+        $event->users = $event->getUsersEventRequirements();
       }
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $event);
       $response = $response->withJson($responseArr);
@@ -309,7 +311,7 @@ $app->group('/events', function () {
       $event_id = $args['event_id'];
       //Event passed from middleware
       $event = $request->getAttribute('event');
-      $eventReqs = getUsersEventRequirements($event_id);
+      $eventReqs = $event->getUsersEventRequirements();
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $eventReqs);
       $response = $response->withJson($responseArr);
       insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'" Requirements');
@@ -320,16 +322,7 @@ $app->group('/events', function () {
       $this->get('', function ($request, $response, $args) {
         //Event passed from middleware
         $event = $request->getAttribute('event');
-        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        $event_id = $args['event_id'];
-        try {
-          $responseArr['data'] = getEventCarList($event_id);
-          $responseArr['status'] = true;
-          $responseArr['msg'] = '';
-        } catch (Exception $e) {
-          insertLogs($level = 'Warning', $message = 'Something went wrong returning event cars. '.$e->getMessage());
-          return exceptionResponse($response, $msg = 'Something went wrong returning event cars');
-      	}
+        $responseArr = standardResponse($status = true, $msg = '', $data = $event->getEventCarList());
         $response = $response->withJson($responseArr);
         insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'" Cars');
         return $response;
@@ -345,28 +338,27 @@ $app->group('/events', function () {
           insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Car passengers');
           return unauthorizedResponse($response);
         }
-        $event_id = $args['event_id'];
         $formData = $request->getParsedBody();
         if(!isset($formData['cars']) || !is_array($formData['cars']) || empty($formData['cars'])) {
           return badRequestResponse($response);
         }
-        $cars = FrcPortal\EventCar::where('event_id',$event_id)->get();
+        $cars = $event->event_cars()->get();
         foreach($cars as $car) {
           $car_id = $car->car_id;
           $carArr = $formData['cars'][$car_id];
           $userArr = array_column($carArr, 'user_id');
           if(!empty($userArr) && count($userArr) <= $car['car_space']) {
-            $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
+            $events = $event->event_requirements()->whereIn('user_id', $userArr)->update(['car_id' => $car_id]);
         	}
         }
         //Not Assigned a car
         $carArr = $formData['cars']['non_select'];
         $userArr = array_column($carArr, 'user_id');
         if(!empty($userArr)) {
-          $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['car_id' => null]);
+          $events = $event->event_requirements()->whereIn('user_id', $userArr)->update(['car_id' => null]);
         }
-        $event = getUsersEventRequirements($event_id);
-        $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>$event);
+        //$event = getUsersEventRequirements($event_id);
+        $responseArr = array('status'=>true, 'msg'=>'Event car list updated', 'data'=>null);
         insertLogs($level = 'Information', $message = 'Event car list updated');
         $response = $response->withJson($responseArr);
         return $response;
@@ -375,28 +367,18 @@ $app->group('/events', function () {
     $this->group('/rooms', function () {
       //Get Event Rooms
       $this->get('', function ($request, $response, $args) {
-        $event_id = $args['event_id'];
-        $responseArr = array(
-          'status' => false,
-          'msg' => '',
-          'data' => null
-        );
-        $responseArr['data'] = FrcPortal\EventRoom::with('users')->where('event_id',$event_id)->get();
-        $responseArr['status'] = true;
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
+        $data = $event->event_rooms()->with('users')->get();
+        $responseArr = standardResponse($status = true, $msg = '', $data);
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get Event Rooms');
       //Get Event Rooms
       $this->get('/adminList', function ($request, $response, $args) {
-        $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        $event_id = $args['event_id'];
-        try {
-          $responseArr['data'] = getEventRoomList($event_id);
-          $responseArr['status'] = true;
-          $responseArr['msg'] = '';
-        } catch (Exception $e) {
-      		$result['msg'] = handleExceptionMessage($e);
-      	}
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
+        $responseArr = standardResponse($status = true, $msg = '', $data = $event->getEventRoomList());
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get Event Rooms Admin List');
@@ -411,7 +393,6 @@ $app->group('/events', function () {
         }
         //Event passed from middleware
         $event = $request->getAttribute('event');
-
         if(!$event->room_required) {
           return badRequestResponse($response, $msg = 'Hotel rooms not needed for this event');
         }
@@ -421,32 +402,27 @@ $app->group('/events', function () {
         if(!isset($formData['gender']) || ($formData['gender'] == '' && $formData['user_type'] != 'Adult')) {
           return badRequestResponse($response, $msg = 'Gender cannot be blank');
         }
-
         $room = new FrcPortal\EventRoom();
         $room->event_id = $event->event_id;
         $room->user_type = $formData['user_type'];
         $room->gender = $formData['gender'];
         if($room->save()) {
-          try {
-            $responseArr['data'] = getEventRoomList($event->event_id);
-            $responseArr['status'] = true;
-            $responseArr['msg'] = 'New room added';
-          } catch (Exception $e) {
-        		$result['msg'] = handleExceptionMessage($e);
-        	}
+          $responseArr['data'] = $event->getEventRoomList();
+          $responseArr['status'] = true;
+          $responseArr['msg'] = 'New room added';
+          insertLogs($level = 'Information', $message = 'Event Room added for '.$event->name);
         } else {
-          insertLogs($level = 'Information', $message = 'Event Room added');
-          $responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
+          #insertLogs($level = 'Information', $message = 'Event Room added');
+          #$responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
         }
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Add Event Room');
-      //Add New Event Room
+      //Add New Event Room for a user
       $this->post('/user', function ($request, $response, $args) {
         $user = FrcPortal\Auth::user();
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-
         //Event passed from middleware
         $event = $request->getAttribute('event');
         if(!$event->room_required) {
@@ -463,16 +439,12 @@ $app->group('/events', function () {
         $room->user_type = $user->adult ? 'Adult':'Student';
         $room->gender = $user->adult ? '':$user->gender;
         if($room->save()) {
-          try {
-            $responseArr['data'] = FrcPortal\EventRoom::with('users')->where('event_id',$event_id)->get();
-            $responseArr['status'] = true;
-            $responseArr['msg'] = 'New room added';
-          } catch (Exception $e) {
-            $result['msg'] = handleExceptionMessage($e);
-          }
+          $responseArr['data'] = $event->event_rooms()->with('users')->get();
+          $responseArr['status'] = true;
+          $responseArr['msg'] = 'New room added';
         } else {
-          insertLogs($level = 'Information', $message = 'Event Room added');
-          $responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
+          #insertLogs($level = 'Information', $message = 'Event Room added');
+          #$responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
         }
         $response = $response->withJson($responseArr);
         return $response;
@@ -486,30 +458,30 @@ $app->group('/events', function () {
           insertLogs($level = 'Warning', $message = 'Unauthorized attempt to update Event Room list');
           return unauthorizedResponse($response);
         }
-
-        $event_id = $args['event_id'];
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
         $formData = $request->getParsedBody();
         if(!isset($formData['rooms']) || !is_array($formData['rooms']) || empty($formData['rooms'])) {
           return badRequestResponse($response);
         }
-        $rooms = FrcPortal\EventRoom::where('event_id',$event_id)->get();
+        $rooms = $event->event_rooms()->get();
         foreach($rooms as $room) {
           $room_id = $room->room_id;
           $roomArr = $formData['rooms'][$room_id];
           $userArr = array_column($roomArr, 'user_id');
           if(!empty($userArr) && count($userArr) <= 4) {
-            $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
+            $events = $event->event_requirements()->whereIn('user_id', $userArr)->update(['room_id' => $room_id]);
           }
         }
         //Not Assigned a room
         $roomArr = $formData['rooms']['non_select'];
         $userArr = array_column($roomArr, 'user_id');
         if(!empty($userArr)) {
-          $events = FrcPortal\EventRequirement::where('event_id',$event_id)->whereIn('user_id', $userArr)->update(['room_id' => null]);
+          $events = $event->event_requirements()->whereIn('user_id', $userArr)->update(['room_id' => null]);
         }
-        $event = getUsersEventRequirements($event_id);
+        //$event = getUsersEventRequirements($event_id);
         insertLogs($level = 'Information', $message = 'Event Room List updated');
-        $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>$event);
+        $responseArr = array('status'=>true, 'msg'=>'Event room list updated', 'data'=>null);
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Update Event Room List');
@@ -522,18 +494,17 @@ $app->group('/events', function () {
           insertLogs($level = 'Warning', $message = 'Unauthorized attempt to delete Event Room');
           return unauthorizedResponse($response);
         }
-
-        $event_id = $args['event_id'];
+        //Event passed from middleware
+        $event = $request->getAttribute('event');
         $room_id = $args['room_id'];
-        try {
-          deleteEventRoom($event_id, $room_id);
-          $rooms = getEventRoomList($event_id);
+        //deleteEventRoom($event_id, $room_id);
+        if($event->event_rooms()->find($room_id)->delete()) {
+      		$rooms = $event->getEventRoomList();
           $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms);
-          $response = $response->withJson($responseArr);
-          return $response;
-        } catch (Exception $e) {
-          return exceptionResponse($response, $msg = handleExceptionMessage($e), $code = 200);
+      	} else {
+          //throw new Exception('Something went wrong', 500);
         }
+        $response = $response->withJson($responseArr);
       })->setName('Delete Event Room');
     });
     $this->group('/timeSlots', function () {
@@ -766,10 +737,18 @@ $app->group('/events', function () {
         insertLogs($level = 'Warning', $message = 'Unauthorized attempt to sync event with Google Calendar');
         return unauthorizedResponse($response);
       }
-
+      $api_key = getSettingsProp('google_api_key');
+      if(!isset($api_key) || $api_key == '') {
+        $responseArr = array('status'=>false, 'msg'=>'Google API Key cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the API Key.');
+        insertLogs($level = 'Warning', $message = 'Cannot search Google calendar.  Google API Key is blank');
+        $response = $response->withJson($responseArr);
+        return $response;
+      }
+      //Event passed from middleware
+      $event = $request->getAttribute('event');
       $event_id = $args['event_id'];
       try {
-				$event = syncGoogleCalendarEvent($event_id);
+				$event = $event->syncGoogleCalendarEvent();
         $responseArr = array(
       		'status' => true,
       		'msg' => $event->name.' synced with Google Calendar',
@@ -822,7 +801,7 @@ $app->group('/events', function () {
           $reqArr->save();
         }
       }
-      $event = getUsersEventRequirements($event_id);
+      $event = $event->getUsersEventRequirements();
       $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $event);
       $response = $response->withJson($responseArr);
       return $response;
@@ -860,7 +839,7 @@ $app->group('/events', function () {
           return badRequestResponse($response, $msg = 'User must be registered prior to receiving time credit');
         }
       }
-      $event = getUsersEventRequirements($event_id);
+      $event = $event->getUsersEventRequirements();
       $responseArr = array('status'=>true, 'msg'=>'Event Requirements Updated', 'data' => $event);
       $response = $response->withJson($responseArr);
       return $response;

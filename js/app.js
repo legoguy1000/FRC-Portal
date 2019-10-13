@@ -21,6 +21,7 @@ angular.module('FrcPortal', [
 	'vAccordion',
 	'shContextMenu',
 	'ngFileUpload',
+	//'dcbClearInput',
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $mdIconProvider, $locationProvider) {
 
 	$locationProvider.html5Mode({ enabled: true, requireBase: true });
@@ -54,6 +55,7 @@ angular.module('FrcPortal', [
 								 'js/services/generalServices.js',
 								 'js/services/logServices.js',
 								 'js/services/loginServices.js',
+								 'js/services/otherServices.js',
 						 ]);
 	    }]
 		},
@@ -311,7 +313,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    metricsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.metricsController.js');
+         	return $ocLazyLoad.load('js/controllers/main.admin.metricsController.js');
 	    }]
 	  }
 	  })
@@ -327,7 +329,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    settingsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.settingsController.js');
+           return $ocLazyLoad.load(['js/controllers/main.admin.settingsController.js','js/controllers/oAuthCredentialModalController.js']);
 	    }]
 	  }
 	  })
@@ -687,9 +689,15 @@ angular.module('FrcPortal', [
 	  );
 		$rootScope.$broadcast('stateChange');
 	});
+	// track pageview on state change
+	$transitions.onStart({}, function(transition) {
+		$rootScope.pageRefresh = false;
+		if(transition.from().name == '') {
+			$rootScope.pageRefresh = true;
+		}
+	});
 	$transitions.onStart({to: function(state) { return state != null && state.authenticate;}}, function(trans) {
 		var toState = trans.$to();
-
 		if (!$auth.isAuthenticated()){
 			trans.abort();
 			/* event.preventDefault();  */
@@ -742,6 +750,22 @@ angular.module('FrcPortal', [
 				.title('Unauthorized')
 				.textContent('You are not authorized to access this page.')
 				.ariaLabel('Unauthorized')
+				.ok('Got it!')
+			);
+			if(trans.$from().name == '') {
+				$state.go('main.home');
+			}
+		}
+		if(toState.name == 'main.profile' && $auth.getPayload().data.localadmin) {
+			trans.abort();
+			$log.info('Local Admin does not have a profile');
+			$mdDialog.show(
+				$mdDialog.alert()
+				.parent(angular.element(document.body))
+				.clickOutsideToClose(true)
+				.title('404')
+				.textContent('Local Admin does not have a profile')
+				.ariaLabel('404')
 				.ok('Got it!')
 			);
 			if(trans.$from().name == '') {

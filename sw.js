@@ -38,6 +38,9 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
+	if ( event.request.url.match( '^.*(sse.php).*$' ) ) {
+		return false;
+	}
   event.respondWith(
     caches.match(event.request)
       .then(function(response) {

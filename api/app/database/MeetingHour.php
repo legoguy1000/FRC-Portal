@@ -8,6 +8,7 @@ Capsule::schema()->create('meeting_hours', function ($table) {
   $table->char('user_id',13)->index();
   $table->dateTime('time_in')->nullable()->default(null)->index();
   $table->dateTime('time_out')->nullable()->default(null)->index();
+  $table->timestamps();
 });
 
 ?>

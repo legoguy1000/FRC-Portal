@@ -12,5 +12,6 @@ config.ini
 /git-deploy/
 deploy.log
 test.php
-secured/
+secured/*
+!secured/config.example.ini
 favicons/

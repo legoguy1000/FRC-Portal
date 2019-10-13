@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.settingsController', ['$rootScope', '$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'settingsService', '$mdDialog','$stateParams','$mdToast','Upload',
+.controller('main.admin.settingsController', ['$rootScope', '$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'settingsService', '$mdDialog','$stateParams','$mdToast','Upload','generalService',
 	mainAdminSettingsController
 ]);
-function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, schoolsService, usersService, settingsService, $mdDialog, $stateParams,$mdToast,Upload) {
+function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, schoolsService, usersService, settingsService, $mdDialog, $stateParams,$mdToast,Upload,generalService) {
 	var vm = this;
 
 	vm.userInfo = {};
@@ -26,12 +26,29 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		'other': {},
 		'cronjob': {},
 	};
+	/*
+	vm.update = {
+		branch_name: $scope.main.versionInfo.branch_name,
+		latest_version: null,
+		current_version: $scope.main.versionInfo.current_version,
+		current_tag: $scope.main.versionInfo.tag,
+	}
+	vm.versionInfo = {};
+	if(vm.update.branch_name == undefined) {
+		generalService.getVersion().then(function(response) {
+			vm.versionInfo = response;
+			vm.update.branch_name = vm.versionInfo.branch_name;
+			vm.update.current_version = response.current_version;
+			vm.update.current_tag = response.tag;
+		});
+	} */
 	vm.serviceAccountCredentials = {};
 	vm.timezones = [];
 
 	vm.selectSettingMenu = function(menu) {
 		vm.currentMenu = menu;
 	}
+	vm.branchOptions = [];
 
 /*	vm.getAllSettings = function () {
 		vm.loading = true;
@@ -127,6 +144,28 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		});
 	}
 
+	/*
+	vm.getUpdateBranches = function() {
+		settingsService.getUpdateBranches().then(function(response){
+			vm.branchOptions = response.data;
+		});
+	}
+	vm.getUpdateBranches();
+
+	vm.checkUpdates = function(manual) {
+		if(manual == true) { vm.loading = true; }
+		settingsService.checkUpdates().then(function(response){
+			var latest_release = response.data.latest_release;
+			var latest_version = response.data.latest_version;
+			if(!latest_release && response.data.update_available==false) {
+				latest_release = 'v'+vm.update.current_version;
+			}
+			vm.update.latest_version = latest_release+'-'+latest_version.substring(0, 7);
+			if(manual == true) { vm.loading = false; }
+		});
+	}
+	vm.checkUpdates();
+	*/
 	$rootScope.$on('400BadRequest', function(event,response) {
 		vm.loading = false;
 		$mdToast.show(
@@ -157,4 +196,22 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		return results;
 	}
 
+	vm.showOAuthCredentialsModal = function(ev,provider) {
+		$mdDialog.show({
+			controller: oAuthCredentialModalController,
+			controllerAs: 'vm',
+			templateUrl: 'views/partials/oAuthCredentialModal.tmpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: {
+				provider: provider,
+			}
+		}).then(function(response){
+			if(response.status) {
+				vm.updateSettingBySection('login');
+			}
+		});
+	}
 }

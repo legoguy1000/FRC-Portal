@@ -1,6 +1,18 @@
-# FRC Portal (In Dev)
+# FRC Portal
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
+
+Version 2.15.0
+* Composer dependency updates
+* Add Discord Login
+* Removed local login (create local admin)
+* Add encryption for sensitive items in the database
+* Remove bag day for seasons >= 2020
+* Added Discord as login provider
+* Add Admin Event/Season filter sidenav's
+* Fix minor GUI issues
+  * Remove right sidenav
+  * Replace tables in user profile with cards
 
 Version 2.14.1
 * changed sign in QR code to a url to allow native qr scanners

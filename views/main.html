@@ -42,10 +42,15 @@
 			<!--    <md-button class="toolbar-button" aria-label="Settings" ng-click="main.toggleRightSidebar()">
 			<i class="material-icons">menu</i>
 			</md-button> -->
-			<md-button class="md-icon-button" ng-click="main.signInModal()">
+			<md-button class="md-icon-button" ng-click="main.signInModal()" ng-hide="main.userInfo.localadmin">
+				<md-tooltip md-direction="bottom">Scan barcode for hours</md-tooltip>
 				<md-icon>photo_camera</md-icon>
 			</md-button>
-			<img class="img-circle" ng-src="{{main.userInfo.profile_image || 'images/blank_user.png'}}" ng-click="main.toggleRightSidebar()">
+			<md-button class="md-icon-button"  ng-click="main.logout()">
+				<md-tooltip md-direction="bottom">Log Out</md-tooltip>
+				<md-icon>exit_to_app</md-icon>
+			</md-button>
+			<img class="img-circle" style="cursor:pointer;" ng-src="{{main.userInfo.profile_image || 'images/blank_user.png'}}" ui-sref="main.profile" ng-hide="main.userInfo.localadmin"/> <!--ng-click="main.toggleRightSidebar()"-->
 		</section>
 		<section layout-align="end center" ng-hide="main.isAuthed">
 			<md-button class="toolbar-button" aria-label="Search" ng-click="main.loginModal($event)">
@@ -59,7 +64,10 @@
 	<md-toolbar layout="row" layout-align="center center" style="min-height: 40px;">
 		<div layout-align="center center" layout-fill flex class="md-toolbar-tools" layout="column" style="font-size: small;">
 			<div>Powered by <a href="https://github.com/legoguy1000/FRC-Portal" target="_blank">FRC Portal</a></div>
-			<div ng-show="main.versionInfo.version">v{{main.versionInfo.version}}</div>
+			<div ng-show="main.versionInfo.current_version">
+				<span ng-if="main.versionInfo.branch_name=='dev'">Dev:</span>
+				<span>v{{main.versionInfo.current_version}}</span><span ng-if="main.versionInfo.branch_name=='dev'">-<a ng-href="https://github.com/legoguy1000/FRC-Portal/commit/{{main.versionInfo.tag}}" target="_blank">{{ main.versionInfo.tag | limitTo: 7 }}</a></span>
+			</div>
 		</div>
 	</md-toolbar>
 </div>

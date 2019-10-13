@@ -33,11 +33,18 @@ class Auth {
 
   public static function setCurrentUser($user_id) {
     self::$currentuser = $user_id;
-    $user = User::with(['school'])->find($user_id);
-    if(!is_null($user)) {
+    if($user_id == getIniProp('admin_user')) {
+      $user = localAdminModel();
       self::$isAuthenticated = true;
       self::$user = $user;
       return true;
+    } else {
+      $user = User::with(['school'])->find($user_id);
+      if(!is_null($user)) {
+        self::$isAuthenticated = true;
+        self::$user = $user;
+        return true;
+      }
     }
     return false;
   }

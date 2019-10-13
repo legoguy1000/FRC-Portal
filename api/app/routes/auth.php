@@ -18,7 +18,7 @@ $app->group('/auth', function () {
     $client = new Google_Client();
     //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
     $client->setClientId(getSettingsProp('google_oauth_client_id'));
-    $client->setClientSecret(getSettingsProp('google_oauth_client_secret'));
+    $client->setClientSecret(decryptItems(getSettingsProp('google_oauth_client_secret')));
     $client->setRedirectUri(getSettingsProp('env_url').'/oauth/google');
     $plus = new Google_Service_Plus($client);
     $data = array();
@@ -37,7 +37,7 @@ $app->group('/auth', function () {
     $user = checkLogin($userData);
     if(FrcPortal\Auth::isAuthenticated()) {
       $auth_user = FrcPortal\Auth::user();
-      if($user != false) {
+      if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Google account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Google account '.$userData['email'].' to their profile.  Account is linked to another user.');
       } else {
@@ -77,7 +77,7 @@ $app->group('/auth', function () {
       return badRequestResponse($response, $msg = 'Invalid code from Facebook Sign In');
     }
     $clientId = getSettingsProp('facebook_oauth_client_id');
-    $secret = getSettingsProp('facebook_oauth_client_secret');
+    $secret = decryptItems(getSettingsProp('facebook_oauth_client_secret'));
     $redirect = getSettingsProp('env_url').'/oauth/facebook';
     $fb = new Facebook\Facebook([
       'app_id'  => getSettingsProp('facebook_oauth_client_id'),
@@ -102,7 +102,7 @@ $app->group('/auth', function () {
         $user = checkLogin($userData);
         if(FrcPortal\Auth::isAuthenticated()) {
           $auth_user = FrcPortal\Auth::user();
-          if($user != false) {
+          if($user != false && $user->user_id != $auth_user->user_id) {
             $responseData = array('status'=>false, 'msg'=>'Facebook account is already linked to another user');
             insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Facebook account '.$userData['email'].' to their profile.  Account is linked to another user.');
           } else {
@@ -152,9 +152,7 @@ $app->group('/auth', function () {
       insertLogs($level = 'Warning', $message = 'Invalid code from Microsoft OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Microsoft Sign In');
     }
-    //$secret = getIniProp('microsoft_client_secret');
-    $secret = getSettingsProp('microsoft_oauth_client_secret');
-//    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
+    $secret = decryptItems(getSettingsProp('microsoft_oauth_client_secret'));
     $clientId =  getSettingsProp('microsoft_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/microsoft';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://login.microsoftonline.com/common/oauth2/v2.0/']);
@@ -192,7 +190,7 @@ $app->group('/auth', function () {
     $user = checkLogin($userData);
     if(FrcPortal\Auth::isAuthenticated()) {
       $auth_user = FrcPortal\Auth::user();
-      if($user != false) {
+      if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Microsoft account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Microsoft account '.$userData['email'].' to their profile.  Account is linked to another user.');
       } else {
@@ -231,9 +229,7 @@ $app->group('/auth', function () {
       insertLogs($level = 'Warning', $message = 'Invalid code from Amazon OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Amazon Sign In');
     }
-    //$secret = getIniProp('microsoft_client_secret');
-    $secret = getSettingsProp('amazon_oauth_client_secret');
-//    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
+    $secret = decryptItems(getSettingsProp('amazon_oauth_client_secret'));
     $clientId =  getSettingsProp('amazon_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/amazon';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://api.amazon.com/']);
@@ -274,7 +270,7 @@ $app->group('/auth', function () {
     $user = checkLogin($userData);
     if(FrcPortal\Auth::isAuthenticated()) {
       $auth_user = FrcPortal\Auth::user();
-      if($user != false) {
+      if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Amazon account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Amazon account '.$userData['email'].' to their profile.  Account is linked to another user.');
       } else {
@@ -313,9 +309,7 @@ $app->group('/auth', function () {
       insertLogs($level = 'Warning', $message = 'Invalid code from Github OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Github Sign In');
     }
-    //$secret = getIniProp('microsoft_client_secret');
-    $secret = getSettingsProp('github_oauth_client_secret');
-//    $clientId = '027f5fe4-87bb-4731-8284-6d44da287677';
+    $secret = decryptItems(getSettingsProp('github_oauth_client_secret'));
     $clientId =  getSettingsProp('github_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/github';
 
@@ -355,7 +349,7 @@ $app->group('/auth', function () {
     $user = checkLogin($userData);
     if(FrcPortal\Auth::isAuthenticated()) {
       $auth_user = FrcPortal\Auth::user();
-      if($user != false) {
+      if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Github account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Github account '.$userData['email'].' to their profile.  Account is linked to another user.');
       } else {
@@ -401,6 +395,88 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Github OAuth2');
+  $this->post('/discord', function ($request, $response) {
+    $responseData = false;
+    $args = $request->getParsedBody();
+    $provider = 'discord';
+    if(checkLoginProvider($provider) == false) {
+      insertLogs($level = 'Warning', $message = 'Attempted login with Discord OAuth2.  Github login provider not enabled.');
+      return badRequestResponse($response, $msg = 'Discord login is not enabled.  Please select a different option.');
+    }
+    if(!isset($args['code']) || $args['code'] == '') {
+      insertLogs($level = 'Warning', $message = 'Invalid code from Discord OAuth2 sign in.');
+      return badRequestResponse($response, $msg = 'Invalid code from Discord Sign In');
+    }
+    $secret = decryptItems(getSettingsProp('discord_oauth_client_secret'));
+    $clientId =  getSettingsProp('discord_oauth_client_id');
+    $redirect = getSettingsProp('env_url').'/oauth/discord';
+
+    $client = new GuzzleHttp\Client(['base_uri' => 'https://discordapp.com/api/']);
+    $params = array(
+      'client_id'=>$clientId,
+      'code'=>$args['code'],
+      'redirect_uri'=>$redirect,
+      'client_secret'=>$secret,
+      'grant_type'=>'authorization_code',
+  		'scope'=>'idetify email',
+    );
+    $result = $client->request('POST', 'oauth2/token', array(
+      'form_params' => $params,
+      'headers' => array("Content-Type"=>"application/x-www-form-urlencoded","Accept"=>"application/json")
+    ));
+    $code = $result->getStatusCode(); // 200
+    $reason = $result->getReasonPhrase(); // OK
+    $body = $result->getBody();
+    $accessTokenArr = (array) json_decode($body, true);
+    $accessToken = $accessTokenArr['access_token'];
+    $headers = array(
+      'Authorization' => 'Bearer '.$accessToken,
+      'Accept' => 'application/json',
+      'Accept-Language' => 'en-US'
+    );
+    $result = $client->request('GET', 'users/@me', array('headers' => $headers));
+    $code = $result->getStatusCode(); // 200
+    $reason = $result->getReasonPhrase(); // OK
+    $body = $result->getBody();
+    $me = (array) json_decode($body, true);
+    $userData = formatDiscordLoginUserData($me);
+    if(checkTeamLogin($userData['email'])) {
+      $teamDomain = getSettingsProp('team_domain');
+      insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Discord OAuth2. A '.$teamDomain.' email is required.');
+      return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
+    }
+
+    $user = checkLogin($userData);
+    if(FrcPortal\Auth::isAuthenticated()) {
+      $auth_user = FrcPortal\Auth::user();
+      if($user != false && $user->user_id != $auth_user->user_id) {
+        $responseData = array('status'=>false, 'msg'=>'Discord account is already linked to another user');
+        insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Discord account '.$userData['email'].' to their profile.  Account is linked to another user.');
+      } else {
+        $provider = $userData['provider'];
+        $id = $userData['id'];
+        $email = $userData['email'];
+        $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
+          $responseData = array('status'=>false, 'msg'=>'Discord account linked');
+          insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Discord account '.$userData['email'].' to their profile.');
+      }
+    } else {
+      if($user != false) {
+        $user->updateUserOnLogin($userData);
+        $jwt = $user->generateUserJWT();
+        $responseData = array('status'=>true, 'msg'=>'Login with Discord Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+        FrcPortal\Auth::setCurrentUser($user->user_id);
+        insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Discord OAuth2.');
+      } else {
+        $teamNumber = getSettingsProp('team_number');
+        $responseData = array('status'=>false, 'msg'=>'Amazon account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+        insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Discord OAuth2. Microsoft account not linked to any current portal user.');
+      }
+    }
+
+    $response = $response->withJson($responseData);
+    return $response;
+  })->setName('Discord OAuth2');
   /*$this->post('/slack', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
@@ -448,48 +524,29 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   }); */
-  $this->post('/login', function ($request, $response) {
+  $this->post('/admin', function ($request, $response) {
     $responseData = false;
     $formData = $request->getParsedBody();
-    $provider = 'local';
-    if(checkLoginProvider($provider) == false) {
-      insertLogs($level = 'Warning', $message = 'Attempted login with local credentials.  Local login provider not enabled.');
-      return badRequestResponse($response, $msg = 'Local login is not enabled.  Please select a different option.');
-    }
+    $provider = 'local_admin';
 
-    if(!isset($formData['email']) || $formData['email'] == '') {
-      return badRequestResponse($response, $msg = 'Email is required');
+    if(!isset($formData['user']) || $formData['user'] == '') {
+      return badRequestResponse($response, $msg = 'Username is required');
     }
     if(!isset($formData['password']) || $formData['password'] == '') {
       return badRequestResponse($response, $msg = 'Password is required');
     }
-    $email = $formData['email'];
+    $username = $formData['user'];
     $password = $formData['password'];
-    $require_team_email = getSettingsProp('require_team_email');
-    if(checkTeamLogin($email)) {
-      $teamDomain = getSettingsProp('team_domain');
-      insertLogs($level = 'Warning', $message = $email.' attempted to login using local credentials. A '.$teamDomain.' email is required.');
-      return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
-    }
-
-    $user = null;
-    $user = FrcPortal\User::with(['school']) //,'user_categories'
-            ->where(function ($query) use ($email) {
-              $query->where('email', $email)
-                    ->orWhere('team_email', $email);
-            })
-            ->where('password', hash('sha512',$password))
-            ->whereNotNull('password')
-            ->where('status',true)
-            ->first();
-    if($user != null) {
+    if($username == getIniProp('admin_user') && hash('sha512',$password) == getIniProp('admin_pass')) {
+      $user = localAdminModel();
       $jwt = $user->generateUserJWT();
       $responseData = array('status'=>true, 'msg'=>'Login Successful', 'token'=>$jwt, 'userInfo' => $user);
       FrcPortal\Auth::setCurrentUser($user->user_id);
       insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using local credentials.');
     } else {
-      $responseData = array('status'=>false, 'msg'=>'Username or Password not correct. Please try again.');
-      insertLogs($level = 'Information', $message = $email.' attempted to login using local credentials. Username or Password not correct.');
+      $responseData = $formData;
+      //$responseData = array('status'=>false, 'msg'=>'Username or Password not correct. Please try again.', );
+      insertLogs($level = 'Information', $message = $username.' attempted to login using local credentials. Username or Password not correct.');
     }
     $response = $response->withJson($responseData);
     return $response;

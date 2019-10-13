@@ -11,27 +11,27 @@
 		</md-toolbar>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 		<md-dialog-content class="md-margin">
-			<div layout="row" ng-repeat="car in vm.car_list.cars" style="border-top: solid;border-left: solid;border-right: solid;">
+			<div layout="row" ng-repeat="car in vm.car_list.cars track by car.car_id" style="border-top: solid;border-left: solid;border-right: solid;">
 				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
 					{{car.car_title}}
 				</div>
 				<div flex class="dndList">
 					<md-list ng-cloak
-						dnd-list="vm.car_list.car_selection[car.car_id]"
-						dnd-disable-if="vm.car_list.car_selection[car.car_id].length >= car.car_space"
+						dnd-list="car.passengers"
+						dnd-disable-if="car.passengers.length >= car.car_space"
 						style="min-height:20px;">
-					    <md-list-item ng-repeat="req in vm.car_list.car_selection[car.car_id]"
-					        dnd-draggable="req"
-					        dnd-moved="vm.car_list.car_selection[car.car_id].splice($index, 1)"
+					    <md-list-item ng-repeat="user in car.passengers"
+					        dnd-draggable="user"
+					        dnd-moved="car.passengers.splice($index, 1)"
 					        dnd-effect-allowed="move"
-					        dnd-selected="models.selected = req"
-					        ng-class="{'selected': models.selected === req}"
+					        dnd-selected="models.selected = user"
+					        ng-class="{'selected': models.selected === user}"
 									class="min-height-reset"
-									dnd-disable-if="req.user_id == car.user_id"
+									dnd-disable-if="user.user_id == car.user_id"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
-						        <div><span ng-show="user.user_id == car.user_id"><md-icon class="material-icons"> star </md-icon> </span>{{req.user.full_name}}</div>
+						        <div>{{user.full_name}}</div>
 								</dnd-nodrag>
 					    </md-list-item>
 					</md-list>
@@ -43,19 +43,19 @@
 				</div>
 				<div flex class="dndList">
 					<md-list ng-cloak
-						dnd-list="vm.car_list.car_selection['non_select']"
+						dnd-list="vm.car_list['non_select']"
 						style="min-height:20px;">
-					    <md-list-item ng-repeat="req in vm.car_list.car_selection['non_select']"
-					        dnd-draggable="req"
-					        dnd-moved="vm.car_list.car_selection['non_select'].splice($index, 1)"
+					    <md-list-item ng-repeat="user in vm.car_list['non_select']"
+					        dnd-draggable="user"
+					        dnd-moved="vm.car_list['non_select'].splice($index, 1)"
 					        dnd-effect-allowed="move"
-					        dnd-selected="models.selected = req"
-					        ng-class="{'selected': models.selected === req}"
+					        dnd-selected="models.selected = user"
+					        ng-class="{'selected': models.selected === user}"
 									class="min-height-reset"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
-						        <div>{{req.user.full_name}}</div>
+						        <div>{{user.full_name}}</div>
 								</dnd-nodrag>
 					    </md-list-item>
 					</md-list>

@@ -1,33 +1,4 @@
 <?php
-	function syncGoogleCalendarEvent($event_id) {
-	$calendar = getSettingsProp('google_calendar_id');
-	$api_key = getSettingsProp('google_api_key');
-	$event = FrcPortal\Event::with('poc')->find($event_id); //, 'event_rooms.users', 'event_cars', 'event_time_slots.registrations.user'
-	if(is_null($event)) {
-		throw new Exception('Event ID not found');
-	}
-	$google_cal_id = $event->google_cal_id;
-	if(!isset($google_cal_id) || $google_cal_id == '') {
-		throw new Exception('Google Calendar Event ID cannot be blank', 400);
-	}
-	$ge = getGoogleCalendarEvent($google_cal_id);
-	$event->name = $ge['name'];
-	$event->details = $ge['details'];
-	$event->location = $ge['location'];
-	$event->event_start = $ge['event_start'];
-	$event->event_end = $ge['event_end'];
-	if(!is_null($event->registration_deadline_gcalid) && $event->registration_deadline_gcalid != '') {
-		try {
-			$ged = getGoogleCalendarEvent($event->registration_deadline_gcalid);
-			$event->registration_deadline = $ged['event_end'];
-		} catch (Exception $e) {}
-	}
-	if(!$event->save()) {
-		throw new Exception('Something went wrong updating the event', 500);
-	}
-	return $event;
-}
-
 function getGoogleCalendarEvent($google_cal_id) {
 	$calendar = getSettingsProp('google_calendar_id');
 	$api_key = getSettingsProp('google_api_key');
@@ -43,69 +14,6 @@ function getGoogleCalendarEvent($google_cal_id) {
 	} catch (Exception $e) {
 		throw $e;
 	}
-}
-
-function getEventCarList($event_id) {
-	$cars = array();
-	$carInfo = array();
-	if(!isset($event_id) || $event_id == '') {
-		throw new Exception('Event ID cannot be blank', 400);
-	}
-	$carInfo = FrcPortal\EventCar::with(['driver','passengers'])->where('event_id',$event_id)->get();
-	if(count($carInfo) > 0) {
-		foreach($carInfo as $car) {
-			$car_id = $car->car_id;
-			$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('car_id','=',$car_id)->get();
-			$cars[$car_id] = $users;
-		}
-	}
-	//no user yet users
-	$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('registration',true)->whereNull('car_id')->get();
-	$cars['non_select'] = $users;
-	return array('cars'=>$carInfo, 'total'=>count($carInfo), 'car_selection'=>$cars);
-
-}
-
-function getEventRoomList($event_id) {
-	$result = array(
-		'status' => false,
-		'msg' => '',
-		'data' => null
-	);
-	$rooms = array();
-	$roomInfo = array();
-	if(!isset($event_id) || $event_id == '') {
-		throw new Exception('Event ID cannot be blank', 400);
-	}
-	$roomInfo = FrcPortal\EventRoom::where('event_id',$event_id)->get();
-	if(count($roomInfo) > 0) {
-		foreach($roomInfo as $room) {
-			$room_id = $room->room_id;
-			$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('room_id','=',$room_id)->get();
-			$rooms[$room_id] = $users;
-		}
-	}
-	//no user yet users
-	$users = FrcPortal\EventRequirement::with(['user'])->where('event_id',$event_id)->where('registration',true)->whereNull('room_id')->get();
-	$rooms['non_select'] = $users;
-	return array('rooms'=>$roomInfo, 'total'=>count($roomInfo), 'room_selection'=>$rooms);
-}
-
-function deleteEventRoom($event_id, $room_id) {
-	if(!isset($event_id) || $event_id == '') {
-		throw new Exception('Event ID cannot be blank', 400);
-	}
-	if(!isset($room_id) || $room_id == '') {
-		throw new Exception('Room ID cannot be blank', 400);
-	}
-	$eventRoom = FrcPortal\EventRoom::where('event_id',$event_id)->where('room_id',$room_id)->first();
-	if(is_null($eventRoom)) {
-		throw new Exception('Event Room not found', 404);
-	}
-	if(!$eventRoom->delete()) {
-		throw new Exception('Something went wrong', 500);
-	}
-	return true;
 }
 
 function getEventTimeSlotList($event_id) {

@@ -19,7 +19,7 @@ class User extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'user_id', 'fname', 'lname', 'email', 'password', 'full_name', 'student_grade', 'grad_year', 'admin', 'user_type'
+    'user_id', 'fname', 'lname', 'email', 'full_name', 'student_grade', 'grad_year', 'admin', 'user_type'
   ];
 
   protected $appends = ['slack_enabled','room_type','adult','other_adult','student','mentor'];
@@ -28,7 +28,7 @@ class User extends Eloquent {
   *
   * @var array
   */
-  protected $hidden = ['signin_pin','password'];
+  protected $hidden = ['signin_pin'];
 
   /**
    * The attributes that should be cast to native types.
@@ -208,6 +208,7 @@ class User extends Eloquent {
   			'status' => $this->status,
   			'user_type' => $this->user_type,
   			'email' => $this->email,
+        'localadmin' => $this->user_id == getIniProp('admin_user'),
   		)
   	);
   	$jwt = JWT::encode($token, $key);
@@ -231,12 +232,16 @@ class User extends Eloquent {
 
   public function getNotificationPreferences() {
     $data = getNotificationOptions();
-  	$result = NotificationPreference::where('user_id',$this->user_id)->get();
+    $method_enable = array(
+      'slack' => getSettingsProp('slack_enable'),
+      'email' => getSettingsProp('email_enable')
+    );
+  	$result = $this->notification_preferences()->get();
   	if(count($result) > 0) {
   		foreach($result as $re) {
   			$m = $re['method'];
   			$t = $re['type'];
-  			$data[$m][$t] = true;
+  			$data[$m][$t] = true && $method_enable[$m];
   		}
   	}
   	return $data;
@@ -294,6 +299,18 @@ class User extends Eloquent {
         }
       }
     }
+    return false;
+  }
+
+  public function deleteLinkedAccount($auth_id) {
+    $auth = $this->oauth()->where('auth_id',$auth_id)->first();
+    if($auth->delete()) {
+      $message = $auth->oauth_provider_cap.' account "'.$auth->oauth_user.'" unlinked.';
+      insertLogs($level = 'Information', $message);
+      return true;
+    }
+    $message = 'Something went wrong unlinking '.$auth->oauth_provider_cap.' account "'.$auth->oauth_user.'".';
+    insertLogs($level = 'Information', $message);
     return false;
   }
 

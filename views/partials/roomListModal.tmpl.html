@@ -11,7 +11,7 @@
 		</md-toolbar>
 		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 		<md-dialog-content class="md-margin">
-			<div layout="row" ng-repeat="room in vm.room_list.rooms" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': !vm.admin && $last}">
+			<div layout="row" ng-repeat="room in vm.room_list.rooms track by room.room_id" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': !vm.admin && $last}">
 				<div flex layout="row" layout-align="start center" class="" style="border-right: solid;">
 					<md-button class="md-icon-button noprint" ng-click="vm.deleteEventRoom(room.room_id)" ng-hide="!vm.admin">
 						<md-tooltip md-direction="top">Delete Room</md-tooltip>
@@ -21,60 +21,58 @@
 				</div>
 				<div flex class="dndList">
 					<md-list ng-cloak
-						dnd-list="vm.room_list.room_selection[room.room_id]"
+						dnd-list="room.users"
 						dnd-allowed-types="room.room_type"
-						dnd-disable-if="!vm.admin || (room.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length >= 4) || (room.user_type == 'Adult' && vm.room_list.room_selection[room.room_id].length >= 2)"
+						dnd-disable-if="(room.user_type == 'Student' && room.users.length >= 4) || (room.user_type == 'Adult' && room.users.length >= 2)"
 						style="min-height:20px;">
-					    <md-list-item ng-repeat="req in vm.room_list.room_selection[room.room_id]"
-					        dnd-draggable="req"
-					        dnd-moved="vm.room_list.room_selection[room.room_id].splice($index, 1)"
+					    <md-list-item ng-repeat="user in room.users track by user.user_id"
+					        dnd-draggable="user"
+					        dnd-moved="room.users.splice($index, 1)"
 					        dnd-effect-allowed="move"
-					        dnd-selected="models.selected = req"
-					        ng-class="{'selected': models.selected === req}"
-									dnd-type="req.user.room_type"
+					        dnd-selected="models.selected = user"
+					        ng-class="{'selected': models.selected === user}"
+									dnd-type="user.room_type"
 									class="min-height-reset"
-									dnd-disable-if = "!vm.admin"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint" ng-hide="!vm.admin">:::</div>
-						        <div>{{req.user.full_name}}</div>
-										<div ng-hide="req.registration" style="cursor: default; margin-left: 5px;">
+						        <div>{{user.full_name}}</div>
+										<!--<div ng-hide="req.registration" style="cursor: default; margin-left: 5px;">
 											<md-tooltip md-direction="top">User has not completed registration</md-tooltip>
 											<md-icon class="material-icons md-warn">warning</md-icon>
-										</div>
+										</div>-->
 								</dnd-nodrag>
 					    </md-list-item>
 					</md-list>
 					<div flex></div>
-					<div ng-show="!vm.admin && !vm.checkReg(room.room_id) && vm.userInfo.user_type == 'Student' && vm.room_list.room_selection[room.room_id].length < 4 && room.gender == vm.userInfo.gender && room.user_type == vm.userInfo.user_type" layout="row" layout-align="center center">
+					<!--<div ng-show="!vm.admin && !vm.checkReg(room.room_id) && vm.userInfo.user_type == 'Student' && vm.room_list[room.room_id].length < 4 && room.gender == vm.userInfo.gender && room.user_type == vm.userInfo.user_type" layout="row" layout-align="center center">
 						<md-button type="button" ng-click="vm.toggleRoomSelect(room.room_id)">
 							<md-tooltip md-direction="top">Select Room</md-tooltip>
 							<span>Select Room</span>
 						</md-button>
-					</div>
+					</div>-->
 				</div>
 			</div>
-			<div layout="row" style="border: solid;" ng-hide="!vm.admin">
+			<div layout="row" style="border: solid;">
 				<div flex layout="row" layout-align="start center" class="md-padding" style="border-right: solid;">
 					No Room Selected
 				</div>
 				<div flex class="dndList">
 					<md-list ng-cloak
-						dnd-list="vm.room_list.room_selection['non_select']"
+						dnd-list="vm.room_list['non_select']"
 						style="min-height:20px;">
-					    <md-list-item ng-repeat="req in vm.room_list.room_selection['non_select']"
-					        dnd-draggable="req"
-					        dnd-moved="vm.room_list.room_selection['non_select'].splice($index, 1)"
+					    <md-list-item ng-repeat="user in vm.room_list['non_select'] track by user.user_id"
+					        dnd-draggable="user"
+					        dnd-moved="vm.room_list['non_select'].splice($index, 1)"
 					        dnd-effect-allowed="move"
-					        dnd-selected="models.selected = req"
-									dnd-type="req.user.room_type"
-					        ng-class="{'selected': models.selected === req}"
+					        dnd-selected="models.selected = user"
+									dnd-type="user.room_type"
+					        ng-class="{'selected': models.selected === user}"
 									class="min-height-reset"
-									dnd-disable-if = "!vm.admin"
 					        >
 									<dnd-nodrag layout="row" layout-align="start center">
 	        					<div dnd-handle style="cursor: move;margin-right:10px;" class="noprint">:::</div>
-						        <div>{{req.user.full_name}}</div>
+						        <div>{{user.full_name}}</div>
 								</dnd-nodrag>
 					    </md-list-item>
 					</md-list>

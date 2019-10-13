@@ -1,26 +1,25 @@
 angular.module('FrcPortal')
-.controller('main.admin.seasonController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log','$stateParams','$mdToast','$mdMenu',
+.controller('main.admin.seasonController', ['$timeout', '$q', '$scope', '$state', 'seasonsService', '$mdDialog', '$log','$stateParams','$mdToast','$mdMenu', 'otherService','$mdSidenav',
 	mainAdminSeasonController
 ]);
-function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log,$stateParams,$mdToast,$mdMenu) {
+function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService, $mdDialog, $log,$stateParams,$mdToast,$mdMenu, otherService,$mdSidenav) {
     var vm = this;
 
 	vm.loading = false;
 	vm.filter = {
 		show: false,
 	};
-	vm.showFilter = function () {
-		vm.filter.show = true;
-		vm.query.filter = {};
+	vm.showFilter = function() {
+		$mdSidenav('season_reqs_filter').toggle();
 	};
-	vm.removeFilter = function () {
-		vm.filter.show = false;
-		vm.query.filter = {};
 
+	vm.clearTextFilter = function() {
+		vm.query.filter = {};
 		if(vm.filter.form.$dirty) {
 			vm.filter.form.$setPristine();
 		}
-	};
+	}
+
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
 		filter: {},
@@ -129,14 +128,16 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		seasonsService.updateSeasonMembershipForm(vm.season.season_id).then(function(response){
 			if(response.status) {
 				vm.season.join_spreadsheet = response.data.join_spreadsheet;
+				$mdToast.show(
+		      $mdToast.simple()
+		        .textContent(response.msg)
+		        .position('top right')
+		        .hideDelay(3000)
+		    );
+			} else {
+				otherService.showErrorToast(response);
 			}
 			vm.loading = false;
-			$mdToast.show(
-	      $mdToast.simple()
-	        .textContent(response.msg)
-	        .position('top right')
-	        .hideDelay(3000)
-	    );
 		});
 	};
 
@@ -145,14 +146,17 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		seasonsService.pollMembershipForm(vm.season.season_id).then(function(response){
 			if(response.status) {
 				vm.users = response.data;
+				$mdToast.show(
+					$mdToast.simple()
+						.textContent(response.msg)
+						.position('top right')
+						.hideDelay(3000)
+				);
+			} else {
+				otherService.showErrorToast(response);
 			}
 			vm.loading = false;
-			$mdToast.show(
-				$mdToast.simple()
-					.textContent(response.msg)
-					.position('top right')
-					.hideDelay(3000)
-			);
+
 		});
 	};
 
@@ -162,7 +166,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			'year': vm.season.year,
 			'season_id': vm.season.season_id,
 			'start_date': vm.season.date.start.long_date,
-			'bag_day': vm.season.date.bag.long_date,
+			'bag_day': vm.season.no_bagday ? null:vm.season.date.bag.long_date,
 			'end_date': vm.season.date.end.long_date,
 			'game_logo': vm.season.game_logo,
 			'game_name': vm.season.game_name,
@@ -230,6 +234,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	vm.openMenu = function() {
 		$mdMenu.open();
 	}
+
 
 
 }

@@ -1,8 +1,8 @@
 <?php
 require_once(__DIR__.'/includes.php');
 use Illuminate\Database\Capsule\Manager as Capsule;
-$version = VERSION;
-
+$version = getVersion();
+//
 //always update composer after pull
 updateComposer();
 
@@ -154,11 +154,11 @@ if($version >= '2.13.7') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'membership_form_name'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'google_analytics_id'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_login_enable'], ['value' => false]);
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_oauth_client_id'], ['value' => '']);
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'amazon_oauth_client_secret'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'amazon_oauth_client_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'amazon_oauth_client_secret'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_login_enable'], ['value' => false]);
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_oauth_client_id'], ['value' => '']);
-    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'github_oauth_client_secret'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'github_oauth_client_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'github_oauth_client_secret'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'require_team_email'], ['value' => '0']);
   }
   if(Capsule::schema()->hasTable('annual_requirements')) {
@@ -183,11 +183,106 @@ if($version >= '2.13.7') {
   }
 }
 
-//Create User Category Tables
-/*
-require_once('UserCategory.php');
-require_once('UserUserCategory.php');
-*/
+/**
+* 2.15.0
+**/
+if($version >= '2.14.2') {
+  //create Admin Account
+  if(file_exists(__DIR__.'/secured/config.ini')) {
+    $iniData = parse_ini_file(__DIR__.'/secured/config.ini', true);
+    if(!array_key_exists('admin',$iniData) || is_null($iniData['admin']['admin_user']) || $iniData['admin']['admin_user'] == '' || is_null($iniData['admin']['admin_pass']) || $iniData['admin']['admin_pass'] == '') {
+      $admin_data = array();
+      $admin_data['admin_user'] = 'admin';
+      $password = bin2hex(openssl_random_pseudo_bytes(10));
+      $admin_data['admin_pass'] = hash('sha512',$password);
+      $iniData['admin'] = $admin_data;
+      write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
+      echo 'New Admin User: admin' . PHP_EOL;
+      echo 'New Admin Password: '.$password . PHP_EOL . PHP_EOL;
+    }
+    if(is_null($iniData['encryption']) || is_null($iniData['encryption']['encryption_key'])) {
+      $enc_data = array();
+      $enc_data['encryption_key'] = bin2hex(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES));
+      $iniData['encryption'] = $enc_data;
+      write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
+    }
+  }
+  if(Capsule::schema()->hasTable('seasons')) {
+    if(Capsule::schema()->hasColumn('seasons','bag_day')) {
+      try {
+        Capsule::schema()->table('seasons', function ($table) {
+          $table->string('bag_day')->nullable()->default(null)->change();
+        });
+      } catch (Exception $e) {
+        //Exception will be logged in Monolog
+      }
+    }
+  }
+  if(Capsule::schema()->hasTable('users')) {
+    if(Capsule::schema()->hasColumn('users','password')) {
+      try {
+        Capsule::schema()->table('users', function ($table) {
+          $table->dropColumn('password');
+        });
+      } catch (Exception $e) {
+        //Exception will be logged in Monolog
+      }
+    }
+  }
+  if(Capsule::schema()->hasTable('settings')) {
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'team', 'setting' => 'enable_team_emails'], ['value' => false]);
+    $file = __DIR__.'/secured/service_account_credentials.json';
+    $setting = FrcPortal\Setting::where('section', 'service_account')->where('setting','google_service_account_data')->first();
+  	if(file_exists($file) && (is_null($setting) || $setting->value == '')) {
+      $client_email = '';
+      $json_encypt = '';
+  		$json = file_get_contents($file);
+      $file_data = json_decode($json);
+      $client_email = $file_data->client_email;
+      $json_encypt = encryptItems($json);
+      $data = $client_email.','.$json_encypt;
+      $setting = FrcPortal\Setting::firstOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => $data]);
+      if($setting) {
+        echo 'Google Drive service account credentials are now encrypted' . PHP_EOL . PHP_EOL;
+        unlink($file);
+      }
+  	}
+    $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_secret')->get();
+    if(count($settings) > 0) {
+      foreach($settings as $secret) {
+        if($secret->value != '') {
+          $secret->value = encryptItems($secret->value);
+        }
+        $secret->section = 'oauth';
+        $secret->save();
+      }
+      echo 'OAuth client secrets are now encrypted' . PHP_EOL . PHP_EOL;
+    }
+    $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_id')->get();
+    foreach($settings as $client_id) {
+      $client_id->section = 'oauth';
+      $client_id->save();
+    }
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'login', 'setting' => 'discord_login_enable'], ['value' => false]);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_id'], ['value' => '']);
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_secret'], ['value' => '']);
+  }
+  if(Capsule::schema()->hasTable('seasons')) {
+    $seasons = FrcPortal\Season::where('membership_form_map', '<>', '')->get();
+    foreach ($seasons as $season) {
+      $memberFormMap = $season->membership_form_map;
+      if(array_key_exists('grad',$memberFormMap)) {
+        $memberFormMap['grad_year'] = $memberFormMap['grad'];
+        unset($memberFormMap['grad']);
+        $season->membership_form_map = $memberFormMap;
+        $season->save();
+      }
+    }
+  }
+  file_put_contents(__DIR__.'/secured/version.txt', '2.15.0');
+  $version = getVersion();
+  echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
+}
 
 
 /*

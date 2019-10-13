@@ -35,10 +35,10 @@
 					 ng-model="vm.start_date_full">
 				</input>
 			</md-input-container>
-			<md-input-container flex class="md-icon-float md-block">
+			<md-input-container flex class="md-icon-float md-block" ng-show="vm.season.year <= 2019">
 				<label>Bag Date</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
-				<input moment-picker="vm.season.date.bag.long_date" required
+				<input moment-picker="vm.season.date.bag.long_date" ng-required="vm.season.year <= 2019"
 					 format="LL"
 					 min-view="year"
 					 max-view="day"
@@ -109,7 +109,7 @@
 						<md-tooltip md-direction="top">Refresh Data</md-tooltip>
 						<md-icon>refresh</md-icon>
 					</md-button>
-					<md-button class="md-icon-button" ng-click="vm.pollMembershipForm()" ng-disabled="vm.season.join_spreadsheet == ''">
+					<md-button class="md-icon-button" ng-click="vm.pollMembershipForm()" ng-disabled="vm.season.join_spreadsheet == ''" ng-if="vm.season.join_spreadsheet != ''">
 						<md-tooltip md-direction="top">Pull latest data from registration form</md-tooltip>
 						<md-icon>cloud_download</md-icon>
 					</md-button>
@@ -144,6 +144,7 @@
 					</md-menu>
 				</div>
 			</md-toolbar>
+			<!--
 			<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
 				<div class="md-toolbar-tools">
 					<md-icon class="material-icons">search</md-icon>
@@ -157,44 +158,9 @@
 			</md-toolbar>
 			<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
 				<div class="md-toolbar-tools" layout="row">
-					<md-input-container class="" flex>
-						<label>Join Team</label>
-						<md-icon class="material-icons">person</md-icon>
-						<md-select ng-model="vm.query.filter.annual_requirements.join_team">
-							<md-option value="" ></md-option>
-							<md-option value="True">True</md-option>
-							<md-option value="False">False</md-option>
-						</md-select>
-					</md-input-container>
-					<md-input-container class="" flex>
-						<label>STIMS/TIMS</label>
-						<md-icon class="material-icons">person</md-icon>
-						<md-select ng-model="vm.query.filter.annual_requirements.stims">
-							<md-option value="" ></md-option>
-							<md-option value="True">True</md-option>
-							<md-option value="False">False</md-option>
-						</md-select>
-					</md-input-container>
-					<md-input-container class="" flex>
-						<label>Dues</label>
-						<md-icon class="material-icons">person</md-icon>
-						<md-select ng-model="vm.query.filter.annual_requirements.dues">
-							<md-option value="" ></md-option>
-							<md-option value="True">True</md-option>
-							<md-option value="False">False</md-option>
-						</md-select>
-					</md-input-container>
-					<md-input-container class="" flex>
-						<label>Reqs Complete</label>
-						<md-icon class="material-icons">person</md-icon>
-						<md-select ng-model="vm.query.filter.annual_requirements.reqs_complete">
-							<md-option value="" ></md-option>
-							<md-option value="True">True</md-option>
-							<md-option value="False">False</md-option>
-						</md-select>
-					</md-input-container>
+
 				</div>
-			</md-toolbar>
+			</md-toolbar> -->
 			<md-table-container>
 				<table md-table md-progress="vm.promise">
 					<thead md-head md-order="vm.query.order">
@@ -275,5 +241,64 @@
 				</md-fab-actions>
 			</md-fab-speed-dial>-->
 		</div>
+		<md-sidenav class="md-sidenav-right" md-component-id="season_reqs_filter">
+			<md-toolbar class="md-theme-light" layout="row" layout-align="space-between center">
+				<div>
+					<h1 class="md-toolbar-tools">Filter</h1>
+				</div>
+				<md-button class="md-icon-button" ng-click="vm.showFilter()" style="margin-right:0">
+					<md-icon class="material-icons">close</md-icon>
+					<md-tooltip md-direction="top" md-autohide="false">Close</md-tooltip>
+				</md-button>
+			</md-toolbar>
+			<md-content layout="column">
+				<form flex name="vm.filter.form" layout="row">
+					<md-input-container class="" flex>
+						<label>Search</label>
+						<md-icon class="material-icons">search</md-icon>
+						<input type="text" ng-model="vm.query.filter.$" class="" aria-invalid="false">
+					</md-input-container>
+				</form>
+				<md-input-container class="" flex>
+					<label>Join Team</label>
+					<md-icon class="material-icons">person</md-icon>
+					<md-select ng-model="vm.query.filter.annual_requirements.join_team">
+						<md-option value="" ></md-option>
+						<md-option value="True">True</md-option>
+						<md-option value="False">False</md-option>
+					</md-select>
+				</md-input-container>
+				<md-input-container class="" flex>
+					<label>STIMS/TIMS</label>
+					<md-icon class="material-icons">assignment</md-icon>
+					<md-select ng-model="vm.query.filter.annual_requirements.stims">
+						<md-option value="" ></md-option>
+						<md-option value="True">True</md-option>
+						<md-option value="False">False</md-option>
+					</md-select>
+				</md-input-container>
+				<md-input-container class="" flex>
+					<label>Dues</label>
+					<md-icon class="material-icons">attach_money</md-icon>
+					<md-select ng-model="vm.query.filter.annual_requirements.dues">
+						<md-option value="" ></md-option>
+						<md-option value="True">True</md-option>
+						<md-option value="False">False</md-option>
+					</md-select>
+				</md-input-container>
+				<md-input-container class="" flex>
+					<label>Reqs Complete</label>
+					<md-icon class="material-icons">check</md-icon>
+					<md-select ng-model="vm.query.filter.annual_requirements.reqs_complete">
+						<md-option value="" ></md-option>
+						<md-option value="True">True</md-option>
+						<md-option value="False">False</md-option>
+					</md-select>
+				</md-input-container>
+				<md-button ng-click="vm.clearTextFilter()" class="md-primary">
+					Clear Filter
+				</md-button>
+			</md-content>
+		</md-sidenav>
 	</md-content>
 </div>

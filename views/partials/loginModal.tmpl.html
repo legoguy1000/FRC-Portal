@@ -11,33 +11,43 @@
   <md-dialog-content layout="column" layout-align="center center" class="layout-margin" style="min-height: 200px;">
     <md-progress-circular md-mode="indeterminate" ng-disabled="!vm.loading" md-diameter="96" ng-show="vm.loading"></md-progress-circular>
     <div layout="column" ng-hide="vm.loading"> <!--ng-click="vm.authenticate('google')"-->
-      <md-button class="md-raised google btn-large social" ng-href="{{vm.oauth_urls.google}}" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.google_login_enable">
+      <md-button class="md-raised google btn-large social" ng-href="{{vm.oauth_urls.google}}" style="min-width: 300px; text-align: left;" ng-show="!vm.showlocallogin && vm.configItems.google_login_enable">
         <i class="mdi mdi-google"></i>
         Log in with Google
       </md-button>
-      <md-button class="md-raised facebook btn-large social" ng-href="{{vm.oauth_urls.facebook}}" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.facebook_login_enable">
+      <md-button class="md-raised facebook btn-large social" ng-href="{{vm.oauth_urls.facebook}}" style="min-width: 300px; text-align: left;" ng-show="!vm.showlocallogin && vm.configItems.facebook_login_enable">
         <i class="mdi mdi-facebook"></i>
         Log in with Facebook
       </md-button>
-      <md-button class="md-raised microsoft btn-large social" ng-href="{{vm.oauth_urls.microsoft}}" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.microsoft_login_enable">
+      <md-button class="md-raised microsoft btn-large social" ng-href="{{vm.oauth_urls.microsoft}}" style="min-width: 300px; text-align: left;" ng-show="!vm.showlocallogin && vm.configItems.microsoft_login_enable">
         <i class="mdi mdi-microsoft"></i>
         Log in with Microsoft
       </md-button>
-      <md-button class="md-raised github btn-large social" ng-href="{{vm.oauth_urls.github}}" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.github_login_enable">
+      <md-button class="md-raised github btn-large social" ng-href="{{vm.oauth_urls.github}}" style="min-width: 300px; text-align: left;" ng-show="!vm.showlocallogin && vm.configItems.github_login_enable">
         <i class="mdi mdi-github-circle"></i>
         Log in with Github
       </md-button>
-      <md-button class="md-raised amazon btn-large social" ng-href="{{vm.oauth_urls.amazon}}" style="min-width: 300px; text-align: left;" ng-show="vm.configItems.amazon_login_enable">
+      <md-button class="md-raised amazon btn-large social" ng-href="{{vm.oauth_urls.amazon}}" style="min-width: 300px; text-align: left;" ng-show="!vm.showlocallogin && vm.configItems.amazon_login_enable">
         <i class="mdi mdi-amazon"></i>
         Log in with Amazon
       </md-button>
-      <div layout="column" ng-show="vm.configItems.local_login_enable && !vm.link_accounts">
+      <md-button class="md-raised discord btn-large social" ng-href="{{vm.oauth_urls.discord}}" style="min-width: 300px; text-align: left;" ng-show="!vm.showlocallogin && vm.configItems.discord_login_enable">
+        <i class="mdi mdi-discord"></i>
+        Log in with Discord
+      </md-button>
+      <div style="text-align: center; cursor: pointer; margin-top:10px;">
+          <a ng-click="vm.showlocal()">
+            <span ng-show="!vm.showlocallogin">Local Login</span>
+            <span ng-show="vm.showlocallogin">Social Logins</span>
+          </a>
+      </div>
+      <div layout="column" ng-show="vm.showlocallogin && !vm.link_accounts">
         <form name="Form" ng-submit="vm.login()">
             <md-input-container class="md-block">
               <label>Login</label>
-              <input type="text" name="email" ng-model="vm.loginForm.email" required/>
-              <div ng-messages="Form.email.$error" role="alert" multiple="">
-                <div ng-message="required" class="my-message">Please enter your email.</div>
+              <input type="text" name="user" ng-model="vm.loginForm.user" required/>
+              <div ng-messages="Form.user.$error" role="alert" multiple="">
+                <div ng-message="required" class="my-message">Please enter your username.</div>
               </div>
             </md-input-container>
             <md-input-container class="md-block">

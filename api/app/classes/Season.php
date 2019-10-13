@@ -21,7 +21,7 @@ class Season extends Eloquent {
   ];
 
 
-  protected $appends = ['date', 'season_period'];
+  protected $appends = ['no_bagday', 'date', 'season_period'];
   //'start_date_unix','bag_day_unix','end_date_unix','start_date_formatted','bag_day_formatted','end_date_formatted','start_date_formatted','start_date_formatted'
   //$data['requirements'] = array();
   /**
@@ -49,10 +49,15 @@ class Season extends Eloquent {
     return parent::save();
   }
 
+  public function getNoBagdayAttribute() {
+    return $this->attributes['year'] > 2019 ? true:false;
+
+  }
+
   public function getDateAttribute() {
     $start = formatDateArrays($this->attributes['start_date']);
     $end = formatDateArrays($this->attributes['end_date']);
-    $bag = formatDateArrays($this->attributes['bag_day']);
+    $bag = $this->no_bagday ? null:formatDateArrays($this->no_bagday);
     return array(
       'start' => $start,
       'end' => $end,
@@ -66,11 +71,18 @@ class Season extends Eloquent {
     $bag = $this->attributes['bag_day'];
     $eoy = date('Y').'-12-31';
   	$date = date('Y-m-d');
-    return array(
-      'build_season' => $date >= $start && $date <= $bag,
-      'competition_season' => $date > $bag && $date <= $end,
-      'off_season' => $date > $end && $date <= $eoy
-    );
+    if($this->no_bagday) {
+      return array(
+        'build_season' => $date >= $start && $date <= $end,
+        'off_season' => $date > $end && $date <= $eoy
+      );
+    } else {
+      return array(
+        'build_season' => $date >= $start && $date <= $bag,
+        'competition_season' => $date > $bag && $date <= $end,
+        'off_season' => $date > $end && $date <= $eoy
+      );
+    }
   }
 
   /**
@@ -79,16 +91,5 @@ class Season extends Eloquent {
   public function annual_requirements() {
     return $this->hasOne('FrcPortal\AnnualRequirement', 'season_id', 'season_id')->withDefault();
   }
-  /**
-  * Get the Annual requirements.
-  */
-  /*public function getAllAnnualRequirementsAttribute() {
-    return User::crossJoin('seasons')
-					->leftJoin('annual_requirements', function ($join) {
-						$join->on('annual_requirements.user_id', '=', 'users.user_id')->on('annual_requirements.season_id', '=', 'seasons.season_id');
-					})->where(function ($query) {
-						$query->where('users.status', '=', true)->orWhereNotNull('annual_requirements.req_id');
-					})->where('seasons.season_id','=',$this->attributes['season_id'])->select('annual_requirements.join_team','annual_requirements.stims','annual_requirements.dues')->get();
-  } */
 
 }

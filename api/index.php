@@ -118,8 +118,8 @@ $container['logger'] = function($c) {
 $app->get('/version', function (Request $request, Response $response, array $args) {
   //$this->logger->addInfo('Called version endpoint');
   $route = FrcPortal\Auth::getRoute();
-  $responseArr = array(
-    'version' => VERSION,
+  $version = getGitVersion();
+  $responseArr = array_merge($version, array(
     'host' => $_SERVER["HTTP_HOST"],
     'user' => FrcPortal\Auth::user(),
     'token' => FrcPortal\Auth::currentToken(),
@@ -132,7 +132,7 @@ $app->get('/version', function (Request $request, Response $response, array $arg
       'arguments' => $route->getArguments(),
       'identifier' => $route->getIdentifier(),
     ),*/
-  );
+  ));
   $response = $response->withJson($responseArr);
   return $response;
 })->setName('Version');
@@ -143,6 +143,7 @@ $app->get('/config', function ($request, $response, $args) {
     'microsoft_oauth_client_id',
     'amazon_oauth_client_id',
     'github_oauth_client_id',
+    'discord_oauth_client_id',
     'team_name',
     'team_number',
     'team_logo_url',
@@ -156,6 +157,7 @@ $app->get('/config', function ($request, $response, $args) {
     'microsoft_login_enable',
     'amazon_login_enable',
     'github_login_enable',
+    'discord_login_enable',
     'slack_enable',
     'email_enable',
     'team_color_primary',
@@ -165,6 +167,7 @@ $app->get('/config', function ($request, $response, $args) {
     'require_team_email',
     'google_form_url',
     'google_analytics_id',
+    'team_emails',
   );
 //  $settings = FrcPortal\Setting::where('public',true)->get();
   $settings = FrcPortal\Setting::whereIn('setting', $configArr)->get();
@@ -178,7 +181,7 @@ $app->get('/config', function ($request, $response, $args) {
   return $response;
 })->setName('Config');
 $app->get('/manifest.json', function ($request, $response, $args) {
-  $this->logger->addInfo('Called manifest endpoint');
+  //$this->logger->addInfo('Called manifest endpoint');
   $configArr = array(
     'team_name',
     'team_number',

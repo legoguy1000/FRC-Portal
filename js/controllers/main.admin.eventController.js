@@ -1,26 +1,24 @@
 angular.module('FrcPortal')
-.controller('main.admin.eventController', ['$rootScope', '$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast',
+.controller('main.admin.eventController', ['$rootScope', '$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast','$mdSidenav',
 	mainAdminEventController
 ]);
-function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast) {
+function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast,$mdSidenav) {
     var vm = this;
 
 	vm.filter = {
 		show: false,
 	};
 	vm.loading = false;
-	vm.showFilter = function () {
-		vm.filter.show = true;
-		vm.query.filter = {};
+	vm.showFilter = function() {
+		$mdSidenav('event_reqs_filter').toggle();
 	};
-	vm.removeFilter = function () {
-		vm.filter.show = false;
-		vm.query.filter = {};
 
+	vm.clearTextFilter = function() {
+		vm.query.filter = {};
 		if(vm.filter.form.$dirty) {
 			vm.filter.form.$setPristine();
 		}
-	};
+	}
 	vm.selectedUsers = [];
 	vm.eventTypes = [
 		'Demo',
@@ -152,6 +150,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 				'food_required': vm.event.food_required,
 				'room_required': vm.event.room_required,
 				'drivers_required': vm.event.drivers_required,
+				'time_slots_required': vm.event.time_slots_required,
 			}
 		};
 		eventsService.updateEvent(data).then(function(response){
@@ -216,7 +215,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 			}
 		})
 		.then(function(response) {
-			vm.users = response.data;
+			vm.getEventRequirements();
 		}, function() { });
   };
 
@@ -238,7 +237,9 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 			}
 		})
 		.then(function(response) {
-			vm.users = response.data;
+			if(response) {
+				vm.getEventRequirements();
+			}
 		}, function() { });
   };
 

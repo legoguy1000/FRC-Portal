@@ -23,9 +23,14 @@ function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersSe
 
 	vm.updateEventCarList = function (close) {
 		vm.loading = true;
+		var cars = {};
+		angular.forEach(vm.car_list.cars, function(car, car_id) {
+		  cars[car_id] = car.passengers;
+		});
+		cars.non_select = vm.car_list.non_select;
 		var data = {
 			event_id: vm.eventInfo.event_id,
-			cars: vm.car_list.car_selection
+			cars: cars
 		};
 		eventsService.updateEventCarList(data).then(function(response){
 			vm.loading = false;
@@ -35,8 +40,8 @@ function carListModalController($log,$element,$mdDialog,$scope,eventInfo,usersSe
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
-			if(close) {
-				$mdDialog.hide(response);
+			if(response.status && close) {
+				$mdDialog.hide(true);
 			}
 		});
 	};
