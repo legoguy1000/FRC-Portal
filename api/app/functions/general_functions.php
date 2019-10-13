@@ -652,8 +652,10 @@ function check_github($branch=null) {
 		$reason = $response->getReasonPhrase(); // OK
 		$gitData = json_decode($response->getBody());
 	} catch (ClientException $e) {
-    die(Psr7\str($e->getRequest()));
-    echo Psr7\str();
+		$error = Psr7\str($e->getResponse());
+		insertLogs('Warning', $error);
+		$result['msg'] = 'Something went wrong getting info from GitHub';
+		$result['error'] = $error;
 	} catch (Exception $e) {
 			$error = handleExceptionMessage($e);
 			insertLogs('Warning', $error);

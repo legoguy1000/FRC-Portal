@@ -26,6 +26,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		'other': {},
 		'cronjob': {},
 	};
+	/*
 	vm.update = {
 		branch_name: $scope.main.versionInfo.branch_name,
 		latest_version: null,
@@ -40,7 +41,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 			vm.update.current_version = response.current_version;
 			vm.update.current_tag = response.tag;
 		});
-	}
+	} */
 	vm.serviceAccountCredentials = {};
 	vm.timezones = [];
 
@@ -143,6 +144,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		});
 	}
 
+	/*
 	vm.getUpdateBranches = function() {
 		settingsService.getUpdateBranches().then(function(response){
 			vm.branchOptions = response.data;
@@ -163,7 +165,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		});
 	}
 	vm.checkUpdates();
-
+	*/
 	$rootScope.$on('400BadRequest', function(event,response) {
 		vm.loading = false;
 		$mdToast.show(
