@@ -9,20 +9,17 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	vm.filter = {
 		show: false,
 	};
-	vm.showFilter = function () {
-		vm.filter.show = true;
-		vm.query.filter = {};
+	vm.showFilter = function() {
 		$mdSidenav('season_reqs_filter').toggle();
 	};
-	vm.removeFilter = function () {
-		vm.filter.show = false;
-		//vm.query.filter = {};
 
-		//if(vm.filter.form.$dirty) {
-		//	vm.filter.form.$setPristine();
-		//}
-		$mdSidenav('season_reqs_filter').toggle();
-	};
+	vm.clearTextFilter = function() {
+		vm.query.filter = {};
+		if(vm.filter.form.$dirty) {
+			vm.filter.form.$setPristine();
+		}
+	}
+
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
 		filter: {},
