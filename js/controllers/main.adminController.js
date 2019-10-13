@@ -60,8 +60,9 @@ function mainAdminController($rootScope,$log,$timeout, $q, $scope, $state, event
 		if(!$rootScope.pageRefresh) {
 			$state.go(sref);
 		}
-		$rootScope.pageRefresh = false;
-		console.log(sref);
+		if($rootScope.pageRefresh) {
+			$rootScope.pageRefresh = false;
+		}
 	}
 	admin.clickTab = function(tab) {
 		var clicked = admin.tabs.indexOf(tab);
