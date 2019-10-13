@@ -242,12 +242,13 @@
 			</md-fab-speed-dial>-->
 		</div>
 		<md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="season_reqs_filter">
-			<md-toolbar class="md-theme-light">
+			<md-toolbar class="md-theme-light" layout="row" layout-align="space-between center">
 				<div>
 					<h1 class="md-toolbar-tools">Filter</h1>
 				</div>
 				<md-button class="md-icon-button" ng-click="vm.showFilter()" style="margin-right:0">
 					<md-icon class="material-icons">close</md-icon>
+					<md-tooltip md-direction="top" md-autohide="false">Close</md-tooltip>
 				</md-button>
 			</md-toolbar>
 			<md-content layout="column">
@@ -255,7 +256,7 @@
 					<md-input-container class="" flex>
 						<label>Search</label>
 						<md-icon class="material-icons">search</md-icon>
-						<input type="text" ng-model="vm.query.filter.$" placeholder="search" class="" aria-invalid="false">
+						<input type="text" ng-model="vm.query.filter.$" class="" aria-invalid="false">
 					</md-input-container>
 				</form>
 				<md-input-container class="" flex>
@@ -294,8 +295,8 @@
 						<md-option value="False">False</md-option>
 					</md-select>
 				</md-input-container>
-				<md-button ng-click="close()" class="md-primary">
-					Close Sidenav Right
+				<md-button ng-click="vm.clearTextFilter()" class="md-primary">
+					Clear season_reqs_filter
 				</md-button>
 			</md-content>
 		</md-sidenav>
