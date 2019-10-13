@@ -157,42 +157,7 @@
 			</md-toolbar>
 			<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
 				<div class="md-toolbar-tools" layout="row">
-					<md-input-container class="" flex>
-						<label>Join Team</label>
-						<md-icon class="material-icons">person</md-icon>
-						<md-select ng-model="vm.query.filter.annual_requirements.join_team">
-							<md-option value="" ></md-option>
-							<md-option value="True">True</md-option>
-							<md-option value="False">False</md-option>
-						</md-select>
-					</md-input-container>
-					<md-input-container class="" flex>
-						<label>STIMS/TIMS</label>
-						<md-icon class="material-icons">person</md-icon>
-						<md-select ng-model="vm.query.filter.annual_requirements.stims">
-							<md-option value="" ></md-option>
-							<md-option value="True">True</md-option>
-							<md-option value="False">False</md-option>
-						</md-select>
-					</md-input-container>
-					<md-input-container class="" flex>
-						<label>Dues</label>
-						<md-icon class="material-icons">person</md-icon>
-						<md-select ng-model="vm.query.filter.annual_requirements.dues">
-							<md-option value="" ></md-option>
-							<md-option value="True">True</md-option>
-							<md-option value="False">False</md-option>
-						</md-select>
-					</md-input-container>
-					<md-input-container class="" flex>
-						<label>Reqs Complete</label>
-						<md-icon class="material-icons">person</md-icon>
-						<md-select ng-model="vm.query.filter.annual_requirements.reqs_complete">
-							<md-option value="" ></md-option>
-							<md-option value="True">True</md-option>
-							<md-option value="False">False</md-option>
-						</md-select>
-					</md-input-container>
+
 				</div>
 			</md-toolbar>
 			<md-table-container>
@@ -277,16 +242,56 @@
 		</div>
 		<md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="season_reqs_filter">
 			<md-toolbar class="md-theme-light">
-				<h1 class="md-toolbar-tools">Sidenav Right</h1>
+				<h1 class="md-toolbar-tools">Filter</h1>
 			</md-toolbar>
 			<md-content layout-padding>
-				<form>
-					<md-input-container>
-						<label for="testInput">Test input</label>
-						<input type="text" id="testInput"
-									 ng-model="data" md-autofocus>
-					</md-input-container>
-				</form>
+				<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
+					<div class="md-toolbar-tools">
+						<md-icon class="material-icons">search</md-icon>
+						<form flex name="vm.filter.form" >
+							<input type="text" ng-model="vm.query.filter.$" placeholder="search" class="" aria-invalid="false">
+						</form>
+						<md-button class="md-icon-button" ng-click="vm.removeFilter()">
+							<md-icon class="material-icons">close</md-icon>
+						</md-button>
+					</div>
+				</md-toolbar>
+				<md-input-container class="" flex>
+					<label>Join Team</label>
+					<md-icon class="material-icons">person</md-icon>
+					<md-select ng-model="vm.query.filter.annual_requirements.join_team">
+						<md-option value="" ></md-option>
+						<md-option value="True">True</md-option>
+						<md-option value="False">False</md-option>
+					</md-select>
+				</md-input-container>
+				<md-input-container class="" flex>
+					<label>STIMS/TIMS</label>
+					<md-icon class="material-icons">person</md-icon>
+					<md-select ng-model="vm.query.filter.annual_requirements.stims">
+						<md-option value="" ></md-option>
+						<md-option value="True">True</md-option>
+						<md-option value="False">False</md-option>
+					</md-select>
+				</md-input-container>
+				<md-input-container class="" flex>
+					<label>Dues</label>
+					<md-icon class="material-icons">person</md-icon>
+					<md-select ng-model="vm.query.filter.annual_requirements.dues">
+						<md-option value="" ></md-option>
+						<md-option value="True">True</md-option>
+						<md-option value="False">False</md-option>
+					</md-select>
+				</md-input-container>
+				<md-input-container class="" flex>
+					<label>Reqs Complete</label>
+					<md-icon class="material-icons">person</md-icon>
+					<md-select ng-model="vm.query.filter.annual_requirements.reqs_complete">
+						<md-option value="" ></md-option>
+						<md-option value="True">True</md-option>
+						<md-option value="False">False</md-option>
+					</md-select>
+				</md-input-container>
 				<md-button ng-click="close()" class="md-primary">
 					Close Sidenav Right
 				</md-button>
