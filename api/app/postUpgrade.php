@@ -242,7 +242,10 @@ if($version >= '2.14.2') {
       $json_encypt = encryptItems($json);
       $data = $client_email.','.$json_encypt;
       $setting = FrcPortal\Setting::firstOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => $data]);
-      echo 'Google Drive service account credentials are now encrypted' . PHP_EOL . PHP_EOL;
+      if($setting) {
+        echo 'Google Drive service account credentials are now encrypted' . PHP_EOL . PHP_EOL;
+        unlink($file);
+      }
   	}
     $settings = FrcPortal\Setting::where('section', 'login')->where('setting','like','%oauth_client_secret')->get();
     if(count($settings) > 0) {
