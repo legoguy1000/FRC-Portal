@@ -267,6 +267,16 @@ if($version >= '2.14.2') {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_id'], ['value' => '']);
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'oauth', 'setting' => 'discord_oauth_client_secret'], ['value' => '']);
   }
+  if(Capsule::schema()->hasTable('seasons')) {
+    $seasons = FrcPortal\Season::where('membership_form_map', '<>', '')->get();
+    foreach ($seasons as $season) {
+      $memberFormMap = $season->membership_form_map;
+      $memberFormMap['grad_year'] = $memberFormMap['grad'];
+      unset($memberFormMap['grad']);
+      $season->membership_form_map = $memberFormMap;
+      $season->save();
+    }
+  }
   file_put_contents(__DIR__.'/secured/version.txt', '2.15.0');
   $version = getVersion();
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
