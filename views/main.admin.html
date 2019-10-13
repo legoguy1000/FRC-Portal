@@ -1,5 +1,5 @@
 <md-tabs md-border-bottom md-autoselect md-swipe-content style="margin-bottom: 10px;">
-	<md-tab label="{{tab.name}}" md-active="admin.state == tab.sref || admin.state == tab.alt"  ng-repeat="tab in admin.tabs"></md-tab>
+	<md-tab label="{{tab.name}}" ng-click="$state.go(tab.sref)" md-active="admin.state == tab.sref || admin.state == tab.alt"  ng-repeat="tab in admin.tabs"></md-tab>
 </md-tabs>
 <div ui-view flex></div>
 <!-- md-on-select="admin.clickTab(tab)"    ng-class="admin.slide"-->
