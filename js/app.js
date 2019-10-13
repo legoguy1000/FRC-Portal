@@ -693,7 +693,7 @@ angular.module('FrcPortal', [
 	$transitions.onStart({}, function(transition) {
 		$rootScope.pageRefresh = false;
 		console.log(transition.from());
-		if(transition.from() == null) {
+		if(transition.from().name == '') {
 			$rootScope.pageRefresh = true;
 		}
 	});
