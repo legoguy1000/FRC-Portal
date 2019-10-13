@@ -20,6 +20,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		if(vm.filter.form.$dirty) {
 			vm.filter.form.$setPristine();
 		}
+		$mdSidenav('season_reqs_filter').toggle();
 	};
 	vm.limitOptions = [5,10,25,50,100];
 	vm.query = {
@@ -235,6 +236,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 	vm.openMenu = function() {
 		$mdMenu.open();
 	}
+
 
 
 }
