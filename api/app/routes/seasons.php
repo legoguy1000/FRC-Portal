@@ -197,10 +197,10 @@ $app->group('/seasons', function () {
       //Season passed from middleware
       $season = $request->getAttribute('season');
       $update = $season->updateSeasonMembershipForm();
-      if($update) {
-        $responseArr = standardResponse($status = true, $msg = $season->year.' membership form added', $data = $season);
-      } elseif(is_array($result) && array_key_exists('join_spreadsheet',$result) && $result['join_spreadsheet'] == '')  {
+      if(is_array($result) && array_key_exists('join_spreadsheet',$result) && $result['join_spreadsheet'] == '')  {
 				$responseArr['msg'] = 'No membership form found for '.$season->year;
+      } elseif($update) {
+        $responseArr = standardResponse($status = true, $msg = $season->year.' membership form added', $data = $season);
       }
       $response = $response->withJson($responseArr);
       return $response;
