@@ -692,6 +692,7 @@ angular.module('FrcPortal', [
 	// track pageview on state change
 	$transitions.onStart({}, function(transition) {
 		$rootScope.pageRefresh = false;
+		console.log(transition.from());
 		if(transition.from() == null) {
 			$rootScope.pageRefresh = true;
 		}
