@@ -58,7 +58,7 @@ function mainAdminController($rootScope,$log,$timeout, $q, $scope, $state, event
 	admin.slide = 'slide-left';
 	admin.go = function(sref) {
 		if(!$rootScope.pageRefresh) {
-			$state.go(sref);
+			//$state.go(sref);
 		}
 		console.log(sref);
 	}
