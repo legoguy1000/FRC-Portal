@@ -9,18 +9,16 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 		show: false,
 	};
 	vm.loading = false;
-	vm.showFilter = function () {
-		vm.filter.show = true;
-		vm.query.filter = {};
+	vm.showFilter = function() {
+		$mdSidenav('event_reqs_filter').toggle();
 	};
-	vm.removeFilter = function () {
-		vm.filter.show = false;
-		vm.query.filter = {};
 
+	vm.clearTextFilter = function() {
+		vm.query.filter = {};
 		if(vm.filter.form.$dirty) {
 			vm.filter.form.$setPristine();
 		}
-	};
+	}
 	vm.selectedUsers = [];
 	vm.eventTypes = [
 		'Demo',
