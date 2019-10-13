@@ -689,6 +689,13 @@ angular.module('FrcPortal', [
 	  );
 		$rootScope.$broadcast('stateChange');
 	});
+	// track pageview on state change
+	$transitions.onStart({}, function(transition) {
+		$rootScope.pageRefresh = false;
+		if(transition.from() == null) {
+			$rootScope.pageRefresh = true;
+		}
+	});
 	$transitions.onStart({to: function(state) { return state != null && state.authenticate;}}, function(trans) {
 		var toState = trans.$to();
 		if (!$auth.isAuthenticated()){
