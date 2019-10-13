@@ -92,19 +92,4 @@ class Season extends Eloquent {
     return $this->hasOne('FrcPortal\AnnualRequirement', 'season_id', 'season_id')->withDefault();
   }
 
-  function updateSeasonMembershipForm() {
-    $result = false;
-    try {
-        $result = getSeasonMembershipForm($this->year);
-        if(is_array($result) && array_key_exists('join_spreadsheet',$result) && $result['join_spreadsheet'] != '') {
-          $this->join_spreadsheet = $result['join_spreadsheet'];
-          $result = $this->save();
-        }
-    } catch (Exception $e) {
-      $error = 'Something went wrong updating season membership form';
-      insertLogs('Warning', $error);
-    }
-  	return $result;
-  }
-
 }
