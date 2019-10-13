@@ -190,14 +190,14 @@ if($version >= '2.14.2') {
   //create Admin Account
   if(file_exists(__DIR__.'/secured/config.ini')) {
     $iniData = parse_ini_file(__DIR__.'/secured/config.ini', true);
-    if(is_null($iniData['admin']['admin_user']) || $iniData['admin']['admin_user'] == '' || is_null($iniData['admin']['admin_pass']) || $iniData['admin']['admin_pass'] == '') {
+    if(!array_key_exists('admin',$iniData) || is_null($iniData['admin']['admin_user']) || $iniData['admin']['admin_user'] == '' || is_null($iniData['admin']['admin_pass']) || $iniData['admin']['admin_pass'] == '') {
       $admin_data = array();
       $admin_data['admin_user'] = 'admin';
       $password = bin2hex(openssl_random_pseudo_bytes(10));
       $admin_data['admin_pass'] = hash('sha512',$password);
       $iniData['admin'] = $admin_data;
       write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
-      echo 'New Admin User: admin' . PHP_EOL . PHP_EOL;
+      echo 'New Admin User: admin' . PHP_EOL;
       echo 'New Admin Password: '.$password . PHP_EOL . PHP_EOL;
     }
     if(is_null($iniData['encryption']) || is_null($iniData['encryption']['encryption_key'])) {
@@ -271,10 +271,12 @@ if($version >= '2.14.2') {
     $seasons = FrcPortal\Season::where('membership_form_map', '<>', '')->get();
     foreach ($seasons as $season) {
       $memberFormMap = $season->membership_form_map;
-      $memberFormMap['grad_year'] = $memberFormMap['grad'];
-      unset($memberFormMap['grad']);
-      $season->membership_form_map = $memberFormMap;
-      $season->save();
+      if(array_key_exists('grad',$memberFormMap)) {
+        $memberFormMap['grad_year'] = $memberFormMap['grad'];
+        unset($memberFormMap['grad']);
+        $season->membership_form_map = $memberFormMap;
+        $season->save();
+      }
     }
   }
   file_put_contents(__DIR__.'/secured/version.txt', '2.15.0');
