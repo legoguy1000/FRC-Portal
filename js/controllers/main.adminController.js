@@ -50,7 +50,10 @@ function mainAdminController($log,$timeout, $q, $scope, $state, eventsService, $
       }, */
     ];
 	admin.slide = 'slide-left';
-
+	admin.go = function(sref) {
+		$state.go(sref);
+		consol.log(sref);
+	}
 	admin.clickTab = function(tab) {
 		var clicked = admin.tabs.indexOf(tab);
 		var cur = admin.tabs.map(function(e) { return e.sref; }).indexOf($state.current.name);
