@@ -95,10 +95,9 @@ class Season extends Eloquent {
   function updateSeasonMembershipForm() {
     $result = false;
     try {
-		    $searchResult = getSeasonMembershipForm($this->year);
-        $result = $searchResult;
-        if(is_array($searchResult) && array_key_exists('join_spreadsheet',$searchResult)) {
-          $this->join_spreadsheet = $searchResult['join_spreadsheet'];
+        $result = getSeasonMembershipForm($this->year);
+        if(is_array($result) && array_key_exists('join_spreadsheet',$result) && $result['join_spreadsheet'] != '') {
+          $this->join_spreadsheet = $result['join_spreadsheet'];
           $result = $this->save();
         }
     } catch (Exception $e) {

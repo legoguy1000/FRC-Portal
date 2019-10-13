@@ -35,10 +35,9 @@ function getSeasonMembershipForm($year) {
 			}
 			$files = $service->files->listFiles($parameters);
 			$fileList = $files->getFiles();
+			$result = array('join_spreadsheet' => '');
 			if(count($fileList) > 0) {
-				$result = array('join_spreadsheet' => $fileList[0]['id']);
-			} else {
-				$result = 0;
+				$result['join_spreadsheet'] = $fileList[0]['id'];
 			}
 		} catch (Exception $e) {
 				$error = handleGoogleAPIException($e, 'Google Drive');

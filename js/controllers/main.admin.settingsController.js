@@ -158,7 +158,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 			if(!latest_release && response.data.update_available==false) {
 				latest_release = 'v'+vm.update.current_version;
 			}
-			vm.update.latest_version = latest_release+'-'+latest_version.substring(0, 6);
+			vm.update.latest_version = latest_release+'-'+latest_version.substring(0, 7);
 			if(manual == true) { vm.loading = false; }
 		});
 	}

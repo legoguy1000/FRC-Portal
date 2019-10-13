@@ -190,17 +190,17 @@ $app->group('/seasons', function () {
     $this->put('/updateMembershipForm', function ($request, $response, $args) {
       $userId = FrcPortal\Auth::user()->user_id;
       $formData = $request->getParsedBody();
-      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong updating season membership form', $data = null);
       if(!FrcPortal\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       //Season passed from middleware
       $season = $request->getAttribute('season');
-
-      if($season->updateSeasonMembershipForm()) {
+      $update = $season->updateSeasonMembershipForm();
+      if($update) {
         $responseArr = standardResponse($status = true, $msg = $season->year.' membership form added', $data = $season);
-      } else {
-        $responseArr['msg'] = 'Something went wrong updating season membership form';
+      } elseif(is_array($result) && array_key_exists('join_spreadsheet',$result) && $result['join_spreadsheet'] == '')  {
+				$responseArr['msg'] = 'No membership form found for '.$season->year;
       }
       $response = $response->withJson($responseArr);
       return $response;
