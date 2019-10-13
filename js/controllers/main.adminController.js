@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.adminController', ['$log','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog',
+.controller('main.adminController', ['$log','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog','$state',
 	mainAdminController
 ]);
-function mainAdminController($log,$timeout, $q, $scope, $state, eventsService, $mdDialog) {
+function mainAdminController($log,$timeout, $q, $scope, $state, eventsService, $mdDialog, $state) {
     var admin = this;
 
 	//$log.log($state.current)
