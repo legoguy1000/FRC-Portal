@@ -96,7 +96,7 @@ $app->group('/seasons', function () {
         'fname' => 'first name',
         'lname' => 'last name',
         'user_type' => 'member type',
-        'grad' => 'year of graduation',
+        'grad_year' => 'year of graduation',
         'school' => 'school',
         'pin_number' => 'student id',
         'phone' => 'phone'
