@@ -186,7 +186,7 @@ if($version >= '2.13.7') {
 /**
 * 2.15.0
 **/
-if($version >= '2.14.2') {
+if($version >= '2.15.0') {
   //create Admin Account
   if(file_exists(__DIR__.'/secured/config.ini')) {
     $iniData = parse_ini_file(__DIR__.'/secured/config.ini', true);
@@ -279,8 +279,8 @@ if($version >= '2.14.2') {
       }
     }
   }
-  file_put_contents(__DIR__.'/secured/version.txt', '2.15.0');
-  $version = getVersion();
+  //file_put_contents(__DIR__.'/secured/version.txt', '2.15.0');
+  //$version = getVersion();
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
 

@@ -20,11 +20,11 @@ function getSettingsProp($prop) {
 }
 
 function getVersion() {
-	$version = null;
-	$version = file_get_contents(__DIR__.'/../secured/version.txt');
-	if(!isset($version) || is_null($version)) {
+	//$version = null;
+	//$version = file_get_contents(__DIR__.'/../secured/version.txt');
+	//if(!isset($version) || is_null($version)) {
 	  $version = VERSION;
-	}
+	//}
 	return $version;
 }
 
