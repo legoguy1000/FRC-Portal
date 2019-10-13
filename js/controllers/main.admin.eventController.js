@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.eventController', ['$rootScope', '$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast',
+.controller('main.admin.eventController', ['$rootScope', '$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','usersService','$mdToast','$mdSidenav',
 	mainAdminEventController
 ]);
-function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast) {
+function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,usersService,$mdToast,$mdSidenav) {
     var vm = this;
 
 	vm.filter = {
