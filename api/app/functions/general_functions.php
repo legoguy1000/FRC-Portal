@@ -653,7 +653,7 @@ function check_github($branch=null) {
 		$gitData = json_decode($response->getBody());
 	} catch (ClientException $e) {
     die(Psr7\str($e->getRequest()));
-    echo Psr7\str($e->getResponse());
+    echo Psr7\str();
 	} catch (Exception $e) {
 			$error = handleExceptionMessage($e);
 			insertLogs('Warning', $error);
