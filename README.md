@@ -11,6 +11,8 @@ Version 2.15.0
 * Added Discord as login provider
 * Add Admin Event/Season filter sidenav's
 * Fix minor GUI issues
+  * Remove right sidenav
+  * Replace tables in user profile with cards
 
 Version 2.14.1
 * changed sign in QR code to a url to allow native qr scanners
