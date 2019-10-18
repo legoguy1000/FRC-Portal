@@ -72,6 +72,14 @@ class User extends Eloquent {
     });
   } */
 
+  public function getFullNameAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return $this->attributes['fname'];
+    }
+  }
+
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
   }
