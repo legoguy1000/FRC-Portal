@@ -86,7 +86,7 @@ function getUsersAnnualRequirements($season_id) {
 										})
 										->orWhere('status',true)
 										->get();
-		$season->annual_requirements()->weeklyBuildSeasonHours();
+		$season->annual_requirements()->append('weekly_build_season_hours');
 	}
 	return $season;
 }
