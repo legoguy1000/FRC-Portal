@@ -107,11 +107,8 @@ class AnnualRequirement extends Eloquent {
     return !is_null($hours) ? (float) $hours->build_season_hours : 0;
   }
 
-  function scopeWeeklyBuildSeasonHours($query) {
-      $query->append('weekly_build_season_hours');
-  }
 
-  public function getWeeklyBuildSeasonHoursAttribute() {
+  public function weeklyBuildSeasonHours() {
     //SELECT user_id,IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, week(mh.time_in,1) as week from meeting_hours mh
     //LEFT JOIN seasons
     //ON seasons.year=YEAR(meeting_hours.time_in) AND mh.time_in >= seasons.start_date AND mh.time_in <= seasons.bag_day
