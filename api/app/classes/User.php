@@ -79,6 +79,53 @@ class User extends Eloquent {
       return $this->attributes['fname'];
     }
   }
+  if(Auth::isAuthenticated()) {
+    $hidden[] = 'lname';
+  }
+/*
+  public function getLnameAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  }
+  public function getGradYearAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  }
+  public function getEmailAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  }
+  public function getTeamEmailAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  }
+  public function getStudentGradeAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  }
+  public function getPhoneAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  } */
+
 
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
