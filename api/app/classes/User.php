@@ -79,17 +79,8 @@ class User extends Eloquent {
       return $this->attributes['fname'];
     }
   }
-  public function toArray($request) {
-      return [
-          'id' => $this->id,
-          'name' => $this->name,
-          'email' => $this->email,
-          'secret' => $this->when(Auth::user()->isAdmin(), 'secret-value'),
-          'created_at' => $this->created_at,
-          'updated_at' => $this->updated_at,
-      ];
-  }
-/*
+
+
   public function getLnameAttribute($value) {
     if(Auth::isAuthenticated()) {
       return $value;
@@ -131,7 +122,7 @@ class User extends Eloquent {
     } else {
       return null;
     }
-  } */
+  }
 
 
   public function getSlackEnabledAttribute() {
