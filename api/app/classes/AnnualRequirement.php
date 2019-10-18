@@ -22,7 +22,7 @@ class AnnualRequirement extends Eloquent {
   ];
 
 
-  protected $appends = ['off_season_hours','build_season_hours','competition_season_hours','event_hours','total_hours','min_hours','reqs_complete'];
+  protected $appends = ['off_season_hours','build_season_hours','weekly_build_season_hours','competition_season_hours','event_hours','total_hours','min_hours','reqs_complete'];
 
   protected $attributes = [
     'join_team' => false,
@@ -106,9 +106,7 @@ class AnnualRequirement extends Eloquent {
     }
     return !is_null($hours) ? (float) $hours->build_season_hours : 0;
   }
-
-
-  public function weeklyBuildSeasonHours() {
+  public function getWeeklyBuildSeasonHoursAttribute() {
     //SELECT user_id,IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, week(mh.time_in,1) as week from meeting_hours mh
     //LEFT JOIN seasons
     //ON seasons.year=YEAR(meeting_hours.time_in) AND mh.time_in >= seasons.start_date AND mh.time_in <= seasons.bag_day
