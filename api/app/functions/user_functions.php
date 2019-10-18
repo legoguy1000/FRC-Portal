@@ -76,7 +76,7 @@ function getUsersAnnualRequirements($season_id) {
 	$season = false;
 	if(!is_null($season_id)) {
 		$season = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
-											$query->where('season_id','=',$season_id)->weeklyBuildSeasonHours();
+											$query->where('season_id','=',$season_id);
 										}])->whereExists(function ($query) use ($season_id) {
 											$query->select(DB::raw(1))
 														->from('annual_requirements')
@@ -86,6 +86,7 @@ function getUsersAnnualRequirements($season_id) {
 										})
 										->orWhere('status',true)
 										->get();
+		$season->annual_requirements()->weeklyBuildSeasonHours();
 	}
 	return $season;
 }
