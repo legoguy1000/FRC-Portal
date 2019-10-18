@@ -79,8 +79,15 @@ class User extends Eloquent {
       return $this->attributes['fname'];
     }
   }
-  if(Auth::isAuthenticated()) {
-    $hidden[] = 'lname';
+  public function toArray($request) {
+      return [
+          'id' => $this->id,
+          'name' => $this->name,
+          'email' => $this->email,
+          'secret' => $this->when(Auth::user()->isAdmin(), 'secret-value'),
+          'created_at' => $this->created_at,
+          'updated_at' => $this->updated_at,
+      ];
   }
 /*
   public function getLnameAttribute($value) {
