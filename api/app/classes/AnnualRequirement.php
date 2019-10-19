@@ -86,6 +86,10 @@ class AnnualRequirement extends Eloquent {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
   }
 
+  public function bsh() {
+    return $this->hasOne('FrcPortal\MeetingHour', 'user_id', 'user_id');
+  }
+
   public function getBuildSeasonHoursAttribute() {
     //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS build_season_hours, seasons.*,exempt_hours.exempt_id
     //FROM meeting_hours
@@ -174,10 +178,7 @@ class AnnualRequirement extends Eloquent {
     }
     return $data;
   }
-  public function getWeeklyBuildSeasonHours() {
-    $this->weekly_build_season_hours = $this->getWeeklyBuildSeasonHoursAttribute();
-    return $this;
-  }
+
   public function getCompetitionSeasonHoursAttribute() {
     //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS competition_season_hours, seasons.*
     //FROM meeting_hours
