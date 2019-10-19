@@ -174,6 +174,10 @@ class AnnualRequirement extends Eloquent {
     }
     return $data;
   }
+  public function getWeeklyBuildSeasonHours() {
+    $this->weekly_build_season_hours = $this->getWeeklyBuildSeasonHoursAttribute();
+    return $this;
+  }
   public function getCompetitionSeasonHoursAttribute() {
     //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS competition_season_hours, seasons.*
     //FROM meeting_hours
