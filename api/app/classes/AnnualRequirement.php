@@ -87,7 +87,7 @@ class AnnualRequirement extends Eloquent {
   }
 
   public function bsh() {
-    die($this->attributes['season_id']);
+    die($this->season_id);
     if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
       $seasonInfo = Season::find($this->attributes['season_id']);
       $no_bagday = $seasonInfo->no_bagday;
