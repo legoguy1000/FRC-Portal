@@ -90,7 +90,7 @@ class AnnualRequirement extends Eloquent {
     //if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
       $seasonInfo = Season::find($this->season_id);
       $no_bagday = true;
-      return $this->hasOne('FrcPortal\MeetingHour', 'user_id', 'user_id')
+      return $this->hasOne('FrcPortal\MeetingHour', 'user_id', 'user_id')->hasOne('FrcPortal\Season', 'season_id', 'season_id')
                   ->leftJoin('seasons', function ($join) use ($no_bagday) {
                       $join->on('seasons.year', '=', DB::raw('YEAR(meeting_hours.time_in)'))->on('meeting_hours.time_in', '>=', 'seasons.start_date')->on('meeting_hours.time_in', '<=', $no_bagday ? 'seasons.end_date':'seasons.bag_day');
                   })
