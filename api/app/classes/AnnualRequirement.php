@@ -90,7 +90,7 @@ class AnnualRequirement extends Eloquent {
     //if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
       //$seasonInfo = Season::find($this->season_id);
       $no_bagday = true;
-      return $this->hasOne('FrcPortal\MeetingHour', 'user_id', 'user_id')->hasOne('FrcPortal\Season', 'season_id', 'season_id');
+      return $this->hasOne('FrcPortal\MeetingHour', 'user_id', 'user_id')->seasons();
   //  }
   }
 
