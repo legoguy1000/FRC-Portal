@@ -88,7 +88,7 @@ class AnnualRequirement extends Eloquent {
 
   public function build_season_hours1() {
       return $this->hasOneThrough('FrcPortal\MeetingHour','FrcPortal\Season', 'season_id', DB::raw('YEAR(meeting_hours.time_in) and meeting_hours.time_in >= seasons.start_date and meeting_hours.time_in <= IF(seasons.year>2019, seasons.end_date, seasons.bag_day)'), 'season_id', 'year')
-                  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as value'))->groupBy('seasons.season_id','meeting_hours.user_id');
+                  ->select(DB::raw('meeting_hours.user_id, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as value'))->groupBy('seasons.season_id','meeting_hours.user_id');
   }
   public function competition_season_hours1() {
       return $this->hasOneThrough('FrcPortal\MeetingHour','FrcPortal\Season', 'season_id', DB::raw('YEAR(meeting_hours.time_in) and meeting_hours.time_in >= IF(seasons.year>2019, seasons.start_date, seasons.bag_day) and meeting_hours.time_in <= seasons.end_date'), 'season_id', 'year')
