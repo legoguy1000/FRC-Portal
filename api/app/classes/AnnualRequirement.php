@@ -88,7 +88,7 @@ class AnnualRequirement extends Eloquent {
 
   public function bsh() {
     //if(isset($this->attributes['user_id']) && isset($this->attributes['season_id'])) {
-      $seasonInfo = Season::find($this->attributes['season_id']);
+      $seasonInfo = Season::find($this->season_id);
       $no_bagday = $seasonInfo->no_bagday;
       return $this->hasOne('FrcPortal\MeetingHour', 'user_id', 'user_id')
                   ->selectRaw('meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS build_season_hours')
