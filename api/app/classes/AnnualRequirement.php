@@ -94,6 +94,14 @@ class AnnualRequirement extends Eloquent {
       return $this->hasOneThrough('FrcPortal\MeetingHour','FrcPortal\Season', 'season_id', DB::raw('YEAR(meeting_hours.time_in) and meeting_hours.time_in >= IF(seasons.year>2019, seasons.start_date, seasons.bag_day) and meeting_hours.time_in <= seasons.end_date'), 'season_id', 'year')
                   ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as value'))->groupBy('seasons.season_id','meeting_hours.user_id');
   }
+  public function off_season_hours() {
+      return $this->hasOneThrough('FrcPortal\MeetingHour','FrcPortal\Season', 'season_id', DB::raw('YEAR(meeting_hours.time_in) and meeting_hours.time_in >= seasons.end_date'), 'season_id', 'year')
+                  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as value'))->groupBy('seasons.season_id','meeting_hours.user_id');
+  }
+  public function total_hours() {
+      return $this->hasOneThrough('FrcPortal\MeetingHour','FrcPortal\Season', 'season_id', DB::raw('YEAR(meeting_hours.time_in)'), 'season_id', 'year')
+                  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as value'))->groupBy('seasons.season_id','meeting_hours.user_id');
+  }
 
   public function getBuildSeasonHoursAttribute() {
     //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS build_season_hours, seasons.*,exempt_hours.exempt_id
