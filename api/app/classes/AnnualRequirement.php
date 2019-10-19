@@ -89,7 +89,7 @@ class AnnualRequirement extends Eloquent {
   public function bsh() {
       $no_bagday = true;
       return $this->hasOneThrough('FrcPortal\MeetingHour','FrcPortal\Season', 'season_id', DB::raw('YEAR(meeting_hours.time_in) and meeting_hours.time_in >= seasons.start_date and meeting_hours.time_in <= '.($no_bagday ? 'seasons.end_date':'seasons.bag_day')), 'season_id', 'year')
-                  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as build_season_hours'))->groupBy('meeting_hours.user_id');
+                  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as build_season_hours'))->groupBy('seasons.season_id','meeting_hours.user_id');
       /*
       return $this->hasOne('FrcPortal\Season', 'season_id', 'season_id')
                   ->rightJoin('meeting_hours', function ($join) use ($no_bagday) {
