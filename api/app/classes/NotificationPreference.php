@@ -8,6 +8,12 @@ class NotificationPreference extends Eloquent {
   protected $table = 'notification_preferences';
   //Use Custom Primary Key
   protected $primaryKey = 'pref_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   public $timestamps = false;
   /**

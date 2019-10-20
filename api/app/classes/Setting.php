@@ -8,6 +8,12 @@ class Setting extends Eloquent {
   protected $table = 'settings';
   //Use Custom Primary Key
   protected $primaryKey = 'setting_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   public $timestamps = false;
   /**

@@ -10,6 +10,12 @@ class EventRoom extends Eloquent {
   protected $table = 'event_rooms';
   //Use Custom Primary Key
   protected $primaryKey = 'room_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   public $timestamps = false;
   /**

@@ -10,6 +10,12 @@ class Season extends Eloquent {
   protected $table = 'seasons';
   //Use Custom Primary Key
   protected $primaryKey = 'season_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   /**
   * The attributes that are mass assignable.

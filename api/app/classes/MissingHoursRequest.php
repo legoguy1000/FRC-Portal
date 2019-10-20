@@ -10,6 +10,12 @@ class MissingHoursRequest extends Eloquent {
   protected $table = 'missing_hours_requests';
   //Use Custom Primary Key
   protected $primaryKey = 'request_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   public $timestamps = false;
   /**

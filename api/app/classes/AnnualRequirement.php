@@ -10,6 +10,12 @@ class AnnualRequirement extends Eloquent {
   protected $table = 'annual_requirements';
   //Use Custom Primary Key
   protected $primaryKey = 'req_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   protected $keyType = 'string';
   /**

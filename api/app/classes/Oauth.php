@@ -9,6 +9,12 @@ class Oauth extends Eloquent {
   protected $table = 'oauth_ids';
   //Use Custom Primary Key
   protected $primaryKey = 'auth_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   /**
   * The attributes that are mass assignable.

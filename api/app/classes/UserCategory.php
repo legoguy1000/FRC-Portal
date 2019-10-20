@@ -10,6 +10,12 @@ class UserCategory extends Eloquent {
   protected $table = 'user_categories';
   //Use Custom Primary Key
   protected $primaryKey = 'cat_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   public $timestamps = false;
   /**

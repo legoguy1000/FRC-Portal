@@ -10,6 +10,12 @@ class Event extends Eloquent {
   protected $table = 'events';
   //Use Custom Primary Key
   protected $primaryKey = 'event_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   /**
   * The attributes that are mass assignable.

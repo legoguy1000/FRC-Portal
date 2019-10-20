@@ -12,6 +12,12 @@ class User extends Eloquent {
   protected $table = 'users';
   //Use Custom Primary Key
   protected $primaryKey = 'user_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   /**
   * The attributes that are mass assignable.

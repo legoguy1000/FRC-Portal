@@ -8,6 +8,12 @@ class Log extends Eloquent {
   protected $table = 'logs';
   //Use Custom Primary Key
   protected $primaryKey = 'log_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   /**
   * The attributes that are mass assignable.
