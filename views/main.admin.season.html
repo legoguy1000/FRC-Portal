@@ -87,7 +87,7 @@
 				<md-icon md-font-library="material-icons">photo</md-icon>
 				<input ng-model="vm.season.game_logo">
 			</md-input-container>
-			<img ng-src="{{vm.season.game_logo}}" class="md-avatar" alt="" ng-if="vm.season.game_logo" style="max-width: 100%; max-height: 200px;"/>
+			<img ng-src="{{vm.season.game_logo}}" class="md-avatar" alt="" ng-if="vm.season.game_logo" style="max-width: 100%; max-height: 200;"/>
 			<div flex layout="row">
 				<span flex></span>
 				<md-button type="submit" class="md-raised md-primary">
@@ -178,7 +178,7 @@
 					<tbody md-body>
 						<tr md-row class="selectRow" ng-class="{'selected': vm.selectedUsers.includes(user.user_id)}" ng-click="vm.selectUsers(user.user_id)" ng-repeat="user in vm.users | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit as filtered" sh-context-menu menu-options="vm.menuOptions" context-data="user">
 							<td md-cell>
-								<md-list-item style="padding: 0px;">
+								<md-list-item style="padding: 0;">
 									{{user.full_name}}
 								</md-list-item>
 							</td>

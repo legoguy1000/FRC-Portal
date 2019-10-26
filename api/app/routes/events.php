@@ -274,8 +274,6 @@ $app->group('/events', function () {
       if($request->getParam('event_cars') !== null && $request->getParam('event_cars')==true) {
         if($authed) {
           $withArr[] = 'event_cars';
-        } else {
-          //$withArr[] = '';
         }
       }
       if($request->getParam('event_time_slots') !== null && $request->getParam('event_time_slots')==true) {
@@ -411,9 +409,6 @@ $app->group('/events', function () {
           $responseArr['status'] = true;
           $responseArr['msg'] = 'New room added';
           insertLogs($level = 'Information', $message = 'Event Room added for '.$event->name);
-        } else {
-          #insertLogs($level = 'Information', $message = 'Event Room added');
-          #$responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
         }
         $response = $response->withJson($responseArr);
         return $response;
@@ -442,9 +437,6 @@ $app->group('/events', function () {
           $responseArr['data'] = $event->event_rooms()->with('users')->get();
           $responseArr['status'] = true;
           $responseArr['msg'] = 'New room added';
-        } else {
-          #insertLogs($level = 'Information', $message = 'Event Room added');
-          #$responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
         }
         $response = $response->withJson($responseArr);
         return $response;
@@ -501,9 +493,7 @@ $app->group('/events', function () {
         if($event->event_rooms()->find($room_id)->delete()) {
       		$rooms = $event->getEventRoomList();
           $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms);
-      	} else {
-          //throw new Exception('Something went wrong', 500);
-        }
+      	}
         $response = $response->withJson($responseArr);
       })->setName('Delete Event Room');
     });

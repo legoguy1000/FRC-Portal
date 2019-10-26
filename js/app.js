@@ -725,10 +725,7 @@ angular.module('FrcPortal', [
 					}
 				})
 				.then(function(data) {
-					if(data.auth) {
-
-					}
-					else if(trans.$from().name == '') {
+					if(!data.auth && trans.$from().name == '') {
 						$state.go('main.home');
 					}
 				}, function() {
@@ -774,7 +771,6 @@ angular.module('FrcPortal', [
 		}
 	});
 	$transitions.onStart({to: 'main.timein'}, function(trans) {
-		var toState = trans.$to();
 		event.preventDefault();
 		var $state = trans.router.stateService;
 		return $state.target("main.home");

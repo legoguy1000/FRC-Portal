@@ -354,7 +354,6 @@ class User extends Eloquent {
         if(isset($data->ok) && $data->ok == true) {
           $this->slack_id = $data->user->id;
           return true;
-          break;
         }
       }
     }

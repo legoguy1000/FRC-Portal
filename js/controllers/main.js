@@ -93,11 +93,6 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 					loading: false,
 				}
 			}
-		})
-		.then(function(response) {
-
-		}, function() {
-			$log.info('Dialog dismissed at: ' + new Date());
 		});
 	}
 
@@ -201,7 +196,6 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		console.info('Login Initiated');
 		loginActions();
 	});
-
 
 	$rootScope.$on('logOutAction', function(event, data) {
 		console.info('LogOut Initiated');

@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('signInModalController', ['$rootScope','$log','$element','$mdDialog', '$scope', 'usersService','$mdToast','userInfo','signinService','$interval','$document','$timeout','$document',
+.controller('signInModalController', ['$rootScope','$log','$element','$mdDialog', '$scope', 'usersService','$mdToast','userInfo','signinService','$interval','$document','$timeout',
 	signInModalController
 ]);
-function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersService,$mdToast,userInfo,signinService,$interval,$document,$timeout,$document) {
+function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersService,$mdToast,userInfo,signinService,$interval,$document,$timeout) {
 	var vm = this;
 
 	vm.cancel = function() {
@@ -63,7 +63,6 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 	        drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
 	        drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
 					vm.scanner(code.data);
-	      } else {
 	      }
 	    }
 	    vm.aniFrame = requestAnimationFrame(tick1);

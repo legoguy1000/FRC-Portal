@@ -15,3 +15,7 @@ before_script:
   - cp ./api/app/secured/config.example.ini ./api/app/secured/config.ini
   - php ./api/app/database/_CreateDatabase.php
 script: phpunit
+  - '7.0'
+  - nightly
+install:
+  - composer install
