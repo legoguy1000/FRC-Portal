@@ -23,4 +23,5 @@ ServerSignature Off
 <ifModule mod_headers.c>
 Header set X-Frame-Options "deny"
 Header set X-XSS-Protection "1; mode=block"
+Header set X-Content-Type-Options "nosniff"
 </ifModule>
