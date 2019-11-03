@@ -204,9 +204,11 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 						        { 'type': 'public-key', 'alg': -257 }
 						    ]
 						}
-						return navigator.credentials.create({ 'publicKey': publicKey });
-					}).then(function(newCredentialInfo) {
-							console.log('SUCCESS', newCredentialInfo)
+						navigator.credentials.create({ 'publicKey': publicKey }).then(newCredentialInfo => {
+						        console.log('SUCCESS', newCredentialInfo)
+						    });
+					}, function() {
+						console.log('i dont want to register');
 					});
 	      }
 	    });
