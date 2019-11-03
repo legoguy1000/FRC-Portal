@@ -179,7 +179,6 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
           .title('Would you like to use your fingerprint to login')
           .textContent('This device is capable of automatically logging you in using your fingerprint.')
           .ariaLabel('Lucky day')
-          .targetEvent(ev)
           .ok('Yes')
           .cancel('No');
 		if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
