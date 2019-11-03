@@ -174,6 +174,21 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		}
 	}
 
+	var isUVPAA = function() {
+		if (PublicKeyCredential &&
+	      PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+	    	PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
+	      if (response === true) {
+	        return true;
+	      } else {
+	        return false;
+	      }
+	    });
+	  } else {
+			return false;
+		}
+	}
+
 	main.checkServiceWorker();
 
 	if(main.isAuthed) {
@@ -216,20 +231,6 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		main.title = $state.current.data.title;
 	});
 
-	function isUVPAA() {
-		if (PublicKeyCredential &&
-	      PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
-	    	PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
-	      if (response === true) {
-	        return true;
-	      } else {
-	        return false;
-	      }
-	    });
-	  } else {
-			return false;
-		}
-	}
 	function registerPlatformAuthenticator() {
 	  const advancedOptions = {};
 	  advancedOptions.userVerification = 'required';
