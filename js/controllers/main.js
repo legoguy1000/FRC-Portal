@@ -212,6 +212,8 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		loginActions();
 		if(isUVPAA()) {
 			alert('UVPA is available')
+		} else {
+			alert('No UVPA')
 		}
 	});
 
