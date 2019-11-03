@@ -195,6 +195,9 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$rootScope.$on('afterLoginAction', function(event) {
 		console.info('Login Initiated');
 		loginActions();
+		if(isUVPAA()) {
+			alert('UVPA is available')
+		}
 	});
 
 	$rootScope.$on('logOutAction', function(event, data) {
@@ -212,6 +215,27 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$rootScope.$on('stateChange', function(event, data) {
 		main.title = $state.current.data.title;
 	});
+
+	function isUVPAA() {
+		if (PublicKeyCredential &&
+	      PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+	    	PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
+	      if (response === true) {
+	        return true;
+	      } else {
+	        return false;
+	      }
+	    });
+	  } else {
+			return false;
+		}
+	}
+	function registerPlatformAuthenticator() {
+	  const advancedOptions = {};
+	  advancedOptions.userVerification = 'required';
+	  advancedOptions.authenticatorAttachment = 'platform';
+	  makeCredential(advancedOptions);
+	}
 
 
 }
