@@ -187,8 +187,6 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 					$mdDialog.show(confirm).then(function() {
 						var challenge = new Uint8Array(32);
 						window.crypto.getRandomValues(challenge);
-						var userID = 'Kosv9fPtkDoh4Oz7Yq/pVgWHS8HhdlCto5cR0aBoVMw='
-						var id =
 						var publicKey = {
 						    'challenge': challenge,
 						    'rp': {
