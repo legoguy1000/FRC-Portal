@@ -175,22 +175,16 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	}
 
 	var isUVPAA = function() {
-		try {
-	    eval(PublicKeyCredential);
-	  } catch(err) {
-	    showErrorMsg(`UVPAA failed: [${err.toString()}]`);
-	    return;
-	  }
 		if (PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
 	    	PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
 	      if (response == true) {
-					alert('UVPA is available')
+					return true;
 	      } else {
-					alert('No UVPA');
+					return false;
 	      }
 	    });
 	  } else {
-			alert('No UVPA');
+			return false;
 		}
 	}
 
@@ -215,8 +209,11 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$rootScope.$on('afterLoginAction', function(event) {
 		console.info('Login Initiated');
 		loginActions();
-		if(isUVPAA()) {
+		var uvpaa = isUVPAA();
+		if(uvpaa) {
+			alert('y');
 		} else {
+			alert('n');
 		}
 	});
 
