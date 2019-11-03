@@ -182,8 +182,8 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
           .targetEvent(ev)
           .ok('Yes')
           .cancel('No');
-		if (PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
-	    	PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
+		if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+	    	window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
 	      if (response == true) {
 					$mdDialog.show(confirm).then(function() {
 						console.log('i want to register');
