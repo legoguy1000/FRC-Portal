@@ -210,6 +210,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		console.info('Login Initiated');
 		loginActions();
 		var uvpaa = isUVPAA();
+		console.log(uvpaa)
 		if(uvpaa) {
 			alert('y');
 		} else {
