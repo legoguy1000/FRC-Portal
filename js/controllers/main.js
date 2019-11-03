@@ -195,7 +195,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 						    },
 						    'user': {
 						        'id': Uint8Array.from(main.userInfo.user_id, c=>c.charCodeAt(0)),
-						        'name': main.userInfo.user_id
+						        'name': main.userInfo.user_id,
 						        'displayName': main.userInfo.full_name
 						    },
 						    'pubKeyCredParams': [
