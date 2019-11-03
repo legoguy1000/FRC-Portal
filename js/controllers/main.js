@@ -174,18 +174,25 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		}
 	}
 
-	var isUVPAA = function() {
+	var askAuthenticator = function() {
+		var confirm = $mdDialog.confirm()
+          .title('Would you like to use your fingerprint to login')
+          .textContent('This device is capable of automatically logging you in using your fingerprint.')
+          .ariaLabel('Lucky day')
+          .targetEvent(ev)
+          .ok('Yes')
+          .cancel('No');
 		if (PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
 	    	PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
 	      if (response == true) {
-					return true;
-	      } else {
-					return false;
+					$mdDialog.show(confirm).then(function() {
+						console.log('i want to register');
+					}, function() {
+						console.log('i dont want to register');
+					});
 	      }
 	    });
-	  } else {
-			return false;
-		}
+	  }
 	}
 
 	main.checkServiceWorker();
@@ -209,7 +216,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$rootScope.$on('afterLoginAction', function(event) {
 		console.info('Login Initiated');
 		loginActions();
-		console.log(isUVPAA())
+		askAuthenticator();
 	});
 
 	$rootScope.$on('logOutAction', function(event, data) {
