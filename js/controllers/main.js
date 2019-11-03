@@ -185,7 +185,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	      PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
 					alert('asdf')
 	    	PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
-	      if (response === true) {
+	      if (response == true) {
 	        return true;
 	      } else {
 	        return false;
