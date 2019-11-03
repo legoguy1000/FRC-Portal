@@ -209,13 +209,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$rootScope.$on('afterLoginAction', function(event) {
 		console.info('Login Initiated');
 		loginActions();
-		var uvpaa = isUVPAA();
-		console.log(uvpaa)
-		if(uvpaa) {
-			alert('y');
-		} else {
-			alert('n');
-		}
+		console.log(isUVPAA())
 	});
 
 	$rootScope.$on('logOutAction', function(event, data) {
