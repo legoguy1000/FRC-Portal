@@ -175,6 +175,12 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	}
 
 	var isUVPAA = function() {
+		try {
+	    eval(PublicKeyCredential);
+	  } catch(err) {
+	    showErrorMsg(`UVPAA failed: [${err.toString()}]`);
+	    return;
+	  }
 		if (PublicKeyCredential &&
 	      PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
 	    	PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
