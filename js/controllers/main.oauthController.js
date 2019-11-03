@@ -41,22 +41,12 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 			if(vm.redirect != '' && (vm.authed || vm.state_from == null)) {
 				state = vm.redirect;
 				params = vm.params;
-				/* $state.go(vm.redirect,vm.params).then(function() {
-					$mdDialog.cancel();
-				}); */
 			} else if(vm.state_from != null) {
 				state = vm.state_from.name;
 				params = vm.state_from.params;
-				/* $state.go(vm.state_from.name,vm.state_from.params).then(function() {
-					$mdDialog.cancel();
-				}); */
-			} /* else {
-				$state.go('main.home').then(function() {
-					$mdDialog.cancel();
-				});
-			} */
+			}
 			$state.go(state,params).then(function() {
-				$mdDialog.cancel();
+				$mdDialog.cancel(dialog);
 			});
 		}
 		function sendCode() {
