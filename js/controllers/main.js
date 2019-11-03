@@ -201,10 +201,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 						    'pubKeyCredParams': [
 						        { 'type': 'public-key', 'alg': -7  },
 						        { 'type': 'public-key', 'alg': -257 }
-						    ],
-								'authenticatorSelection': {
-									'authenticatorAttachment': 'platform'
-								}
+						    ]
 						}
 						return navigator.credentials.create({ 'publicKey': publicKey })
 					}).then(newCredentialInfo => {
