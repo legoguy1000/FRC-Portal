@@ -53,7 +53,7 @@ function mainEventsController($timeout, $q, $scope, $state, eventsService, $mdDi
 			$mdDialog.show({
 				controller: eventRegistrationController,
 				controllerAs: 'vm',
-				templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
+				templateUrl: 'components/eventRegistrationModal/eventRegistrationModal.html',
 				parent: angular.element(document.body),
 				targetEvent: ev,
 				clickOutsideToClose:true,

@@ -251,7 +251,7 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 /*		$mdDialog.show({
 			controller: signInModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/signInModal.tmpl.html',
+			templateUrl: 'components/signInModal/signInModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,

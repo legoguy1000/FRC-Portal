@@ -216,7 +216,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 		$mdDialog.show({
 			controller: googleFormMapModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/googleFormMapModal.tmpl.html',
+			templateUrl: 'components/googleFormMapModal/googleFormMapModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,

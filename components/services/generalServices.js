@@ -5,7 +5,7 @@ angular.module('FrcPortal')
 			$mdDialog.show({
 				controller: SeasonHoursGraphModalController,
 				controllerAs: 'vm',
-				templateUrl: 'views/partials/SeasonHoursGraphModal.tmpl.html',
+				templateUrl: 'components/SeasonHoursGraphModal/SeasonHoursGraphModal.html',
 				parent: angular.element(document.body),
 				targetEvent: ev,
 				clickOutsideToClose:true,

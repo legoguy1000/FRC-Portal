@@ -26,26 +26,26 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.versionInfo = {}
 
 	//lazy load dialog controllers
-	$ocLazyLoad.load('components/loginModal/loginModalController.js');
-	$ocLazyLoad.load('js/controllers/newUserModalController.js');
-	$ocLazyLoad.load('js/controllers/newSeasonModalController.js');
-	$ocLazyLoad.load('js/controllers/newEventModalController.js');
-	$ocLazyLoad.load('js/controllers/SeasonHoursGraphModalController.js');
-	$ocLazyLoad.load('js/controllers/roomListModalController.js');
-	$ocLazyLoad.load('js/controllers/carListModalController.js');
-	$ocLazyLoad.load('js/controllers/eventFoodModalController.js');
-	$ocLazyLoad.load('js/controllers/eventRegistrationModalController.js');
-	$ocLazyLoad.load('js/controllers/timeSlotModalController.js');
-	$ocLazyLoad.load('js/controllers/eventSearchModalController.js');
-	$ocLazyLoad.load('js/controllers/editTimeSlotModalController.js');
-	$ocLazyLoad.load('js/controllers/eventTypesModalController.js');
-	$ocLazyLoad.load('js/controllers/timeSheetModalController.js');
-	$ocLazyLoad.load('js/controllers/userCategoriesModalController.js');
-	$ocLazyLoad.load('js/controllers/serviceAccountModalController.js');
-	$ocLazyLoad.load('js/controllers/googleFormMapModalController.js');
-	$ocLazyLoad.load('js/controllers/signInModalController.js');
+	$ocLazyLoad.load('components/loginModal/loginModal.js');
+	$ocLazyLoad.load('components/newUserModal/newUserModal.js');
+	$ocLazyLoad.load('components/newSeasonModal/newSeasonModal.js');
+	$ocLazyLoad.load('components/newEventModal/newEventModal.js');
+	$ocLazyLoad.load('components/SeasonHoursGraphModal/SeasonHoursGraphModal.js');
+	$ocLazyLoad.load('components/roomListModal/roomListModal.js');
+	$ocLazyLoad.load('components/carListModal/carListModal.js');
+	$ocLazyLoad.load('components/eventFoodModal/eventFoodModal.js');
+	$ocLazyLoad.load('components/eventRegistrationModal/eventRegistrationModal.js');
+	$ocLazyLoad.load('components/timeSlotModal/timeSlotModal.js');
+	$ocLazyLoad.load('components/eventSearchModal/eventSearchModal.js');
+	$ocLazyLoad.load('components/editTimeSlotModal/editTimeSlotModal.js');
+	$ocLazyLoad.load('components/eventTypesModal/eventTypesModal.js');
+	$ocLazyLoad.load('components/timeSheetModal/timeSheetModal.js');
+	$ocLazyLoad.load('components/userCategoriesModal/userCategoriesModal.js');
+	$ocLazyLoad.load('components/serviceAccountModal/serviceAccountModal.js');
+	$ocLazyLoad.load('components/googleFormMapModal/googleFormMapModal.js');
+	$ocLazyLoad.load('components/signInModal/signInModal.js');
   //$ocLazyLoad.load('https://rawgit.com/schmich/instascan-builds/master/instascan.min.js');
-	$ocLazyLoad.load('js/controllers/newSchoolModalController.js');
+	$ocLazyLoad.load('components/newSchoolModal/newSchoolModal.js');
 
 	navService.loadAllItems().then(function(menuItems) {
 		main.menuItems = [].concat(menuItems);
@@ -124,7 +124,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		$mdDialog.show({
 			controller: signInModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/signInModal.tmpl.html',
+			templateUrl: 'components/signInModal/signInModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			//clickOutsideToClose:true,

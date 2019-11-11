@@ -215,7 +215,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 			$mdDialog.show({
 				controller: timeSlotModalController,
 				controllerAs: 'vm',
-				templateUrl: 'views/partials/timeSlotModal.tmpl.html',
+				templateUrl: 'components/timeSlotModal/timeSlotModal.tmpl.html',
 				parent: angular.element(document.body),
 				targetEvent: ev,
 				//clickOutsideToClose:true,
@@ -256,7 +256,7 @@ function eventRegistrationController($log,$element,$mdDialog,$scope,eventInfo,us
 		$mdDialog.show({
 			controller: roomListModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/roomListModal.tmpl.html',
+			templateUrl: 'components/roomListModal/roomListModal.tmpl.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			fullscreen: true, // Only for -xs, -sm breakpoints.

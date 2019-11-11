@@ -72,7 +72,7 @@ function mainAdminSchoolsController($timeout, $q, $scope, $state, schoolsService
 		$mdDialog.show({
 			controller: newSchoolModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/newSchoolModal.tmpl.html',
+			templateUrl: 'components/newSchoolModal/newSchoolModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,

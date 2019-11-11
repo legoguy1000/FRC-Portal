@@ -64,7 +64,7 @@ function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService
 		$mdDialog.show({
 			controller: newSeasonModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/newSeasonModal.tmpl.html',
+			templateUrl: 'components/newSeasonModal/newSeasonModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,

@@ -32,7 +32,7 @@ function timeSlotModalController($log,$element,$mdDialog,$scope,$auth,eventInfo,
 		$mdDialog.show({
 			controller: editTimeSlotModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/editTimeSlotModal.tmpl.html',
+			templateUrl: 'components/editTimeSlotModal/editTimeSlotModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,

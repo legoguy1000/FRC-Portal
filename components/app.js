@@ -96,7 +96,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    homeController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-       	return $ocLazyLoad.load(['components/loginModal/loginModalController.js','components/main.oauth/main.oauthController.js']);
+       	return $ocLazyLoad.load(['components/loginModal/loginModal.js','components/main.oauth/main.oauth.js']);
 	    }]
 	  }
 		})
@@ -116,7 +116,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    profileController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.profile/main.profileController.js');
+	             return $ocLazyLoad.load('components/main.profile/main.profile.js');
 	    }]
 	  }
 	  })
@@ -133,7 +133,7 @@ angular.module('FrcPortal', [
 		resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 			profileController: ['$ocLazyLoad', function($ocLazyLoad) {
 				// you can lazy load files for an existing module
-							 return $ocLazyLoad.load('components/main.timein/main.timeinController.js');
+							 return $ocLazyLoad.load('components/main.timein/main.timein.js');
 			}]
 		}
 		})
@@ -149,7 +149,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    signinController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.signin/main.signinController.js');
+	             return $ocLazyLoad.load('components/main.signin/main.signin.js');
 	    }]
 	  }
 	  })
@@ -168,7 +168,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    adminController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.admin/main.adminController.js');
+	             return $ocLazyLoad.load('components/main.admin/main.admin.js');
 	    }]
 	  }
 	  })
@@ -184,7 +184,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    usersController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.admin.users/main.admin.usersController.js');
+	             return $ocLazyLoad.load('components/main.admin.users/main.admin.users.js');
 	    }]
 	  }
 	  })
@@ -200,7 +200,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    userController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.admin.user/main.admin.userController.js');
+	             return $ocLazyLoad.load('components/main.admin.user/main.admin.user.js');
 	    }]
 	  }
 	  })
@@ -216,7 +216,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    seasonsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.admin.seasons/main.admin.seasonsController.js');
+	             return $ocLazyLoad.load('components/main.admin.seasons/main.admin.seasons.js');
 	    }]
 	  }
 	  })
@@ -232,7 +232,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    seasonController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.admin.season/main.admin.seasonController.js');
+	             return $ocLazyLoad.load('components/main.admin.season/main.admin.season.js');
 	    }]
 	  }
 	  })
@@ -248,7 +248,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    eventsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.admin.events/main.admin.eventsController.js');
+	             return $ocLazyLoad.load('components/main.admin.events/main.admin.events.js');
 	    }]
 	  }
 	  })
@@ -264,7 +264,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    eventController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.admin.event/main.admin.eventController.js');
+	             return $ocLazyLoad.load('components/main.admin.event/main.admin.event.js');
 
 	    }]
 	  }
@@ -281,7 +281,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    timeController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load(['components/main.admin.time/main.admin.timeController.js','js/directives/humanize-duration.js']);
+	             return $ocLazyLoad.load(['components/main.admin.time/main.admin.time.js','js/directives/humanize-duration.js']);
 	    }]
 	  }
 	  })
@@ -297,7 +297,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    schoolsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.admin.schools/main.admin.schoolsController.js');
+	             return $ocLazyLoad.load('components/main.admin.schools/main.admin.schools.js');
 	    }]
 	  }
 	  })
@@ -313,7 +313,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    metricsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-         	return $ocLazyLoad.load('components/main.admin.metrics/main.admin.metricsController.js');
+         	return $ocLazyLoad.load('components/main.admin.metrics/main.admin.metrics.js');
 	    }]
 	  }
 	  })
@@ -329,7 +329,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    settingsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-           return $ocLazyLoad.load(['components/main.admin.settings/main.admin.settingsController.js','components/oAuthCredentialModal/oAuthCredentialModalController.js']);
+           return $ocLazyLoad.load(['components/main.admin.settings/main.admin.settings.js','components/oAuthCredentialModal/oAuthCredentialModal.js']);
 	    }]
 	  }
 	  })
@@ -345,7 +345,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    settingsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.admin.logs/main.admin.logsController.js');
+	             return $ocLazyLoad.load('components/main.admin.logs/main.admin.logs.js');
 	    }]
 	  }
 	  })
@@ -370,7 +370,7 @@ angular.module('FrcPortal', [
 	 resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 		 eventsController: ['$ocLazyLoad', function($ocLazyLoad) {
 			 // you can lazy load files for an existing module
-							return $ocLazyLoad.load('components/main.events/main.eventsController.js');
+							return $ocLazyLoad.load('components/main.events/main.events.js');
 		 }]
 	 }
 	 })
@@ -386,7 +386,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    eventController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('components/main.event/main.eventController.js');
+	             return $ocLazyLoad.load('components/main.event/main.event.js');
 	    }]
 	  }
 	});
@@ -611,7 +611,7 @@ angular.module('FrcPortal', [
 					var $rootScope = $injector.get('$rootScope');
 					var $ocLazyLoad = $injector.get('$ocLazyLoad');
 					console.log(rejection);
-					$ocLazyLoad.load('components/loginModal/loginModalController.js').then(function() {
+					$ocLazyLoad.load('components/loginModal/loginModal.js').then(function() {
 						$mdDialog.show({
 							controller: loginModalController,
 							controllerAs: 'vm',
@@ -706,7 +706,7 @@ angular.module('FrcPortal', [
 			var from_params_json = JSON.stringify(trans.params('from'));
 			var from_params = angular.fromJson(from_params_json);
 			delete from_params["#"];
-			$ocLazyLoad.load('components/loginModal/loginModalController.js').then(function() {
+			$ocLazyLoad.load('components/loginModal/loginModal.js').then(function() {
 				$mdDialog.show({
 					controller: loginModalController,
 					controllerAs: 'vm',

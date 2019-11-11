@@ -200,7 +200,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 		$mdDialog.show({
 			controller: roomListModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/roomListModal.tmpl.html',
+			templateUrl: 'components/roomListModal/roomListModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,
@@ -223,7 +223,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 		$mdDialog.show({
 			controller: carListModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/carListModal.tmpl.html',
+			templateUrl: 'components/carListModal/carListModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,
@@ -247,7 +247,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 		$mdDialog.show({
 			controller: timeSlotModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/timeSlotModal.tmpl.html',
+			templateUrl: 'components/timeSlotModal/timeSlotModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,
@@ -268,7 +268,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 		$mdDialog.show({
 			controller: eventFoodModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/eventFoodModal.tmpl.html',
+			templateUrl: 'components/eventFoodModal/eventFoodModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,
@@ -383,7 +383,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 		$mdDialog.show({
 			controller: eventRegistrationController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/eventRegistrationModal.tmpl.html',
+			templateUrl: 'components/eventRegistrationModal/eventRegistrationModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,
@@ -425,7 +425,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 		$mdDialog.show({
 			controller: eventSearchModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/eventSearchModal.tmpl.html',
+			templateUrl: 'components/eventSearchModal/eventSearchModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,

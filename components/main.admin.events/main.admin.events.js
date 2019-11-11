@@ -64,7 +64,7 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 		$mdDialog.show({
 			controller: newEventModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/newEventModal.tmpl.html',
+			templateUrl: 'components/newEventModal/newEventModal.html',
 			parent: angular.element(document.body),
 			clickOutsideToClose:true,
 			fullscreen: true, // Only for -xs, -sm breakpoints.
@@ -83,7 +83,7 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 		$mdDialog.show({
 			controller: eventTypesModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/eventTypesModal.tmpl.html',
+			templateUrl: 'components/eventTypesModal/eventTypesModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,
