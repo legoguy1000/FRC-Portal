@@ -28,7 +28,7 @@ angular.module('FrcPortal', [
 	$stateProvider
 	  .state('main', {
 		url: '',
-		templateUrl: 'views/main.html',
+		templateUrl: 'components/main/main.html',
 		controller: 'mainController',
 		controllerAs: 'main',
 		abstract: true,
@@ -62,7 +62,7 @@ angular.module('FrcPortal', [
 	  })
 	  .state('main.home', {
 		url: '/home',
-		templateUrl: 'views/main.home.html',
+		templateUrl: 'components/main.home/main.home.html',
 		controller: 'main.homeController',
 		controllerAs: 'vm',
 		authenticate: false,
