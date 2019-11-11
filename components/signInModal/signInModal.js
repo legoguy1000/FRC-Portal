@@ -94,7 +94,9 @@ function signInModalController($rootScope,$log,$element,$mdDialog,$scope,usersSe
 		vm.stop = function() {
 			vm.hideVideo = true;
 			vm.video.srcObject = null;
-			vm.localstream.getTracks().forEach(function(track) { track.stop(); })
+			if(vm.localstream != undefined) {
+				vm.localstream.getTracks().forEach(function(track) { track.stop(); })
+			}
 			cancelAnimationFrame(vm.aniFrame);
 		}
 
