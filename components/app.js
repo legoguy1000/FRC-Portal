@@ -102,7 +102,7 @@ angular.module('FrcPortal', [
 		})
 	  .state('main.profile', {
 		url: '/profile?signin',
-		templateUrl: 'views/main.profile.html',
+		templateUrl: 'components/main.profile/main.profile.html',
 		controller: 'main.profileController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -116,13 +116,13 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    profileController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.profileController.js');
+	             return $ocLazyLoad.load('components/main.profile/main.profileController.js');
 	    }]
 	  }
 	  })
 		.state('main.timein', {
 		url: '/timein?token',
-		templateUrl: 'views/main.timein.html',
+		templateUrl: 'components/main.timein/main.timein.html',
 		controller: 'main.timeinController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -133,13 +133,13 @@ angular.module('FrcPortal', [
 		resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 			profileController: ['$ocLazyLoad', function($ocLazyLoad) {
 				// you can lazy load files for an existing module
-							 return $ocLazyLoad.load('js/controllers/main.timeinController.js');
+							 return $ocLazyLoad.load('components/main.timein/main.timeinController.js');
 			}]
 		}
 		})
 	  .state('main.signin', {
 		url: '/signin',
-		templateUrl: 'views/main.signin.html',
+		templateUrl: 'components/main.signin/main.signin.html',
 		controller: 'main.signinController',
 		controllerAs: 'vm',
 		authenticate: false,
@@ -149,13 +149,13 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    signinController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.signinController.js');
+	             return $ocLazyLoad.load('components/main.signin/main.signinController.js');
 	    }]
 	  }
 	  })
 	  .state('main.admin', {
 		url: '/admin',
-		templateUrl: 'views/main.admin.html',
+		templateUrl: 'components/main.admin/main.admin.html',
 		controller: 'main.adminController',
 		controllerAs: 'admin',
 		abstract: true,
@@ -168,13 +168,13 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    adminController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.adminController.js');
+	             return $ocLazyLoad.load('components/main.admin/main.adminController.js');
 	    }]
 	  }
 	  })
 	  .state('main.admin.users', {
 		url: '/users',
-		templateUrl: 'views/main.admin.users.html',
+		templateUrl: 'components/main.admin.users/main.admin.users.html',
 		controller: 'main.admin.usersController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -184,13 +184,13 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    usersController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.usersController.js');
+	             return $ocLazyLoad.load('components/main.admin.users/main.admin.usersController.js');
 	    }]
 	  }
 	  })
 	  .state('main.admin.user', {
 		url: '/user/{user_id}',
-		templateUrl: 'views/main.admin.user.html',
+		templateUrl: 'components/main.admin.user/main.admin.user.html',
 		controller: 'main.admin.userController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -200,7 +200,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    userController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.userController.js');
+	             return $ocLazyLoad.load('components/main.admin.user/main.admin.userController.js');
 	    }]
 	  }
 	  })
