@@ -4,7 +4,7 @@ angular.module('FrcPortal')
 		restrict: 'E',
 		transclude: true,
 		scope: { events:'=', user:'=', max:'=' },
-		templateUrl: 'js/directives/eventCards/eventCards.html',
+		templateUrl: 'components/eventCards/eventCards.html',
     controller: function($scope) {
       $scope.limit = 0;
 

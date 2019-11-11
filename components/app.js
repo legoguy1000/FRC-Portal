@@ -38,24 +38,24 @@ angular.module('FrcPortal', [
 			},// Any property in resolve should return a promise and is executed before the view is loaded
 			mainController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load(['js/controllers/main.js', 'js/filters.js']);
+	             return $ocLazyLoad.load(['components/main/main.js', 'components/filters.js']);
 	    }],
 	    services: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
 	             return $ocLazyLoad.load([
-								 'js/services/NavService.js',
-								 'js/services/schoolServices.js',
-								 'js/services/userServices.js',
-								 'js/services/seasonServices.js',
-								 'js/services/eventServices.js',
-								 'js/services/signinServices.js',
-								 'js/services/metricsServices.js',
-								 'js/services/timeServices.js',
-								 'js/services/settingServices.js',
-								 'js/services/generalServices.js',
-								 'js/services/logServices.js',
-								 'js/services/loginServices.js',
-								 'js/services/otherServices.js',
+								 'components/services/NavService.js',
+								 'components/services/schoolServices.js',
+								 'components/services/userServices.js',
+								 'components/services/seasonServices.js',
+								 'components/services/eventServices.js',
+								 'components/services/signinServices.js',
+								 'components/services/metricsServices.js',
+								 'components/services/timeServices.js',
+								 'components/services/settingServices.js',
+								 'components/services/generalServices.js',
+								 'components/services/logServices.js',
+								 'components/services/loginServices.js',
+								 'components/services/otherServices.js',
 						 ]);
 	    }]
 		},
@@ -72,7 +72,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    homeController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.homeController.js');
+	             return $ocLazyLoad.load('components/main.home/main.home.js');
 	    }]
 	  }
 	  })

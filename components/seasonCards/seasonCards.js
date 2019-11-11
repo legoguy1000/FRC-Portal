@@ -4,7 +4,7 @@ angular.module('FrcPortal')
 		restrict: 'E',
 		transclude: true,
 		scope: { seasons:'=', user:'=', max:'=' },
-		templateUrl: 'js/directives/seasonCards/seasonCards.html',
+		templateUrl: 'components/seasonCards/seasonCards.html',
     controller: function($scope) {
       $scope.limit = 0;
 
