@@ -200,7 +200,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		$mdDialog.show({
 			controller: oAuthCredentialModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/oAuthCredentialModal.tmpl.html',
+			templateUrl: 'components/oAuthCredentialModalController/oAuthCredentialModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,

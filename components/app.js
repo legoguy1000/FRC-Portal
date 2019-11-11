@@ -287,7 +287,7 @@ angular.module('FrcPortal', [
 	  })
 	  .state('main.admin.schools', {
 		url: '/schools',
-		templateUrl: 'views/main.admin.schools.html',
+		templateUrl: 'components/main.admin.schools/main.admin.schools.html',
 		controller: 'main.admin.schoolsController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -297,13 +297,13 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    schoolsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.schoolsController.js');
+	             return $ocLazyLoad.load('components/main.admin.schools/main.admin.schoolsController.js');
 	    }]
 	  }
 	  })
 	  .state('main.admin.metrics', {
 		url: '/metrics',
-		templateUrl: 'views/main.admin.metrics.html',
+		templateUrl: 'components/main.admin.metrics/main.admin.metrics.html',
 		controller: 'main.admin.metricsController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -313,13 +313,13 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    metricsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-         	return $ocLazyLoad.load('js/controllers/main.admin.metricsController.js');
+         	return $ocLazyLoad.load('components/main.admin.metrics/main.admin.metricsController.js');
 	    }]
 	  }
 	  })
 	  .state('main.admin.settings', {
 		url: '/settings',
-		templateUrl: 'views/main.admin.settings.html',
+		templateUrl: 'components/main.admin.settings/main.admin.settings.html',
 		controller: 'main.admin.settingsController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -329,13 +329,13 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    settingsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-           return $ocLazyLoad.load(['js/controllers/main.admin.settingsController.js','js/controllers/oAuthCredentialModalController.js']);
+           return $ocLazyLoad.load(['components/main.admin.settings/main.admin.settingsController.js','components/oAuthCredentialModal/oAuthCredentialModalController.js']);
 	    }]
 	  }
 	  })
 	  .state('main.admin.logs', {
 		url: '/logs',
-		templateUrl: 'views/main.admin.logs.html',
+		templateUrl: 'components/main.admin.logs/main.admin.logs.html',
 		controller: 'main.admin.logsController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -345,7 +345,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    settingsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.logsController.js');
+	             return $ocLazyLoad.load('components/main.admin.logs/main.admin.logsController.js');
 	    }]
 	  }
 	  })
@@ -361,7 +361,7 @@ angular.module('FrcPortal', [
 	 }) */
 	 .state('main.events', {
 	 url: '/events?name&type&event_start&event_end',
-	 templateUrl: 'views/main.events.html',
+	 templateUrl: 'components/main.events/main.events.html',
 	 controller: 'main.eventsController',
 	 controllerAs: 'vm',
 	 data: {
@@ -370,13 +370,13 @@ angular.module('FrcPortal', [
 	 resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 		 eventsController: ['$ocLazyLoad', function($ocLazyLoad) {
 			 // you can lazy load files for an existing module
-							return $ocLazyLoad.load('js/controllers/main.eventsController.js');
+							return $ocLazyLoad.load('components/main.events/main.eventsController.js');
 		 }]
 	 }
 	 })
  	  .state('main.event', {
  		url: '/events/{event_id}',
- 		templateUrl: 'views/main.event.html',
+ 		templateUrl: 'components/main.event/main.event.html',
  		controller: 'main.eventController',
  		controllerAs: 'vm',
 		//authenticate: true,
@@ -386,7 +386,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    eventController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.eventController.js');
+	             return $ocLazyLoad.load('components/main.event/main.eventController.js');
 	    }]
 	  }
 	});
