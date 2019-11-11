@@ -27,7 +27,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 
 	//lazy load dialog controllers
 	$ocLazyLoad.load('components/loginModal/loginModal.js');
-	$ocLazyLoad.load('components/newUserModal/newUserModal.js');
+	//$ocLazyLoad.load('components/newUserModal/newUserModal.js');
 	$ocLazyLoad.load('components/newSeasonModal/newSeasonModal.js');
 	$ocLazyLoad.load('components/newEventModal/newEventModal.js');
 	$ocLazyLoad.load('components/SeasonHoursGraphModal/SeasonHoursGraphModal.js');
@@ -40,7 +40,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$ocLazyLoad.load('components/editTimeSlotModal/editTimeSlotModal.js');
 	$ocLazyLoad.load('components/eventTypesModal/eventTypesModal.js');
 	$ocLazyLoad.load('components/timeSheetModal/timeSheetModal.js');
-	$ocLazyLoad.load('components/userCategoriesModal/userCategoriesModal.js');
+	//$ocLazyLoad.load('components/userCategoriesModal/userCategoriesModal.js');
 	$ocLazyLoad.load('components/serviceAccountModal/serviceAccountModal.js');
 	$ocLazyLoad.load('components/googleFormMapModal/googleFormMapModal.js');
 	$ocLazyLoad.load('components/signInModal/signInModal.js');
