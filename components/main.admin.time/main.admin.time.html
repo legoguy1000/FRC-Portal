@@ -1,0 +1,155 @@
+<div layout-gt-sm="row">
+	<!--<div layout layout-sm="column">
+	   <md-button class="md-raised" ng-click="vm.authorizeSignIn()" ng-hide="vm.signInAuthed">Authorize Sign In</md-button>
+	   <md-button class="md-raised" ng-click="vm.deauthorizeSignIn()" ng-show="vm.signInAuthed">Deauthorize Sign In</md-button>
+	</div>-->
+	<md-content flex class="md-margin">
+		<md-toolbar class="md-table-toolbar md-default" ng-hide="vm.sil.filter.show">
+			<div class="md-toolbar-tools">
+				<span>All Sign In/Out Records</span>
+				<div flex></div>
+				<md-button class="md-icon-button" ng-click="vm.showFilter('sil')">
+					<md-icon>filter_list</md-icon>
+				</md-button>
+				<md-button class="md-icon-button" ng-click="vm.getSignIns()">
+					<md-icon>refresh</md-icon>
+				</md-button>
+				<md-button class="md-icon-button" ng-click="vm.showTimeSheetModal()">
+					<md-tooltip md-direction="top">Daily TimeSheet</md-tooltip>
+					<md-icon>list</md-icon>
+				</md-button>
+				</div>
+		</md-toolbar>
+		<md-toolbar class="md-table-toolbar md-default" ng-show="vm.sil.filter.show">
+			<div class="md-toolbar-tools">
+				<md-icon class="material-icons">search</md-icon>
+				<form flex name="vm.sil.filter.form" >
+					<input type="text" ng-model="vm.sil.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">
+				</form>
+				<md-button class="md-icon-button" ng-click="vm.removeFilter('sil')">
+					<md-icon class="material-icons">close</md-icon>
+				</md-button>
+			</div>
+		</md-toolbar>
+		<md-table-container>
+			<table md-table ng-model="selected" md-progress="vm.sil.promise">
+				<thead md-head md-order="vm.sil.query.order" md-on-reorder="vm.getSignIns">
+					<tr md-row>
+						<th md-column><span>Name</span></th>
+						<th md-column><span>Date</span></th>
+						<th md-column md-order-by="time_in"><span>Time In</span></th>
+						<th md-column md-order-by="time_out"><span>Time Out</span></th>
+						<th md-column md-order-by="hours"><span>Hours</span></th>
+						<th md-column></th>
+					</tr>
+				</thead>
+				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+					<tr md-row ng-repeat="user in vm.users">
+						<td md-cell>
+							<span>{{user.user.full_name}}</span>
+						</td>
+						<td md-cell><span ng-if="user.time_in">{{user.date.time_in.long_date}}</span></td>
+						<td md-cell><span ng-if="user.time_in">{{user.date.time_in.time_formatted}}</span></td>
+						<td md-cell><span ng-if="user.time_out">{{user.date.time_out.time_formatted}}</span></td>
+						<td md-cell><span>{{user.hours}}</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</md-table-container>
+		<md-table-pagination md-limit="vm.sil.query.limit" md-limit-options="vm.limitOptions" md-page="vm.sil.query.page" md-total="{{vm.sil.total}}" md-page-select md-boundary-links md-on-paginate="vm.getSignIns"></md-table-pagination>
+	</md-content>
+	<md-content flex class="md-margin">
+		<md-toolbar class="md-table-toolbar md-default" ng-hide="vm.mhrl.filter.show">
+			<div class="md-toolbar-tools">
+				<span>Missing Hours Requests</span>
+				<div flex></div>
+				<md-button class="md-icon-button" ng-click="vm.showFilter('mhrl')">
+					<md-icon>filter_list</md-icon>
+				</md-button>
+				<md-button class="md-icon-button" ng-click="vm.getAllMissingHoursRequestsFilter()">
+					<md-icon>refresh</md-icon>
+				</md-button>
+				</div>
+		</md-toolbar>
+		<md-toolbar class="md-table-toolbar md-default" ng-show="vm.mhrl.filter.show">
+			<div class="md-toolbar-tools">
+				<md-icon class="material-icons">search</md-icon>
+				<form flex name="vm.mhrl.filter.form" >
+					<input type="text" ng-model="vm.mhrl.query.filter" ng-model-options="vm.filter.options" placeholder="search" class="" aria-invalid="false">
+				</form>
+				<md-button class="md-icon-button" ng-click="vm.removeFilter('mhrl')">
+					<md-icon class="material-icons">close</md-icon>
+				</md-button>
+			</div>
+		</md-toolbar>
+		<md-table-container>
+			<table md-table ng-model="selected" md-progress="vm.mhrl.promise">
+				<thead md-head md-order="vm.mhrl.query.order" md-on-reorder="vm.getAllMissingHoursRequestsFilter">
+					<tr md-row>
+						<th md-column><span>Name</span></th>
+						<th md-column><span>Date</span></th>
+						<th md-column md-order-by="time_in"><span>Time In</span></th>
+						<th md-column md-order-by="time_out"><span>Time Out</span></th>
+						<th md-column><span>Hours</span></th>
+						<th md-column><span>Status</span></th>
+						<th md-column></th>
+					</tr>
+				</thead>
+				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+					<tr md-row ng-repeat-start="req in vm.requests">
+						<td md-cell>
+							<span>{{req.user.full_name}}</span>
+						</td>
+						<td md-cell><span ng-if="req.time_in">{{req.date.time_in.long_date}}</span></td>
+						<td md-cell><span ng-if="req.time_in">{{req.date.time_in.time_formatted}}</span></td>
+						<td md-cell><span ng-if="req.time_out">{{req.date.time_out.time_formatted}}</span></td>
+						<td md-cell><span>{{req.hours}}</span></td>
+						<td md-cell ng-switch="req.approved">
+							<span ng-switch-when="true"><md-icon class="material-icons" style="color:green;">check_circle</md-icon></span>
+							<span ng-switch-when="false"><md-icon class="material-icons" style="color:red;">remove_circle</md-icon></span>
+							<span ng-switch-default layout="row">
+								<md-button class="md-icon-button" ng-click="vm.approveDenyHoursRequest(req.request_id)">
+									<md-icon class="material-icons" style="color:green;">check_circle</md-icon>
+									<md-tooltip md-direction="top">Approve Hours</md-tooltip>
+								</md-button>
+								<md-button class="md-icon-button" ng-click="vm.denyMissingHoursRequest(req.request_id)">
+									<md-icon class="material-icons" style="color:red;">remove_circle</md-icon>
+									<md-tooltip md-direction="top">Deny Hours</md-tooltip>
+								</md-button>
+							</span>
+						</td>
+						<td md-cell>
+							<span>
+								<md-button class="md-icon-button" ng-click="vm.showRequestRow(req.request_id)">
+									<md-icon class="material-icons" ng-show="vm.requestRow != req.request_id">arrow_drop_down</md-icon>
+									<md-icon class="material-icons" ng-show="vm.requestRow == req.request_id">arrow_drop_up</md-icon>
+								</md-button>
+							</span>
+						</td>
+					</tr>
+					<tr md-row ng-show="vm.requestRow == req.request_id">
+							<td md-cell style="border-top:0px;" colspan="2">
+								<div>Requested: </div>
+								<div>{{req.date.request.full_formatted}}</div>
+							</td>
+							<td md-cell style="border-top:0px;">
+								<div>Decision By: </div>
+								<div>{{req.approver.full_name}}</div>
+							</td>
+							<td md-cell style="border-top:0px;" colspan="2">
+								<div>Decision Date: </div>
+								<div ng-if="req.approved_date">{{req.date.approve.full_formatted}}</div>
+							</td>
+					</tr>
+					<tr md-row ng-repeat-end ng-show="vm.requestRow == req.request_id">
+							<td md-cell style="border-top:0px;" colspan="4">
+								<div>Comment: </div>
+								<div>{{req.comment}}</div>
+							</td>
+					</tr>
+				</tbody>
+			</table>
+		</md-table-container>
+		<md-table-pagination md-limit="vm.mhrl.query.limit" md-limit-options="vm.limitOptions" md-page="vm.mhrl.query.page" md-total="{{vm.mhrl.total}}" md-page-select md-boundary-links md-on-paginate="vm.getAllMissingHoursRequestsFilter"></md-table-pagination>
+	</md-content>
+</div>

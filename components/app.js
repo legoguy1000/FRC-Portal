@@ -206,7 +206,7 @@ angular.module('FrcPortal', [
 	  })
 	  .state('main.admin.seasons', {
 		url: '/seasons',
-		templateUrl: 'views/main.admin.seasons.html',
+		templateUrl: 'components/main.admin.seasons/main.admin.seasons.html',
 		controller: 'main.admin.seasonsController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -216,13 +216,13 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    seasonsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.seasonsController.js');
+	             return $ocLazyLoad.load('components/main.admin.seasons/main.admin.seasonsController.js');
 	    }]
 	  }
 	  })
 	  .state('main.admin.season', {
 		url: '/seasons/{season_id}',
-		templateUrl: 'views/main.admin.season.html',
+		templateUrl: 'components/main.admin.season/main.admin.season.html',
 		controller: 'main.admin.seasonController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -232,13 +232,13 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    seasonController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.seasonController.js');
+	             return $ocLazyLoad.load('components/main.admin.season/main.admin.seasonController.js');
 	    }]
 	  }
 	  })
 	  .state('main.admin.events', {
 		url: '/events',
-		templateUrl: 'views/main.admin.events.html',
+		templateUrl: 'components/main.admin.events/main.admin.events.html',
 		controller: 'main.admin.eventsController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -248,13 +248,13 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    eventsController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.eventsController.js');
+	             return $ocLazyLoad.load('components/main.admin.events/main.admin.eventsController.js');
 	    }]
 	  }
 	  })
 	  .state('main.admin.event', {
 		url: '/events/{event_id}',
-		templateUrl: 'views/main.admin.event.html',
+		templateUrl: 'components/main.admin.event/main.admin.event.html',
 		controller: 'main.admin.eventController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -264,14 +264,14 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    eventController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load('js/controllers/main.admin.eventController.js');
+	             return $ocLazyLoad.load('components/main.admin.event/main.admin.eventController.js');
 
 	    }]
 	  }
 	  })
 	  .state('main.admin.time', {
 		url: '/time',
-		templateUrl: 'views/main.admin.time.html',
+		templateUrl: 'components/main.admin.time/main.admin.time.html',
 		controller: 'main.admin.timeController',
 		controllerAs: 'vm',
 		authenticate: true,
@@ -281,7 +281,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    timeController: ['$ocLazyLoad', 'adminController', function($ocLazyLoad,adminController) {
 	      // you can lazy load files for an existing module
-	             return $ocLazyLoad.load(['js/controllers/main.admin.timeController.js','js/directives/humanize-duration.js']);
+	             return $ocLazyLoad.load(['components/main.admin.time/main.admin.timeController.js','js/directives/humanize-duration.js']);
 	    }]
 	  }
 	  })
