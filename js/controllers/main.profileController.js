@@ -281,7 +281,7 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 		$mdDialog.show({
 			controller: loginModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/loginModal.tmpl.html',
+			templateUrl: 'components/loginModal/loginModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,

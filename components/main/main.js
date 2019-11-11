@@ -26,7 +26,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.versionInfo = {}
 
 	//lazy load dialog controllers
-	$ocLazyLoad.load('js/controllers/loginModalController.js');
+	$ocLazyLoad.load('components/loginModal/loginModalController.js');
 	$ocLazyLoad.load('js/controllers/newUserModalController.js');
 	$ocLazyLoad.load('js/controllers/newSeasonModalController.js');
 	$ocLazyLoad.load('js/controllers/newEventModalController.js');
@@ -83,7 +83,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		$mdDialog.show({
 			controller: loginModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/loginModal.tmpl.html',
+			templateUrl: 'components/loginModal/loginModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,

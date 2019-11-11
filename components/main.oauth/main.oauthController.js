@@ -17,7 +17,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 			dialog = $mdDialog.show({
 				controller: loginModalController,
 				controllerAs: 'vm',
-				templateUrl: 'views/partials/loginModal.tmpl.html',
+				templateUrl: 'components/loginModal/loginModal.html',
 				parent: angular.element(document.body),
 				clickOutsideToClose:false,
 				fullscreen: true, // Only for -xs, -sm breakpoints.

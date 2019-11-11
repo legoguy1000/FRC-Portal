@@ -78,7 +78,7 @@ angular.module('FrcPortal', [
 	  })
 	  .state('main.oauthSuccess', {
 		url: '/oauth?clientId&code&redirectUri',
-		templateUrl: 'views/main.oauth.html',
+		templateUrl: 'components/main.oauth/main.oauth.html',
 		authenticate: false,
 		data: {
 		  title: ''
@@ -86,7 +86,7 @@ angular.module('FrcPortal', [
 	  })
 	  .state('main.oauth', {
 		url: '/oauth/{provider}?code&state',
-		templateUrl: 'views/main.oauth.html',
+		templateUrl: 'components/main.oauth/main.oauth.html',
 		controller: 'main.oauthController',
 		controllerAs: 'vm',
 		authenticate: false,
@@ -96,7 +96,7 @@ angular.module('FrcPortal', [
 	  resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 	    homeController: ['$ocLazyLoad', function($ocLazyLoad) {
 	      // you can lazy load files for an existing module
-       	return $ocLazyLoad.load(['js/controllers/loginModalController.js','js/controllers/main.oauthController.js']);
+       	return $ocLazyLoad.load(['components/loginModal/loginModalController.js','components/main.oauth/main.oauthController.js']);
 	    }]
 	  }
 		})
@@ -611,11 +611,11 @@ angular.module('FrcPortal', [
 					var $rootScope = $injector.get('$rootScope');
 					var $ocLazyLoad = $injector.get('$ocLazyLoad');
 					console.log(rejection);
-					$ocLazyLoad.load('js/controllers/loginModalController.js').then(function() {
+					$ocLazyLoad.load('components/loginModal/loginModalController.js').then(function() {
 						$mdDialog.show({
 							controller: loginModalController,
 							controllerAs: 'vm',
-							templateUrl: 'views/partials/loginModal.tmpl.html',
+							templateUrl: 'components/loginModal/loginModal.html',
 							parent: angular.element(document.body),
 							clickOutsideToClose:true,
 							fullscreen: true, // Only for -xs, -sm breakpoints.
@@ -706,11 +706,11 @@ angular.module('FrcPortal', [
 			var from_params_json = JSON.stringify(trans.params('from'));
 			var from_params = angular.fromJson(from_params_json);
 			delete from_params["#"];
-			$ocLazyLoad.load('js/controllers/loginModalController.js').then(function() {
+			$ocLazyLoad.load('components/loginModal/loginModalController.js').then(function() {
 				$mdDialog.show({
 					controller: loginModalController,
 					controllerAs: 'vm',
-					templateUrl: 'views/partials/loginModal.tmpl.html',
+					templateUrl: 'components/loginModal/loginModal.html',
 					parent: angular.element(document.body),
 					clickOutsideToClose:true,
 					fullscreen: true, // Only for -xs, -sm breakpoints.
