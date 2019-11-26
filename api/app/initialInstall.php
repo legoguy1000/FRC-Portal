@@ -45,7 +45,7 @@ $iniData['admin'] = $admin_data;
 
 //Create AES
 $iniData['encryption'] = array();
-$iniData['encryption']['key'] = bin2hex(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES));
+$iniData['encryption']['encryption_key'] = bin2hex(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES));
 write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
 
 if (!file_exists(__DIR__.'/../../favicons')) {

@@ -1,0 +1,40 @@
+version: '3'
+services:
+  portal-db:
+    image: mariadb
+    ports:
+    - '3306:3306'
+    environment:
+    - MYSQL_ROOT_PASSWORD=password
+    - MYSQL_USER=user
+    - MYSQL_PASSWORD=password
+    - MYSQL_DATABASE=demodb
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+    - PMA_HOST=portal-db
+    restart: always
+    ports:
+     - 8080:80
+    volumes:
+     - /sessions
+  portal-web:
+    image: legoguy1000/frc-portal
+    ports:
+    - "80:80"
+    - "443:443"
+    environment:
+    - DB_HOST=portal-db
+    - DB_USER=user
+    - DB_PASS=password
+    - DB_NAME=demodb
+    depends_on:
+    - portal-db
+    volumes:
+    # REQUIRED: used to maintain the config.ini file
+    - "C:/Users/adr82/Desktop/test1/secured:/var/www/html/api/app/secured"
+    # OPTIONAL: Used for the favicons
+    - "C:/Users/adr82/Desktop/test1/favicons:/var/www/html/favicons"
+    # Required (or self signed certs will be used):Must be cert.crt & key.key.
+    - "C:/Users/adr82/Desktop/test1/certs:/ssl_certs"
