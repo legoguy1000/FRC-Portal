@@ -174,7 +174,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		}
 	}
 
-	var askAuthenticator = function() {
+/*	var askAuthenticator = function() {
 		var confirm = $mdDialog.confirm()
           .title('Would you like to use your fingerprint to login')
           .textContent('This device is capable of automatically logging you in using your fingerprint.')
@@ -210,7 +210,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	      }
 	    });
 	  }
-	}
+	} */
 
 	main.checkServiceWorker();
 
@@ -233,7 +233,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	$rootScope.$on('afterLoginAction', function(event) {
 		console.info('Login Initiated');
 		loginActions();
-		askAuthenticator();
+		//askAuthenticator();
 	});
 
 	$rootScope.$on('logOutAction', function(event, data) {
