@@ -1,5 +1,6 @@
 <?php
-require_once(__DIR__.'/includes.php');
+//require_once(__DIR__.'/includes.php');
+require_once(__DIR__.'/functions/general_functions.php');
 require_once(__DIR__.'/version.php');
 
 $iniData = array();

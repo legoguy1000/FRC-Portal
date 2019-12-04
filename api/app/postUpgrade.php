@@ -284,6 +284,15 @@ if($version >= '2.15.0') {
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
 
+/**
+* 2.16.0
+**/
+if($version >= '2.15.0') {
+  if(Capsule::schema()->hasTable('settings')) {
+    $setting = FrcPortal\Setting::firstOrCreate(['section' => 'service_account', 'setting' => 'firstportal_credential_data'], ['value' => '']);
+    echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
+  }
+}
 
 /*
 //Add Column

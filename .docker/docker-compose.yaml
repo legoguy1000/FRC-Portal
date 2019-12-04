@@ -2,8 +2,6 @@ version: '3'
 services:
   portal-db:
     image: mariadb
-    ports:
-    - '3306:3306'
     environment:
     - MYSQL_ROOT_PASSWORD=password
     - MYSQL_USER=user
@@ -20,7 +18,7 @@ services:
     volumes:
      - /sessions
   portal-web:
-    image: legoguy1000/frc-portal
+    image: legoguy1000/frc_portal:dev
     ports:
     - "80:80"
     - "443:443"
@@ -33,8 +31,12 @@ services:
     - portal-db
     volumes:
     # REQUIRED: used to maintain the config.ini file
-    - "C:/Users/adr82/Desktop/test1/secured:/var/www/html/api/app/secured"
+    - "C:/Users/adr82/Documents/DockerStuff/test1/secured:/var/www/html/api/app/secured"
+    # REQUIRED: used to maintain the config.ini file
+    - "C:/Users/adr82/Documents/GitHub/FRC-Portal:/var/www/html/"
+    # REQUIRED: used to maintain the config.ini file
+    - "/var/www/html/api/app/vendor"
     # OPTIONAL: Used for the favicons
-    - "C:/Users/adr82/Desktop/test1/favicons:/var/www/html/favicons"
+    - "C:/Users/adr82/Documents/DockerStuff/test1/favicons:/var/www/html/favicons"
     # Required (or self signed certs will be used):Must be cert.crt & key.key.
-    - "C:/Users/adr82/Desktop/test1/certs:/ssl_certs"
+    - "C:/Users/adr82/Documents/DockerStuff/test1/certs:/ssl_certs"

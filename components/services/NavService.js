@@ -7,15 +7,19 @@ function navService($q){
       {
         name: 'Dashboard',
         icon: 'dashboard',
-        sref: 'main.home'
+        sref: 'main.home',
+				admin: false
       }, {
         name: 'Events',
         icon: 'event',
-        sref: 'main.events'
+        sref: 'main.events',
+				admin: false,
+				admin: false
       }, {
         name: 'Clock In/Out',
         icon: 'access_time',
-        sref: 'main.signin'
+        sref: 'main.signin',
+				admin: false
       },
       /* {
         name: 'Profile',
@@ -35,7 +39,8 @@ function navService($q){
       {
         name: 'Admin',
         icon: 'settings',
-        sref: 'main.admin'
+        sref: 'main.admin',
+				admin: true
       }
     ];
 

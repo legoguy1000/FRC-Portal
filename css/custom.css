@@ -413,3 +413,11 @@ md-list-item.min-height-reset .md-list-item-inner::before {
 .check-status.incomplete {
   color:red;
 }
+
+label > md-icon.material-icons {
+  font-size: 16px;
+  min-height: auto;
+  min-width: auto;
+  width: auto;
+  margin-right: 5px;
+}

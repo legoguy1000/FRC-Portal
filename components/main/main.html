@@ -5,7 +5,7 @@
 			<img ng-src="{{main.team_logo_url}}" style="max-height: 60px;"/>
 		</md-button>
 	</md-toolbar>
-	<md-button ng-repeat-start="item in main.menuItems" layout="row" layout-gt-sm="column" layout-align="start center" layout-align-gt-sm="center center" flex class="capitalize" ng-click="main.selectItem(item)" ui-sref-active="md-accent" ui-sref="{{item.sref}}">
+	<md-button ng-if="!item.admin || (item.admin && main.userInfo.admin)" ng-repeat-start="item in main.menuItems" layout="row" layout-gt-sm="column" layout-align="start center" layout-align-gt-sm="center center" flex class="capitalize" ng-click="main.selectItem(item)" ui-sref-active="md-accent" ui-sref="{{item.sref}}">
 		<div class="md-tile-content">
 			<i class="material-icons md-36">{{item.icon}}</i>
 		</div>

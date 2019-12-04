@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.settingsController', ['$rootScope', '$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'settingsService', '$mdDialog','$stateParams','$mdToast','Upload','generalService',
+.controller('main.admin.settingsController', ['$rootScope', '$state', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'settingsService', '$mdDialog','$stateParams','$mdToast','Upload','generalService','configItems',
 	mainAdminSettingsController
 ]);
-function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, schoolsService, usersService, settingsService, $mdDialog, $stateParams,$mdToast,Upload,generalService) {
+function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, schoolsService, usersService, settingsService, $mdDialog, $stateParams,$mdToast,Upload,generalService, configItems) {
 	var vm = this;
 
 	vm.userInfo = {};
@@ -43,13 +43,17 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		});
 	} */
 	vm.serviceAccountCredentials = {};
+	vm.firstcredentials = {};
 	vm.timezones = [];
 
 	vm.selectSettingMenu = function(menu) {
 		vm.currentMenu = menu;
 	}
 	vm.branchOptions = [];
-
+	vm.team_colors = {
+		team_color_primary: '',
+		team_color_secondary: ''
+	};
 /*	vm.getAllSettings = function () {
 		vm.loading = true;
 		settingsService.getAllSettings().then(function(response){
@@ -59,18 +63,22 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	};
 	vm.getAllSettings(); */
 
-	vm.getSettingBySection = function (section) {
+	vm.getSettingBySection = function (section, callback) {
 		vm.loading = true;
 		settingsService.getSettingBySection(section).then(function(response){
 			vm.loading = false;
 			vm.settings[section] = response.data;
+			if(callback != undefined && callback != null) {
+				callback();
+			}
 		});
 	};
-	vm.getSettingBySection('team');
-	vm.getSettingBySection('login');
-	vm.getSettingBySection('notification');
-	vm.getSettingBySection('other');
-	vm.getSettingBySection('cronjob');
+
+	vm.getSettingBySection('team',null);
+	vm.getSettingBySection('login',null);
+	vm.getSettingBySection('notification',null);
+	vm.getSettingBySection('other',null);
+	vm.getSettingBySection('cronjob',null);
 
 	vm.getAllTimezones = function () {
 		settingsService.getAllTimezones().then(function(response){
@@ -82,6 +90,13 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	vm.getServiceAccountCredentials = function () {
 		settingsService.getServiceAccountCredentials().then(function(response){
 			vm.serviceAccountCredentials = response.data;
+		});
+	};
+	vm.getServiceAccountCredentials();
+
+	vm.getServiceAccountCredentials = function () {
+		settingsService.getFirstPortalCredentials().then(function(response){
+			vm.firstcredentials = response.data;
 		});
 	};
 	vm.getServiceAccountCredentials();
@@ -100,9 +115,20 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
-			//vm.settings[section] = response.data;
+			if(section == 'team') {
+				updateColors();
+			}
 		});
 	};
+
+	function updateColors() {
+		if(configItems.team_color_primary != vm.settings.team.team_color_primary) {
+			configItems.team_color_primary = vm.settings.team.team_color_primary
+		}
+		if(configItems.team_color_secondary != vm.settings.team.team_color_secondary) {
+			configItems.team_color_secondary = vm.settings.team.team_color_secondary
+		}
+	}
 	// upload on file select or drop
 	vm.uploadSAFile = function (file) {
 			Upload.upload({
@@ -211,6 +237,22 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		}).then(function(response){
 			if(response.status) {
 				vm.updateSettingBySection('login');
+			}
+		});
+	}
+	vm.showFirstPortalCredentialsModal = function(ev) {
+		$mdDialog.show({
+			controller: firstPortalCredentialModalController,
+			controllerAs: 'vm',
+			templateUrl: 'components/firstPortalCredentialModal/firstPortalCredentialModal.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose:true,
+			fullscreen: true, // Only for -xs, -sm breakpoints.
+			locals: { }
+		}).then(function(response){
+			if(response.status) {
+				vm.firstcredentials = response.data;
 			}
 		});
 	}

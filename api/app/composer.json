@@ -12,7 +12,8 @@
         "tuupola/slim-jwt-auth": "^3.0",
         "doctrine/dbal": "^2.7",
         "guzzlehttp/guzzle": "^6.3",
-        "akrabat/ip-address-middleware": "^1.0"
+        "akrabat/ip-address-middleware": "^1.0",
+        "fabpot/goutte": "^3.2"
     },
 	"autoload": {
         "psr-4": {

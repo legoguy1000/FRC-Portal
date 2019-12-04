@@ -78,6 +78,24 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getFirstPortalCredentials: function () {
+			return $http.get('api/settings/firstPortalCredentials')
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		updateFirstPortalCredentials: function (formData) {
+			return $http.post('api/settings/firstPortalCredentials',formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		removeFirstPortalCredentials: function () {
+			return $http.delete('api/settings/firstPortalCredentials')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		getUpdateBranches: function () {
 			return $http.get('api/settings/update/branches')
 			.then(function(response) {

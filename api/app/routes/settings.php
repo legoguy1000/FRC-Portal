@@ -195,11 +195,85 @@ $app->group('/settings', function () {
         $setting = FrcPortal\Setting::updateOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => $data]);
         $responseArr['data'] = array('client_email'=>$client_email);
         $responseArr['status'] = true;
-        $responseArr['msg'] = 'Service account credentials uploaded';
+        $responseArr['msg'] = 'Google Service account credentials uploaded';
       }
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update Service Account Credentials');
+    $this->delete('', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+      $setting = FrcPortal\Setting::updateOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => '']);
+      $responseArr['status'] = true;
+      $responseArr['msg'] = 'Google Service account credentials deleted';
+      $response = $response->withJson($responseArr);
+      return $response;
+    })->setName('Delete Google Service Account Credentials');
+  });
+  $this->group('/firstPortalCredentials', function () {
+    $this->get('', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+      $creds_data = FrcPortal\Setting::where('section', 'service_account')->where('setting', 'firstportal_credential_data')->first();
+      if(!is_null($creds_data)) {
+        $creds_arr = explode(',',$creds_data->value);
+        $responseArr['data'] = array('email' => $creds_arr[0]);
+        $responseArr['status'] = true;
+        $responseArr['msg'] = '';
+      } else {
+        $responseArr['msg'] = 'No FIRST Portal credentials';
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    })->setName('Get Service Account Credentials');
+    $this->post('', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+
+      if(!isset($formData['email']) || $formData['email'] == '') {
+        return badRequestResponse($response, $msg = 'Email cannot be blank');
+      }
+      if(!isset($formData['password']) || $formData['password'] == '') {
+        return badRequestResponse($response, $msg = 'Password cannot be blank');
+      }
+      $email = $formData['email'];
+      $password = $formData['password'];
+      $cookie = loginToFirst($email, $password);
+      if($cookie != '') {
+        $cookie_encypt = encryptItems($cookie);
+        $data = $email.','.$cookie_encypt;
+        $setting = FrcPortal\Setting::updateOrCreate(['section' => 'service_account', 'setting' => 'firstportal_credential_data'], ['value' => $data]);
+      }
+      $responseArr['data'] = array('email'=>$email);
+      $responseArr['status'] = true;
+      $responseArr['msg'] = 'FIRST Portal credentials updated';
+      $response = $response->withJson($responseArr);
+      return $response;
+    })->setName('Update FIRST Portal Credentials');
+    $this->delete('', function ($request, $response, $args) {
+      $userId = FrcPortal\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+      $setting = FrcPortal\Setting::updateOrCreate(['section' => 'service_account', 'setting' => 'firstportal_credential_data'], ['value' => '']);
+      $responseArr['status'] = true;
+      $responseArr['msg'] = 'FIRST Portal credentials deleted';
+      $response = $response->withJson($responseArr);
+      return $response;
+    })->setName('Delete FIRST Portal Credentials');
   });
   $this->group('/oauth/{provider}', function () {
     $this->get('', function ($request, $response, $args) {
@@ -263,7 +337,7 @@ $app->group('/settings', function () {
     $responseArr = standardResponse($status = true, $msg = 'Admin password reset', $data = array('password'=>$password));
     $response = $response->withJson($responseArr);
     return $response;
-  })->setName('Test Slack');
+  })->setName('Reset Admin Password');
   $this->post('/testSlack', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
