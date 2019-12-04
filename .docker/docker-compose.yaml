@@ -18,7 +18,7 @@ services:
     volumes:
      - /sessions
   portal-web:
-    image: legoguy1000/frc_portal:dev
+    image: legoguy1000/frc-portal:dev
     ports:
     - "80:80"
     - "443:443"
