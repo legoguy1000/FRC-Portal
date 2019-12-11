@@ -308,7 +308,7 @@ if($version >= '2.16.0') {
       Capsule::schema()->table('seasons', function ($table, $as = null, $connection = null) {
         $table->string('hour_requirement')->default(0)->change();
         $table->string('hour_requirement_week')->default(0)->change();
-        $table->string('membership_form_map')->nullable()->default(null)->change();
+        $table->text('membership_form_map')->nullable()->default(null)->change();
       });
     } catch (Exception $e) {
       //Exception will be logged in Monolog
