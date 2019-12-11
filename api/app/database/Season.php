@@ -14,7 +14,7 @@ Capsule::schema()->create('seasons', function ($table) {
        $table->integer('hour_requirement')->default(0);
        $table->integer('hour_requirement_week')->default(0);
        $table->string('join_spreadsheet',500);
-       $table->text('membership_form_map')->default('');
+       $table->text('membership_form_map')->nullable()->default(null);
        $table->string('membership_form_sheet')->nullable()->default('Form Responses 1');
        $table->timestamps();
 });
