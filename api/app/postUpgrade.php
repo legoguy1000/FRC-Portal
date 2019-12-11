@@ -13,7 +13,7 @@ if($version >= '2.6.0') {
   //Create Event Types Table
   if(Capsule::schema()->hasColumn('events','type')) {
     try {
-      Capsule::schema()->table('events', function ($table, $as = null, $connection = null) {
+      Capsule::schema()->table('events', function ($table) {
         $table->string('type')->nullable()->default(null)->change();
       });
     } catch (Exception $e) {
@@ -23,7 +23,7 @@ if($version >= '2.6.0') {
   if(!Capsule::schema()->hasTable('event_types')) {
     require_once('database/EventType.php');
     try {
-      Capsule::schema()->table('events', function ($table, $as = null, $connection = null) {
+      Capsule::schema()->table('events', function ($table) {
         $table->foreign('type')->references('type')->on('event_types')->onDelete('set null')->onUpdate('cascade');
       });
     } catch (Exception $e) {
@@ -41,7 +41,7 @@ if($version >= '2.7.0') {
     //Backup Database
     exportDB();
     try {
-      Capsule::schema()->table('events', function($table, $as = null, $connection = null) {
+      Capsule::schema()->table('events', function($table) {
         $table->renameColumn('time_slots', 'time_slots_required');
       });
     } catch (Exception $e) {
@@ -57,7 +57,7 @@ if($version >= '2.10.0') {
   if(!Capsule::schema()->hasTable('event_food')) {
     require_once('database/EventFood.php');
     try {
-      Capsule::schema()->table('event_food', function ($table, $as = null, $connection = null) {
+      Capsule::schema()->table('event_food', function ($table) {
         $table->foreign('event_id')->references('event_id')->on('events')->onDelete('cascade')->onUpdate('cascade');
       });
     } catch (Exception $e) {
@@ -67,7 +67,7 @@ if($version >= '2.10.0') {
   if(!Capsule::schema()->hasTable('event_food_event_requirements')) {
     require_once('database/EventFoodUser.php');
     try {
-      Capsule::schema()->table('event_food_event_requirements', function ($table, $as = null, $connection = null) {
+      Capsule::schema()->table('event_food_event_requirements', function ($table) {
         $table->foreign('food_id')->references('food_id')->on('event_food')->onDelete('cascade')->onUpdate('cascade');
         $table->foreign('ereq_id')->references('ereq_id')->on('event_requirements')->onDelete('cascade')->onUpdate('cascade');
       });
@@ -77,7 +77,7 @@ if($version >= '2.10.0') {
   }
   if(Capsule::schema()->hasTable('seasons') && !Capsule::schema()->hasColumn('seasons','hour_requirement_week')) {
     try {
-      Capsule::schema()->table('seasons', function ($table, $as = null, $connection = null) {
+      Capsule::schema()->table('seasons', function ($table) {
         $table->integer('hour_requirement_week')->after('hour_requirement');
       });
     } catch (Exception $e) {
@@ -93,7 +93,7 @@ if($version >= '2.11.0') {
   if(Capsule::schema()->hasTable('seasons')) {
     if(!Capsule::schema()->hasColumn('seasons','membership_form_map')) {
       try {
-        Capsule::schema()->table('seasons', function ($table, $as = null, $connection = null) {
+        Capsule::schema()->table('seasons', function ($table) {
           $table->text('membership_form_map')->after('join_spreadsheet');
         });
       } catch (Exception $e) {
@@ -102,7 +102,7 @@ if($version >= '2.11.0') {
     }
     if(!Capsule::schema()->hasColumn('seasons','membership_form_sheet')) {
       try {
-        Capsule::schema()->table('seasons', function ($table, $as = null, $connection = null) {
+        Capsule::schema()->table('seasons', function ($table) {
           $table->string('membership_form_sheet')->after('membership_form_map')->nullable()->default('Form Responses 1');
         });
       } catch (Exception $e) {
@@ -135,7 +135,7 @@ if($version >= '2.13.7') {
   if(Capsule::schema()->hasTable('meeting_hours')) {
     if(!Capsule::schema()->hasColumn('meeting_hours','created_at') && !Capsule::schema()->hasColumn('meeting_hours','updated_at')) {
       try {
-        Capsule::schema()->table('meeting_hours', function ($table, $as = null, $connection = null) {
+        Capsule::schema()->table('meeting_hours', function ($table) {
           $table->timestamps();
         });
       } catch (Exception $e) {
@@ -145,7 +145,7 @@ if($version >= '2.13.7') {
   }
   if(!Capsule::schema()->hasTable('logs')) {
     require_once('database/Logs.php');
-    Capsule::schema()->table('logs', function ($table, $as = null, $connection = null) {
+    Capsule::schema()->table('logs', function ($table) {
       $table->foreign('user_id')->references('user_id')->on('users')->onDelete('set null')->onUpdate('cascade');
     });
   }
@@ -164,7 +164,7 @@ if($version >= '2.13.7') {
   if(Capsule::schema()->hasTable('annual_requirements')) {
     if(!Capsule::schema()->hasColumn('annual_requirements','stims_date')) {
       try {
-        Capsule::schema()->table('annual_requirements', function ($table, $as = null, $connection = null) {
+        Capsule::schema()->table('annual_requirements', function ($table) {
           $table->dateTime('stims_date')->after('stims');
         });
       } catch (Exception $e) {
@@ -173,7 +173,7 @@ if($version >= '2.13.7') {
     }
     if(!Capsule::schema()->hasColumn('annual_requirements','dues_date')) {
       try {
-        Capsule::schema()->table('annual_requirements', function ($table, $as = null, $connection = null) {
+        Capsule::schema()->table('annual_requirements', function ($table) {
           $table->dateTime('dues_date')->after('dues');
         });
       } catch (Exception $e) {
@@ -210,7 +210,7 @@ if($version >= '2.15.0') {
   if(Capsule::schema()->hasTable('seasons')) {
     if(Capsule::schema()->hasColumn('seasons','bag_day')) {
       try {
-        Capsule::schema()->table('seasons', function ($table, $as = null, $connection = null) {
+        Capsule::schema()->table('seasons', function ($table) {
           $table->string('bag_day')->nullable()->default(null)->change();
         });
       } catch (Exception $e) {
@@ -221,7 +221,7 @@ if($version >= '2.15.0') {
   if(Capsule::schema()->hasTable('users')) {
     if(Capsule::schema()->hasColumn('users','password')) {
       try {
-        Capsule::schema()->table('users', function ($table, $as = null, $connection = null) {
+        Capsule::schema()->table('users', function ($table) {
           $table->dropColumn('password');
         });
       } catch (Exception $e) {
@@ -295,8 +295,8 @@ if($version >= '2.16.0') {
   if(Capsule::schema()->hasTable('events')) {
     if(Capsule::schema()->hasColumn('events','hotel_info')) {
       try {
-        Capsule::schema()->table('events', function ($table, $as = null, $connection = null) {
-        $table->text('hotel_info')->nullable()->default(null)->change();
+        Capsule::schema()->table('events', function ($table) {
+          $table->string('hotel_info')->default('')->change();
         });
       } catch (Exception $e) {
         //Exception will be logged in Monolog
@@ -305,10 +305,10 @@ if($version >= '2.16.0') {
   }
   if(Capsule::schema()->hasTable('seasons')) {
     try {
-      Capsule::schema()->table('seasons', function ($table, $as = null, $connection = null) {
+      Capsule::schema()->table('seasons', function ($table) {
         $table->string('hour_requirement')->default(0)->change();
         $table->string('hour_requirement_week')->default(0)->change();
-        $table->string('membership_form_map')->nullable()->default(null)->change();
+        $table->string('membership_form_map')->default('')->change();
       });
     } catch (Exception $e) {
       //Exception will be logged in Monolog
@@ -316,7 +316,7 @@ if($version >= '2.16.0') {
   }
   if(Capsule::schema()->hasTable('users')) {
     try {
-      Capsule::schema()->table('users', function ($table, $as = null, $connection = null) {
+      Capsule::schema()->table('users', function ($table) {
         $table->string('fname')->default('')->change();
         $table->string('lname')->default('')->change();
         $table->string('user_type')->default('')->change();
@@ -340,7 +340,7 @@ if(Capsule::schema()->hasTable('events') && !Capsule::schema()->hasColumn('event
   //Backup Database
   exportDB();
   try {
-    Capsule::schema()->table('events', function($table, $as = null, $connection = null) {
+    Capsule::schema()->table('events', function($table) {
       $table->decimal('payment_amount', 5, 2)->default(00.00);
     });
   } catch (Exception $e) { }
@@ -350,7 +350,7 @@ if(Capsule::schema()->hasTable('events') && !Capsule::schema()->hasColumn('event
   //Backup Database
   exportDB();
   try {
-    Capsule::schema()->table('events', function($table, $as = null, $connection = null) {
+    Capsule::schema()->table('events', function($table) {
     $table->text('hotel_info');
     });
   } catch (Exception $e) { }
