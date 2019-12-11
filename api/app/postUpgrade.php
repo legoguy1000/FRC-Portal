@@ -296,7 +296,7 @@ if($version >= '2.16.0') {
     if(Capsule::schema()->hasColumn('events','hotel_info')) {
       try {
         Capsule::schema()->table('events', function ($table, $as = null, $connection = null) {
-          $table->string('hotel_info')->default('')->change();
+        $table->text('hotel_info')->nullable()->default(null)->change();
         });
       } catch (Exception $e) {
         //Exception will be logged in Monolog
