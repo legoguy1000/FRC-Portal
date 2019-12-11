@@ -1,5 +1,6 @@
 Dockerfile
 docker-compose.yaml
-.git/
+.git
+.dockerignore
 .gitignore
 .travis.yml
