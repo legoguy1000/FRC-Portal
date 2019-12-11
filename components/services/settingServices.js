@@ -58,6 +58,12 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		removeServiceAccountCredentials: function () {
+			return $http.delete('api/settings/serviceAccountCredentials')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		testSlack: function () {
 			return $http.post('api/settings/testSlack')
 			.then(function(response) {

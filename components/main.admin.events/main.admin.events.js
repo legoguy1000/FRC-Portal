@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.eventsController', ['$log','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog',
+.controller('main.admin.eventsController', ['$log','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog','settingsService',
 	mainAdminEventsController
 ]);
-function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsService, $mdDialog) {
+function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsService, $mdDialog,settingsService) {
      var vm = this;
 
 	vm.selected = [];
@@ -19,6 +19,7 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 	};
 	vm.events = [];
 	vm.limitOptions = [10,25,50,100];
+	vm.firstPortal = false;
 
 	vm.showFilter = function () {
 		vm.filter.show = true;
@@ -58,6 +59,12 @@ function mainAdminEventsController($log,$timeout, $q, $scope, $state, eventsServ
 			vm.maxPage = response.maxPage;
 		});
 	};
+	vm.getFirstPortalCredentials = function () {
+		settingsService.getFirstPortalCredentials().then(function(response){
+			vm.firstPortal = response.data && response.data.email != '';
+		});
+	};
+	vm.getFirstPortalCredentials();
 
 
 	function newEventModal() {

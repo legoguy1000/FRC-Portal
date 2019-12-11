@@ -13,10 +13,28 @@
 				<md-tooltip md-direction="top">View/Edit Event Types</md-tooltip>
 				<md-icon>list</md-icon>
 			</md-button>
-			<md-button class="md-icon-button" ng-click="vm.newEventModal()">
-				<md-tooltip md-direction="top">Add event from Google calendar</md-tooltip>
-				<md-icon>add</md-icon>
-			</md-button>
+			<md-menu>
+				<md-button aria-label="Open Add Event Menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
+					<md-tooltip md-direction="top">Add event</md-tooltip>
+					<md-icon>add</md-icon>
+				</md-button>
+				<md-menu-content>
+					<md-menu-item>
+						<md-button aria-label="Google Calendar" ng-click="vm.newEventModal()" ng-disabled="main.configItems.google_calendar_id == ''">
+							<md-tooltip md-direction="left" md-autohide="false">Add event from Google Calendar</md-tooltip>
+							<md-icon class="material-icons">calendar_today</md-icon>
+							Add from Google Calendar
+						</md-button>
+					</md-menu-item>
+					<!-- <md-menu-item>
+						<md-button aria-label="FIRST Portal" ng-click="" ng-disabled="!vm.firstPortal">
+							<md-tooltip md-direction="left" md-autohide="false">Add event from FIRST Portal</md-tooltip>
+							<md-icon class="material-icons">dashboard</md-icon>
+							Add from FIRST Portal
+						</md-button>
+					</md-menu-item> -->
+				</md-menu-content>
+			</md-menu>
 		</div>
 	</md-toolbar>
 

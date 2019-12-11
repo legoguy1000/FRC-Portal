@@ -94,12 +94,12 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	};
 	vm.getServiceAccountCredentials();
 
-	vm.getServiceAccountCredentials = function () {
+	vm.getFirstPortalCredentials = function () {
 		settingsService.getFirstPortalCredentials().then(function(response){
 			vm.firstcredentials = response.data;
 		});
 	};
-	vm.getServiceAccountCredentials();
+	vm.getFirstPortalCredentials();
 
 	vm.updateSettingBySection = function (section) {
 		vm.loading = true;
@@ -131,6 +131,11 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 	}
 	// upload on file select or drop
 	vm.uploadSAFile = function (file) {
+			vm.loading = true;
+			if(file == null) {
+				vm.loading = false;
+				return;
+			}
 			Upload.upload({
 					url: 'api/settings/serviceAccountCredentials',
 					data: {file: file}
@@ -147,6 +152,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		        .position('top right')
 		        .hideDelay(3000)
 		    );
+				vm.loading = false;
 					//console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
 			}, function (resp) {
 					console.log('Error status: ' + resp.status);
@@ -254,6 +260,38 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 			if(response.status) {
 				vm.firstcredentials = response.data;
 			}
+		});
+	}
+
+	vm.removeFirstCredentials = function() {
+		vm.loading = true;
+		settingsService.removeFirstPortalCredentials().then(function(response) {
+			if(response.status) {
+				vm.firstcredentials = response.data;
+			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+			vm.loading = false;
+		});
+	}
+
+	vm.removeServiceAccountCredentials = function() {
+		vm.loading = true;
+		settingsService.removeServiceAccountCredentials().then(function(response) {
+			if(response.status) {
+				vm.serviceAccountCredentials = response.data;
+			}
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+			vm.loading = false;
 		});
 	}
 }
