@@ -114,13 +114,14 @@ function getServiceAccountFile() {
 
 function getServiceAccountData() {
 	$gsa_data = FrcPortal\Setting::where('section', 'service_account')->where('setting', 'google_service_account_data')->first();
-	if(!is_null($gsa_data)) {
+	if(!is_null($gsa_data) && $gsa_data->value != '') {
 		$gsa_arr = explode(',',$gsa_data->value);
 		$encypted_json = $gsa_arr[1];
 		$json = decryptItems($encypted_json);
 		return json_decode($json, true);
 	} else {
 		throw new Exception("Google Service Account credentials do not exist");
+		//return false;
 	}
 }
 
@@ -798,6 +799,9 @@ function loginToFirst($email, $password) {
 	$crawler = $client->submit($form);
 	$cookieJar = $client->getCookieJar();
 	$cookie = $cookieJar->get('DashboardTokenV0002', '/Dashboard', 'my.firstinspires.org');
+	if(is_null($cookie)) {
+		return false;
+	}
 	$cookieVal = $cookie->getValue();
 	return 'DashboardTokenV0002='.$cookieVal;
 }
