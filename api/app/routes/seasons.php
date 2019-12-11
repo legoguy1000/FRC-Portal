@@ -77,8 +77,12 @@ $app->group('/seasons', function () {
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    $spreadsheetId = getSeasonMembershipForm($formData['year']);
-    $spreadsheetId = $spreadsheetId['status'] != false ? $spreadsheetId['data']['join_spreadsheet']:'';
+    try {
+      $spreadsheetId = getSeasonMembershipForm($formData['year']);
+    } catch (Exception $e) {
+      $spreadsheetId = false;
+    }
+    $spreadsheetId = $spreadsheetId != false ? $spreadsheetId['join_spreadsheet']:'';
     $start_date = new DateTime($formData['start_date']);
     $end_date = new DateTime($formData['end_date']);
     $bag_day = $no_bagday ? null:new DateTime($formData['bag_day']);
@@ -208,6 +212,7 @@ $app->group('/seasons', function () {
         }
       } catch (Exception $e) {
         insertLogs('Warning', 'Something went wrong updating season membership form');
+        $responseArr['error'] = handleExceptionMessage($e);
       }
       $response = $response->withJson($responseArr);
       return $response;

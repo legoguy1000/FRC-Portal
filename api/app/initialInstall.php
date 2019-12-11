@@ -1,5 +1,6 @@
 <?php
-require_once(__DIR__.'/includes.php');
+//require_once(__DIR__.'/includes.php');
+require_once(__DIR__.'/functions/general_functions.php');
 require_once(__DIR__.'/version.php');
 
 $iniData = array();
@@ -13,39 +14,38 @@ if($line != 'yes' && $line != 'y'){
 shell_exec("composer install");
 shell_exec("composer dump-autoload");
 
-$db_data = array();
+
+$iniData = array();
 if(file_exists(__DIR__.'/secured/config.ini')) {
-  $db_data = parse_ini_file(__DIR__.'/secured/config.ini');
+  $iniData = parse_ini_file(__DIR__.'/secured/config.ini', true);
 }
 
-if($db_data['db_host'] == '') {
+$db_exists = array_key_exists('db', $iniData);
+if(!$db_exists || $iniData['db']['db_host'] == '') {
   $question = "Please input the MYSQL DB server (hostname or ip): ";
-  $db_data['db_host'] = clinput($question, $required = true);
+  $iniData['db']['db_host'] = clinput($question, $required = true);
 }
-if($db_data['db_user'] == '') {
+if(!$db_exists || $iniData['db']['db_user'] == '') {
   $question =  "Please input the MYSQL DB user: ";
-  $db_data['db_user'] = clinput($question, $required = true);
+  $iniData['db']['db_user'] = clinput($question, $required = true);
 }
-if($db_data['db_pass'] == '') {
+if(!$db_exists || $iniData['db']['db_pass'] == '') {
   $question =  "Please input the MYSQL DB password: ";
-  $db_data['db_pass'] = clinput($question, $required = true);
+  $iniData['db']['db_pass'] = clinput($question, $required = true);
 }
-if($db_data['db_name'] == '') {
+if(!$db_exists || $iniData['db']['db_name'] == '') {
   $question =  "Please input the MYSQL DB name: ";
-  $db_data['db_name'] = clinput($question, $required = true);
+  $iniData['db']['db_name'] = clinput($question, $required = true);
 }
-$iniData['db'] = $db_data;
 
 //create Admin Account
-$admin_data = array();
-$admin_data['admin_user'] = 'admin';
+$iniData['admin']['admin_user'] = 'admin';
 $password = bin2hex(openssl_random_pseudo_bytes(10));
-$admin_data['admin_pass'] = hash('sha512',$password);
-$iniData['admin'] = $admin_data;
+$iniData['admin']['admin_pass'] = hash('sha512',$password);
 
 //Create AES
 $iniData['encryption'] = array();
-$iniData['encryption']['key'] = bin2hex(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES));
+$iniData['encryption']['encryption_key'] = bin2hex(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES));
 write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
 
 if (!file_exists(__DIR__.'/../../favicons')) {

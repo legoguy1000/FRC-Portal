@@ -1,5 +1,8 @@
 <?php
 use \Firebase\JWT\JWT;
+use Goutte\Client;
+use Symfony\Component\DomCrawler\Field\InputFormField;
+use GuzzleHttp\Client as GuzzleClient;
 
 function getRealIpAddr() {
 	$ip = '';
@@ -111,13 +114,14 @@ function getServiceAccountFile() {
 
 function getServiceAccountData() {
 	$gsa_data = FrcPortal\Setting::where('section', 'service_account')->where('setting', 'google_service_account_data')->first();
-	if(!is_null($gsa_data)) {
+	if(!is_null($gsa_data) && $gsa_data->value != '') {
 		$gsa_arr = explode(',',$gsa_data->value);
 		$encypted_json = $gsa_arr[1];
 		$json = decryptItems($encypted_json);
 		return json_decode($json, true);
 	} else {
 		throw new Exception("Google Service Account credentials do not exist");
+		//return false;
 	}
 }
 
@@ -751,5 +755,54 @@ function updatePortal() {
 		//file_put_contents($file, $current);
 	}
 	//include(__DIR__ . '/../postUpgrade.php');
+}
+
+function getVersion() {
+	//$version = null;
+	//$version = file_get_contents(__DIR__.'/../secured/version.txt');
+	//if(!isset($version) || is_null($version)) {
+	  $version = VERSION;
+	//}
+	return $version;
+}
+
+function loginToFirst($email, $password) {
+	$data = array();
+	$client = new Client();
+	// Go to the FIRST website
+	$crawler = $client->request('GET', 'https://www.firstinspires.org');
+	$form = $crawler->selectButton('edit-openid-connect-client-generic-login')->form();
+	$crawler = $client->submit($form);
+	$crawler1 = $crawler->filter('#modelJson')->eq(0);
+	$json = html_entity_decode($crawler1->text());
+	$json = json_decode($json);
+	$form = $crawler->selectButton('LOG IN')->form();
+	$domdocument = new \DOMDocument;
+	$ff = $domdocument->createElement('input');
+	$ff->setAttribute('name', $json->antiForgery->name);
+	$ff->setAttribute('value', $json->antiForgery->value);
+	$formfield = new InputFormField($ff);
+	$form->set($formfield);
+
+	$node = $form->getNode(0);
+	$node->setAttribute('action', $json->loginUrl);
+	$form['username'] = $email;
+	$form['password'] = $password;
+	$crawler = $client->submit($form);
+	// remove all h2 nodes inside .content
+	$crawler->filter('script')->each(function ($crawler) {
+	    foreach ($crawler as $node) {
+	        $node->parentNode->removeChild($node);
+	    }
+	});
+	$form = $crawler->filter('form')->form();
+	$crawler = $client->submit($form);
+	$cookieJar = $client->getCookieJar();
+	$cookie = $cookieJar->get('DashboardTokenV0002', '/Dashboard', 'my.firstinspires.org');
+	if(is_null($cookie)) {
+		return false;
+	}
+	$cookieVal = $cookie->getValue();
+	return 'DashboardTokenV0002='.$cookieVal;
 }
 ?>

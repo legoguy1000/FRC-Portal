@@ -1,0 +1,99 @@
+<title ng-bind="'Team {{main.team_number}} Portal | '+main.title" class="ng-cloak">Team Portal</title>
+<md-sidenav md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2 md-sidenav-left" flex-xs="100">
+	<md-toolbar  class="md-accent md-whiteframe-z2">
+		<md-button layout="row" layout-align="center center" class="md-toolbar-tools md-warn">
+			<img ng-src="{{main.team_logo_url}}" style="max-height: 60px;"/>
+		</md-button>
+	</md-toolbar>
+	<md-button ng-if="!item.admin || (item.admin && main.userInfo.admin)" ng-repeat-start="item in main.menuItems" layout="row" layout-gt-sm="column" layout-align="start center" layout-align-gt-sm="center center" flex class="capitalize" ng-click="main.selectItem(item)" ui-sref-active="md-accent" ui-sref="{{item.sref}}">
+		<div class="md-tile-content">
+			<i class="material-icons md-36">{{item.icon}}</i>
+		</div>
+		<div flex="5" hide-gt-sm></div>
+		<div class="md-tile-content">
+			{{item.name}}
+		</div>
+	</md-button>
+	<md-divider ng-repeat-end></md-divider>
+	<!-- <md-button ng-click="main.showActions($event)" layout-align="center center">
+		<div class="md-tile-content">
+			Actions
+		</div>
+	</md-button> -->
+</md-sidenav>
+<div layout="column" flex>
+	<md-toolbar layout="row" layout-align="center center">
+		<section layout-align="start center" layout-fill flex class="md-toolbar-tools">
+			<md-button hide-gt-sm ng-click="main.toggleItemsList()" aria-label="Menu">
+				<i class="material-icons">menu</i>
+			</md-button>
+			<div class="" >
+				<span hide-sm hide-xs ng-cloak>Team {{main.team_number}} Portal <span ng-show="main.title != ''"> | </span></span>{{main.title}} {{main.title_extra}}
+			</div>
+		</section>
+		<section layout-align="center center" layout="row" ng-show="main.isAuthed">
+			<!-- <md-button class="toolbar-button" aria-label="Search" ng-click="main.showSearch = !main.showSearch">
+			<i class="material-icons">search</i>
+			</md-button> -->
+			<!--  <md-button class="toolbar-button" aria-label="Notifications">
+			<i class="material-icons">notifications</i>
+			<span class="notifications-label">7</span>
+			</md-button> -->
+			<!--    <md-button class="toolbar-button" aria-label="Settings" ng-click="main.toggleRightSidebar()">
+			<i class="material-icons">menu</i>
+			</md-button> -->
+			<md-button class="md-icon-button" ng-click="main.signInModal()" ng-hide="main.userInfo.localadmin">
+				<md-tooltip md-direction="bottom">Scan barcode for hours</md-tooltip>
+				<md-icon>photo_camera</md-icon>
+			</md-button>
+			<md-button class="md-icon-button"  ng-click="main.logout()">
+				<md-tooltip md-direction="bottom">Log Out</md-tooltip>
+				<md-icon>exit_to_app</md-icon>
+			</md-button>
+			<img class="img-circle" style="cursor:pointer;" ng-src="{{main.userInfo.profile_image || 'images/blank_user.png'}}" ui-sref="main.profile" ng-hide="main.userInfo.localadmin"/> <!--ng-click="main.toggleRightSidebar()"-->
+		</section>
+		<section layout-align="end center" ng-hide="main.isAuthed">
+			<md-button class="toolbar-button" aria-label="Search" ng-click="main.loginModal($event)">
+				Log In
+			</md-button>
+		</section>
+	</md-toolbar>
+	<md-content flex layout="roww" class="md-padding page-content">
+		<div ui-view flex></div>
+	</md-content>
+	<md-toolbar layout="row" layout-align="center center" style="min-height: 40px;">
+		<div layout-align="center center" layout-fill flex class="md-toolbar-tools" layout="column" style="font-size: small;">
+			<div>Powered by <a href="https://github.com/legoguy1000/FRC-Portal" target="_blank">FRC Portal</a></div>
+			<div ng-show="main.versionInfo.current_version">
+				<span ng-if="main.versionInfo.branch_name=='dev'">Dev:</span>
+				<span>v{{main.versionInfo.current_version}}</span><span ng-if="main.versionInfo.branch_name=='dev'">-<a ng-href="https://github.com/legoguy1000/FRC-Portal/commit/{{main.versionInfo.tag}}" target="_blank">{{ main.versionInfo.tag | limitTo: 7 }}</a></span>
+			</div>
+		</div>
+	</md-toolbar>
+</div>
+
+<md-sidenav md-component-id="right" class="md-whiteframe-z2 md-sidenav-right">
+    <md-toolbar>
+        <md-toolbar class="" layout="row" layout-align="center center">
+            <img class="img-circle" ng-src="{{main.userInfo.profile_image || 'images/blank_user.png'}}">
+            <md-menu md-offset="0 20">
+                <md-button class="capitalize" ng-click="$mdMenu.open()" aria-label="Open menu">
+                    <span>{{main.userInfo.full_name}}</span>
+                    <i class="material-icons">keyboard_arrow_down</i>
+                </md-button>
+                <md-menu-content width="3">
+                    <md-menu-item><md-button ng-click="main.toggleRightSidebar()" ui-sref="main.profile">Profile</md-button></md-menu-item>
+                    <md-menu-item><md-button ng-click="main.toggleRightSidebar(); main.logout()">Log out</md-button></md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </md-toolbar>
+    </md-toolbar>
+    <section>
+        <md-toolbar  class="md-hue-1">
+            <div class="md-toolbar-tools">
+                <h3>Messages</h3>
+            </div>
+        </md-toolbar>
+        <!-- <div ng-include src="'views/partials/messages.html'"/> -->
+    </section>
+</md-sidenav>

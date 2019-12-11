@@ -10,6 +10,12 @@ class EventCar extends Eloquent {
   protected $table = 'event_cars';
   //Use Custom Primary Key
   protected $primaryKey = 'car_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   public $timestamps = false;
   /**

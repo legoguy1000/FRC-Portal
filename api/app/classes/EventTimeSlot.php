@@ -10,6 +10,12 @@ class EventTimeSlot extends Eloquent {
   protected $table = 'event_time_slots';
   //Use Custom Primary Key
   protected $primaryKey = 'time_slot_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   public $timestamps = false;
   /**

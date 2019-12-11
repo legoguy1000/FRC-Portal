@@ -14,4 +14,4 @@ install:
 before_script:
   - cp ./api/app/secured/config.example.ini ./api/app/secured/config.ini
   - php ./api/app/database/_CreateDatabase.php
-script: phpunit
+script: phpunit .

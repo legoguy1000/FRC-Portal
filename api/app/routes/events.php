@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
+use GuzzleHttp\Client;
 $app->group('/events', function () {
   //Get all events
   $this->get('', function ($request, $response, $args) {
@@ -112,7 +113,7 @@ $app->group('/events', function () {
     	}
     	$optParams['timeMax'] = $timeMax;
     }
-    $optParams['timeMin'] = date('c',strtotime('-6 months'));
+    $optParams['timeMin'] = date('c',strtotime('-7 Days'));
     if($request->getParam('timeMin') != null && $request->getParam('timeMin') != '' && $request->getParam('timeMin') != 'null' && $request->getParam('timeMin') != 'undefined') {
     	$timeMin = date('c', strtotime($request->getParam('timeMin')));
     	if(is_numeric($request->getParam('timeMin'))) {
@@ -159,7 +160,44 @@ $app->group('/events', function () {
     insertLogs($level = 'Information', $message = 'Successfully searched Google Calendar');
     return $response;
   })->setName('Search Google Calendar');
-
+  //Browse FIRST Portal for events
+  // $this->get('/browseFirstPortalEvents', function ($request, $response, $args) {
+  //   $creds = getSettingsProp('firstportal_credential_data');
+  //   $creds_arr = explode(',',$creds->value);
+  //   $enc_cookie = $creds_arr[1];
+  //   $cookie = decryptItems($enc_cookie);
+  //   $client = new Client([
+  //       'base_uri' => 'https://my.firstinspires.org/Dashboard/Dashboard',
+  //       'timeout'  => 2.0,
+  //   ]);
+  //   $response = $client->request('POST', '/GetMoreTeams', [
+  //     'headers' => [
+  //         'Accept' => 'application/json',
+  //         'Cookie' => $cookie
+  //     ]]);
+  //   $data = array(
+  //   	'results'=>$allEvents,
+  //   	'count'=>count($allEvents)
+  //   );
+  //   if($response->getStatusCode() == 200) {
+  //     $data = $response->getBody();
+  //     $json = json_validate($data);
+  //     if($json['status']) {
+  //       $data = $json['data'];
+  //       $team_num = getSettingsProp('team_number');
+  //       $team_array = array_filter($data['Teams'], function($obj){
+  //           if (isset($obj->TeamCode)) {
+  //             return $obj->TeamCode == $team_num;
+  //           }
+  //       });
+  //       $eventList = $team_array['EventsList'];
+  //     }
+  //   }
+  //   $responseArr = array('status'=>true, 'msg'=>'', 'data' => $data);
+  //   $response = $response->withJson($responseArr);
+  //   insertLogs($level = 'Information', $message = 'Successfully browsed FIRST Portal Events');
+  //   return $response;
+  // })->setName('Browse FIRST Portal Events');
   //Add New Event
   $this->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Auth::user()->user_id;
@@ -205,7 +243,10 @@ $app->group('/events', function () {
       $event->drivers_required = isset($formData['requirements']['drivers']) && $formData['requirements']['drivers'] ? true:false;
       $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
       $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
-      $event->poc_id = $userId;
+      if($userId != getIniProp('admin_user')) {
+        $event->poc_id = $userId;
+      }
+      $event->hotel_info = '';
       if($event->save()) {
         if($event->room_required && isset($formData['rooms'])) {
           $roomTypes = array('boys','girls','adults');
@@ -274,8 +315,6 @@ $app->group('/events', function () {
       if($request->getParam('event_cars') !== null && $request->getParam('event_cars')==true) {
         if($authed) {
           $withArr[] = 'event_cars';
-        } else {
-          //$withArr[] = '';
         }
       }
       if($request->getParam('event_time_slots') !== null && $request->getParam('event_time_slots')==true) {
@@ -411,9 +450,6 @@ $app->group('/events', function () {
           $responseArr['status'] = true;
           $responseArr['msg'] = 'New room added';
           insertLogs($level = 'Information', $message = 'Event Room added for '.$event->name);
-        } else {
-          #insertLogs($level = 'Information', $message = 'Event Room added');
-          #$responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
         }
         $response = $response->withJson($responseArr);
         return $response;
@@ -442,9 +478,6 @@ $app->group('/events', function () {
           $responseArr['data'] = $event->event_rooms()->with('users')->get();
           $responseArr['status'] = true;
           $responseArr['msg'] = 'New room added';
-        } else {
-          #insertLogs($level = 'Information', $message = 'Event Room added');
-          #$responseArr = array('status'=>false, 'msg'=>'Event Room added', 'data' => null);
         }
         $response = $response->withJson($responseArr);
         return $response;
@@ -501,9 +534,7 @@ $app->group('/events', function () {
         if($event->event_rooms()->find($room_id)->delete()) {
       		$rooms = $event->getEventRoomList();
           $responseArr = array('status'=>true, 'msg'=>'Room Deleted', 'data' => $rooms);
-      	} else {
-          //throw new Exception('Something went wrong', 500);
-        }
+      	}
         $response = $response->withJson($responseArr);
       })->setName('Delete Event Room');
     });

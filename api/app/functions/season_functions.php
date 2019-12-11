@@ -3,6 +3,9 @@ function getSeasonMembershipForm($year) {
 	$result = false;
 	try {
 		$creds = getServiceAccountData();
+		if($creds == false) {
+			return $result;
+		}
 	} catch (Exception $e) {
 		$error = handleExceptionMessage($e);
 		insertLogs('Warning', $error);
@@ -65,6 +68,7 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 				insertLogs('Warning', $error);
 				$result['msg'] = 'Something went wrong searching Google Drive';
 				$result['error'] = $error;
+				$creds = null;
 		}
 		try {
 			$client = new Google_Client();

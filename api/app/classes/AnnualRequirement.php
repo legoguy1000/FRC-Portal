@@ -10,8 +10,13 @@ class AnnualRequirement extends Eloquent {
   protected $table = 'annual_requirements';
   //Use Custom Primary Key
   protected $primaryKey = 'req_id'; // or null
-  public $incrementing = false;
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
   protected $keyType = 'string';
+  public $incrementing = false;
   /**
   * The attributes that are mass assignable.
   *
@@ -22,7 +27,7 @@ class AnnualRequirement extends Eloquent {
   ];
 
 
-  protected $appends = ['off_season_hours','build_season_hours','weekly_build_season_hours','competition_season_hours','event_hours','total_hours','min_hours','reqs_complete'];
+  protected $appends = ['off_season_hours','build_season_hours','competition_season_hours','event_hours','total_hours','min_hours','reqs_complete'];
 
   protected $attributes = [
     'join_team' => false,
@@ -84,6 +89,28 @@ class AnnualRequirement extends Eloquent {
    */
   public function users() {
       return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
+  }
+
+  public function build_season_hours1() {
+      return $this->hasOneThrough('FrcPortal\MeetingHour','FrcPortal\Season', 'season_id', DB::raw('YEAR(meeting_hours.time_in) and meeting_hours.time_in >= seasons.start_date and meeting_hours.time_in <= IF(seasons.year>2019, seasons.end_date, seasons.bag_day)'), 'season_id', 'year')
+                  ->select(DB::raw('meeting_hours.user_id, SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as value'))->groupBy('seasons.season_id','meeting_hours.user_id');
+  }
+  public function competition_season_hours1() {
+      return $this->hasOneThrough('FrcPortal\MeetingHour','FrcPortal\Season', 'season_id', DB::raw('YEAR(meeting_hours.time_in) and meeting_hours.time_in >= IF(seasons.year>2019, seasons.start_date, seasons.bag_day) and meeting_hours.time_in <= seasons.end_date'), 'season_id', 'year')
+                  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as value'))->groupBy('seasons.season_id','meeting_hours.user_id');
+  }
+  public function off_season_hours1() {
+      return $this->hasOneThrough('FrcPortal\MeetingHour','FrcPortal\Season', 'season_id', DB::raw('YEAR(meeting_hours.time_in) and meeting_hours.time_in >= seasons.end_date'), 'season_id', 'year')
+                  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as value'))->groupBy('seasons.season_id','meeting_hours.user_id');
+  }
+  public function total_hours1() {
+      /* return $this->hasOneThrough('FrcPortal\MeetingHour','FrcPortal\Season', 'season_id', DB::raw('YEAR(meeting_hours.time_in)'), 'season_id', 'year')
+                  ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) as value'))->groupBy('seasons.season_id','meeting_hours.user_id'); */
+        return MeetingHour::leftJoin('seasons', function ($join) {
+            $join->on('seasons.year', '=', DB::raw('YEAR(time_in)'));
+        })->where('seasons.season_id', $this->season_id)
+          ->where('meeting_hours.user_id', $this->user_id)
+          ->select(DB::raw('SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS total_hours'))->groupBy('meeting_hours.user_id')->first();
   }
 
   public function getBuildSeasonHoursAttribute() {
@@ -174,6 +201,7 @@ class AnnualRequirement extends Eloquent {
     }
     return $data;
   }
+
   public function getCompetitionSeasonHoursAttribute() {
     //SELECT meeting_hours.user_id, year(meeting_hours.time_in), SUM(time_to_sec(IFNULL(timediff(meeting_hours.time_out, meeting_hours.time_in),0)) / 3600) AS competition_season_hours, seasons.*
     //FROM meeting_hours

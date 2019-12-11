@@ -12,6 +12,12 @@ class User extends Eloquent {
   protected $table = 'users';
   //Use Custom Primary Key
   protected $primaryKey = 'user_id'; // or null
+  /**
+ * The "type" of the primary key ID.
+ *
+ * @var string
+ */
+  protected $keyType = 'string';
   public $incrementing = false;
   /**
   * The attributes that are mass assignable.
@@ -71,6 +77,59 @@ class User extends Eloquent {
       $instance->user_id = (string) uniqid();
     });
   } */
+
+  public function getFullNameAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return $this->attributes['fname'];
+    }
+  }
+
+
+  public function getLnameAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  }
+  public function getGradYearAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  }
+  public function getEmailAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  }
+  public function getTeamEmailAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  }
+  public function getStudentGradeAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  }
+  public function getPhoneAttribute($value) {
+    if(Auth::isAuthenticated()) {
+      return $value;
+    } else {
+      return null;
+    }
+  }
+
 
   public function getSlackEnabledAttribute() {
     return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
@@ -295,7 +354,6 @@ class User extends Eloquent {
         if(isset($data->ok) && $data->ok == true) {
           $this->slack_id = $data->user->id;
           return true;
-          break;
         }
       }
     }

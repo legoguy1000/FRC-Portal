@@ -1,0 +1,391 @@
+<div flex layout-gt-sm="row" layout-gt-md="row" layout="column">
+	<md-content flex flex-gt-sm="30" flex-gt-md="20" layout="column" class="md-margin">
+		<md-toolbar class="md-default md-table-toolbar">
+			<div class="md-toolbar-tools">
+				<span>Settings</span>
+				<div flex></div>
+			</div>
+		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loadingUser"></md-progress-linear>
+		<md-list>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('team')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'team'}">
+		    <p>Team Settings</p>
+		  </md-list-item>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('login')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'login'}">
+		    <p>Login Settings</p>
+		  </md-list-item>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('notification')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'notification'}">
+		    <p>Notification Settings</p>
+		  </md-list-item>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('cronjob')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'cronjob'}">
+		    <p>Scheduled Tasks Settings</p>
+		  </md-list-item>
+			<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('other')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'other'}">
+		    <p>Other Settings</p>
+		  </md-list-item>
+			<!--<md-list-item class="md-1-line" ng-click="vm.selectSettingMenu('update')" ng-class="{'backgroundPrimary colorAccent': vm.currentMenu == 'update'}">
+		    <p>Update</p>
+		  </md-list-item>-->
+		</md-list>
+	</md-content>
+	<md-content flex="grow" class="md-margin" layout="column">
+		<md-toolbar class="md-default md-table-toolbar">
+			<div class="md-toolbar-tools">
+				<span>{{vm.currentMenu | capitalizeWordsFirst}} Settings</span>
+				<div flex></div>
+				<md-button class="md-icon-button" ng-click="vm.getSettingBySection(vm.currentMenu)">
+					<md-icon>refresh</md-icon>
+				</md-button>
+			</div>
+		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
+		<div layout="column" ng-show="vm.currentMenu == 'team';" class="layout-padding">
+			<div layout="column" layout-gt-xs="row">
+				<md-input-container flex required>
+					<label>Team Number</label>
+					<input ng-model="vm.settings.team.team_number">
+				</md-input-container>
+				<md-input-container flex required>
+					<label>Team Name</label>
+					<input ng-model="vm.settings.team.team_name">
+				</md-input-container>
+			</div>
+			<md-input-container flex required>
+				<label>Team Location</label>
+				<input ng-model="vm.settings.team.location">
+			</md-input-container>
+			<md-input-container flex required>
+				<label>Team Domain</label>
+				<input ng-model="vm.settings.team.team_domain">
+			</md-input-container>
+			<div layout="row">
+				<md-switch aria-label="Team email accounts" ng-model="vm.settings.team.enable_team_emails" class="md-warn">
+					Personal team email accounts?
+				</md-switch>
+			</div>
+			<div layout="column" layout-gt-xs="row">
+				<md-input-container flex required>
+					<label>Site URL</label>
+					<input ng-model="vm.settings.team.env_url">
+				</md-input-container>
+				<md-input-container flex required>
+					<label>Team Logo URL</label>
+					<input ng-model="vm.settings.team.team_logo_url">
+				</md-input-container>
+			</div>
+			<md-input-container flex required>
+				<label>Google Form URL</label>
+				<input ng-model="vm.settings.team.google_form_url">
+			</md-input-container>
+		<!--	<div flex label="Text Background" md-color-picker has-backdrop="true" click-outside-to-close="true" random="true" ng-model="textBackground" open-on-input="true"></div>-->
+			<div layout="column" layout-gt-xs="row">
+				<div
+					flex
+			    md-color-picker
+			    ng-model="vm.settings.team.team_color_primary"
+			    label="Team Primary Color"
+			    icon="brush"
+					has-backdrop="true"
+					click-outside-to-close="true"
+					open-on-input="true"
+					clear-button="false"
+				></div>
+				<!-- <div flex-gt-xs="5"></div> -->
+				<div
+					flex
+			    md-color-picker
+			    ng-model="vm.settings.team.team_color_secondary"
+			    label="Team Secondary Color"
+			    icon="brush"
+					has-backdrop="true"
+					click-outside-to-close="true"
+					open-on-input="true"
+					clear-button="false"
+				></div>
+			</div>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">
+			<div layout="row">
+				<!--<md-switch aria-label="Enable Local Login" ng-model="vm.settings.login.local_login_enable" class="md-warn">
+					Enable Local Login
+				</md-switch>-->
+				<md-switch aria-label="Require Team Email For Login" ng-model="vm.settings.login.require_team_email" class="md-warn">
+					Require Team Email For Login
+				</md-switch>
+			</div>
+			<div layout="column" layout-gt-sm="row" layout-align-gt-sm="space-between center">
+				<div layout="column" flex flex-gt-sm="45">
+					<div layout="row" layout-align="space-between center">
+						<div>
+							<md-switch aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn">
+								Enable Google Login
+							</md-switch>
+						</div>
+						<div ng-show="vm.settings.login.google_login_enable">
+							<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'google')">
+								<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+								<md-icon>vpn_key</md-icon>
+							</md-button>
+						</div>
+					</div>
+					<div layout="row" layout-align="space-between center">
+						<div>
+							<md-switch aria-label="Enable Facebook Login" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
+								Enable Facebook Login
+							</md-switch>
+						</div>
+						<div ng-show="vm.settings.login.facebook_login_enable">
+							<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'facebook')">
+								<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+								<md-icon>vpn_key</md-icon>
+							</md-button>
+						</div>
+					</div>
+					<div layout="row" layout-align="space-between center">
+						<div>
+							<md-switch aria-label="Enable Microsoft Login" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn">
+								Enable Microsoft Login
+							</md-switch>
+						</div>
+						<div ng-show="vm.settings.login.microsoft_login_enable">
+							<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'microsoft')">
+								<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+								<md-icon>vpn_key</md-icon>
+							</md-button>
+						</div>
+					</div>
+				</div>
+				<div layout="column" flex flex-gt-sm="45">
+					<div layout="row" layout-align="space-between center">
+						<div>
+							<md-switch aria-label="Enable Github Login" ng-model="vm.settings.login.github_login_enable" class="md-warn">
+								Enable Github Login
+							</md-switch>
+						</div>
+						<div ng-show="vm.settings.login.github_login_enable">
+							<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'github')">
+								<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+								<md-icon>vpn_key</md-icon>
+							</md-button>
+						</div>
+					</div>
+					<div layout="row" layout-align="space-between center">
+						<div>
+							<md-switch aria-label="Enable Amazon Login" ng-model="vm.settings.login.amazon_login_enable" class="md-warn">
+								Enable Amazon Login
+							</md-switch>
+						</div>
+						<div ng-show="vm.settings.login.amazon_login_enable">
+							<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'amazon')">
+								<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+								<md-icon>vpn_key</md-icon>
+							</md-button>
+						</div>
+					</div>
+					<div layout="row" layout-align="space-between center">
+						<div>
+							<md-switch aria-label="Enable Discord Login" ng-model="vm.settings.login.discord_login_enable" class="md-warn">
+								Enable Discord Login
+							</md-switch>
+						</div>
+						<div ng-show="vm.settings.login.discord_login_enable">
+							<md-button class="md-icon-button"  ng-click="vm.showOAuthCredentialsModal($event,'discord')">
+								<md-tooltip md-direction="bottom">Add/Edit OAuth Credentials</md-tooltip>
+								<md-icon>vpn_key</md-icon>
+							</md-button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'notification'" class="layout-padding">
+			<md-switch aria-label="Enable Slack Notifications" ng-model="vm.settings.notification.slack_enable" class="md-warn">
+				Enable Slack Notifications
+			</md-switch>
+			<div layout="column" layout-gt-sm="row">
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Slack Team URL</label>
+						<input ng-model="vm.settings.notification.slack_url" ng-disabled="!vm.settings.notification.slack_enable">
+					</md-input-container>
+				</div>
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Slack Team ID</label>
+						<input ng-model="vm.settings.notification.slack_team_id" ng-disabled="!vm.settings.notification.slack_enable">
+					</md-input-container>
+				</div>
+			</div>
+			<!--
+			<md-input-container flex>
+				<label>Slack Team URL</label>
+				<input ng-model="vm.settings.notification.slack_url" ng-disabled="!vm.settings.notification.slack_enable">
+			</md-input-container>
+			<md-input-container flex>
+				<label>Slack Team ID</label>
+				<input ng-model="vm.settings.notification.slack_team_id" ng-disabled="!vm.settings.notification.slack_enable">
+			</md-input-container>
+			-->
+			<div layout="column" layout-gt-sm="row">
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Slack API Token</label>
+						<input ng-model="vm.settings.notification.slack_api_token" ng-disabled="!vm.settings.notification.slack_enable">
+					</md-input-container>
+				</div>
+				<div class="layout-align-center-center layout-row">
+					<md-button type="button" class="md-raised md-primary"  ng-click="vm.testSlack()" ng-disabled="!vm.settings.notification.slack_enable">
+						Test Slack Notification
+					</md-button>
+				</div>
+			</div>
+			<md-switch aria-label="Enable Email Notifications" ng-model="vm.settings.notification.email_enable" class="md-warn">
+				Enable Email Notifications
+			</md-switch>
+			<md-input-container flex>
+				<label>Site Email</label>
+				<input ng-model="vm.settings.notification.notification_email" ng-disabled="!vm.settings.notification.email_enable">
+			</md-input-container>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'other'" class="layout-padding">
+			<div layout="column" layout-gt-sm="row">
+				<div flex>
+					<md-autocomplete flex style="width: 100%;"
+						md-no-cache="false"
+						md-selected-item="vm.settings.other.timezone"
+						md-search-text="vm.searchText"
+						md-items="item in vm.TzSearch(vm.searchText)"
+						md-item-text="item"
+						md-floating-label="Timezone">
+						<md-item-template>
+							<span md-highlight-text="vm.searchText" md-highlight-flags="i">{{item}}</span>
+						</md-item-template>
+					</md-autocomplete>
+				</div>
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>School Year Month End</label>
+						<input moment-picker="vm.settings.other.school_month_end" required
+					     format="MMMM"
+					     min-view="year"
+					     max-view="year"
+							 ng-model="vm.school_month_end_full">
+						</input>
+					</md-input-container>
+				</div>
+				<div flex>
+					<md-input-container flex>
+						<label>Google Analytics ID</label>
+						<input ng-model="vm.settings.other.google_analytics_id">
+						<span class="hint">Optional if you want to use Google Analytics</span>
+					</md-input-container>
+				</div>
+			</div>
+			<div layout="column" layout-gt-sm="row">
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Google API Key</label>
+						<input ng-model="vm.settings.other.google_api_key">
+					</md-input-container>
+				</div>
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Google Calendar ID</label>
+						<input ng-model="vm.settings.other.google_calendar_id">
+					</md-input-container>
+				</div>
+			</div>
+			<div layout="column" layout-gt-sm="row">
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Membership Form Name</label>
+						<input ng-model="vm.settings.other.membership_form_name">
+						<span class="hint">###YEAR### & ###YEAR-1### can be used as variables.  Default is "###YEAR### Membership (Responses)"</span>
+					</md-input-container>
+				</div>
+				<div flex>
+					<md-input-container flex style="width: 100%;">
+						<label>Google Team Drive ID</label>
+						<input ng-model="vm.settings.other.google_drive_id">
+						<span class="hint">Optional if Google Form responses are stored within a Google Team Drive</span>
+					</md-input-container>
+				</div>
+			</div>
+			<div layout="column" layout-gt-sm="row">
+				<div flex layout="row" layout-align="start center">
+					<md-input-container flex>
+						<label><md-icon md-font-library="material-icons">lock</md-icon><span>FIRST Portal Account</span></label>
+						<input ng-model="vm.firstcredentials.email" readonly disabled>
+						<span class="hint">This is the account used. This requires the coach role for full capability.</span>
+					</md-input-container>
+					<md-button class="md-icon-button" ng-click="vm.showFirstPortalCredentialsModal()">
+						<md-tooltip md-direction="top">Enter credentials for the FIRST Portal.</md-tooltip>
+						<md-icon md-font-library="material-icons">vpn_key</md-icon>
+					</md-button>
+					<md-button class="md-icon-button" ng-click="vm.removeFirstCredentials()" ng-disabled="vm.firstcredentials.email == ''">
+						<md-tooltip md-direction="top">Clear credentials for the FIRST Portal.</md-tooltip>
+						<md-icon md-font-library="material-icons">delete</md-icon>
+					</md-button>
+				</div>
+				<div flex layout="row" layout-align="start center">
+					<md-input-container flex>
+						<label><md-icon md-font-library="material-icons">lock</md-icon><span>Google Service Account</span></label>
+						<input ng-model="vm.serviceAccountCredentials.client_email" readonly disabled>
+						<span class="hint">Files must be shared with service account either directly of via folder AND/OR be a member of the Google Team Drive (if applicable)</span>
+					</md-input-container>
+					<md-button class="md-icon-button" ngf-select="vm.uploadSAFile($file)" ngf-accept="'.json'" ngf-max-size="2MB" ngf-model-invalid="errorFile">
+						<md-tooltip md-direction="top">Upload New Service Account File</md-tooltip>
+						<md-icon md-font-library="material-icons">cloud_upload </md-icon>
+					</md-button>
+					<md-button class="md-icon-button" ng-click="vm.removeServiceAccountCredentials()" ng-disabled="vm.serviceAccountCredentials.client_email == ''">
+						<md-tooltip md-direction="top">Clear Google Service Account File.</md-tooltip>
+						<md-icon md-font-library="material-icons">delete</md-icon>
+					</md-button>
+				</div>
+			</div>
+		</div>
+		<div layout="column" ng-show="vm.currentMenu == 'cronjob'" class="layout-padding">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-changeUserStatus']" class="md-warn">
+				Automatically change user status after graduation
+			</md-switch>
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-importSlackProfiles']" class="md-warn">
+				Automatically import and link Slack information with user data
+			</md-switch>
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-pollMembershipFormResponses']" class="md-warn">
+				Automatically pull reponses from membership form
+			</md-switch>
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-updateEventsFromGoogle']" class="md-warn">
+				Automatically update events from Google Calendar
+			</md-switch>
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-tooLong']" class="md-warn">
+				Automatically remove sign-ins that haven't signed out after 12 hours
+			</md-switch>
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-endOfDayHoursToSlack']" class="md-warn">
+				Automatically send Slack notification at 9pm local with the numberof hours completed that day
+			</md-switch>
+		</div>
+		<!--
+		<div layout="column" ng-show="vm.currentMenu == 'update'" class="layout-padding">
+			<md-input-container flex>
+				<label>Git Branch</label>
+				<md-select ng-model="vm.update.branch_name" required>
+					<md-option ng-repeat="opt in vm.branchOptions" value="{{opt}}">{{opt}}</md-option>
+				</md-select>
+			</md-input-container>
+			<div>
+				<div>Current version: v{{vm.update.current_version}}-{{ vm.update.current_tag | limitTo: 7 }}</div>
+				<div>Latest version: {{vm.update.latest_version}}</div>
+			</div>
+			<md-button type="button" class="md-raised md-primary"  ng-click="vm.checkUpdates(true)">
+				Check for updates
+			</md-button>
+		</div>
+		-->
+		<div flex layout="row">
+			<span flex></span>
+			<md-button type="button" class="md-raised md-primary"  ng-click="vm.updateSettingBySection(vm.currentMenu)">
+				Save
+			</md-button>
+		</div>
+	</md-content>
+</div>

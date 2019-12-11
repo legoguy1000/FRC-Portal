@@ -62,7 +62,7 @@ function mainAdminExemptHoursController($log,$timeout, $q, $scope, $state, timeS
 		$mdDialog.show({
 			controller: newEventModalController,
 			controllerAs: 'vm',
-			templateUrl: 'views/partials/newEventModal.tmpl.html',
+			templateUrl: 'components/newEventModal/newEventModal.html',
 			parent: angular.element(document.body),
 			targetEvent: ev,
 			clickOutsideToClose:true,

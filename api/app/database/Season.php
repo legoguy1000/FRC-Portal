@@ -11,10 +11,10 @@ Capsule::schema()->create('seasons', function ($table) {
        $table->dateTime('start_date');
        $table->dateTime('bag_day')->nullable()->default(null);
        $table->dateTime('end_date');
-       $table->integer('hour_requirement');
-       $table->integer('hour_requirement_week');
+       $table->integer('hour_requirement')->default(0);
+       $table->integer('hour_requirement_week')->default(0);
        $table->string('join_spreadsheet',500);
-       $table->text('membership_form_map');
+       $table->text('membership_form_map')->default('');
        $table->string('membership_form_sheet')->nullable()->default('Form Responses 1');
        $table->timestamps();
 });
