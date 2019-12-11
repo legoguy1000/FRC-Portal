@@ -9,7 +9,7 @@
 
 This project was developed for my FIRST Robotics Team 2363, Triple Helix.  We needed a way to handle team and event registration as well as hours and metrics tracking.
 
-Version 2.15.0
+Version 2.15.1
 * Composer dependency updates
 * Add Discord Login
 * Removed local login (create local admin)
