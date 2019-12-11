@@ -3,7 +3,7 @@
 ![PHP from Travis config](https://img.shields.io/travis/php-v/legoguy1000/frc-portal/dev)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/legoguy1000/FRC-Portal)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/legoguy1000/Frc-Portal)
-![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/legoguy1000/frc-portal)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/legoguy1000/frc-portal)](https://hub.docker.com/r/legoguy1000/frc-portal)
 [![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/legoguy1000/Frc-Portal)](https://libraries.io/github/legoguy1000/FRC-Portal)
 ![GitHub contributors](https://img.shields.io/github/contributors/legoguy1000/Frc-Portal)
 

@@ -167,7 +167,7 @@ $app->get('/config', function ($request, $response, $args) {
     'require_team_email',
     'google_form_url',
     'google_analytics_id',
-    'team_emails',
+    'enable_team_emails',
   );
 //  $settings = FrcPortal\Setting::where('public',true)->get();
   $settings = FrcPortal\Setting::whereIn('setting', $configArr)->get();
