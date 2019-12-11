@@ -555,15 +555,24 @@ angular.module('FrcPortal', [
 		$mdThemingProvider.definePalette('primary', accentPalette);
 	}
 	//CSS
-	var style = document.createElement('style');
+	var tag = document.getElementById('variableCSS');
+	if(!tag) {
+		style = document.createElement('style');
+	} else {
+		style = tag;
+	}
 	style.type = 'text/css';
+	style.id = 'variableCSS';
 	style.innerHTML = ':root { --primary-color: #'+primaryPalette['500']+'; }';
 	style.innerHTML += ':root { --accent-color: #'+accentPalette['500']+'; }';
 	style.innerHTML += '.backgroundPrimary { background-color: #'+primaryPalette['500']+'; }';
 	style.innerHTML += '.colorPrimary { color: #'+primaryPalette['500']+'; }';
 	style.innerHTML += '.backgroundAccent { color: #'+accentPalette['500']+'; }';
 	style.innerHTML += '.colorAccent { color: #'+accentPalette['500']+'; }';
-	document.getElementsByTagName('head')[0].appendChild(style);
+	if(!tag) {
+		document.getElementsByTagName('head')[0].appendChild(style);
+	}
+
 
 	$mdThemingProvider.theme('default')
 		.primaryPalette('primary', {
