@@ -293,7 +293,7 @@ if($version >= '2.16.0') {
 
   }
   if(Capsule::schema()->hasTable('events')) {
-    if(!Capsule::schema()->hasColumn('events','hotel_info')) {
+    if(Capsule::schema()->hasColumn('events','hotel_info')) {
       try {
         Capsule::schema()->table('events', function ($table) {
           $table->string('hotel_info')->default('')->change();
@@ -316,7 +316,7 @@ if($version >= '2.16.0') {
   }
   if(Capsule::schema()->hasTable('users')) {
     try {
-      Capsule::schema()->table('seasons', function ($table) {
+      Capsule::schema()->table('users', function ($table) {
         $table->string('fname')->default('')->change();
         $table->string('lname')->default('')->change();
         $table->string('user_type')->default('')->change();
@@ -325,10 +325,10 @@ if($version >= '2.16.0') {
         $table->string('gender')->default('')->change();
         $table->string('profile_image',500)->default('')->change();
         $table->string('slack_id')->default('')->change();
-        $table->char('signin_pin',64)->default('')->change();
+        //$table->char('signin_pin',64)->default('')->change();
       });
     } catch (Exception $e) {
-      //Exception will be logged in Monolog
+      echo $e->getMessage() . PHP_EOL;
     }
   }
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
