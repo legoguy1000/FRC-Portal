@@ -39,6 +39,7 @@ function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,
 			}
 		});
 	}
+	vm.searchGoogleFunc();
 
 	vm.selectGoogleEvent = function(data) {
 		vm.data = data;

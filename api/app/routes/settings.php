@@ -250,14 +250,17 @@ $app->group('/settings', function () {
       $email = $formData['email'];
       $password = $formData['password'];
       $cookie = loginToFirst($email, $password);
-      if($cookie != '') {
+      if($cookie == false) {
+        $responseArr['data'] = array('email'=>$email);
+        $responseArr['msg'] = 'Invalid Credentials';
+      } else if($cookie != '') {
         $cookie_encypt = encryptItems($cookie);
         $data = $email.','.$cookie_encypt;
         $setting = FrcPortal\Setting::updateOrCreate(['section' => 'service_account', 'setting' => 'firstportal_credential_data'], ['value' => $data]);
+        $responseArr['data'] = array('email'=>$email);
+        $responseArr['status'] = true;
+        $responseArr['msg'] = 'FIRST Portal credentials updated';
       }
-      $responseArr['data'] = array('email'=>$email);
-      $responseArr['status'] = true;
-      $responseArr['msg'] = 'FIRST Portal credentials updated';
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update FIRST Portal Credentials');

@@ -39,19 +39,4 @@ function firstPortalCredentialModalController($log,$mdDialog,$scope,settingsServ
 	}
 	vm.getFirstPortalCredentials();
 
-	vm.removeCredentials = function() {
-		vm.loading = true;
-		settingsService.removeFirstPortalCredentials().then(function(response) {
-			if(response.status) {
-				$mdDialog.hide(response);
-			}
-			$mdToast.show(
-				$mdToast.simple()
-					.textContent(response.msg)
-					.position('top right')
-					.hideDelay(3000)
-			);
-			vm.loading = false;
-		});
-	}
 }
