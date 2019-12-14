@@ -22,6 +22,7 @@ RUN docker-php-ext-install pdo
 #RUN docker-php-ext-install pdo_dblib
 RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-install gmp
+RUN docker-php-ext-install intl
 
 # Copy source over
 COPY . /var/www/html/
