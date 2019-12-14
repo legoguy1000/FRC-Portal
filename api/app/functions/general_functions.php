@@ -798,11 +798,20 @@ function loginToFirst($email, $password) {
 	$form = $crawler->filter('form')->form();
 	$crawler = $client->submit($form);
 	$cookieJar = $client->getCookieJar();
+	$cookies = array();
 	$cookie = $cookieJar->get('DashboardTokenV0002', '/Dashboard', 'my.firstinspires.org');
 	if(is_null($cookie)) {
 		return false;
 	}
-	$cookieVal = $cookie->getValue();
-	return 'DashboardTokenV0002='.$cookieVal;
+	$cookies[] = 'DashboardTokenV0002='.$cookie->getValue();
+	$cookie = $cookieJar->get('LBr', '/', 'my.firstinspires.org');
+	if(!is_null($cookie)) {
+		$cookies[] = 'LBr='.$cookie->getValue();
+	}
+	$cookie = $cookieJar->get('ASP.NET_SessionId', '/', 'my.firstinspires.org');
+	if(!is_null($cookie)) {
+		$cookies[] = 'ASP.NET_SessionId='.$cookie->getValue();
+	}
+	return implode('; ',$cookies);
 }
 ?>
