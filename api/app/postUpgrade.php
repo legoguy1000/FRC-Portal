@@ -200,7 +200,7 @@ if($version >= '2.15.0') {
       echo 'New Admin User: admin' . PHP_EOL;
       echo 'New Admin Password: '.$password . PHP_EOL . PHP_EOL;
     }
-    if(is_null($iniData['encryption']) || is_null($iniData['encryption']['encryption_key'])) {
+    if(!array_key_exists('encryption', $iniData) || is_null($iniData['encryption']) || is_null($iniData['encryption']['encryption_key'])) {
       $enc_data = array();
       $enc_data['encryption_key'] = bin2hex(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES));
       $iniData['encryption'] = $enc_data;
@@ -325,6 +325,17 @@ if($version >= '2.16.0') {
         $table->string('gender')->default('')->change();
         $table->string('profile_image',500)->default('')->change();
         $table->string('slack_id')->default('')->change();
+        //$table->char('signin_pin',64)->default('')->change();
+      });
+    } catch (Exception $e) {
+      echo $e->getMessage() . PHP_EOL;
+    }
+  }
+  if(Capsule::schema()->hasTable('annual_requirements')) {
+    try {
+      Capsule::schema()->table('annual_requirements', function ($table, $as = null, $connection = null) {
+        $table->string('stims_date')->nullable()->default(null)->change();
+        $table->string('dues_date')->nullable()->default(null)->change();
         //$table->char('signin_pin',64)->default('')->change();
       });
     } catch (Exception $e) {
