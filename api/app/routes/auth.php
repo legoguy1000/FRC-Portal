@@ -552,7 +552,48 @@ $app->group('/auth', function () {
     return $response;
   })->setName('Local Login');
 });
+$app->group('/webauthn', function () {
+  $this->post('/register', function ($request, $response) {
+    $responseData = false;
+    $formData = $request->getParsedBody();
+    $provider = 'webauthn';
+    // Get user identity. Note that the userHandle should be a unique identifier for each user
+    // (max 64 bytes). The WebAuthn specs recommend generating a random byte sequence for each
+    // user. The code below is just for testing purposes!
+    // $user = new UserIdentity(ByteBuffer::fromHex('aabbccdd'), 'dummy', 'Dummy user');
+    //
+    // // Setup options
+    // $options = new RegistrationOptions($user);
+    //
+    // // Get array with configuration for webauthn client
+    // $clientOptions = $manager->startRegistration($options);
+    //
+    // $vars['clientOptions'] = $clientOptions;
 
+    $response = $response->withJson($provider);
+    return $response;
+  })->setName('Webauthn Register');
+  $this->post('/login', function ($request, $response) {
+    $responseData = false;
+    $formData = $request->getParsedBody();
+    $provider = 'webauthn';
+    // Get user identity. Note that the userHandle should be a unique identifier for each user
+    // (max 64 bytes). The WebAuthn specs recommend generating a random byte sequence for each
+    // user. The code below is just for testing purposes!
+    // $user = new UserIdentity(ByteBuffer::fromHex('aabbccdd'), 'dummy', 'Dummy user');
+    //
+    // // Setup options
+    // $options = new RegistrationOptions($user);
+    //
+    // // Get array with configuration for webauthn client
+    // $clientOptions = $manager->startRegistration($options);
+    //
+    // $vars['clientOptions'] = $clientOptions;
+
+    $response = $response->withJson($provider);
+    return $response;
+  })->setName('Webauthn Register');
+});
 
 
 
