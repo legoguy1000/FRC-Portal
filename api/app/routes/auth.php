@@ -544,8 +544,8 @@ $app->group('/auth', function () {
       FrcPortal\Auth::setCurrentUser($user->user_id);
       insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using local credentials.');
     } else {
-      $responseData = $formData;
-      //$responseData = array('status'=>false, 'msg'=>'Username or Password not correct. Please try again.', );
+      //$responseData = $formData;
+      $responseData = array('status'=>false, 'msg'=>'Username or Password not correct. Please try again.', );
       insertLogs($level = 'Information', $message = $username.' attempted to login using local credentials. Username or Password not correct.');
     }
     $response = $response->withJson($responseData);
