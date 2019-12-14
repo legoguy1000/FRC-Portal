@@ -34,7 +34,7 @@ class User extends Eloquent {
   *
   * @var array
   */
-  protected $hidden = ['signin_pin'];
+  protected $hidden = ['signin_pin','lname','grad_year','email','team_email','student_grade','phone','admin','adult','first_login','gender','user_type','mentor','student','slack_id','room_type','former_student','school','school_id','slack_enabled'];
 
   /**
    * The attributes that should be cast to native types.
@@ -50,6 +50,7 @@ class User extends Eloquent {
     'other_adult' => 'boolean',
     'student' => 'boolean',
     'mentor' => 'boolean',
+    'former_student' => 'boolean',
   ];
 
   public function newQuery() {
@@ -78,6 +79,23 @@ class User extends Eloquent {
     });
   } */
 
+
+
+  public function setAttributeVisibility(){
+    if(Auth::isAuthenticated()) {
+      $this->makeVisible(['lname','grad_year','email','team_email','student_grade','phone','admin','adult','first_login','gender','user_type','mentor','student','slack_id','room_type','former_student','school','school_id','slack_enabled']);
+    }
+  }
+
+  public function toJson($options = 0) {
+    $this->setAttributeVisibility();
+    return parent::toJson();
+  }
+  public function toArray() {
+    $this->setAttributeVisibility();
+    return parent::toArray();
+  }
+
   public function getFullNameAttribute($value) {
     if(Auth::isAuthenticated()) {
       return $value;
@@ -86,49 +104,6 @@ class User extends Eloquent {
     }
   }
 
-
-  public function getLnameAttribute($value) {
-    if(Auth::isAuthenticated()) {
-      return $value;
-    } else {
-      return null;
-    }
-  }
-  public function getGradYearAttribute($value) {
-    if(Auth::isAuthenticated()) {
-      return $value;
-    } else {
-      return null;
-    }
-  }
-  public function getEmailAttribute($value) {
-    if(Auth::isAuthenticated()) {
-      return $value;
-    } else {
-      return null;
-    }
-  }
-  public function getTeamEmailAttribute($value) {
-    if(Auth::isAuthenticated()) {
-      return $value;
-    } else {
-      return null;
-    }
-  }
-  public function getStudentGradeAttribute($value) {
-    if(Auth::isAuthenticated()) {
-      return $value;
-    } else {
-      return null;
-    }
-  }
-  public function getPhoneAttribute($value) {
-    if(Auth::isAuthenticated()) {
-      return $value;
-    } else {
-      return null;
-    }
-  }
 
 
   public function getSlackEnabledAttribute() {
