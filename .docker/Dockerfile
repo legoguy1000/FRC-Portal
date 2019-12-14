@@ -4,7 +4,7 @@ WORKDIR /var/www/html/
 
 # Update and install packages
 RUN apt-get update  && apt-get upgrade -y && \
-	apt-get install -y git libxml2-dev libzip-dev libcurl4-gnutls-dev unzip
+	apt-get install -y git libxml2-dev libzip-dev libcurl4-gnutls-dev unzip libgmp-dev
 
 #cron
 
@@ -21,6 +21,7 @@ RUN docker-php-ext-install json
 RUN docker-php-ext-install pdo
 #RUN docker-php-ext-install pdo_dblib
 RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install gmp
 
 # Copy source over
 COPY . /var/www/html/
