@@ -48,6 +48,8 @@ class CredentialStore implements CredentialStoreInterface {
 
   public function getUserCredentialIds(UserHandle $userHandle) : array {
     $data = UserCredential::where('user_handle', $userHandle->toString())->get()->pluck('credential_id');
-    return $data->all();
+    return $data->map(function ($cred) {
+        return CredentialId::fromString($cred);
+    })->all();
   }
 }

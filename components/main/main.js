@@ -192,18 +192,25 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 				return webauthnService.getRegisterOptions();
 			}).then(response => {
 				console.log('creating creds');
+				var excludeCredentials = response.excludeCredentials == undefined ? [] : response.excludeCredentials.map(function(val){
+					var temp = val;
+					var unsafeBase64 = atob(val.id.replace(/_/g, '/').replace(/-/g, '+'));
+					temp.id = Uint8Array.from(unsafeBase64, c=>c.charCodeAt(0));
+					return temp;
+				})
 				var publicKey = {
-						'challenge': Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
-						'rp': {
+						challenge: Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
+						rp: {
 							'name': response.rp.name,
 							'id': response.rp.id,
 						},
-						'user': {
+						user: {
 								'id': Uint8Array.from(response.user.id, c=>c.charCodeAt(0)),
 								'name': response.user.name,
 								'displayName': response.user.displayName
 						},
-						'pubKeyCredParams': response.pubKeyCredParams
+						excludeCredentials: excludeCredentials,
+						pubKeyCredParams: response.pubKeyCredParams
 				}
 				console.log(publicKey);
 				return navigator.credentials.create({ 'publicKey': publicKey })

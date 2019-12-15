@@ -577,6 +577,7 @@ $app->group('/webauthn', function () {
     // Setup options
     $options = new RegistrationOptions($userId);
     $options->setAttestation('none');
+    $options->setExcludeExistingCredentials(true);
     $criteria = new AuthenticatorSelectionCriteria();
     $criteria->setAuthenticatorAttachment('platform');
     $criteria->setUserVerification('preferred');
@@ -610,6 +611,7 @@ $app->group('/webauthn', function () {
     // Setup options
     $options = new RegistrationOptions($userId);
     $options->setAttestation('none');
+    $options->setExcludeExistingCredentials(true);
     $criteria = new AuthenticatorSelectionCriteria();
     $criteria->setAuthenticatorAttachment('platform');
     $criteria->setUserVerification('preferred');
@@ -653,8 +655,7 @@ $app->group('/webauthn', function () {
     $credentialStore = new FrcPortal\CredentialStore();
     $credentials = $credentialStore->getUserCredentialIds(UserHandle::fromBuffer(new ByteBuffer($user_id)));
     foreach($credentials as $cred) {
-      $credential = CredentialId::fromString($cred);
-      $options->addAllowCredential($credential);
+      $options->addAllowCredential($cred);
     }
     $config = new WebAuthnConfiguration();
     $rpId = getSettingsProp('env_url');

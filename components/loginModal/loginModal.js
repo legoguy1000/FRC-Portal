@@ -30,14 +30,15 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 			if(cred.user != null && cred.user != undefined) {
 				webauthnService.getAuthenticationOptions(cred.user).then(response => {
 					console.log('creating creds');
+					var allowCredentials = response.allowCredentials == undefined ? [] : response.allowCredentials.map(function(val){
+						var temp = val;
+						var unsafeBase64 = atob(val.id.replace(/_/g, '/').replace(/-/g, '+'));
+						temp.id = Uint8Array.from(unsafeBase64, c=>c.charCodeAt(0));
+						return temp;
+					})
 					var publicKey = {
 						challenge: Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
-						allowCredentials: response.allowCredentials.map(function(val){
-							var temp = val;
-							var unsafeBase64 = atob(val.id.replace(/_/g, '/').replace(/-/g, '+'));
-							temp.id = Uint8Array.from(unsafeBase64, c=>c.charCodeAt(0));
-							return temp;
-						}),
+						allowCredentials: allowCredentials,
 						authenticatorSelection: {
 								authenticatorAttachment: "platform",
 								userVerification: "preferred",
