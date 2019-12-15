@@ -26,7 +26,7 @@ function mainTimeinController($rootScope, $timeout, $q, $scope, $state, schoolsS
 				$timeout( function(){
 						$mdDialog.cancel();
 						$state.go('main.home');
-					}, 1000 );
+					}, 2000 );
 			} else {
 				$mdToast.show(
 					$mdToast.simple()

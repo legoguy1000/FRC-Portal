@@ -459,95 +459,91 @@ $app->group('/hours', function () {
         insertLogs($level = 'Information', $message = $user->user_type.' user type is not authorized for sign in.');
         return unauthorizedResponse($response, $msg = $user->user_type.' user type is not authorized for sign in.');
       }
-      if(isset($args['token'])) {
-        if(!checkJwtFormat($args['token'])) {
-          insertLogs($level = 'Information', $message = 'Invalid QR code value. "'.$args['token'].'" is not a valid token.');
-          return badRequestResponse($response, $msg = 'Invalid token. QR code value ('.$args['token'].') is not a valid token.');
-        }
-        $key = getSettingsProp('jwt_signin_key');
-        try{
-          $decoded = JWT::decode($args['token'], $key, array('HS256'));
-          $data = (array) $decoded;
-          if(isset($data['jti']) || $data['jti'] != '') {
-            $jti = $data['jti'];
-            $user_id = $user->user_id;
-            $name = $user->full_name;
-            $date = time();
-            $hours = FrcPortal\MeetingHour::where('user_id',$user_id)->whereNotNull('time_in')->whereNull('time_out')->orderBy('time_in','DESC')->first();
-            if($hours != null) {
-              $hours_id = $hours->hours_id;
-              $hours->time_out = date('Y-m-d H:i:s',$date);
-              if($hours->save()) {
-                $ti = $hours->time_in;
-                $to = $hours->time_out;
-                $hourTotal = round((strtotime($to) - strtotime($ti))/3600, 2);
-                $emailData = array(
-                  'signin_time' => date('M d, Y H:i A', $date),
-                  'signin_out' => 'sign_out'
-                );
-                $emailInfo = emailSignInOut($user_id,$emailData);
-                $msgData = array(
-                  'slack' => array(
-                    'title' => 'Sign out',
-                    'body' => 'You signed out at '.$emailData['signin_time']
-                  ),
-                  'email' => array(
-                    'subject' => $emailInfo['subject'],
-                    'content' =>  $emailInfo['content'],
-                    'userData' => $user
-                  )
-                );
-                $user->sendUserNotification('sign_in_out', $msgData);
-                insertLogs($level = 'Information', $message = 'User signed out using QR');
-                $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date).' for a total of '.$hourTotal.' hours');
-              } else {
-              $responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out');
-              }
+      if(!isset($args['token']) ||!checkJwtFormat($args['token']) ) {
+        insertLogs($level = 'Information', $message = 'Invalid QR code value. "'.$args['token'].'" is not a valid token.');
+        return badRequestResponse($response, $msg = 'Invalid token. QR code value ('.$args['token'].') is not a valid token.');
+      }
+      $key = getSettingsProp('jwt_signin_key');
+      try{
+        $decoded = JWT::decode($args['token'], $key, array('HS256'));
+        $data = (array) $decoded;
+        if(isset($data['jti']) || $data['jti'] != '') {
+          $jti = $data['jti'];
+          $user_id = $user->user_id;
+          $name = $user->full_name;
+          $date = time();
+          $hours = FrcPortal\MeetingHour::where('user_id',$user_id)->whereNotNull('time_in')->whereNull('time_out')->orderBy('time_in','DESC')->first();
+          if($hours != null) {
+            $hours_id = $hours->hours_id;
+            $hours->time_out = date('Y-m-d H:i:s',$date);
+            if($hours->save()) {
+              $ti = $hours->time_in;
+              $to = $hours->time_out;
+              $hourTotal = round((strtotime($to) - strtotime($ti))/3600, 2);
+              $emailData = array(
+                'signin_time' => date('M d, Y H:i A', $date),
+                'signin_out' => 'sign_out'
+              );
+              $emailInfo = emailSignInOut($user_id,$emailData);
+              $msgData = array(
+                'slack' => array(
+                  'title' => 'Sign out',
+                  'body' => 'You signed out at '.$emailData['signin_time']
+                ),
+                'email' => array(
+                  'subject' => $emailInfo['subject'],
+                  'content' =>  $emailInfo['content'],
+                  'userData' => $user
+                )
+              );
+              $user->sendUserNotification('sign_in_out', $msgData);
+              insertLogs($level = 'Information', $message = 'User signed out using QR');
+              $responseArr = array('status'=>true, 'msg'=>$name.' signed out at '.date('M d, Y H:i A', $date).' for a total of '.$hourTotal.' hours');
             } else {
-              $hours = FrcPortal\MeetingHour::create(['user_id' => $user_id, 'time_in' => date('Y-m-d H:i:s',$date)]);
-              if($hours) {
-                $emailData = array(
-                  'signin_time' => date('M d, Y H:i A', $date),
-                  'signin_out' => 'sign_in'
-                );
-                $emailInfo = emailSignInOut($user_id,$emailData);
-                $msgData = array(
-                  'slack' => array(
-                    'title' => 'Sign In',
-                    'body' => 'You signed in at '.$emailData['signin_time']
-                  ),
-                  'email' => array(
-                    'subject' => $emailInfo['subject'],
-                    'content' =>  $emailInfo['content'],
-                    'userData' => $user
-                  )
-                );
-                $user->sendUserNotification('sign_in_out', $msgData);
-                insertLogs($level = 'Information', $message = 'User signed in using QR');
-                $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date));
-              } else {
-                $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');
-              }
+            $responseArr = 	array('status'=>false, 'msg'=>'Something went wrong signing out');
             }
           } else {
-            $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
+            $hours = FrcPortal\MeetingHour::create(['user_id' => $user_id, 'time_in' => date('Y-m-d H:i:s',$date)]);
+            if($hours) {
+              $emailData = array(
+                'signin_time' => date('M d, Y H:i A', $date),
+                'signin_out' => 'sign_in'
+              );
+              $emailInfo = emailSignInOut($user_id,$emailData);
+              $msgData = array(
+                'slack' => array(
+                  'title' => 'Sign In',
+                  'body' => 'You signed in at '.$emailData['signin_time']
+                ),
+                'email' => array(
+                  'subject' => $emailInfo['subject'],
+                  'content' =>  $emailInfo['content'],
+                  'userData' => $user
+                )
+              );
+              $user->sendUserNotification('sign_in_out', $msgData);
+              insertLogs($level = 'Information', $message = 'User signed in using QR');
+              $responseArr = array('status'=>true, 'msg'=>$name.' Signed In at '.date('M d, Y H:i A', $date));
+            } else {
+              $responseArr = array('status'=>false, 'msg'=>'Something went wrong signing in');
+            }
           }
-        } catch(ExpiredException $e) {
-          insertLogs($level = 'Warning', $message = 'User tried to sign in using QR. Token was expired. '.$e->getMessage());
-          return unauthorizedResponse($response, $msg = 'Authorization Error. Token was expired.');
-        } catch(SignatureInvalidException $e){
-          insertLogs($level = 'Warning', $message = 'User tried to sign in using QR. Token signature was invalid. '.$e->getMessage());
-          return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
-        } catch(BeforeValidException $e){
-          $date = new DateTime($data['nbf']);
-          insertLogs($level = 'Warning', $message = 'User tried to sign in using QR. Token is not valid before '.$date->format('F j, Y g:i:s A').'. '.$e->getMessage());
-          return unauthorizedResponse($response, $msg = 'Authorization Error. Token is not valid before '.$date->format('F j, Y g:i:s A').'.');
-        } catch(UnexpectedValueException $e){
-          insertLogs($level = 'Warning', $message = 'User tried to sign in using QR. '.$e->getMessage());
-          return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
+        } else {
+          $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid JTI.');
         }
-      } else {
-        $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid token. User not signed in.');
+      } catch(ExpiredException $e) {
+        insertLogs($level = 'Warning', $message = 'User tried to sign in using QR. Token was expired. '.$e->getMessage());
+        return unauthorizedResponse($response, $msg = 'Authorization Error. Token was expired.');
+      } catch(SignatureInvalidException $e){
+        insertLogs($level = 'Warning', $message = 'User tried to sign in using QR. Token signature was invalid. '.$e->getMessage());
+        return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
+      } catch(BeforeValidException $e){
+        $date = new DateTime($data['nbf']);
+        insertLogs($level = 'Warning', $message = 'User tried to sign in using QR. Token is not valid before '.$date->format('F j, Y g:i:s A').'. '.$e->getMessage());
+        return unauthorizedResponse($response, $msg = 'Authorization Error. Token is not valid before '.$date->format('F j, Y g:i:s A').'.');
+      } catch(UnexpectedValueException $e){
+        insertLogs($level = 'Warning', $message = 'User tried to sign in using QR. '.$e->getMessage());
+        return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
       }
       $response = $response->withJson($responseArr);
       return $response;
