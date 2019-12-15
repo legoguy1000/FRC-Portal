@@ -9,6 +9,9 @@
     </div>
   </md-toolbar>
   <md-dialog-content layout="column" layout-align="center center" class="layout-margin" style="min-height: 200px;">
+    <i class="material-icons" style="font-size: 64px;position: absolute;margin: 0;" ng-show="vm.webauthn && vm.loading">
+      fingerprint
+    </i>
     <md-progress-circular md-mode="indeterminate" ng-disabled="!vm.loading" md-diameter="96" ng-show="vm.loading"></md-progress-circular>
     <div layout="column" ng-hide="vm.loading"> <!--ng-click="vm.authenticate('google')"-->
       <md-button class="md-raised google btn-large social" ng-href="{{vm.oauth_urls.google}}" style="min-width: 300px; text-align: left;" ng-show="!vm.showlocallogin && vm.configItems.google_login_enable">

@@ -20,6 +20,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	};
 	vm.urlStateEncode = btoa(JSON.stringify(vm.urlState));
 	vm.showlocallogin = false;
+	vm.webauthn = !loginData.oauth;
 
 	vm.loginForm = {};
 	vm.webauthnLogin = function () {
@@ -93,7 +94,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 			vm.loading = false;
 		}
   }
-	if(!loginData.oauth) {
+	if(vm.webauthn) {
 		vm.webauthnLogin();
 	}
 
