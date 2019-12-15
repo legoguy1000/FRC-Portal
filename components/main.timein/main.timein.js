@@ -13,7 +13,7 @@ function mainTimeinController($rootScope, $timeout, $q, $scope, schoolsService, 
 				.cancel('Cancel');
 	$mdDialog.show(confirm).then(function() {
 		var data = {
-			'token': $stateParams.signin
+			'token': $stateParams.token
 		};
 		signinService.signInOutQR(data).then(function(response) {
 			if(response.status) {
