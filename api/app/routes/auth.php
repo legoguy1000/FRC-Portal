@@ -691,10 +691,11 @@ $app->group('/webauthn', function () {
     $credentialStore = new FrcPortal\CredentialStore();
     $server = new WebAuthnServer($config,$credentialStore);
     // Get array with configuration for webauthn client
-    $userId = array_key_exists('userHandle', $formData['response']) ? base64_decode($formData['response']['userHandle']) : false;
+    $userId = $formData['response']['userHandle'] != '' ? base64_decode($formData['response']['userHandle']) : false;
     if($userId == false) {
       $credential = $credentialStore->findCredential(CredentialId::fromString($formData['id']));
       $userId = $credential->getUserHandle()->toBinary();
+      unset($formData['response']['userHandle']);
     }
     if($userId != false && $userId != getIniProp('admin_user')) {
       $user = FrcPortal\User::find($userId);
