@@ -691,8 +691,12 @@ $app->group('/webauthn', function () {
     $credentialStore = new FrcPortal\CredentialStore();
     $server = new WebAuthnServer($config,$credentialStore);
     // Get array with configuration for webauthn client
-    $userId = base64_decode($formData['response']['userHandle']);
-    if($userId != getIniProp('admin_user')) {
+    $userId = array_key_exists('userHandle', $formData['response']) ? base64_decode($formData['response']['userHandle']) : false;
+    if($userId == false) {
+      $credential = $credentialStore->findCredential(CredentialId::fromString($formData['id']));
+      $userId = $credential->getUserCredential()->getUserHandle()->toBinary();
+    }
+    if($userId != false && $userId != getIniProp('admin_user')) {
       $user = FrcPortal\User::find($userId);
       if(is_null($user) || is_null($user->webauthn_challenge) || $user->webauthn_challenge == '') {
         $responseData = array('status'=>false, 'msg'=>'Login with WebAuthn Failed');
