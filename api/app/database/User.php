@@ -18,6 +18,7 @@ Capsule::schema()->create('users', function ($table) {
   $table->string('profile_image',500)->default('');
   $table->string('slack_id')->default('');
   $table->char('signin_pin',64)->default('');
+  $table->text('webauthn_challenge')->nullable()->default(null);
   $table->boolean('admin')->default(0);
   $table->boolean('first_login')->default(1);
   $table->boolean('status')->default(1);

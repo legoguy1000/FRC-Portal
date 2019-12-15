@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('loginModalController', ['$rootScope','$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loginData','$state','$stateParams', 'loginService',
+.controller('loginModalController', ['$rootScope','$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loginData','$state','$stateParams', 'loginService', 'webauthnService',
 	loginModalController
 ]);
-function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $mdToast, loginData, $state, $stateParams, loginService) {
+function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $mdToast, loginData, $state, $stateParams, loginService, webauthnService) {
 	var vm = this;
 
 	vm.configItems = configItems;
@@ -21,8 +21,76 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	vm.urlStateEncode = btoa(JSON.stringify(vm.urlState));
 	vm.showlocallogin = false;
 
-
 	vm.loginForm = {};
+	vm.webauthnLogin = function () {
+		vm.loading = true;
+		if($window.localStorage['webauthn_cred'] != null && $window.localStorage['webauthn_cred'] != undefined) {
+			var cred = angular.fromJson(window.localStorage['webauthn_cred']);
+			if(cred.user != null && cred.user != undefined) {
+				webauthnService.getAuthenticationOptions(cred.user).then(response => {
+					console.log('creating creds');
+					var publicKey = {
+						challenge: Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
+						allowCredentials: response.allowCredentials.map(function(val){
+							var temp = val;
+							var unsafeBase64 = atob(val.id.replace(/_/g, '/').replace(/-/g, '+'));
+							temp.id = Uint8Array.from(unsafeBase64, c=>c.charCodeAt(0));
+							return temp;
+						}),
+						authenticatorSelection: {
+								authenticatorAttachment: "platform",
+								userVerification: "preferred",
+						},
+					}
+					console.log(publicKey);
+					return navigator.credentials.get({ 'publicKey': publicKey });
+				}).then(assertion => {
+					console.log('SUCCESS', assertion);
+					// Move data into Arrays incase it is super long
+			    let authenticatorData = new Uint8Array(assertion.response.authenticatorData);
+			    let attestationObject = new Uint8Array(assertion.response.attestationObject);
+					let clientDataJSON = new Uint8Array(assertion.response.clientDataJSON);
+					let signature = new Uint8Array(assertion.response.signature);
+			    let userHandle = new Uint8Array(assertion.response.userHandle);
+			    let rawId = new Uint8Array(assertion.rawId);
+					var data = {
+						id: assertion.id,
+            rawId: webauthnService.bufferEncode(rawId),
+            type: assertion.type,
+            response: {
+							authenticatorData: webauthnService.bufferEncode(authenticatorData),
+              attestationObject: webauthnService.bufferEncode(attestationObject),
+							clientDataJSON: webauthnService.bufferEncode(clientDataJSON),
+							signature: webauthnService.bufferEncode(signature),
+              userHandle: atob(webauthnService.bufferEncode(userHandle)),
+            },
+					};
+					return webauthnService.authenticate(data);
+				}, error => {
+					console.log(error);
+				}).then(response => {
+					vm.loading = false;
+					var authed = $auth.isAuthenticated();
+					if(authed) {
+						$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
+						var data = {
+							'auth': true,
+							'userInfo': response.userInfo,
+						}
+						$rootScope.$emit('afterLoginAction',{loginType: 'webauthn'});
+						$state.go(vm.state, vm.state_params);
+						$mdDialog.hide(data);
+					}
+				});
+			}
+		} else {
+			vm.loading = false;
+		}
+  }
+	if(!loginData.oauth) {
+		vm.webauthnLogin();
+	}
+
 	vm.login = function () {
 		vm.loading = true;
 		loginService.localadmin(vm.loginForm).then(function(response) {
@@ -40,7 +108,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 					'auth': true,
 					'userInfo': response.userInfo,
 				}
-				$rootScope.$broadcast('afterLoginAction');
+				$rootScope.$emit('afterLoginAction',{loginType: 'local_admin'});
 				$state.go(vm.state, vm.state_params);
 				$mdDialog.hide(data);
 			}

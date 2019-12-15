@@ -1,9 +1,9 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService',
+	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService','webauthnService',
 	mainController
 ]);
-function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService) {
+function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService,webauthnService) {
 	var main = this;
 
 	main.configItems = configItems;
@@ -24,6 +24,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.signInAuthed = signinService.isAuthed();
 	main.browserData = {}
 	main.versionInfo = {}
+	main.loginProvider = null;
 
 	//lazy load dialog controllers
 	$ocLazyLoad.load('components/loginModal/loginModal.js');
@@ -175,7 +176,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		}
 	}
 
-/*	var askAuthenticator = function() {
+	var askAuthenticator = function() {
 		var confirm = $mdDialog.confirm()
           .title('Would you like to use your fingerprint to login')
           .textContent('This device is capable of automatically logging you in using your fingerprint.')
@@ -185,33 +186,52 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
 	    	window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
 	      if (response == true) {
-					$mdDialog.show(confirm).then(function() {
-						var challenge = new Uint8Array(32);
-						window.crypto.getRandomValues(challenge);
-						var publicKey = {
-						    'challenge': challenge,
-						    'rp': {
-									'name': main.configItems.team_name,
-					        'id': main.configItems.env_url,
-						    },
-						    'user': {
-						        'id': Uint8Array.from(main.userInfo.user_id, c=>c.charCodeAt(0)),
-						        'name': main.userInfo.user_id,
-						        'displayName': main.userInfo.full_name
-						    },
-						    'pubKeyCredParams': [
-						        { 'type': 'public-key', 'alg': -7  },
-						        { 'type': 'public-key', 'alg': -257 }
-						    ]
-						}
-						return navigator.credentials.create({ 'publicKey': publicKey })
-					}).then(newCredentialInfo => {
-							console.log('SUCCESS', newCredentialInfo)
-					});
-	      }
-	    });
+					return $mdDialog.show(confirm);
+				}
+			}).then(function() {
+				return webauthnService.getRegisterOptions();
+			}).then(response => {
+				console.log('creating creds');
+				var publicKey = {
+						'challenge': Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
+						'rp': {
+							'name': response.rp.name,
+							'id': response.rp.id,
+						},
+						'user': {
+								'id': Uint8Array.from(response.user.id, c=>c.charCodeAt(0)),
+								'name': response.user.name,
+								'displayName': response.user.displayName
+						},
+						'pubKeyCredParams': response.pubKeyCredParams
+				}
+				console.log(publicKey);
+				return navigator.credentials.create({ 'publicKey': publicKey })
+			}).then(newCredential => {
+					console.log('SUCCESS', newCredential);
+					// Move data into Arrays incase it is super long
+			    let attestationObject = new Uint8Array(newCredential.response.attestationObject);
+			    let clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON);
+			    let rawId = new Uint8Array(newCredential.rawId);
+					var data = {
+						id: newCredential.id,
+            rawId: webauthnService.bufferEncode(rawId),
+            type: newCredential.type,
+            response: {
+                attestationObject: webauthnService.bufferEncode(attestationObject),
+                clientDataJSON: webauthnService.bufferEncode(clientDataJSON),
+            },
+					};
+					return webauthnService.registerCredential(data);
+			}, function(error) {
+				console.log(error)
+			}).then(response => {
+				if(response.status) {
+					$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
+				}
+			});
 	  }
-	} */
+	}
 
 	main.checkServiceWorker();
 
@@ -231,10 +251,12 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		$auth.logout();
 	}
 
-	$rootScope.$on('afterLoginAction', function(event) {
+	$rootScope.$on('afterLoginAction', function(event,args) {
 		console.info('Login Initiated');
 		loginActions();
-		//askAuthenticator();
+		if(args.loginType == 'oauth' && !($window.localStorage['webauthn_cred'] != null && $window.localStorage['webauthn_cred'] != undefined)) {
+			askAuthenticator();
+		}
 	});
 
 	$rootScope.$on('logOutAction', function(event, data) {

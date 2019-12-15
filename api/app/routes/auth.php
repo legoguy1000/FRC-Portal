@@ -552,45 +552,163 @@ $app->group('/auth', function () {
     return $response;
   })->setName('Local Login');
 });
+use MadWizard\WebAuthn\Server\UserIdentity;
+use MadWizard\WebAuthn\Dom\AuthenticatorSelectionCriteria;
+use MadWizard\WebAuthn\Server\Registration\RegistrationOptions;
+use MadWizard\WebAuthn\Server\Registration\RegistrationContext;
+use MadWizard\WebAuthn\Format\ByteBuffer;
+use MadWizard\WebAuthn\Credential\UserHandle;
+use MadWizard\WebAuthn\Config\WebAuthnConfiguration;
+use MadWizard\WebAuthn\Server\WebAuthnServer;
+use MadWizard\WebAuthn\Server\Authentication\AuthenticationOptions;
+use MadWizard\WebAuthn\Server\Authentication\AuthenticationContext;
+use MadWizard\WebAuthn\Credential\CredentialId;
+
 $app->group('/webauthn', function () {
-  $this->post('/register', function ($request, $response) {
+  $this->get('/register', function ($request, $response) {
     $responseData = false;
+    $user = FrcPortal\Auth::user();
     $formData = $request->getParsedBody();
     $provider = 'webauthn';
     // Get user identity. Note that the userHandle should be a unique identifier for each user
     // (max 64 bytes). The WebAuthn specs recommend generating a random byte sequence for each
     // user. The code below is just for testing purposes!
-    // $user = new UserIdentity(ByteBuffer::fromHex('aabbccdd'), 'dummy', 'Dummy user');
-    //
-    // // Setup options
-    // $options = new RegistrationOptions($user);
-    //
-    // // Get array with configuration for webauthn client
-    // $clientOptions = $manager->startRegistration($options);
-    //
-    // $vars['clientOptions'] = $clientOptions;
-
-    $response = $response->withJson($provider);
+    $userId = new UserIdentity(UserHandle::fromBuffer(new ByteBuffer($user->user_id)), $user->user_id, $user->full_name);
+    // Setup options
+    $options = new RegistrationOptions($userId);
+    $options->setAttestation('none');
+    $criteria = new AuthenticatorSelectionCriteria();
+    $criteria->setAuthenticatorAttachment('platform');
+    $criteria->setUserVerification('preferred');
+    $options->setAuthenticatorSelection($criteria);
+    $config = new WebAuthnConfiguration();
+    $rpId = getSettingsProp('env_url');
+    $config->setRelyingPartyId(preg_replace('#^https?://#', '', rtrim($rpId,'/')));
+    $config->setRelyingPartyName('FRC Portal');
+    $config->setRelyingPartyOrigin($rpId);
+    $credentialStore = new FrcPortal\CredentialStore();
+    $server = new WebAuthnServer($config,$credentialStore);
+    // Get array with configuration for webauthn client
+    $clientOptions = $server->startRegistration($options);
+    $opts = $clientOptions->getClientOptionsJson();
+    if($user->user_id != getIniProp('admin_user')) {
+      $user1 = FrcPortal\User::find($user->user_id);
+      if(!is_null($user1)) {
+        $user1->webauthn_challenge = $opts['challenge'];
+        $user1->save();
+      }
+    }
+    $response = $response->withJson($opts);
     return $response;
   })->setName('Webauthn Register');
-  $this->post('/login', function ($request, $response) {
+  $this->post('/register', function ($request, $response) {
     $responseData = false;
+    $user = FrcPortal\Auth::user();
     $formData = $request->getParsedBody();
     $provider = 'webauthn';
-    // Get user identity. Note that the userHandle should be a unique identifier for each user
-    // (max 64 bytes). The WebAuthn specs recommend generating a random byte sequence for each
-    // user. The code below is just for testing purposes!
-    // $user = new UserIdentity(ByteBuffer::fromHex('aabbccdd'), 'dummy', 'Dummy user');
-    //
-    // // Setup options
-    // $options = new RegistrationOptions($user);
-    //
-    // // Get array with configuration for webauthn client
-    // $clientOptions = $manager->startRegistration($options);
-    //
-    // $vars['clientOptions'] = $clientOptions;
-
-    $response = $response->withJson($provider);
+    $userId = new UserIdentity(UserHandle::fromBuffer(new ByteBuffer($user->user_id)), $user->user_id, $user->full_name);
+    // Setup options
+    $options = new RegistrationOptions($userId);
+    $options->setAttestation('none');
+    $criteria = new AuthenticatorSelectionCriteria();
+    $criteria->setAuthenticatorAttachment('platform');
+    $criteria->setUserVerification('preferred');
+    $options->setAuthenticatorSelection($criteria);
+    $config = new WebAuthnConfiguration();
+    $rpId = getSettingsProp('env_url');
+    $config->setRelyingPartyId(preg_replace('#^https?://#', '', rtrim($rpId,'/')));
+    $config->setRelyingPartyName('FRC Portal');
+    $config->setRelyingPartyOrigin($rpId);
+    $credentialStore = new FrcPortal\CredentialStore();
+    $server = new WebAuthnServer($config,$credentialStore);
+    if($user->user_id != getIniProp('admin_user')) {
+      $user1 = FrcPortal\User::find($user->user_id);
+      if(is_null($user1) || is_null($user1->webauthn_challenge) || $user1->webauthn_challenge == '') {
+        //TODO: Error out
+      }
+    }
+    $context = new RegistrationContext(new ByteBuffer($user1->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($user->user_id)));
+    $result = $server->finishRegistration(json_encode($formData), $context);
+    $responseArr = array(
+      'status' => true,
+      'msg' => 'Registrion complete',
+      'data' => array(
+        'credential_id' => $formData['id'],
+        'type' => 'public-key',
+        'user' => $user->user_id,
+      )
+    );
+    $response = $response->withJson($responseArr);
+    return $response;
+  })->setName('Webauthn Register');
+  $this->get('/authenticate/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $responseData = false;
+    $user = FrcPortal\Auth::user();
+    $formData = $request->getParsedBody();
+    $user_id = $args['user_id'];
+    $provider = 'webauthn';
+    // Setup options
+    $options = new AuthenticationOptions();
+    $options->setUserVerification('preferred');
+    $credentialStore = new FrcPortal\CredentialStore();
+    $credentials = $credentialStore->getUserCredentialIds(UserHandle::fromBuffer(new ByteBuffer($user_id)));
+    foreach($credentials as $cred) {
+      $credential = CredentialId::fromString($cred);
+      $options->addAllowCredential($credential);
+    }
+    $config = new WebAuthnConfiguration();
+    $rpId = getSettingsProp('env_url');
+    $config->setRelyingPartyId(preg_replace('#^https?://#', '', rtrim($rpId,'/')));
+    $config->setRelyingPartyName('FRC Portal');
+    $config->setRelyingPartyOrigin($rpId);
+    $server = new WebAuthnServer($config,$credentialStore);
+    // Get array with configuration for webauthn client
+    $clientOptions = $server->startAuthentication($options);
+    $opts = $clientOptions->getClientOptionsJson();
+    if($user_id != getIniProp('admin_user')) {
+      $user1 = FrcPortal\User::find($user_id);
+      if(!is_null($user1)) {
+        $user1->webauthn_challenge = $opts['challenge'];
+        $user1->save();
+      }
+    }
+    $response = $response->withJson($opts);
+    return $response;
+  })->setName('Webauthn Register');
+  $this->post('/authenticate', function ($request, $response) {
+    $responseData = false;
+    $user = FrcPortal\Auth::user();
+    $formData = $request->getParsedBody();
+    $provider = 'webauthn';
+    // Setup options
+    $options = new AuthenticationOptions();
+    $options->setUserVerification('preferred');
+    $config = new WebAuthnConfiguration();
+    $rpId = getSettingsProp('env_url');
+    $config->setRelyingPartyId(preg_replace('#^https?://#', '', rtrim($rpId,'/')));
+    $config->setRelyingPartyName('FRC Portal');
+    $config->setRelyingPartyOrigin($rpId);
+    $credentialStore = new FrcPortal\CredentialStore();
+    $server = new WebAuthnServer($config,$credentialStore);
+    // Get array with configuration for webauthn client
+    $userId = base64_decode($formData['response']['userHandle']);
+    if($userId != getIniProp('admin_user')) {
+      $user = FrcPortal\User::find($userId);
+      if(is_null($user) || is_null($user->webauthn_challenge) || $user->webauthn_challenge == '') {
+        $responseData = array('status'=>false, 'msg'=>'Login with WebAuthn Failed');
+        $response = $response->withJson($responseData);
+        return $response;
+      }
+    }
+    $context = new AuthenticationContext(new ByteBuffer($user->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($userId)));
+    $result = $server->finishAuthentication(json_encode($formData), $context);
+    if($user != false) {
+      $jwt = $user->generateUserJWT();
+      $responseData = array('status'=>true, 'msg'=>'Login with WebAuthn Successful', 'token'=>$jwt, 'userInfo' => $user);
+      FrcPortal\Auth::setCurrentUser($user->user_id);
+      insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using WebAuthn.');
+    }
+    $response = $response->withJson($responseData);
     return $response;
   })->setName('Webauthn Register');
 });
