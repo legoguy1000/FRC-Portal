@@ -70,6 +70,12 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 					console.log(error);
 				}).then(response => {
 					vm.loading = false;
+					$mdToast.show(
+						$mdToast.simple()
+							.textContent(response.msg)
+							.position('top right')
+							.hideDelay(3000)
+					);
 					var authed = $auth.isAuthenticated();
 					if(authed) {
 						$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
