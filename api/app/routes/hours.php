@@ -547,7 +547,7 @@ $app->group('/hours', function () {
           return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
         }
       } else {
-        $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid token');
+        $responseArr = array('status'=>false, 'type'=>'warning', 'msg'=>'Invalid token. User not signed in.');
       }
       $response = $response->withJson($responseArr);
       return $response;
