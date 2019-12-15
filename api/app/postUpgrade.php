@@ -354,7 +354,6 @@ if($version >= '2.16.0') {
   if(!Capsule::schema()->hasTable('user_credentials')) {
     require_once('database/UserCredential.php');
   }
-}
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
 
