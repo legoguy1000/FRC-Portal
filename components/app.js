@@ -134,7 +134,7 @@ angular.module('FrcPortal', [
 		resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 			profileController: ['$ocLazyLoad', function($ocLazyLoad) {
 				// you can lazy load files for an existing module
-							 return $ocLazyLoad.load(['components/services/loginServices.js','components/main.timein/main.timein.js']);
+							 return $ocLazyLoad.load('components/main.timein/main.timein.js');
 			}]
 		}
 		})
@@ -716,7 +716,7 @@ angular.module('FrcPortal', [
 			var from_params_json = JSON.stringify(trans.params('from'));
 			var from_params = angular.fromJson(from_params_json);
 			delete from_params["#"];
-			$ocLazyLoad.load('components/loginModal/loginModal.js').then(function() {
+			$ocLazyLoad.load(['components/services/loginServices.js','components/services/webauthnServices.js', 'components/loginModal/loginModal.js']).then(function() {
 				$mdDialog.show({
 					controller: loginModalController,
 					controllerAs: 'vm',
