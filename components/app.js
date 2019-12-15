@@ -780,11 +780,11 @@ angular.module('FrcPortal', [
 			}
 		}
 	});
-	$transitions.onStart({to: 'main.timein'}, function(trans) {
-		event.preventDefault();
-		var $state = trans.router.stateService;
-		return $state.target("main.home");
-	});
+	// $transitions.onStart({to: 'main.timein'}, function(trans) {
+	// 	event.preventDefault();
+	// 	var $state = trans.router.stateService;
+	// 	return $state.target("main.home");
+	// });
 });
 /*
 .config(function($authProvider, configItems) {
