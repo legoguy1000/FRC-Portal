@@ -34,6 +34,7 @@ function mainTimeinController($rootScope, $timeout, $q, $scope, $state, schoolsS
 						.position('top right')
 						.hideDelay(3000)
 				);
+				$state.go('main.home');
 			}
 		});
 	}, function() {
