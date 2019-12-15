@@ -694,7 +694,7 @@ $app->group('/webauthn', function () {
     $userId = array_key_exists('userHandle', $formData['response']) ? base64_decode($formData['response']['userHandle']) : false;
     if($userId == false) {
       $credential = $credentialStore->findCredential(CredentialId::fromString($formData['id']));
-      $userId = $credential->getUserCredential()->getUserHandle()->toBinary();
+      $userId = $credential->getUserHandle()->toBinary();
     }
     if($userId != false && $userId != getIniProp('admin_user')) {
       $user = FrcPortal\User::find($userId);
