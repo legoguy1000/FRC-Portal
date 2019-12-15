@@ -28,10 +28,11 @@ function mainTimeinController($rootScope, $timeout, $q, $scope, $state, schoolsS
 						$state.go('main.home');
 					}, 2000 );
 			} else {
-				$mdToast.simple()
-					.textContent(response.msg)
-					.position('top right')
-					.hideDelay(3000)
+				$mdToast.show(
+					$mdToast.simple()
+						.textContent(response.msg)
+						.position('top right')
+						.hideDelay(3000)
 				);
 			}
 		});
