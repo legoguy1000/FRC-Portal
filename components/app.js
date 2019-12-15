@@ -134,7 +134,7 @@ angular.module('FrcPortal', [
 		resolve: { // Any property in resolve should return a promise and is executed before the view is loaded
 			profileController: ['$ocLazyLoad', function($ocLazyLoad) {
 				// you can lazy load files for an existing module
-							 return $ocLazyLoad.load(['components/loginModal/loginModal.js','components/main.timein/main.timein.js']);
+							 return $ocLazyLoad.load(['components/services/loginServices.js','components/main.timein/main.timein.js']);
 			}]
 		}
 		})
