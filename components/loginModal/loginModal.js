@@ -27,71 +27,74 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		vm.loading = true;
 		if(vm.webauthn) {
 			var cred = angular.fromJson(window.localStorage['webauthn_cred']);
-			if(cred.user != null && cred.user != undefined) {
-				webauthnService.getAuthenticationOptions(cred.user).then(response => {
-					console.log('creating creds');
-					var allowCredentials = response.allowCredentials == undefined ? [] : response.allowCredentials.map(function(val){
-						var temp = val;
-						var unsafeBase64 = atob(val.id.replace(/_/g, '/').replace(/-/g, '+'));
-						temp.id = Uint8Array.from(unsafeBase64, c=>c.charCodeAt(0));
-						return temp;
-					})
-					var publicKey = {
-						challenge: Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
-						allowCredentials: allowCredentials,
-						authenticatorSelection: {
-								authenticatorAttachment: "platform",
-								userVerification: "preferred",
-						},
-					}
-					console.log(publicKey);
-					return navigator.credentials.get({ 'publicKey': publicKey });
-				}).then(assertion => {
-					console.log('SUCCESS', assertion);
-					// Move data into Arrays incase it is super long
-			    let authenticatorData = new Uint8Array(assertion.response.authenticatorData);
-			    let attestationObject = new Uint8Array(assertion.response.attestationObject);
-					let clientDataJSON = new Uint8Array(assertion.response.clientDataJSON);
-					let signature = new Uint8Array(assertion.response.signature);
-			    let userHandle = new Uint8Array(assertion.response.userHandle);
-			    let rawId = new Uint8Array(assertion.rawId);
-					var data = {
-						id: assertion.id,
-            rawId: webauthnService.bufferEncode(rawId),
-            type: assertion.type,
-            response: {
-							authenticatorData: webauthnService.bufferEncode(authenticatorData),
-              attestationObject: webauthnService.bufferEncode(attestationObject),
-							clientDataJSON: webauthnService.bufferEncode(clientDataJSON),
-							signature: webauthnService.bufferEncode(signature),
-              userHandle: atob(webauthnService.bufferEncode(userHandle)),
-            },
-					};
-					return webauthnService.authenticate(data);
-				}, error => {
-					console.log(error);
-					vm.loading = false;
-				}).then(response => {
-					vm.loading = false;
-					$mdToast.show(
-						$mdToast.simple()
-							.textContent(response.msg)
-							.position('top right')
-							.hideDelay(3000)
-					);
-					var authed = $auth.isAuthenticated();
-					if(authed) {
-						$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
-						var data = {
-							'auth': true,
-							'userInfo': response.userInfo,
-						}
-						$rootScope.$emit('afterLoginAction',{loginType: 'webauthn'});
-						$state.go(vm.state, vm.state_params);
-						$mdDialog.hide(data);
-					}
+			webauthnService.getAuthenticationOptions(cred.user).then(response => {
+				console.log('creating creds');
+				var allowCredentials = response.allowCredentials == undefined ? [] : response.allowCredentials.map(function(val){
+					var temp = val;
+					var unsafeBase64 = atob(val.id.replace(/_/g, '/').replace(/-/g, '+'));
+					temp.id = Uint8Array.from(unsafeBase64, c=>c.charCodeAt(0));
+					return temp;
+				})
+				var publicKey = {
+					challenge: Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
+					allowCredentials: allowCredentials,
+					authenticatorSelection: {
+							authenticatorAttachment: "platform",
+							userVerification: "preferred",
+					},
+				}
+				console.log(publicKey);
+				return navigator.credentials.get({ 'publicKey': publicKey });
+			}).then(assertion => {
+				console.log('SUCCESS', assertion);
+				// Move data into Arrays incase it is super long
+		    let authenticatorData = new Uint8Array(assertion.response.authenticatorData);
+		    let attestationObject = new Uint8Array(assertion.response.attestationObject);
+				let clientDataJSON = new Uint8Array(assertion.response.clientDataJSON);
+				let signature = new Uint8Array(assertion.response.signature);
+		    let userHandle = new Uint8Array(assertion.response.userHandle);
+		    let rawId = new Uint8Array(assertion.rawId);
+				var data = {
+					id: assertion.id,
+          rawId: webauthnService.bufferEncode(rawId),
+          type: assertion.type,
+          response: {
+						authenticatorData: webauthnService.bufferEncode(authenticatorData),
+            attestationObject: webauthnService.bufferEncode(attestationObject),
+						clientDataJSON: webauthnService.bufferEncode(clientDataJSON),
+						signature: webauthnService.bufferEncode(signature),
+            userHandle: atob(webauthnService.bufferEncode(userHandle)),
+          },
+				};
+				$window.localStorage['webauthn_cred'] = angular.toJson({
+					credential_id: assertion.id,
+					type: assertion.type,
+					user: cred.user
 				});
-			}
+				return webauthnService.authenticate(data);
+			}, error => {
+				console.log(error);
+				vm.loading = false;
+			}).then(response => {
+				vm.loading = false;
+				$mdToast.show(
+					$mdToast.simple()
+						.textContent(response.msg)
+						.position('top right')
+						.hideDelay(3000)
+				);
+				var authed = $auth.isAuthenticated();
+				if(authed) {
+					$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
+					var data = {
+						'auth': true,
+						'userInfo': response.userInfo,
+					}
+					$rootScope.$emit('afterLoginAction',{loginType: 'webauthn'});
+					$state.go(vm.state, vm.state_params);
+					$mdDialog.hide(data);
+				}
+			});
 		} else {
 			vm.loading = false;
 		}
