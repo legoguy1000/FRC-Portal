@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('loginModalController', ['$rootScope','$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loginData','$state','$stateParams', 'loginService', 'webauthnService',
+.controller('loginModalController', ['$rootScope','$scope','$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loginData','$state','$stateParams', 'loginService', 'webauthnService',
 	loginModalController
 ]);
-function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $mdToast, loginData, $state, $stateParams, loginService, webauthnService) {
+function loginModalController($rootScope,$scope,$auth,$mdDialog,$window, configItems, $mdToast, loginData, $state, $stateParams, loginService, webauthnService) {
 	var vm = this;
 
 	vm.configItems = configItems;
@@ -20,7 +20,12 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	};
 	vm.urlStateEncode = btoa(JSON.stringify(vm.urlState));
 	vm.showlocallogin = false;
-	vm.webauthn = $window.localStorage['webauthn_cred'] != null && $window.localStorage['webauthn_cred'] != undefined && !loginData.oauth && !vm.linkedAccounts;
+	vm.webauthn = false;
+
+	var webAuthnStatus = function() {
+		vm.webauthn = $window.localStorage['webauthn_cred'] != null && $window.localStorage['webauthn_cred'] != undefined && !loginData.oauth && !vm.linkedAccounts;
+	}
+	webAuthnStatus();
 
 	vm.loginForm = {};
 	vm.webauthnLogin = function () {
@@ -38,10 +43,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 				var publicKey = {
 					challenge: Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
 					allowCredentials: allowCredentials,
-					authenticatorSelection: {
-							authenticatorAttachment: "platform",
-							userVerification: "preferred",
-					},
+					userVerification: response.userVerification,
 				}
 				console.log(publicKey);
 				return navigator.credentials.get({ 'publicKey': publicKey });
@@ -93,6 +95,11 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 					$rootScope.$emit('afterLoginAction',{loginType: 'webauthn'});
 					$state.go(vm.state, vm.state_params);
 					$mdDialog.hide(data);
+				}
+				if(!response.status && response.badCredential) {
+					$window.localStorage.removeItem('webauthn_cred');
+					webAuthnStatus();
+					//$rootScope.$emit('webAuthnRegister',{loginType: 'webauthn'});
 				}
 			});
 		} else {

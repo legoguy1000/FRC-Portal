@@ -704,13 +704,21 @@ $app->group('/webauthn', function () {
     if($userId != false && $userId != getIniProp('admin_user')) {
       $user = FrcPortal\User::find($userId);
       if(is_null($user) || is_null($user->webauthn_challenge) || $user->webauthn_challenge == '') {
-        $responseData = array('status'=>false, 'msg'=>'Login with WebAuthn Failed');
+        $responseData = array('status'=>false, 'msg'=>'Login with WebAuthn Failed. Use another login method.');
         $response = $response->withJson($responseData);
         return $response;
       }
     }
     $context = new AuthenticationContext(new ByteBuffer($user->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($userId)));
-    $result = $server->finishAuthentication(json_encode($formData), $context);
+    try {
+      $result = $server->finishAuthentication(json_encode($formData), $context);
+    } catch (MadWizard\WebAuthn\Exception\VerificationException $e) {
+      if($e->getMessage() == 'Account was not found') {
+        $responseData = array('status'=>false, 'msg'=>'Login with WebAuthn Failed. Use another login method.', 'error' => $e->getMessage(), 'badCredential' => true);
+        $response = $response->withJson($responseData);
+        return $response;
+      }
+    }
     if($user != false) {
       $jwt = $user->generateUserJWT();
       $responseData = array('status'=>true, 'msg'=>'Login with WebAuthn Successful', 'token'=>$jwt, 'userInfo' => $user);

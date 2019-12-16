@@ -239,19 +239,19 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get User Web Authn Credentials');
-      // $this->delete('/{auth_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-      //   $userId = FrcPortal\Auth::user()->user_id;
-      //   $formData = $request->getParsedBody();
-      //   $responseArr = standardResponse($status = false, $msg = 'Something went wrong unlinking the account', $data = null);
-      //   $user = $request->getAttribute('user');
-      //   if($user->deleteLinkedAccount($args['auth_id'])) {
-      //     $responseArr['status'] = true;
-      //     $responseArr['msg'] ='Linked Account Removed';
-      //     $responseArr['data'] = $user->oauth()->get();
-      //   }
-      //   $response = $response->withJson($responseArr);
-      //   return $response;
-      // })->setName('Delete User Linked Account');
+      $this->delete('/{cred_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = standardResponse($status = false, $msg = 'Something went wrong unlinking the account', $data = null);
+        $user = $request->getAttribute('user');
+        if($user->deleteWebAuthnCredential($args['cred_id'])) {
+          $responseArr['status'] = true;
+          $responseArr['msg'] ='Device Credential Deleted';
+          $responseArr['data'] = $user->web_authn_credentials()->get();
+        }
+        $response = $response->withJson($responseArr);
+        return $response;
+      })->setName('Delete User Web Authn Credentials');
     });
     $this->group('/notificationPreferences', function () {
       $this->get('', function ($request, $response, $args) {

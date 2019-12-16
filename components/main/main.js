@@ -177,7 +177,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		}
 	}
 
-	var askAuthenticator = function() {
+	main.askAuthenticator = function() {
 		var confirm = $mdDialog.confirm()
           .title('Would you like to use your fingerprint to login')
           .textContent('This device is capable of automatically logging you in using your fingerprint.')
@@ -257,8 +257,14 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 				console.log(error)
 			}).then(response => {
 				if(response.status) {
-					$window.localStorage['webauthn_cred'] = angular.toJson(response.data);;
+					$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
 				}
+				return $mdToast.show(
+					$mdToast.simple()
+						.textContent(response.msg)
+						.position('top right')
+						.hideDelay(3000)
+				);
 			});
 	  }
 	}
@@ -285,7 +291,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		console.info('Login Initiated');
 		loginActions();
 		if(args.loginType == 'oauth' && !($window.localStorage['webauthn_cred'] != null && $window.localStorage['webauthn_cred'] != undefined)) {
-			askAuthenticator();
+			main.askAuthenticator();
 		}
 	});
 

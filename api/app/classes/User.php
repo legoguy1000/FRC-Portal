@@ -353,4 +353,15 @@ class User extends Eloquent {
     return false;
   }
 
+  public function deleteWebAuthnCredential($cred_id) {
+    $cred = $this->web_authn_credentials()->where('cred_id',$cred_id)->first();
+    if($cred->delete()) {
+      $message = '"'.$cred->name.'" device credential deleted.';
+      insertLogs($level = 'Information', $message);
+      return true;
+    }
+    $message = 'Something went wrong deleting "'.$cred->name.'" device credential.';
+    insertLogs($level = 'Information', $message);
+    return false;
+  }
 }

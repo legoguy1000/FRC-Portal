@@ -241,10 +241,10 @@
 						<span flex></span>
 						<span>Enrolled Device Credentials</span>
 						<span flex></span>
-						<!-- <md-button class="md-icon-button" ng-click="vm.loginModal($event)">
-							<md-tooltip md-direction="top">Link new account</md-tooltip>
-							<md-icon>add</md-icon>
-						</md-button> -->
+						<md-button class="md-icon-button" ng-click="vm.enrollCreds()" ng-show="vm.webAuthnCredEnabled && vm.localWebAuthCred == null">
+							<md-tooltip md-direction="top">Enroll Device</md-tooltip>
+							<md-icon>fingerprint</md-icon>
+						</md-button>
 					</h1>
 					<md-list flex>
 						<md-list-item class="md-2-line" ng-repeat = "cred in vm.WebAuthnCreds track by $index" ng-click="null">
@@ -258,7 +258,7 @@
 									<h3>{{cred.timestamp_unix*1000 | date:'medium'}}</h3>
 									<p>Created</p>
 								</div>
-								<md-icon class="md-secondary" md-font-set="material-icons" ng-click="" aria-label="Delete">delete
+								<md-icon class="md-secondary" md-font-set="material-icons" ng-click="vm.deleteUserWebAuthnCredentials(cred)" aria-label="Delete">delete
 									<md-tooltip md-direction="top">Delete Credential</md-tooltip>
 								</md-icon>
 							</div>
