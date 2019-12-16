@@ -248,6 +248,24 @@
 					</h1>
 					<md-list flex>
 						<md-list-item class="md-2-line" ng-repeat = "cred in vm.WebAuthnCreds track by $index" ng-click="null">
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'android'" style="z-index: 100;">phone_android
+								<md-tooltip md-direction="top">Android Phone</md-tooltip>
+							</md-icon>
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'iphone'" style="z-index: 100;">phone_iphone
+								<md-tooltip md-direction="top">iPhone</md-tooltip>
+							</md-icon>
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'ipad'" style="z-index: 100;">tablet_mac
+								<md-tooltip md-direction="top">iPad</md-tooltip>
+							</md-icon>
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'mac'" style="z-index: 100;">laptop_mac
+								<md-tooltip md-direction="top">Apple Computer</md-tooltip>
+							</md-icon>
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'windows'" style="z-index: 100;">computer
+								<md-tooltip md-direction="top">Windows Computer</md-tooltip>
+							</md-icon>
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'linux'" style="z-index: 100;">computer
+								<md-tooltip md-direction="top">Linux Computer</md-tooltip>
+							</md-icon>
 							<div class="md-list-item-text" flex layout="row">
 								<div>
 									<h3>{{cred.name | capitalizeFirst}} <span ng-show="cred.credential_id == vm.localWebAuthCred.credential_id">-  This Device</span></h3>

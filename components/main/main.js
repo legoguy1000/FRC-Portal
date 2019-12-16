@@ -251,6 +251,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 					if(main.newCredential != null) {
 						var data = main.newCredential;
 						data.name = result;
+						data.platform = getCredPlatform();
 						return webauthnService.registerCredential(data);
 					}
 			}, function(error) {
@@ -311,12 +312,31 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		main.title = $state.current.data.title;
 	});
 
-	function registerPlatformAuthenticator() {
-	  const advancedOptions = {};
-	  advancedOptions.userVerification = 'required';
-	  advancedOptions.authenticatorAttachment = 'platform';
-	  makeCredential(advancedOptions);
+	var getCredPlatform = function() {
+	  var userAgent = window.navigator.userAgent,
+	      platform = window.navigator.platform,
+	      macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
+	      windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
+	      iosPlatforms = ['iPhone', 'iPad', 'iPod'],
+	      device = null;
+
+	  if (macosPlatforms.indexOf(platform) !== -1) {
+	    device = 'mac';
+	  } else if (platform == 'iPhone' || platform == 'iPod') {
+	    device = 'iphone';
+	  } else if (platform == 'iPad') {
+	    device = 'ipad';
+	  } else if (windowsPlatforms.indexOf(platform) !== -1) {
+	    device = 'windows';
+	  } else if (/Android/.test(userAgent)) {
+	    device = 'android';
+	  } else if (!device && /Linux/.test(platform)) {
+	    device = 'linux';
+	  }
+	  return device;
 	}
+
+
 
 
 }
