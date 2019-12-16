@@ -7,7 +7,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 
 	vm.configItems = configItems;
 	vm.loading = loginData.loading != undefined ? loginData.loading:false;
-	vm.link_accounts = loginData.link_accounts != undefined ? loginData.link_accounts:false;
+	vm.linkedAccounts = loginData.state_params != undefined && loginData.state_params.linkedAccounts != undefined ? loginData.state_params.linkedAccounts:false;
 	vm.state = loginData.state != undefined ? loginData.state:$state.current.name;
 	var state_params = $stateParams;
 	delete state_params['#'];
@@ -20,12 +20,12 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	};
 	vm.urlStateEncode = btoa(JSON.stringify(vm.urlState));
 	vm.showlocallogin = false;
-	vm.webauthn = !loginData.oauth;
+	vm.webauthn = $window.localStorage['webauthn_cred'] != null && $window.localStorage['webauthn_cred'] != undefined && !loginData.oauth && !vm.linkedAccounts;
 
 	vm.loginForm = {};
 	vm.webauthnLogin = function () {
 		vm.loading = true;
-		if($window.localStorage['webauthn_cred'] != null && $window.localStorage['webauthn_cred'] != undefined) {
+		if(vm.webauthn) {
 			var cred = angular.fromJson(window.localStorage['webauthn_cred']);
 			if(cred.user != null && cred.user != undefined) {
 				webauthnService.getAuthenticationOptions(cred.user).then(response => {
@@ -70,6 +70,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 					return webauthnService.authenticate(data);
 				}, error => {
 					console.log(error);
+					vm.loading = false;
 				}).then(response => {
 					vm.loading = false;
 					$mdToast.show(
@@ -129,6 +130,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		microsoft: '',
 		amazon: '',
 		github: '',
+		discord: '',
 	}
 
 	//Google

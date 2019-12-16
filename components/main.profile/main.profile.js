@@ -10,12 +10,15 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
   vm.querySearch   = querySearch;
 	vm.notificationPreferences = [];
 	vm.linkedAccounts = [];
+	vm.WebAuthnCreds = [];
 	vm.seasonInfo = [];
 	vm.eventInfo = [];
 	vm.limitOptions = [1,5,10];
 	vm.rmhData = {};
 	vm.changePinNum = null;
 	vm.selectedTab = 0;
+	vm.localWebAuthCred = angular.fromJson(window.localStorage['webauthn_cred']);
+
 	if($stateParams.firstLogin) {
 		vm.selectedTab = 3;
 		var dialog = $mdDialog.alert()
@@ -138,6 +141,15 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 		});
 	}
 	vm.getUserLinkedAccounts();
+
+	vm.getUserWebAuthnCredentials = function() {
+		vm.loading = true;
+		usersService.getUserWebAuthnCredentials($scope.main.userInfo.user_id).then(function(response) {
+			vm.WebAuthnCreds = response.data;
+			vm.loading = false;
+		});
+	}
+	vm.getUserWebAuthnCredentials();
 
 	vm.getUserNotificationPreferences = function() {
 		vm.loading = true;

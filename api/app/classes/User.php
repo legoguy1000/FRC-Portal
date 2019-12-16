@@ -177,6 +177,12 @@ class User extends Eloquent {
     return $this->hasMany('FrcPortal\Oauth', 'user_id', 'user_id');
   }
   /**
+  * Get the WebAuthn IDs
+  */
+  public function web_authn_credentials() {
+    return $this->hasMany('FrcPortal\UserCredential', 'user_id', 'user_id');
+  }
+  /**
   * Get the Notification Preferences
   */
   public function notification_preferences() {

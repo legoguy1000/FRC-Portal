@@ -25,6 +25,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.browserData = {}
 	main.versionInfo = {}
 	main.loginProvider = null;
+	main.newCredential;
 
 	//lazy load dialog controllers
 	$ocLazyLoad.load('components/loginModal/loginModal.js');
@@ -216,7 +217,21 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 				return navigator.credentials.create({ 'publicKey': publicKey })
 			}).then(newCredential => {
 					console.log('SUCCESS', newCredential);
+					main.newCredential = newCredential;
+			    var confirm = $mdDialog.prompt()
+			      .title('Please enter a name for this credential')
+			      .textContent('Naming this credential will allow you to easily identify it.')
+			      .placeholder('Credential Name')
+			      .ariaLabel('Credential Name')
+			      .required(true)
+			      .ok('submit')
+			      .cancel('cancel');
+		    	return $mdDialog.show(confirm);
+				}, function(error) {
+					console.log(error)
+				}).then(result => {
 					// Move data into Arrays incase it is super long
+					var newCredential = main.newCredential;
 			    let attestationObject = new Uint8Array(newCredential.response.attestationObject);
 			    let clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON);
 			    let rawId = new Uint8Array(newCredential.rawId);
@@ -228,6 +243,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
                 attestationObject: webauthnService.bufferEncode(attestationObject),
                 clientDataJSON: webauthnService.bufferEncode(clientDataJSON),
             },
+						name: result
 					};
 					return webauthnService.registerCredential(data);
 			}, function(error) {

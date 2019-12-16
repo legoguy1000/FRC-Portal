@@ -631,6 +631,9 @@ $app->group('/webauthn', function () {
     }
     $context = new RegistrationContext(new ByteBuffer($user1->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($user->user_id)));
     $result = $server->finishRegistration(json_encode($formData), $context);
+    $credential = FrcPortal\UserCredential::where('credential_id',$formData['id'])->first();
+    $credential->name = isset($formData['name']) ? $formData['name'] : '';
+    $credential->save();
     $responseArr = array(
       'status' => true,
       'msg' => 'Registrion complete',

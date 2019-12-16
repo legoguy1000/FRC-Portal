@@ -2,6 +2,7 @@
 namespace FrcPortal;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use \DateTime;
 
 class UserCredential extends Eloquent {
   //table name
@@ -21,7 +22,7 @@ class UserCredential extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'cred_id', 'credential_id', 'public_key', 'user_handle'
+    'cred_id', 'credential_id', 'public_key', 'user_handle', 'user_id', 'name'
   ];
 
   /**
@@ -30,6 +31,8 @@ class UserCredential extends Eloquent {
   * @var array
   */
   protected $hidden = [];
+
+  protected $appends = ['timestamp_unix'];
 
   public function save($options = array()) {
     if(is_null($this->cred_id)) {
@@ -43,5 +46,8 @@ class UserCredential extends Eloquent {
       $instance->school_id = (string) uniqid();
     });
   }*/
-
+  public function getTimestampUnixAttribute() {
+    $date = new DateTime($this->attributes['created_at']);
+    return $date->format('U');
+  }
 }

@@ -192,7 +192,7 @@
 					<md-table-pagination md-limit="vm.queryEvents.limit" md-limit-options="vm.limitOptions" md-page="vm.queryEvents.page" md-total="{{(vm.eventInfo | filter: vm.queryEvents.filter).length}}" md-page-select md-boundary-links></md-table-pagination>-->
 				</md-content>
 			</md-tab>
-			<md-tab label="Linked Accounts">
+			<md-tab label="Login Settings">
 				<md-content  flex layout="column">
 					<h1 class="md-headline" flex layout="row">
 						<span flex></span>
@@ -235,6 +235,36 @@
 						</md-list-item>
 						<div ng-show="vm.user.linkedAccounts.length == 0 && !vm.loading" layout="row" layout-align="center center">
 							<h4>No Linked Accounts</h4>
+						</div>
+					</md-list>
+					<h1 class="md-headline" flex layout="row">
+						<span flex></span>
+						<span>Enrolled Device Credentials</span>
+						<span flex></span>
+						<!-- <md-button class="md-icon-button" ng-click="vm.loginModal($event)">
+							<md-tooltip md-direction="top">Link new account</md-tooltip>
+							<md-icon>add</md-icon>
+						</md-button> -->
+					</h1>
+					<md-list flex>
+						<md-list-item class="md-2-line" ng-repeat = "cred in vm.WebAuthnCreds track by $index" ng-click="null">
+							<div class="md-list-item-text" flex layout="row">
+								<div>
+									<h3>{{cred.name | capitalizeFirst}} <span ng-show="cred.credential_id == vm.localWebAuthCred.credential_id">-  This Device</span></h3>
+									<p>{{cred.credential_id}}</p>
+								</div>
+								<div flex></div>
+								<div hide-xs>
+									<h3>{{cred.timestamp_unix*1000 | date:'medium'}}</h3>
+									<p>Created</p>
+								</div>
+								<md-icon class="md-secondary" md-font-set="material-icons" ng-click="" aria-label="Delete">delete
+									<md-tooltip md-direction="top">Delete Credential</md-tooltip>
+								</md-icon>
+							</div>
+						</md-list-item>
+						<div ng-show="vm.user.WebAuthnCreds.length == 0 && !vm.loading" layout="row" layout-align="center center">
+							<h4>No Device Credentials</h4>
 						</div>
 					</md-list>
 				</md-content>
