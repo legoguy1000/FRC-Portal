@@ -636,7 +636,7 @@ $app->group('/webauthn', function () {
     $credential->save();
     $responseArr = array(
       'status' => true,
-      'msg' => 'Registrion complete',
+      'msg' => 'Registration complete',
       'data' => array(
         'credential_id' => $formData['id'],
         'type' => 'public-key',
