@@ -279,9 +279,6 @@ if($version >= '2.15.0') {
       }
     }
   }
-  //file_put_contents(__DIR__.'/secured/version.txt', '2.15.0');
-  //$version = getVersion();
-  echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
 
 /**
