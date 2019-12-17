@@ -672,7 +672,9 @@ $app->group('/webauthn', function () {
       $user = FrcPortal\User::find($userId);
       if(is_null($user) || is_null($user->webauthn_challenge) || $user->webauthn_challenge == '') {
         insertLogs($level = 'Warning', $message = 'User "'.$userId.'" not found or invalid challenge.');
-        return badRequestResponse($response, $msg = 'Login with Device Credential Failed. Use another login method.');
+        $responseData = array('status'=>false, 'msg' => 'Login with Device Credential Failed. Use another login method.', 'badCredential' => true);
+        $response = $response->withJson($responseData);
+        return $response;
       }
     }
     $context = new AuthenticationContext(new ByteBuffer($user->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($userId)));

@@ -832,6 +832,7 @@ use MadWizard\WebAuthn\Server\UserIdentity;
 use MadWizard\WebAuthn\Format\ByteBuffer;
 use MadWizard\WebAuthn\Server\Registration\RegistrationOptions;
 use MadWizard\WebAuthn\Dom\AuthenticatorSelectionCriteria;
+use MadWizard\WebAuthn\Credential\UserHandle;
 function getWebAuthnRegistrationOptions($user) {
 	// Get user identity. Note that the userHandle should be a unique identifier for each user
 	// (max 64 bytes). The WebAuthn specs recommend generating a random byte sequence for each
