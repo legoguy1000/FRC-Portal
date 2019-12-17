@@ -659,7 +659,7 @@ $app->group('/webauthn', function () {
     $credentialStore = new FrcPortal\CredentialStore();
     $credentials = $credentialStore->getUserCredentialIds(UserHandle::fromBuffer(new ByteBuffer($user_id)));
     foreach($credentials as $cred) {
-      //$options->addAllowCredential($cred);
+      $options->addAllowCredential($cred);
     }
     $config = new WebAuthnConfiguration();
     $rpId = getSettingsProp('env_url');
