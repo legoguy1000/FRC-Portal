@@ -34,7 +34,7 @@ class User extends Eloquent {
   *
   * @var array
   */
-  protected $hidden = ['signin_pin','lname','grad_year','email','team_email','student_grade','phone','admin','adult','first_login','gender','user_type','mentor','student','slack_id','room_type','former_student','school','school_id','slack_enabled'];
+  protected $hidden = ['signin_pin','lname','grad_year','email','team_email','student_grade','phone','admin','adult','first_login','gender','user_type','mentor','student','slack_id','room_type','former_student','school','school_id','slack_enabled', 'webauthn_challenge'];
 
   /**
    * The attributes that should be cast to native types.
@@ -98,7 +98,7 @@ class User extends Eloquent {
 
   public function getFullNameAttribute($value) {
     if(Auth::isAuthenticated()) {
-      return $value;
+      return $this->attributes['fname'].' '.$this->attributes['lname'];
     } else {
       return $this->attributes['fname'];
     }

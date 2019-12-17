@@ -25,6 +25,7 @@ $app->group('/users', function () {
     $page = $inputs['page'];
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
     $search = $request->getParam('search') !== null ? $request->getParam('search'):$searchProperties;
+    $returnColumns = $request->getParam('return') !== null && is_array($request->getParam('return')) ? $request->getParam('return'):array();
 
     $queryArr = array();
     $queryArr2 = array();
@@ -64,6 +65,12 @@ $app->group('/users', function () {
     }
 
     $users = $users->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+    if(!empty($returnColumns)) {
+      $users = $users->map(function ($user) use ($returnColumns) {
+          return $user->only($returnColumns);
+      });
+    }
+
 
 
     $data['data'] = $users;
