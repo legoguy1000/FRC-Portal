@@ -26,6 +26,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.versionInfo = {}
 	main.loginProvider = null;
 	main.newCredential = null;
+	main.noCameras = true;
 
 	//lazy load dialog controllers
 	$ocLazyLoad.load('components/loginModal/loginModal.js');
@@ -171,6 +172,7 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		main.isAuthed = $auth.isAuthenticated();
 		main.userInfo = angular.fromJson(window.localStorage['userInfo']);
 		//main.StartEventSource();
+		main.checkCamera();
 		if(main.userInfo != undefined && main.userInfo.first_login) {
 			//newUserModal();
 			$state.go('main.profile',{'firstLogin': true});
@@ -273,6 +275,17 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	  }
 	}
 
+	main.checkCamera = function() {
+		var cameras = [];
+		navigator.mediaDevices.enumerateDevices().then(function(devices) {
+		  devices.forEach(function(device) {
+				if(device.kind == 'videoinput') {
+					cameras.push(device);
+				}
+			});
+			main.noCameras = cameras.length == 0;
+		})
+	}
 	main.checkServiceWorker();
 
 	if(main.isAuthed) {
