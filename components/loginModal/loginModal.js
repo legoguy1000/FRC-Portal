@@ -44,6 +44,9 @@ function loginModalController($rootScope,$scope,$auth,$mdDialog,$window, configI
 					challenge: Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
 					allowCredentials: allowCredentials,
 					userVerification: response.userVerification,
+					extensions: {
+						txAuthSimple: 'Please verify your identity to FRC Portal'
+					}
 				}
 				console.log(publicKey);
 				return navigator.credentials.get({ 'publicKey': publicKey });

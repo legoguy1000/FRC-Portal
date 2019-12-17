@@ -211,7 +211,10 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 								'displayName': response.user.displayName
 						},
 						excludeCredentials: excludeCredentials,
-						pubKeyCredParams: response.pubKeyCredParams
+						pubKeyCredParams: response.pubKeyCredParams,
+						extensions: {
+							txAuthSimple: 'Please verify your identity to FRC Portal'
+						}
 				}
 				console.log(publicKey);
 				return navigator.credentials.create({ 'publicKey': publicKey })
