@@ -645,6 +645,7 @@ $app->group('/webauthn', function () {
         'user' => $user->user_id,
       )
     );
+    insertLogs($level = 'Information', $message = $user->full_name.' successfully registered device credential "'.$credential->name.'" on '.$credential->platform.'.');
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Device Credentials Finish Registration');
