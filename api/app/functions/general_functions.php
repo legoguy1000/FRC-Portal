@@ -814,4 +814,36 @@ function loginToFirst($email, $password) {
 	}
 	return implode('; ',$cookies);
 }
+
+use MadWizard\WebAuthn\Config\WebAuthnConfiguration;
+function getWebAuthnConfiguration() {
+	$config = new WebAuthnConfiguration();
+	$env_url = rtrim(getSettingsProp('env_url'),'/');
+	if($env_url == '') {
+		$env_url = 'https://'.$_SERVER['HTTP_HOST'];
+	}
+	$config->setRelyingPartyId(preg_replace('#^https?://#', '', $env_url));
+	$config->setRelyingPartyName('FRC Portal');
+	$config->setRelyingPartyOrigin($env_url);
+	return $config;
+}
+
+use MadWizard\WebAuthn\Server\UserIdentity;
+use MadWizard\WebAuthn\Format\ByteBuffer;
+use MadWizard\WebAuthn\Server\Registration\RegistrationOptions;
+use MadWizard\WebAuthn\Dom\AuthenticatorSelectionCriteria;
+function getWebAuthnRegistrationOptions($user) {
+	// Get user identity. Note that the userHandle should be a unique identifier for each user
+	// (max 64 bytes). The WebAuthn specs recommend generating a random byte sequence for each
+	// user. The code below is just for testing purposes!
+	$userId = new UserIdentity(UserHandle::fromBuffer(new ByteBuffer($user->user_id)), $user->user_id, $user->full_name);
+	$options = new RegistrationOptions($userId);
+	$options->setAttestation('none');
+	$options->setExcludeExistingCredentials(true);
+	$criteria = new AuthenticatorSelectionCriteria();
+	$criteria->setAuthenticatorAttachment('platform');
+	$criteria->setUserVerification('preferred');
+	$options->setAuthenticatorSelection($criteria);
+	return $options;
+}
 ?>
