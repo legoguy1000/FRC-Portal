@@ -601,7 +601,7 @@ $app->group('/webauthn', function () {
     }
     $response = $response->withJson($opts);
     return $response;
-  })->setName('Webauthn Register');
+  })->setName('Device Credentials Start Registration');
   $this->post('/register', function ($request, $response) {
     $responseData = false;
     $user = FrcPortal\Auth::user();
@@ -626,7 +626,8 @@ $app->group('/webauthn', function () {
     if($user->user_id != getIniProp('admin_user')) {
       $user1 = FrcPortal\User::find($user->user_id);
       if(is_null($user1) || is_null($user1->webauthn_challenge) || $user1->webauthn_challenge == '') {
-        //TODO: Error out
+        insertLogs($level = 'Warning', $message = 'User "'.$user->user_id.'" not found or invalid challenge.');
+        return badRequestResponse($response, $msg = 'Something went wrong with registration.');
       }
     }
     $context = new RegistrationContext(new ByteBuffer($user1->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($user->user_id)));
@@ -637,7 +638,7 @@ $app->group('/webauthn', function () {
     $credential->save();
     $responseArr = array(
       'status' => true,
-      'msg' => 'Registration complete',
+      'msg' => 'Device Credential Registration complete',
       'data' => array(
         'credential_id' => $formData['id'],
         'type' => 'public-key',
@@ -646,10 +647,9 @@ $app->group('/webauthn', function () {
     );
     $response = $response->withJson($responseArr);
     return $response;
-  })->setName('Webauthn Register');
+  })->setName('Device Credentials Finish Registration');
   $this->get('/authenticate/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $responseData = false;
-    $user = FrcPortal\Auth::user();
     $formData = $request->getParsedBody();
     $user_id = $args['user_id'];
     $provider = 'webauthn';
@@ -679,10 +679,9 @@ $app->group('/webauthn', function () {
     }
     $response = $response->withJson($opts);
     return $response;
-  })->setName('Webauthn Register');
+  })->setName('Device Credentials Start Authentication');
   $this->post('/authenticate', function ($request, $response) {
     $responseData = false;
-    $user = FrcPortal\Auth::user();
     $formData = $request->getParsedBody();
     $provider = 'webauthn';
     // Setup options
@@ -701,13 +700,11 @@ $app->group('/webauthn', function () {
       $credential = $credentialStore->findCredential(CredentialId::fromString($formData['id']));
       $userId = $credential->getUserHandle()->toBinary();
       unset($formData['response']['userHandle']);
-    }
-    if($userId != false && $userId != getIniProp('admin_user')) {
+    } else if($userId != false && $userId != getIniProp('admin_user')) {
       $user = FrcPortal\User::find($userId);
       if(is_null($user) || is_null($user->webauthn_challenge) || $user->webauthn_challenge == '') {
-        $responseData = array('status'=>false, 'msg'=>'Login with WebAuthn Failed. Use another login method.');
-        $response = $response->withJson($responseData);
-        return $response;
+        insertLogs($level = 'Warning', $message = 'User "'.$userId.'" not found or invalid challenge.');
+        return badRequestResponse($response, $msg = 'Login with Device Credential Failed. Use another login method.');
       }
     }
     $context = new AuthenticationContext(new ByteBuffer($user->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($userId)));
@@ -722,13 +719,13 @@ $app->group('/webauthn', function () {
     }
     if($user != false) {
       $jwt = $user->generateUserJWT();
-      $responseData = array('status'=>true, 'msg'=>'Login with WebAuthn Successful', 'token'=>$jwt, 'userInfo' => $user);
+      $responseData = array('status'=>true, 'msg'=>'Login with Device Credential Successful', 'token'=>$jwt, 'userInfo' => $user);
       FrcPortal\Auth::setCurrentUser($user->user_id);
       insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using WebAuthn.');
     }
     $response = $response->withJson($responseData);
     return $response;
-  })->setName('Webauthn Register');
+  })->setName('Device Credentials Finish Authentication');
 });
 
 
