@@ -587,7 +587,7 @@ $app->group('/webauthn', function () {
     $config->setRelyingPartyId(preg_replace('#^https?://#', '', rtrim($rpId,'/')));
     $config->setRelyingPartyName('FRC Portal');
     $config->setRelyingPartyOrigin($rpId);
-    $credentialStore = new FrcPortal\CredentialStore();
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
     $server = new WebAuthnServer($config,$credentialStore);
     // Get array with configuration for webauthn client
     $clientOptions = $server->startRegistration($options);
@@ -621,7 +621,7 @@ $app->group('/webauthn', function () {
     $config->setRelyingPartyId(preg_replace('#^https?://#', '', rtrim($rpId,'/')));
     $config->setRelyingPartyName('FRC Portal');
     $config->setRelyingPartyOrigin($rpId);
-    $credentialStore = new FrcPortal\CredentialStore();
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
     $server = new WebAuthnServer($config,$credentialStore);
     if($user->user_id != getIniProp('admin_user')) {
       $user1 = FrcPortal\User::find($user->user_id);
@@ -657,7 +657,7 @@ $app->group('/webauthn', function () {
     // Setup options
     $options = new AuthenticationOptions();
     $options->setUserVerification('preferred');
-    $credentialStore = new FrcPortal\CredentialStore();
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
     $credentials = $credentialStore->getUserCredentialIds(UserHandle::fromBuffer(new ByteBuffer($user_id)));
     foreach($credentials as $cred) {
       $options->addAllowCredential($cred);
@@ -693,7 +693,7 @@ $app->group('/webauthn', function () {
     $config->setRelyingPartyId(preg_replace('#^https?://#', '', rtrim($rpId,'/')));
     $config->setRelyingPartyName('FRC Portal');
     $config->setRelyingPartyOrigin($rpId);
-    $credentialStore = new FrcPortal\CredentialStore();
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
     $server = new WebAuthnServer($config,$credentialStore);
     // Get array with configuration for webauthn client
     $userId = $formData['response']['userHandle'] != '' ? base64_decode($formData['response']['userHandle']) : false;

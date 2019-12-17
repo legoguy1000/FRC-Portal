@@ -1,5 +1,5 @@
 <?php
-namespace FrcPortal;
+namespace FrcPortal\WebAuthn;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use MadWizard\WebAuthn\Credential\CredentialId;
