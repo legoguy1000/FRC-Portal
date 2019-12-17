@@ -173,10 +173,10 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		main.userInfo = angular.fromJson(window.localStorage['userInfo']);
 		//main.StartEventSource();
 		main.checkCamera();
-		if(main.userInfo != undefined && main.userInfo.first_login) {
-			//newUserModal();
-			$state.go('main.profile',{'firstLogin': true});
-		}
+		// if(main.userInfo != undefined && main.userInfo.first_login) {
+		// 	//newUserModal();
+		// 	$state.go('main.profile',{'firstLogin': true});
+		// }
 	}
 
 	main.askAuthenticator = function() {
