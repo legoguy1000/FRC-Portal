@@ -13,7 +13,7 @@ use MadWizard\WebAuthn\Crypto\CoseKey;
 class CredentialStore implements CredentialStoreInterface {
 
   public function findCredential(CredentialId $credentialId): ?UserCredentialInterface {
-    $cred = UserCredential::where('credential_id', $credentialId->toString())->first();
+    $cred = \FrcPortal\UserCredential::where('credential_id', $credentialId->toString())->first();
     if(!is_null($cred)) {
       $credential = CredentialId::fromString($cred->credential_id); // CredentialId
       $public_key = CoseKey::fromString($cred->public_key); //CoseKeyInterface
@@ -30,7 +30,7 @@ class CredentialStore implements CredentialStoreInterface {
     $public_key = $credential->getPublicKey()->toString(); //CoseKeyInterface
     $user_handle = $credential->getUserHandle()->toString(); //UserHandle
     //var_dump($credential->getPublicKey());
-    $cred = new UserCredential();
+    $cred = new \FrcPortal\UserCredential();
     $cred->credential_id = $credentialId;
     $cred->public_key = $public_key;
     $cred->user_handle = $user_handle;
@@ -47,7 +47,7 @@ class CredentialStore implements CredentialStoreInterface {
   }
 
   public function getUserCredentialIds(UserHandle $userHandle) : array {
-    $data = UserCredential::where('user_handle', $userHandle->toString())->get()->pluck('credential_id');
+    $data = \FrcPortal\UserCredential::where('user_handle', $userHandle->toString())->get()->pluck('credential_id');
     return $data->map(function ($cred) {
         return CredentialId::fromString($cred);
     })->all();
