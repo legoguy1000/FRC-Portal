@@ -287,10 +287,9 @@ if($version >= '2.15.0') {
 /**
 * 2.16.0
 **/
-if($version >= '2.16.0') {
+if(version_compare($version, '2.16.0','>=')) {
   if(Capsule::schema()->hasTable('settings')) {
     $setting = FrcPortal\Setting::firstOrCreate(['section' => 'service_account', 'setting' => 'firstportal_credential_data'], ['value' => '']);
-
   }
   if(Capsule::schema()->hasTable('events')) {
     if(Capsule::schema()->hasColumn('events','hotel_info')) {
@@ -330,15 +329,6 @@ if($version >= '2.16.0') {
     } catch (Exception $e) {
       echo $e->getMessage() . PHP_EOL;
     }
-    if(!Capsule::schema()->hasColumn('users','webauthn_challenge')) {
-      try {
-        Capsule::schema()->table('users', function ($table, $as = null, $connection = null) {
-          $table->text('webauthn_challenge')->nullable()->default(null)->after('signin_pin');
-        });
-      } catch (Exception $e) {
-        //Exception will be logged in Monolog
-      }
-    }
   }
   if(Capsule::schema()->hasTable('annual_requirements')) {
     try {
@@ -351,12 +341,26 @@ if($version >= '2.16.0') {
       echo $e->getMessage() . PHP_EOL;
     }
   }
+}
+
+/**
+* 2.17.0-dev
+**/
+if(version_compare($version, '2.17.0-dev','>=')) {
+  if(Capsule::schema()->hasTable('users') && !Capsule::schema()->hasColumn('users','webauthn_challenge')) {
+    try {
+      Capsule::schema()->table('users', function ($table, $as = null, $connection = null) {
+        $table->text('webauthn_challenge')->nullable()->default(null)->after('signin_pin');
+      });
+    } catch (Exception $e) {
+      //Exception will be logged in Monolog
+    }
+  }
   if(!Capsule::schema()->hasTable('user_credentials')) {
     require_once('database/UserCredential.php');
   }
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
-
 /*
 //Add Column
 if(Capsule::schema()->hasTable('events') && !Capsule::schema()->hasColumn('events','payment_amount')) {
