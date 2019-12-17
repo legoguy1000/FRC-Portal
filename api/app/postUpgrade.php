@@ -330,6 +330,15 @@ if($version >= '2.16.0') {
     } catch (Exception $e) {
       echo $e->getMessage() . PHP_EOL;
     }
+    if(!Capsule::schema()->hasColumn('users','webauthn_challenge')) {
+      try {
+        Capsule::schema()->table('users', function ($table, $as = null, $connection = null) {
+          $table->text('webauthn_challenge')->nullable()->default(null)->after('signin_pin');
+        });
+      } catch (Exception $e) {
+        //Exception will be logged in Monolog
+      }
+    }
   }
   if(Capsule::schema()->hasTable('annual_requirements')) {
     try {
@@ -341,6 +350,9 @@ if($version >= '2.16.0') {
     } catch (Exception $e) {
       echo $e->getMessage() . PHP_EOL;
     }
+  }
+  if(!Capsule::schema()->hasTable('user_credentials')) {
+    require_once('database/UserCredential.php');
   }
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }

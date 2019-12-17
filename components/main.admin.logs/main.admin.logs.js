@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.logsController', ['$timeout', '$q', '$scope', '$state', '$timeout', 'logsService', '$mdDialog',
+.controller('main.admin.logsController', ['$timeout', '$q', '$scope', '$state', '$timeout', 'logsService', '$mdDialog', 'usersService',
 	mainAdminLogsController
 ]);
-function mainAdminLogsController($timeout, $q, $scope, $state, $timeout, logsService, $mdDialog) {
+function mainAdminLogsController($timeout, $q, $scope, $state, $timeout, logsService, $mdDialog, usersService) {
     var vm = this;
 
 	vm.selected = [];
@@ -19,6 +19,7 @@ function mainAdminLogsController($timeout, $q, $scope, $state, $timeout, logsSer
 			user_id: '',
 		}
 	};
+	vm.userSearch = null;
 	vm.logs = [];
 	vm.limitOptions = [10,25,50,100];
 
@@ -36,7 +37,7 @@ function mainAdminLogsController($timeout, $q, $scope, $state, $timeout, logsSer
 	};
 
 	var timeoutPromise;
-	$scope.$watchGroup(['vm.query.filter', 'vm.query.search.level','vm.query.search.user_id'], function(newValues, oldValues, scope) {
+	$scope.$watchGroup(['vm.query.filter', 'vm.query.search.level','vm.userSearch'], function(newValues, oldValues, scope) {
 		//console.log(newValues);
 		//console.log(oldValues);
 		$timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
@@ -55,10 +56,29 @@ function mainAdminLogsController($timeout, $q, $scope, $state, $timeout, logsSer
 	});
 
 	vm.getLogs = function () {
+		var user_id = vm.userSearch != null ? vm.userSearch.user_id : '';
+		 vm.query.search.user_id = user_id;
 		vm.promise = logsService.getAllLogsFilter($.param(vm.query)).then(function(response){
 			vm.logs = response.data;
 			vm.total = response.total;
 			vm.maxPage = response.maxPage;
 		});
+	};
+
+	vm.searchUsers = function (search) {
+		var data = {
+			filter: search,
+			limit: 0,
+			order: 'full_name',
+			page: 1,
+			listOnly: true,
+			return: [
+				'fname',
+				'lname',
+				'full_name',
+				'user_id',
+			]
+		};
+		return usersService.getAllUsersFilter($.param(data));
 	};
 }

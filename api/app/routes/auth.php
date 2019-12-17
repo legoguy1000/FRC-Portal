@@ -552,7 +552,182 @@ $app->group('/auth', function () {
     return $response;
   })->setName('Local Login');
 });
+use MadWizard\WebAuthn\Server\UserIdentity;
+use MadWizard\WebAuthn\Dom\AuthenticatorSelectionCriteria;
+use MadWizard\WebAuthn\Server\Registration\RegistrationOptions;
+use MadWizard\WebAuthn\Server\Registration\RegistrationContext;
+use MadWizard\WebAuthn\Format\ByteBuffer;
+use MadWizard\WebAuthn\Credential\UserHandle;
+use MadWizard\WebAuthn\Config\WebAuthnConfiguration;
+use MadWizard\WebAuthn\Server\WebAuthnServer;
+use MadWizard\WebAuthn\Server\Authentication\AuthenticationOptions;
+use MadWizard\WebAuthn\Server\Authentication\AuthenticationContext;
+use MadWizard\WebAuthn\Credential\CredentialId;
 
+$app->group('/webauthn', function () {
+  $this->get('/register', function ($request, $response) {
+    $responseData = false;
+    $user = FrcPortal\Auth::user();
+    $formData = $request->getParsedBody();
+    $provider = 'webauthn';
+    // Get user identity. Note that the userHandle should be a unique identifier for each user
+    // (max 64 bytes). The WebAuthn specs recommend generating a random byte sequence for each
+    // user. The code below is just for testing purposes!
+    $userId = new UserIdentity(UserHandle::fromBuffer(new ByteBuffer($user->user_id)), $user->user_id, $user->full_name);
+    // Setup options
+    $options = new RegistrationOptions($userId);
+    $options->setAttestation('none');
+    $options->setExcludeExistingCredentials(true);
+    $criteria = new AuthenticatorSelectionCriteria();
+    $criteria->setAuthenticatorAttachment('platform');
+    $criteria->setUserVerification('preferred');
+    $options->setAuthenticatorSelection($criteria);
+    $config = new WebAuthnConfiguration();
+    $rpId = getSettingsProp('env_url');
+    $config->setRelyingPartyId(preg_replace('#^https?://#', '', rtrim($rpId,'/')));
+    $config->setRelyingPartyName('FRC Portal');
+    $config->setRelyingPartyOrigin($rpId);
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
+    $server = new WebAuthnServer($config,$credentialStore);
+    // Get array with configuration for webauthn client
+    $clientOptions = $server->startRegistration($options);
+    $opts = $clientOptions->getClientOptionsJson();
+    if($user->user_id != getIniProp('admin_user')) {
+      $user1 = FrcPortal\User::find($user->user_id);
+      if(!is_null($user1)) {
+        $user1->webauthn_challenge = $opts['challenge'];
+        $user1->save();
+      }
+    }
+    $response = $response->withJson($opts);
+    return $response;
+  })->setName('Device Credentials Start Registration');
+  $this->post('/register', function ($request, $response) {
+    $responseData = false;
+    $user = FrcPortal\Auth::user();
+    $formData = $request->getParsedBody();
+    $provider = 'webauthn';
+    $userId = new UserIdentity(UserHandle::fromBuffer(new ByteBuffer($user->user_id)), $user->user_id, $user->full_name);
+    // Setup options
+    $options = new RegistrationOptions($userId);
+    $options->setAttestation('none');
+    $options->setExcludeExistingCredentials(true);
+    $criteria = new AuthenticatorSelectionCriteria();
+    $criteria->setAuthenticatorAttachment('platform');
+    $criteria->setUserVerification('preferred');
+    $options->setAuthenticatorSelection($criteria);
+    $config = new WebAuthnConfiguration();
+    $rpId = getSettingsProp('env_url');
+    $config->setRelyingPartyId(preg_replace('#^https?://#', '', rtrim($rpId,'/')));
+    $config->setRelyingPartyName('FRC Portal');
+    $config->setRelyingPartyOrigin($rpId);
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
+    $server = new WebAuthnServer($config,$credentialStore);
+    if($user->user_id != getIniProp('admin_user')) {
+      $user1 = FrcPortal\User::find($user->user_id);
+      if(is_null($user1) || is_null($user1->webauthn_challenge) || $user1->webauthn_challenge == '') {
+        insertLogs($level = 'Warning', $message = 'User "'.$user->user_id.'" not found or invalid challenge.');
+        return badRequestResponse($response, $msg = 'Something went wrong with registration.');
+      }
+    }
+    $context = new RegistrationContext(new ByteBuffer($user1->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($user->user_id)));
+    $result = $server->finishRegistration(json_encode($formData), $context);
+    $credential = FrcPortal\UserCredential::where('credential_id',$formData['id'])->first();
+    $credential->name = isset($formData['name']) ? $formData['name'] : null;
+    $credential->platform = isset($formData['platform']) ? $formData['platform'] : null;
+    $credential->save();
+    $responseArr = array(
+      'status' => true,
+      'msg' => 'Device Credential Registration complete',
+      'data' => array(
+        'credential_id' => $formData['id'],
+        'type' => 'public-key',
+        'user' => $user->user_id,
+      )
+    );
+    insertLogs($level = 'Information', $message = $user->full_name.' successfully registered device credential "'.$credential->name.'" on '.$credential->platform.'.');
+    $response = $response->withJson($responseArr);
+    return $response;
+  })->setName('Device Credentials Finish Registration');
+  $this->get('/authenticate/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $responseData = false;
+    $formData = $request->getParsedBody();
+    $user_id = $args['user_id'];
+    $provider = 'webauthn';
+    // Setup options
+    $options = new AuthenticationOptions();
+    $options->setUserVerification('preferred');
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
+    $credentials = $credentialStore->getUserCredentialIds(UserHandle::fromBuffer(new ByteBuffer($user_id)));
+    foreach($credentials as $cred) {
+      $options->addAllowCredential($cred);
+    }
+    $config = new WebAuthnConfiguration();
+    $rpId = getSettingsProp('env_url');
+    $config->setRelyingPartyId(preg_replace('#^https?://#', '', rtrim($rpId,'/')));
+    $config->setRelyingPartyName('FRC Portal');
+    $config->setRelyingPartyOrigin($rpId);
+    $server = new WebAuthnServer($config,$credentialStore);
+    // Get array with configuration for webauthn client
+    $clientOptions = $server->startAuthentication($options);
+    $opts = $clientOptions->getClientOptionsJson();
+    if($user_id != getIniProp('admin_user')) {
+      $user1 = FrcPortal\User::find($user_id);
+      if(!is_null($user1)) {
+        $user1->webauthn_challenge = $opts['challenge'];
+        $user1->save();
+      }
+    }
+    $response = $response->withJson($opts);
+    return $response;
+  })->setName('Device Credentials Start Authentication');
+  $this->post('/authenticate', function ($request, $response) {
+    $responseData = false;
+    $formData = $request->getParsedBody();
+    $provider = 'webauthn';
+    // Setup options
+    $options = new AuthenticationOptions();
+    $options->setUserVerification('preferred');
+    $config = new WebAuthnConfiguration();
+    $rpId = getSettingsProp('env_url');
+    $config->setRelyingPartyId(preg_replace('#^https?://#', '', rtrim($rpId,'/')));
+    $config->setRelyingPartyName('FRC Portal');
+    $config->setRelyingPartyOrigin($rpId);
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
+    $server = new WebAuthnServer($config,$credentialStore);
+    // Get array with configuration for webauthn client
+    $userId = $formData['response']['userHandle'] != '' ? base64_decode($formData['response']['userHandle']) : false;
+    if($userId == false) {
+      $credential = $credentialStore->findCredential(CredentialId::fromString($formData['id']));
+      $userId = $credential->getUserHandle()->toBinary();
+      unset($formData['response']['userHandle']);
+    } else if($userId != false && $userId != getIniProp('admin_user')) {
+      $user = FrcPortal\User::find($userId);
+      if(is_null($user) || is_null($user->webauthn_challenge) || $user->webauthn_challenge == '') {
+        insertLogs($level = 'Warning', $message = 'User "'.$userId.'" not found or invalid challenge.');
+        return badRequestResponse($response, $msg = 'Login with Device Credential Failed. Use another login method.');
+      }
+    }
+    $context = new AuthenticationContext(new ByteBuffer($user->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($userId)));
+    try {
+      $result = $server->finishAuthentication(json_encode($formData), $context);
+    } catch (MadWizard\WebAuthn\Exception\VerificationException $e) {
+      if($e->getMessage() == 'Account was not found') {
+        $responseData = array('status'=>false, 'msg'=>'Login with WebAuthn Failed. Use another login method.', 'error' => $e->getMessage(), 'badCredential' => true);
+        $response = $response->withJson($responseData);
+        return $response;
+      }
+    }
+    if($user != false) {
+      $jwt = $user->generateUserJWT();
+      $responseData = array('status'=>true, 'msg'=>'Login with Device Credential Successful', 'token'=>$jwt, 'userInfo' => $user);
+      FrcPortal\Auth::setCurrentUser($user->user_id);
+      insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using WebAuthn.');
+    }
+    $response = $response->withJson($responseData);
+    return $response;
+  })->setName('Device Credentials Finish Authentication');
+});
 
 
 

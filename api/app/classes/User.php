@@ -34,7 +34,7 @@ class User extends Eloquent {
   *
   * @var array
   */
-  protected $hidden = ['signin_pin','lname','grad_year','email','team_email','student_grade','phone','admin','adult','first_login','gender','user_type','mentor','student','slack_id','room_type','former_student','school','school_id','slack_enabled'];
+  protected $hidden = ['signin_pin','lname','grad_year','email','team_email','student_grade','phone','admin','adult','first_login','gender','user_type','mentor','student','slack_id','room_type','former_student','school','school_id','slack_enabled', 'webauthn_challenge'];
 
   /**
    * The attributes that should be cast to native types.
@@ -98,7 +98,7 @@ class User extends Eloquent {
 
   public function getFullNameAttribute($value) {
     if(Auth::isAuthenticated()) {
-      return $value;
+      return $this->attributes['fname'].' '.$this->attributes['lname'];
     } else {
       return $this->attributes['fname'];
     }
@@ -175,6 +175,12 @@ class User extends Eloquent {
   */
   public function oauth() {
     return $this->hasMany('FrcPortal\Oauth', 'user_id', 'user_id');
+  }
+  /**
+  * Get the WebAuthn IDs
+  */
+  public function web_authn_credentials() {
+    return $this->hasMany('FrcPortal\UserCredential', 'user_id', 'user_id');
   }
   /**
   * Get the Notification Preferences
@@ -347,4 +353,15 @@ class User extends Eloquent {
     return false;
   }
 
+  public function deleteWebAuthnCredential($cred_id) {
+    $cred = $this->web_authn_credentials()->where('cred_id',$cred_id)->first();
+    if($cred->delete()) {
+      $message = '"'.$cred->name.'" device credential deleted.';
+      insertLogs($level = 'Information', $message);
+      return true;
+    }
+    $message = 'Something went wrong deleting "'.$cred->name.'" device credential.';
+    insertLogs($level = 'Information', $message);
+    return false;
+  }
 }

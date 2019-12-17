@@ -192,7 +192,7 @@
 					<md-table-pagination md-limit="vm.queryEvents.limit" md-limit-options="vm.limitOptions" md-page="vm.queryEvents.page" md-total="{{(vm.eventInfo | filter: vm.queryEvents.filter).length}}" md-page-select md-boundary-links></md-table-pagination>-->
 				</md-content>
 			</md-tab>
-			<md-tab label="Linked Accounts">
+			<md-tab label="Login Settings">
 				<md-content  flex layout="column">
 					<h1 class="md-headline" flex layout="row">
 						<span flex></span>
@@ -235,6 +235,54 @@
 						</md-list-item>
 						<div ng-show="vm.user.linkedAccounts.length == 0 && !vm.loading" layout="row" layout-align="center center">
 							<h4>No Linked Accounts</h4>
+						</div>
+					</md-list>
+					<h1 class="md-headline" flex layout="row">
+						<span flex></span>
+						<span>Enrolled Device Credentials</span>
+						<span flex></span>
+						<md-button class="md-icon-button" ng-click="vm.enrollCreds()" ng-show="vm.webAuthnCredEnabled && vm.localWebAuthCred == null">
+							<md-tooltip md-direction="top">Enroll Device</md-tooltip>
+							<md-icon>fingerprint</md-icon>
+						</md-button>
+					</h1>
+					<md-list flex>
+						<md-list-item class="md-2-line" ng-repeat = "cred in vm.WebAuthnCreds track by $index" ng-click="null">
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'android'" style="z-index: 100;">phone_android
+								<md-tooltip md-direction="top">Android Phone</md-tooltip>
+							</md-icon>
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'iphone'" style="z-index: 100;">phone_iphone
+								<md-tooltip md-direction="top">iPhone</md-tooltip>
+							</md-icon>
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'ipad'" style="z-index: 100;">tablet_mac
+								<md-tooltip md-direction="top">iPad</md-tooltip>
+							</md-icon>
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'mac'" style="z-index: 100;">laptop_mac
+								<md-tooltip md-direction="top">Apple Computer</md-tooltip>
+							</md-icon>
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'windows'" style="z-index: 100;">computer
+								<md-tooltip md-direction="top">Windows Computer</md-tooltip>
+							</md-icon>
+							<md-icon class="md-avatar-icon" ng-show="cred.platform == 'linux'" style="z-index: 100;">computer
+								<md-tooltip md-direction="top">Linux Computer</md-tooltip>
+							</md-icon>
+							<div class="md-list-item-text" flex layout="row">
+								<div>
+									<h3>{{cred.name | capitalizeFirst}} <span ng-show="cred.credential_id == vm.localWebAuthCred.credential_id">-  This Device</span></h3>
+									<p hide-xs>{{cred.credential_id}}</p>
+								</div>
+								<div flex></div>
+								<div hide-xs>
+									<h3>{{cred.timestamp_unix*1000 | date:'medium'}}</h3>
+									<p>Created</p>
+								</div>
+								<md-icon class="md-secondary" md-font-set="material-icons" ng-click="vm.deleteUserWebAuthnCredentials(cred)" aria-label="Delete">delete
+									<md-tooltip md-direction="top">Delete Credential</md-tooltip>
+								</md-icon>
+							</div>
+						</md-list-item>
+						<div ng-show="vm.user.WebAuthnCreds.length == 0 && !vm.loading" layout="row" layout-align="center center">
+							<h4>No Device Credentials</h4>
 						</div>
 					</md-list>
 				</md-content>

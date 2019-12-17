@@ -69,7 +69,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     "rules" => [
         new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
           "path" => ['/'],
-          "ignore" => ['/version','/manifest.json','/auth','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/hours/signIn/token','/config'],
+          "ignore" => ['/version','/manifest.json','/auth','/webauthn/authenticate','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/hours/signIn/token','/config'],
         ]),
         new Tuupola\Middleware\JwtAuthentication\RequestPathMethodRule([
           "passthrough" => [

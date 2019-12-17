@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.timeinController', ['$rootScope', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams', '$window', 'generalService', '$state',
+.controller('main.timeinController', ['$rootScope', '$timeout', '$q', '$scope', '$state', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams', '$window', 'generalService', '$state',
 	mainTimeinController
 ]);
-function mainTimeinController($rootScope, $timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams, $window, generalService, $state) {
+function mainTimeinController($rootScope, $timeout, $q, $scope, $state, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams, $window, generalService, $state) {
   var vm = this;
 
 	var confirm = $mdDialog.confirm()
@@ -13,7 +13,7 @@ function mainTimeinController($rootScope, $timeout, $q, $scope, schoolsService, 
 				.cancel('Cancel');
 	$mdDialog.show(confirm).then(function() {
 		var data = {
-			'token': $stateParams.signin
+			'token': $stateParams.token
 		};
 		signinService.signInOutQR(data).then(function(response) {
 			if(response.status) {
@@ -27,10 +27,18 @@ function mainTimeinController($rootScope, $timeout, $q, $scope, schoolsService, 
 						$mdDialog.cancel();
 						$state.go('main.home');
 					}, 2000 );
+			} else {
+				$mdToast.show(
+					$mdToast.simple()
+						.textContent(response.msg)
+						.position('top right')
+						.hideDelay(3000)
+				);
+				$state.go('main.home');
 			}
 		});
 	}, function() {
-
+		$state.go('main.home');
 	});
 
 	$rootScope.$on('400BadRequest', function(event,response) {
@@ -41,5 +49,6 @@ function mainTimeinController($rootScope, $timeout, $q, $scope, schoolsService, 
 				.position('top right')
 				.hideDelay(3000)
 		);
+		$state.go('main.home');
 	});
 }
