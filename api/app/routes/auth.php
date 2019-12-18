@@ -698,18 +698,4 @@ $app->group('/webauthn', function () {
   })->setName('Device Credentials Finish Authentication');
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ?>
