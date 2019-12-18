@@ -79,6 +79,7 @@ function loginModalController($rootScope,$scope,$auth,$mdDialog,$window, configI
 				return webauthnService.authenticate(data);
 			}, error => {
 				console.log(error);
+				console.log(error.name);
 				vm.loading = false;
 			}).then(response => {
 				vm.loading = false;
