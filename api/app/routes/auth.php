@@ -678,7 +678,6 @@ $app->group('/webauthn', function () {
         return $response;
       }
     }
-    die($user->webauthn_challenge);
     $context = new AuthenticationContext(new ByteBuffer($user->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($userId)));
     try {
       $result = $server->finishAuthentication(json_encode($formData), $context);
