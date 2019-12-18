@@ -81,13 +81,13 @@ function loginModalController($rootScope,$scope,$auth,$mdDialog,$window, configI
 				console.log(error);
 				if(error.name == 'InvalidStateError') {
 					$window.localStorage.removeItem('webauthn_cred');
-					loginModal(null);
 					$mdToast.show(
 						$mdToast.simple()
 							.textContent('Invalid credentials.  Please try a different login method.')
 							.position('top right')
 							.hideDelay(3000)
 					);
+					webAuthnStatus();
 				}
 				console.log(error.name);
 				vm.loading = false;
@@ -113,6 +113,7 @@ function loginModalController($rootScope,$scope,$auth,$mdDialog,$window, configI
 				if(!response.status && response.badCredential) {
 					$window.localStorage.removeItem('webauthn_cred');
 					webAuthnStatus();
+					vm.webauthnLogin();
 					//$rootScope.$emit('webAuthnRegister',{loginType: 'webauthn'});
 				}
 			});
