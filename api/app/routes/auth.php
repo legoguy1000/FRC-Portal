@@ -668,7 +668,8 @@ $app->group('/webauthn', function () {
       $credential = $credentialStore->findCredential(CredentialId::fromString($formData['id']));
       $userId = $credential->getUserHandle()->toBinary();
       unset($formData['response']['userHandle']);
-    } else if($userId != false && $userId != getIniProp('admin_user')) {
+    }
+    if($userId != false && $userId != getIniProp('admin_user')) {
       $user = FrcPortal\User::find($userId);
       if(is_null($user) || is_null($user->webauthn_challenge) || $user->webauthn_challenge == '') {
         insertLogs($level = 'Warning', $message = 'User "'.$userId.'" not found or invalid challenge.');
