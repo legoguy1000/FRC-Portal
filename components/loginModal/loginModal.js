@@ -149,7 +149,7 @@ function loginModalController($rootScope,$scope,$auth,$mdDialog,$window, configI
 		});
   };
 
-	$rootScope.$on('closeLoginModal', function(event) {
+	$rootScope.$on('closeLoginModal', function() {
 		$mdDialog.cancel();
 	});
 

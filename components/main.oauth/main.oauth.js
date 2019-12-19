@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.oauthController', ['$rootScope', '$scope', '$state', '$auth', '$mdToast', '$state', '$stateParams', 'configItems', '$sce', 'loginService','$window','$mdDialog',
+.controller('main.oauthController', ['$rootScope', '$scope', '$state', '$auth', '$mdToast', '$stateParams', 'configItems', '$sce', 'loginService','$window','$mdDialog',
 	mainOauthController
 ]);
-function mainOauthController($rootScope, $scope, $state, $auth, $mdToast, $state, $stateParams, configItems, $sce, loginService,$window,$mdDialog) {
+function mainOauthController($rootScope, $scope, $state, $auth, $mdToast, $stateParams, configItems, $sce, loginService,$window,$mdDialog) {
     var vm = this;
 
 		//$stateParams.provider;
