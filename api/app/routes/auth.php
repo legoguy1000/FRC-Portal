@@ -22,11 +22,11 @@ $app->group('/auth', function () {
       $client->setClientSecret(decryptItems(getSettingsProp('google_oauth_client_secret')));
       $client->setRedirectUri(getSettingsProp('env_url').'/oauth/google');
       $plus = new Google_Service_Plus($client);
-      $data = array();
+      $data = array(getSettingsProp('google_oauth_client_id'), decryptItems(getSettingsProp('google_oauth_client_secret')), getSettingsProp('env_url').'/oauth/google', $args['code']);
       $client->authenticate($args['code']);
       $accessCode = $client->getAccessToken();
       $id_token = $accessCode['id_token'];
-      die(json_encode($accessCode));
+      die(json_encode($data));
       $payload = $client->verifyIdToken($id_token);
       //$me = $plus->people->get("me");
       $userData = formatGoogleLoginUserData($payload);
