@@ -157,7 +157,7 @@ function handleGoogleAPIException($e, $google_service) {
 		}
 		return $msg;
 	} else {
-		return $e->getMessage();
+		return $google_service.' Error: '.$e->getMessage();
 	}
 	return 'Something went wrong';
 }

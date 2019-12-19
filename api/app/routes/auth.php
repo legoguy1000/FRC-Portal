@@ -19,14 +19,19 @@ $app->group('/auth', function () {
       $client = new Google_Client();
       //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
       $client->setClientId(getSettingsProp('google_oauth_client_id'));
-      $client->setClientSecret(decryptItems(getSettingsProp('google_oauth_client_secret')));
+      $secret = decryptItems(getSettingsProp('google_oauth_client_secret'));
+      if($secret == false) {
+        $responseData = array('status'=>false, 'msg'=>'Google login failed.');
+        insertLogs($level = 'Warning', $message = 'Decrypting the Google OAuth Client Secret failed. Please check and update the setting.');
+        return $response;
+      }
+      $client->setClientSecret($secret);
       $client->setRedirectUri(getSettingsProp('env_url').'/oauth/google');
       $plus = new Google_Service_Plus($client);
       $data = array(getSettingsProp('google_oauth_client_id'), decryptItems(getSettingsProp('google_oauth_client_secret')), getSettingsProp('env_url').'/oauth/google', $args['code']);
       $client->authenticate($args['code']);
       $accessCode = $client->getAccessToken();
       $id_token = $accessCode['id_token'];
-      die(json_encode($data));
       $payload = $client->verifyIdToken($id_token);
       //$me = $plus->people->get("me");
       $userData = formatGoogleLoginUserData($payload);
@@ -67,6 +72,7 @@ $app->group('/auth', function () {
       $error = handleGoogleAPIException($e, 'Google Login');
       $responseData = array('status'=>false, 'msg'=>'Google login failed.', 'error' => $error);
       insertLogs($level = 'Warning', $message = $error);
+      return $response;
     }
     $response = $response->withJson($responseData);
     return $response;
