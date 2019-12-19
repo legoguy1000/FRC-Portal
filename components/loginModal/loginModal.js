@@ -1,13 +1,13 @@
 angular.module('FrcPortal')
-.controller('loginModalController', ['$rootScope','$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loginData','$state','$stateParams', 'loginService',
+.controller('loginModalController', ['$rootScope','$scope','$auth', '$mdDialog', '$window', 'configItems', '$mdToast', 'loginData','$state','$stateParams', 'loginService', 'webauthnService',
 	loginModalController
 ]);
-function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $mdToast, loginData, $state, $stateParams, loginService) {
+function loginModalController($rootScope,$scope,$auth,$mdDialog,$window, configItems, $mdToast, loginData, $state, $stateParams, loginService, webauthnService) {
 	var vm = this;
 
 	vm.configItems = configItems;
 	vm.loading = loginData.loading != undefined ? loginData.loading:false;
-	vm.link_accounts = loginData.link_accounts != undefined ? loginData.link_accounts:false;
+	vm.linkedAccounts = loginData.state_params != undefined && loginData.state_params.linkedAccounts != undefined ? loginData.state_params.linkedAccounts:false;
 	vm.state = loginData.state != undefined ? loginData.state:$state.current.name;
 	var state_params = $stateParams;
 	delete state_params['#'];
@@ -20,9 +20,111 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 	};
 	vm.urlStateEncode = btoa(JSON.stringify(vm.urlState));
 	vm.showlocallogin = false;
+	vm.webauthn = false;
 
+	var webAuthnStatus = function() {
+		vm.webauthn = $window.localStorage['webauthn_cred'] != null && $window.localStorage['webauthn_cred'] != undefined && !loginData.oauth && !vm.linkedAccounts;
+	}
+	webAuthnStatus();
 
 	vm.loginForm = {};
+	vm.webauthnLogin = function () {
+		vm.loading = true;
+		if(vm.webauthn) {
+			var cred = angular.fromJson(window.localStorage['webauthn_cred']);
+			webauthnService.getAuthenticationOptions(cred.user).then(response => {
+				console.log('creating creds');
+				var allowCredentials = response.allowCredentials == undefined ? [] : response.allowCredentials.map(function(val){
+					var temp = val;
+					var unsafeBase64 = atob(val.id.replace(/_/g, '/').replace(/-/g, '+'));
+					temp.id = Uint8Array.from(unsafeBase64, c=>c.charCodeAt(0));
+					return temp;
+				})
+				var publicKey = {
+					challenge: Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
+					allowCredentials: allowCredentials,
+					userVerification: response.userVerification,
+					extensions: {
+						txAuthSimple: 'Please verify your identity to FRC Portal'
+					}
+				}
+				console.log(publicKey);
+				return navigator.credentials.get({ 'publicKey': publicKey });
+			}).then(assertion => {
+				console.log('SUCCESS', assertion);
+				// Move data into Arrays incase it is super long
+		    let authenticatorData = new Uint8Array(assertion.response.authenticatorData);
+		    let attestationObject = new Uint8Array(assertion.response.attestationObject);
+				let clientDataJSON = new Uint8Array(assertion.response.clientDataJSON);
+				let signature = new Uint8Array(assertion.response.signature);
+		    let userHandle = new Uint8Array(assertion.response.userHandle);
+		    let rawId = new Uint8Array(assertion.rawId);
+				var data = {
+					id: assertion.id,
+          rawId: webauthnService.bufferEncode(rawId),
+          type: assertion.type,
+          response: {
+						authenticatorData: webauthnService.bufferEncode(authenticatorData),
+            attestationObject: webauthnService.bufferEncode(attestationObject),
+						clientDataJSON: webauthnService.bufferEncode(clientDataJSON),
+						signature: webauthnService.bufferEncode(signature),
+            userHandle: atob(webauthnService.bufferEncode(userHandle)),
+          },
+				};
+				$window.localStorage['webauthn_cred'] = angular.toJson({
+					credential_id: assertion.id,
+					type: assertion.type,
+					user: cred.user
+				});
+				return webauthnService.authenticate(data);
+			}, error => {
+				console.log(error);
+				if(error.name == 'InvalidStateError') {
+					$window.localStorage.removeItem('webauthn_cred');
+					$mdToast.show(
+						$mdToast.simple()
+							.textContent('Invalid credentials.  Please try a different login method.')
+							.position('top right')
+							.hideDelay(3000)
+					);
+					webAuthnStatus();
+				}
+				console.log(error.name);
+				vm.loading = false;
+			}).then(response => {
+				vm.loading = false;
+				$mdToast.show(
+					$mdToast.simple()
+						.textContent(response.msg)
+						.position('top right')
+						.hideDelay(3000)
+				);
+				var authed = $auth.isAuthenticated();
+				if(authed) {
+					$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
+					var data = {
+						'auth': true,
+						'userInfo': response.userInfo,
+					}
+					$rootScope.$emit('afterLoginAction',{loginType: 'webauthn'});
+					$state.go(vm.state, vm.state_params);
+					$mdDialog.hide(data);
+				}
+				if(!response.status && response.badCredential) {
+					$window.localStorage.removeItem('webauthn_cred');
+					webAuthnStatus();
+					vm.webauthnLogin();
+					//$rootScope.$emit('webAuthnRegister',{loginType: 'webauthn'});
+				}
+			});
+		} else {
+			vm.loading = false;
+		}
+  }
+	if(vm.webauthn) {
+		vm.webauthnLogin();
+	}
+
 	vm.login = function () {
 		vm.loading = true;
 		loginService.localadmin(vm.loginForm).then(function(response) {
@@ -40,12 +142,16 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 					'auth': true,
 					'userInfo': response.userInfo,
 				}
-				$rootScope.$broadcast('afterLoginAction');
+				$rootScope.$emit('afterLoginAction',{loginType: 'local_admin'});
 				$state.go(vm.state, vm.state_params);
 				$mdDialog.hide(data);
 			}
 		});
   };
+
+	$rootScope.$on('closeLoginModal', function() {
+		$mdDialog.cancel();
+	});
 
 	vm.oauth_urls = {
 		google: '',
@@ -53,6 +159,7 @@ function loginModalController($rootScope,$auth,$mdDialog,$window, configItems, $
 		microsoft: '',
 		amazon: '',
 		github: '',
+		discord: '',
 	}
 
 	//Google

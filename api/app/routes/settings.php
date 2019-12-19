@@ -133,6 +133,7 @@ $app->group('/settings', function () {
       }
 
       $section = $args['section'];
+      $formData['env_url'] = rtrim($formData['env_url'],'/');
       //loop through,
       //Do update or create
       foreach($formData as $setting=>$value) {

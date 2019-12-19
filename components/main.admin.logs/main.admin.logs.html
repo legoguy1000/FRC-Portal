@@ -29,20 +29,43 @@
 	</md-toolbar>
 	<md-toolbar class="md-table-toolbar md-default" ng-show="vm.filter.show">
 		<div class="md-toolbar-tools" layout="row">
-			<md-input-container class="" flex>
+			<md-input-container class="" flex style="margin-bottom: 42px;">
 				<label>Log Level</label>
 				<md-icon class="material-icons">person</md-icon>
 				<md-select ng-model="vm.query.search.level">
 					<md-option value="" ></md-option>
+					<md-option value="information">Information</md-option>
+					<md-option value="warning">Warning</md-option>
+					<md-option value="critical">Critical</md-option>
 				</md-select>
 			</md-input-container>
-			<md-input-container class="" flex>
+			<div layout="row" flex>
+				<md-input-container  class="md-icon-float md-block">
+					<div><md-icon md-font-library="material-icons">person</md-icon></div>
+				</md-input-container>
+				<md-autocomplete flex class="md-icon-float md-block"
+						md-input-name="autocompleteField"
+						md-input-minlength="2"
+						md-input-maxlength="18"
+						md-no-cache="false"
+						md-selected-item="vm.userSearch"
+						md-search-text="vm.searchPOC"
+						md-items="user in vm.searchUsers(vm.searchPOC)"
+						md-item-text="user.full_name"
+						md-require-match
+						md-floating-label="User">
+					<md-item-template>
+						<span md-highlight-text="vm.searchPOC">{{user.full_name}}</span>
+					</md-item-template>
+				</md-autocomplete>
+			</div>
+			<!-- <md-input-container class="" flex>
 				<label>User</label>
 				<md-icon class="material-icons">person</md-icon>
 				<md-select ng-model="vm.query.search.user_id" >
 					<md-option value="" ></md-option>
 				</md-select>
-			</md-input-container>
+			</md-input-container> -->
 		</div>
 	</md-toolbar>
 	<md-table-container>

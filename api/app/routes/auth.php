@@ -15,51 +15,66 @@ $app->group('/auth', function () {
       insertLogs($level = 'Warning', $message = 'Invalid code from Google OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Google Sign In');
     }
-    $client = new Google_Client();
-    //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
-    $client->setClientId(getSettingsProp('google_oauth_client_id'));
-    $client->setClientSecret(decryptItems(getSettingsProp('google_oauth_client_secret')));
-    $client->setRedirectUri(getSettingsProp('env_url').'/oauth/google');
-    $plus = new Google_Service_Plus($client);
-    $data = array();
-    $client->authenticate($args['code']);
-    $accessCode = $client->getAccessToken();
-    $id_token = $accessCode['id_token'];
-    $payload = $client->verifyIdToken($id_token);
-    //$me = $plus->people->get("me");
-    $userData = formatGoogleLoginUserData($payload);
-    if(checkTeamLogin($userData['email'])) {
-      $teamDomain = getSettingsProp('team_domain');
-      insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Google OAuth2. A '.$teamDomain.' email is required.');
-      return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
-    }
+    try {
+      $client = new Google_Client();
+      //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
+      $client->setClientId(getSettingsProp('google_oauth_client_id'));
+      $secret = decryptItems(getSettingsProp('google_oauth_client_secret'));
+      if($secret == false) {
+        $responseData = array('status'=>false, 'msg'=>'Google login failed.');
+        insertLogs($level = 'Warning', $message = 'Decrypting the Google OAuth Client Secret failed. Please check and update the setting.');
+        $response = $response->withJson($responseData);
+        return $response;
+      }
+      $client->setClientSecret($secret);
+      $client->setRedirectUri(getSettingsProp('env_url').'/oauth/google');
+      $plus = new Google_Service_Plus($client);
+      $data = array(getSettingsProp('google_oauth_client_id'), decryptItems(getSettingsProp('google_oauth_client_secret')), getSettingsProp('env_url').'/oauth/google', $args['code']);
+      $client->authenticate($args['code']);
+      $accessCode = $client->getAccessToken();
+      $id_token = $accessCode['id_token'];
+      $payload = $client->verifyIdToken($id_token);
+      //$me = $plus->people->get("me");
+      $userData = formatGoogleLoginUserData($payload);
+      if(checkTeamLogin($userData['email'])) {
+        $teamDomain = getSettingsProp('team_domain');
+        insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Google OAuth2. A '.$teamDomain.' email is required.');
+        return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
+      }
 
-    $user = checkLogin($userData);
-    if(FrcPortal\Auth::isAuthenticated()) {
-      $auth_user = FrcPortal\Auth::user();
-      if($user != false && $user->user_id != $auth_user->user_id) {
-        $responseData = array('status'=>false, 'msg'=>'Google account is already linked to another user');
-        insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Google account '.$userData['email'].' to their profile.  Account is linked to another user.');
+      $user = checkLogin($userData);
+      if(FrcPortal\Auth::isAuthenticated()) {
+        $auth_user = FrcPortal\Auth::user();
+        if($user != false && $user->user_id != $auth_user->user_id) {
+          $responseData = array('status'=>false, 'msg'=>'Google account is already linked to another user');
+          insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Google account '.$userData['email'].' to their profile.  Account is linked to another user.');
+        } else {
+          $provider = $userData['provider'];
+        	$id = $userData['id'];
+        	$email = $userData['email'];
+          $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
+            $responseData = array('status'=>false, 'msg'=>'Google account linked');
+            insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Google account '.$userData['email'].' to their profile.');
+        }
       } else {
-        $provider = $userData['provider'];
-      	$id = $userData['id'];
-      	$email = $userData['email'];
-        $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
-          $responseData = array('status'=>false, 'msg'=>'Google account linked');
-          insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Google account '.$userData['email'].' to their profile.');
+        if($user != false) {
+          $user->updateUserOnLogin($userData);
+    			$jwt = $user->generateUserJWT();
+          $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+          FrcPortal\Auth::setCurrentUser($user->user_id);
+          insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Google OAuth2.');
+        } else {
+          $teamNumber = getSettingsProp('team_number');
+          $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+          insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Google OAuth2. Google account not linked to any current portal user.');
+        }
       }
-    } else {
-      if($user != false) {
-        $user->updateUserOnLogin($userData);
-  			$jwt = $user->generateUserJWT();
-        $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-        FrcPortal\Auth::setCurrentUser($user->user_id);
-        insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Google OAuth2.');
-      } else {
-        $teamNumber = getSettingsProp('team_number');
-        $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
-        insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Google OAuth2. Google account not linked to any current portal user.');
-      }
+    } catch (Exception $e) {
+      $error = handleGoogleAPIException($e, 'Google Login');
+      $responseData = array('status'=>false, 'msg'=>'Google login failed.', 'error' => $error);
+      insertLogs($level = 'Warning', $message = $error);
+      $response = $response->withJson($responseData);
+      return $response;
     }
     $response = $response->withJson($responseData);
     return $response;
@@ -78,6 +93,12 @@ $app->group('/auth', function () {
     }
     $clientId = getSettingsProp('facebook_oauth_client_id');
     $secret = decryptItems(getSettingsProp('facebook_oauth_client_secret'));
+    if($secret == false) {
+      $responseData = array('status'=>false, 'msg'=>'Facebook login failed.');
+      insertLogs($level = 'Warning', $message = 'Decrypting the Facebook OAuth Client Secret failed. Please check and update the setting.');
+      $response = $response->withJson($responseData);
+      return $response;
+    }
     $redirect = getSettingsProp('env_url').'/oauth/facebook';
     $fb = new Facebook\Facebook([
       'app_id'  => getSettingsProp('facebook_oauth_client_id'),
@@ -153,6 +174,12 @@ $app->group('/auth', function () {
       return badRequestResponse($response, $msg = 'Invalid code from Microsoft Sign In');
     }
     $secret = decryptItems(getSettingsProp('microsoft_oauth_client_secret'));
+    if($secret == false) {
+      $responseData = array('status'=>false, 'msg'=>'Microsoft login failed.');
+      insertLogs($level = 'Warning', $message = 'Decrypting the Microsoft OAuth Client Secret failed. Please check and update the setting.');
+      $response = $response->withJson($responseData);
+      return $response;
+    }
     $clientId =  getSettingsProp('microsoft_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/microsoft';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://login.microsoftonline.com/common/oauth2/v2.0/']);
@@ -230,6 +257,12 @@ $app->group('/auth', function () {
       return badRequestResponse($response, $msg = 'Invalid code from Amazon Sign In');
     }
     $secret = decryptItems(getSettingsProp('amazon_oauth_client_secret'));
+    if($secret == false) {
+      $responseData = array('status'=>false, 'msg'=>'Amazon login failed.');
+      insertLogs($level = 'Warning', $message = 'Decrypting the Amazon OAuth Client Secret failed. Please check and update the setting.');
+      $response = $response->withJson($responseData);
+      return $response;
+    }
     $clientId =  getSettingsProp('amazon_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/amazon';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://api.amazon.com/']);
@@ -310,6 +343,12 @@ $app->group('/auth', function () {
       return badRequestResponse($response, $msg = 'Invalid code from Github Sign In');
     }
     $secret = decryptItems(getSettingsProp('github_oauth_client_secret'));
+    if($secret == false) {
+      $responseData = array('status'=>false, 'msg'=>'Github login failed.');
+      insertLogs($level = 'Warning', $message = 'Decrypting the Github OAuth Client Secret failed. Please check and update the setting.');
+      $response = $response->withJson($responseData);
+      return $response;
+    }
     $clientId =  getSettingsProp('github_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/github';
 
@@ -408,6 +447,12 @@ $app->group('/auth', function () {
       return badRequestResponse($response, $msg = 'Invalid code from Discord Sign In');
     }
     $secret = decryptItems(getSettingsProp('discord_oauth_client_secret'));
+    if($secret == false) {
+      $responseData = array('status'=>false, 'msg'=>'Discord login failed.');
+      insertLogs($level = 'Warning', $message = 'Decrypting the Discord OAuth Client Secret failed. Please check and update the setting.');
+      $response = $response->withJson($responseData);
+      return $response;
+    }
     $clientId =  getSettingsProp('discord_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/discord';
 
@@ -544,28 +589,159 @@ $app->group('/auth', function () {
       FrcPortal\Auth::setCurrentUser($user->user_id);
       insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using local credentials.');
     } else {
-      $responseData = $formData;
-      //$responseData = array('status'=>false, 'msg'=>'Username or Password not correct. Please try again.', );
+      //$responseData = $formData;
+      $responseData = array('status'=>false, 'msg'=>'Username or Password not correct. Please try again.', );
       insertLogs($level = 'Information', $message = $username.' attempted to login using local credentials. Username or Password not correct.');
     }
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Local Login');
 });
+use MadWizard\WebAuthn\Server\UserIdentity;
+use MadWizard\WebAuthn\Dom\AuthenticatorSelectionCriteria;
+use MadWizard\WebAuthn\Server\Registration\RegistrationOptions;
+use MadWizard\WebAuthn\Server\Registration\RegistrationContext;
+use MadWizard\WebAuthn\Format\ByteBuffer;
+use MadWizard\WebAuthn\Credential\UserHandle;
+use MadWizard\WebAuthn\Config\WebAuthnConfiguration;
+use MadWizard\WebAuthn\Server\WebAuthnServer;
+use MadWizard\WebAuthn\Server\Authentication\AuthenticationOptions;
+use MadWizard\WebAuthn\Server\Authentication\AuthenticationContext;
+use MadWizard\WebAuthn\Credential\CredentialId;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+$app->group('/webauthn', function () {
+  $this->get('/register', function ($request, $response) {
+    $responseData = false;
+    $user = FrcPortal\Auth::user();
+    $formData = $request->getParsedBody();
+    $provider = 'webauthn';
+    // Setup options
+    $options = getWebAuthnRegistrationOptions($user);
+    $config = getWebAuthnConfiguration();
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
+    $server = new WebAuthnServer($config,$credentialStore);
+    // Get array with configuration for webauthn client
+    $clientOptions = $server->startRegistration($options);
+    $opts = $clientOptions->getClientOptionsJson();
+    if($user->user_id != getIniProp('admin_user')) {
+      $user1 = FrcPortal\User::find($user->user_id);
+      if(!is_null($user1)) {
+        $user1->webauthn_challenge = $opts['challenge'];
+        $user1->save();
+      }
+    }
+    $response = $response->withJson($opts);
+    return $response;
+  })->setName('Device Credentials Start Registration');
+  $this->post('/register', function ($request, $response) {
+    $responseData = false;
+    $user = FrcPortal\Auth::user();
+    $formData = $request->getParsedBody();
+    $provider = 'webauthn';
+    // Setup options
+    $options = getWebAuthnRegistrationOptions($user);
+    $config = getWebAuthnConfiguration();
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
+    $server = new WebAuthnServer($config,$credentialStore);
+    if($user->user_id != getIniProp('admin_user')) {
+      $user1 = FrcPortal\User::find($user->user_id);
+      if(is_null($user1) || is_null($user1->webauthn_challenge) || $user1->webauthn_challenge == '') {
+        insertLogs($level = 'Warning', $message = 'User "'.$user->user_id.'" not found or invalid challenge.');
+        return badRequestResponse($response, $msg = 'Something went wrong with registration.');
+      }
+    }
+    $context = new RegistrationContext(new ByteBuffer($user1->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($user->user_id)));
+    $result = $server->finishRegistration(json_encode($formData), $context);
+    $credential = FrcPortal\UserCredential::where('credential_id',$formData['id'])->first();
+    $credential->name = isset($formData['name']) ? $formData['name'] : null;
+    $credential->platform = isset($formData['platform']) ? $formData['platform'] : null;
+    $credential->save();
+    $responseArr = array(
+      'status' => true,
+      'msg' => 'Device Credential Registration complete',
+      'data' => array(
+        'credential_id' => $formData['id'],
+        'type' => 'public-key',
+        'user' => $user->user_id,
+      )
+    );
+    insertLogs($level = 'Information', $message = $user->full_name.' successfully registered device credential "'.$credential->name.'" on '.$credential->platform.'.');
+    $response = $response->withJson($responseArr);
+    return $response;
+  })->setName('Device Credentials Finish Registration');
+  $this->get('/authenticate/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+    $responseData = false;
+    $formData = $request->getParsedBody();
+    $user_id = $args['user_id'];
+    $provider = 'webauthn';
+    // Setup options
+    $options = new AuthenticationOptions();
+    $options->setUserVerification('preferred');
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
+    $credentials = $credentialStore->getUserCredentialIds(UserHandle::fromBuffer(new ByteBuffer($user_id)));
+    foreach($credentials as $cred) {
+      $options->addAllowCredential($cred);
+    }
+    $config = getWebAuthnConfiguration();
+    $server = new WebAuthnServer($config,$credentialStore);
+    // Get array with configuration for webauthn client
+    $clientOptions = $server->startAuthentication($options);
+    $opts = $clientOptions->getClientOptionsJson();
+    if($user_id != getIniProp('admin_user')) {
+      $user1 = FrcPortal\User::find($user_id);
+      if(!is_null($user1)) {
+        $user1->webauthn_challenge = $opts['challenge'];
+        $user1->save();
+      }
+    }
+    $response = $response->withJson($opts);
+    return $response;
+  })->setName('Device Credentials Start Authentication');
+  $this->post('/authenticate', function ($request, $response) {
+    $responseData = false;
+    $formData = $request->getParsedBody();
+    $provider = 'webauthn';
+    // Setup options
+    $options = new AuthenticationOptions();
+    $options->setUserVerification('preferred');
+    $config = getWebAuthnConfiguration();
+    $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
+    $server = new WebAuthnServer($config,$credentialStore);
+    // Get array with configuration for webauthn client
+    $userId = $formData['response']['userHandle'] != '' ? base64_decode($formData['response']['userHandle']) : false;
+    if($userId == false) {
+      $credential = $credentialStore->findCredential(CredentialId::fromString($formData['id']));
+      $userId = $credential->getUserHandle()->toBinary();
+      unset($formData['response']['userHandle']);
+    }
+    if($userId != false && $userId != getIniProp('admin_user')) {
+      $user = FrcPortal\User::find($userId);
+      if(is_null($user) || is_null($user->webauthn_challenge) || $user->webauthn_challenge == '') {
+        insertLogs($level = 'Warning', $message = 'User "'.$userId.'" not found or invalid challenge.');
+        $responseData = array('status'=>false, 'msg' => 'Login with Device Credential Failed. Use another login method.', 'badCredential' => true);
+        $response = $response->withJson($responseData);
+        return $response;
+      }
+    }
+    $context = new AuthenticationContext(new ByteBuffer($user->webauthn_challenge), $config->getRelyingPartyOrigin(), $config->getRelyingPartyId(), UserHandle::fromBuffer(new ByteBuffer($userId)));
+    try {
+      $result = $server->finishAuthentication(json_encode($formData), $context);
+    } catch (MadWizard\WebAuthn\Exception\VerificationException $e) {
+      if($e->getMessage() == 'Account was not found') {
+        $responseData = array('status'=>false, 'msg'=>'Login with WebAuthn Failed. Use another login method.', 'error' => $e->getMessage(), 'badCredential' => true);
+        $response = $response->withJson($responseData);
+        return $response;
+      }
+    }
+    if($user != false) {
+      $jwt = $user->generateUserJWT();
+      $responseData = array('status'=>true, 'msg'=>'Login with Device Credential Successful', 'token'=>$jwt, 'userInfo' => $user);
+      FrcPortal\Auth::setCurrentUser($user->user_id);
+      insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using WebAuthn.');
+    }
+    $response = $response->withJson($responseData);
+    return $response;
+  })->setName('Device Credentials Finish Authentication');
+});
 
 ?>

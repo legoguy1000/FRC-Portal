@@ -157,7 +157,7 @@ function handleGoogleAPIException($e, $google_service) {
 		}
 		return $msg;
 	} else {
-		return $e->getMessage();
+		return $google_service.' Error: '.$e->getMessage();
 	}
 	return 'Something went wrong';
 }
@@ -798,11 +798,53 @@ function loginToFirst($email, $password) {
 	$form = $crawler->filter('form')->form();
 	$crawler = $client->submit($form);
 	$cookieJar = $client->getCookieJar();
+	$cookies = array();
 	$cookie = $cookieJar->get('DashboardTokenV0002', '/Dashboard', 'my.firstinspires.org');
 	if(is_null($cookie)) {
 		return false;
 	}
-	$cookieVal = $cookie->getValue();
-	return 'DashboardTokenV0002='.$cookieVal;
+	$cookies[] = 'DashboardTokenV0002='.$cookie->getValue();
+	$cookie = $cookieJar->get('LBr', '/', 'my.firstinspires.org');
+	if(!is_null($cookie)) {
+		$cookies[] = 'LBr='.$cookie->getValue();
+	}
+	$cookie = $cookieJar->get('ASP.NET_SessionId', '/', 'my.firstinspires.org');
+	if(!is_null($cookie)) {
+		$cookies[] = 'ASP.NET_SessionId='.$cookie->getValue();
+	}
+	return implode('; ',$cookies);
+}
+
+use MadWizard\WebAuthn\Config\WebAuthnConfiguration;
+function getWebAuthnConfiguration() {
+	$config = new WebAuthnConfiguration();
+	$env_url = rtrim(getSettingsProp('env_url'),'/');
+	if($env_url == '') {
+		$env_url = 'https://'.$_SERVER['HTTP_HOST'];
+	}
+	$config->setRelyingPartyId(preg_replace('#^https?://#', '', $env_url));
+	$config->setRelyingPartyName('FRC Portal');
+	$config->setRelyingPartyOrigin($env_url);
+	return $config;
+}
+
+use MadWizard\WebAuthn\Server\UserIdentity;
+use MadWizard\WebAuthn\Format\ByteBuffer;
+use MadWizard\WebAuthn\Server\Registration\RegistrationOptions;
+use MadWizard\WebAuthn\Dom\AuthenticatorSelectionCriteria;
+use MadWizard\WebAuthn\Credential\UserHandle;
+function getWebAuthnRegistrationOptions($user) {
+	// Get user identity. Note that the userHandle should be a unique identifier for each user
+	// (max 64 bytes). The WebAuthn specs recommend generating a random byte sequence for each
+	// user. The code below is just for testing purposes!
+	$userId = new UserIdentity(UserHandle::fromBuffer(new ByteBuffer($user->user_id)), $user->user_id, $user->full_name);
+	$options = new RegistrationOptions($userId);
+	$options->setAttestation('none');
+	$options->setExcludeExistingCredentials(true);
+	$criteria = new AuthenticatorSelectionCriteria();
+	$criteria->setAuthenticatorAttachment('platform');
+	$criteria->setUserVerification('preferred');
+	$options->setAuthenticatorSelection($criteria);
+	return $options;
 }
 ?>

@@ -3,8 +3,8 @@ FROM php:7.3-apache
 WORKDIR /var/www/html/
 
 # Update and install packages
-RUN apt-get update  && apt-get upgrade -y && \
-	apt-get install -y git libxml2-dev libzip-dev libcurl4-gnutls-dev unzip
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends git libxml2-dev libzip-dev libcurl4-gnutls-dev unzip libgmp-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 #cron
 
@@ -21,6 +21,8 @@ RUN docker-php-ext-install json
 RUN docker-php-ext-install pdo
 #RUN docker-php-ext-install pdo_dblib
 RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install gmp
+RUN docker-php-ext-install intl
 
 # Copy source over
 COPY . /var/www/html/
@@ -43,8 +45,6 @@ RUN mkdir /ssl_certs && openssl req -new -newkey rsa:4096 -x509 -sha256 -days 36
 RUN a2enmod rewrite
 RUN a2enmod ssl
 RUN a2ensite 000-default.conf
-
-RUN service apache2 restart
 
 EXPOSE 80 443
 

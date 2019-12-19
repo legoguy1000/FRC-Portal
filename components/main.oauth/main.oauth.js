@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.oauthController', ['$rootScope', '$state', '$auth', '$mdToast', '$state', '$stateParams', 'configItems', '$sce', 'loginService','$window','$mdDialog',
+.controller('main.oauthController', ['$rootScope', '$scope', '$state', '$auth', '$mdToast', '$stateParams', 'configItems', '$sce', 'loginService','$window','$mdDialog',
 	mainOauthController
 ]);
-function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $stateParams, configItems, $sce, loginService,$window,$mdDialog) {
+function mainOauthController($rootScope, $scope, $state, $auth, $mdToast, $stateParams, configItems, $sce, loginService,$window,$mdDialog) {
     var vm = this;
 
 		//$stateParams.provider;
@@ -24,6 +24,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 				locals: {
 					loginData: {
 						loading: true,
+						oauth: true,
 					}
 				}
 			});
@@ -33,7 +34,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 				vm.authed = $auth.isAuthenticated();
 				if(vm.authed) {
 					$window.localStorage['userInfo'] = angular.toJson(response.userInfo);
-					$rootScope.$emit('afterLoginAction');
+					$rootScope.$emit('afterLoginAction',{loginType: 'oauth', loginProvider: $stateParams.provider});
 				}
 			}
 			var state = 'main.home';
@@ -46,7 +47,7 @@ function mainOauthController($rootScope, $state, $auth, $mdToast, $state, $state
 				params = vm.state_from.params;
 			}
 			$state.go(state,params).then(function() {
-				$mdDialog.cancel();
+				$rootScope.$emit('closeLoginModal');
 			});
 		}
 		function sendCode() {

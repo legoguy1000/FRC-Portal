@@ -1,9 +1,9 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService',
+	'$rootScope', 'configItems', '$auth', '$timeout', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService','webauthnService',
 	mainController
 ]);
-function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService) {
+function mainController($rootScope, configItems, $auth, $timeout, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService,webauthnService) {
 	var main = this;
 
 	main.configItems = configItems;
@@ -24,6 +24,9 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 	main.signInAuthed = signinService.isAuthed();
 	main.browserData = {}
 	main.versionInfo = {}
+	main.loginProvider = null;
+	main.newCredential = null;
+	main.noCameras = true;
 
 	//lazy load dialog controllers
 	$ocLazyLoad.load('components/loginModal/loginModal.js');
@@ -169,13 +172,14 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		main.isAuthed = $auth.isAuthenticated();
 		main.userInfo = angular.fromJson(window.localStorage['userInfo']);
 		//main.StartEventSource();
-		if(main.userInfo != undefined && main.userInfo.first_login) {
-			//newUserModal();
-			$state.go('main.profile',{'firstLogin': true});
-		}
+		main.checkCamera();
+		// if(main.userInfo != undefined && main.userInfo.first_login) {
+		// 	//newUserModal();
+		// 	$state.go('main.profile',{'firstLogin': true});
+		// }
 	}
 
-/*	var askAuthenticator = function() {
+	main.askAuthenticator = function() {
 		var confirm = $mdDialog.confirm()
           .title('Would you like to use your fingerprint to login')
           .textContent('This device is capable of automatically logging you in using your fingerprint.')
@@ -185,34 +189,113 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
 	    	window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
 	      if (response == true) {
-					$mdDialog.show(confirm).then(function() {
-						var challenge = new Uint8Array(32);
-						window.crypto.getRandomValues(challenge);
-						var publicKey = {
-						    'challenge': challenge,
-						    'rp': {
-									'name': main.configItems.team_name,
-					        'id': main.configItems.env_url,
-						    },
-						    'user': {
-						        'id': Uint8Array.from(main.userInfo.user_id, c=>c.charCodeAt(0)),
-						        'name': main.userInfo.user_id,
-						        'displayName': main.userInfo.full_name
-						    },
-						    'pubKeyCredParams': [
-						        { 'type': 'public-key', 'alg': -7  },
-						        { 'type': 'public-key', 'alg': -257 }
-						    ]
+					return $mdDialog.show(confirm);
+				}
+			}).then(function() {
+				return webauthnService.getRegisterOptions();
+			}).then(response => {
+				console.log('creating creds');
+				var excludeCredentials = response.excludeCredentials == undefined ? [] : response.excludeCredentials.map(function(val){
+					var temp = val;
+					var unsafeBase64 = atob(val.id.replace(/_/g, '/').replace(/-/g, '+'));
+					temp.id = Uint8Array.from(unsafeBase64, c=>c.charCodeAt(0));
+					return temp;
+				})
+				var publicKey = {
+						challenge: Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
+						rp: {
+							'name': response.rp.name,
+							'id': response.rp.id,
+						},
+						user: {
+								'id': Uint8Array.from(response.user.id, c=>c.charCodeAt(0)),
+								'name': response.user.name,
+								'displayName': response.user.displayName
+						},
+						excludeCredentials: excludeCredentials,
+						pubKeyCredParams: response.pubKeyCredParams,
+						extensions: {
+							txAuthSimple: 'Please verify your identity to FRC Portal'
 						}
-						return navigator.credentials.create({ 'publicKey': publicKey })
-					}).then(newCredentialInfo => {
-							console.log('SUCCESS', newCredentialInfo)
-					});
-	      }
-	    });
+				}
+				console.log(publicKey);
+				return navigator.credentials.create({ 'publicKey': publicKey })
+			}, error => {
+				if(error) {
+					console.log(error)
+				}
+			}).then(newCredential => {
+					if(newCredential != undefined) {
+						console.log('SUCCESS', newCredential);
+						let attestationObject = new Uint8Array(newCredential.response.attestationObject);
+				    let clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON);
+				    let rawId = new Uint8Array(newCredential.rawId);
+						var data = {
+							id: newCredential.id,
+	            rawId: webauthnService.bufferEncode(rawId),
+	            type: newCredential.type,
+	            response: {
+	                attestationObject: webauthnService.bufferEncode(attestationObject),
+	                clientDataJSON: webauthnService.bufferEncode(clientDataJSON),
+	            },
+							name: '',
+						};
+						main.newCredential = data;
+				    var confirm = $mdDialog.prompt()
+				      .title('Please enter a name for this credential')
+				      .textContent('Naming this credential will allow you to easily identify it.')
+				      .placeholder('Credential Name')
+				      .ariaLabel('Credential Name')
+				      .required(true)
+				      .ok('submit')
+				      .cancel('cancel');
+			    	return $mdDialog.show(confirm);
+					}
+				}, function(error) {
+					if(error && error.name == 'InvalidStateError') {
+						$window.localStorage['webauthn_cred'] = angular.toJson({user: main.userInfo.user_id});
+						loginModal(null);
+					}
+					console.log(error.name)
+					console.log(error.message)
+				}).then(result => {
+					if(main.newCredential != null) {
+						var data = main.newCredential;
+						data.name = result;
+						data.platform = getCredPlatform();
+						return webauthnService.registerCredential(data);
+					}
+			}, error => {
+				if(error) {
+					console.log(error)
+				}
+			}).then(response => {
+				if(response) {
+					if(response.status) {
+						$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
+					}
+					return $mdToast.show(
+						$mdToast.simple()
+							.textContent(response.msg)
+							.position('top right')
+							.hideDelay(3000)
+					);
+				}
+			});
 	  }
-	} */
+	}
 
+	main.checkCamera = function() {
+		var cameras = [];
+		navigator.mediaDevices.enumerateDevices().then(function(devices) {
+		  devices.forEach(function(device) {
+				if(device.kind == 'videoinput') {
+					cameras.push(device);
+				}
+			});
+			main.noCameras = cameras.length == 0;
+		})
+	}
 	main.checkServiceWorker();
 
 	if(main.isAuthed) {
@@ -231,10 +314,20 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		$auth.logout();
 	}
 
-	$rootScope.$on('afterLoginAction', function(event) {
+	$rootScope.$on('afterLoginAction', function(event,args) {
 		console.info('Login Initiated');
 		loginActions();
-		//askAuthenticator();
+		if(args.loginType == 'oauth' && !($window.localStorage['webauthn_cred'] != null && $window.localStorage['webauthn_cred'] != undefined)) {
+			if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+		    	window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
+		      if (response == true) {
+						$timeout( function(){
+								main.askAuthenticator();
+							}, 600 );
+					}
+				})
+			}
+		}
 	});
 
 	$rootScope.$on('logOutAction', function(event, data) {
@@ -253,12 +346,31 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		main.title = $state.current.data.title;
 	});
 
-	function registerPlatformAuthenticator() {
-	  const advancedOptions = {};
-	  advancedOptions.userVerification = 'required';
-	  advancedOptions.authenticatorAttachment = 'platform';
-	  makeCredential(advancedOptions);
+	var getCredPlatform = function() {
+	  var userAgent = window.navigator.userAgent,
+	      platform = window.navigator.platform,
+	      macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
+	      windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
+	      iosPlatforms = ['iPhone', 'iPad', 'iPod'],
+	      device = null;
+
+	  if (macosPlatforms.indexOf(platform) !== -1) {
+	    device = 'mac';
+	  } else if (platform == 'iPhone' || platform == 'iPod') {
+	    device = 'iphone';
+	  } else if (platform == 'iPad') {
+	    device = 'ipad';
+	  } else if (windowsPlatforms.indexOf(platform) !== -1) {
+	    device = 'windows';
+	  } else if (/Android/.test(userAgent)) {
+	    device = 'android';
+	  } else if (!device && /Linux/.test(platform)) {
+	    device = 'linux';
+	  }
+	  return device;
 	}
+
+
 
 
 }

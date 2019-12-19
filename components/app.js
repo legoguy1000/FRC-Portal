@@ -56,6 +56,7 @@ angular.module('FrcPortal', [
 								 'components/services/logServices.js',
 								 'components/services/loginServices.js',
 								 'components/services/otherServices.js',
+								 'components/services/webauthnServices.js',
 						 ]);
 	    }]
 		},
@@ -715,7 +716,7 @@ angular.module('FrcPortal', [
 			var from_params_json = JSON.stringify(trans.params('from'));
 			var from_params = angular.fromJson(from_params_json);
 			delete from_params["#"];
-			$ocLazyLoad.load('components/loginModal/loginModal.js').then(function() {
+			$ocLazyLoad.load(['components/services/loginServices.js','components/services/webauthnServices.js', 'components/loginModal/loginModal.js']).then(function() {
 				$mdDialog.show({
 					controller: loginModalController,
 					controllerAs: 'vm',
@@ -779,11 +780,11 @@ angular.module('FrcPortal', [
 			}
 		}
 	});
-	$transitions.onStart({to: 'main.timein'}, function(trans) {
-		event.preventDefault();
-		var $state = trans.router.stateService;
-		return $state.target("main.home");
-	});
+	// $transitions.onStart({to: 'main.timein'}, function(trans) {
+	// 	event.preventDefault();
+	// 	var $state = trans.router.stateService;
+	// 	return $state.target("main.home");
+	// });
 });
 /*
 .config(function($authProvider, configItems) {

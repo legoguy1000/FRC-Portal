@@ -58,10 +58,25 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getUserWebAuthnCredentials: function (user_id) {
+			var user_id = user_id != undefined && user_id != null ? user_id:'';
+			return $http.get('api/users/'+user_id+'/webAuthnCredentials')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		deleteUserLinkedAccount: function (formData) {
 			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
 			var auth_id = formData.auth_id != undefined && formData.auth_id != null ? formData.auth_id:'';
 			return $http.delete('api/users/'+user_id+'/linkedAccounts/'+auth_id)
+			.then(function(response) {
+				return response.data;
+			});
+		},
+		deleteUserWebAuthnCredentials: function (formData) {
+			var user_id = formData.user_id != undefined && formData.user_id != null ? formData.user_id:'';
+			var cred_id = formData.cred_id != undefined && formData.cred_id != null ? formData.cred_id:'';
+			return $http.delete('api/users/'+user_id+'/webAuthnCredentials/'+cred_id)
 			.then(function(response) {
 				return response.data;
 			});

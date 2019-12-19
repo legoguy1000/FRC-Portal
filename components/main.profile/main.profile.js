@@ -10,12 +10,20 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
   vm.querySearch   = querySearch;
 	vm.notificationPreferences = [];
 	vm.linkedAccounts = [];
+	vm.WebAuthnCreds = [];
 	vm.seasonInfo = [];
 	vm.eventInfo = [];
 	vm.limitOptions = [1,5,10];
 	vm.rmhData = {};
 	vm.changePinNum = null;
 	vm.selectedTab = 0;
+	vm.localWebAuthCred = angular.fromJson($window.localStorage['webauthn_cred']);
+
+	if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+			window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
+			vm.webAuthnCredEnabled = response;
+		})
+	}
 	if($stateParams.firstLogin) {
 		vm.selectedTab = 3;
 		var dialog = $mdDialog.alert()
@@ -139,6 +147,15 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 	}
 	vm.getUserLinkedAccounts();
 
+	vm.getUserWebAuthnCredentials = function() {
+		vm.loading = true;
+		usersService.getUserWebAuthnCredentials($scope.main.userInfo.user_id).then(function(response) {
+			vm.WebAuthnCreds = response.data;
+			vm.loading = false;
+		});
+	}
+	vm.getUserWebAuthnCredentials();
+
 	vm.getUserNotificationPreferences = function() {
 		vm.loading = true;
 		usersService.getUserNotificationPreferences($scope.main.userInfo.user_id).then(function(response) {
@@ -194,6 +211,35 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 					.hideDelay(3000)
 			);
 		});
+	}
+
+	vm.deleteUserWebAuthnCredentials = function(cred) {
+		vm.loading = true;
+		var data = {
+			user_id: $scope.main.userInfo.user_id,
+			cred_id: cred.cred_id
+		}
+		usersService.deleteUserWebAuthnCredentials(data).then(function(response){
+			if(response.status) {
+				vm.WebAuthnCreds = response.data;
+				if(cred.credential_id == vm.localWebAuthCred.credential_id) {
+					$window.localStorage.removeItem('webauthn_cred');
+					vm.localWebAuthCred = null;
+				}
+			}
+			vm.loading = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+		});
+	}
+
+	vm.enrollCreds = function() {
+		$scope.main.askAuthenticator()
+		//vm.getUserWebAuthnCredentials();
 	}
 
 	vm.showSeasonHoursGraph = function(ev,year) {

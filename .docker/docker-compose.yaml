@@ -17,8 +17,26 @@ services:
      - 8080:80
     volumes:
      - /sessions
+# To use portal behind nginx reverse proxy, see below config and example nginx-default.conf file.  Remove lines 38-40 (ports) from portal_web config and add lines 36-37 (expose)
+  # portal-nginx:
+  #   image: nginx
+  #   ports:
+  #   - "80:80"
+  #   - "443:443"
+  #   environment:
+  #   - NGINX_HOST=www.example.com
+  #   - NGINX_PORT=80
+  #   volumes:
+  #   # Required (or self signed certs will be used):Must be cert.crt & key.key.
+  #   - "C:/Users/adr82/Documents/DockerStuff/test1/certs:/ssl_certs"
+  #   # Required to configre nginx as reverse proxy
+  #   - "C:/Users/adr82/Documents/GitHub/FRC-Portal/.docker/nginx-default.conf:/etc/nginx/conf.d/default.conf"
+  #   depends_on:
+  #   - portal-web
   portal-web:
     image: legoguy1000/frc-portal:dev
+    # expose:
+    #   - "443"
     ports:
     - "80:80"
     - "443:443"

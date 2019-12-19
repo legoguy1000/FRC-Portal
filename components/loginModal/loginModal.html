@@ -9,7 +9,15 @@
     </div>
   </md-toolbar>
   <md-dialog-content layout="column" layout-align="center center" class="layout-margin" style="min-height: 200px;">
-    <md-progress-circular md-mode="indeterminate" ng-disabled="!vm.loading" md-diameter="96" ng-show="vm.loading"></md-progress-circular>
+    <div layout="column" layout-align="center center" class="layout-margin" style="min-height: 200px;" ng-show="vm.loading">
+      <i class="material-icons" style="font-size: 64px;position: absolute;margin: 0;" ng-show="vm.webauthn">
+        fingerprint
+      </i>
+      <md-progress-circular md-mode="indeterminate" ng-disabled="!vm.loading" md-diameter="96"></md-progress-circular>
+    </div>
+    <div ng-show="vm.webauthn && vm.loading">
+      Click back/escape to cancel and login normally
+    </div>
     <div layout="column" ng-hide="vm.loading"> <!--ng-click="vm.authenticate('google')"-->
       <md-button class="md-raised google btn-large social" ng-href="{{vm.oauth_urls.google}}" style="min-width: 300px; text-align: left;" ng-show="!vm.showlocallogin && vm.configItems.google_login_enable">
         <i class="mdi mdi-google"></i>
@@ -35,12 +43,6 @@
         <i class="mdi mdi-discord"></i>
         Log in with Discord
       </md-button>
-      <div style="text-align: center; cursor: pointer; margin-top:10px;">
-          <a ng-click="vm.showlocal()">
-            <span ng-show="!vm.showlocallogin">Local Login</span>
-            <span ng-show="vm.showlocallogin">Social Logins</span>
-          </a>
-      </div>
       <div layout="column" ng-show="vm.showlocallogin && !vm.link_accounts">
         <form name="Form" ng-submit="vm.login()">
             <md-input-container class="md-block">
@@ -61,6 +63,20 @@
               <md-button ng-disabled="!Form.$valid" type="submit" class="md-raised md-primary">Login</md-button>
             </div>
           </form>
+      </div>
+      <div style="text-align: center; margin-top:10px;" ng-hide="vm.linkedAccounts">
+        <md-button class="md-icon-button" ng-click="vm.showlocal()" ng-show="!vm.showlocallogin">
+  				<md-tooltip md-direction="bottom">Local Admin Login</md-tooltip>
+  				<md-icon>vpn_key</md-icon>
+  			</md-button>
+        <md-button class="md-icon-button" ng-click="vm.showlocal()" ng-show="vm.showlocallogin">
+          <md-tooltip md-direction="bottom">Social Logins</md-tooltip>
+          <md-icon>people</md-icon>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="vm.webauthnLogin()" ng-show="vm.webauthn">
+          <md-tooltip md-direction="bottom">WebAuthn</md-tooltip>
+          <md-icon>fingerprint</md-icon>
+        </md-button>
       </div>
     </div>
     <!--<div>

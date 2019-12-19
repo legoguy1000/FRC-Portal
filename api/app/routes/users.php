@@ -25,6 +25,7 @@ $app->group('/users', function () {
     $page = $inputs['page'];
     $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
     $search = $request->getParam('search') !== null ? $request->getParam('search'):$searchProperties;
+    $returnColumns = $request->getParam('return') !== null && is_array($request->getParam('return')) ? $request->getParam('return'):array();
 
     $queryArr = array();
     $queryArr2 = array();
@@ -64,6 +65,12 @@ $app->group('/users', function () {
     }
 
     $users = $users->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+    if(!empty($returnColumns)) {
+      $users = $users->map(function ($user) use ($returnColumns) {
+          return $user->only($returnColumns);
+      });
+    }
+
 
 
     $data['data'] = $users;
@@ -229,6 +236,29 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Delete User Linked Account');
+    });
+    $this->group('/webAuthnCredentials', function () {
+      $this->get('', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
+        $user = $request->getAttribute('user');
+        $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user->web_authn_credentials()->get());
+        $response = $response->withJson($responseArr);
+        return $response;
+      })->setName('Get User Web Authn Credentials');
+      $this->delete('/{cred_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+        $userId = FrcPortal\Auth::user()->user_id;
+        $formData = $request->getParsedBody();
+        $responseArr = standardResponse($status = false, $msg = 'Something went wrong unlinking the account', $data = null);
+        $user = $request->getAttribute('user');
+        if($user->deleteWebAuthnCredential($args['cred_id'])) {
+          $responseArr['status'] = true;
+          $responseArr['msg'] ='Device Credential Deleted';
+          $responseArr['data'] = $user->web_authn_credentials()->get();
+        }
+        $response = $response->withJson($responseArr);
+        return $response;
+      })->setName('Delete User Web Authn Credentials');
     });
     $this->group('/notificationPreferences', function () {
       $this->get('', function ($request, $response, $args) {
