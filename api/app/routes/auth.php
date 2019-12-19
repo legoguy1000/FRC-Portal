@@ -15,51 +15,57 @@ $app->group('/auth', function () {
       insertLogs($level = 'Warning', $message = 'Invalid code from Google OAuth2 sign in.');
       return badRequestResponse($response, $msg = 'Invalid code from Google Sign In');
     }
-    $client = new Google_Client();
-    //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
-    $client->setClientId(getSettingsProp('google_oauth_client_id'));
-    $client->setClientSecret(decryptItems(getSettingsProp('google_oauth_client_secret')));
-    $client->setRedirectUri(getSettingsProp('env_url').'/oauth/google');
-    $plus = new Google_Service_Plus($client);
-    $data = array();
-    $client->authenticate($args['code']);
-    $accessCode = $client->getAccessToken();
-    $id_token = $accessCode['id_token'];
-    $payload = $client->verifyIdToken($id_token);
-    //$me = $plus->people->get("me");
-    $userData = formatGoogleLoginUserData($payload);
-    if(checkTeamLogin($userData['email'])) {
-      $teamDomain = getSettingsProp('team_domain');
-      insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Google OAuth2. A '.$teamDomain.' email is required.');
-      return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
-    }
+    try {
+      $client = new Google_Client();
+      //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
+      $client->setClientId(getSettingsProp('google_oauth_client_id'));
+      $client->setClientSecret(decryptItems(getSettingsProp('google_oauth_client_secret')));
+      $client->setRedirectUri(getSettingsProp('env_url').'/oauth/google');
+      $plus = new Google_Service_Plus($client);
+      $data = array();
+      $client->authenticate($args['code']);
+      $accessCode = $client->getAccessToken();
+      $id_token = $accessCode['id_token'];
+      $payload = $client->verifyIdToken($id_token);
+      //$me = $plus->people->get("me");
+      $userData = formatGoogleLoginUserData($payload);
+      if(checkTeamLogin($userData['email'])) {
+        $teamDomain = getSettingsProp('team_domain');
+        insertLogs($level = 'Warning', $message = $userData['email'].' attempted to login using Google OAuth2. A '.$teamDomain.' email is required.');
+        return unauthorizedResponse($response, $msg = 'A '.$teamDomain.' email is required');
+      }
 
-    $user = checkLogin($userData);
-    if(FrcPortal\Auth::isAuthenticated()) {
-      $auth_user = FrcPortal\Auth::user();
-      if($user != false && $user->user_id != $auth_user->user_id) {
-        $responseData = array('status'=>false, 'msg'=>'Google account is already linked to another user');
-        insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Google account '.$userData['email'].' to their profile.  Account is linked to another user.');
+      $user = checkLogin($userData);
+      if(FrcPortal\Auth::isAuthenticated()) {
+        $auth_user = FrcPortal\Auth::user();
+        if($user != false && $user->user_id != $auth_user->user_id) {
+          $responseData = array('status'=>false, 'msg'=>'Google account is already linked to another user');
+          insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Google account '.$userData['email'].' to their profile.  Account is linked to another user.');
+        } else {
+          $provider = $userData['provider'];
+        	$id = $userData['id'];
+        	$email = $userData['email'];
+          $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
+            $responseData = array('status'=>false, 'msg'=>'Google account linked');
+            insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Google account '.$userData['email'].' to their profile.');
+        }
       } else {
-        $provider = $userData['provider'];
-      	$id = $userData['id'];
-      	$email = $userData['email'];
-        $oauth = FrcPortal\Oauth::updateOrCreate(['oauth_id' => $id, 'oauth_provider' => strtolower($provider)], ['user_id' => $auth_user->user_id, 'oauth_user' => $email]);
-          $responseData = array('status'=>false, 'msg'=>'Google account linked');
-          insertLogs($level = 'Information', $message = $auth_user->full_name.' linked Google account '.$userData['email'].' to their profile.');
+        if($user != false) {
+          $user->updateUserOnLogin($userData);
+    			$jwt = $user->generateUserJWT();
+          $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
+          FrcPortal\Auth::setCurrentUser($user->user_id);
+          insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Google OAuth2.');
+        } else {
+          $teamNumber = getSettingsProp('team_number');
+          $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
+          insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Google OAuth2. Google account not linked to any current portal user.');
+        }
       }
-    } else {
-      if($user != false) {
-        $user->updateUserOnLogin($userData);
-  			$jwt = $user->generateUserJWT();
-        $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-        FrcPortal\Auth::setCurrentUser($user->user_id);
-        insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Google OAuth2.');
-      } else {
-        $teamNumber = getSettingsProp('team_number');
-        $responseData = array('status'=>false, 'msg'=>'Google account not linked to any current portal user.  If this is your first login, please use an account with the email you use to complete the Team '.$teamNumber.' Google form.');
-        insertLogs($level = 'Information', $message = $userData['email'].' attempted to log in using Google OAuth2. Google account not linked to any current portal user.');
-      }
+    } catch (Exception $e) {
+      $error = handleGoogleAPIException($e, 'Google Login');
+      $responseData = array('status'=>false, 'msg'=>'Google login failed.', 'error' => $error);
+      insertLogs($level = 'Warning', $message = $error);
     }
     $response = $response->withJson($responseData);
     return $response;
