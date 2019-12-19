@@ -23,6 +23,7 @@ $app->group('/auth', function () {
       if($secret == false) {
         $responseData = array('status'=>false, 'msg'=>'Google login failed.');
         insertLogs($level = 'Warning', $message = 'Decrypting the Google OAuth Client Secret failed. Please check and update the setting.');
+        $response = $response->withJson($responseData);
         return $response;
       }
       $client->setClientSecret($secret);
@@ -72,6 +73,7 @@ $app->group('/auth', function () {
       $error = handleGoogleAPIException($e, 'Google Login');
       $responseData = array('status'=>false, 'msg'=>'Google login failed.', 'error' => $error);
       insertLogs($level = 'Warning', $message = $error);
+      $response = $response->withJson($responseData);
       return $response;
     }
     $response = $response->withJson($responseData);
@@ -91,6 +93,12 @@ $app->group('/auth', function () {
     }
     $clientId = getSettingsProp('facebook_oauth_client_id');
     $secret = decryptItems(getSettingsProp('facebook_oauth_client_secret'));
+    if($secret == false) {
+      $responseData = array('status'=>false, 'msg'=>'Facebook login failed.');
+      insertLogs($level = 'Warning', $message = 'Decrypting the Facebook OAuth Client Secret failed. Please check and update the setting.');
+      $response = $response->withJson($responseData);
+      return $response;
+    }
     $redirect = getSettingsProp('env_url').'/oauth/facebook';
     $fb = new Facebook\Facebook([
       'app_id'  => getSettingsProp('facebook_oauth_client_id'),
@@ -166,6 +174,12 @@ $app->group('/auth', function () {
       return badRequestResponse($response, $msg = 'Invalid code from Microsoft Sign In');
     }
     $secret = decryptItems(getSettingsProp('microsoft_oauth_client_secret'));
+    if($secret == false) {
+      $responseData = array('status'=>false, 'msg'=>'Microsoft login failed.');
+      insertLogs($level = 'Warning', $message = 'Decrypting the Microsoft OAuth Client Secret failed. Please check and update the setting.');
+      $response = $response->withJson($responseData);
+      return $response;
+    }
     $clientId =  getSettingsProp('microsoft_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/microsoft';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://login.microsoftonline.com/common/oauth2/v2.0/']);
@@ -243,6 +257,12 @@ $app->group('/auth', function () {
       return badRequestResponse($response, $msg = 'Invalid code from Amazon Sign In');
     }
     $secret = decryptItems(getSettingsProp('amazon_oauth_client_secret'));
+    if($secret == false) {
+      $responseData = array('status'=>false, 'msg'=>'Amazon login failed.');
+      insertLogs($level = 'Warning', $message = 'Decrypting the Amazon OAuth Client Secret failed. Please check and update the setting.');
+      $response = $response->withJson($responseData);
+      return $response;
+    }
     $clientId =  getSettingsProp('amazon_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/amazon';
     $client = new GuzzleHttp\Client(['base_uri' => 'https://api.amazon.com/']);
@@ -323,6 +343,12 @@ $app->group('/auth', function () {
       return badRequestResponse($response, $msg = 'Invalid code from Github Sign In');
     }
     $secret = decryptItems(getSettingsProp('github_oauth_client_secret'));
+    if($secret == false) {
+      $responseData = array('status'=>false, 'msg'=>'Github login failed.');
+      insertLogs($level = 'Warning', $message = 'Decrypting the Github OAuth Client Secret failed. Please check and update the setting.');
+      $response = $response->withJson($responseData);
+      return $response;
+    }
     $clientId =  getSettingsProp('github_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/github';
 
@@ -421,6 +447,12 @@ $app->group('/auth', function () {
       return badRequestResponse($response, $msg = 'Invalid code from Discord Sign In');
     }
     $secret = decryptItems(getSettingsProp('discord_oauth_client_secret'));
+    if($secret == false) {
+      $responseData = array('status'=>false, 'msg'=>'Discord login failed.');
+      insertLogs($level = 'Warning', $message = 'Decrypting the Discord OAuth Client Secret failed. Please check and update the setting.');
+      $response = $response->withJson($responseData);
+      return $response;
+    }
     $clientId =  getSettingsProp('discord_oauth_client_id');
     $redirect = getSettingsProp('env_url').'/oauth/discord';
 
