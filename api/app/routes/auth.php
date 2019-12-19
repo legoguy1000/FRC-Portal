@@ -26,6 +26,7 @@ $app->group('/auth', function () {
       $client->authenticate($args['code']);
       $accessCode = $client->getAccessToken();
       $id_token = $accessCode['id_token'];
+      die(json_encode($accessCode));
       $payload = $client->verifyIdToken($id_token);
       //$me = $plus->people->get("me");
       $userData = formatGoogleLoginUserData($payload);
