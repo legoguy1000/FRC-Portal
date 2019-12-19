@@ -341,9 +341,9 @@ if(version_compare($version, '2.16.0','>=')) {
 }
 
 /**
-* 2.17.0-dev
+* 2.17.0
 **/
-if(version_compare($version, '2.17.0-dev','>=')) {
+if(version_compare($version, '2.17.0','>=')) {
   if(Capsule::schema()->hasTable('users') && !Capsule::schema()->hasColumn('users','webauthn_challenge')) {
     try {
       Capsule::schema()->table('users', function ($table, $as = null, $connection = null) {
@@ -358,25 +358,4 @@ if(version_compare($version, '2.17.0-dev','>=')) {
   }
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
-/*
-//Add Column
-if(Capsule::schema()->hasTable('events') && !Capsule::schema()->hasColumn('events','payment_amount')) {
-  //Backup Database
-  exportDB();
-  try {
-    Capsule::schema()->table('events', function($table, $as = null, $connection = null) {
-      $table->decimal('payment_amount', 5, 2)->default(00.00);
-    });
-  } catch (Exception $e) { }
-}
-//Add Column
-if(Capsule::schema()->hasTable('events') && !Capsule::schema()->hasColumn('events','hotel_info')) {
-  //Backup Database
-  exportDB();
-  try {
-    Capsule::schema()->table('events', function($table, $as = null, $connection = null) {
-    $table->text('hotel_info');
-    });
-  } catch (Exception $e) { }
-} */
 ?>
