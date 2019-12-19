@@ -47,7 +47,7 @@ function mainOauthController($rootScope, $scope, $state, $auth, $mdToast, $state
 				params = vm.state_from.params;
 			}
 			$state.go(state,params).then(function() {
-				dialog.cancel();
+				$rootScope.$emit('closeLoginModal');
 			});
 		}
 		function sendCode() {

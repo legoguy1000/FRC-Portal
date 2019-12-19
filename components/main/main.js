@@ -1,9 +1,9 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'configItems', '$auth', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService','webauthnService',
+	'$rootScope', 'configItems', '$auth', '$timeout', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService','webauthnService',
 	mainController
 ]);
-function mainController($rootScope, configItems, $auth, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService,webauthnService) {
+function mainController($rootScope, configItems, $auth, $timeout, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService,webauthnService) {
 	var main = this;
 
 	main.configItems = configItems;
@@ -220,33 +220,39 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 				}
 				console.log(publicKey);
 				return navigator.credentials.create({ 'publicKey': publicKey })
+			}, error => {
+				if(error) {
+					console.log(error)
+				}
 			}).then(newCredential => {
-					console.log('SUCCESS', newCredential);
-					let attestationObject = new Uint8Array(newCredential.response.attestationObject);
-			    let clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON);
-			    let rawId = new Uint8Array(newCredential.rawId);
-					var data = {
-						id: newCredential.id,
-            rawId: webauthnService.bufferEncode(rawId),
-            type: newCredential.type,
-            response: {
-                attestationObject: webauthnService.bufferEncode(attestationObject),
-                clientDataJSON: webauthnService.bufferEncode(clientDataJSON),
-            },
-						name: '',
-					};
-					main.newCredential = data;
-			    var confirm = $mdDialog.prompt()
-			      .title('Please enter a name for this credential')
-			      .textContent('Naming this credential will allow you to easily identify it.')
-			      .placeholder('Credential Name')
-			      .ariaLabel('Credential Name')
-			      .required(true)
-			      .ok('submit')
-			      .cancel('cancel');
-		    	return $mdDialog.show(confirm);
+					if(newCredential != undefined) {
+						console.log('SUCCESS', newCredential);
+						let attestationObject = new Uint8Array(newCredential.response.attestationObject);
+				    let clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON);
+				    let rawId = new Uint8Array(newCredential.rawId);
+						var data = {
+							id: newCredential.id,
+	            rawId: webauthnService.bufferEncode(rawId),
+	            type: newCredential.type,
+	            response: {
+	                attestationObject: webauthnService.bufferEncode(attestationObject),
+	                clientDataJSON: webauthnService.bufferEncode(clientDataJSON),
+	            },
+							name: '',
+						};
+						main.newCredential = data;
+				    var confirm = $mdDialog.prompt()
+				      .title('Please enter a name for this credential')
+				      .textContent('Naming this credential will allow you to easily identify it.')
+				      .placeholder('Credential Name')
+				      .ariaLabel('Credential Name')
+				      .required(true)
+				      .ok('submit')
+				      .cancel('cancel');
+			    	return $mdDialog.show(confirm);
+					}
 				}, function(error) {
-					if(error.name == 'InvalidStateError') {
+					if(error && error.name == 'InvalidStateError') {
 						$window.localStorage['webauthn_cred'] = angular.toJson({user: main.userInfo.user_id});
 						loginModal(null);
 					}
@@ -259,18 +265,22 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 						data.platform = getCredPlatform();
 						return webauthnService.registerCredential(data);
 					}
-			}, function(error) {
-				console.log(error)
-			}).then(response => {
-				if(response.status) {
-					$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
+			}, error => {
+				if(error) {
+					console.log(error)
 				}
-				return $mdToast.show(
-					$mdToast.simple()
-						.textContent(response.msg)
-						.position('top right')
-						.hideDelay(3000)
-				);
+			}).then(response => {
+				if(response) {
+					if(response.status) {
+						$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
+					}
+					return $mdToast.show(
+						$mdToast.simple()
+							.textContent(response.msg)
+							.position('top right')
+							.hideDelay(3000)
+					);
+				}
 			});
 	  }
 	}
@@ -308,7 +318,15 @@ function mainController($rootScope, configItems, $auth, navService, $mdSidenav, 
 		console.info('Login Initiated');
 		loginActions();
 		if(args.loginType == 'oauth' && !($window.localStorage['webauthn_cred'] != null && $window.localStorage['webauthn_cred'] != undefined)) {
-			main.askAuthenticator();
+			if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+		    	window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
+		      if (response == true) {
+						$timeout( function(){
+								main.askAuthenticator();
+							}, 600 );
+					}
+				})
+			}
 		}
 	});
 

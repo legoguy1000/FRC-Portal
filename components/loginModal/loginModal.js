@@ -149,6 +149,10 @@ function loginModalController($rootScope,$scope,$auth,$mdDialog,$window, configI
 		});
   };
 
+	$rootScope.$on('closeLoginModal', function(event) {
+		$mdDialog.cancel();
+	});
+
 	vm.oauth_urls = {
 		google: '',
 		facebook: '',
