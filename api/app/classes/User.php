@@ -8,7 +8,7 @@ use \Firebase\JWT\JWT;
 use FrcPortal\Utilities\IniConfig;
 
 class User extends Eloquent {
-  //use Traits\AdminStuff;
+  //use Traits\Admin;
   //table name
   protected $table = 'users';
   //Use Custom Primary Key
@@ -245,7 +245,7 @@ class User extends Eloquent {
   		'data' => array(
   			'user_id' => $this->user_id,
   			'full_name' => $this->full_name,
-  			'admin' => $this->admin,
+  			'admin' => $this->status && $this->admin,
   			'status' => $this->status,
   			'user_type' => $this->user_type,
   			'email' => $this->email,
