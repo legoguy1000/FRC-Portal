@@ -73,10 +73,10 @@ $app->group('/hours', function () {
     })->setName('Get Missing Hours Requests');
     $this->group('/{request_id:[a-z0-9]{13}}', function () {
       $this->put('/approve', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
+        $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        if(!FrcPortal\Auth::isAdmin()) {
+        if(!FrcPortal\Utilities\Auth::isAdmin()) {
           return unauthorizedResponse($response);
         }
         $request_id = $args['request_id'];
@@ -109,10 +109,10 @@ $app->group('/hours', function () {
         return $response;
       })->setName('Approve Missing Hours Request');
       $this->put('/deny', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
+        $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-        if(!FrcPortal\Auth::isAdmin()) {
+        if(!FrcPortal\Utilities\Auth::isAdmin()) {
           return unauthorizedResponse($response);
         }
         $request_id = $args['request_id'];
@@ -137,7 +137,7 @@ $app->group('/hours', function () {
   $this->group('/signIn', function() {
     //Get the list of users and their last sign/out and hours
     $this->get('/list', function ($request, $response, $args) {
-      $authed = FrcPortal\Auth::isAuthenticated() ? true:false;
+      $authed = FrcPortal\Utilities\Auth::isAuthenticated() ? true:false;
       if(!$authed && !is_null($request->getParam('signin_token'))) {
         $key = getSettingsProp('jwt_signin_key');
         $signin_token = $request->getParam('signin_token');
@@ -160,10 +160,10 @@ $app->group('/hours', function () {
     })->setName('Get Sign In List');
     //Time Sheet
     $this->get('/timeSheet/{date:(?:[1-9]\d{3})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])}', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
 
@@ -256,7 +256,7 @@ $app->group('/hours', function () {
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
           $user = $decoded->data;
-          FrcPortal\Auth::setCurrentUser($user->user_id);
+          FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
         } catch(ExpiredException $e) {
           insertLogs($level = 'Warning', $message = 'Tried to authorize sign in. User token was expired. '.$e->getMessage());
           return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
@@ -272,7 +272,7 @@ $app->group('/hours', function () {
         }
       } elseif(isset($args['auth_code'])) {
         $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status',true)->where('admin',true)->first();
-        FrcPortal\Auth::setCurrentUser($user->user_id);
+        FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
       } else {
         insertLogs($level = 'Warning', $message = 'Sign in authorization failed.');
         return badRequestResponse($response);
@@ -326,7 +326,7 @@ $app->group('/hours', function () {
       if(isset($args['time_end']) && $args['time_end'] != '') {
         $te = strtotime($args['time_end']);
       }
-      if(FrcPortal\Auth::isAdmin() || $decoded !== false) {
+      if(FrcPortal\Utilities\Auth::isAdmin() || $decoded !== false) {
         $tokenArr = generateSignInToken($ts, $te);
         $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Authorized', 'signin_token'=>$tokenArr['token'], 'qr_code'=>$tokenArr['qr_code']);
       } else {
@@ -345,7 +345,7 @@ $app->group('/hours', function () {
     //Clock in and Out
     $this->post('', function ($request, $response, $args) {
       $args = $request->getParsedBody();
-      FrcPortal\Auth::setCurrentUser($args['user_id']);
+      FrcPortal\Utilities\Auth::setCurrentUser($args['user_id']);
       if(isset($args['token'])) {
         $key = getSettingsProp('jwt_signin_key');
         try{
@@ -453,7 +453,7 @@ $app->group('/hours', function () {
     })->setName('Sign In with PIN');
     //Clock in and Out
     $this->post('/qr', function ($request, $response, $args) {
-      $user = FrcPortal\Auth::user();
+      $user = FrcPortal\Utilities\Auth::user();
       $args = $request->getParsedBody();
       if($user->other_adult) {
         insertLogs($level = 'Information', $message = $user->user_type.' user type is not authorized for sign in.');

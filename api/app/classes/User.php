@@ -5,9 +5,10 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
 use \Firebase\JWT\JWT;
+use FrcPortal\Utilities\IniConfig;
 
 class User extends Eloquent {
-  //use Traits\AdminStuff;
+  //use Traits\Admin;
   //table name
   protected $table = 'users';
   //Use Custom Primary Key
@@ -82,7 +83,7 @@ class User extends Eloquent {
 
 
   public function setAttributeVisibility(){
-    if(Auth::isAuthenticated()) {
+    if(Utilities\Auth::isAuthenticated()) {
       $this->makeVisible(['lname','grad_year','email','team_email','student_grade','phone','admin','adult','first_login','gender','user_type','mentor','student','slack_id','room_type','former_student','school','school_id','slack_enabled']);
     }
   }
@@ -97,7 +98,7 @@ class User extends Eloquent {
   }
 
   public function getFullNameAttribute($value) {
-    if(Auth::isAuthenticated()) {
+    if(Utilities\Auth::isAuthenticated()) {
       return $this->attributes['fname'].' '.$this->attributes['lname'];
     } else {
       return $this->attributes['fname'];
@@ -244,11 +245,11 @@ class User extends Eloquent {
   		'data' => array(
   			'user_id' => $this->user_id,
   			'full_name' => $this->full_name,
-  			'admin' => $this->admin,
+  			'admin' => $this->status && $this->admin,
   			'status' => $this->status,
   			'user_type' => $this->user_type,
   			'email' => $this->email,
-        'localadmin' => $this->user_id == getIniProp('admin_user'),
+        'localadmin' => $this->user_id == IniConfig::iniDataProperty('admin_user'),
   		)
   	);
   	$jwt = JWT::encode($token, $key);

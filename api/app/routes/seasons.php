@@ -45,10 +45,10 @@ $app->group('/seasons', function () {
     return $response;
   })->setName('Get Seasons');
   $this->post('', function ($request, $response, $args) {
-    $userId = FrcPortal\Auth::user()->user_id;
+    $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $formData = $request->getParsedBody();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-    if(!FrcPortal\Auth::isAdmin()) {
+    if(!FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
     if(!isset($formData['year']) || $formData['year'] == '') {
@@ -152,10 +152,10 @@ $app->group('/seasons', function () {
       return $response;
     })->setName('Get Season Annual Requirements');
     $this->put('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $season_id = $args['season_id'];
@@ -192,10 +192,10 @@ $app->group('/seasons', function () {
       return $response;
     })->setName('Update Season');
     $this->put('/updateMembershipForm', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong updating season membership form', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       //Season passed from middleware
@@ -218,10 +218,10 @@ $app->group('/seasons', function () {
       return $response;
     })->setName('Update Season Membership Form');
     $this->put('/pollMembershipForm', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $season_id = $args['season_id'];
@@ -234,10 +234,10 @@ $app->group('/seasons', function () {
       return $response;
     })->setName('Poll Season Membership Form');
     $this->put('/toggleAnnualReqs', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $season_id = $args['season_id'];
@@ -274,10 +274,10 @@ $app->group('/seasons', function () {
       return $response;
     })->setName('Toggle Annual Requirements');
     $this->delete('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $season_id = $args['season_id'];
@@ -293,7 +293,7 @@ $app->group('/seasons', function () {
   })->add(function ($request, $response, $next) {
     //Season Midddleware to pull season data
     // get the route from the request
-    $route = FrcPortal\Auth::getRoute();
+    $route = FrcPortal\Utilities\Auth::getRoute();
     if (!$route) {
         // no route matched
         return $next($request, $response);

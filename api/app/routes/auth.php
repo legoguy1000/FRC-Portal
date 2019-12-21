@@ -2,6 +2,8 @@
 use \Firebase\JWT\JWT;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
+use FrcPortal\Utilities\IniConfig;
+
 $app->group('/auth', function () {
   $this->post('/google', function ($request, $response) {
     $responseData = false;
@@ -43,8 +45,8 @@ $app->group('/auth', function () {
       }
 
       $user = checkLogin($userData);
-      if(FrcPortal\Auth::isAuthenticated()) {
-        $auth_user = FrcPortal\Auth::user();
+      if(FrcPortal\Utilities\Auth::isAuthenticated()) {
+        $auth_user = FrcPortal\Utilities\Auth::user();
         if($user != false && $user->user_id != $auth_user->user_id) {
           $responseData = array('status'=>false, 'msg'=>'Google account is already linked to another user');
           insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Google account '.$userData['email'].' to their profile.  Account is linked to another user.');
@@ -61,7 +63,7 @@ $app->group('/auth', function () {
           $user->updateUserOnLogin($userData);
     			$jwt = $user->generateUserJWT();
           $responseData = array('status'=>true, 'msg'=>'Login with Google Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-          FrcPortal\Auth::setCurrentUser($user->user_id);
+          FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
           insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Google OAuth2.');
         } else {
           $teamNumber = getSettingsProp('team_number');
@@ -121,8 +123,8 @@ $app->group('/auth', function () {
         }
 
         $user = checkLogin($userData);
-        if(FrcPortal\Auth::isAuthenticated()) {
-          $auth_user = FrcPortal\Auth::user();
+        if(FrcPortal\Utilities\Auth::isAuthenticated()) {
+          $auth_user = FrcPortal\Utilities\Auth::user();
           if($user != false && $user->user_id != $auth_user->user_id) {
             $responseData = array('status'=>false, 'msg'=>'Facebook account is already linked to another user');
             insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Facebook account '.$userData['email'].' to their profile.  Account is linked to another user.');
@@ -139,7 +141,7 @@ $app->group('/auth', function () {
             $user->updateUserOnLogin($userData);
       			$jwt = $user->generateUserJWT();
             $responseData = array('status'=>true, 'msg'=>'Login with Facebook Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-            FrcPortal\Auth::setCurrentUser($user->user_id);
+            FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
             insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Facebook OAuth2.');
           } else {
             $teamNumber = getSettingsProp('team_number');
@@ -215,8 +217,8 @@ $app->group('/auth', function () {
     }
 
     $user = checkLogin($userData);
-    if(FrcPortal\Auth::isAuthenticated()) {
-      $auth_user = FrcPortal\Auth::user();
+    if(FrcPortal\Utilities\Auth::isAuthenticated()) {
+      $auth_user = FrcPortal\Utilities\Auth::user();
       if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Microsoft account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Microsoft account '.$userData['email'].' to their profile.  Account is linked to another user.');
@@ -233,7 +235,7 @@ $app->group('/auth', function () {
         $user->updateUserOnLogin($userData);
   			$jwt = $user->generateUserJWT();
         $responseData = array('status'=>true, 'msg'=>'Login with Microsoft Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-        FrcPortal\Auth::setCurrentUser($user->user_id);
+        FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
         insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Microsoft OAuth2.');
       } else {
         $teamNumber = getSettingsProp('team_number');
@@ -301,8 +303,8 @@ $app->group('/auth', function () {
     }
 
     $user = checkLogin($userData);
-    if(FrcPortal\Auth::isAuthenticated()) {
-      $auth_user = FrcPortal\Auth::user();
+    if(FrcPortal\Utilities\Auth::isAuthenticated()) {
+      $auth_user = FrcPortal\Utilities\Auth::user();
       if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Amazon account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Amazon account '.$userData['email'].' to their profile.  Account is linked to another user.');
@@ -319,7 +321,7 @@ $app->group('/auth', function () {
         $user->updateUserOnLogin($userData);
         $jwt = $user->generateUserJWT();
         $responseData = array('status'=>true, 'msg'=>'Login with Amazon Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-        FrcPortal\Auth::setCurrentUser($user->user_id);
+        FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
         insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Amazon OAuth2.');
       } else {
         $teamNumber = getSettingsProp('team_number');
@@ -386,8 +388,8 @@ $app->group('/auth', function () {
     }
 
     $user = checkLogin($userData);
-    if(FrcPortal\Auth::isAuthenticated()) {
-      $auth_user = FrcPortal\Auth::user();
+    if(FrcPortal\Utilities\Auth::isAuthenticated()) {
+      $auth_user = FrcPortal\Utilities\Auth::user();
       if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Github account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Github account '.$userData['email'].' to their profile.  Account is linked to another user.');
@@ -423,7 +425,7 @@ $app->group('/auth', function () {
         $user->updateUserOnLogin($userData);
         $jwt = $user->generateUserJWT();
         $responseData = array('status'=>true, 'msg'=>'Login with Github Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-        FrcPortal\Auth::setCurrentUser($user->user_id);
+        FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
         insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Github OAuth2.');
       } else {
         $teamNumber = getSettingsProp('team_number');
@@ -492,8 +494,8 @@ $app->group('/auth', function () {
     }
 
     $user = checkLogin($userData);
-    if(FrcPortal\Auth::isAuthenticated()) {
-      $auth_user = FrcPortal\Auth::user();
+    if(FrcPortal\Utilities\Auth::isAuthenticated()) {
+      $auth_user = FrcPortal\Utilities\Auth::user();
       if($user != false && $user->user_id != $auth_user->user_id) {
         $responseData = array('status'=>false, 'msg'=>'Discord account is already linked to another user');
         insertLogs($level = 'Information', $message = $auth_user->full_name.' attempted to link Discord account '.$userData['email'].' to their profile.  Account is linked to another user.');
@@ -510,7 +512,7 @@ $app->group('/auth', function () {
         $user->updateUserOnLogin($userData);
         $jwt = $user->generateUserJWT();
         $responseData = array('status'=>true, 'msg'=>'Login with Discord Account Successful', 'token'=>$jwt, 'userInfo' => $user);
-        FrcPortal\Auth::setCurrentUser($user->user_id);
+        FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
         insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using Discord OAuth2.');
       } else {
         $teamNumber = getSettingsProp('team_number');
@@ -582,11 +584,11 @@ $app->group('/auth', function () {
     }
     $username = $formData['user'];
     $password = $formData['password'];
-    if($username == getIniProp('admin_user') && hash('sha512',$password) == getIniProp('admin_pass')) {
+    if($username == IniConfig::iniDataProperty('admin_user') && hash('sha512',$password) == IniConfig::iniDataProperty('admin_pass')) {
       $user = localAdminModel();
       $jwt = $user->generateUserJWT();
       $responseData = array('status'=>true, 'msg'=>'Login Successful', 'token'=>$jwt, 'userInfo' => $user);
-      FrcPortal\Auth::setCurrentUser($user->user_id);
+      FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
       insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using local credentials.');
     } else {
       //$responseData = $formData;
@@ -612,7 +614,7 @@ use MadWizard\WebAuthn\Credential\CredentialId;
 $app->group('/webauthn', function () {
   $this->get('/register', function ($request, $response) {
     $responseData = false;
-    $user = FrcPortal\Auth::user();
+    $user = FrcPortal\Utilities\Auth::user();
     $formData = $request->getParsedBody();
     $provider = 'webauthn';
     // Setup options
@@ -623,7 +625,7 @@ $app->group('/webauthn', function () {
     // Get array with configuration for webauthn client
     $clientOptions = $server->startRegistration($options);
     $opts = $clientOptions->getClientOptionsJson();
-    if($user->user_id != getIniProp('admin_user')) {
+    if($user->user_id != IniConfig::iniDataProperty('admin_user')) {
       $user1 = FrcPortal\User::find($user->user_id);
       if(!is_null($user1)) {
         $user1->webauthn_challenge = $opts['challenge'];
@@ -635,7 +637,7 @@ $app->group('/webauthn', function () {
   })->setName('Device Credentials Start Registration');
   $this->post('/register', function ($request, $response) {
     $responseData = false;
-    $user = FrcPortal\Auth::user();
+    $user = FrcPortal\Utilities\Auth::user();
     $formData = $request->getParsedBody();
     $provider = 'webauthn';
     // Setup options
@@ -643,7 +645,7 @@ $app->group('/webauthn', function () {
     $config = getWebAuthnConfiguration();
     $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
     $server = new WebAuthnServer($config,$credentialStore);
-    if($user->user_id != getIniProp('admin_user')) {
+    if($user->user_id != IniConfig::iniDataProperty('admin_user')) {
       $user1 = FrcPortal\User::find($user->user_id);
       if(is_null($user1) || is_null($user1->webauthn_challenge) || $user1->webauthn_challenge == '') {
         insertLogs($level = 'Warning', $message = 'User "'.$user->user_id.'" not found or invalid challenge.');
@@ -687,7 +689,7 @@ $app->group('/webauthn', function () {
     // Get array with configuration for webauthn client
     $clientOptions = $server->startAuthentication($options);
     $opts = $clientOptions->getClientOptionsJson();
-    if($user_id != getIniProp('admin_user')) {
+    if($user_id != IniConfig::iniDataProperty('admin_user')) {
       $user1 = FrcPortal\User::find($user_id);
       if(!is_null($user1)) {
         $user1->webauthn_challenge = $opts['challenge'];
@@ -714,7 +716,7 @@ $app->group('/webauthn', function () {
       $userId = $credential->getUserHandle()->toBinary();
       unset($formData['response']['userHandle']);
     }
-    if($userId != false && $userId != getIniProp('admin_user')) {
+    if($userId != false && $userId != IniConfig::iniDataProperty('admin_user')) {
       $user = FrcPortal\User::find($userId);
       if(is_null($user) || is_null($user->webauthn_challenge) || $user->webauthn_challenge == '') {
         insertLogs($level = 'Warning', $message = 'User "'.$userId.'" not found or invalid challenge.');
@@ -736,7 +738,7 @@ $app->group('/webauthn', function () {
     if($user != false) {
       $jwt = $user->generateUserJWT();
       $responseData = array('status'=>true, 'msg'=>'Login with Device Credential Successful', 'token'=>$jwt, 'userInfo' => $user);
-      FrcPortal\Auth::setCurrentUser($user->user_id);
+      FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
       insertLogs($level = 'Information', $message = $user->full_name.' successfully logged in using WebAuthn.');
     }
     $response = $response->withJson($responseData);
