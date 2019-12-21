@@ -1,7 +1,8 @@
 <?php
-namespace FrcPortal;
+namespace FrcPortal\Utilities;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use FrcPortal\User;
 
 class Auth {
   //use Traits\AdminStuff;

@@ -148,7 +148,7 @@ $app->group('/users', function () {
       });
     });
     $this->put('/pin', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       $user_id = $args['user_id'];
@@ -175,7 +175,7 @@ $app->group('/users', function () {
       return $response;
     })->setName('Update User Sign In PIN');
     $this->get('/hoursByDate/{year:[0-9]{4}}', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
 
@@ -216,7 +216,7 @@ $app->group('/users', function () {
     })->setName('Get User Hours by Year');
     $this->group('/linkedAccounts', function () {
       $this->get('', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
+        $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $user = $request->getAttribute('user');
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user->oauth()->get());
@@ -224,7 +224,7 @@ $app->group('/users', function () {
         return $response;
       })->setName('Get User Linked Accounts');
       $this->delete('/{auth_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
+        $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong unlinking the account', $data = null);
         $user = $request->getAttribute('user');
@@ -239,7 +239,7 @@ $app->group('/users', function () {
     });
     $this->group('/webAuthnCredentials', function () {
       $this->get('', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
+        $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $user = $request->getAttribute('user');
         $responseArr = array('status'=>true, 'msg'=>'', 'data' => $user->web_authn_credentials()->get());
@@ -247,7 +247,7 @@ $app->group('/users', function () {
         return $response;
       })->setName('Get User Web Authn Credentials');
       $this->delete('/{cred_id:[a-z0-9]{13}}', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
+        $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong unlinking the account', $data = null);
         $user = $request->getAttribute('user');
@@ -262,7 +262,7 @@ $app->group('/users', function () {
     });
     $this->group('/notificationPreferences', function () {
       $this->get('', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
+        $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         $user = $request->getAttribute('user');
@@ -271,7 +271,7 @@ $app->group('/users', function () {
         return $response;
       })->setName('Get User Notification Preferences');
       $this->put('', function ($request, $response, $args) {
-        $userId = FrcPortal\Auth::user()->user_id;
+        $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         $user_id = $args['user_id'];
@@ -306,7 +306,7 @@ $app->group('/users', function () {
       })->setName('Update User Notification Preferences');
     });
     $this->post('/requestMissingHours', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       $user_id = $args['user_id'];
@@ -353,13 +353,13 @@ $app->group('/users', function () {
       return $response;
     })->setName('Request Missing Hours');
     $this->put('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
 
       $user_id = $args['user_id'];
       $selfUpdate = $user_id == $userId;
-      $admin = FrcPortal\Auth::isAdmin();
+      $admin = FrcPortal\Utilities\Auth::isAdmin();
       if(!$selfUpdate && !$admin) {
         insertLogs($level = 'Warning', $message = 'User information update failed. Unauthorized user.');
         return unauthorizedResponse($response);
@@ -405,12 +405,12 @@ $app->group('/users', function () {
       return $response;
     })->setName('Update User');
     $this->delete('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
 
       $user_id = $args['user_id'];
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         insertLogs($level = 'Warning', $message = 'User deletetion failed. Unauthorized user.');
         return unauthorizedResponse($response);
       }
@@ -425,19 +425,19 @@ $app->group('/users', function () {
   })->add(function ($request, $response, $next) {
     //User Midddleware to pull season data
     // get the route from the request
-    $route = FrcPortal\Auth::getRoute();
+    $route = FrcPortal\Utilities\Auth::getRoute();
     if (!$route) {
         // no route matched
         return $next($request, $response);
     }
-    $userId = FrcPortal\Auth::user()->user_id;
+    $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $args = $route->getArguments();
     $user_id = $args['user_id'];
     $user = FrcPortal\User::find($user_id);
     if(is_null($user)) {
       return notFoundResponse($response, $msg = 'User not found');
     }
-    if($user_id != $userId && !FrcPortal\Auth::isAdmin()) {
+    if($user_id != $userId && !FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
     $request = $request->withAttribute('user', $user);

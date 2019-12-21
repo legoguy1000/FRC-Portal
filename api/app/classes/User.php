@@ -82,7 +82,7 @@ class User extends Eloquent {
 
 
   public function setAttributeVisibility(){
-    if(Auth::isAuthenticated()) {
+    if(Utilities\Auth::isAuthenticated()) {
       $this->makeVisible(['lname','grad_year','email','team_email','student_grade','phone','admin','adult','first_login','gender','user_type','mentor','student','slack_id','room_type','former_student','school','school_id','slack_enabled']);
     }
   }
@@ -97,7 +97,7 @@ class User extends Eloquent {
   }
 
   public function getFullNameAttribute($value) {
-    if(Auth::isAuthenticated()) {
+    if(Utilities\Auth::isAuthenticated()) {
       return $this->attributes['fname'].' '.$this->attributes['lname'];
     } else {
       return $this->attributes['fname'];

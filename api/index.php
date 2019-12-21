@@ -52,14 +52,14 @@ $app->add(function ($request, $response, $next) {
   }
   if(!is_null($authToken)) {
     $userId = $authToken['data']->user_id;
-  	FrcPortal\Auth::setCurrentUser($userId);
-  	FrcPortal\Auth::setCurrentToken($authToken);
+  	FrcPortal\Utilities\Auth::setCurrentUser($userId);
+  	FrcPortal\Utilities\Auth::setCurrentToken($authToken);
     /* Everything ok, call next middleware. */
   }
   $ipAddress = $request->getAttribute('ip_address');
-  FrcPortal\Auth::setClientIP($ipAddress);
+  FrcPortal\Utilities\Auth::setClientIP($ipAddress);
   $route = $request->getAttribute('route');
-  FrcPortal\Auth::setRoute($route);
+  FrcPortal\Utilities\Auth::setRoute($route);
 	$response = $next($request, $response);
   return $response;
 });
@@ -85,19 +85,19 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     "before" => function ($request, $arguments) {
       //$authToken = $request->getAttribute("token");
       //$userId = $authToken['data']->user_id;
-      //FrcPortal\Auth::setCurrentUser($userId);
-      //FrcPortal\Auth::setCurrentToken($authToken);
-      //$test = FrcPortal\Auth::user()->user_id;
+      //FrcPortal\Utilities\Auth::setCurrentUser($userId);
+      //FrcPortal\Utilities\Auth::setCurrentToken($authToken);
+      //$test = FrcPortal\Utilities\Auth::user()->user_id;
       //error_log($test, 0);
       return $request;
     },
     "after" => function ($response, $arguments) {
-      $token = FrcPortal\Auth::currentToken();
+      $token = FrcPortal\Utilities\Auth::currentToken();
       $exp = $token['exp'];
       $status = $response->getStatusCode();
       if($exp - time() <= 15*60 && $status == 200) {
         $body = json_decode($response->getBody(),true);
-        $user = FrcPortal\Auth::user();
+        $user = FrcPortal\Utilities\Auth::user();
         if(!is_null($user)) {
           $body['token'] = $user->generateUserJWT();
         }
@@ -117,14 +117,14 @@ $container['logger'] = function($c) {
 
 $app->get('/version', function (Request $request, Response $response, array $args) {
   //$this->logger->addInfo('Called version endpoint');
-  $route = FrcPortal\Auth::getRoute();
+  $route = FrcPortal\Utilities\Auth::getRoute();
   $version = getGitVersion();
   $responseArr = array_merge($version, array(
     'host' => $_SERVER["HTTP_HOST"],
-    'user' => FrcPortal\Auth::user(),
-    'token' => FrcPortal\Auth::currentToken(),
-    'isAuthenticated' => FrcPortal\Auth::isAuthenticated(),
-    'ip' => FrcPortal\Auth::getClientIP(),
+    'user' => FrcPortal\Utilities\Auth::user(),
+    'token' => FrcPortal\Utilities\Auth::currentToken(),
+    'isAuthenticated' => FrcPortal\Utilities\Auth::isAuthenticated(),
+    'ip' => FrcPortal\Utilities\Auth::getClientIP(),
     /*'route' => array(
       'name' => $route->getName(),
       'groups' => $route->getGroups(),

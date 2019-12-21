@@ -176,21 +176,21 @@ function handleExceptionMessage($e) {
 }
 
 function insertLogs($level, $message) {
-	$authed = FrcPortal\Auth::isAuthenticated();
+	$authed = FrcPortal\Utilities\Auth::isAuthenticated();
 	$log = new FrcPortal\Log();
 	if($authed) {
-		$userId = FrcPortal\Auth::user()->user_id;
+		$userId = FrcPortal\Utilities\Auth::user()->user_id;
 		if($userId == getIniProp('admin_user')) {
 			$message = '(Local Admin) '.$message;
 		} else {
 			$log->user_id = $userId;
 		}
 	}
-	$route = FrcPortal\Auth::getRoute();
+	$route = FrcPortal\Utilities\Auth::getRoute();
 	if(!is_null($route)) {
 		$log->route = $route->getName();
 	}
-	$ip = FrcPortal\Auth::getClientIP();
+	$ip = FrcPortal\Utilities\Auth::getClientIP();
 	$log->level = ucfirst($level);
 	$log->message = $message;
 	$log->ip_address = $ip;
