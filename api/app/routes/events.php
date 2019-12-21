@@ -108,6 +108,7 @@ $app->group('/events', function () {
     	$q = trim($request->getParam('q'));
     	$optParams['q'] = $q;
     }
+    $optParams['timeMax'] = date('c',strtotime('+3 Months'));
     if($request->getParam('timeMax') != null && $request->getParam('timeMax') != '' && $request->getParam('timeMax') != 'null' && $request->getParam('timeMax') != 'undefined') {
     	$timeMax = date('c', strtotime($request->getParam('timeMax')));
     	if(is_numeric($request->getParam('timeMax'))) {

@@ -14,7 +14,7 @@
 				<md-input-container flex class="md-icon-float md-block">
 					<label>Year</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.data.year" required
+					<input moment-picker="vm.data.year" required autocomplete="off"
 						 format="YYYY"
 						 min-view="decade"
 						 max-view="year"
@@ -31,7 +31,7 @@
 				<md-input-container flex class="md-icon-float md-block">
 					<label>Start Date/Kickoff</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.data.start_date" required
+					<input moment-picker="vm.data.start_date" required autocomplete="off"
 						 format="LL"
 						 min-view="year"
 						 max-view="day"
@@ -43,7 +43,7 @@
 				<md-input-container flex class="md-icon-float md-block" ng-show="vm.data.year <= 2019">
 					<label>Bag Date</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.data.bag_day" ng-required="vm.data.year <= 2019"
+					<input moment-picker="vm.data.bag_day" ng-required="vm.data.year <= 2019" autocomplete="off"
 						 format="LL"
 						 min-view="year"
 						 max-view="day"
