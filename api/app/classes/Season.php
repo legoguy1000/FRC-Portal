@@ -45,6 +45,7 @@ class Season extends Eloquent {
   protected $casts = [
     'year' => 'integer',
     'hour_requirement' => 'integer',
+    'hour_requirement_week' => 'integer',
     'membership_form_map' => 'array',
   ];
 
