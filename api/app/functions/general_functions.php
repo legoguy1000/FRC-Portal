@@ -3,6 +3,7 @@ use \Firebase\JWT\JWT;
 use Goutte\Client;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 use GuzzleHttp\Client as GuzzleClient;
+use FrcPortal\Utilities\IniConfig;
 
 function getRealIpAddr() {
 	$ip = '';
@@ -127,7 +128,7 @@ function getServiceAccountData() {
 
 function encryptItems($decrypted) {
 	$nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
-	$key = hex2bin(getIniProp('encryption_key'));
+	$key = hex2bin(IniConfig::iniDataProperty('encryption_key'));
 	$ciphertext = sodium_crypto_secretbox($decrypted, $nonce, $key);
 	$encrypted = base64_encode($nonce.$ciphertext);
 	return $encrypted;
@@ -137,7 +138,7 @@ function decryptItems($encrypted) {
 	$decoded = base64_decode($encrypted);
 	$nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
 	$ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
-	$key = hex2bin(getIniProp('encryption_key'));
+	$key = hex2bin(IniConfig::iniDataProperty('encryption_key'));
 	$decrypted = sodium_crypto_secretbox_open($ciphertext, $nonce, $key);
 	return $decrypted;
 }
@@ -180,7 +181,7 @@ function insertLogs($level, $message) {
 	$log = new FrcPortal\Log();
 	if($authed) {
 		$userId = FrcPortal\Utilities\Auth::user()->user_id;
-		if($userId == getIniProp('admin_user')) {
+		if($userId == IniConfig::iniDataProperty('admin_user')) {
 			$message = '(Local Admin) '.$message;
 		} else {
 			$log->user_id = $userId;
@@ -286,10 +287,10 @@ function exportDB() {
 	if (!file_exists($folder)) {
 	    mkdir($folder,0777,true);
 	}
-	$mysqlDatabaseName = getIniProp('db_name');
-	$mysqlUserName = getIniProp('db_user');
-	$mysqlPassword = getIniProp('db_pass');
-	$mysqlHostName = getIniProp('db_host');
+	$mysqlDatabaseName = IniConfig::iniDataProperty('db_name');
+	$mysqlUserName = IniConfig::iniDataProperty('db_user');
+	$mysqlPassword = IniConfig::iniDataProperty('db_pass');
+	$mysqlHostName = IniConfig::iniDataProperty('db_host');
 	$mysqlExportPath = $folder.date('Y-m-d H:i:s').' '.$mysqlDatabaseName.'.sql';
 	$worked = null;
 	if (!file_exists($mysqlExportPath)) {

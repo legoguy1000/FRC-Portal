@@ -2,10 +2,10 @@
 use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/settings', function () {
   $this->get('', function ($request, $response, $args) {
-    $userId = FrcPortal\Auth::user()->user_id;
+    $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $formData = $request->getParsedBody();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-    if(!FrcPortal\Auth::isAdmin()) {
+    if(!FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
 
@@ -106,9 +106,9 @@ $app->group('/settings', function () {
   });*/
   $this->group('/section/{section}', function () {
     $this->get('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
 
@@ -118,6 +118,15 @@ $app->group('/settings', function () {
       foreach($settings as $set) {
         $data[$set->setting] = formatSettings($set->setting, $set->value);
       }
+
+      if($section == 'team') {
+        $data['env_url'] = rtrim($data['env_url'],'/');
+      } else if($section == 'notification') {
+        $data['slack_api_token'] = $data['slack_api_token'] != '' ? decryptItems($data['slack_api_token']) : '';
+      } else if($section == 'other') {
+        $data['google_api_key'] = $data['google_api_key'] != '' ? decryptItems($data['google_api_key']) : '';
+      }
+
       $responseArr['status'] = true;
       $responseArr['msg'] = '';
       $responseArr['data'] = $data;
@@ -125,16 +134,20 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Get Settings by Section');
     $this->put('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
 
       $section = $args['section'];
       if($section == 'team') {
         $formData['env_url'] = rtrim($formData['env_url'],'/');
+      } else if($section == 'notification') {
+        $formData['slack_api_token'] = $formData['slack_api_token'] != '' ? encryptItems($formData['slack_api_token']) : '';
+      } else if($section == 'other') {
+        $formData['google_api_key'] = $formData['google_api_key'] != '' ? encryptItems($formData['google_api_key']) : '';
       }
       //loop through,
       //Do update or create
@@ -151,9 +164,9 @@ $app->group('/settings', function () {
   });
   $this->group('/serviceAccountCredentials', function () {
     $this->get('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $gsa_data = FrcPortal\Setting::where('section', 'service_account')->where('setting', 'google_service_account_data')->first();
@@ -169,10 +182,10 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Get Service Account Credentials');
     $this->post('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
 
@@ -204,10 +217,10 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Update Service Account Credentials');
     $this->delete('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $setting = FrcPortal\Setting::updateOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => '']);
@@ -219,9 +232,9 @@ $app->group('/settings', function () {
   });
   $this->group('/firstPortalCredentials', function () {
     $this->get('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $creds_data = FrcPortal\Setting::where('section', 'service_account')->where('setting', 'firstportal_credential_data')->first();
@@ -237,10 +250,10 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Get Service Account Credentials');
     $this->post('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
 
@@ -268,10 +281,10 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Update FIRST Portal Credentials');
     $this->delete('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $setting = FrcPortal\Setting::updateOrCreate(['section' => 'service_account', 'setting' => 'firstportal_credential_data'], ['value' => '']);
@@ -283,9 +296,9 @@ $app->group('/settings', function () {
   });
   $this->group('/oauth/{provider}', function () {
     $this->get('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $provider = $args['provider'];
@@ -308,10 +321,10 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Get OAuth Credentials');
     $this->put('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $provider = $args['provider'];
@@ -328,9 +341,9 @@ $app->group('/settings', function () {
     })->setName('Update OAuth Credentials');
   });
   $this->post('/resetAdminPass', function ($request, $response, $args) {
-    $userId = FrcPortal\Auth::user()->user_id;
+    $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-    if(!FrcPortal\Auth::isAdmin()) {
+    if(!FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
     $password = bin2hex(openssl_random_pseudo_bytes(10));
@@ -345,9 +358,9 @@ $app->group('/settings', function () {
     return $response;
   })->setName('Reset Admin Password');
   $this->post('/testSlack', function ($request, $response, $args) {
-    $userId = FrcPortal\Auth::user()->user_id;
+    $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-    if(!FrcPortal\Auth::isAdmin()) {
+    if(!FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
 
@@ -364,9 +377,9 @@ $app->group('/settings', function () {
   })->setName('Test Slack');
   $this->group('/update', function () {
     $this->get('/branches', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $responseArr = standardResponse($status = true, $msg = '', $data = getBranchOptions());
@@ -374,9 +387,9 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Get Version Branch Options');
     $this->get('/check', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
     	$branch = $request->getParam('branch') !== null ? $request->getParam('filter'):null;

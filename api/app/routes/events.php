@@ -1,6 +1,8 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
 use GuzzleHttp\Client;
+use FrcPortal\Utilities\IniConfig;
+
 $app->group('/events', function () {
   //Get all events
   $this->get('', function ($request, $response, $args) {
@@ -243,7 +245,7 @@ $app->group('/events', function () {
       $event->drivers_required = isset($formData['requirements']['drivers']) && $formData['requirements']['drivers'] ? true:false;
       $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
       $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
-      if($userId != getIniProp('admin_user')) {
+      if($userId != IniConfig::iniDataProperty('admin_user')) {
         $event->poc_id = $userId;
       }
       $event->hotel_info = '';

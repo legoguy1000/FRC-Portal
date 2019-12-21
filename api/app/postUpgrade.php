@@ -356,6 +356,16 @@ if(version_compare($version, '2.17.0','>=')) {
   if(!Capsule::schema()->hasTable('user_credentials')) {
     require_once('database/UserCredential.php');
   }
+  $settings = FrcPortal\Setting::where('setting','slack_api_token')->orWhere('setting','google_api_key')->get();
+  if(count($settings) > 0) {
+    foreach($settings as $secret) {
+      if($secret->value != '') {
+        $secret->value = encryptItems($secret->value);
+      }
+      $secret->save();
+    }
+    echo 'API Tokens are now encrypted' . PHP_EOL . PHP_EOL;
+  }
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
 ?>

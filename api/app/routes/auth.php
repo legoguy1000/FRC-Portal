@@ -2,6 +2,8 @@
 use \Firebase\JWT\JWT;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
+use FrcPortal\Utilities\IniConfig;
+
 $app->group('/auth', function () {
   $this->post('/google', function ($request, $response) {
     $responseData = false;
@@ -582,7 +584,7 @@ $app->group('/auth', function () {
     }
     $username = $formData['user'];
     $password = $formData['password'];
-    if($username == getIniProp('admin_user') && hash('sha512',$password) == getIniProp('admin_pass')) {
+    if($username == IniConfig::iniDataProperty('admin_user') && hash('sha512',$password) == IniConfig::iniDataProperty('admin_pass')) {
       $user = localAdminModel();
       $jwt = $user->generateUserJWT();
       $responseData = array('status'=>true, 'msg'=>'Login Successful', 'token'=>$jwt, 'userInfo' => $user);
@@ -623,7 +625,7 @@ $app->group('/webauthn', function () {
     // Get array with configuration for webauthn client
     $clientOptions = $server->startRegistration($options);
     $opts = $clientOptions->getClientOptionsJson();
-    if($user->user_id != getIniProp('admin_user')) {
+    if($user->user_id != IniConfig::iniDataProperty('admin_user')) {
       $user1 = FrcPortal\User::find($user->user_id);
       if(!is_null($user1)) {
         $user1->webauthn_challenge = $opts['challenge'];
@@ -643,7 +645,7 @@ $app->group('/webauthn', function () {
     $config = getWebAuthnConfiguration();
     $credentialStore = new FrcPortal\WebAuthn\CredentialStore();
     $server = new WebAuthnServer($config,$credentialStore);
-    if($user->user_id != getIniProp('admin_user')) {
+    if($user->user_id != IniConfig::iniDataProperty('admin_user')) {
       $user1 = FrcPortal\User::find($user->user_id);
       if(is_null($user1) || is_null($user1->webauthn_challenge) || $user1->webauthn_challenge == '') {
         insertLogs($level = 'Warning', $message = 'User "'.$user->user_id.'" not found or invalid challenge.');
@@ -687,7 +689,7 @@ $app->group('/webauthn', function () {
     // Get array with configuration for webauthn client
     $clientOptions = $server->startAuthentication($options);
     $opts = $clientOptions->getClientOptionsJson();
-    if($user_id != getIniProp('admin_user')) {
+    if($user_id != IniConfig::iniDataProperty('admin_user')) {
       $user1 = FrcPortal\User::find($user_id);
       if(!is_null($user1)) {
         $user1->webauthn_challenge = $opts['challenge'];
@@ -714,7 +716,7 @@ $app->group('/webauthn', function () {
       $userId = $credential->getUserHandle()->toBinary();
       unset($formData['response']['userHandle']);
     }
-    if($userId != false && $userId != getIniProp('admin_user')) {
+    if($userId != false && $userId != IniConfig::iniDataProperty('admin_user')) {
       $user = FrcPortal\User::find($userId);
       if(is_null($user) || is_null($user->webauthn_challenge) || $user->webauthn_challenge == '') {
         insertLogs($level = 'Warning', $message = 'User "'.$userId.'" not found or invalid challenge.');

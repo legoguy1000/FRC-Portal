@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
 use \Firebase\JWT\JWT;
+use FrcPortal\Utilities\IniConfig;
 
 class User extends Eloquent {
   //use Traits\AdminStuff;
@@ -248,7 +249,7 @@ class User extends Eloquent {
   			'status' => $this->status,
   			'user_type' => $this->user_type,
   			'email' => $this->email,
-        'localadmin' => $this->user_id == getIniProp('admin_user'),
+        'localadmin' => $this->user_id == IniConfig::iniDataProperty('admin_user'),
   		)
   	);
   	$jwt = JWT::encode($token, $key);

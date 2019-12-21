@@ -6,16 +6,18 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Slim\Http\UploadedFile;
 use \Firebase\JWT\JWT;
+use FrcPortal\Utilities\Auth;
+use FrcPortal\Utilities\IniConfig;
 
 $config = array();
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
 $config['determineRouteBeforeAppMiddleware'] = true;
 $config['db']['driver']   = 'mysql'; //your mysql server
-$config['db']['host']   = getIniProp('db_host'); //your mysql server
-$config['db']['user']   = getIniProp('db_user'); //your mysql server username
-$config['db']['pass']   = getIniProp('db_pass'); //your mysql server password
-$config['db']['dbname'] = getIniProp('db_name'); //the mysql database to use
+$config['db']['host']   = IniConfig::iniDataProperty('db_host'); //your mysql server
+$config['db']['user']   = IniConfig::iniDataProperty('db_user'); //your mysql server username
+$config['db']['pass']   = IniConfig::iniDataProperty('db_pass'); //your mysql server password
+$config['db']['dbname'] = IniConfig::iniDataProperty('db_name'); //the mysql database to use
 $config['db']['charset'] = 'utf8';
 $config['db']['collation'] = 'utf8_unicode_ci';
 $config['db']['prefix'] = '';
@@ -40,7 +42,7 @@ $app->add(function ($request, $response, $next) {
         try {
           $decoded = JWT::decode(
               $token,
-              getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : getIniProp('db_pass'),
+              getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : IniConfig::iniDataProperty('db_pass'),
               array("HS256", "HS512", "HS384")
           );
           $authToken = (array) $decoded;
@@ -52,20 +54,20 @@ $app->add(function ($request, $response, $next) {
   }
   if(!is_null($authToken)) {
     $userId = $authToken['data']->user_id;
-  	FrcPortal\Utilities\Auth::setCurrentUser($userId);
-  	FrcPortal\Utilities\Auth::setCurrentToken($authToken);
+  	Auth::setCurrentUser($userId);
+  	Auth::setCurrentToken($authToken);
     /* Everything ok, call next middleware. */
   }
   $ipAddress = $request->getAttribute('ip_address');
-  FrcPortal\Utilities\Auth::setClientIP($ipAddress);
+  Auth::setClientIP($ipAddress);
   $route = $request->getAttribute('route');
-  FrcPortal\Utilities\Auth::setRoute($route);
+  Auth::setRoute($route);
 	$response = $next($request, $response);
   return $response;
 });
 $app->add(new RKA\Middleware\IpAddress($checkProxyHeaders = true, $trustedProxies = array()));
 $app->add(new Tuupola\Middleware\JwtAuthentication([
-    "secret" => getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : getIniProp('db_pass'),
+    "secret" => getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : IniConfig::iniDataProperty('db_pass'),
     "rules" => [
         new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
           "path" => ['/'],
@@ -85,19 +87,19 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
     "before" => function ($request, $arguments) {
       //$authToken = $request->getAttribute("token");
       //$userId = $authToken['data']->user_id;
-      //FrcPortal\Utilities\Auth::setCurrentUser($userId);
-      //FrcPortal\Utilities\Auth::setCurrentToken($authToken);
-      //$test = FrcPortal\Utilities\Auth::user()->user_id;
+      //Auth::setCurrentUser($userId);
+      //Auth::setCurrentToken($authToken);
+      //$test = Auth::user()->user_id;
       //error_log($test, 0);
       return $request;
     },
     "after" => function ($response, $arguments) {
-      $token = FrcPortal\Utilities\Auth::currentToken();
+      $token = Auth::currentToken();
       $exp = $token['exp'];
       $status = $response->getStatusCode();
       if($exp - time() <= 15*60 && $status == 200) {
         $body = json_decode($response->getBody(),true);
-        $user = FrcPortal\Utilities\Auth::user();
+        $user = Auth::user();
         if(!is_null($user)) {
           $body['token'] = $user->generateUserJWT();
         }
@@ -117,14 +119,14 @@ $container['logger'] = function($c) {
 
 $app->get('/version', function (Request $request, Response $response, array $args) {
   //$this->logger->addInfo('Called version endpoint');
-  $route = FrcPortal\Utilities\Auth::getRoute();
+  $route = Auth::getRoute();
   $version = getGitVersion();
   $responseArr = array_merge($version, array(
     'host' => $_SERVER["HTTP_HOST"],
-    'user' => FrcPortal\Utilities\Auth::user(),
-    'token' => FrcPortal\Utilities\Auth::currentToken(),
-    'isAuthenticated' => FrcPortal\Utilities\Auth::isAuthenticated(),
-    'ip' => FrcPortal\Utilities\Auth::getClientIP(),
+    'user' => Auth::user(),
+    'token' => Auth::currentToken(),
+    'isAuthenticated' => Auth::isAuthenticated(),
+    'ip' => Auth::getClientIP(),
     /*'route' => array(
       'name' => $route->getName(),
       'groups' => $route->getGroups(),

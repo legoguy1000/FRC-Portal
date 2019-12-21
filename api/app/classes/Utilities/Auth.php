@@ -3,6 +3,7 @@ namespace FrcPortal\Utilities;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use FrcPortal\User;
+use FrcPortal\Utilities\IniConfig;
 
 class Auth {
   //use Traits\AdminStuff;
@@ -34,7 +35,7 @@ class Auth {
 
   public static function setCurrentUser($user_id) {
     self::$currentuser = $user_id;
-    if($user_id == getIniProp('admin_user')) {
+    if($user_id == IniConfig::iniDataProperty('admin_user')) {
       $user = localAdminModel();
       self::$isAuthenticated = true;
       self::$user = $user;
