@@ -35,6 +35,8 @@ function formatGoogleCalendarEventData($event) {
 		'allDay' => false,
 		'event_start' => null,
 		'event_end' => null,
+		'single_day' => null,
+		'single_month' => null,
 /*				'event_start_unix' => null,
 		'event_end_unix' => null,
 		'event_end_formatted' => null,
@@ -55,6 +57,8 @@ function formatGoogleCalendarEventData($event) {
 	}
 	$temp['start'] = formatDateArrays($temp['event_start']);
 	$temp['end'] = formatDateArrays($temp['event_end']);
+	$temp['single_day'] = (bool) ($temp['start']['date_raw'] == $temp['end']['date_raw']);
+	$temp['single_month'] = (bool) ($temp['start']['date_ym'] == $temp['end']['date_ym']);
 	return $temp;
 }
 
