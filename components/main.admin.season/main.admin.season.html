@@ -27,7 +27,7 @@
 			<md-input-container flex class="md-icon-float md-block">
 				<label>Start Date</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
-				<input moment-picker="vm.season.date.start.long_date" required
+				<input moment-picker="vm.season.date.start.long_date" required autocomplete="off"
 					 format="LL"
 					 min-view="year"
 					 max-view="day"
@@ -38,7 +38,7 @@
 			<md-input-container flex class="md-icon-float md-block" ng-show="vm.season.year <= 2019">
 				<label>Bag Date</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
-				<input moment-picker="vm.season.date.bag.long_date" ng-required="vm.season.year <= 2019"
+				<input moment-picker="vm.season.date.bag.long_date" ng-required="vm.season.year <= 2019" autocomplete="off"
 					 format="LL"
 					 min-view="year"
 					 max-view="day"
@@ -49,7 +49,7 @@
 			<md-input-container flex class="md-icon-float md-block">
 				<label>End Date</label>
 				<md-icon md-font-library="material-icons">today</md-icon>
-				<input moment-picker="vm.season.date.end.long_date" required
+				<input moment-picker="vm.season.date.end.long_date" required autocomplete="off"
 					 format="LL"
 					 min-view="year"
 					 max-view="day"
