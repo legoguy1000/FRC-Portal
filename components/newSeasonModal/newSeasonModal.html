@@ -40,7 +40,7 @@
 						 ng-model="vm.data.start_date_full">
 					</input>
 				</md-input-container>
-				<md-input-container flex class="md-icon-float md-block" ng-show="vm.data.year <= 2019">
+				<md-input-container flex class="md-icon-float md-block" ng-hide="!vm.data.year || vm.data.year > 2019">
 					<label>Bag Date</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
 					<input moment-picker="vm.data.bag_day" ng-required="vm.data.year <= 2019" autocomplete="off"
@@ -54,7 +54,7 @@
 				<md-input-container flex class="md-icon-float md-block">
 					<label>End Date</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.data.end_date" required
+					<input moment-picker="vm.data.end_date" required autocomplete="off"
 						 format="LL"
 						 min-view="year"
 						 max-view="day"
