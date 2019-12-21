@@ -14,10 +14,10 @@ $app->group('/eventTypes', function () {
     return $response;
   })->setName('Get Event Types');
   $this->post('', function ($request, $response, $args) {
-    $userId = FrcPortal\Auth::user()->user_id;
+    $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $formData = $request->getParsedBody();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-    if(!FrcPortal\Auth::isAdmin()) {
+    if(!FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
 
@@ -40,10 +40,10 @@ $app->group('/eventTypes', function () {
   })->setName('Add Event Type');
   $this->group('/{type_id:[a-z0-9]{13}}', function () {
     $this->put('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $type_id = $args['type_id'];
@@ -68,10 +68,10 @@ $app->group('/eventTypes', function () {
       return $response;
     })->setName('Update Event Types');
     $this->delete('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $type_id = $args['type_id'];

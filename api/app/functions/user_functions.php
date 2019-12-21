@@ -1,6 +1,8 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
 use \Firebase\JWT\JWT;
+use FrcPortal\Utilities\IniConfig;
+
 function checkAdmin($user) {
 	$return = false;
 	if($user instanceof FrcPortal\User) {
@@ -115,7 +117,7 @@ function getUsersEventRequirements($event_id) {
 
 function localAdminModel() {
 	$user = new FrcPortal\User();
-	$user->user_id = getIniProp('admin_user');
+	$user->user_id = IniConfig::iniDataProperty('admin_user');
 	$user->email = '';
 	$user->fname = 'Local';
 	$user->lname = 'Admin';

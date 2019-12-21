@@ -50,10 +50,10 @@ $app->group('/schools', function () {
     return $response;
   })->setName('Get Schools');
   $this->post('', function ($request, $response, $args) {
-    $userId = FrcPortal\Auth::user()->user_id;
+    $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $formData = $request->getParsedBody();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-    if(!FrcPortal\Auth::isAdmin()) {
+    if(!FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
 
@@ -96,10 +96,10 @@ $app->group('/schools', function () {
       return $response;
     })->setName('Get School');
     $this->put('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
 
@@ -137,10 +137,10 @@ $app->group('/schools', function () {
       return $response;
     })->setName('Update School');
     $this->delete('', function ($request, $response, $args) {
-      $userId = FrcPortal\Auth::user()->user_id;
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-      if(!FrcPortal\Auth::isAdmin()) {
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
       $school_id = $args['school_id'];
@@ -156,7 +156,7 @@ $app->group('/schools', function () {
   })->add(function ($request, $response, $next) {
     //Event Midddleware to pull event data
     // get the route from the request
-    $route = FrcPortal\Auth::getRoute();
+    $route = FrcPortal\Utilities\Auth::getRoute();
     if (!$route) {
         // no route matched
         return $next($request, $response);

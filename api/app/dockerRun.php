@@ -4,6 +4,7 @@ require_once(__DIR__.'/functions/getConfigFile.php');
 require_once(__DIR__.'/functions/general_functions.php');
 require_once(__DIR__.'/version.php');
 use Illuminate\Database\Capsule\Manager as Capsule;
+use FrcPortal\Utilities\IniConfig;
 
 $iniData = array();
 if(file_exists(__DIR__.'/secured/config.ini')) {
@@ -19,14 +20,14 @@ write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
 
 try {
   while(true) {
-    $mysqli = @new mysqli(getIniProp('db_host'), getIniProp('db_user'), getIniProp('db_pass'), getIniProp('db_name'));
+    $mysqli = @new mysqli(IniConfig::iniDataProperty('db_host'), IniConfig::iniDataProperty('db_user'), IniConfig::iniDataProperty('db_pass'), IniConfig::iniDataProperty('db_name'));
     if (!$mysqli->connect_errno) {
       break;
     }
     sleep(2);
   }
   $tables = array();
-  if ($result = $mysqli->query("SHOW TABLES FROM ".getIniProp('db_name').";")) {
+  if ($result = $mysqli->query("SHOW TABLES FROM ".IniConfig::iniDataProperty('db_name').";")) {
     while ($row = $result->fetch_array(MYSQLI_NUM)) {
       $tables[] = $table[0];
     }
