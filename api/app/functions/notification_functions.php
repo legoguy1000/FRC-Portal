@@ -21,26 +21,25 @@ function getNotificationOptions() {
 }
 
 function sendMassNotifications($type, $msgData) {
-	$users = FrcPortal\NotificationPreference::where('type',$type)->get();
-	foreach($users as $user) {
-		if($user['method'] == 'email') {
+	$notifications = FrcPortal\NotificationPreference::with('user')->where('type',$type)->get();
+	foreach($notifications as $note) {
+		if($note['method'] == 'email') {
 			$msg = $msgData['email'];
 			$subject = $msg['subject'];
 			$content = $msg['content'];
-			$userData = FrcPortal\User::find($user_id);
+			//$userData = FrcPortal\User::find($user->user_id);
 			$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
-			emailUser($userData,$subject,$content,$attachments);
+			$note->user->emailUser($subject,$content,$attachments);
 		}
-		elseif($user['method'] == 'slack') {
+		elseif($note['method'] == 'slack') {
 			$msg = $msgData['slack'];
 			$title = $msg['title'];
 			$body = $msg['body'];
 			$tag = '';
 			$note_id = uniqid();
-			slackMessageToUser($user->user_id, $body);
+			slackMessageToUser($note->user_id, $body);
 		}
 	}
-
 }
 
 function postToSlack($msg = '', $channel = null) {

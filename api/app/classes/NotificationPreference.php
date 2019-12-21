@@ -48,7 +48,7 @@ class NotificationPreference extends Eloquent {
   /**
    * Get the user.
    */
-   public function users() {
+   public function user() {
      return $this->belongsTo('FrcPortal\User', 'user_id', 'user_id');
    }
 
