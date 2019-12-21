@@ -242,7 +242,7 @@ class Event extends Eloquent {
   	}
   	$ge = getGoogleCalendarEvent($google_cal_id);
   	$this->name = $ge['name'];
-  	$this->details = $ge['details'];
+  	$this->details = !is_null($ge['details']) ? $ge['details'] : '';
   	$this->location = $ge['location'];
   	$this->event_start = $ge['event_start'];
   	$this->event_end = $ge['event_end'];

@@ -26,9 +26,12 @@ function newSeasonModalController($log,$mdDialog,$scope,userInfo,seasonsService,
 	}
 
 	vm.onYearChange = function (newValue, oldValue) {
-		vm.start_min_date = moment(vm.data.year);
+		vm.start_min_date = moment(vm.data.year+'0101');
+		console.log(vm.data.year+'0101');
 	};
+
 	vm.onStartChange = function (newValue, oldValue) {
-		vm.end_min_date = moment(vm.data.start_date);
+		vm.end_min_date = moment(vm.data.start_date_full);
+		console.log(vm.data.start_date_full);
 	};
 }

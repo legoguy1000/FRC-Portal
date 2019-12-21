@@ -326,6 +326,7 @@ function formatDateArrays($date_raw) {
 		'date_time_raw' => $date->format('Y-m-d H:i:s'),
 		'date_ym' => $date->format('Y-m'),
 		'long_date' => $date->format('F j, Y'),
+		'short_date' => $date->format('M j, Y'),
 		'time_formatted' => $date->format('g:i A'),
 		'date_dow' => $date->format('D'),
 		'multi_day_start' => $date->format('F j'),

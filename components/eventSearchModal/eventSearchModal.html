@@ -10,15 +10,15 @@
 		  </div>
 		</md-toolbar>
 		<md-dialog-content layout="column" class="md-margin">
-			<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.searchGoogleFunc()">
-				<div layout="column" layout-gt-sm="row" layout-align="start center">
-					<md-input-container flex>
+			<form ng-cloak ng-submit="vm.searchGoogleFunc()" style="width: 100%;">
+				<div layout="row" layout-align="start center" layout-wrap>
+					<md-input-container flex flex-order-xs="3">
 						<label>Search</label>
 						<input ng-model="vm.searchGoogle.q"/>
 					</md-input-container>
-					<md-input-container flex>
+					<md-input-container flex flex-order-xs="1" flex-xs="50">
 						<label>Min Time</label>
-						<input moment-picker="vm.searchGoogle.end_form"
+						<input moment-picker="vm.searchGoogle.end_form" autocomplete="off"
 							format="LL"
 							min-view="year"
 							max-view="month"
@@ -27,9 +27,9 @@
 						 	ng-model="vm.searchGoogle.timeMin">
 						</input>
 					</md-input-container>
-					<md-input-container flex>
+					<md-input-container flex flex-order-xs="2" flex-xs="50">
 						<label>Max Time</label>
-						<input moment-picker="vm.searchGoogle.start_form"
+						<input moment-picker="vm.searchGoogle.start_form" autocomplete="off"
 								format="LL"
 							 	min-view="year"
 							 	max-view="month"
@@ -39,34 +39,40 @@
 							 	ng-model="vm.searchGoogle.timeMax">
 						</input>
 					</md-input-container>
-					<md-button type="submit" class="md-icon-button">
+					<md-button type="submit" class="md-icon-button" flex-order-xs="4">
 						<md-icon class=""> search </md-icon>
 					</md-button>
 				</div>
 			</form>
-			<div>
+			<div style="width: 100%;">
 				<md-table-container>
 					<table md-table ng-model="selected" md-progress="vm.loading.searchGoogle">
 						<thead md-head md-order="vm.query.order" md-on-reorder="vm.searchGoogleFunc">
 							<tr md-row>
 								<th md-column md-order-by="name"><span>Event Name</span></th>
-								<th md-column md-order-by="event_start"><span>Start Date</span></th>
-								<th md-column md-order-by="event_end"><span>End Date</span></th>
-								<th md-column md-order-by="location"><span>Location</span></th>
+								<th md-column md-order-by="event_start"><span hide-xs>Start Date</span><span hide-gt-xs>Date</span></th>
+								<th md-column md-order-by="event_end" hide-xs><span>End Date</span></th>
+								<th md-column md-order-by="location" hide-xs><span>Location</span></th>
 							</tr>
 						</thead>
-						<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+						<tbody md-body>
 							<tr md-row ng-repeat="event in vm.googleEvents.data | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
 								<td md-cell>{{event.name}}</td>
-								<td md-cell>
+								<td md-cell hide-gt-xs style="padding-right:0">
+									<span ng-show="event.single_day">
+										{{event.start.long_date}}<br/>{{event.start.time_formatted}} - {{event.end.time_formatted}}
+									</span>
+									<span ng-hide="event.single_day">
+										{{event.start.long_date}} {{event.start.time_formatted}}<br/> {{event.end.long_date}} {{event.end.time_formatted}}
+									</span>
+								</td>
+								<td md-cell hide-xs>
 									{{event.start.long_date}} {{event.start.time_formatted}}
-									<!-- {{event.event_start_unix*1000 | date:'MMM d, y h:mm a'}} -->
 								</td>
-								<td md-cell>
+								<td md-cell hide-xs>
 									{{event.end.long_date}} {{event.end.time_formatted}}
-									<!-- {{event.event_end_unix*1000 | date:'MMM d, y h:mm a'}} -->
 								</td>
-								<td md-cell>
+								<td md-cell hide-xs>
 									{{event.location}}
 								</td>
 								<td md-cell>
@@ -82,7 +88,7 @@
 				<md-table-pagination md-limit="vm.query.limit" md-limit-options="[5]" md-page="vm.query.page" md-total="{{vm.googleEvents.total}}" md-page-select md-boundary-links></md-table-pagination>
 			</div>
 		</md-dialog-content>
-		<md-dialog-actions layout="row">
-		</md-dialog-actions>
+		<!-- <md-dialog-actions layout="row">
+		</md-dialog-actions> -->
 	<!--</form>-->
 </md-dialog>
