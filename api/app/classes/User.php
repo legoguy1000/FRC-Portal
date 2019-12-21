@@ -394,15 +394,23 @@ class User extends Eloquent {
   	$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
   	try {
   	    //Server settings
-  	    $mail->SMTPDebug = 2;                                 // Enable verbose debug output
-  	    /* $mail->isSMTP();                                      // Set mailer to use SMTP
-  	    $mail->Host = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
-  	    $mail->SMTPAuth = true;                               // Enable SMTP authentication
-  	    $mail->Username = 'user@example.com';                 // SMTP username
-  	    $mail->Password = 'secret';                           // SMTP password
-  	    $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-  	    $mail->Port = 587;                                    // TCP port to connect to */
-
+        if(getSettingsProp('email_smtp')) {
+          //$mail->SMTPDebug = 3;                                           // Enable verbose debug output
+    	    $mail->isSMTP();                                                // Set mailer to use SMTP
+    	    $mail->Host = getSettingsProp('email_smtp_server');            // Specify main and backup SMTP servers
+    	    $mail->SMTPAuth = true;                                        // Enable SMTP authentication
+    	    $mail->Username = getSettingsProp('email_smtp_user');          // SMTP username
+    	    $mail->Password = getSettingsProp('email_smtp_password');      // SMTP password
+    	    $mail->SMTPSecure = getSettingsProp('email_smtp_encryption');  //'tls';                            // Enable TLS encryption, `ssl` also accepted
+    	    $mail->Port = getSettingsProp('email_smtp_port');              //587;                                    // TCP port to connect to
+          $mail->SMTPOptions = array(
+              'ssl' => array(
+                  'verify_peer' => false,
+                  'verify_peer_name' => false,
+                  'allow_self_signed' => true
+              )
+          );
+        }
   	    //Recipients
   			$mailFrom = getSettingsProp('notification_email');
   			$teamNumber = getSettingsProp('team_number');
@@ -432,7 +440,6 @@ class User extends Eloquent {
   	    $mail->Subject = $subject;
   	    $mail->Body    = $email;
   	    /* $mail->AltBody = 'This is the body in plain text for non-HTML mail clients'; */
-        var_dump($mail);
   	    $mail->send();
   	//    echo 'Message has been sent';
   	} catch (Exception $e) {

@@ -122,6 +122,7 @@ $app->group('/settings', function () {
       if($section == 'team') {
         $data['env_url'] = rtrim($data['env_url'],'/');
       } else if($section == 'notification') {
+        $data['email_smtp_password'] = $data['email_smtp_password'] != '' ? decryptItems($data['email_smtp_password']) : '';
         //$data['slack_api_token'] = $data['slack_api_token'] != '' ? decryptItems($data['slack_api_token']) : '';
       } else if($section == 'other') {
         //$data['google_api_key'] = $data['google_api_key'] != '' ? decryptItems($data['google_api_key']) : '';
@@ -145,6 +146,7 @@ $app->group('/settings', function () {
       if($section == 'team') {
         $formData['env_url'] = rtrim($formData['env_url'],'/');
       } else if($section == 'notification') {
+        $formData['email_smtp_password'] = $formData['email_smtp_password'] != '' ? encryptItems($formData['email_smtp_password']) : '';
         //$formData['slack_api_token'] = $formData['slack_api_token'] != '' ? encryptItems($formData['slack_api_token']) : '';
       } else if($section == 'other') {
         //$formData['google_api_key'] = $formData['google_api_key'] != '' ? encryptItems($formData['google_api_key']) : '';
