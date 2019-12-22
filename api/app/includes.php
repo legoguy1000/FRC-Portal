@@ -10,7 +10,6 @@ ini_set("expose_php", false);
 $root = __DIR__;
 require_once($root.'/version.php');
 require_once($root.'/vendor/autoload.php');
-require_once($root.'/functions/getConfigFile.php');
 
 IniConfig::parseIniFile();
 $capsule = new Capsule;
