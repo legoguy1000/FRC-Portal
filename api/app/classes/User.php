@@ -373,6 +373,7 @@ class User extends Eloquent {
   	if(!$email_enable) {
   		return false;
   	}
+
   	$html = file_get_contents(__DIR__.'/../libraries/email/email_template.html');
   	$css = file_get_contents(__DIR__.'/../libraries/email/email_css.css');
   	$emogrifier = new \Pelago\Emogrifier($html, $css);
@@ -394,15 +395,19 @@ class User extends Eloquent {
   	$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
   	try {
   	    //Server settings
-        if(getSettingsProp('email_smtp')) {
+        if(getSettingsProp('email_enable_smtp')) {
           //$mail->SMTPDebug = 3;                                           // Enable verbose debug output
     	    $mail->isSMTP();                                                // Set mailer to use SMTP
     	    $mail->Host = getSettingsProp('email_smtp_server');            // Specify main and backup SMTP servers
     	    $mail->SMTPAuth = true;                                        // Enable SMTP authentication
     	    $mail->Username = getSettingsProp('email_smtp_user');          // SMTP username
-    	    $mail->Password = getSettingsProp('email_smtp_password');      // SMTP password
-    	    $mail->SMTPSecure = getSettingsProp('email_smtp_encryption');  //'tls';                            // Enable TLS encryption, `ssl` also accepted
-    	    $mail->Port = getSettingsProp('email_smtp_port');              //587;                                    // TCP port to connect to
+          $password = decryptItems(getSettingsProp('email_smtp_password'));
+          if($password == false) {
+            throw new Exception("Could not decrypt SMTP password");
+          }
+    	    $mail->Password = $password;                                    // SMTP password
+    	    $mail->SMTPSecure = getSettingsProp('email_smtp_encryption');  // Enable TLS encryption, `ssl` also accepted
+    	    $mail->Port = getSettingsProp('email_smtp_port');              // TCP port to connect to
           $mail->SMTPOptions = array(
               'ssl' => array(
                   'verify_peer' => false,

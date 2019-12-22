@@ -239,38 +239,46 @@
 					</md-button>
 				</div>
 			</div>
-			<md-switch aria-label="Enable Email Notifications" ng-model="vm.settings.notification.email_enable" class="md-warn">
-				Enable Email Notifications
-			</md-switch>
-			<md-switch aria-label="Enable SMTP" ng-model="vm.settings.notification.email_enable_smtp" class="md-warn">
-				Enable External SMTP server (Google, Microsoft...)
-			</md-switch>
-			<md-input-container flex>
-				<label>Site Email</label>
-				<input ng-model="vm.settings.notification.notification_email" ng-disabled="!vm.settings.notification.email_enable">
-			</md-input-container>
-			<md-input-container flex>
-				<label>SMTP Server</label>
-				<input ng-model="vm.settings.notification.email_smtp_server" ng-disabled="!vm.settings.notification.email_enable">
-			</md-input-container>
-			<md-input-container flex>
-				<label>SMTP Port</label>
-				<input ng-model="vm.settings.notification.email_smtp_port" ng-disabled="!vm.settings.notification.email_enable">
-			</md-input-container>
-			<md-input-container flex>
-				<label>SMTP Username</label>
-				<input ng-model="vm.settings.notification.email_smtp_user" ng-disabled="!vm.settings.notification.email_enable">
-			</md-input-container>
-			<md-input-container flex>
-				<label>SMTP Password</label>
-				<input ng-model="vm.settings.notification.email_smtp_password" ng-disabled="!vm.settings.notification.email_enable">
-			</md-input-container>
-			<md-input-container flex>
-				<label>SMTP Encryption</label>
-				<input ng-model="vm.settings.notification.email_smtp_encryption" ng-disabled="!vm.settings.notification.email_enable">
-			</md-input-container>
-
-
+			<div layout="column" layout-gt-sm="row">
+				<md-switch aria-label="Enable Email Notifications" ng-model="vm.settings.notification.email_enable" class="md-warn">
+					Enable Email Notifications
+				</md-switch>
+				<md-switch aria-label="Enable SMTP" ng-model="vm.settings.notification.email_enable_smtp" class="md-warn" ng-disabled="!vm.settings.notification.email_enable">
+					Enable External SMTP server (Google, Microsoft...)
+				</md-switch>
+			</div>
+			<div layout="column" layout-gt-sm="row">
+				<md-input-container flex>
+					<label>Site Email</label>
+					<input ng-model="vm.settings.notification.notification_email" ng-disabled="!vm.settings.notification.email_enable">
+				</md-input-container>
+				<md-input-container flex>
+					<label>SMTP Server</label>
+					<input ng-model="vm.settings.notification.email_smtp_server" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
+				</md-input-container>
+				<md-input-container flex>
+					<label>SMTP Port</label>
+					<input typ="number" ng-model="vm.settings.notification.email_smtp_port" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
+				</md-input-container>
+			</div>
+			<div layout="column" layout-gt-sm="row">
+				<md-input-container flex>
+					<label>SMTP Username</label>
+					<input ng-model="vm.settings.notification.email_smtp_user" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
+				</md-input-container>
+				<md-input-container flex>
+					<label>SMTP Password</label>
+					<input ng-model="vm.settings.notification.email_smtp_password" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
+				</md-input-container>
+				<md-input-container flex>
+					<label>SMTP Encryption</label>
+					<md-select ng-model="vm.settings.notification.email_smtp_encryption" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
+						<md-option ng-value="">None</md-option>
+						<md-option ng-value="'tls'">TLS (Rcommended)</md-option>
+						<md-option ng-value="'ssl'">SSL</md-option>
+					</md-select>
+				</md-input-container>
+			</div>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'other'" class="layout-padding">
 			<div layout="column" layout-gt-sm="row">
