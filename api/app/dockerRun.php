@@ -17,6 +17,7 @@ $iniData['db']['db_name'] = getenv('DB_NAME');
 
 write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
 
+IniConfig::parseIniFile();
 try {
   while(true) {
     $mysqli = @new mysqli(IniConfig::iniDataProperty('db_host'), IniConfig::iniDataProperty('db_user'), IniConfig::iniDataProperty('db_pass'), IniConfig::iniDataProperty('db_name'));
