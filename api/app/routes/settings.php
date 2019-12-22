@@ -365,14 +365,14 @@ $app->group('/settings', function () {
     return $response;
   })->setName('Reset Admin Password');
   $this->post('/testSlack', function ($request, $response, $args) {
-    $userId = FrcPortal\Utilities\Auth::user()->user_id;
+    $user = FrcPortal\Utilities\Auth::user();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
     if(!FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
 
     $slackMsg = 'Test Slack notification.';
-    if(slackMessageToUser($userId, $slackMsg)) {
+    if($user->slackMessage($slackMsg)) {
       $responseArr = array(
         'status' => true,
         'msg' => 'Test Slack notification sent',

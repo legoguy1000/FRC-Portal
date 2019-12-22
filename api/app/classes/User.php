@@ -298,9 +298,8 @@ class User extends Eloquent {
   		$msg = $msgData['email'];
   		$subject = $msg['subject'];
   		$content = $msg['content'];
-  		$userData = $msg['userData'];
   		$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
-  		emailUser($userData,$subject,$content,$attachments);
+  		$this->emailUser($subject,$content,$attachments);
   	}
   	if(($type == '' || $preferences['slack'][$type] == true) && isset($msgData['slack'])) {
   		$msg = $msgData['slack'];
@@ -308,7 +307,7 @@ class User extends Eloquent {
   		$body = $msg['body'];
   		$tag = '';
   		$note_id = uniqid();
-  		slackMessageToUser($this->user_id, $body);
+  		$this->slackMessage($body);
   	}
   }
 
@@ -326,6 +325,14 @@ class User extends Eloquent {
       $this->gender = '';
   	}
   	return false;
+  }
+
+  public function slackMessage($msg) {
+  	$result = false;
+		if($this->slack_enabled == true) {
+			$result = postToSlack($msg, $this->slack_id);
+		}
+  	return $result;
   }
 
   public function getGetSlackIdByEmail() {

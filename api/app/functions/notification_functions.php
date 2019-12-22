@@ -37,7 +37,7 @@ function sendMassNotifications($type, $msgData) {
 			$body = $msg['body'];
 			$tag = '';
 			$note_id = uniqid();
-			slackMessageToUser($note->user_id, $body);
+			$note->user->slackMessage($body);
 		}
 	}
 }
@@ -94,94 +94,6 @@ function endOfDayHoursToSlack($date = null) {
 		$teamName = getSettingsProp('team_name');
 		$msg .= $teamName.' completed another '.round($hours,1).' hours of work for an annual total of '.round($total,1).'.#new_line#Keep up the amazing work!!';
 		postToSlack($msg, $channel = null);
-	}
-}
-
-function slackMessageToUser($user_id, $msg) {
-	$result = false;
-	if(!is_null($user_id)) {
-		$userData = false;
-		$user = FrcPortal\User::find($user_id);
-		if(!is_null($user) && $user->slack_enabled == true) {
-			$result = postToSlack($msg, $user->slack_id);
-		}
-	}
-	return $result;
-}
-
-function emailUser($userData = array(),$subject = '',$content = '',$attachments = false)
-{
-	$email_enable = getSettingsProp('email_enable');
-	if(!$email_enable) {
-		return false;
-	}
-	$root = __DIR__;
-	$html = file_get_contents($root.'/../libraries/email/email_template.html');
-	$css = file_get_contents($root.'/../libraries/email/email_css.css');
-	$emogrifier = new \Pelago\Emogrifier($html, $css);
-	$mergedHtml = $emogrifier->emogrify();
-
-	$subjectLine = $subject;
-	$emailContent = $content ;
-	$teamName = getSettingsProp('team_name');
-	$teamNumber = getSettingsProp('team_number');
-	$teamLocation = getSettingsProp('location');
-	$envUrl = getSettingsProp('env_url');
-	$email = str_replace('###TEAM_NAME###',$teamName,$mergedHtml);
-	$email = str_replace('###TEAM_NUMBER###',$teamNumber,$email);
-	$email = str_replace('###TEAM_LOCATION###',$teamLocation,$email);
-	$email = str_replace('###ENV_URL###',$envUrl,$email);
-	$email = str_replace('###SUBJECT###',$subjectLine,$email);
-	$email = str_replace('###FNAME###',$userData['fname'],$email);
-	$email = str_replace('###CONTENT###',$emailContent,$email);
-	$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
-	try {
-	    //Server settings
-	    $mail->SMTPDebug = 2;                                 // Enable verbose debug output
-	    /* $mail->isSMTP();                                      // Set mailer to use SMTP
-	    $mail->Host = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
-	    $mail->SMTPAuth = true;                               // Enable SMTP authentication
-	    $mail->Username = 'user@example.com';                 // SMTP username
-	    $mail->Password = 'secret';                           // SMTP password
-	    $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-	    $mail->Port = 587;                                    // TCP port to connect to */
-
-	    //Recipients
-			$mailFrom = getSettingsProp('notification_email');
-			$teamNumber = getSettingsProp('team_number');
-			$mailFromName = 'Team '.$teamNumber.' Portal';
-	    $mail->setFrom($mailFrom, $mailFromName);
-	    $mail->addAddress($userData['email'], $userData['full_name']);     // Add a recipient
-	   /*  $mail->addAddress('ellen@example.com');               // Name is optional
-	    $mail->addReplyTo('info@example.com', 'Information');
-	    $mail->addCC('cc@example.com');
-	    $mail->addBCC('bcc@example.com'); */
-
-	    //Attachments
-			if($attachments != false && is_array($attachments)) {
-				foreach($attachments as $file) {
-					if(is_array($file) && file_exists($file['path'])) {
-						$mail->addAttachment($file['path'], $file['name']);
-					} elseif(file_exists($file)) {
-						$mail->addAttachment($file);
-					}
-				}
-			}
-	    /* $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-	    $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name */
-
-	    //Content
-	    $mail->isHTML(true);                                  // Set email format to HTML
-	    $mail->Subject = $subject;
-	    $mail->Body    = $email;
-	    /* $mail->AltBody = 'This is the body in plain text for non-HTML mail clients'; */
-
-	    $mail->send();
-	//    echo 'Message has been sent';
-	} catch (Exception $e) {
-		return $mail->ErrorInfo;
-	 //   echo 'Message could not be sent.';
-	  //  echo 'Mailer Error: ' . $mail->ErrorInfo;
 	}
 }
 
