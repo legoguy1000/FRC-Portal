@@ -259,7 +259,7 @@ class User extends Eloquent {
   }
 
   public function setDefaultNotifications() {
-  	$data = getNotificationOptions();
+  	$data = $this->getNotificationOptions();
   	$queryArr = array();
   	$queryStr	 = '';
   	foreach($data as $meth=>$types) {
@@ -274,7 +274,7 @@ class User extends Eloquent {
   }
 
   public function getNotificationPreferences() {
-    $data = getNotificationOptions();
+    $data = $this->getNotificationOptions();
     $method_enable = array(
       'slack' => getSettingsProp('slack_enable'),
       'email' => getSettingsProp('email_enable')
@@ -462,5 +462,22 @@ class User extends Eloquent {
   	 //   echo 'Message could not be sent.';
   	  //  echo 'Mailer Error: ' . $mail->ErrorInfo;
   	}
+  }
+
+  public function getNotificationOptions() {
+  	$default = array(
+  		'sign_in_out' => false,
+  		'new_season' => false,
+  		'new_event' => false,
+  		'join_team' => false,
+  		'dues' => false,
+  		'stims' => false,
+  		'event_registration' => false,
+  	);
+  	$data = array(
+  		'slack' => $default,
+  		'email' => $default,
+  	);
+  	return $data;
   }
 }
