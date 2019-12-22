@@ -103,13 +103,19 @@
 					clear-button="false"
 				></div>
 			</div>
+			<div flex layout="row">
+				<span flex></span>
+				<md-button type="button" class="md-raised md-primary"  ng-click="vm.updateSettingBySection('team')">
+					Save
+				</md-button>
+			</div>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'login';" class="layout-padding">
 			<div layout="row">
 				<!--<md-switch aria-label="Enable Local Login" ng-model="vm.settings.login.local_login_enable" class="md-warn">
 					Enable Local Login
 				</md-switch>-->
-				<md-switch aria-label="Require Team Email For Login" ng-model="vm.settings.login.require_team_email" class="md-warn">
+				<md-switch aria-label="Require Team Email For Login" ng-model="vm.settings.login.require_team_email" class="md-warn" ng-change="vm.updateSettingBySection('login')">
 					Require Team Email For Login
 				</md-switch>
 			</div>
@@ -117,7 +123,7 @@
 				<div layout="column" flex flex-gt-sm="45">
 					<div layout="row" layout-align="space-between center">
 						<div>
-							<md-switch aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn">
+							<md-switch aria-label="Enable Google Login" ng-model="vm.settings.login.google_login_enable" class="md-warn" ng-change="vm.updateSettingBySection('login')">
 								Enable Google Login
 							</md-switch>
 						</div>
@@ -130,7 +136,7 @@
 					</div>
 					<div layout="row" layout-align="space-between center">
 						<div>
-							<md-switch aria-label="Enable Facebook Login" ng-model="vm.settings.login.facebook_login_enable" class="md-warn">
+							<md-switch aria-label="Enable Facebook Login" ng-model="vm.settings.login.facebook_login_enable" class="md-warn" ng-change="vm.updateSettingBySection('login')">
 								Enable Facebook Login
 							</md-switch>
 						</div>
@@ -143,7 +149,7 @@
 					</div>
 					<div layout="row" layout-align="space-between center">
 						<div>
-							<md-switch aria-label="Enable Microsoft Login" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn">
+							<md-switch aria-label="Enable Microsoft Login" ng-model="vm.settings.login.microsoft_login_enable" class="md-warn" ng-change="vm.updateSettingBySection('login')">
 								Enable Microsoft Login
 							</md-switch>
 						</div>
@@ -158,7 +164,7 @@
 				<div layout="column" flex flex-gt-sm="45">
 					<div layout="row" layout-align="space-between center">
 						<div>
-							<md-switch aria-label="Enable Github Login" ng-model="vm.settings.login.github_login_enable" class="md-warn">
+							<md-switch aria-label="Enable Github Login" ng-model="vm.settings.login.github_login_enable" class="md-warn" ng-change="vm.updateSettingBySection('login')">
 								Enable Github Login
 							</md-switch>
 						</div>
@@ -171,7 +177,7 @@
 					</div>
 					<div layout="row" layout-align="space-between center">
 						<div>
-							<md-switch aria-label="Enable Amazon Login" ng-model="vm.settings.login.amazon_login_enable" class="md-warn">
+							<md-switch aria-label="Enable Amazon Login" ng-model="vm.settings.login.amazon_login_enable" class="md-warn" ng-change="vm.updateSettingBySection('login')">
 								Enable Amazon Login
 							</md-switch>
 						</div>
@@ -184,7 +190,7 @@
 					</div>
 					<div layout="row" layout-align="space-between center">
 						<div>
-							<md-switch aria-label="Enable Discord Login" ng-model="vm.settings.login.discord_login_enable" class="md-warn">
+							<md-switch aria-label="Enable Discord Login" ng-model="vm.settings.login.discord_login_enable" class="md-warn" ng-change="vm.updateSettingBySection('login')">
 								Enable Discord Login
 							</md-switch>
 						</div>
@@ -198,7 +204,7 @@
 				</div>
 			</div>
 		</div>
-		<div layout="column" ng-show="vm.currentMenu == 'notification'" class="layout-padding">
+		<form layout="column" ng-show="vm.currentMenu == 'notification'" class="layout-padding" ng-submit="vm.updateSettingBySection('notification')">
 			<md-switch aria-label="Enable Slack Notifications" ng-model="vm.settings.notification.slack_enable" class="md-warn">
 				Enable Slack Notifications
 			</md-switch>
@@ -278,7 +284,7 @@
 						<input ng-model="vm.settings.notification.email_smtp_user" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
 					</md-input-container>
 					<md-input-container flex>
-						<label>SMTP Password</label>
+						<label><md-icon md-font-library="material-icons">lock</md-icon><span>SMTP Password</span></label>
 						<input ng-model="vm.settings.notification.email_smtp_password" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
 					</md-input-container>
 					<md-input-container flex>
@@ -291,7 +297,13 @@
 					</md-input-container>
 				</div>
 			</div>
-		</div>
+			<div flex layout="row">
+				<span flex></span>
+				<md-button type="submit" class="md-raised md-primary">
+					Save
+				</md-button>
+			</div>
+		</form>
 		<div layout="column" ng-show="vm.currentMenu == 'other'" class="layout-padding">
 			<div layout="column" layout-gt-sm="row">
 				<div flex>
@@ -388,24 +400,30 @@
 					</md-button>
 				</div>
 			</div>
+			<div flex layout="row">
+				<span flex></span>
+				<md-button type="button" class="md-raised md-primary"  ng-click="vm.updateSettingBySection('other')">
+					Save
+				</md-button>
+			</div>
 		</div>
 		<div layout="column" ng-show="vm.currentMenu == 'cronjob'" class="layout-padding">
-			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-changeUserStatus']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-changeUserStatus']" class="md-warn" ng-change="vm.updateSettingBySection('cronjob')">
 				Automatically change user status after graduation
 			</md-switch>
-			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-importSlackProfiles']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-importSlackProfiles']" class="md-warn" ng-change="vm.updateSettingBySection('cronjob')">
 				Automatically import and link Slack information with user data
 			</md-switch>
-			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-pollMembershipFormResponses']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-pollMembershipFormResponses']" class="md-warn" ng-change="vm.updateSettingBySection('cronjob')">
 				Automatically pull reponses from membership form
 			</md-switch>
-			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-updateEventsFromGoogle']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-updateEventsFromGoogle']" class="md-warn" ng-change="vm.updateSettingBySection('cronjob')">
 				Automatically update events from Google Calendar
 			</md-switch>
-			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-tooLong']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-tooLong']" class="md-warn" ng-change="vm.updateSettingBySection('cronjob')">
 				Automatically remove sign-ins that haven't signed out after 12 hours
 			</md-switch>
-			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-endOfDayHoursToSlack']" class="md-warn">
+			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-endOfDayHoursToSlack']" class="md-warn" ng-change="vm.updateSettingBySection('cronjob')">
 				Automatically send Slack notification at 9pm local with the numberof hours completed that day
 			</md-switch>
 		</div>
@@ -426,11 +444,5 @@
 			</md-button>
 		</div>
 		-->
-		<div flex layout="row">
-			<span flex></span>
-			<md-button type="button" class="md-raised md-primary"  ng-click="vm.updateSettingBySection(vm.currentMenu)">
-				Save
-			</md-button>
-		</div>
 	</md-content>
 </div>

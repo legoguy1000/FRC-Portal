@@ -159,7 +159,7 @@ $app->group('/settings', function () {
       }
       $responseArr['status'] = true;
       $responseArr['msg'] = ucwords($section).' Settings Updated';
-      //$responseArr['data'] = $data;
+      insertLogs($level = 'Information', $message = 'Successfully updated '.ucwords($section).' settings');
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update Settings');
@@ -214,6 +214,7 @@ $app->group('/settings', function () {
         $responseArr['data'] = array('client_email'=>$client_email);
         $responseArr['status'] = true;
         $responseArr['msg'] = 'Google Service account credentials uploaded';
+        insertLogs($level = 'Information', $message = 'Successfully updated Google Service Account credentials');
       }
       $response = $response->withJson($responseArr);
       return $response;
@@ -228,6 +229,7 @@ $app->group('/settings', function () {
       $setting = FrcPortal\Setting::updateOrCreate(['section' => 'service_account', 'setting' => 'google_service_account_data'], ['value' => '']);
       $responseArr['status'] = true;
       $responseArr['msg'] = 'Google Service account credentials deleted';
+      insertLogs($level = 'Information', $message = 'Successfully deleted Google Service Account credentials');
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Delete Google Service Account Credentials');
@@ -278,6 +280,7 @@ $app->group('/settings', function () {
         $responseArr['data'] = array('email'=>$email);
         $responseArr['status'] = true;
         $responseArr['msg'] = 'FIRST Portal credentials updated';
+        insertLogs($level = 'Information', $message = 'Successfully updated FIRST Portal credentials');
       }
       $response = $response->withJson($responseArr);
       return $response;
@@ -292,6 +295,7 @@ $app->group('/settings', function () {
       $setting = FrcPortal\Setting::updateOrCreate(['section' => 'service_account', 'setting' => 'firstportal_credential_data'], ['value' => '']);
       $responseArr['status'] = true;
       $responseArr['msg'] = 'FIRST Portal credentials deleted';
+      insertLogs($level = 'Information', $message = 'Successfully deleted FIRST Portal credentials');
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Delete FIRST Portal Credentials');
@@ -338,6 +342,7 @@ $app->group('/settings', function () {
 
       $responseArr['status'] = true;
       $responseArr['msg'] = ucfirst($provider).' OAuth credentials updated';
+      insertLogs($level = 'Information', $message = 'Successfully updated '.ucfirst($provider).' OAuth credentials');
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update OAuth Credentials');

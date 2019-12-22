@@ -34,6 +34,8 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 		$mdDialog.show(dialog);
 	}	else if($stateParams.linkedAccounts) {
 		vm.selectedTab = 1;
+	} else if($stateParams.notificationOptions) {
+		vm.selectedTab = 2;
 	} else if($stateParams.signin) {
 		var confirm = $mdDialog.confirm()
 					.title('Do you want to sign in/out?')

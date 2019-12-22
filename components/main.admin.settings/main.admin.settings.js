@@ -242,7 +242,7 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 			}
 		}).then(function(response){
 			if(response.status) {
-				vm.updateSettingBySection('login');
+				//vm.updateSettingBySection('login');
 			}
 		});
 	}
