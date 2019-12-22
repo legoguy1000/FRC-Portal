@@ -17,7 +17,8 @@ $capsule->addConnection(array("driver" => "mysql", "host" =>IniConfig::iniDataPr
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-$tz = Capsule::schema()->hasTable('settings') ? getSettingsProp('timezone') : null;
+$timeZone = FrcPortal\Setting::where('setting','timezone')->first();
+$tz = Capsule::schema()->hasTable('settings') ? $timeZone->value : null;
 $time_zone = !is_null($tz) && $tz != '' ? $tz:date_default_timezone_get();
 date_default_timezone_set($time_zone);
 
