@@ -146,7 +146,7 @@ $app->group('/settings', function () {
       if($section == 'team') {
         $formData['env_url'] = rtrim($formData['env_url'],'/');
       } else if($section == 'notification') {
-        $formData['email_smtp_password'] = $formData['email_smtp_password'] != '' ? encryptItems($formData['email_smtp_password']) : '';
+        $formData['email_smtp_password'] = isset($formData['email_smtp_password']) && $formData['email_smtp_password'] != '' ? encryptItems($formData['email_smtp_password']) : '';
         //$formData['slack_api_token'] = $formData['slack_api_token'] != '' ? encryptItems($formData['slack_api_token']) : '';
       } else if($section == 'other') {
         //$formData['google_api_key'] = $formData['google_api_key'] != '' ? encryptItems($formData['google_api_key']) : '';

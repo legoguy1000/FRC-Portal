@@ -420,7 +420,10 @@ class User extends Eloquent {
   			$mailFrom = getSettingsProp('notification_email');
   			$teamNumber = getSettingsProp('team_number');
   			$mailFromName = 'Team '.$teamNumber.' Portal';
-  	    $mail->setFrom($mailFrom, $mailFromName);
+        $mail->setFrom($mailFrom, $mailFromName);
+        $replyTo = getSettingsProp('email_replyto');
+        $replyTo = !is_null($replyTo) && $replyTo != '' ? $replyTo : $mailFrom;
+  	    $mail->addReplyTo($replyTo, $mailFromName);
   	    $mail->addAddress($this->email, $this->full_name);     // Add a recipient
   	   /*  $mail->addAddress('ellen@example.com');               // Name is optional
   	    $mail->addReplyTo('info@example.com', 'Information');
