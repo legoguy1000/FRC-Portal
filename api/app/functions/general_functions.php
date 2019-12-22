@@ -111,21 +111,6 @@ function filterArrayData ($inputArray, $filter) {
 													ARRAY_FILTER_USE_KEY) : $inputArray;
 }
 
-function getServiceAccountFile() {
-	$file = __DIR__.'/../secured/service_account_credentials.json';
-	if(!file_exists($file)) {
-		throw new Exception("Credentials file does not exist");
-	}
-	$valid = json_validate(file_get_contents($file));
-	if(!$valid['status']) {
-		throw new Exception("Credentials file is not valid");
-	}
-	return array(
-		'contents' => $valid['data'],
-		'path' => $file
-	);
-}
-
 function getServiceAccountData() {
 	$gsa_data = FrcPortal\Setting::where('section', 'service_account')->where('setting', 'google_service_account_data')->first();
 	if(!is_null($gsa_data) && $gsa_data->value != '') {
