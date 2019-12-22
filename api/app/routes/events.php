@@ -1007,10 +1007,12 @@ $app->group('/events', function () {
         )
       );
       $user->sendUserNotification('event_registration', $msgData);
-      //slackMessageToUser($user_id, $slackMsg);
       //notify event POC
       if(!is_null($event->poc_id) && $user_id != $event->poc_id && $loggedInUser != $event->poc_id) {
-        slackMessageToUser($event->poc_id, $slackMsgPoc);
+        $poc = FrcPortal\User::find($event->poc_id);
+        if(!is_null($poc)) {
+          $poc->slackMessage($slackMsgPoc);
+        }
       }
 
 

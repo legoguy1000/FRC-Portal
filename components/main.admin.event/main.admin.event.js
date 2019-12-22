@@ -95,6 +95,7 @@ function mainAdminEventController($rootScope, $timeout, $q, $scope, $state, even
 		vm.loading = true;
 		eventsService.getEvent(vm.event_id).then(function(response){
 			vm.event = response.data;
+			vm.deadline_max_date = moment(vm.event.event_start).subtract(1, 'day');
 		}).finally(function() {
 			vm.loading = false;
 		});

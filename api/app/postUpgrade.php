@@ -356,6 +356,14 @@ if(version_compare($version, '2.17.0','>=')) {
   if(!Capsule::schema()->hasTable('user_credentials')) {
     require_once('database/UserCredential.php');
   }
+  $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_enable_smtp'], ['value' => false]);
+  $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_smtp_server'], ['value' => '']);
+  $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_smtp_port'], ['value' => '']);
+  $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_smtp_user'], ['value' => '']);
+  $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_smtp_password'], ['value' => '']);
+  $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_smtp_encryption'], ['value' => '']);
+  $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_replyto'], ['value' => '']);
+
   // $settings = FrcPortal\Setting::where('setting','slack_api_token')->orWhere('setting','google_api_key')->get();
   // if(count($settings) > 0) {
   //   foreach($settings as $secret) {

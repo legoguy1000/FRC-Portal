@@ -27,7 +27,7 @@ class Event extends Eloquent {
   ];
 
 
-  protected $appends = ['registration_deadline_google_event','season','num_days','date','registration_deadline_date'];
+  protected $appends = ['registration_deadline_google_event','season','num_days','date','registration_deadline_date', 'past_registration'];
   //'single_day','year','event_start_unix','event_end_unix','single_month','registration_deadline_unix','registration_deadline_formatted',
   //$data['requirements'] = array();
   /**
@@ -50,6 +50,7 @@ class Event extends Eloquent {
     'permission_slip_required' => 'boolean',
     'time_slots_required' => 'boolean',
     'time_slots' => 'boolean',
+    'past_registration' => 'boolean',
     //'single_day' => 'boolean',
     //'single_month' => 'boolean',
   ];
@@ -125,6 +126,12 @@ class Event extends Eloquent {
       } catch (Exception $e) {}
     }
     return $return;
+  }
+  public function getPastRegistrationAttribute() {
+    if(time() > strtotime($this->event_start) || (!is_null($this->registration_deadline) && time() > strtotime($this->registration_deadline))) {
+      return true;
+    }
+    return false;
   }
   /*
   public function getRegistrationDeadlineUnixAttribute() {

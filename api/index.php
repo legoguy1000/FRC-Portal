@@ -1,6 +1,5 @@
 <?php
 require_once('app/includes.php');
-require_once('app/libraries/CustomAuthRule.php');
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -73,7 +72,7 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
           "path" => ['/'],
           "ignore" => ['/version','/manifest.json','/auth','/webauthn/authenticate','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/hours/signIn/token','/config'],
         ]),
-        new Tuupola\Middleware\JwtAuthentication\RequestPathMethodRule([
+        new FrcPortal\Utilities\RequestPathMethodRule([
           "passthrough" => [
             "/events" => ["GET"],
             "/eventTypes" => ["GET"],

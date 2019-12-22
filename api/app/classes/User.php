@@ -1,6 +1,8 @@
 <?php
 namespace FrcPortal;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
@@ -257,7 +259,7 @@ class User extends Eloquent {
   }
 
   public function setDefaultNotifications() {
-  	$data = getNotificationOptions();
+  	$data = $this->getNotificationOptions();
   	$queryArr = array();
   	$queryStr	 = '';
   	foreach($data as $meth=>$types) {
@@ -272,7 +274,7 @@ class User extends Eloquent {
   }
 
   public function getNotificationPreferences() {
-    $data = getNotificationOptions();
+    $data = $this->getNotificationOptions();
     $method_enable = array(
       'slack' => getSettingsProp('slack_enable'),
       'email' => getSettingsProp('email_enable')
@@ -296,9 +298,8 @@ class User extends Eloquent {
   		$msg = $msgData['email'];
   		$subject = $msg['subject'];
   		$content = $msg['content'];
-  		$userData = $msg['userData'];
   		$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
-  		emailUser($userData,$subject,$content,$attachments);
+  		$this->emailUser($subject,$content,$attachments);
   	}
   	if(($type == '' || $preferences['slack'][$type] == true) && isset($msgData['slack'])) {
   		$msg = $msgData['slack'];
@@ -306,7 +307,7 @@ class User extends Eloquent {
   		$body = $msg['body'];
   		$tag = '';
   		$note_id = uniqid();
-  		slackMessageToUser($this->user_id, $body);
+  		$this->slackMessage($body);
   	}
   }
 
@@ -324,6 +325,14 @@ class User extends Eloquent {
       $this->gender = '';
   	}
   	return false;
+  }
+
+  public function slackMessage($msg) {
+  	$result = false;
+		if($this->slack_enabled == true) {
+			$result = postToSlack($msg, $this->slack_id);
+		}
+  	return $result;
   }
 
   public function getGetSlackIdByEmail() {
@@ -364,5 +373,111 @@ class User extends Eloquent {
     $message = 'Something went wrong deleting "'.$cred->name.'" device credential.';
     insertLogs($level = 'Information', $message);
     return false;
+  }
+
+  public function emailUser($subject = '',$content = '',$attachments = false) {
+  	$email_enable = getSettingsProp('email_enable');
+  	if(!$email_enable) {
+  		return false;
+  	}
+
+  	$html = file_get_contents(__DIR__.'/../libraries/email/email_template.html');
+  	$css = file_get_contents(__DIR__.'/../libraries/email/email_css.css');
+  	$emogrifier = new \Pelago\Emogrifier($html, $css);
+  	$mergedHtml = $emogrifier->emogrify();
+
+  	$subjectLine = $subject;
+  	$emailContent = $content ;
+  	$teamName = getSettingsProp('team_name');
+  	$teamNumber = getSettingsProp('team_number');
+  	$teamLocation = getSettingsProp('location');
+  	$envUrl = getSettingsProp('env_url');
+  	$email = str_replace('###TEAM_NAME###',$teamName,$mergedHtml);
+  	$email = str_replace('###TEAM_NUMBER###',$teamNumber,$email);
+  	$email = str_replace('###TEAM_LOCATION###',$teamLocation,$email);
+  	$email = str_replace('###ENV_URL###',$envUrl,$email);
+  	$email = str_replace('###SUBJECT###',$subjectLine,$email);
+  	$email = str_replace('###FNAME###',$this->fname,$email);
+  	$email = str_replace('###CONTENT###',$emailContent,$email);
+  	$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+  	try {
+  	    //Server settings
+        if(getSettingsProp('email_enable_smtp')) {
+          //$mail->SMTPDebug = 3;                                           // Enable verbose debug output
+    	    $mail->isSMTP();                                                // Set mailer to use SMTP
+    	    $mail->Host = getSettingsProp('email_smtp_server');            // Specify main and backup SMTP servers
+    	    $mail->SMTPAuth = true;                                        // Enable SMTP authentication
+    	    $mail->Username = getSettingsProp('email_smtp_user');          // SMTP username
+          $password = decryptItems(getSettingsProp('email_smtp_password'));
+          if($password == false) {
+            throw new Exception("Could not decrypt SMTP password");
+          }
+    	    $mail->Password = $password;                                    // SMTP password
+    	    $mail->SMTPSecure = getSettingsProp('email_smtp_encryption');  // Enable TLS encryption, `ssl` also accepted
+    	    $mail->Port = getSettingsProp('email_smtp_port');              // TCP port to connect to
+          $mail->SMTPOptions = array(
+              'ssl' => array(
+                  'verify_peer' => false,
+                  'verify_peer_name' => false,
+                  'allow_self_signed' => true
+              )
+          );
+        }
+  	    //Recipients
+  			$mailFrom = getSettingsProp('notification_email');
+  			$teamNumber = getSettingsProp('team_number');
+  			$mailFromName = 'Team '.$teamNumber.' Portal';
+        $mail->setFrom($mailFrom, $mailFromName);
+        $replyTo = getSettingsProp('email_replyto');
+        $replyTo = !is_null($replyTo) && $replyTo != '' ? $replyTo : $mailFrom;
+  	    $mail->addReplyTo($replyTo, $mailFromName);
+  	    $mail->addAddress($this->email, $this->full_name);     // Add a recipient
+  	   /*  $mail->addAddress('ellen@example.com');               // Name is optional
+  	    $mail->addReplyTo('info@example.com', 'Information');
+  	    $mail->addCC('cc@example.com');
+  	    $mail->addBCC('bcc@example.com'); */
+
+  	    //Attachments
+  			if($attachments != false && is_array($attachments)) {
+  				foreach($attachments as $file) {
+  					if(is_array($file) && file_exists($file['path'])) {
+  						$mail->addAttachment($file['path'], $file['name']);
+  					} elseif(file_exists($file)) {
+  						$mail->addAttachment($file);
+  					}
+  				}
+  			}
+  	    /* $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+  	    $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name */
+
+  	    //Content
+  	    $mail->isHTML(true);                                  // Set email format to HTML
+  	    $mail->Subject = $subject;
+  	    $mail->Body    = $email;
+  	    /* $mail->AltBody = 'This is the body in plain text for non-HTML mail clients'; */
+  	    $mail->send();
+  	//    echo 'Message has been sent';
+  	} catch (Exception $e) {
+  		return $mail->ErrorInfo;
+  	 //   echo 'Message could not be sent.';
+  	  //  echo 'Mailer Error: ' . $mail->ErrorInfo;
+  	}
+  }
+
+  public function getNotificationOptions() {
+  	$default = array(
+  		'sign_in_out' => false,
+  		'new_season' => false,
+  		'new_event' => false,
+  		'join_team' => false,
+  		'dues' => false,
+  		'stims' => false,
+  		'event_registration' => false,
+  	);
+  	$data = array(
+  		'slack' => $default,
+  		'email' => $default,
+  	);
+  	return $data;
   }
 }

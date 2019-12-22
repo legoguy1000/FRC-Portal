@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.eventController', ['$rootScope','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdDialog', '$log','$stateParams','seasonsService','configItems','$sce',
+.controller('main.eventController', ['$rootScope','$timeout', '$q', '$scope', '$state', 'eventsService', '$mdToast', '$mdDialog', '$log','$stateParams','seasonsService','configItems','$sce',
 	mainEventController
 ]);
-function mainEventController($rootScope, $timeout, $q, $scope, $state, eventsService, $mdDialog, $log,$stateParams,seasonsService,configItems,$sce) {
+function mainEventController($rootScope, $timeout, $q, $scope, $state, eventsService, $mdToast, $mdDialog, $log,$stateParams,seasonsService,configItems,$sce) {
     var vm = this;
 
 		vm.registrationFormVisible = false;

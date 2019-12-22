@@ -9,14 +9,22 @@
 			<div style="text-align: center;">
 				<h1>{{vm.event.name}}</h1>
 			</div>
+			<div style="text-align: center;">
+				<div ng-show="vm.event.date.single_day">
+					<h3 class="mt-20">
+						<md-icon class="material-icons">today</md-icon> {{vm.event.date.start.long_date}}
+					</h3>
+					<h3 class="mt-20">
+						<md-icon class="material-icons">access_time</md-icon> {{vm.event.date.start.time_formatted}} - {{vm.event.date.end.time_formatted}}
+					</h3>
+				</div>
+				<h3 class="mt-20" ng-hide="vm.event.date.single_day">
+					<md-icon class="material-icons">today</md-icon> {{vm.event.date.start.multi_day_start}} - {{vm.event.date.end.multi_day_end}}
+				</h3>
+			</div>
 			<div>
 				<h5 class="mt-20">
-					<span ng-show="vm.event.date.single_day">
-						<md-icon class="material-icons">today</md-icon> {{vm.event.date.start.long_date}} {{vm.event.date.start.time_formatted}} - {{vm.event.date.end.time_formatted}}
-					</span>
-					<span ng-hide="vm.event.date.single_day">
-						<md-icon class="material-icons">today</md-icon> {{vm.event.date.start.multi_day_start}} - {{vm.event.date.end.multi_day_end}}
-					</span>
+						<md-icon class="material-icons">today</md-icon> Registrion Deadline: {{vm.event.registration_deadline_date.full_formatted}}
 				</h5>
 			</div>
 			<div>
@@ -26,7 +34,10 @@
 			</div>
 			<div flex layout="row" layout-align="center center">
 				<!--<button class="md-button md-raised md-primary" ng-click="vm.registerForEvent()">Register Now</button>-->
-				<button class="md-button md-raised md-primary" ng-click="vm.showRegistrationForm($event)" ng-show="main.isAuthed">Register Now</button>
+				<button class="md-button md-raised md-primary" ng-click="vm.showRegistrationForm($event)" ng-show="main.isAuthed && !vm.event.past_registration" ng-disabled="">
+					Register Now
+				</button>
+				<span ng-show="main.isAuthed && vm.event.past_registration">Registration has closed.</span>
 				<span ng-show="!main.isAuthed">Please sign in to register for event.</span>
 			</div>
 		</div>

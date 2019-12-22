@@ -10,7 +10,6 @@ ini_set("expose_php", false);
 $root = __DIR__;
 require_once($root.'/version.php');
 require_once($root.'/vendor/autoload.php');
-require_once($root.'/functions/getConfigFile.php');
 
 IniConfig::parseIniFile();
 $capsule = new Capsule;
@@ -18,7 +17,8 @@ $capsule->addConnection(array("driver" => "mysql", "host" =>IniConfig::iniDataPr
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-$tz = Capsule::schema()->hasTable('settings') ? getSettingsProp('timezone') : null;
+$timeZone = FrcPortal\Setting::where('setting','timezone')->first();
+$tz = Capsule::schema()->hasTable('settings') ? $timeZone->value : null;
 $time_zone = !is_null($tz) && $tz != '' ? $tz:date_default_timezone_get();
 date_default_timezone_set($time_zone);
 
