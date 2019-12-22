@@ -13,11 +13,11 @@ declare(strict_types=1);
  *   https://appelsiini.net/projects/slim-jwt-auth
  *  https://github.com/tuupola/slim-jwt-auth/tree/3.x/src/JwtAuthentication
  */
-namespace Tuupola\Middleware\JwtAuthentication;
+namespace FrcPortal\Utilities;
+use Tuupola\Middleware\JwtAuthentication\RuleInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class RequestPathMethodRule implements RuleInterface
-{
+class RequestPathMethodRule implements RuleInterface {
     /**
      * Stores all the options passed to the rule
      */
@@ -25,12 +25,10 @@ final class RequestPathMethodRule implements RuleInterface
         "passthrough" => []
     ];
 
-    public function __construct($options = [])
-    {
+    public function __construct($options = []) {
         $this->options = array_merge($this->options, $options);
     }
-    public function __invoke(ServerRequestInterface $request): bool
-    {
+    public function __invoke(ServerRequestInterface $request): bool {
         $uri = "/" . $request->getUri()->getPath();
         $uri = preg_replace("#/+#", "/", $uri);
         /* If request path is matches ignore should not authenticate. */

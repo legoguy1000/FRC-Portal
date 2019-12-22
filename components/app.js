@@ -102,7 +102,7 @@ angular.module('FrcPortal', [
 	  }
 		})
 	  .state('main.profile', {
-		url: '/profile?signin',
+		url: '/profile?signin&notificationOptions',
 		templateUrl: 'components/main.profile/main.profile.html',
 		controller: 'main.profileController',
 		controllerAs: 'vm',

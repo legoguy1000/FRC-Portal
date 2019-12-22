@@ -28,6 +28,19 @@ function getRealIpAddr() {
     return $ip;
 }
 
+function getSettingsProp($prop, $section = null) {
+	$value = null;
+	$setting = FrcPortal\Setting::where('setting',$prop);
+	if($section != null) {
+		$setting = $setting->where('section',$section);
+	}
+	$setting = $setting->first();
+	//$ini = parse_ini_file(__DIR__.'/../secured/config.ini');
+	if(!is_null($setting) && isset($setting->value)) {
+		$value = $setting->value;
+	}
+	return $value;
+}
 /*
 function insertLogs($userId, $type, $status, $msg) {
 	$db = db_connect();
@@ -96,21 +109,6 @@ function filterArrayData ($inputArray, $filter) {
 															return in_array($var,$filter, true);
 													},
 													ARRAY_FILTER_USE_KEY) : $inputArray;
-}
-
-function getServiceAccountFile() {
-	$file = __DIR__.'/../secured/service_account_credentials.json';
-	if(!file_exists($file)) {
-		throw new Exception("Credentials file does not exist");
-	}
-	$valid = json_validate(file_get_contents($file));
-	if(!$valid['status']) {
-		throw new Exception("Credentials file is not valid");
-	}
-	return array(
-		'contents' => $valid['data'],
-		'path' => $file
-	);
 }
 
 function getServiceAccountData() {

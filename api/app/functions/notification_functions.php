@@ -3,44 +3,26 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Illuminate\Database\Capsule\Manager as DB;
 
-function getNotificationOptions() {
-	$default = array(
-		'sign_in_out' => false,
-		'new_season' => false,
-		'new_event' => false,
-		'join_team' => false,
-		'dues' => false,
-		'stims' => false,
-		'event_registration' => false,
-	);
-	$data = array(
-		'slack' => $default,
-		'email' => $default,
-	);
-	return $data;
-}
-
 function sendMassNotifications($type, $msgData) {
-	$users = FrcPortal\NotificationPreference::where('type',$type)->get();
-	foreach($users as $user) {
-		if($user['method'] == 'email') {
+	$notifications = FrcPortal\NotificationPreference::with('user')->where('type',$type)->get();
+	foreach($notifications as $note) {
+		if($note['method'] == 'email') {
 			$msg = $msgData['email'];
 			$subject = $msg['subject'];
 			$content = $msg['content'];
-			$userData = FrcPortal\User::find($user_id);
+			//$userData = FrcPortal\User::find($user->user_id);
 			$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
-			emailUser($userData,$subject,$content,$attachments);
+			$note->user->emailUser($subject,$content,$attachments);
 		}
-		elseif($user['method'] == 'slack') {
+		elseif($note['method'] == 'slack') {
 			$msg = $msgData['slack'];
 			$title = $msg['title'];
 			$body = $msg['body'];
 			$tag = '';
 			$note_id = uniqid();
-			slackMessageToUser($user->user_id, $body);
+			$note->user->slackMessage($body);
 		}
 	}
-
 }
 
 function postToSlack($msg = '', $channel = null) {
@@ -98,94 +80,6 @@ function endOfDayHoursToSlack($date = null) {
 	}
 }
 
-function slackMessageToUser($user_id, $msg) {
-	$result = false;
-	if(!is_null($user_id)) {
-		$userData = false;
-		$user = FrcPortal\User::find($user_id);
-		if(!is_null($user) && $user->slack_enabled == true) {
-			$result = postToSlack($msg, $user->slack_id);
-		}
-	}
-	return $result;
-}
-
-function emailUser($userData = array(),$subject = '',$content = '',$attachments = false)
-{
-	$email_enable = getSettingsProp('email_enable');
-	if(!$email_enable) {
-		return false;
-	}
-	$root = __DIR__;
-	$html = file_get_contents($root.'/../libraries/email/email_template.html');
-	$css = file_get_contents($root.'/../libraries/email/email_css.css');
-	$emogrifier = new \Pelago\Emogrifier($html, $css);
-	$mergedHtml = $emogrifier->emogrify();
-
-	$subjectLine = $subject;
-	$emailContent = $content ;
-	$teamName = getSettingsProp('team_name');
-	$teamNumber = getSettingsProp('team_number');
-	$teamLocation = getSettingsProp('location');
-	$envUrl = getSettingsProp('env_url');
-	$email = str_replace('###TEAM_NAME###',$teamName,$mergedHtml);
-	$email = str_replace('###TEAM_NUMBER###',$teamNumber,$email);
-	$email = str_replace('###TEAM_LOCATION###',$teamLocation,$email);
-	$email = str_replace('###ENV_URL###',$envUrl,$email);
-	$email = str_replace('###SUBJECT###',$subjectLine,$email);
-	$email = str_replace('###FNAME###',$userData['fname'],$email);
-	$email = str_replace('###CONTENT###',$emailContent,$email);
-	$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
-	try {
-	    //Server settings
-	    $mail->SMTPDebug = 2;                                 // Enable verbose debug output
-	    /* $mail->isSMTP();                                      // Set mailer to use SMTP
-	    $mail->Host = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
-	    $mail->SMTPAuth = true;                               // Enable SMTP authentication
-	    $mail->Username = 'user@example.com';                 // SMTP username
-	    $mail->Password = 'secret';                           // SMTP password
-	    $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-	    $mail->Port = 587;                                    // TCP port to connect to */
-
-	    //Recipients
-			$mailFrom = getSettingsProp('notification_email');
-			$teamNumber = getSettingsProp('team_number');
-			$mailFromName = 'Team '.$teamNumber.' Portal';
-	    $mail->setFrom($mailFrom, $mailFromName);
-	    $mail->addAddress($userData['email'], $userData['full_name']);     // Add a recipient
-	   /*  $mail->addAddress('ellen@example.com');               // Name is optional
-	    $mail->addReplyTo('info@example.com', 'Information');
-	    $mail->addCC('cc@example.com');
-	    $mail->addBCC('bcc@example.com'); */
-
-	    //Attachments
-			if($attachments != false && is_array($attachments)) {
-				foreach($attachments as $file) {
-					if(is_array($file) && file_exists($file['path'])) {
-						$mail->addAttachment($file['path'], $file['name']);
-					} elseif(file_exists($file)) {
-						$mail->addAttachment($file);
-					}
-				}
-			}
-	    /* $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-	    $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name */
-
-	    //Content
-	    $mail->isHTML(true);                                  // Set email format to HTML
-	    $mail->Subject = $subject;
-	    $mail->Body    = $email;
-	    /* $mail->AltBody = 'This is the body in plain text for non-HTML mail clients'; */
-
-	    $mail->send();
-	//    echo 'Message has been sent';
-	} catch (Exception $e) {
-		return $mail->ErrorInfo;
-	 //   echo 'Message could not be sent.';
-	  //  echo 'Mailer Error: ' . $mail->ErrorInfo;
-	}
-}
-
 function emailSignInOut($user_id,$emailData) {
 	$year = date('Y');
 	$date = date('Y-m-d');
@@ -226,187 +120,5 @@ function emailSignInOut($user_id,$emailData) {
 	);
 	//emailUser($userData,$subject,$content,$attachments = false);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* OLD */
-/*
-function errorHandle($error, $query = '')
-{
-	$db = db_connect();
-	$userId = '';
-	$token = checkToken($die=false,$die401=false);
-	if($token != false)
-	{
-		$userId = $token['data']['id'];
-	}
-	$errorId = insertLogs($userId, 'mysql', 'error', $query.'<br/><br/>'.$error);
-	$smtpCreds = smtpCredentials();
-	$mail = new PHPMailer;
-	$mail->setFrom('frcscout_mysql_error@resnick-tech.com', 'FRC Scout MySQL Error');
-	$mail->addAddress('adr8292@gmail.com', 'Alex resnick');     // Add a recipient
-	$mail->isHTML(true);                                  // Set email format to HTML
-	$mail->Subject = 'FRC Scout | MySQL Error';
-	//$mail->SMTPDebug = 1;
-	$mail->IsSMTP();
-	$mail->Mailer = "smtp";
-	$mail->Host = $smtpCreds['host'];
-	$mail->Port = $smtpCreds['port'];
-	$mail->SMTPAuth = $smtpCreds['auth'];
-	$mail->SMTPSecure = $smtpCreds['ssl'];
-	$mail->Username = $smtpCreds['user'];
-	$mail->Password = $smtpCreds['pasword'];
-	$mail->Body  = $error.'<br/><br/>'.$query;
-	$email = array();
-	if(!$mail->send()) {
-		$email['msg'] = 'Mailer Error: ' . $mail->ErrorInfo;
-		$email['status'] = false;
-	} else {
-		$email['msg'] = 'Message has been sent';
-		$email['status'] = true;
-	}
-	//header("HTTP/1.1 500 Internal Server Error");
-	//echo json_encode(array('status'=>false, 'type'=>'danger', 'msg'=>$error, 'query'=>$query, 'email'=>$email, 'error_id'=>$errorId));
-	//return array('status'=>false, 'type'=>'danger', 'msg'=>$error, 'query'=>$query, 'email'=>$email);
-}
-
-function webHookEmailNotification($data)
-{
-	//Email me the info
-	$smtpCreds = smtpCredentials();
-	$mail = new PHPMailer;
-	$mail->setFrom('blue_alliance_webhook@resnick-tech.com', 'Blue Alliance Webhook');
-	$mail->addAddress('adr8292@gmail.com', 'Alex resnick');     // Add a recipient
-	$mail->isHTML(true);                                  // Set email format to HTML
-	$mail->Subject = 'Blue Alliance | '.ucwords(str_replace('_',' ',$data['message_type']));
-	//$mail->SMTPDebug = 1;
-	$mail->IsSMTP();
-	$mail->Mailer = "smtp";
-	$mail->Host = $smtpCreds['host'];
-	$mail->Port = $smtpCreds['port'];
-	$mail->SMTPAuth = $smtpCreds['auth'];
-	$mail->SMTPSecure = $smtpCreds['ssl'];
-	$mail->Username = $smtpCreds['user'];
-	$mail->Password = $smtpCreds['pasword'];
-	$message = 'No Data';
-	if(!empty($data))
-	{
-		if($data['message_type'] == 'match_score')
-		{
-			$eventName = $data['message_data']['event_name'];
-			$match = $data['message_data']['match'];
-			$matchNum = $match['match_number'];
-			$redAlliance = $match['alliances']['red']['teams'];
-			$blueAlliance = $match['alliances']['blue']['teams'];
-			$redScore = $match['alliances']['red']['score'];
-			$blueScore = $match['alliances']['blue']['score'];
-			$message = '<table class="tg" style="undefined: ;table-layout: fixed;width: 292px;border-collapse: collapse;border-spacing: 0;">
-						<colgroup>
-						<col style="width: 100px">
-						<col style="width: 100px">
-						<col style="width: 100px">
-						<col style="width: 100px">
-						<col style="width: 100px">
-						</colgroup>
-						  <tr>
-							<th class="tg-9hbo" colspan="5" style="font-family: Arial, sans-serif;font-size: 18px;font-weight: bold;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;vertical-align: top;">'.$eventName.'<br/>Match: '.$matchNum.'</th>
-						  </tr>
-						  <tr>
-							<td class="tg-yw4l" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;vertical-align: top;"></td>
-							<td class="tg-amwm" colspan="3" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;font-weight: bold;text-align: center;vertical-align: top;">Alliance Members</td>
-							<td class="tg-9hbo" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;font-weight: bold;vertical-align: top;">Score</td>
-						  </tr>
-						  <tr>
-							<td class="tg-9hbo" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;font-weight: bold;vertical-align: top;">Red</td>
-							<td class="tg-0fb1" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;background-color: #fe0000;color: #ffffff;text-align: center;vertical-align: top;">'.$redAlliance[0].'</td>
-							<td class="tg-0fb1" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;background-color: #fe0000;color: #ffffff;text-align: center;vertical-align: top;">'.$redAlliance[1].'</td>
-							<td class="tg-0fb1" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;background-color: #fe0000;color: #ffffff;text-align: center;vertical-align: top;">'.$redAlliance[2].'</td>
-							<td class="tg-cgy6" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;font-weight: bold;background-color: #fe0000;color: #000000;text-align: center;vertical-align: top;">'.$redScore.'</td>
-						  </tr>
-						  <tr>
-							<td class="tg-9hbo" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;font-weight: bold;vertical-align: top;">Blue</td>
-							<td class="tg-ohc4" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;background-color: #3166ff;color: #ffffff;text-align: center;vertical-align: top;">'.$blueAlliance[0].'</td>
-							<td class="tg-ohc4" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;background-color: #3166ff;color: #ffffff;text-align: center;vertical-align: top;">'.$blueAlliance[1].'</td>
-							<td class="tg-ohc4" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;background-color: #3166ff;color: #ffffff;text-align: center;vertical-align: top;">'.$blueAlliance[2].'</td>
-							<td class="tg-cfoz" style="font-family: Arial, sans-serif;font-size: 18px;padding: 10px 5px;border-style: solid;border-width: 1px;overflow: hidden;word-break: normal;font-weight: bold;background-color: #3166ff;color: #000000;text-align: center;vertical-align: top;">'.$blueScore.'</td>
-						  </tr>
-						</table>';
-		}
-		else
-		{
-			$message = '';
-		}
-	}
-	$message .= '<br/><br/><br/>'.json_encode($data).'<br/><br/><br/>';
-	$mail->Body  = $message;
-	if(!$mail->send()) {
-		echo 'Message could not be sent.';
-		echo 'Mailer Error: ' . $mail->ErrorInfo;
-	} else {
-		echo 'Message has been sent';
-	//	echo '<br/><br/>';
-	//	echo json_encode($data);
-	}
-}
-
-function contactEmail($msgData)
-{
-	$smtpCreds = smtpCredentials();
-	$mail = new PHPMailer;
-	$mail->setFrom('frcscout_mysql_error@resnick-tech.com', 'FRC Scout MySQL Error');
-	$mail->addAddress($$msgData['email'], $msgData['name']);     // Add a recipient
-	$mail->isHTML(true);                                  // Set email format to HTML
-	$mail->Subject = 'FRC Scout Contact';
-	$mail->SMTPDebug = 1;
-	$mail->IsSMTP();
-	$mail->Mailer = "smtp";
-	$mail->Host = $smtpCreds['host'];
-	$mail->Port = $smtpCreds['port'];
-	$mail->SMTPAuth = $smtpCreds['auth'];
-	$mail->SMTPSecure = $smtpCreds['ssl'];
-	$mail->Username = $smtpCreds['user'];
-	$mail->Password = $smtpCreds['pasword'];
-	$mail->Body  = $error.'<br/><br/>'.$query;
-	$email = array();
-	if(!$mail->send()) {
-		$email['msg'] = 'Mailer Error: ' . $mail->ErrorInfo;
-		$email['status'] = false;
-	} else {
-		$email['msg'] = 'Message has been sent';
-		$email['status'] = true;
-	}
-	return array('status'=>false, 'type'=>'danger', 'msg'=>$error, 'query'=>$query, 'email'=>$email);
-}
-
-
-*/
-
-
-
-
-
-
-
 
 ?>
