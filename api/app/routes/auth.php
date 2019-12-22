@@ -19,7 +19,6 @@ $app->group('/auth', function () {
     }
     try {
       $client = new Google_Client();
-      //$client->setAuthConfigFile(__DIR__.'/../secured/google_client_secret.json');
       $client->setClientId(getSettingsProp('google_oauth_client_id'));
       $secret = decryptItems(getSettingsProp('google_oauth_client_secret'));
       if($secret == false) {
