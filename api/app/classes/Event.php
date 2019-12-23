@@ -128,7 +128,7 @@ class Event extends Eloquent {
     return $return;
   }
   public function getPastRegistrationAttribute() {
-    if(time() > strtotime($this->event_start) || (!is_null($this->registration_deadline) && time() > strtotime($this->registration_deadline))) {
+    if(time() > strtotime($this->event_start) || (!empty($this->registration_deadline) && time() > strtotime($this->registration_deadline))) {
       return true;
     }
     return false;

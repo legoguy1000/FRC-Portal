@@ -22,9 +22,9 @@
 					<md-icon class="material-icons">today</md-icon> {{vm.event.date.start.multi_day_start}} - {{vm.event.date.end.multi_day_end}}
 				</h3>
 			</div>
-			<div>
+			<div ng-show="vm.event.registration_deadline">
 				<h5 class="mt-20">
-						<md-icon class="material-icons">today</md-icon> Registrion Deadline: {{vm.event.registration_deadline_date.full_formatted}}
+						<md-icon class="material-icons">today</md-icon> Registration Deadline: {{vm.event.registration_deadline_date.full_formatted}}
 				</h5>
 			</div>
 			<div>
