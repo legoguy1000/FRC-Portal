@@ -372,16 +372,18 @@ if(version_compare($version, '2.17.0','>=')) {
       //Exception will be logged in Monolog
     }
   }
-  // $settings = FrcPortal\Setting::where('setting','slack_api_token')->orWhere('setting','google_api_key')->get();
-  // if(count($settings) > 0) {
-  //   foreach($settings as $secret) {
-  //     if($secret->value != '') {
-  //       $secret->value = encryptItems($secret->value);
-  //     }
-  //     $secret->save();
-  //   }
-  //   echo 'API Tokens are now encrypted' . PHP_EOL . PHP_EOL;
-  // }
+  $settings = FrcPortal\Setting::where('setting','slack_api_token')->orWhere('setting','google_api_key')->get();
+  if(!empty($settings)) {
+    foreach($settings as $secret) {
+      if(!empty($secret->value) && !is_base64($secret->value) && empty(decryptItems($secret->value))) {
+        $secret->value = encryptItems($secret->value);
+        $secret->save();
+        echo ucwords(str_replace('_',' ',$secret->setting)).' is now encrypted' . PHP_EOL;
+      }
+
+    }
+    //echo 'API Tokens are now encrypted' . PHP_EOL . PHP_EOL;
+  }
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
 ?>
