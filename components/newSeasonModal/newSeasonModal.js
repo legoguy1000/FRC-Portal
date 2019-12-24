@@ -27,11 +27,11 @@ function newSeasonModalController($log,$mdDialog,$scope,userInfo,seasonsService,
 
 	vm.onYearChange = function (newValue, oldValue) {
 		vm.start_min_date = moment(vm.data.year+'0101');
-		console.log(vm.data.year+'0101');
+		vm.data.start_date_full = moment().startOf('month').set({'year':vm.data.year, 'month':0, 'isoweekday':6});
+		vm.data.end_date_full = moment().endOf('month').set({'year':vm.data.year, 'month':3});
 	};
 
 	vm.onStartChange = function (newValue, oldValue) {
-		vm.end_min_date = moment(vm.data.start_date_full);
-		console.log(vm.data.start_date_full);
+		vm.end_min_date = moment(vm.data.start_date_full).add(1, 'day');
 	};
 }
