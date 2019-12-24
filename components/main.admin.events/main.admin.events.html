@@ -58,7 +58,7 @@
 					<th md-column md-order-by="event_start" hide-xs hide-sm><span>Date</span></th>
 					<th md-column md-order-by="num_days" hide-xs><span># Days</span></th>
 					<th md-column md-order-by="type" hide-xs><span>Event Type</span></th>
-					<th md-column md-order-by="game_name" hide-xs hide-sm><span>Season</span></th>
+					<th md-column md-order-by="game_name" hide-xs hide-sm hide-md><span>Season</span></th>
 					<th md-column></th>
 				</tr>
 			</thead>
@@ -77,7 +77,8 @@
 					</td>
 					<td md-cell hide-xs hide-sm>
 						<span ng-show="event.date.single_day">
-							{{event.date.start.long_date}} {{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}
+							{{event.date.start.long_date}} <br/>
+							<span class="hint">{{event.date.start.time_formatted}} - {{event.date.end.time_formatted}}</span>
 						</span>
 						<span ng-hide="event.date.single_day">
 							{{event.date.start.multi_day_start}} - {{event.date.end.multi_day_end}}
@@ -85,7 +86,7 @@
 					</td>
 					<td md-cell hide-xs>{{event.num_days}}</td>
 					<td md-cell hide-xs>{{event.type}}</td>
-					<td md-cell hide-xs hide-sm>
+					<td md-cell hide-xs hide-sm hide-md>
 						<div layout="row" layout-align="start center">
 							<img ng-src="{{event.season.game_logo}}" class="avatar" alt="" ng-if="event.season.game_logo"/>
 							{{event.season.game_name}}
