@@ -150,13 +150,12 @@ function mainAdminTimeController($timeout, $q, $scope, $state, $timeout, signinS
 			$mdDialog.show({
 				controller: timeSheetModalController,
 				controllerAs: 'vm',
-				templateUrl: 'components/timeSheetModalcomponents/timeSheetModal.html',
+				templateUrl: 'components/timeSheetModal/timeSheetModal.html',
 				parent: angular.element(document.body),
 				clickOutsideToClose:true,
 				fullscreen: true, // Only for -xs, -sm breakpoints.
 				locals: { }
-			})
-			.then(function(response) {}, function() {});
+			});
 		}
 
 
