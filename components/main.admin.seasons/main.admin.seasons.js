@@ -29,7 +29,7 @@ function mainAdminSeasonsController($timeout, $q, $scope, $state, seasonsService
 		vm.filter.show = false;
 		vm.query.filter = '';
 
-		if(vm.filter.form.$dirty) {
+		if(vm.filter.form && vm.filter.form.$dirty) {
 			vm.filter.form.$setPristine();
 		}
 	};
