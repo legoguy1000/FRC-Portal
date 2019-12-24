@@ -31,7 +31,7 @@ function mainAdminLogsController($timeout, $q, $scope, $state, $timeout, logsSer
 		vm.filter.show = false;
 		vm.query.filter = '';
 
-		if(vm.filter.form.$dirty) {
+		if(vm.filter.form && vm.filter.form.$dirty) {
 			vm.filter.form.$setPristine();
 		}
 	};
