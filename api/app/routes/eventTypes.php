@@ -21,7 +21,7 @@ $app->group('/eventTypes', function () {
       return unauthorizedResponse($response);
     }
 
-    if(!isset($formData['type']) || $formData['type'] == '') {
+    if(empty($formData['type'])) {
       $responseArr['msg'] = 'Type cannot be blank';
       $response = $response->withJson($responseArr,400);
       return $response;
@@ -29,7 +29,7 @@ $app->group('/eventTypes', function () {
 
     $type = new FrcPortal\EventType();
     $type->type = $formData['type'];
-    $type->description = isset($formData['description']) ? $formData['description']:'';
+    $type->description = !empty($formData['description']) ? $formData['description']:'';
     if($type->save()) {
       $responseArr['data'] = $type;
       $responseArr['msg'] = 'New event type added';
@@ -48,7 +48,7 @@ $app->group('/eventTypes', function () {
       }
       $type_id = $args['type_id'];
 
-      if(!isset($formData['type']) || $formData['type'] == '') {
+      if(empty($formData['type'])) {
         $responseArr['msg'] = 'Type cannot be blank';
         $response = $response->withJson($responseArr,400);
         return $response;
@@ -57,7 +57,7 @@ $app->group('/eventTypes', function () {
       $type = FrcPortal\EventType::find($type_id);
       if(!is_null($type_id)) {
         $type->type = $formData['type'];
-        $type->description = isset($formData['description']) ? $formData['description']:'';
+        $type->description = !empty($formData['description']) ? $formData['description']:'';
         if($type->save()) {
           $responseArr['data'] = $type;
           $responseArr['msg'] = 'Event type updated';

@@ -9,7 +9,7 @@ function checkAdmin($user) {
 		$return = $user->status && $user->admin;
 	} else {
 		$temp = FrcPortal\User::where('user_id',$user)->where('admin',true)->where('status',true)->first();
-		$return = !is_null($temp);
+		$return = !empty($temp);
 	}
 	return $return;
 }
@@ -60,7 +60,7 @@ function checkTeamEmail($email = '',$teamDomain = null) {
 	if($teamDomain == null) {
 		$teamDomain = getSettingsProp('team_domain');
 	}
-	if(!is_null($teamDomain) && preg_match('/[a-z0-9._%+-]+@'.$teamDomain.'$/i', $email) != false) {
+	if(!empty($teamDomain) && preg_match('/[a-z0-9._%+-]+@'.$teamDomain.'$/i', $email) != false) {
 		return true;
 	}
 	return false;
@@ -68,7 +68,7 @@ function checkTeamEmail($email = '',$teamDomain = null) {
 
 function checkLoginProvider($provider) {
 	$loginEnabled = FrcPortal\Setting::where('section','login')->where('setting',$provider.'_login_enable')->first();
-	if(is_null($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
+	if(empty($loginEnabled) || ((boolean) $loginEnabled->value) == false) {
 		return false;
 	}
 	return true;
@@ -76,7 +76,7 @@ function checkLoginProvider($provider) {
 
 function getUsersAnnualRequirements($season_id) {
 	$users = false;
-	if(!is_null($season_id)) {
+	if(!empty($season_id)) {
 		$users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($season_id) {
 											$query->where('season_id','=',$season_id);
 										}])->whereExists(function ($query) use ($season_id) {

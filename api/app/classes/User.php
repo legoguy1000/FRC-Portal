@@ -110,25 +110,25 @@ class User extends Eloquent {
 
 
   public function getSlackEnabledAttribute() {
-    return (bool) isset($this->attributes['slack_id']) && $this->attributes['slack_id'] != '';
+    return (bool) !empty($this->attributes['slack_id']);
   }
   public function getAdultAttribute() {
-    return (bool) isset($this->attributes['user_type']) && ($this->attributes['user_type'] == 'Mentor' || $this->attributes['user_type'] == 'Alumni' || $this->attributes['user_type'] == 'Parent');
+    return (bool) !empty($this->attributes['user_type']) && ($this->attributes['user_type'] == 'Mentor' || $this->attributes['user_type'] == 'Alumni' || $this->attributes['user_type'] == 'Parent');
   }
   public function getOtherAdultAttribute() {
-    return (bool) $this->adult && isset($this->attributes['user_type']) && ($this->attributes['user_type'] == 'Alumni' || $this->attributes['user_type'] == 'Parent');
+    return (bool) $this->adult && !empty($this->attributes['user_type']) && ($this->attributes['user_type'] == 'Alumni' || $this->attributes['user_type'] == 'Parent');
   }
   public function getStudentAttribute() {
-    return (bool) isset($this->attributes['user_type']) && $this->attributes['user_type'] == 'Student';
+    return (bool) !empty($this->attributes['user_type']) && $this->attributes['user_type'] == 'Student';
   }
   public function getMentorAttribute() {
-    return (bool) $this->adult && isset($this->attributes['user_type']) && $this->attributes['user_type'] == 'Mentor';
+    return (bool) $this->adult && !empty($this->attributes['user_type']) && $this->attributes['user_type'] == 'Mentor';
   }
   public function getRoomTypeAttribute() {
     $return = null;
     if($this->adult) {
       $return = 'Adult';
-    } else if(isset($this->attributes['user_type']) && isset($this->attributes['gender'])) {
+    } else if(!empty($this->attributes['user_type']) && !empty($this->attributes['gender'])) {
       $return = $this->attributes['user_type'].'.'.$this->attributes['gender'];
     }
     return $return;
@@ -224,7 +224,7 @@ class User extends Eloquent {
   		$update = true;
   	}
   	$teamDomain = getSettingsProp('team_domain');
-  	if($this->team_email == '' && !is_null($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
+  	if($this->team_email == '' && !empty($teamDomain) && strpos($userData['email'],'@'.$teamDomain) !== false) {
   		$this->team_email = $userData['email'];
   		$update = true;
   	}
@@ -294,14 +294,14 @@ class User extends Eloquent {
 
   	$preferences = $this->getNotificationPreferences();
   	//$preferences = array('push' => true, 'email' => false);
-    if(($type == '' || $preferences['email'][$type] == true) && isset($msgData['email'])) {
+    if(($type == '' || $preferences['email'][$type] == true) && !empty($msgData['email'])) {
   		$msg = $msgData['email'];
   		$subject = $msg['subject'];
   		$content = $msg['content'];
-  		$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
+  		$attachments = !empty($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
   		$this->emailUser($subject,$content,$attachments);
   	}
-  	if(($type == '' || $preferences['slack'][$type] == true) && isset($msgData['slack'])) {
+  	if(($type == '' || $preferences['slack'][$type] == true) && !empty($msgData['slack'])) {
   		$msg = $msgData['slack'];
   		$title = $msg['title'];
   		$body = $msg['body'];
@@ -314,11 +314,11 @@ class User extends Eloquent {
   public function getGenderByFirstName() {
   	$return = false;
     $name = $this->fname;
-  	if(!is_null($name) && $name != '') {
+  	if(!empty($name)) {
   		$base = 'https://api.genderize.io/';
   		$url = $base.'?name='.$name;
   		$contents = json_decode(file_get_contents($url));
-  		if(isset($contents->gender) && !is_null($contents->gender) && $contents->gender != '' && $contents->probability > .90) {
+  		if(!empty($contents->gender) && $contents->probability > .90) {
   			$this->gender = ucfirst($contents->gender);
       	return true;
   		}
@@ -339,10 +339,10 @@ class User extends Eloquent {
     $return = false;
     $emails = array($this->email,$this->team_email);
     foreach($emails as $email) {
-      if(!is_null($email) && $email != '') {
+      if(!empty($email)) {
         $result = slackGetAPI('users.lookupByEmail', $params = array('email'=>$email));
         $data = json_decode($result);
-        if(isset($data->ok) && $data->ok == true) {
+        if(!empty($data->ok) && $data->ok == true) {
           $this->slack_id = $data->user->id;
           return true;
         }
@@ -429,7 +429,7 @@ class User extends Eloquent {
   			$mailFromName = 'Team '.$teamNumber.' Portal';
         $mail->setFrom($mailFrom, $mailFromName);
         $replyTo = getSettingsProp('email_replyto');
-        $replyTo = !is_null($replyTo) && $replyTo != '' ? $replyTo : $mailFrom;
+        $replyTo = !empty($replyTo) ? $replyTo : $mailFrom;
   	    $mail->addReplyTo($replyTo, $mailFromName);
   	    $mail->addAddress($this->email, $this->full_name);     // Add a recipient
   	   /*  $mail->addAddress('ellen@example.com');               // Name is optional

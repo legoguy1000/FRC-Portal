@@ -11,7 +11,7 @@ function sendMassNotifications($type, $msgData) {
 			$subject = $msg['subject'];
 			$content = $msg['content'];
 			//$userData = FrcPortal\User::find($user->user_id);
-			$attachments = isset($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
+			$attachments = !empty($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
 			$note->user->emailUser($subject,$content,$attachments);
 		}
 		elseif($note['method'] == 'slack') {
@@ -46,7 +46,7 @@ function postToSlack($msg = '', $channel = null) {
 
 function SlackApiPost($data = null) {
 	$result = false;
-	if(is_null($data) || !is_array($data) || empty($data)) {
+	if(empty($data) || !is_array($data)) {
 		return $result;
 	}
 	$result = slackPostAPI($endpoint = 'chat.postMessage', $data);
@@ -54,7 +54,7 @@ function SlackApiPost($data = null) {
 }
 
 function endOfDayHoursToSlack($date = null) {
-	if(is_null($date)) {
+	if(empty($date)) {
 		$date = date('Y-m-d');
 	}
 	$msg = 'Congratulations on another hard day of work.#new_line#';
@@ -65,7 +65,7 @@ function endOfDayHoursToSlack($date = null) {
 
 	//$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE DATE(a.time_in)='.db_quote($date).' AND DATE(a.time_out)=DATE(a.time_in) GROUP BY DATE(a.time_in)';
 	//$result = db_select_single($query);
-	if(!is_null($result)) {
+	if(!empty($result)) {
 		$hours = $result->hours;
 		$result = DB::table('meeting_hours')
 							->whereRaw('year(meeting_hours.time_in) = "'.date('Y',strtotime($date)).'"')
@@ -73,7 +73,7 @@ function endOfDayHoursToSlack($date = null) {
 							->select(DB::raw('IFNULL(SUM(time_to_sec(timediff(meeting_hours.time_out, meeting_hours.time_in)) / 3600),0) as hours'))->groupBy(DB::raw('year(meeting_hours.time_in)'))->first();
 		//$query = 'SELECT IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours FROM meeting_hours a WHERE year(a.time_in)='.db_quote(date('Y',strtotime($date))).' GROUP BY year(a.time_in)';
 		//$result = db_select_single($query);
-		$total = !is_null($result) ? $result->hours : 0;
+		$total = !empty($result) ? $result->hours : 0;
 		$teamName = getSettingsProp('team_name');
 		$msg .= $teamName.' completed another '.round($hours,1).' hours of work for an annual total of '.round($total,1).'.#new_line#Keep up the amazing work!!';
 		postToSlack($msg, $channel = null);
