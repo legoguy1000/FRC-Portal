@@ -73,12 +73,10 @@ function mainSigninController($rootScope, $timeout, $q, $auth, $scope, signinSer
 	vm.qrCodeUrl = vm.genQrCodeUrl();
 	vm.authorizeSignIn = function() {
 		var data = {
-			auth_token: null,
 			auth_code: null
 		};
 		if($auth.isAuthenticated()) {
-			data.auth_token = $auth.getToken();
-			sendAuth(data);
+			sendAuth();
 		} else {
 			var confirm = $mdDialog.prompt()
 	      .title('Please enter your code to authorize sign in.')
