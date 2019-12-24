@@ -60,6 +60,30 @@ $app->group('/slack', function () {
     $response->getBody()->write($responseStr);
     return $response;
   });
+  $this->post('/myHours', function ($request, $response, $args) {
+    $formData = $request->getParsedBody();
+    $responseStr = '';
+    $token = $formData['token'];
+    $slack_id = $formData['user_id'];
+    $user_name = $formData['user_name'];
+    if(!empty($formData['text']) && filter_var($formData['text'], FILTER_VALIDATE_EMAIL)) {
+      $email = $formData['text'];
+      $user = FrcPortal\User::where('email',$email)->orWhere('team_email',$email)->first();
+      if(!empty($user)) {
+        $user->slack_id = $user_id;
+        if($user->save()) {
+          $responseStr = 'Slack ID added to profile.'
+        } else {
+          $responseStr = 'Something went wrong adding slack ID to profile.'
+        }
+      } else {
+        $responseStr = 'I don\'t know who you are. The email "'.$email.'" doesn\t link to known user. Please check your portal profile to verify your email is set.';
+    } else {
+      $responseStr = 'Invalid email provided.';
+    }
+    $response->getBody()->write($responseStr);
+    return $response;
+  });
   /*$this->post('/signin', function ($request, $response, $args) {
     $formData = $request->getParsedBody();
     $responseStr = '';
