@@ -30,18 +30,18 @@ $app->group('/events', function () {
     $search = $request->getParam('search') !== null ? $request->getParam('search'):$searchProperties;
 
     $queryArr = array();
-    if(isset($search['name']) && $search['name'] != '') {
+    if(!empty($search['name'])) {
       $queryArr[] = array('name', 'LIKE', '%'.$search['name'].'%');
     }
-    if(isset($search['type']) && $search['type'] != '') {
+    if(!empty($search['type'])) {
       $queryArr[] = array('type', '=', $search['type']);
     }
-    if(isset($search['event_start']) && $search['event_start'] != '') {
+    if(!empty($search['event_start'])) {
       $es = new DateTime($search['event_start']);
       $es = $es->format('Y-m-d');
       $queryArr[] = array('event_start', '>=', $es);
     }
-    if(isset($search['event_end']) && $search['event_end'] != '') {
+    if(!empty($search['event_end'])) {
       $ee = new DateTime($search['event_end']);
       $ee = $ee->format('Y-m-d').' 23:59:59';
       $queryArr[] = array('event_end', '<=', $ee);
@@ -91,25 +91,25 @@ $app->group('/events', function () {
   $this->get('/searchGoogleCalendar', function ($request, $response, $args) {
     $calendar = getSettingsProp('google_calendar_id');
     $api_key = getSettingsProp('google_api_key');
-    if(!isset($api_key) || $api_key == '') {
+    if(empty($api_key)) {
       $responseArr = array('status'=>false, 'msg'=>'Google API Key cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the API Key.');
       insertLogs($level = 'Warning', $message = 'Cannot search Google calendar.  Google API Key is blank');
       $response = $response->withJson($responseArr);
       return $response;
     }
-    if(!isset($calendar) || $calendar == '') {
+    if(empty($calendar)) {
       $responseArr = array('status'=>false, 'msg'=>'Google Calendar ID cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the Google Calendar ID.');
       insertLogs($level = 'Warning', $message = 'Cannot search Google calendar.  Google Calendar ID is blank');
       $response = $response->withJson($responseArr);
       return $response;
     }
     $optParams = array();
-    if($request->getParam('q') != null && $request->getParam('q') != '' && $request->getParam('q') != 'null' && $request->getParam('q') != 'undefined') {
+    if(!empty($request->getParam('q')) && $request->getParam('q') != 'null' && $request->getParam('q') != 'undefined') {
     	$q = trim($request->getParam('q'));
     	$optParams['q'] = $q;
     }
     $optParams['timeMax'] = date('c',strtotime('+3 Months'));
-    if($request->getParam('timeMax') != null && $request->getParam('timeMax') != '' && $request->getParam('timeMax') != 'null' && $request->getParam('timeMax') != 'undefined') {
+    if(!empty($request->getParam('timeMax')) && $request->getParam('timeMax') != 'null' && $request->getParam('timeMax') != 'undefined') {
     	$timeMax = date('c', strtotime($request->getParam('timeMax')));
     	if(is_numeric($request->getParam('timeMax'))) {
     		$timeMax = date('c',$request->getParam('timeMax')/1000);
@@ -117,7 +117,7 @@ $app->group('/events', function () {
     	$optParams['timeMax'] = $timeMax;
     }
     $optParams['timeMin'] = date('c',strtotime('-7 Days'));
-    if($request->getParam('timeMin') != null && $request->getParam('timeMin') != '' && $request->getParam('timeMin') != 'null' && $request->getParam('timeMin') != 'undefined') {
+    if(!empty($request->getParam('timeMin')) && $request->getParam('timeMin') != 'null' && $request->getParam('timeMin') != 'undefined') {
     	$timeMin = date('c', strtotime($request->getParam('timeMin')));
     	if(is_numeric($request->getParam('timeMin'))) {
     		$timeMin = date('c',$request->getParam('timeMin')/1000);
@@ -211,22 +211,22 @@ $app->group('/events', function () {
       return unauthorizedResponse($response);
     }
 
-    if(!isset($formData['name']) || $formData['name'] == '') {
+    if(empty($formData['name'])) {
       return badRequestResponse($response, $msg = 'Name cannot be blank');
     }
-    if(!isset($formData['type']) || $formData['type'] == '') {
+    if(empty($formData['type'])) {
       return badRequestResponse($response, $msg = 'Event type cannot be blank');
     }
-    if(!isset($formData['event_start']) || $formData['event_start'] == '') {
+    if(empty($formData['event_start'])) {
       return badRequestResponse($response, $msg = 'Start Date cannot be blank');
     }
-    if(!isset($formData['event_end']) || $formData['event_end'] == '') {
+    if(empty($formData['event_end'])) {
       return badRequestResponse($response, $msg = 'End Date cannot be blank');
     }
     if(strtotime($formData['event_start']) >= strtotime($formData['event_end'])) {
       return badRequestResponse($response, $msg = 'Start Date must be before End Date');
     }
-    if(!isset($formData['google_cal_id']) || $formData['google_cal_id'] == '') {
+    if(empty($formData['google_cal_id'])) {
       return badRequestResponse($response, $msg = 'Invalid Google calendar ID');
     }
     $event = FrcPortal\Event::where('google_cal_id', $formData['google_cal_id'])->first();
@@ -237,21 +237,21 @@ $app->group('/events', function () {
       $event->type = $formData['type'];
       $event->event_start = $formData['event_start'];
       $event->event_end = $formData['event_end'];
-      $event->details = isset($formData['details']) && !is_null($formData['details']) ? $formData['details']:'';
-      $event->location = isset($formData['location']) && !is_null($formData['location']) ? $formData['location']:'';
-      $event->payment_required = isset($formData['requirements']['payment']) && $formData['requirements']['payment'] ? true:false;
-      $event->permission_slip_required = isset($formData['requirements']['permission_slip']) && $formData['requirements']['permission_slip'] ? true:false;
-      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
-      $event->room_required = isset($formData['requirements']['room']) && $formData['requirements']['room'] ? true:false;
-      $event->drivers_required = isset($formData['requirements']['drivers']) && $formData['requirements']['drivers'] ? true:false;
-      $event->food_required = isset($formData['requirements']['food']) && $formData['requirements']['food'] ? true:false;
-      $event->time_slots_required = isset($formData['requirements']['time_slots']) && $formData['requirements']['time_slots'] ? true:false;
+      $event->details = !empty($formData['details']) ? $formData['details']:'';
+      $event->location = !empty($formData['location']) ? $formData['location']:'';
+      $event->payment_required = !empty($formData['requirements']['payment']);
+      $event->permission_slip_required = !empty($formData['requirements']['permission_slip']);
+      $event->food_required = !empty($formData['requirements']['food']);
+      $event->room_required = !empty($formData['requirements']['room']);
+      $event->drivers_required = !empty($formData['requirements']['drivers']);
+      $event->food_required = !empty($formData['requirements']['food']);
+      $event->time_slots_required = !empty($formData['requirements']['time_slots']);
       if($userId != IniConfig::iniDataProperty('admin_user')) {
         $event->poc_id = $userId;
       }
       $event->hotel_info = '';
       if($event->save()) {
-        if($event->room_required && isset($formData['rooms'])) {
+        if($event->room_required && !empty($formData['rooms'])) {
           $roomTypes = array('boys','girls','adults');
           $roomKey = array(
             'boys' => array('user_type'=>'Student','gender'=>'Male'),
@@ -381,7 +381,7 @@ $app->group('/events', function () {
           return unauthorizedResponse($response);
         }
         $formData = $request->getParsedBody();
-        if(!isset($formData['cars']) || !is_array($formData['cars']) || empty($formData['cars'])) {
+        if(empty($formData['cars']) || !is_array($formData['cars'])) {
           return badRequestResponse($response);
         }
         $cars = $event->event_cars()->get();
@@ -438,10 +438,10 @@ $app->group('/events', function () {
         if(!$event->room_required) {
           return badRequestResponse($response, $msg = 'Hotel rooms not needed for this event');
         }
-        if(!isset($formData['user_type']) || $formData['user_type'] == '') {
+        if(empty($formData['user_type'])) {
           return badRequestResponse($response, $msg = 'User Type cannot be blank');
         }
-        if(!isset($formData['gender']) || ($formData['gender'] == '' && $formData['user_type'] != 'Adult')) {
+        if(empty($formData['gender']) || ($formData['gender'] == '' && $formData['user_type'] != 'Adult')) {
           return badRequestResponse($response, $msg = 'Gender cannot be blank');
         }
         $room = new FrcPortal\EventRoom();
@@ -497,7 +497,7 @@ $app->group('/events', function () {
         //Event passed from middleware
         $event = $request->getAttribute('event');
         $formData = $request->getParsedBody();
-        if(!isset($formData['rooms']) || !is_array($formData['rooms']) || empty($formData['rooms'])) {
+        if(empty($formData['rooms']) || !is_array($formData['rooms'])) {
           return badRequestResponse($response);
         }
         $rooms = $event->event_rooms()->get();
@@ -667,8 +667,8 @@ $app->group('/events', function () {
           $food_id = $args['food_id'];
           $food = FrcPortal\EventFood::where('event_id',$event_id)->where('food_id',$food_id)->first();
           if($food) {
-            $food->group = isset($formData['group']) ? $formData['group']:'';
-            $food->description = isset($formData['description']) ? $formData['description']:'';
+            $food->group = !empty($formData['group']) ? $formData['group']:'';
+            $food->description = !empty($formData['description']) ? $formData['description']:'';
             if($food->save()) {
               $responseArr['status'] = true;
               $responseArr['msg'] = 'Food option Updated';
@@ -713,8 +713,8 @@ $app->group('/events', function () {
         $event_id = $args['event_id'];
         $food = new FrcPortal\EventFood();
         $food->event_id = $event_id;
-        $food->group = isset($formData['group']) ? $formData['group']:'';
-        $food->description = isset($formData['description']) ? $formData['description']:'';
+        $food->group = !empty($formData['group']) ? $formData['group']:'';
+        $food->description = !empty($formData['description']) ? $formData['description']:'';
         if($food->save()) {
           $responseArr['status'] = true;
           $responseArr['msg'] = 'Food option created';
@@ -737,17 +737,17 @@ $app->group('/events', function () {
       //Event passed from middleware
       $event = $request->getAttribute('event');
       //$event = FrcPortal\Event::find($event_id);
-      $event->type = isset($formData['type']) && $formData['type'] != '' ? $formData['type'] : null;
-      $event->poc_id = isset($formData['poc']['user_id']) && $formData['poc']['user_id'] != '' ? $formData['poc']['user_id']:null;
-      if($formData['registration_deadline'] != null && $formData['registration_deadline'] != '') {
+      $event->type = !empty($formData['type']) ? $formData['type'] : null;
+      $event->poc_id = !empty($formData['poc']['user_id']) ? $formData['poc']['user_id']:null;
+      if(!empty($formData['registration_deadline'])) {
         $registration_deadline = new DateTime($formData['registration_deadline']);
         $event->registration_deadline = $registration_deadline->format('Y-m-d').' 23:59:59';
       } else {
         $event->registration_deadline = null;
       }
-      $event->registration_deadline_gcalid = isset($formData['registration_deadline_gcalid']) && $formData['registration_deadline_gcalid'] != '' ? $formData['registration_deadline_gcalid']:null;
+      $event->registration_deadline_gcalid = !empty($formData['registration_deadline_gcalid']) ? $formData['registration_deadline_gcalid']:null;
 
-      $eventReqs = isset($formData['requirements']) ? $formData['requirements'] : null;
+      $eventReqs = !empty($formData['requirements']) ? $formData['requirements'] : null;
       if(!is_null($eventReqs)) {
         foreach($eventReqs as $req=>$val) {
           $event->{$req} = $val;
@@ -772,7 +772,7 @@ $app->group('/events', function () {
         return unauthorizedResponse($response);
       }
       $api_key = getSettingsProp('google_api_key');
-      if(!isset($api_key) || $api_key == '') {
+      if(empty($api_key)) {
         $responseArr = array('status'=>false, 'msg'=>'Google API Key cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the API Key.');
         insertLogs($level = 'Warning', $message = 'Cannot search Google calendar.  Google API Key is blank');
         $response = $response->withJson($responseArr);
@@ -809,10 +809,10 @@ $app->group('/events', function () {
       }
 
       $event_id = $args['event_id'];
-      if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
+      if(empty($formData['users']) || !is_array($formData['users'])) {
         return badRequestResponse($response, $msg = 'Please select at least 1 user');
       }
-      if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('registration','permission_slip','payment'))) {
+      if(empty($formData['requirement']) || !in_array($formData['requirement'],array('registration','permission_slip','payment'))) {
         return badRequestResponse($response, $msg = 'Invalid event requirement');
       }
       //Event passed from middleware
@@ -850,7 +850,7 @@ $app->group('/events', function () {
       }
 
       $event_id = $args['event_id'];
-      if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
+      if(empty($formData['users']) || !is_array($formData['users'])) {
         return badRequestResponse($response, $msg = 'Please select at least 1 user');
       }
       /* if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('registration','permission_slip','payment'))) {
@@ -867,7 +867,7 @@ $app->group('/events', function () {
         $cur = isset($user['event_requirements']['attendance_confirmed']) ? $user['event_requirements']['attendance_confirmed'] : false;
         $new = !$cur;
         $ereq = FrcPortal\EventRequirement::where('event_id', $event_id)->where('user_id', $user_id)->first();
-        if(!is_null($ereq) && isset($ereq->registration) && $ereq->registration==true) {
+        if(!empty($ereq) && !empty($ereq->registration)) {
           $ereq->attendance_confirmed = $new;
         } else {
           return badRequestResponse($response, $msg = 'User must be registered prior to receiving time credit');
@@ -887,11 +887,11 @@ $app->group('/events', function () {
       $event_id = $args['event_id'];
       $user_id = $loggedInUser;
 
-      if(isset($formData['user_id']) && $formData['user_id'] != $loggedInUser && !FrcPortal\Utilities\Auth::isAdmin()) {
+      if(!empty($formData['user_id']) && $formData['user_id'] != $loggedInUser && !FrcPortal\Utilities\Auth::isAdmin()) {
         $responseArr = array('status'=>false, 'msg'=>'Unauthorized');
         $response = $response->withJson($responseArr,403);
         return $response;
-      } else if(isset($formData['user_id']) && FrcPortal\Utilities\Auth::isAdmin()) {
+      } else if(!empty($formData['user_id']) && FrcPortal\Utilities\Auth::isAdmin()) {
       	$user_id = $formData['user_id'];
       }
       $userFullName = FrcPortal\Utilities\Auth::user()->full_name;
@@ -937,7 +937,7 @@ $app->group('/events', function () {
           }
         }
         $room_required = (bool) $event->room_required;
-        if($room_required && $user_type == 'Student' && isset($formData['room_id'])) {
+        if($room_required && $user_type == 'Student' && !empty($formData['room_id'])) {
           $room_id = $formData['room_id'];
           $room = FrcPortal\EventRoom::where('room_id',$room_id)->where('event_id',$event_id)->first();
           if(is_null($room)) {
@@ -950,12 +950,12 @@ $app->group('/events', function () {
             $response = $response->withJson($responseArr);
             return $response;
           }
-          $reqUpdate->room_id = isset($formData['room_id']) && $formData['room_id'] != '' ? $formData['room_id']:null;
+          $reqUpdate->room_id = !empty($formData['room_id']) ? $formData['room_id']:null;
           $reqUpdate->save();
         }
         $time_slots_required = (bool) $event->time_slots_required;
         if($time_slots_required) {
-          if(isset($formData['event_time_slots']) && count($formData['event_time_slots']) > 0) {
+          if(!empty($formData['event_time_slots'])) {
             $ts_ids = array_column($formData['event_time_slots'], 'time_slot_id');
             $reqUpdate->event_time_slots()->sync($ts_ids);
           } else {
@@ -968,7 +968,7 @@ $app->group('/events', function () {
         $food_required = (bool) $event->food_required;
         if($food_required) {
           $event_food_count = FrcPortal\EventFood::distinct('group')->where('event_id',$event_id)->count('group');
-          if(isset($formData['event_food']) && count($formData['event_food']) == $event_food_count) {
+          if(!empty($formData['event_food']) && count($formData['event_food']) == $event_food_count) {
             $food_ids = array_values($formData['event_food']);
             $reqUpdate->event_food()->sync($food_ids);
           } else {
