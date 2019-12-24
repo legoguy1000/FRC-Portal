@@ -25,32 +25,23 @@ function sendMassNotifications($type, $msgData) {
 	}
 }
 
-function postToSlack($msg = '', $channel = null) {
+function postToSlack($msg = '', $channel = null, $attachments = null) {
 	$slack_enable = getSettingsProp('slack_enable');
-	if(!$slack_enable) {
+	if(!$slack_enable || empty($channel) || empty($msg)) {
+		insertLogs('Warning', 'Slack notifications is not enabled and/or message/channel cannot be blank');
 		return false;
 	}
-
 	$data = array(
-		'text'=>$msg
+		'text'=>$msg,
+		'channel'=>$channel
 		//'username'=> '',
 		//'icon_url'=> '',
 		//'icon_emoji'=>':taco:'
 	);
-	if($channel != null) {
-		$data["channel"] = $channel;
+	if(!empty($attachments)) {
+		$data['attachments'] = $attachments;
 	}
-	$result = SlackApiPost($data);
-	return $result;
-}
-
-function SlackApiPost($data = null) {
-	$result = false;
-	if(empty($data) || !is_array($data)) {
-		return $result;
-	}
-	$result = slackPostAPI($endpoint = 'chat.postMessage', $data);
-	return $result;
+	return slackPostAPI($endpoint = 'chat.postMessage', $data);
 }
 
 function endOfDayHoursToSlack($date = null) {

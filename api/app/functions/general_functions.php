@@ -390,21 +390,32 @@ function exceptionResponse($response, $msg = 'Error', $code = 200, $error = null
 
 function slackPostAPI($endpoint, $data) {
 	$content = str_replace('#new_line#','\n',json_encode($data));
-	$slack_token = getSettingsProp('slack_api_token');
+	$slack_token = decryptItems(getSettingsProp('slack_api_token'));
+	if(empty($slack_token)) {
+		insertLogs('Warning', 'Slack API token is not valid');
+		return false;
+	}
 	$client = new GuzzleHttp\Client(['base_uri' => 'https://slack.com/api/']);
 	$response = $client->request('POST', $endpoint, array(
 		'body' => $content,
 		'headers' => array(
 			'Authorization' => 'Bearer '.$slack_token,
-			'Content-Type' => 'application/json',
+			'Content-Type' => 'application/json; charset=utf-8',
 		)
 	));
-	$code = $response->getStatusCode(); // 200
-	$reason = $response->getReasonPhrase(); // OK
+	$body = json_decode($response->getBody());
+	if(empty($body->ok)) {
+		insertLogs('Warning', 'Error posting to slack API. Error: '.$response->getBody());
+	}
+	return $body->ok;
 }
 
 function slackGetAPI($endpoint, $params = array()) {
-	$slack_token = getSettingsProp('slack_api_token');
+	$slack_token = decryptItems(getSettingsProp('slack_api_token'));
+	if(empty($slack_token)) {
+		insertLogs('Warning', 'Slack API token is not valid');
+		return false;
+	}
 	$params['token'] = $slack_token;
 	//$url = 'https://slack.com/api/'.$endpoint.'?'.http_build_query($params);
 	$client = new GuzzleHttp\Client(['base_uri' => 'https://slack.com/api/']);

@@ -327,12 +327,13 @@ class User extends Eloquent {
   	return false;
   }
 
-  public function slackMessage($msg) {
-  	$result = false;
-		if($this->slack_enabled == true) {
-			$result = postToSlack($msg, $this->slack_id);
-		}
-  	return $result;
+  public function slackMessage($msg = '', $attachments = null) {
+		if($this->slack_enabled == true && !empty($msg)) {
+			return postToSlack($msg, $this->slack_id);
+		} else if(!$this->slack_enabled) {
+      insertLogs('Warning', $this->full_name.' is not slack enabled.');
+    }
+  	return false;
   }
 
   public function getGetSlackIdByEmail() {
