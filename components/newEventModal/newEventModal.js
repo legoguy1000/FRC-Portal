@@ -13,9 +13,8 @@ function newEventModalController($rootScope,$log,$element,$mdDialog,$scope,users
 	vm.oldData = null;
 	vm.htmlDetails = '';
 	vm.startDate = moment();
-	vm.loading = {
-		searchGoogle: false,
-	}
+
+	vm.loading = false;
 	vm.backToSearch = function() {
 		$mdDialog.cancel();
 	}
@@ -56,6 +55,7 @@ function newEventModalController($rootScope,$log,$element,$mdDialog,$scope,users
 	vm.getEventTypeList();
 
 	vm.addEvent = function() {
+		vm.loading = true;
 		eventsService.addEvent(vm.data).then(function(response) {
 			if(response.status) {
 				$mdDialog.hide(response);
@@ -66,6 +66,7 @@ function newEventModalController($rootScope,$log,$element,$mdDialog,$scope,users
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
+			vm.loading = false;
 		});
 	}
 

@@ -27,6 +27,7 @@ function eventSearchModalController($log,$element,$mdDialog,$scope,usersService,
 		order: 'event_start',
 		page: 1
 	};
+	vm.searchGoogle.timeMin = moment();
 
 	vm.searchGoogleFunc = function() {
 		var data = vm.searchGoogle;
