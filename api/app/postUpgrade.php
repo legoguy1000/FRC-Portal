@@ -366,7 +366,7 @@ if(version_compare($version, '2.17.0','>=')) {
   if(Capsule::schema()->hasTable('events') && Capsule::schema()->hasColumn('events','google_cal_id')) {
     try {
       Capsule::schema()->table('events', function ($table, $as = null, $connection = null) {
-        $table->string('google_cal_id')->nullable()->default(null)->change();
+        $table->string('google_cal_id',255)->nullable()->default(null)->change();
       });
     } catch (Exception $e) {
       //Exception will be logged in Monolog
