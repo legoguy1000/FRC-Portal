@@ -82,10 +82,10 @@ class EventRequirement extends Eloquent {
   } */
 
   public function getCarBoolAttribute() {
-    return isset($this->attributes['car_id']) && !is_null($this->attributes['car_id']);
+    return !empty($this->attributes['car_id']);
   }
   public function getRoomBoolAttribute() {
-    return isset($this->attributes['room_id']) && !is_null($this->attributes['room_id']);
+    return !empty($this->attributes['room_id']);
   }
   public function getFoodBoolAttribute() {
     if(!is_null($this->attributes['event_id']) && $this->relationLoaded('event_food')) {

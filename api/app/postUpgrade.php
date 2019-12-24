@@ -363,7 +363,15 @@ if(version_compare($version, '2.17.0','>=')) {
   $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_smtp_password'], ['value' => '']);
   $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_smtp_encryption'], ['value' => '']);
   $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_replyto'], ['value' => '']);
-
+  if(Capsule::schema()->hasTable('events') && Capsule::schema()->hasColumn('events','google_cal_id')) {
+    try {
+      Capsule::schema()->table('events', function ($table, $as = null, $connection = null) {
+        $table->string('google_cal_id')->nullable()->default(null)->change();
+      });
+    } catch (Exception $e) {
+      //Exception will be logged in Monolog
+    }
+  }
   // $settings = FrcPortal\Setting::where('setting','slack_api_token')->orWhere('setting','google_api_key')->get();
   // if(count($settings) > 0) {
   //   foreach($settings as $secret) {

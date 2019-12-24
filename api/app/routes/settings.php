@@ -146,7 +146,7 @@ $app->group('/settings', function () {
       if($section == 'team') {
         $formData['env_url'] = rtrim($formData['env_url'],'/');
       } else if($section == 'notification') {
-        $formData['email_smtp_password'] = isset($formData['email_smtp_password']) && $formData['email_smtp_password'] != '' ? encryptItems($formData['email_smtp_password']) : '';
+        $formData['email_smtp_password'] = !empty($formData['email_smtp_password']) ? encryptItems($formData['email_smtp_password']) : '';
         //$formData['slack_api_token'] = $formData['slack_api_token'] != '' ? encryptItems($formData['slack_api_token']) : '';
       } else if($section == 'other') {
         //$formData['google_api_key'] = $formData['google_api_key'] != '' ? encryptItems($formData['google_api_key']) : '';
@@ -201,9 +201,7 @@ $app->group('/settings', function () {
         if($extension != 'json' || !$validJson['status']) {
           return badRequestResponse($response, $msg = 'File must be a valid JSON file. '.$validJson['msg']);
         }
-        if($validJson['data']['type'] != 'service_account' || !isset($validJson['data']['client_email']) || $validJson['data']['client_email'] == ''
-                                                           || !isset($validJson['data']['client_id']) || $validJson['data']['client_id'] == ''
-                                                           || !isset($validJson['data']['private_key']) || $validJson['data']['private_key'] == '') {
+        if($validJson['data']['type'] != 'service_account' || empty($validJson['data']['client_email']) || empty($validJson['data']['client_id']) || empty($validJson['data']['private_key'])) {
           return badRequestResponse($response, $msg = 'File is not a valid Google Serice Account Credential JSON file.');
         }
         $json = json_encode($validJson['data']);
@@ -261,10 +259,10 @@ $app->group('/settings', function () {
         return unauthorizedResponse($response);
       }
 
-      if(!isset($formData['email']) || $formData['email'] == '') {
+      if(empty($formData['email'])) {
         return badRequestResponse($response, $msg = 'Email cannot be blank');
       }
-      if(!isset($formData['password']) || $formData['password'] == '') {
+      if(empty($formData['password'])) {
         return badRequestResponse($response, $msg = 'Password cannot be blank');
       }
       $email = $formData['email'];

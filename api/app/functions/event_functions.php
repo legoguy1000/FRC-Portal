@@ -2,7 +2,7 @@
 function getGoogleCalendarEvent($google_cal_id) {
 	$calendar = getSettingsProp('google_calendar_id');
 	$api_key = getSettingsProp('google_api_key');
-	if(!isset($google_cal_id) || $google_cal_id == '') {
+	if(empty($google_cal_id)) {
 		throw new Exception('Google Calendar Event ID cannot be blank', 400);
 	}
 	try {
@@ -18,7 +18,7 @@ function getGoogleCalendarEvent($google_cal_id) {
 
 function getEventTimeSlotList($event_id) {
 	$timeSlots = array();
-	if(!isset($event_id) || $event_id == '') {
+	if(empty($event_id)) {
 		throw new Exception('Event ID cannot be blank', 400);
 	}
 	return FrcPortal\EventTimeSlot::with('registrations.user')->where('event_id',$event_id)->orderBy('time_start', 'ASC')->get();
@@ -86,14 +86,14 @@ function checkTimeSlotOverlap($timeSlot) {
 		 	$query->where('time_end', '<=', $timeSlot->time_end);
 		});
 	});
-	if(!is_null($timeSlot->time_slot_id)) {
+	if(!empty($timeSlot->time_slot_id)) {
 		$data->where('time_slot_id','<>',$timeSlot->time_slot_id);
 	}
 	return $data->exists();
 }
 function formatTimeSlot($timeSlot, $formData) {
     $timeSlot->name = $formData['name'];
-    $timeSlot->description = isset($formData['description']) ? $formData['description']:'';
+    $timeSlot->description = !empty($formData['description']) ? $formData['description']:'';
     $ts = new DateTime($formData['time_start']);
     $te = new DateTime($formData['time_end']);
     $timeSlot->time_start = $ts->format('Y-m-d H:i:s');
@@ -105,17 +105,17 @@ function formatTimeSlot($timeSlot, $formData) {
 }
 
 function updateTimeSlot($event_id, $time_slot_id, $formData) {
-	if(!isset($event_id) || $event_id == '') {
+	if(empty($event_id)) {
 		throw new Exception('Event ID is invalid', 400);
 	}
-	if(!isset($time_slot_id) || $time_slot_id == '') {
+	if(empty($time_slot_id)) {
 		throw new Exception('Time Slot ID is invalid', 400);
 	}
-	if(!isset($formData) || empty($formData)) {
+	if(empty($formData)) {
 		throw new Exception('Invalid Time Slot data', 400);
 	}
 	$timeSlot = FrcPortal\EventTimeSlot::where('event_id',$event_id)->where('time_slot_id',$time_slot_id)->first();
-	if(is_null($timeSlot)) {
+	if(empty($timeSlot)) {
 		throw new Exception('Event Time Slot not found', 404);
 	}
 	try {
@@ -130,10 +130,10 @@ function updateTimeSlot($event_id, $time_slot_id, $formData) {
 }
 
 function addTimeSlot($event_id, $formData) {
-	if(!isset($event_id) || $event_id == '') {
+	if(empty($event_id)) {
 		throw new Exception('Event ID is invalid', 400);
 	}
-	if(!isset($formData) || empty($formData)) {
+	if(empty($formData)) {
 		throw new Exception('Invalid Time Slot data', 400);
 	}
 	$timeSlot = new FrcPortal\EventTimeSlot();

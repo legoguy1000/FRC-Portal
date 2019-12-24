@@ -2,7 +2,7 @@
 use \Firebase\JWT\JWT;
 use Illuminate\Database\Capsule\Manager as DB;
 function getSignInList($year = null) {
-	if(is_null($year)) {
+	if(empty($year)) {
 		$year = date('Y');
 	}
 	$users = FrcPortal\User::with(['annual_requirements' => function ($query) use ($year)  {
@@ -20,10 +20,10 @@ function getSignInList($year = null) {
 }
 
 function generateSignInToken($ts = null, $te = null) {
-	if(is_null($ts)) {
+	if(empty($ts)) {
 		$ts = time();
 	}
-	if(is_null($te)) {
+	if(empty($te)) {
 		$te = time()+60*60*12; //12 hours liftime
 	}
 	$jti = md5(random_bytes(20));

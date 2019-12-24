@@ -57,12 +57,12 @@ $app->group('/schools', function () {
       return unauthorizedResponse($response);
     }
 
-    if(!isset($formData['school_name']) || $formData['school_name'] == '') {
+    if(empty($formData['school_name'])) {
       $responseArr = array('status'=>false, 'msg'=>'School name cannot be blank!');
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    if(!isset($formData['abv']) || $formData['abv'] == '') {
+    if(empty($formData['abv'])) {
       $responseArr = array('status'=>false, 'msg'=>'Abbreviation cannot be blank!');
       $response = $response->withJson($responseArr,400);
       return $response;
@@ -73,7 +73,7 @@ $app->group('/schools', function () {
       $newSchool = new FrcPortal\School();
       $newSchool->school_name = $formData['school_name'];
       $newSchool->abv = $formData['abv'];
-      $newSchool->logo_url = isset($formData['logo_url']) && !is_null($formData['logo_url']) ? $formData['logo_url']:'';
+      $newSchool->logo_url = !empty($formData['logo_url']) ? $formData['logo_url']:'';
       if($newSchool->save()) {
         $responseArr = array('status'=>true, 'msg'=>$formData['school_name'].' created', 'data'=>$newSchool);
       } else {
@@ -103,12 +103,12 @@ $app->group('/schools', function () {
         return unauthorizedResponse($response);
       }
 
-      if(!isset($formData['school_name']) || $formData['school_name'] == '') {
+      if(empty($formData['school_name'])) {
         $responseArr = array('status'=>false, 'msg'=>'School name cannot be blank!');
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      if(!isset($formData['abv']) || $formData['abv'] == '') {
+      if(empty($formData['abv'])) {
         $responseArr = array('status'=>false, 'msg'=>'Abbreviation cannot be blank!');
         $response = $response->withJson($responseArr,400);
         return $response;
@@ -127,7 +127,7 @@ $app->group('/schools', function () {
         }
       }
       $school->abv = $formData['abv'];
-      $school->logo_url = isset($formData['logo_url']) && !is_null($formData['logo_url']) ? $formData['logo_url']:'';
+      $school->logo_url = !empty($formData['logo_url']) ? $formData['logo_url']:'';
       if($school->save()) {
         $responseArr = array('status'=>true, 'msg'=>$formData['school_name'].' updated', 'data'=>$school);
       } else {
