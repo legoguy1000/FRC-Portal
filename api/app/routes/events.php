@@ -230,7 +230,7 @@ $app->group('/events', function () {
       return badRequestResponse($response, $msg = 'Invalid Google calendar ID');
     }
     $event = FrcPortal\Event::where('google_cal_id', $formData['google_cal_id'])->first();
-    if(is_null($event)) {
+    if(empty($event)) {
       $event = new FrcPortal\Event();
       $event->google_cal_id = $formData['google_cal_id'];
       $event->name = $formData['name'];
@@ -263,7 +263,7 @@ $app->group('/events', function () {
               'options' => array( 'min_range' => 0)
           );
           foreach($roomTypes as $room) {
-            if(isset($formData['rooms'][$room]) && filter_var($formData['rooms'][$room], FILTER_VALIDATE_INT, $filter_options ) !== FALSE) {
+            if(!empty($formData['rooms'][$room]) && filter_var($formData['rooms'][$room], FILTER_VALIDATE_INT, $filter_options ) !== FALSE) {
               $num = $formData['rooms'][$room];
               for($i=0;$i<$num;$i++) {
                 $rm = new FrcPortal\EventRoom($roomKey[$room]);
@@ -748,7 +748,7 @@ $app->group('/events', function () {
       $event->registration_deadline_gcalid = !empty($formData['registration_deadline_gcalid']) ? $formData['registration_deadline_gcalid']:null;
 
       $eventReqs = !empty($formData['requirements']) ? $formData['requirements'] : null;
-      if(!is_null($eventReqs)) {
+      if(!empty($eventReqs)) {
         foreach($eventReqs as $req=>$val) {
           $event->{$req} = $val;
         }
@@ -825,7 +825,7 @@ $app->group('/events', function () {
         //$user_id = $user['user_id'];
         $reqArr = FrcPortal\EventRequirement::firstOrNew(['event_id' => $event_id, 'user_id' => $user]);
         //$reqArr = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user)->first();
-        $cur = isset($reqArr->$req) ? $reqArr->$req : false;
+        $cur = !empty($reqArr->$req) ? $reqArr->$req : false;
         $new = !$cur;
         if($req == 'registration' && $new == false) {
           $reqUpdate = FrcPortal\EventRequirement::where('event_id',$event_id)->where('user_id',$user)->delete();
@@ -864,7 +864,7 @@ $app->group('/events', function () {
       $user_ids = array_column($users, 'user_id');
       foreach($users as $user) {
         $user_id = $user['user_id'];
-        $cur = isset($user['event_requirements']['attendance_confirmed']) ? $user['event_requirements']['attendance_confirmed'] : false;
+        $cur = !empty($user['event_requirements']['attendance_confirmed']) ? $user['event_requirements']['attendance_confirmed'] : false;
         $new = !$cur;
         $ereq = FrcPortal\EventRequirement::where('event_id', $event_id)->where('user_id', $user_id)->first();
         if(!empty($ereq) && !empty($ereq->registration)) {
@@ -928,7 +928,7 @@ $app->group('/events', function () {
             $reqUpdate->car_id = $eventCarUpdate->car_id;
             $reqUpdate->save();
           } else {
-            if(!is_null($car) && $car->user_id == $user_id) {
+            if(!empty($car) && $car->user_id == $user_id) {
               $eventCarUpdate = FrcPortal\EventCar::where('event_id',$event_id)->where('user_id',$user_id)->delete();
               $reqUpdate->can_drive = false;
               $reqUpdate->car_id = null;
@@ -940,7 +940,7 @@ $app->group('/events', function () {
         if($room_required && $user_type == 'Student' && !empty($formData['room_id'])) {
           $room_id = $formData['room_id'];
           $room = FrcPortal\EventRoom::where('room_id',$room_id)->where('event_id',$event_id)->first();
-          if(is_null($room)) {
+          if(empty($room)) {
             $responseArr['msg'] = 'Invalid Room Selection';
             $response = $response->withJson($responseArr);
             return $response;
@@ -1008,9 +1008,9 @@ $app->group('/events', function () {
       );
       $user->sendUserNotification('event_registration', $msgData);
       //notify event POC
-      if(!is_null($event->poc_id) && $user_id != $event->poc_id && $loggedInUser != $event->poc_id) {
+      if(!empty($event->poc_id) && $user_id != $event->poc_id && $loggedInUser != $event->poc_id) {
         $poc = FrcPortal\User::find($event->poc_id);
-        if(!is_null($poc)) {
+        if(!empty($poc)) {
           $poc->slackMessage($slackMsgPoc);
         }
       }
@@ -1054,7 +1054,7 @@ $app->group('/events', function () {
     $args = $route->getArguments();
     $event_id = $args['event_id'];
     $event = FrcPortal\Event::find($event_id);
-    if(!is_null($event)) {
+    if(!empty($event)) {
       $request = $request->withAttribute('event', $event);
       $response = $next($request, $response);
     } else {

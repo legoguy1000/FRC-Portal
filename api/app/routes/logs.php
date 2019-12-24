@@ -27,10 +27,10 @@ $app->group('/logs', function () {
 
     $queryArr = array();
     $queryArr2 = array();
-    if(isset($search['level']) && $search['level'] != '') {
+    if(!empty($search['level'])) {
       $queryArr2[] = array('level', '=', $search['level']);
     }
-    if(isset($search['user_id']) && $search['user_id'] != '') {
+    if(!empty($search['user_id'])) {
       $queryArr2[] = array('user_id', '=', $search['user_id']);
     //  die($bool );
     }

@@ -29,10 +29,10 @@ $app->group('/users', function () {
 
     $queryArr = array();
     $queryArr2 = array();
-    if(isset($search['user_type']) && $search['user_type'] != '') {
+    if(!empty($search['user_type'])) {
       $queryArr2[] = array('user_type', '=', $search['user_type']);
     }
-    if(isset($search['status']) && $search['status'] != '') {
+    if(!empty($search['status'])) {
       $bool = $search['status'] == 'true' ? '1': '0';
       $queryArr2[] = array('status', '=', $bool);
     //  die($bool );
@@ -155,7 +155,7 @@ $app->group('/users', function () {
 
       //User passed from middleware
       $user = $request->getAttribute('user');
-      if(!isset($formData['pin']) || $formData['pin'] == '') {
+      if(!empty($formData['pin'])) {
         insertLogs($level = 'Information', $message = 'PIN update failed. PIN cannot be blank.');
         return badRequestResponse($response, $msg = 'PIN cannot be blank');
       }
@@ -276,10 +276,10 @@ $app->group('/users', function () {
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         $user_id = $args['user_id'];
         $user = $request->getAttribute('user');
-        if(!isset($formData['method']) || $formData['method'] == '') {
+        if(!empty($formData['method'])) {
           return badRequestResponse($response, $msg = 'Notification method is required');
         }
-        if(!isset($formData['type']) || $formData['type'] == '') {
+        if(!empty($formData['type'])) {
           return badRequestResponse($response, $msg = 'Notification type is required');
         }
         if(!array_key_exists('value',$formData)) {
@@ -317,19 +317,19 @@ $app->group('/users', function () {
         return unauthorizedResponse($response);
       }
 
-      if(!isset($formData['date']) || $formData['date'] == '') {
+      if(empty($formData['date'])) {
         insertLogs($level = 'Information', $message = 'Missing hours request failed. Date cannot be blank.');
         return badRequestResponse($response, $msg = 'Date cannot be blank');
       }
-      if(!isset($formData['start_time']) || $formData['start_time'] == '') {
+      if(empty($formData['start_time'])) {
         insertLogs($level = 'Information', $message = 'Missing hours request failed. Start time cannot be blank.');
         return badRequestResponse($response, $msg = 'Start Time cannot be blank');
       }
-      if(!isset($formData['end_time']) || $formData['end_time'] == '') {
+      if(empty($formData['end_time'])) {
         insertLogs($level = 'Information', $message = 'Missing hours request failed. End time cannot be blank.');
         return badRequestResponse($response, $msg = 'End Time cannot be blank');
       }
-      if(!isset($formData['comment']) || $formData['comment'] == '') {
+      if(empty($formData['comment'])) {
         insertLogs($level = 'Information', $message = 'Missing hours request failed. Comment cannot be blank.');
         return badRequestResponse($response, $msg = 'Comment cannot be blank');
       }
@@ -364,12 +364,12 @@ $app->group('/users', function () {
         insertLogs($level = 'Warning', $message = 'User information update failed. Unauthorized user.');
         return unauthorizedResponse($response);
       }
-      if(!isset($formData['email']) || $formData['email'] == '') {
+      if(empty($formData['email'])) {
         insertLogs($level = 'Information', $message = 'User profile update failed. Email is required.');
         return badRequestResponse($response,$msg = 'Email is required.');
       }
       $teamDomain = getSettingsProp('team_domain');
-      if(isset($formData['team_email']) && $formData['team_email'] != '' && !is_null($teamDomain) && preg_match('/[a-z0-9._%+-]+@'.$teamDomain.'$/i', $formData['team_email']) == false) {
+      if(!empty($formData['team_email']) && !empty($teamDomain) && preg_match('/[a-z0-9._%+-]+@'.$teamDomain.'$/i', $formData['team_email']) == false) {
         insertLogs($level = 'Information', $message = 'User profile update failed. Team Email must be a "@'.$teamDomain.'" email address.');
         return badRequestResponse($response,$msg = 'Team Email must be a "@'.$teamDomain.'" email address.');
       }
@@ -379,7 +379,7 @@ $app->group('/users', function () {
       $user->fname = $formData['fname'];
       $user->lname = $formData['lname'];
       $user->email = $formData['email'];
-      $user->team_email = isset($formData['team_email']) ? $formData['team_email']:'';
+      $user->team_email = !empty($formData['team_email']) ? $formData['team_email']:'';
       $user->phone = $formData['phone'];
       $user->user_type = $formData['user_type'];
       $user->gender = $formData['gender'];
@@ -390,10 +390,10 @@ $app->group('/users', function () {
       if($selfUpdate && $user->first_login) {
         $user->first_login = false;
       }
-      if($admin && isset($formData['admin'])) {
+      if($admin && !empty($formData['admin'])) {
         $user->admin = $formData['admin'];
       }
-      if($admin && isset($formData['status'])) {
+      if($admin && !empty($formData['status'])) {
         $user->status = $formData['status'];
       }
       if($user->save()) {
@@ -434,7 +434,7 @@ $app->group('/users', function () {
     $args = $route->getArguments();
     $user_id = $args['user_id'];
     $user = FrcPortal\User::find($user_id);
-    if(is_null($user)) {
+    if(empty($user)) {
       return notFoundResponse($response, $msg = 'User not found');
     }
     if($user_id != $userId && !FrcPortal\Utilities\Auth::isAdmin()) {
