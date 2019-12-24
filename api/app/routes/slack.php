@@ -78,6 +78,7 @@ $app->group('/slack', function () {
         }
       } else {
         $responseStr = 'I don\'t know who you are. The email "'.$email.'" doesn\t link to known user. Please check your portal profile to verify your email is set.';
+      }
     } else {
       $responseStr = 'Invalid email provided.';
     }
