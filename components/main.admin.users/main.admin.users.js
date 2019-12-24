@@ -34,7 +34,7 @@ function mainAdminUsersController($timeout, $q, $scope, $state, $timeout, school
 		vm.filter.show = false;
 		vm.query.filter = '';
 
-		if(vm.filter.form.$dirty) {
+		if(vm.filter.form && vm.filter.form.$dirty) {
 			vm.filter.form.$setPristine();
 		}
 	};
