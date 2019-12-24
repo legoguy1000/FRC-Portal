@@ -13,7 +13,7 @@ function getSeasonMembershipForm($year) {
 		//$result['msg'] = 'Something went wrong searching Google Drive';
 		//$result['error'] = $error;
 	}
-	if(!is_null($year)) {
+	if(!empty($year)) {
 		try {
 			$client = new Google_Client();
 			$client->setAuthConfig($creds);
@@ -31,7 +31,7 @@ function getSeasonMembershipForm($year) {
 				'pageSize' => '1'
 			);
 			$teamDrive = getSettingsProp('google_drive_id');
-			if(!is_null($teamDrive) && $teamDrive != '') {
+			if(!empty($teamDrive)) {
 				$parameters['corpora'] = 'teamDrive';
 				$parameters['teamDriveId'] = $teamDrive;
 				$parameters['includeTeamDriveItems'] = 'true';
@@ -59,7 +59,7 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 		'msg' => '',
 		'data' => null
 	);
-	if(!is_null($spreadsheetId)) {
+	if(!empty($spreadsheetId)) {
 		$data = array();
 		try {
 			$creds = getServiceAccountData();
@@ -77,11 +77,11 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 			$service = new Google_Service_Sheets($client);
 			// The A1 notation of the values to retrieve.
 			$range = 'Form Responses 1';
-			if(!is_null($season) && !$season instanceof FrcPortal\Season && is_string($season)) {
+			if(!empty($season) && !$season instanceof FrcPortal\Season && is_string($season)) {
 				$season = FrcPortal\Season::find($season);
 			}
 			$sheet = $season->membership_form_sheet;
-			if(!is_null($sheet) && $sheet != '') {
+			if(!empty($sheet)) {
 				$range = $sheet;
 			}
 
@@ -115,7 +115,7 @@ function pollMembershipForm($spreadsheetId, $season = null) {
 function itterateMembershipFormData($data = array(), $season = null) {
 	$team_num = getSettingsProp('team_number');
 	$team_name = getSettingsProp('team_name');
-	if(!is_null($season) && !$season instanceof FrcPortal\Season && is_string($season)) {
+	if(!empty($season) && !$season instanceof FrcPortal\Season && is_string($season)) {
 		$season = FrcPortal\Season::find($season);
 	}
 	$season_id = $season->season_id;
@@ -148,11 +148,11 @@ function itterateMembershipFormData($data = array(), $season = null) {
 			$user = null;
 			$user_id = null;
 			$user = FrcPortal\User::where('email',$email)->orWhere('team_email',$email)->first();
-			if(is_null($user)) {
+			if(empty($user)) {
 				$user = FrcPortal\User::where('fname',$fname)->where('lname',$lname)->where('user_type',$user_type)->first();
 			}
 			//If user doesn't exist, add data to user table
-			if(is_null($user)) {
+			if(empty($user)) {
 				$school_id = '';
 				if($user_type == 'Student' && $school != '') {
 					$school_id = checkSchool($school);
@@ -199,10 +199,10 @@ function itterateMembershipFormData($data = array(), $season = null) {
 				}
 			}
 			//Add User info into the Annual Requirements Table
-			if(!is_null($season_id) && !is_null($user)) {
+			if(!empty($season_id) && !empty($user)) {
 				$user_id = $user->user_id;
 				$season_reg = $user->annual_requirements()->where('season_id', $season_id)->first();
-				if(is_null($season_reg) || !$season_reg->join_team) {
+				if(empty($season_reg) || !$season_reg->join_team) {
 					$season_join = FrcPortal\AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
 					if($season_join) {
 						$msgData = array(
@@ -234,11 +234,11 @@ function updateSeasonRegistrationFromForm($season_id) {
 		'msg' => '',
 		'data' => null
 	);
-	if(!is_null($season_id)) {
+	if(!empty($season_id)) {
 		$season = FrcPortal\Season::find($season_id);
-		if(!is_null($season)) {
+		if(!empty($season)) {
 			$spreadsheetId = $season->join_spreadsheet != '' ? $season->join_spreadsheet:null;
-			if(!is_null($spreadsheetId)) {
+			if(!empty($spreadsheetId)) {
 				$result = $data = pollMembershipForm($spreadsheetId, $season);
 				if($data['status'] == true && !empty($data['data'])) {
 					$result['status'] = itterateMembershipFormData($data['data'], $season);
@@ -252,7 +252,7 @@ function updateSeasonRegistrationFromForm($season_id) {
 
 function createSchoolAbv($name = null) {
 	$abv = '';
-	if(!is_null($name) && is_string($name) && $name != '') {
+	if(!empty($name) && is_string($name) && $name != '') {
 		for($i=0; $i<strlen($name); $i++) {
 			if (ctype_upper($name[$i])) {
 				$abv .= $name[$i];
@@ -269,7 +269,7 @@ function checkSchool($school) {
 	$school_formated = str_replace(' MS', ' Middle School', $school_formated);
 	//$school_formated = stripos($school_formated,' School') === false ? $school_formated.' School': $school_formated;
 	$school = FrcPortal\School::where('school_name','LIKE','%'.$school_formated.'%')->orWhere('abv','LIKE','%'.$school_formated.'%')->first();
-	if(!is_null($school)) {
+	if(!empty($school)) {
 		$school_id = $school['school_id'];
 	} else {
 		$abv = createSchoolAbv($school_formated);

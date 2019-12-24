@@ -36,7 +36,7 @@ function getSettingsProp($prop, $section = null) {
 	}
 	$setting = $setting->first();
 	//$ini = parse_ini_file(__DIR__.'/../secured/config.ini');
-	if(!is_null($setting) && isset($setting->value)) {
+	if(!empty($setting) && !empty($setting->value)) {
 		$value = $setting->value;
 	}
 	return $value;
@@ -113,7 +113,7 @@ function filterArrayData ($inputArray, $filter) {
 
 function getServiceAccountData() {
 	$gsa_data = FrcPortal\Setting::where('section', 'service_account')->where('setting', 'google_service_account_data')->first();
-	if(!is_null($gsa_data) && $gsa_data->value != '') {
+	if(!empty($gsa_data) && !empty($gsa_data->value)) {
 		$gsa_arr = explode(',',$gsa_data->value);
 		$encypted_json = $gsa_arr[1];
 		$json = decryptItems($encypted_json);
@@ -151,7 +151,7 @@ function handleGoogleAPIException($e, $google_service) {
 			$msg = $msg.'.';
 		}
 		$msg = $msg.' Please check API key and/or Service Account Credentials.';
-		if(isset($errorRoot['extendedHelp'])) {
+		if(!empty($errorRoot['extendedHelp'])) {
 			$msg = $msg.' See '.$errorRoot['extendedHelp'].' for more information.';
 		}
 		return $msg;
@@ -186,7 +186,7 @@ function insertLogs($level, $message) {
 		}
 	}
 	$route = FrcPortal\Utilities\Auth::getRoute();
-	if(!is_null($route)) {
+	if(!empty($route)) {
 		$log->route = $route->getName();
 	}
 	$ip = FrcPortal\Utilities\Auth::getClientIP();
@@ -198,7 +198,7 @@ function insertLogs($level, $message) {
 
 function getMembershipFormName() {
 	$mfn = getSettingsProp('membership_form_name');
-	if(is_null($mfn) || $mfn == '') {
+	if(empty($mfn)) {
 		$mfn = '###YEAR### Membership (Responses)';
 	}
 	return $mfn;
@@ -313,7 +313,7 @@ function updateComposer() {
 }
 
 function formatDateArrays($date_raw) {
-	if(is_null($date_raw)) {
+	if(empty($date_raw)) {
 		return null;
 	}
 	$date = new DateTime($date_raw);
@@ -613,11 +613,11 @@ function getGitVersion() {
 			$remote_name = $remote_branch[0];
 			$branch_name = $remote_branch[1];
 		}
-		if(is_null($remote_name)) {
+		if(empty($remote_name)) {
 			//logger.error('Could not retrieve remote name from git. Defaulting to origin.')
 			$remote_name = 'origin';
 		}
-		if(is_null($branch_name)) {
+		if(empty($branch_name)) {
 			//logger.error('Could not retrieve branch name from git. Defaulting to master.')
 			$branch_name = 'master';
 		}
@@ -667,7 +667,7 @@ function check_github($branch=null) {
 			$result['error'] = $error;
 	}
 
-	if(is_null($gitData)) {
+	if(empty($gitData)) {
 		//logger.warn('Could not get the latest version from GitHub. Are you running a local development version?')
 		return $versionInfo['tag'];
 	}
@@ -677,7 +677,7 @@ function check_github($branch=null) {
 	$code = $response->getStatusCode(); // 200
 	$reason = $response->getReasonPhrase(); // OK
 	$gitData = json_decode($response->getBody());
-	if(is_null($gitData)) {
+	if(empty($gitData)) {
 		//logger.warn('Could not get commits behind from GitHub.')
 		$versionInfo['latest_version'] = $latestVersion;
 		return $versionInfo;
@@ -690,7 +690,7 @@ function check_github($branch=null) {
 		$code = $response->getStatusCode(); // 200
 		$reason = $response->getReasonPhrase(); // OK
 		$gitData = json_decode($response->getBody());
-		if(is_null($gitData)) {
+		if(empty($gitData)) {
 			//logger.warn('Could not get releases from GitHub.')
 			$versionInfo['latest_version'] = $latestVersion;
 			return $versionInfo;
@@ -800,16 +800,16 @@ function loginToFirst($email, $password) {
 	$cookieJar = $client->getCookieJar();
 	$cookies = array();
 	$cookie = $cookieJar->get('DashboardTokenV0002', '/Dashboard', 'my.firstinspires.org');
-	if(is_null($cookie)) {
+	if(empty($cookie)) {
 		return false;
 	}
 	$cookies[] = 'DashboardTokenV0002='.$cookie->getValue();
 	$cookie = $cookieJar->get('LBr', '/', 'my.firstinspires.org');
-	if(!is_null($cookie)) {
+	if(!empty($cookie)) {
 		$cookies[] = 'LBr='.$cookie->getValue();
 	}
 	$cookie = $cookieJar->get('ASP.NET_SessionId', '/', 'my.firstinspires.org');
-	if(!is_null($cookie)) {
+	if(!empty($cookie)) {
 		$cookies[] = 'ASP.NET_SessionId='.$cookie->getValue();
 	}
 	return implode('; ',$cookies);

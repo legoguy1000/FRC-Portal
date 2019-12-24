@@ -78,16 +78,16 @@ class EventRoom extends Eloquent {
   }
 
   public function getroomBoolAttribute() {
-    return isset($this->attributes['room_id']) && !is_null($this->attributes['room_id']);
+    return !empty($this->attributes['room_id']);
   }
 
   public function getRoomTypeAttribute() {
-  	$roomType = isset($this->attributes['user_type']) && isset($this->attributes['gender']) ? ($this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : 'Adult') : null;
+  	$roomType = !empty($this->attributes['user_type']) && !empty($this->attributes['gender']) ? ($this->attributes['user_type'] == 'Student' ? $this->attributes['user_type'].'.'.$this->attributes['gender'] : 'Adult') : null;
     return  array($roomType);
   }
   //$room['user_type'] == 'Student' ? str_replace('Male',"Boys",str_replace('Female',"Girls",$room['gender'])).' '.$c[$roomType] : $room['user_type'].' '.$c[$roomType];
 
     public function getRoomTitleAttribute() {
-      return isset($this->user_type) && isset($this->gender) ? ($this->user_type == 'Student' ? str_replace('Male',"Boys",str_replace('Female',"Girls",$this->gender)) : $this->user_type) : null;
+      return !empty($this->user_type) && !empty($this->gender) ? ($this->user_type == 'Student' ? str_replace('Male',"Boys",str_replace('Female',"Girls",$this->gender)) : $this->user_type) : null;
     }
 }

@@ -244,7 +244,7 @@ class Event extends Eloquent {
   public function syncGoogleCalendarEvent() {
   	$calendar = getSettingsProp('google_calendar_id');
   	$google_cal_id = $this->google_cal_id;
-  	if(!isset($google_cal_id) || $google_cal_id == '') {
+  	if(empty($google_cal_id)) {
   		throw new Exception('Google Calendar Event ID cannot be blank', 400);
   	}
   	$ge = getGoogleCalendarEvent($google_cal_id);
