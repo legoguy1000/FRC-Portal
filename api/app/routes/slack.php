@@ -70,7 +70,7 @@ $app->group('/slack', function () {
       $email = $formData['text'];
       $user = FrcPortal\User::where('email',$email)->orWhere('team_email',$email)->first();
       if(!empty($user)) {
-        $user->slack_id = $user_id;
+        $user->slack_id = $slack_id;
         if($user->save()) {
           $responseStr = 'Slack ID added to profile.';
         } else {
