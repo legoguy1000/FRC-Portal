@@ -224,11 +224,12 @@ $app->group('/seasons', function () {
       if(!FrcPortal\Utilities\Auth::isAdmin()) {
         return unauthorizedResponse($response);
       }
-      $season_id = $args['season_id'];
+      //Season passed from middleware
+      $season = $request->getAttribute('season');
 
-      $responseArr = updateSeasonRegistrationFromForm($season_id);
+      $responseArr = $season->updateSeasonRegistrationFromForm();
       if($responseArr['status'] == true) {
-        $responseArr['data'] = getUsersAnnualRequirements($season_id);
+        $responseArr['data'] = getUsersAnnualRequirements($season->season_id);
       }
       $response = $response->withJson($responseArr);
       return $response;

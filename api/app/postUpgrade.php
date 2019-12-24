@@ -372,6 +372,17 @@ if(version_compare($version, '2.17.0','>=')) {
       //Exception will be logged in Monolog
     }
   }
+  if(Capsule::schema()->hasTable('schools') && Capsule::schema()->hasColumn('schools','logo_url')) {
+    try {
+      Capsule::schema()->table('schools', function ($table, $as = null, $connection = null) {
+        $table->string('logo_url',255)->default('')->change();
+        $table->string('school_name')->default('')->change();
+        $table->string('abv')->default('')->change();
+      });
+    } catch (Exception $e) {
+      //Exception will be logged in Monolog
+    }
+  }
   $settings = FrcPortal\Setting::where('setting','slack_api_token')->orWhere('setting','google_api_key')->get();
   if(!empty($settings)) {
     foreach($settings as $secret) {

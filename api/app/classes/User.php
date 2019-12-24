@@ -293,15 +293,17 @@ class User extends Eloquent {
   public function sendUserNotification($type, $msgData) {
 
   	$preferences = $this->getNotificationPreferences();
+    $slack_enable = getSettingsProp('slack_enable');
+    $email_enable = getSettingsProp('email_enable');
   	//$preferences = array('push' => true, 'email' => false);
-    if(($type == '' || $preferences['email'][$type] == true) && !empty($msgData['email'])) {
+    if($slack_enable && ($type == '' || $preferences['email'][$type] == true) && !empty($msgData['email'])) {
   		$msg = $msgData['email'];
   		$subject = $msg['subject'];
   		$content = $msg['content'];
   		$attachments = !empty($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
   		$this->emailUser($subject,$content,$attachments);
   	}
-  	if(($type == '' || $preferences['slack'][$type] == true) && !empty($msgData['slack'])) {
+  	if($email_enable && ($type == '' || $preferences['slack'][$type] == true) && !empty($msgData['slack'])) {
   		$msg = $msgData['slack'];
   		$title = $msg['title'];
   		$body = $msg['body'];
@@ -328,7 +330,8 @@ class User extends Eloquent {
   }
 
   public function slackMessage($msg = '', $attachments = null) {
-		if($this->slack_enabled == true && !empty($msg)) {
+    $slack_enable = getSettingsProp('slack_enable');
+		if($slack_enable && $this->slack_enabled == true && !empty($msg)) {
 			return postToSlack($msg, $this->slack_id);
 		} else if(!$this->slack_enabled) {
       insertLogs('Warning', $this->full_name.' is not slack enabled.');
