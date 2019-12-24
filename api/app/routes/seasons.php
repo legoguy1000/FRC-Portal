@@ -51,28 +51,28 @@ $app->group('/seasons', function () {
     if(!FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
-    if(!isset($formData['year']) || $formData['year'] == '') {
+    if(empty($formData['year'])) {
       $responseArr = array('status'=>false, 'msg'=>'Year cannot be blank!');
       $response = $response->withJson($responseArr,400);
       return $response;
     }
     $no_bagday = $formData['year'] > 2019 ? true:false;
-    if(!isset($formData['game_name']) || $formData['game_name'] == '') {
+    if(empty($formData['game_name'])) {
       $responseArr = array('status'=>false, 'msg'=>'Name cannot be blank!');
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    if(!isset($formData['start_date']) || $formData['start_date'] == '') {
+    if(empty($formData['start_date'])) {
       $responseArr = array('status'=>false, 'msg'=>'Start Date cannot be blank!');
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    if(!$no_bagday && (!isset($formData['bag_day']) || $formData['bag_day'] == '')) {
+    if(!$no_bagday && empty($formData['bag_day'])) {
       $responseArr = array('status'=>false, 'msg'=>'Bag Date cannot be blank!');
       $response = $response->withJson($responseArr,400);
       return $response;
     }
-    if(!isset($formData['end_date']) || $formData['end_date'] == '') {
+    if(empty($formData['end_date'])) {
       $responseArr = array('status'=>false, 'msg'=>'End Date cannot be blank!');
       $response = $response->withJson($responseArr,400);
       return $response;
@@ -106,7 +106,7 @@ $app->group('/seasons', function () {
         'phone' => 'phone'
       );
       $newSeason->membership_form_sheet = 'Form Responses 1';
-      $newSeason->game_logo = isset($formData['game_logo']) && !is_null($formData['game_logo']) ? $formData['game_logo']:'';
+      $newSeason->game_logo = !empty($formData['game_logo']) ? $formData['game_logo']:'';
       if($newSeason->save()) {
         $responseArr = array('status'=>true, 'msg'=>$formData['year'].' season created', 'data'=>$newSeason);
         //Send notifications
@@ -163,15 +163,15 @@ $app->group('/seasons', function () {
       $season = $request->getAttribute('season');
       //$season = FrcPortal\Season::find($season_id);
       $no_bagday = $season->year > 2019 ? true:false;
-      if(!is_null($formData['start_date'])) {
+      if(!empty($formData['start_date'])) {
         $start_date = new DateTime($formData['start_date']);
         $season->start_date = $start_date->format('Y-m-d');
       }
-      if(!$no_bagday && !is_null($formData['bag_day'])) {
+      if(!$no_bagday && !empty($formData['bag_day'])) {
         $bag_day = new DateTime($formData['bag_day']);
         $season->bag_day = $bag_day->format('Y-m-d'." 23:59:59");
       }
-      if(!is_null($formData['end_date'])) {
+      if(!empty($formData['end_date'])) {
         $end_date = new DateTime($formData['end_date']);
         $season->end_date = $end_date->format('Y-m-d'." 23:59:59");
       }
@@ -244,12 +244,12 @@ $app->group('/seasons', function () {
       //Season passed from middleware
       $season = $request->getAttribute('season');
       //$season = FrcPortal\Season::find($season_id);
-      if(!isset($formData['users']) || !is_array($formData['users']) || empty($formData['users'])) {
+      if(empty($formData['users']) || !is_array($formData['users'])) {
         $responseArr = array('status'=>false, 'msg'=>'Please select at least 1 user');
         $response = $response->withJson($responseArr,400);
         return $response;
       }
-      if(!isset($formData['requirement']) || $formData['requirement'] == '' || !in_array($formData['requirement'],array('join_team','stims','dues'))) {
+      if(empty($formData['requirement']) || !in_array($formData['requirement'],array('join_team','stims','dues'))) {
         $responseArr = array('status'=>false, 'msg'=>'Invalid requirement');
         $response = $response->withJson($responseArr,400);
         return $response;
@@ -261,7 +261,7 @@ $app->group('/seasons', function () {
         //$user_id = $user['user_id'];
         $reqArr = FrcPortal\AnnualRequirement::firstOrNew(['season_id' => $season_id, 'user_id' => $user]);
         //$reqArr = FrcPortal\AnnualRequirement::where('season_id',$season_id)->where('user_id',$user)->first();
-        $cur = isset($reqArr->$req) ? $reqArr->$req : false;
+        $cur = !empty($reqArr->$req) ? $reqArr->$req : false;
         $reqArr->$req = !$cur;
         if($req == 'stims' || $req == 'dues') {
           $reqArr->{$req.'_date'} = date('Y-m-d H:i:s');
@@ -301,7 +301,7 @@ $app->group('/seasons', function () {
     $args = $route->getArguments();
     $season_id = $args['season_id'];
     $season = FrcPortal\Season::find($season_id);
-    if(!is_null($season)) {
+    if(!empty($season)) {
       $request = $request->withAttribute('season', $season);
       $response = $next($request, $response);
     } else {

@@ -5,7 +5,7 @@ require_once(__DIR__.'/../includes.php');
 use Illuminate\Database\Capsule\Manager as Capsule;
 Capsule::schema()->create('events', function ($table) {
   $table->char('event_id',13)->primary();
-  $table->string('google_cal_id',50)->nullable()->default(null);
+  $table->string('google_cal_id')->nullable()->default(null);
   $table->string('name');
   $table->string('type')->nullable()->default(null);
   $table->dateTime('event_start');

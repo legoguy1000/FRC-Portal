@@ -250,7 +250,7 @@ $app->group('/hours', function () {
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
 
       $user = null;
-      if(isset($args['auth_token'])) {
+      if(!empty($args['auth_token'])) {
         $key = getSettingsProp('jwt_key');
         $jwt = $args['auth_token'];
         try {
@@ -270,7 +270,7 @@ $app->group('/hours', function () {
           insertLogs($level = 'Warning', $message = 'Tried to generate sign in token. '.$e->getMessage());
           return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
         }
-      } elseif(isset($args['auth_code'])) {
+      } elseif(!empty($args['auth_code'])) {
         $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status',true)->where('admin',true)->first();
         FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
       } else {
@@ -299,7 +299,7 @@ $app->group('/hours', function () {
       $ts = time();
       $te = time()+60*60*12; //12 hours liftime
       $key = getSettingsProp('jwt_signin_key');
-      if(isset($args['token'])) {
+      if(!empty($args['token'])) {
         $jwt = $args['token'];
         try {
           $decoded = JWT::decode($jwt, $key, array('HS256'));
@@ -320,10 +320,10 @@ $app->group('/hours', function () {
           return unauthorizedResponse($response, $msg = 'Authorization Error. Please Deauthorize and Reauthorize sign in.');
         }
       }
-      if(isset($args['time_start']) && $args['time_start'] != '') {
+      if(!empty($args['time_start'])) {
         $ts = strtotime($args['time_start']);
       }
-      if(isset($args['time_end']) && $args['time_end'] != '') {
+      if(!empty($args['time_end'])) {
         $te = strtotime($args['time_end']);
       }
       if(FrcPortal\Utilities\Auth::isAdmin() || $decoded !== false) {
@@ -346,14 +346,14 @@ $app->group('/hours', function () {
     $this->post('', function ($request, $response, $args) {
       $args = $request->getParsedBody();
       FrcPortal\Utilities\Auth::setCurrentUser($args['user_id']);
-      if(isset($args['token'])) {
+      if(!empty($args['token'])) {
         $key = getSettingsProp('jwt_signin_key');
         try{
           $decoded = JWT::decode($args['token'], $key, array('HS256'));
           $data = (array) $decoded;
-          if(isset($data['jti']) || $data['jti'] != '') {
+          if(!empty($data['jti'])) {
             $jti = $data['jti'];
-            if(isset($args['pin']) && isset($args['user_id']) && $args['pin'] != '' && $args['user_id'] != '') {
+            if(!empty($args['pin']) && !empty($args['user_id'])) {
               $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['pin']))->where('user_id',$args['user_id'])->where('status',true)->first();
               if($user != null) {
                 if($user->other_adult) {
@@ -459,7 +459,7 @@ $app->group('/hours', function () {
         insertLogs($level = 'Information', $message = $user->user_type.' user type is not authorized for sign in.');
         return unauthorizedResponse($response, $msg = $user->user_type.' user type is not authorized for sign in.');
       }
-      if(!isset($args['token']) ||!checkJwtFormat($args['token']) ) {
+      if(empty($args['token']) || !checkJwtFormat($args['token']) ) {
         insertLogs($level = 'Information', $message = 'Invalid QR code value. "'.$args['token'].'" is not a valid token.');
         return badRequestResponse($response, $msg = 'Invalid token. QR code value "'.$args['token'].'" is not a valid token.');
       }
@@ -467,7 +467,7 @@ $app->group('/hours', function () {
       try{
         $decoded = JWT::decode($args['token'], $key, array('HS256'));
         $data = (array) $decoded;
-        if(!isset($data['jti']) || $data['jti'] == '') {
+        if(empty($data['jti'])) {
           insertLogs($level = 'Information', $message = 'Invalid QR code. Invalid JTI.');
           return badRequestResponse($response, $msg = 'Invalid token.');
         }
