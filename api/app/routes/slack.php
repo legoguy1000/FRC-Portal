@@ -60,7 +60,7 @@ $app->group('/slack', function () {
     $response->getBody()->write($responseStr);
     return $response;
   });
-  $this->post('/myHours', function ($request, $response, $args) {
+  $this->post('/registerPortal', function ($request, $response, $args) {
     $formData = $request->getParsedBody();
     $responseStr = '';
     $token = $formData['token'];
