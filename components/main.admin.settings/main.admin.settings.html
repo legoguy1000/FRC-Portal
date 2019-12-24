@@ -266,16 +266,20 @@
 			<div layout="column" ng-show="vm.settings.notification.email_enable_smtp">
 				<div layout="column" layout-gt-sm="row">
 					<md-input-container flex>
-						<label>Site Email</label>
-						<input ng-model="vm.settings.notification.notification_email" ng-disabled="!vm.settings.notification.email_enable">
-					</md-input-container>
-					<md-input-container flex>
 						<label>SMTP Server</label>
 						<input ng-model="vm.settings.notification.email_smtp_server" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
 					</md-input-container>
 					<md-input-container flex>
 						<label>SMTP Port</label>
 						<input typ="number" ng-model="vm.settings.notification.email_smtp_port" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
+					</md-input-container>
+					<md-input-container flex>
+						<label>SMTP Encryption</label>
+						<md-select ng-model="vm.settings.notification.email_smtp_encryption" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
+							<md-option ng-value="">None</md-option>
+							<md-option ng-value="'tls'">TLS (Rcommended)</md-option>
+							<md-option ng-value="'ssl'">SSL</md-option>
+						</md-select>
 					</md-input-container>
 				</div>
 				<div layout="column" layout-gt-sm="row">
@@ -286,14 +290,6 @@
 					<md-input-container flex>
 						<label><md-icon md-font-library="material-icons">lock</md-icon><span>SMTP Password</span></label>
 						<input ng-model="vm.settings.notification.email_smtp_password" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
-					</md-input-container>
-					<md-input-container flex>
-						<label>SMTP Encryption</label>
-						<md-select ng-model="vm.settings.notification.email_smtp_encryption" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
-							<md-option ng-value="">None</md-option>
-							<md-option ng-value="'tls'">TLS (Rcommended)</md-option>
-							<md-option ng-value="'ssl'">SSL</md-option>
-						</md-select>
 					</md-input-container>
 				</div>
 			</div>

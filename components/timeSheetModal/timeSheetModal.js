@@ -14,7 +14,7 @@ function timeSheetModalController($log,$element,$mdDialog,$scope,timeService,$md
 	vm.dateEdit = null;
 	//function time sheeet
 	vm.getSignInTimeSheet = function () {
-		var date = moment(vm.date).format('YYYY-MM-DD');
+		var date = moment(vm.date_full).format('YYYY-MM-DD');
 		timeService.getSignInTimeSheet(date).then(function(response){
 			vm.users = response.data;
 		});
