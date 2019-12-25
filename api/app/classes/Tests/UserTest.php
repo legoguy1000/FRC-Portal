@@ -4,10 +4,14 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
+use Firebase\JWT\JWT;
+use FrcPortal\Utilities\IniConfig;
 
 class UserTest extends TestCase {
 
   protected $app;
+  protected $jwt;
+  protected $user;
 
   public function setUp(): void {
     error_reporting(E_ALL);
@@ -21,13 +25,22 @@ class UserTest extends TestCase {
     $user->getGenderByFirstName();
     $user->user_type = 'Adult';
     $user->phone = '1234567890';
+    $user->admin = true;
+    $user->status = true;
     //$user->getGetSlackIdByEmail();
     $user->save();
+    $this->user = $user;
+    $this->jwt = $user->generateUserJWT();
     //$this->app->config('debug', true);
   }
 
-  public function testUserGet() {
-      $this->assertTrue(true);
+  public function testUserJWT() {
+    $authToken = JWT::decode(
+        $token,
+        getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : IniConfig::iniDataProperty('db_pass'),
+        array("HS256", "HS512", "HS384")
+    );
+    $this->assertSame($authToken->data->user_id , $this->user->user_id);
   }
 }
 
