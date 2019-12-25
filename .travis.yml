@@ -20,4 +20,4 @@ install:
 before_script:
   - cp ./api/app/secured/config.example.ini ./api/app/secured/config.ini
   - php ./api/app/database/_CreateDatabase.php
-script: phpdbg -qrr ./api/app/vendor/bin/phpunit -c ./api/app/phpunit.xml --verbose
+script: phpdbg -qrr ./api/app/vendor/bin/phpunit -c ./api/app/phpunit.xml --verbose --testdox
