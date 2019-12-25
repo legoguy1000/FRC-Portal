@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit bootstrap = "./includes.php" backupGlobals = "false" processIsolation = "false"
-  backupStaticAttributes = "false" colors = "true" stopOnFailure = "false"
+  backupStaticAttributes = "false" colors = "true" stopOnFailure = "false" verbose = "true"
   convertErrorsToExceptions = "true" convertNoticesToExceptions = "true" convertWarningsToExceptions = "true">
 
   <testsuites>

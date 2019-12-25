@@ -15,7 +15,7 @@ before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS `FRC-Portal`;'
   - composer self-update
 install:
-  - composer install --dev -d ./api/app/
+  - composer install -d ./api/app/
   - composer dump-autoload -d ./api/app/
 before_script:
   - cp ./api/app/secured/config.example.ini ./api/app/secured/config.ini

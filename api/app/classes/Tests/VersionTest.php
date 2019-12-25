@@ -30,7 +30,7 @@ class VersionTest extends TestCase {
       $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
       $this->assertSame((string) $body->current_version , VERSION);
   }
+  
 }
-
 
 ?>
