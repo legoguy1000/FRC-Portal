@@ -3,8 +3,13 @@ php:
   - '7.3'
   - '7.4'
 #  - nightly
+jobs:
+  allow_failures:
+    - php: '7.4'
 services:
   - mysql
+before_script:
+  - if php -v | grep -q 'Xdebug'; then phpenv config-rm xdebug.ini; fi
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS `FRC-Portal`;'
   - composer self-update
@@ -14,4 +19,4 @@ install:
 before_script:
   - cp ./api/app/secured/config.example.ini ./api/app/secured/config.ini
   - php ./api/app/database/_CreateDatabase.php
-script: ./api/app/vendor/bin/phpunit -c ./api/app/phpunit.xml
+script: phpdbg -qrr ./api/app/vendor/bin/phpunit -c ./api/app/phpunit.xml
