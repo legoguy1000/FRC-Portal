@@ -11,8 +11,9 @@ if($line != 'yes' && $line != 'y'){
     echo "Aborting!\n";
     exit;
 }
-shell_exec("composer install");
-shell_exec("composer dump-autoload");
+updateComposer();
+// shell_exec("composer install --no-suggest --no-dev");
+// shell_exec("composer dump-autoload");
 
 
 $iniData = array();
