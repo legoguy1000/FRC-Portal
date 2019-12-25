@@ -366,22 +366,35 @@ if(version_compare($version, '2.17.0','>=')) {
   if(Capsule::schema()->hasTable('events') && Capsule::schema()->hasColumn('events','google_cal_id')) {
     try {
       Capsule::schema()->table('events', function ($table, $as = null, $connection = null) {
-        $table->string('google_cal_id')->nullable()->default(null)->change();
+        $table->string('google_cal_id',255)->nullable()->default(null)->change();
       });
     } catch (Exception $e) {
       //Exception will be logged in Monolog
     }
   }
-  // $settings = FrcPortal\Setting::where('setting','slack_api_token')->orWhere('setting','google_api_key')->get();
-  // if(count($settings) > 0) {
-  //   foreach($settings as $secret) {
-  //     if($secret->value != '') {
-  //       $secret->value = encryptItems($secret->value);
-  //     }
-  //     $secret->save();
-  //   }
-  //   echo 'API Tokens are now encrypted' . PHP_EOL . PHP_EOL;
-  // }
+  if(Capsule::schema()->hasTable('schools') && Capsule::schema()->hasColumn('schools','logo_url')) {
+    try {
+      Capsule::schema()->table('schools', function ($table, $as = null, $connection = null) {
+        $table->string('logo_url',255)->default('')->change();
+        $table->string('school_name')->default('')->change();
+        $table->string('abv')->default('')->change();
+      });
+    } catch (Exception $e) {
+      //Exception will be logged in Monolog
+    }
+  }
+  $settings = FrcPortal\Setting::where('setting','slack_api_token')->orWhere('setting','google_api_key')->get();
+  if(!empty($settings)) {
+    foreach($settings as $secret) {
+      if(!empty($secret->value) && !is_base64($secret->value) && empty(decryptItems($secret->value))) {
+        $secret->value = encryptItems($secret->value);
+        $secret->save();
+        echo ucwords(str_replace('_',' ',$secret->setting)).' is now encrypted' . PHP_EOL;
+      }
+
+    }
+    //echo 'API Tokens are now encrypted' . PHP_EOL . PHP_EOL;
+  }
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
 ?>

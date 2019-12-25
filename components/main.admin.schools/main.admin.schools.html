@@ -41,7 +41,7 @@
 			<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
 				<tr md-row ng-repeat="school in vm.schools track by $index">
 					<td md-cell>
-						<md-list-item style="padding: 0px;">
+						<md-list-item style="padding: 0;">
 							<img ng-src="{{school.logo_url}}" class="md-avatar" alt="" ng-if="school.logo_url"/>
 						</md-list-item></td>
 					<td md-cell>{{school.school_name}}</td>

@@ -34,7 +34,7 @@
 				    <v-pane-content layout="column">
 							<div layout="row" ng-repeat="time_slot in vm.time_slots track by $index" style="border-top: solid;border-left: solid;border-right: solid;" ng-class="{'lastRowStyle': $last}">
 								<div flex layout="column" layout-align="center start" class="md-padding" style="border-right: solid;">
-									<h3 style="margin-top: 0px;">
+									<h3 style="margin-top: 0;">
 										<span>{{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</span>
 								 	</h3>
 									<b>{{time_slot.name}}</b>

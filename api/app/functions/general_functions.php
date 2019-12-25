@@ -125,6 +125,9 @@ function getServiceAccountData() {
 }
 
 function encryptItems($decrypted) {
+	if(empty($decrypted)) {
+		return false;
+	}
 	$nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
 	$key = hex2bin(IniConfig::iniDataProperty('encryption_key'));
 	$ciphertext = sodium_crypto_secretbox($decrypted, $nonce, $key);
@@ -133,12 +136,29 @@ function encryptItems($decrypted) {
 }
 
 function decryptItems($encrypted) {
+	if(empty($encrypted)) {
+		return false;
+	}
 	$decoded = base64_decode($encrypted);
 	$nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
 	$ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
 	$key = hex2bin(IniConfig::iniDataProperty('encryption_key'));
 	$decrypted = sodium_crypto_secretbox_open($ciphertext, $nonce, $key);
 	return $decrypted;
+}
+
+function is_base64($s) {
+    // Check if there are valid base64 characters
+    if (!preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $s)) return false;
+    // Decode the string in strict mode and check the results
+    $decoded = base64_decode($s, true);
+    if(false === $decoded) return false;
+    // Encode the string again
+    if(base64_encode($decoded) != $s) return false;
+		// Check if decoded data is actual text
+	  if (!in_array(mb_detect_encoding($decoded), array('UTF-8', 'ASCII'))) return false;
+
+    return true;
 }
 
 function handleGoogleAPIException($e, $google_service) {
@@ -370,21 +390,32 @@ function exceptionResponse($response, $msg = 'Error', $code = 200, $error = null
 
 function slackPostAPI($endpoint, $data) {
 	$content = str_replace('#new_line#','\n',json_encode($data));
-	$slack_token = getSettingsProp('slack_api_token');
+	$slack_token = decryptItems(getSettingsProp('slack_api_token'));
+	if(empty($slack_token)) {
+		insertLogs('Warning', 'Slack API token is not valid');
+		return false;
+	}
 	$client = new GuzzleHttp\Client(['base_uri' => 'https://slack.com/api/']);
 	$response = $client->request('POST', $endpoint, array(
 		'body' => $content,
 		'headers' => array(
 			'Authorization' => 'Bearer '.$slack_token,
-			'Content-Type' => 'application/json',
+			'Content-Type' => 'application/json; charset=utf-8',
 		)
 	));
-	$code = $response->getStatusCode(); // 200
-	$reason = $response->getReasonPhrase(); // OK
+	$body = json_decode($response->getBody());
+	if(empty($body->ok)) {
+		insertLogs('Warning', 'Error posting to slack API. Error: '.$response->getBody());
+	}
+	return $body->ok;
 }
 
 function slackGetAPI($endpoint, $params = array()) {
-	$slack_token = getSettingsProp('slack_api_token');
+	$slack_token = decryptItems(getSettingsProp('slack_api_token'));
+	if(empty($slack_token)) {
+		insertLogs('Warning', 'Slack API token is not valid');
+		return false;
+	}
 	$params['token'] = $slack_token;
 	//$url = 'https://slack.com/api/'.$endpoint.'?'.http_build_query($params);
 	$client = new GuzzleHttp\Client(['base_uri' => 'https://slack.com/api/']);

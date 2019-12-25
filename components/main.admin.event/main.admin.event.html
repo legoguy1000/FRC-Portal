@@ -224,7 +224,7 @@
 					<tbody md-body> <!-- md-select="user" md-select-id="user_id" -->
 						<tr md-row class="selectRow" ng-class="{'selected': vm.selectedUsers.includes(user.user_id)}" ng-click="vm.selectUsers(user.user_id)" ng-repeat="user in vm.users | filter: vm.query.filter | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit" sh-context-menu menu-options="vm.menuOptions" context-data="user">
 							<td md-cell>
-								<md-list-item style="padding: 0px;">
+								<md-list-item style="padding: 0;">
 									{{user.full_name}}
 								</md-list-item>
 							</td>

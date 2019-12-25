@@ -293,15 +293,17 @@ class User extends Eloquent {
   public function sendUserNotification($type, $msgData) {
 
   	$preferences = $this->getNotificationPreferences();
+    $slack_enable = getSettingsProp('slack_enable');
+    $email_enable = getSettingsProp('email_enable');
   	//$preferences = array('push' => true, 'email' => false);
-    if(($type == '' || $preferences['email'][$type] == true) && !empty($msgData['email'])) {
+    if($slack_enable && ($type == '' || $preferences['email'][$type] == true) && !empty($msgData['email'])) {
   		$msg = $msgData['email'];
   		$subject = $msg['subject'];
   		$content = $msg['content'];
   		$attachments = !empty($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
   		$this->emailUser($subject,$content,$attachments);
   	}
-  	if(($type == '' || $preferences['slack'][$type] == true) && !empty($msgData['slack'])) {
+  	if($email_enable && ($type == '' || $preferences['slack'][$type] == true) && !empty($msgData['slack'])) {
   		$msg = $msgData['slack'];
   		$title = $msg['title'];
   		$body = $msg['body'];
@@ -315,24 +317,41 @@ class User extends Eloquent {
   	$return = false;
     $name = $this->fname;
   	if(!empty($name)) {
-  		$base = 'https://api.genderize.io/';
-  		$url = $base.'?name='.$name;
-  		$contents = json_decode(file_get_contents($url));
-  		if(!empty($contents->gender) && $contents->probability > .90) {
-  			$this->gender = ucfirst($contents->gender);
-      	return true;
-  		}
-      $this->gender = '';
+      $client = new \GuzzleHttp\Client();
+      $name = preg_replace("/[^A-Za-z ]/", '', $name);
+      $names = array($name);
+      $explode = explode(' ',$name);
+      if(count($explode) > 1) {
+        $names[] = str_replace(' ','',$name);
+        $names = array_merge($names,$explode);
+      }
+      $response = $client->request('GET', 'https://api.genderize.io', array(
+        'query' => array(
+          'name' => $names
+        )
+      ));
+      $contents = json_decode($response->getBody());
+  		if(!empty($contents)) {
+        foreach($contents as $name) {
+          if(!empty($name->gender) && $name->probability > .90) {
+      			$this->gender = ucfirst($name->gender);
+          	return true;
+      		}
+        }
+      }
   	}
+    $this->gender = '';
   	return false;
   }
 
-  public function slackMessage($msg) {
-  	$result = false;
-		if($this->slack_enabled == true) {
-			$result = postToSlack($msg, $this->slack_id);
-		}
-  	return $result;
+  public function slackMessage($msg = '', $attachments = null) {
+    $slack_enable = getSettingsProp('slack_enable');
+		if($slack_enable && $this->slack_enabled == true && !empty($msg)) {
+			return postToSlack($msg, $this->slack_id);
+		} else if(!$this->slack_enabled) {
+      insertLogs('Warning', $this->full_name.' is not slack enabled.');
+    }
+  	return false;
   }
 
   public function getGetSlackIdByEmail() {

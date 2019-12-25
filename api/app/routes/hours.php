@@ -138,7 +138,7 @@ $app->group('/hours', function () {
     //Get the list of users and their last sign/out and hours
     $this->get('/list', function ($request, $response, $args) {
       $authed = FrcPortal\Utilities\Auth::isAuthenticated() ? true:false;
-      if(!$authed && !is_null($request->getParam('signin_token'))) {
+      if(!$authed && !empty($request->getParam('signin_token'))) {
         $key = getSettingsProp('jwt_signin_key');
         $signin_token = $request->getParam('signin_token');
         try {
@@ -248,36 +248,15 @@ $app->group('/hours', function () {
     $this->post('/authorize', function ($request, $response, $args) {
       $args = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
-
-      $user = null;
-      if(!empty($args['auth_token'])) {
-        $key = getSettingsProp('jwt_key');
-        $jwt = $args['auth_token'];
-        try {
-          $decoded = JWT::decode($jwt, $key, array('HS256'));
-          $user = $decoded->data;
-          FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
-        } catch(ExpiredException $e) {
-          insertLogs($level = 'Warning', $message = 'Tried to authorize sign in. User token was expired. '.$e->getMessage());
-          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
-        } catch(SignatureInvalidException $e){
-          insertLogs($level = 'Warning', $message = 'Tried to generate sign in token. Old user token signature was invalid. '.$e->getMessage());
-          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
-        } catch(BeforeValidException $e){
-          insertLogs($level = 'Warning', $message = 'Tried to generate sign in token. '.$e->getMessage());
-          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
-        } catch(UnexpectedValueException $e){
-          insertLogs($level = 'Warning', $message = 'Tried to generate sign in token. '.$e->getMessage());
-          return unauthorizedReloginResponse($response, $msg = 'Authorization Error. Please login in again.');
-        }
-      } elseif(!empty($args['auth_code'])) {
+      $user = FrcPortal\Utilities\Auth::user();
+      if(!empty($args['auth_code'])) {
         $user = FrcPortal\User::where('signin_pin',hash('sha256',$args['auth_code']))->where('status',true)->where('admin',true)->first();
-        FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
-      } else {
+      } else if(empty($user)) {
         insertLogs($level = 'Warning', $message = 'Sign in authorization failed.');
         return badRequestResponse($response);
       }
-      if(!is_null($user) && $user->status && $user->admin) {
+      if(!empty($user) && $user->status && $user->admin) {
+        FrcPortal\Utilities\Auth::setCurrentUser($user->user_id);
         $ts = time();
         $te = time()+60*60*12; //12 hours liftime
         $tokenArr = generateSignInToken($ts, $te);
