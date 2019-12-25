@@ -70,6 +70,10 @@ function checkSchool($school) {
 	$school_id = '';
 	$school_formated = str_replace(' HS', ' High School', $school);
 	$school_formated = str_replace(' MS', ' Middle School', $school_formated);
+	$school_formated = trim($school_formated);
+	if (strpos(strtolower($school_formated), 'home') !== false && strpos(strtolower($school_formated), 'school') !== false) {
+	  $school_formated = 'Homeschool';
+	}
 	//$school_formated = stripos($school_formated,' School') === false ? $school_formated.' School': $school_formated;
 	$school = FrcPortal\School::where('school_name','LIKE','%'.$school_formated.'%')->orWhere('abv','LIKE','%'.$school_formated.'%')->first();
 	if(!empty($school)) {

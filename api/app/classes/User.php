@@ -317,15 +317,30 @@ class User extends Eloquent {
   	$return = false;
     $name = $this->fname;
   	if(!empty($name)) {
-  		$base = 'https://api.genderize.io/';
-  		$url = $base.'?name='.$name;
-  		$contents = json_decode(file_get_contents($url));
-  		if(!empty($contents->gender) && $contents->probability > .90) {
-  			$this->gender = ucfirst($contents->gender);
-      	return true;
-  		}
-      $this->gender = '';
+      $client = new \GuzzleHttp\Client();
+      $name = preg_replace("/[^A-Za-z ]/", '', $name);
+      $names = array($name);
+      $explode = explode(' ',$name);
+      if(count($explode) > 1) {
+        $names[] = str_replace(' ','',$name);
+        $names = array_merge($names,$explode);
+      }
+      $response = $client->request('GET', 'https://api.genderize.io', array(
+        'query' => array(
+          'name' => $names
+        )
+      ));
+      $contents = json_decode($response->getBody());
+  		if(!empty($contents)) {
+        foreach($contents as $name) {
+          if(!empty($name->gender) && $name->probability > .90) {
+      			$this->gender = ucfirst($name->gender);
+          	return true;
+      		}
+        }
+      }
   	}
+    $this->gender = '';
   	return false;
   }
 
