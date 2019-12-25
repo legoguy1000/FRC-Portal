@@ -128,21 +128,21 @@
 						</td>
 					</tr>
 					<tr md-row ng-show="vm.requestRow == req.request_id">
-							<td md-cell style="border-top:0px;" colspan="2">
+							<td md-cell style="border-top:0;" colspan="2">
 								<div>Requested: </div>
 								<div>{{req.date.request.full_formatted}}</div>
 							</td>
-							<td md-cell style="border-top:0px;">
+							<td md-cell style="border-top:0;">
 								<div>Decision By: </div>
 								<div>{{req.approver.full_name}}</div>
 							</td>
-							<td md-cell style="border-top:0px;" colspan="2">
+							<td md-cell style="border-top:0;" colspan="2">
 								<div>Decision Date: </div>
 								<div ng-if="req.approved_date">{{req.date.approve.full_formatted}}</div>
 							</td>
 					</tr>
 					<tr md-row ng-repeat-end ng-show="vm.requestRow == req.request_id">
-							<td md-cell style="border-top:0px;" colspan="4">
+							<td md-cell style="border-top:0;" colspan="4">
 								<div>Comment: </div>
 								<div>{{req.comment}}</div>
 							</td>

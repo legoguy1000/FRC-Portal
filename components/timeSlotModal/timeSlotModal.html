@@ -17,7 +17,7 @@
 						<md-tooltip md-direction="top">Delete Room</md-tooltip>
 					  <md-icon class=""> close </md-icon>
 					</md-button>-->
-					<h3 style="margin-top: 0px;">
+					<h3 style="margin-top: 0;">
 						<span ng-hide="vm.eventInfo.date.single_day">{{time_slot.date.date_formatted}}: </span><span>{{time_slot.date.event_start_formatted}} - {{time_slot.date.event_end_formatted}}</span>
 						<md-button class="md-icon-button noprint" ng-click="vm.editTimeSlot($event, false, time_slot)" ng-if="vm.admin">
 							<md-tooltip md-direction="top">Edit Time Slot</md-tooltip>

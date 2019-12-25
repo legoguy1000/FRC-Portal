@@ -290,6 +290,7 @@ input.signin-pin:-ms-input-placeholder {
 /* Hide HTML5 Up and Down arrows. */
 input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
+    -moz-appearance: none;
     margin: 0;
 }
 
@@ -300,7 +301,7 @@ input[type="number"] {
 button.md-icon-button.profile {
     height: 50px;
     width: 50px;
-    padding: 0px;
+    padding: 0;
 }
 
 /**
@@ -318,7 +319,7 @@ button.md-icon-button.profile {
  */
 .dndList ul[dnd-list], .dndList md-list[dnd-list] {
   min-height: 42px;
-  padding-left: 0px;
+  padding-left: 0;
 }
 
 /**
@@ -348,7 +349,7 @@ md-list-item.min-height-reset,
 md-list-item.min-height-reset .md-list-item-inner,
 md-list-item.min-height-reset::before,
 md-list-item.min-height-reset .md-list-item-inner::before {
-  min-height: 0px !important;
+  min-height: 0 !important;
 }
 
 /* .activeSelect {
