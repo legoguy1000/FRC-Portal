@@ -37,8 +37,9 @@ class AuthTest extends TestCase {
     $body = json_decode((string) $response->getBody());
     $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
     $this->assertTrue($body->status);
-    $this->assertClassHasStaticAttribute('token' , $body);
-    $this->assertClassHasStaticAttribute('userInfo' , $body);
+    $this->assertObjectHasAttribute('token' , $body);
+    $this->assertObjectHasAttribute('userInfo' , $body);
+    $this->assertSame($body->userInfo->user_id , 'admin');
   }
 
   public function testFailedLocalAdminLogin() {
@@ -58,8 +59,8 @@ class AuthTest extends TestCase {
     $body = json_decode((string) $response->getBody());
     $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
     $this->assertFalse($body->status);
-    $this->assertClassNotHasStaticAttribute('token' , $body);
-    $this->assertClassNotHasStaticAttribute('userInfo' , $body);
+    $this->assertObjectNotHasAttribute('token' , $body);
+    $this->assertObjectNotHasAttribute('userInfo' , $body);
   }
 }
 
