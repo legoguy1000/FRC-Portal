@@ -1,6 +1,6 @@
 language: php
 php:
-  - '7.2'
+#  - '7.2'
   - '7.3'
   - '7.4'
 #  - nightly
@@ -14,6 +14,7 @@ env:
     - DB_PASS=
     - DB_NAME="FRC-Portal"
     - NO_DB_PASS=true
+    - ADMIN_PASS="45fb19a600cb409c58c464dc5ad7ff57bd8a1e68"
 services:
   - mysql
 before_script:
