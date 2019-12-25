@@ -36,7 +36,7 @@ class UserTest extends TestCase {
 
   public function testUserJWT() {
     $authToken = JWT::decode(
-        $token,
+        $this->jwt,
         getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : IniConfig::iniDataProperty('db_pass'),
         array("HS256", "HS512", "HS384")
     );
