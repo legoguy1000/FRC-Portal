@@ -14,9 +14,6 @@ class AuthTest extends TestCase {
   protected $user;
 
   public function setUp(): void {
-    error_reporting(E_ALL);
-    ini_set('display_errors', '1');
-    ini_set('error_log', tempnam(sys_get_temp_dir(), 'slim'));
     $this->app = (new FrcPortal\App())->get();
   }
 
