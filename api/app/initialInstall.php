@@ -5,12 +5,12 @@ require_once(__DIR__.'/version.php');
 
 $iniData = array();
 $version = getVersion();
-$question = 'This file will install and configure FRC Portal v'.$version.'.  Type "yes/y" to continue: ';
-$line = clinput($question, $required = true);
-if($line != 'yes' && $line != 'y'){
-    echo "Aborting!\n";
-    exit;
-}
+$question = 'Installing FRC Portal v'.$version;
+// $line = clinput($question, $required = true);
+// if($line != 'yes' && $line != 'y'){
+//     echo "Aborting!\n";
+//     exit;
+// }
 updateComposer();
 // shell_exec("composer install --no-suggest --no-dev");
 // shell_exec("composer dump-autoload");
@@ -22,18 +22,22 @@ if(file_exists(__DIR__.'/secured/config.ini')) {
 }
 
 $db_exists = array_key_exists('db', $iniData);
+$iniData['db']['db_host'] = !empty(getenv('DB_HOST')) ? getenv('DB_HOST'):'';
 if(!$db_exists || $iniData['db']['db_host'] == '') {
   $question = "Please input the MYSQL DB server (hostname or ip): ";
   $iniData['db']['db_host'] = clinput($question, $required = true);
 }
+$iniData['db']['db_user'] = !empty(getenv('DB_USER')) ? getenv('DB_USER'):'';
 if(!$db_exists || $iniData['db']['db_user'] == '') {
   $question =  "Please input the MYSQL DB user: ";
   $iniData['db']['db_user'] = clinput($question, $required = true);
 }
+$iniData['db']['db_pass'] = !empty(getenv('DB_PASS')) ? getenv('DB_PASS'):'';
 if(!$db_exists || $iniData['db']['db_pass'] == '') {
   $question =  "Please input the MYSQL DB password: ";
   $iniData['db']['db_pass'] = clinput($question, $required = true);
 }
+$iniData['db']['db_name'] = !empty(getenv('DB_NAME')) ? getenv('DB_NAME'):'';
 if(!$db_exists || $iniData['db']['db_name'] == '') {
   $question =  "Please input the MYSQL DB name: ";
   $iniData['db']['db_name'] = clinput($question, $required = true);
@@ -41,7 +45,7 @@ if(!$db_exists || $iniData['db']['db_name'] == '') {
 
 //create Admin Account
 $iniData['admin']['admin_user'] = 'admin';
-$password = bin2hex(random_bytes(20));
+$password = !empty(getenv('ADMIN_PASS')) ? getenv('ADMIN_PASS') : bin2hex(random_bytes(20));
 $iniData['admin']['admin_pass'] = hash('sha512',$password);
 
 //Create AES

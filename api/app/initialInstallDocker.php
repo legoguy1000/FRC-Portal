@@ -20,9 +20,8 @@ if(!array_key_exists('admin', $iniData)) {
 if(!array_key_exists('admin_user', $iniData['admin']) || $iniData['admin']['admin_user'] == '') {
   $iniData['admin']['admin_user'] = 'admin';
 }
-$password = '';
+$password = !empty(getenv('ADMIN_PASS')) ? getenv('ADMIN_PASS') : bin2hex(random_bytes(20));
 if(!array_key_exists('admin_pass', $iniData['admin']) || $iniData['admin']['admin_pass'] == '') {
-  $password = bin2hex(random_bytes(20));
   $iniData['admin']['admin_pass'] = hash('sha512',$password);
 }
 
