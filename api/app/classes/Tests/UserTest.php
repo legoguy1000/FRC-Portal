@@ -26,8 +26,8 @@ class UserTest extends TestCase {
     //$this->app->config('debug', true);
   }
 
-  public function testVersionGet() {
-      $this->assert(true);
+  public function testUserGet() {
+      $this->assertTrue(true);
   }
 }
 
