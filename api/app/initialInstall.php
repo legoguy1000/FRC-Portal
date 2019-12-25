@@ -23,22 +23,22 @@ if(file_exists(__DIR__.'/secured/config.ini')) {
 
 $db_exists = array_key_exists('db', $iniData);
 $iniData['db']['db_host'] = !empty(getenv('DB_HOST')) ? getenv('DB_HOST'):'';
-if(!$db_exists || $iniData['db']['db_host'] == '') {
+if(empty($iniData['db']['db_host'])) {
   $question = "Please input the MYSQL DB server (hostname or ip): ";
   $iniData['db']['db_host'] = clinput($question, $required = true);
 }
 $iniData['db']['db_user'] = !empty(getenv('DB_USER')) ? getenv('DB_USER'):'';
-if(!$db_exists || $iniData['db']['db_user'] == '') {
+if(empty($iniData['db']['db_user'])) {
   $question =  "Please input the MYSQL DB user: ";
   $iniData['db']['db_user'] = clinput($question, $required = true);
 }
 $iniData['db']['db_pass'] = !empty(getenv('DB_PASS')) ? getenv('DB_PASS'):'';
-if(!$db_exists || $iniData['db']['db_pass'] == '') {
+if(empty($iniData['db']['db_pass'])) {
   $question =  "Please input the MYSQL DB password: ";
   $iniData['db']['db_pass'] = clinput($question, $required = true);
 }
 $iniData['db']['db_name'] = !empty(getenv('DB_NAME')) ? getenv('DB_NAME'):'';
-if(!$db_exists || $iniData['db']['db_name'] == '') {
+if(empty($iniData['db']['db_name'])) {
   $question =  "Please input the MYSQL DB name: ";
   $iniData['db']['db_name'] = clinput($question, $required = true);
 }
