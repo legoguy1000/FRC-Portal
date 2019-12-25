@@ -90,7 +90,7 @@ $app->group('/events', function () {
   //Search Google Calendar for events
   $this->get('/searchGoogleCalendar', function ($request, $response, $args) {
     $calendar = getSettingsProp('google_calendar_id');
-    $api_key = getSettingsProp('google_api_key');
+    $api_key = decryptItems(getSettingsProp('google_api_key'));
     if(empty($api_key)) {
       $responseArr = array('status'=>false, 'msg'=>'Google API Key cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the API Key.');
       insertLogs($level = 'Warning', $message = 'Cannot search Google calendar.  Google API Key is blank');
@@ -771,7 +771,7 @@ $app->group('/events', function () {
         insertLogs($level = 'Warning', $message = 'Unauthorized attempt to sync event with Google Calendar');
         return unauthorizedResponse($response);
       }
-      $api_key = getSettingsProp('google_api_key');
+      $api_key = decryptItems(getSettingsProp('google_api_key'));
       if(empty($api_key)) {
         $responseArr = array('status'=>false, 'msg'=>'Google API Key cannot be blank.  Please got to Site Settings '.html_entity_decode('&#8594;').' Other Settings to set the API Key.');
         insertLogs($level = 'Warning', $message = 'Cannot search Google calendar.  Google API Key is blank');

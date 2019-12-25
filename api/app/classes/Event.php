@@ -120,11 +120,11 @@ class Event extends Eloquent {
   }
   public function getRegistrationDeadlineGoogleEventAttribute() {
     $return = null;
-    if(!is_null($this->registration_deadline_gcalid)) {
-      try {
-        //$return = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
-      } catch (Exception $e) {}
-    }
+    // if(!is_null($this->registration_deadline_gcalid)) {
+    //   try {
+    //     //$return = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
+    //   } catch (Exception $e) {}
+    // }
     return $return;
   }
   public function getPastRegistrationAttribute() {
@@ -253,11 +253,13 @@ class Event extends Eloquent {
   	$this->location = $ge['location'];
   	$this->event_start = $ge['event_start'];
   	$this->event_end = $ge['event_end'];
-  	if(!is_null($this->registration_deadline_gcalid) && $this->registration_deadline_gcalid != '') {
+  	if(!empty($this->registration_deadline_gcalid)) {
   		try {
   			$ged = getGoogleCalendarEvent($this->registration_deadline_gcalid);
   			$this->registration_deadline = $ged['event_end'];
-  		} catch (Exception $e) {}
+  		} catch (Exception $e) {
+    		insertLogs('Warning', 'Unable to get Google Calendar event information for the registration deadline of '.$this->name);
+      }
   	}
   	if(!$this->save()) {
   		throw new Exception('Something went wrong updating the event', 500);

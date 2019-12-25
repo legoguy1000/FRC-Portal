@@ -4,6 +4,9 @@ namespace FrcPortal;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Capsule\Manager as DB;
 use \DateTime;
+use Google_Client;
+use Google_Service_Sheets;
+
 
 class Season extends Eloquent {
   //table name
@@ -91,6 +94,187 @@ class Season extends Eloquent {
       );
     }
   }
+
+  public function updateSeasonRegistrationFromForm() {
+  	$data = false;
+  	$result = array(
+  		'status' => false,
+  		'msg' => '',
+  		'data' => null
+  	);
+		if(!empty($this->join_spreadsheet)) {
+			$data = $this->pollMembershipForm();
+			if($data['status'] == true && !empty($data['data'])) {
+				$result['status'] = $this->itterateMembershipFormData($data['data']);
+				$result['msg'] = 'Latest data downloaded from Google form';
+			}
+		}
+  	return $result;
+  }
+
+  public function pollMembershipForm() {
+  	$result = array(
+  		'status' => false,
+  		'msg' => '',
+  		'data' => null
+  	);
+  	if(!empty($this->join_spreadsheet)) {
+  		$data = array();
+  		try {
+  			$creds = getServiceAccountData();
+  		} catch (Exception $e) {
+  				$error = handleExceptionMessage($e);
+  				insertLogs('Warning', $error);
+  				$result['msg'] = 'Something went wrong searching Google Drive';
+  				$result['error'] = $error;
+  				$creds = null;
+  		}
+  		try {
+  			$client = new Google_Client();
+  			$client->setAuthConfig($creds);
+  			$client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly']);
+  			$service = new Google_Service_Sheets($client);
+				$range = !empty($this->membership_form_sheet) ? $this->membership_form_sheet : 'Form Responses 1';
+  			$response = $service->spreadsheets_values->get($this->join_spreadsheet, $range);
+  			$values = $response->getValues();
+  			if (count($values) != 0) {
+  				$headers = array_map('strtolower', array_shift($values));
+  				foreach ($values as $row) {
+  					$temp = array();
+  					for($i=0; $i<count($headers);$i++) {
+  						$key = $headers[$i];
+  						$val = isset($row[$i]) ? $row[$i] : '';
+  						$temp[$key] = $val;
+  					}
+  					$data[] = $temp;
+  				}
+  				$result['msg'] = 'Data pulled from Google Spreadsheet';
+  				$result['data'] = $data;
+  				$result['status'] = true;
+  			}
+  		} catch (Exception $e) {
+  				$error = handleGoogleAPIException($e, 'Google Sheets');
+  				insertLogs('Warning', $error);
+  				$result['msg'] = 'Something went wrong reading the Google Spreadsheet';
+  				$result['error'] = $error;
+  		}
+  	}
+  	return $result;
+  }
+
+  public function itterateMembershipFormData($data = array()) {
+  	$team_num = getSettingsProp('team_number');
+  	$team_name = getSettingsProp('team_name');
+
+  	$season_id = $this->season_id;
+  	$form_map = $this->membership_form_map;
+  	$email_column = $form_map['email']; //'email address';
+  	$fname_column = $form_map['fname']; //'first name';
+  	$lname_column = $form_map['lname']; //'last name';
+  	$userType_column = $form_map['user_type']; //'member type';
+  	$grad_column = $form_map['grad_year']; //'year of graduation';
+  	$school_column = $form_map['school']; //'school';
+  	$pin_column = $form_map['pin_number']; //'student id';
+  	$phone_column = $form_map['phone']; //'phone';
+
+  	//Itterate through data
+  	if(count($data) > 0) {
+  		foreach($data as $userInfo) {
+  			//	$timestamp = $data['timestamp'];
+  			$email = $userInfo[$email_column];
+  			$fname = $userInfo[$fname_column];
+  			$lname = $userInfo[$lname_column];
+  			$form_user_type = !empty($userInfo[$userType_column]) ? $userInfo[$userType_column]: '';
+  			$user_type = $form_user_type == 'Adult' ? 'Mentor' : $form_user_type;
+  			//	$birthday = $userInfo['birthday'];
+  			$grad_year = !empty($userInfo[$grad_column]) ? $userInfo[$grad_column]: '';
+  			$school = !empty($userInfo[$school_column]) ? $userInfo[$school_column]: '';
+  			$student_id = !empty($userInfo[$pin_column]) ? $userInfo[$pin_column]: '';
+  			$phone = !empty($userInfo[$phone_column]) ? $userInfo[$phone_column] : '';
+  			$clean_phone = preg_replace('/[^0-9]/s', '', $phone);
+
+  			$user = null;
+  			$user_id = null;
+  			$user = User::where('email',$email)->orWhere('team_email',$email)->first();
+  			if(empty($user)) {
+  				$user = User::where('fname',$fname)->where('lname',$lname)->where('user_type',$user_type)->first();
+  			}
+  			//If user doesn't exist, add data to user table
+  			if(empty($user)) {
+  				$school_id = '';
+  				if($user_type == 'Student' && $school != '') {
+  					$school_id = checkSchool($school);
+  				}
+  				$user = new User();
+  				if(checkTeamEmail($email)) {
+  					$user->team_email = $email;
+  				}
+  				$user->email = $email;
+  				$user->fname = $fname;
+  				$user->lname = $lname;
+  				$user->getGenderByFirstName();
+  				$user->user_type = $user_type;
+  				if($user_type == 'Student') {
+  					if($school_id != '') {
+  						$user->school_id = $school_id;
+  					}
+  					if(!empty($grad_year) && is_numeric($grad_year)) {
+  						$user->grad_year = $grad_year;
+  					}
+  					if($student_id != '' && is_numeric($student_id)) {
+  						$signin_pin = hash('SHA256',$student_id);
+  						$user->signin_pin = $signin_pin;
+  					}
+  				}
+  				if($clean_phone != '' && is_numeric($clean_phone)) {
+  					$user->phone = $clean_phone;
+  				}
+  				$user->getGetSlackIdByEmail();
+  				//Insert Data
+  				if($user->save()) {
+  					$user_id = $user->user_id;
+  					insertLogs($level = 'Information', $message = $user->full_name.' imported from Google Form results.');
+  					$user->setDefaultNotifications();
+  					$host = getSettingsProp('env_url');
+  					$msgData = array(
+  						'email' => array(
+  						'subject' => 'User account created for '.$team_name.'\s team portal',
+  						'content' =>  'Congratulations! You have been added to '.$team_name.'\s team portal.  Please go to '.$host.' to view your annual registration, event registration, season hours and more.',
+  						'userData' => $user
+  						)
+  					);
+  					$user->sendUserNotification($type = '', $msgData);
+  				}
+  			}
+  			//Add User info into the Annual Requirements Table
+  			if(!empty($season_id) && !empty($user)) {
+  				$user_id = $user->user_id;
+  				$season_reg = $user->annual_requirements()->where('season_id', $season_id)->first();
+  				if(empty($season_reg) || !$season_reg->join_team) {
+  					$season_join = AnnualRequirement::updateOrCreate(['season_id' => $season_id, 'user_id' => $user_id], ['join_team' => true]);
+  					if($season_join) {
+  						$msgData = array(
+  								'slack' => array(
+  								'title' => 'Annual Registration Complete',
+  								'body' => 'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$this->year.' FRC season.'
+  							),
+  								'email' => array(
+  								'subject' => 'Annual Registration Complete',
+  								'content' =>  'Congratulations! You have completed the Team '.$team_num.' membership form for the '.$this->year.' FRC season.',
+  								'userData' => $user
+  							)
+  						);
+  						$user->sendUserNotification($type = 'join_team', $msgData);
+  					}
+  				}
+  			}
+  		}
+  		return true;
+  	} else {
+  		return false;
+  	}
+  }
+
 
   /**
   * Get the Annual requirements.

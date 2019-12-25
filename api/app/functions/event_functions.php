@@ -1,7 +1,7 @@
 <?php
 function getGoogleCalendarEvent($google_cal_id) {
 	$calendar = getSettingsProp('google_calendar_id');
-	$api_key = getSettingsProp('google_api_key');
+	$api_key = decryptItems(getSettingsProp('google_api_key'));
 	if(empty($google_cal_id)) {
 		throw new Exception('Google Calendar Event ID cannot be blank', 400);
 	}

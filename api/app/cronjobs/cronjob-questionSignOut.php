@@ -12,7 +12,7 @@ if((date('N') <= 5 && date('H') == 21) || (date('N') > 5 && date('H') == 18)) {
 	$result = FrcPortal\MeetingHour::with('user')->whereNull('time_out')->where('time_in','>',$date)->get();
 	if(count($result) > 0) {
 		foreach($result as $hour) {
-			$user = $hour->users;
+			$user = $hour->user;
 			if($user->slack_id != '') {
 				$msg = 'Hey '.$user->fname.',#new_line##new_line#';
 				$msg .= 'I noticed that you signed in on '.date('F j, Y',strtotime($user->time_in)).' at '.date('g:i A',strtotime($user->time_in)).' and have not signed out yet.  Most weekday meetings end at 9pm and weekend meetings at 6pm.  If you forgot to sign out please use the button below, if not please do not forget to sign out before leaving the shop.  This is your only reminder, if you do not sign out your hours will not count.';
@@ -33,12 +33,13 @@ if((date('N') <= 5 && date('H') == 21) || (date('N') > 5 && date('H') == 18)) {
 						)
 					)
 				);
-				$data = array(
-					'channel' => $user->slack_id,
-					'text'=>$msg,
-					'attachments'=>$attachments
-				);
-				$result = SlackApiPost($data);
+				// $data = array(
+				// 	'channel' => $user->slack_id,
+				// 	'text'=>$msg,
+				// 	'attachments'=>$attachments
+				// );
+				$result = $user->slackMessage($msg,$attachments);
+				//SlackApiPost($data);
 			}
 		}
 	}

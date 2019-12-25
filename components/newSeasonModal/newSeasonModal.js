@@ -10,8 +10,9 @@ function newSeasonModalController($log,$mdDialog,$scope,userInfo,seasonsService,
 	}
 
 	vm.data = {};
-
+	vm.loading = false;
 	vm.addSeason = function() {
+		vm.loading = true;
 		seasonsService.addSeason(vm.data).then(function(response) {
 			if(response.status) {
 				$mdDialog.hide(response);
@@ -22,6 +23,7 @@ function newSeasonModalController($log,$mdDialog,$scope,userInfo,seasonsService,
 	        .position('top right')
 	        .hideDelay(3000)
 	    );
+			vm.loading = false;
 		});
 	}
 

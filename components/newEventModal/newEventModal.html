@@ -14,6 +14,7 @@
 			</md-button>
 		  </div>
 		</md-toolbar>
+		<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
 		<form ng-cloak layout="column" flex layout-fill style="" ng-submit="vm.addEvent()">
 			<md-dialog-content layout-wrap class="md-margin" style="overflow-y: scroll;">
 				<div layout="row">

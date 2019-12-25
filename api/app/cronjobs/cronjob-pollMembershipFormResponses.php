@@ -5,7 +5,7 @@ require_once(__DIR__ . '/../includes.php');
 $season_id = null;
 $spreadsheetId = null;
 $season = FrcPortal\Season::where('bag_day','>=',date('Y-m-d'))->orderBy('start_date', 'ASC')->first();
-if(!is_null($season)) {
+if(!empty($season)) {
 	$season_id = $season->season_id;
 	$spreadsheetId = $season->join_spreadsheet != '' ? $season->join_spreadsheet:null;
 	if(is_null($spreadsheetId)) {
@@ -29,9 +29,9 @@ if(!is_null($season)) {
 		}
 	}
 }
-$data = pollMembershipForm($spreadsheetId, $season);
+$data = $season->pollMembershipForm();
 if($data['status'] != false && !empty($data['data'])) {
-	$return = itterateMembershipFormData($data['data'], $season);
+	$return = $season->itterateMembershipFormData($data['data']);
 }
 
 

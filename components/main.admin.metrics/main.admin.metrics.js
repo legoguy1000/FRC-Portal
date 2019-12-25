@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.metricsController', ['$timeout', '$q', '$scope', '$state', '$timeout', 'metricsService',
+.controller('main.admin.metricsController', ['$timeout', '$q', '$scope', '$state', 'metricsService',
 	mainAdminMetricsController
 ]);
-function mainAdminMetricsController($timeout, $q, $scope, $state, $timeout, metricsService) {
+function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService) {
     var vm = this;
 
 	vm.onClick = function (points, evt) {

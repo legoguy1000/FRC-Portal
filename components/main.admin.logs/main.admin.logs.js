@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.admin.logsController', ['$timeout', '$q', '$scope', '$state', '$timeout', 'logsService', '$mdDialog', 'usersService',
+.controller('main.admin.logsController', ['$timeout', '$q', '$scope', '$state', 'logsService', '$mdDialog', 'usersService',
 	mainAdminLogsController
 ]);
-function mainAdminLogsController($timeout, $q, $scope, $state, $timeout, logsService, $mdDialog, usersService) {
+function mainAdminLogsController($timeout, $q, $scope, $state, logsService, $mdDialog, usersService) {
     var vm = this;
 
 	vm.selected = [];
