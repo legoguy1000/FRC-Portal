@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.timeinController', ['$rootScope', '$timeout', '$q', '$scope', '$state', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams', '$window', 'generalService',
+.controller('main.timeinController', ['$rootScope', '$timeout', '$q', '$scope', '$state', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams',
 	mainTimeinController
 ]);
-function mainTimeinController($rootScope, $timeout, $q, $scope, $state, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams, $window, generalService) {
+function mainTimeinController($rootScope, $timeout, $q, $scope, $state, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams) {
   var vm = this;
 
 	var confirm = $mdDialog.confirm()
