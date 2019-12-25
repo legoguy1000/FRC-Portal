@@ -13,10 +13,7 @@ class UserTest extends TestCase {
   protected $jwt;
   protected $user;
 
-  public function setUpBeforeClass(): void {
-    error_reporting(E_ALL);
-    ini_set('display_errors', '1');
-    ini_set('error_log', tempnam(sys_get_temp_dir(), 'slim'));
+  public function setUp(): void {
     $this->app = (new FrcPortal\App())->get();
     $user = new FrcPortal\User();
     $user->email = 'abcd@example.org';
@@ -33,6 +30,12 @@ class UserTest extends TestCase {
     $this->jwt = $user->generateUserJWT();
     //$this->app->config('debug', true);
   }
+
+  public function tearDown(): void {
+    $this->app = (new FrcPortal\App())->get();
+    FrcPortal\User::destroy($this->user->user_id);
+  }
+
 
   public function testUserJwt() {
     $authToken = JWT::decode(
