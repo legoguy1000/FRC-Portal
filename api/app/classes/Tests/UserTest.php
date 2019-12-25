@@ -34,13 +34,49 @@ class UserTest extends TestCase {
     //$this->app->config('debug', true);
   }
 
-  public function testUserJWT() {
+  public function testUserJwt() {
     $authToken = JWT::decode(
         $this->jwt,
         getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : IniConfig::iniDataProperty('db_pass'),
         array("HS256", "HS512", "HS384")
     );
     $this->assertSame($authToken->data->user_id , $this->user->user_id);
+  }
+
+  public function testGetUsers() {
+    $env = Environment::mock([
+      'REQUEST_METHOD' => 'GET',
+      'REQUEST_URI'    => '/users',
+    ]);
+    $request = Request::createFromEnvironment($env);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request = $request->withHeader('Authentication', 'Bearer '.$this->jwt);
+    $this->app->getContainer()['request'] = $request;
+    $response = $this->app->run(true);
+    $this->assertSame($response->getStatusCode(), 200);
+    $body = json_decode((string) $response->getBody());
+    $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
+    $this->assertTrue($body->status);
+    $this->assertObjectHasAttribute('data' , $body);
+    $this->assertGreaterThanOrEqual(1 , count($body->data));
+  }
+
+  public function testGetUser() {
+    $env = Environment::mock([
+      'REQUEST_METHOD' => 'GET',
+      'REQUEST_URI'    => '/users/'.$this->user->user_id,
+    ]);
+    $request = Request::createFromEnvironment($env);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request = $request->withHeader('Authentication', 'Bearer '.$this->jwt);
+    $this->app->getContainer()['request'] = $request;
+    $response = $this->app->run(true);
+    $this->assertSame($response->getStatusCode(), 200);
+    $body = json_decode((string) $response->getBody());
+    $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
+    $this->assertTrue($body->status);
+    $this->assertObjectHasAttribute('data' , $body);
+    $this->assertSame($body->data->user_id , $this->user->user_id);
   }
 }
 

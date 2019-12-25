@@ -50,8 +50,8 @@ class AuthTest extends TestCase {
     $request = Request::createFromEnvironment($env);
     $request = $request->withHeader('Content-Type', 'application/json');
     $request->getBody()->write(json_encode(array(
-      'user' => 'admin1',
-      'password' => getenv('ADMIN_PASS')
+      'user' => 'admin',
+      'password' => 'incorrect password'
     )));
     $this->app->getContainer()['request'] = $request;
     $response = $this->app->run(true);
