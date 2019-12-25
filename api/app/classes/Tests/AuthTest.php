@@ -17,6 +17,10 @@ class AuthTest extends TestCase {
     $this->app = (new FrcPortal\App())->get();
   }
 
+  public function tearDown(): void {
+    unset($this->app);
+  }
+
   public function testSuccessfulLocalAdminLogin() {
     $env = Environment::mock([
       'REQUEST_METHOD' => 'POST',

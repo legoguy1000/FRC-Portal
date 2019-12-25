@@ -32,6 +32,7 @@ class UserTest extends TestCase {
   }
 
   public function tearDown(): void {
+    unset($this->app);
     FrcPortal\User::destroy($this->user->user_id);
   }
 
