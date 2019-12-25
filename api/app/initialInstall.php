@@ -33,7 +33,7 @@ if(empty($iniData['db']['db_user'])) {
   $iniData['db']['db_user'] = clinput($question, $required = true);
 }
 $iniData['db']['db_pass'] = !empty(getenv('DB_PASS')) ? getenv('DB_PASS'):'';
-if(empty($iniData['db']['db_pass'])) {
+if(empty($iniData['db']['db_pass']) && empty(getenv('NO_DB_PASS')) ) {
   $question =  "Please input the MYSQL DB password: ";
   $iniData['db']['db_pass'] = clinput($question, $required = true);
 }

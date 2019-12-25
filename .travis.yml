@@ -13,6 +13,7 @@ env:
     - DB_USER="root"
     - DB_PASS=
     - DB_NAME="FRC-Portal"
+    - NO_DB_PASS=true
 services:
   - mysql
 before_script:
