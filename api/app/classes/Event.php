@@ -120,11 +120,11 @@ class Event extends Eloquent {
   }
   public function getRegistrationDeadlineGoogleEventAttribute() {
     $return = null;
-    if(!is_null($this->registration_deadline_gcalid)) {
-      try {
-        //$return = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
-      } catch (Exception $e) {}
-    }
+    // if(!is_null($this->registration_deadline_gcalid)) {
+    //   try {
+    //     //$return = getGoogleCalendarEvent($this->attributes['registration_deadline_gcalid']);
+    //   } catch (Exception $e) {}
+    // }
     return $return;
   }
   public function getPastRegistrationAttribute() {
