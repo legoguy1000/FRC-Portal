@@ -334,7 +334,7 @@ function exportDB() {
 }
 
 function updateComposer() {
-	exec('cd '. __DIR__ .'/../ && composer install && composer dump-autoload');
+	exec('cd '. __DIR__ .'/../ && composer install --no-dev && composer dump-autoload');
   //exec("composer install");
   //exec("composer dump-autoload");
 	sleep(.5);

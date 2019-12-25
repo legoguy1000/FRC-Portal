@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap = "./includes.php" backupGlobals = "false" processIsolation = "false"
+  backupStaticAttributes = "false" colors = "true" stopOnFailure = "false"
+  convertErrorsToExceptions = "true" convertNoticesToExceptions = "true" convertWarningsToExceptions = "true">
+
+  <testsuites>
+    <testsuite name="Unit Tests">
+      <directory phpVersion="7.2.0" phpVersionOperator=">=">./classes/Tests</directory>
+    </testsuite>
+  </testsuites>
+
+  <filter>
+    <whitelist>
+      <directory suffix=".php">app/</directory>
+    </whitelist>
+  </filter>
+
+  <php>
+    <env name="APP_ENV" value="testing"/>
+    <server name='HTTP_HOST' value='http://localhost' />
+  </php>
+
+  <logging>
+    <log type="coverage-html" target="/tmp/report" lowUpperBound="35" highLowerBound="70"/>
+    <log type="coverage-clover" target="/tmp/coverage.xml"/>
+    <log type="coverage-php" target="/tmp/coverage.serialized"/>
+    <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+    <log type="junit" target="/tmp/logfile.xml"/>
+    <log type="testdox-html" target="/tmp/testdox.html"/>
+    <log type="testdox-text" target="/tmp/testdox.txt"/>
+  </logging>
+
+</phpunit>
