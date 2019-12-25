@@ -10,12 +10,6 @@
     </testsuite>
   </testsuites>
 
-  <filter>
-    <whitelist>
-      <directory suffix=".php">app/</directory>
-    </whitelist>
-  </filter>
-
   <php>
     <env name="APP_ENV" value="testing"/>
     <server name='HTTP_HOST' value='http://localhost' />
