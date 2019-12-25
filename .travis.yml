@@ -9,10 +9,10 @@ jobs:
     - php: '7.4'
 env:
   global:
-    - DB_HOST = localhost
-    - DB_USER = root
-    - DB_PASS =
-    - DB_NAME = FRC-Portal
+    - DB_HOST="localhost"
+    - DB_USER="root"
+    - DB_PASS=
+    - DB_NAME="FRC-Portal"
 services:
   - mysql
 before_script:
