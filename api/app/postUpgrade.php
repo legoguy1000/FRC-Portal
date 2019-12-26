@@ -193,7 +193,7 @@ if($version >= '2.15.0') {
     if(!array_key_exists('admin',$iniData) || is_null($iniData['admin']['admin_user']) || $iniData['admin']['admin_user'] == '' || is_null($iniData['admin']['admin_pass']) || $iniData['admin']['admin_pass'] == '') {
       $admin_data = array();
       $admin_data['admin_user'] = 'admin';
-      $password = bin2hex(openssl_random_pseudo_bytes(10));
+      $password = bin2hex(random_bytes(20));
       $admin_data['admin_pass'] = hash('sha512',$password);
       $iniData['admin'] = $admin_data;
       write_ini_file($iniData, __DIR__.'/secured/config.ini', true);
