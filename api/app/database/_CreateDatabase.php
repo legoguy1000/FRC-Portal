@@ -59,6 +59,9 @@ if(!Capsule::schema()->hasTable('event_food_event_requirements')) {
 if(!Capsule::schema()->hasTable('logs')) {
   require_once('Logs.php');
 }
+if(!Capsule::schema()->hasTable('user_credentials')) {
+  require_once('UserCredential.php');
+}
 require_once(__DIR__.'/_CreateForeignKeys.php');
 
 //require_once('UserCategory.php');

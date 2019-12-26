@@ -22,7 +22,7 @@ if(!array_key_exists('admin_user', $iniData['admin']) || $iniData['admin']['admi
 }
 $password = '';
 if(!array_key_exists('admin_pass', $iniData['admin']) || $iniData['admin']['admin_pass'] == '') {
-  $password = bin2hex(openssl_random_pseudo_bytes(10));
+  $password = bin2hex(random_bytes(20));
   $iniData['admin']['admin_pass'] = hash('sha512',$password);
 }
 

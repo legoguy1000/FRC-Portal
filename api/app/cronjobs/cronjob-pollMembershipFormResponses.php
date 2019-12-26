@@ -29,9 +29,10 @@ if(!empty($season)) {
 		}
 	}
 }
-$data = $season->pollMembershipForm();
-if($data['status'] != false && !empty($data['data'])) {
-	$return = $season->itterateMembershipFormData($data['data']);
+if(!empty($season)) {
+	if($season->pollMembershipForm()) {
+		$season->itterateMembershipFormData();
+	}
 }
 
 
