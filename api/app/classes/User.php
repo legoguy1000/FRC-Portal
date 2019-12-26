@@ -355,15 +355,16 @@ class User extends Eloquent {
   }
 
   public function getGetSlackIdByEmail() {
-    $return = false;
-    $emails = array($this->email,$this->team_email);
-    foreach($emails as $email) {
-      if(!empty($email)) {
-        $result = slackGetAPI('users.lookupByEmail', $params = array('email'=>$email));
-        $data = json_decode($result);
-        if(!empty($data->ok) && $data->ok == true) {
-          $this->slack_id = $data->user->id;
-          return true;
+    if(getSettingsProp('slack_enable')) {
+      $emails = array($this->email,$this->team_email);
+      foreach($emails as $email) {
+        if(!empty($email)) {
+          $result = slackGetAPI('users.lookupByEmail', $params = array('email'=>$email));
+          $data = json_decode($result);
+          if(!empty($data->ok) && $data->ok == true) {
+            $this->slack_id = $data->user->id;
+            return true;
+          }
         }
       }
     }

@@ -29,6 +29,7 @@ class Season extends Eloquent {
     'season_id', 'year', 'game_name', 'game_logo', 'start_date','bag_day','end_date','hour_requirement','hour_requirement_week','join_spreadsheet','membership_form_map','membership_form_sheet'
   ];
 
+  protected $googleFormData;
 
   protected $appends = ['no_bagday', 'date', 'season_period'];
   //'start_date_unix','bag_day_unix','end_date_unix','start_date_formatted','bag_day_formatted','end_date_formatted','start_date_formatted','start_date_formatted'
@@ -67,7 +68,7 @@ class Season extends Eloquent {
   public function getDateAttribute() {
     $start = formatDateArrays($this->attributes['start_date']);
     $end = formatDateArrays($this->attributes['end_date']);
-    $bag = $this->no_bagday ? null:formatDateArrays($this->no_bagday);
+    $bag = $this->no_bagday ? null:formatDateArrays($this->attributes['bag_day']);
     return array(
       'start' => $start,
       'end' => $end,
@@ -96,28 +97,13 @@ class Season extends Eloquent {
   }
 
   public function updateSeasonRegistrationFromForm() {
-  	$data = false;
-  	$result = array(
-  		'status' => false,
-  		'msg' => '',
-  		'data' => null
-  	);
-		if(!empty($this->join_spreadsheet)) {
-			$data = $this->pollMembershipForm();
-			if($data['status'] == true && !empty($data['data'])) {
-				$result['status'] = $this->itterateMembershipFormData($data['data']);
-				$result['msg'] = 'Latest data downloaded from Google form';
-			}
+		if(!empty($this->join_spreadsheet) && $this->pollMembershipForm() && !empty($this->googleFormData)) {
+			return $this->itterateMembershipFormData();
 		}
-  	return $result;
+  	return false;
   }
 
   public function pollMembershipForm() {
-  	$result = array(
-  		'status' => false,
-  		'msg' => '',
-  		'data' => null
-  	);
   	if(!empty($this->join_spreadsheet)) {
   		$data = array();
   		try {
@@ -125,9 +111,6 @@ class Season extends Eloquent {
   		} catch (Exception $e) {
   				$error = handleExceptionMessage($e);
   				insertLogs('Warning', $error);
-  				$result['msg'] = 'Something went wrong searching Google Drive';
-  				$result['error'] = $error;
-  				$creds = null;
   		}
   		try {
   			$client = new Google_Client();
@@ -148,21 +131,19 @@ class Season extends Eloquent {
   					}
   					$data[] = $temp;
   				}
-  				$result['msg'] = 'Data pulled from Google Spreadsheet';
-  				$result['data'] = $data;
-  				$result['status'] = true;
+  				//$result['msg'] = 'Data pulled from Google Spreadsheet';
+          $this->googleFormData = $data;
+          return true;
   			}
   		} catch (Exception $e) {
   				$error = handleGoogleAPIException($e, 'Google Sheets');
   				insertLogs('Warning', $error);
-  				$result['msg'] = 'Something went wrong reading the Google Spreadsheet';
-  				$result['error'] = $error;
   		}
   	}
-  	return $result;
+  	return false;
   }
 
-  public function itterateMembershipFormData($data = array()) {
+  public function itterateMembershipFormData() {
   	$team_num = getSettingsProp('team_number');
   	$team_name = getSettingsProp('team_name');
 
@@ -178,8 +159,9 @@ class Season extends Eloquent {
   	$phone_column = $form_map['phone']; //'phone';
 
   	//Itterate through data
-  	if(count($data) > 0) {
-  		foreach($data as $userInfo) {
+  	if(!empty($this->googleFormData)) {
+      $slack_enable = getSettingsProp('slack_enable');
+  		foreach($this->googleFormData as $userInfo) {
   			//	$timestamp = $data['timestamp'];
   			$email = $userInfo[$email_column];
   			$fname = $userInfo[$fname_column];
@@ -229,7 +211,9 @@ class Season extends Eloquent {
   				if($clean_phone != '' && is_numeric($clean_phone)) {
   					$user->phone = $clean_phone;
   				}
-  				$user->getGetSlackIdByEmail();
+          if($slack_enable) {
+			      $user->getGetSlackIdByEmail();
+          }
   				//Insert Data
   				if($user->save()) {
   					$user_id = $user->user_id;
