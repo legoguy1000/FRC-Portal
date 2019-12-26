@@ -4,6 +4,7 @@ require_once(__DIR__.'/../includes.php');
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 $users = Capsule::schema()->hasTable('users');
+$user_credentials = Capsule::schema()->hasTable('user_credentials');
 $schools = Capsule::schema()->hasTable('schools');
 $oauth_ids = Capsule::schema()->hasTable('oauth_ids');
 $notification_preferences = Capsule::schema()->hasTable('notification_preferences');
@@ -47,6 +48,14 @@ if($users && $oauth_ids) {
     $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
   });
 }
+
+//User Credentials Table
+if($users && $user_credentials) {
+  Capsule::schema()->table('user_credentials', function ($table, $as = null, $connection = null) {
+    $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+  });
+}
+
 
 //Nootification Preferences Table
 if($users && $notification_preferences) {

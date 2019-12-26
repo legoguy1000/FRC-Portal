@@ -355,6 +355,9 @@ if(version_compare($version, '2.17.0','>=')) {
   }
   if(!Capsule::schema()->hasTable('user_credentials')) {
     require_once('database/UserCredential.php');
+    Capsule::schema()->table('user_credentials', function ($table, $as = null, $connection = null) {
+      $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+    });
   }
   $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_enable_smtp'], ['value' => false]);
   $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_smtp_server'], ['value' => '']);
