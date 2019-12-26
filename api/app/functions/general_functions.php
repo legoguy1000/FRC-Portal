@@ -4,6 +4,7 @@ use Goutte\Client;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 use GuzzleHttp\Client as GuzzleClient;
 use FrcPortal\Utilities\IniConfig;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 function getRealIpAddr() {
 	$ip = '';
@@ -40,6 +41,13 @@ function getSettingsProp($prop, $section = null) {
 		$value = $setting->value;
 	}
 	return $value;
+}
+
+function listTableForeignKeys($table) {
+    $conn = Capsule::schema()->getConnection()->getDoctrineSchemaManager();
+    return array_map(function($key) {
+			return $key->getName();
+    }, $conn->listTableForeignKeys($table));
 }
 /*
 function insertLogs($userId, $type, $status, $msg) {

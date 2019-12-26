@@ -226,9 +226,9 @@ $app->group('/seasons', function () {
       }
       //Season passed from middleware
       $season = $request->getAttribute('season');
-
-      $responseArr = $season->updateSeasonRegistrationFromForm();
-      if($responseArr['status'] == true) {
+      if($season->updateSeasonRegistrationFromForm()) {
+        $responseArr['status'] = true;
+        $responseArr['msg'] = 'Latest data downloaded from Google form';
         $responseArr['data'] = getUsersAnnualRequirements($season->season_id);
       }
       $response = $response->withJson($responseArr);

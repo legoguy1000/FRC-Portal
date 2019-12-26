@@ -8,7 +8,7 @@ Capsule::schema()->create('user_credentials', function ($table) {
      $table->text('credential_id');
      $table->text('public_key');
      $table->text('user_handle');
-     $table->char('user_id',13)->nullable()->default(null);
+     $table->char('user_id',13)->nullable()->default(null)->index();
      $table->string('name')->nullable()->default(null);
      $table->string('platform')->nullable()->default(null);
      $table->timestamps();

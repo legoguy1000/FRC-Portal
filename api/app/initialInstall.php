@@ -40,7 +40,7 @@ if(!$db_exists || $iniData['db']['db_name'] == '') {
 
 //create Admin Account
 $iniData['admin']['admin_user'] = 'admin';
-$password = bin2hex(openssl_random_pseudo_bytes(10));
+$password = bin2hex(random_bytes(20));
 $iniData['admin']['admin_pass'] = hash('sha512',$password);
 
 //Create AES

@@ -351,7 +351,7 @@ $app->group('/settings', function () {
     if(!FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
-    $password = bin2hex(openssl_random_pseudo_bytes(10));
+    $password = bin2hex(random_bytes(20));
     $iniData = array();
     if(file_exists(__DIR__.'/secured/config.ini')) {
       $iniData = parse_ini_file(__DIR__.'/secured/config.ini');
