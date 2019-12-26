@@ -186,11 +186,11 @@ if($version >= '2.13.7') {
 /**
 * 2.15.0
 **/
-if($version >= '2.15.0') {
+if(version_compare($version, '2.15.0','>=')) {
   //create Admin Account
   if(file_exists(__DIR__.'/secured/config.ini')) {
     $iniData = parse_ini_file(__DIR__.'/secured/config.ini', true);
-    if(!array_key_exists('admin',$iniData) || is_null($iniData['admin']['admin_user']) || $iniData['admin']['admin_user'] == '' || is_null($iniData['admin']['admin_pass']) || $iniData['admin']['admin_pass'] == '') {
+    if(!array_key_exists('admin',$iniData) || empty($iniData['admin']['admin_user']) || empty($iniData['admin']['admin_pass'])) {
       $admin_data = array();
       $admin_data['admin_user'] = 'admin';
       $password = bin2hex(random_bytes(20));
@@ -362,7 +362,7 @@ if(version_compare($version, '2.17.0','>=')) {
       $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade')->onUpdate('cascade');
     });
   }
-  
+
   $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_enable_smtp'], ['value' => false]);
   $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_smtp_server'], ['value' => '']);
   $setting = FrcPortal\Setting::firstOrCreate(['section' => 'notification', 'setting' => 'email_smtp_port'], ['value' => '']);
