@@ -70,6 +70,12 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		testEmail: function () {
+			return $http.post('api/settings/testEmail')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		getOAuthCredentialsByProvider: function (provider) {
 			var provider = provider != undefined && provider != null ? provider:'';
 			return $http.get('api/settings/oauth/'+provider)
