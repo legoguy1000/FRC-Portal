@@ -423,10 +423,10 @@ class User extends Eloquent {
   	try {
   	    //Server settings
         if(getSettingsProp('email_enable_smtp')) {
-          $mail->SMTPDebug = 3;
-          $mail->Debugoutput = function($str, $level) {
-            insertLogs($level = 'Warning', 'Email Error: '.$str);
-          };                                           // Enable verbose debug output
+          //$mail->SMTPDebug = 3;
+          // $mail->Debugoutput = function($str, $level) {
+          //   insertLogs($level = 'Warning', 'Email Error: '.$str);
+          // };                                           // Enable verbose debug output
     	    $mail->isSMTP();                                                // Set mailer to use SMTP
     	    $mail->Host = getSettingsProp('email_smtp_server');            // Specify main and backup SMTP servers
     	    $mail->SMTPAuth = true;                                        // Enable SMTP authentication
