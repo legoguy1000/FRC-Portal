@@ -87,6 +87,110 @@ class UserTest extends TestCase {
     $this->assertObjectHasAttribute('data' , $body);
     $this->assertSame($body->data->user_id , self::$user->user_id);
   }
+
+  public function testSetUserPinGood() {
+    $env = Environment::mock([
+      'REQUEST_METHOD' => 'GET',
+      'REQUEST_URI'    => '/users/'.self::$user->user_id.'/pin',
+    ]);
+    $request = Request::createFromEnvironment($env);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request = $request->withHeader('Authorization', 'Bearer '.self::$jwt);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request->getBody()->write(json_encode(array(
+      'pin' => '12345',
+    )));
+    $this->app->getContainer()['request'] = $request;
+    $response = $this->app->run(true);
+    $this->assertSame($response->getStatusCode(), 200);
+    $body = json_decode((string) $response->getBody());
+    $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
+    $this->assertTrue($body->status);
+    $this->assertObjectHasAttribute('data' , $body);
+    $this->assertSame($body->data->user_id , self::$user->user_id);
+  }
+
+  public function testSetUserPinEmpty() {
+    $env = Environment::mock([
+      'REQUEST_METHOD' => 'GET',
+      'REQUEST_URI'    => '/users/'.self::$user->user_id.'/pin',
+    ]);
+    $request = Request::createFromEnvironment($env);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request = $request->withHeader('Authorization', 'Bearer '.self::$jwt);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request->getBody()->write(json_encode(array(
+      'pin' => '',
+    )));
+    $this->app->getContainer()['request'] = $request;
+    $response = $this->app->run(true);
+    $this->assertSame($response->getStatusCode(), 400);
+    $body = json_decode((string) $response->getBody());
+    $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
+    $this->assertFalse($body->status);
+    $this->assertObjectNotHasAttribute('data' , $body);
+  }
+
+public function testSetUserPinTooShort() {
+    $env = Environment::mock([
+      'REQUEST_METHOD' => 'GET',
+      'REQUEST_URI'    => '/users/'.self::$user->user_id.'/pin',
+    ]);
+    $request = Request::createFromEnvironment($env);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request = $request->withHeader('Authorization', 'Bearer '.self::$jwt);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request->getBody()->write(json_encode(array(
+      'pin' => '123',
+    )));
+    $this->app->getContainer()['request'] = $request;
+    $response = $this->app->run(true);
+    $this->assertSame($response->getStatusCode(), 400);
+    $body = json_decode((string) $response->getBody());
+    $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
+    $this->assertFalse($body->status);
+    $this->assertObjectNotHasAttribute('data' , $body);
+  }
+  public function testSetUserPinTooLong() {
+    $env = Environment::mock([
+      'REQUEST_METHOD' => 'GET',
+      'REQUEST_URI'    => '/users/'.self::$user->user_id.'/pin',
+    ]);
+    $request = Request::createFromEnvironment($env);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request = $request->withHeader('Authorization', 'Bearer '.self::$jwt);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request->getBody()->write(json_encode(array(
+      'pin' => '1234567890',
+    )));
+    $this->app->getContainer()['request'] = $request;
+    $response = $this->app->run(true);
+    $this->assertSame($response->getStatusCode(), 400);
+    $body = json_decode((string) $response->getBody());
+    $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
+    $this->assertFalse($body->status);
+    $this->assertObjectNotHasAttribute('data' , $body);
+  }
+  public function testSetUserPinNotNumbers() {
+    $env = Environment::mock([
+      'REQUEST_METHOD' => 'GET',
+      'REQUEST_URI'    => '/users/'.self::$user->user_id.'/pin',
+    ]);
+    $request = Request::createFromEnvironment($env);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request = $request->withHeader('Authorization', 'Bearer '.self::$jwt);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request->getBody()->write(json_encode(array(
+      'pin' => 'asdfasdf',
+    )));
+    $this->app->getContainer()['request'] = $request;
+    $response = $this->app->run(true);
+    $this->assertSame($response->getStatusCode(), 400);
+    $body = json_decode((string) $response->getBody());
+    $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
+    $this->assertFalse($body->status);
+    $this->assertObjectNotHasAttribute('data' , $body);
+  }
 }
 
 ?>
