@@ -208,7 +208,7 @@ public function testSetUserPinTooShort() {
     )));
     $this->app->getContainer()['request'] = $request;
     $response = $this->app->run(true);
-    $this->assertSame($response->getStatusCode(), 400);
+    $this->assertSame($response->getStatusCode(), 200);
     $body = json_decode((string) $response->getBody());
     $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
     $this->assertFalse($body->status);
