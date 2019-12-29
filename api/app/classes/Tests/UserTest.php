@@ -202,9 +202,13 @@ public function testSetUserPinTooShort() {
     $request = $request->withHeader('Authorization', 'Bearer '.self::$jwt);
     $request = $request->withHeader('Content-Type', 'application/json');
     $request->getBody()->write(json_encode(array(
+      'user_id' => self::$user->user_id,
       'fname' => 'Test',
       'lname' => 'User',
       'email' => 'test@test.com',
+      'gender' => 'N/A',
+      'user_type' => 'Mentor',
+      'phone' => '1234567890',
     )));
     $this->app->getContainer()['request'] = $request;
     $response = $this->app->run(true);
