@@ -14,7 +14,6 @@ class UserTest extends TestCase {
   protected static $user;
 
   public static function setUpBeforeClass(): void {
-    $this->app = (new FrcPortal\App())->get();
     $user = new FrcPortal\User();
     $user->email = 'abcd@example.org';
     $user->fname = 'John';
@@ -35,28 +34,13 @@ class UserTest extends TestCase {
       FrcPortal\User::destroy(self::$user->user_id);
   }
 
-  // public function setUp(): void {
-  //   $this->app = (new FrcPortal\App())->get();
-  //   $user = new FrcPortal\User();
-  //   $user->email = 'abcd@example.org';
-  //   $user->fname = 'John';
-  //   $user->lname = 'Doe';
-  //   $user->getGenderByFirstName();
-  //   $user->user_type = 'Mentor';
-  //   $user->phone = '1234567890';
-  //   $user->admin = true;
-  //   $user->status = true;
-  //   //$user->getGetSlackIdByEmail();
-  //   $user->save();
-  //   $this->user = $user;
-  //   $this->jwt = $user->generateUserJWT();
-  //   //$this->app->config('debug', true);
-  // }
-  //
-  // public function tearDown(): void {
-  //   unset($this->app);
-  //   FrcPortal\User::destroy($this->user->user_id);
-  // }
+  public function setUp(): void {
+    $this->app = (new FrcPortal\App())->get();
+  }
+
+  public function tearDown(): void {
+    unset($this->app);
+  }
 
 
   public function testUserJwt() {
