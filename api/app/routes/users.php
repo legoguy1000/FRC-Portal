@@ -155,7 +155,7 @@ $app->group('/users', function () {
 
       //User passed from middleware
       $user = $request->getAttribute('user');
-      if(!empty($formData['pin'])) {
+      if(empty($formData['pin'])) {
         insertLogs($level = 'Information', $message = 'PIN update failed. PIN cannot be blank.');
         return badRequestResponse($response, $msg = 'PIN cannot be blank');
       }
