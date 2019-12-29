@@ -386,7 +386,8 @@ $app->group('/settings', function () {
     if(!FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }
-    if($user->emailUser($subject = 'Test Email Notification',$content = 'Test Email Notification.',$attachments = false)) {
+    $email = $user->emailUser($subject = 'Test Email Notification',$content = 'Test Email Notification.',$attachments = false);
+    if($email) {
       $responseArr = array(
         'status' => true,
         'msg' => 'Test email notification sent',
