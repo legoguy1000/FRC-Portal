@@ -380,6 +380,23 @@ $app->group('/settings', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Test Slack');
+  $this->post('/testEmail', function ($request, $response, $args) {
+    $user = FrcPortal\Utilities\Auth::user();
+    $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+    if(!FrcPortal\Utilities\Auth::isAdmin()) {
+      return unauthorizedResponse($response);
+    }
+    $email = $user->emailUser($subject = 'Test Email Notification',$content = 'Test Email Notification.',$attachments = false);
+    if($email) {
+      $responseArr = array(
+        'status' => true,
+        'msg' => 'Test email notification sent',
+        'data' => null
+      );
+    }
+    $response = $response->withJson($responseArr);
+    return $response;
+  })->setName('Test Email');
   $this->group('/update', function () {
     $this->get('/branches', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
