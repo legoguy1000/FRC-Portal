@@ -155,7 +155,7 @@ $app->group('/users', function () {
 
       //User passed from middleware
       $user = $request->getAttribute('user');
-      if(!empty($formData['pin'])) {
+      if(empty($formData['pin'])) {
         insertLogs($level = 'Information', $message = 'PIN update failed. PIN cannot be blank.');
         return badRequestResponse($response, $msg = 'PIN cannot be blank');
       }
@@ -276,10 +276,10 @@ $app->group('/users', function () {
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
         $user_id = $args['user_id'];
         $user = $request->getAttribute('user');
-        if(!empty($formData['method'])) {
+        if(empty($formData['method'])) {
           return badRequestResponse($response, $msg = 'Notification method is required');
         }
-        if(!empty($formData['type'])) {
+        if(empty($formData['type'])) {
           return badRequestResponse($response, $msg = 'Notification type is required');
         }
         if(!array_key_exists('value',$formData)) {

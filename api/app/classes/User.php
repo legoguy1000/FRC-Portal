@@ -423,7 +423,10 @@ class User extends Eloquent {
   	try {
   	    //Server settings
         if(getSettingsProp('email_enable_smtp')) {
-          //$mail->SMTPDebug = 3;                                           // Enable verbose debug output
+          //$mail->SMTPDebug = 3;
+          // $mail->Debugoutput = function($str, $level) {
+          //   insertLogs($level = 'Warning', 'Email Error: '.$str);
+          // };                                           // Enable verbose debug output
     	    $mail->isSMTP();                                                // Set mailer to use SMTP
     	    $mail->Host = getSettingsProp('email_smtp_server');            // Specify main and backup SMTP servers
     	    $mail->SMTPAuth = true;                                        // Enable SMTP authentication
@@ -474,13 +477,10 @@ class User extends Eloquent {
   	    $mail->isHTML(true);                                  // Set email format to HTML
   	    $mail->Subject = $subject;
   	    $mail->Body    = $email;
-  	    /* $mail->AltBody = 'This is the body in plain text for non-HTML mail clients'; */
-  	    $mail->send();
-  	//    echo 'Message has been sent';
+  	    return $mail->send();
   	} catch (Exception $e) {
-  		return $mail->ErrorInfo;
-  	 //   echo 'Message could not be sent.';
-  	  //  echo 'Mailer Error: ' . $mail->ErrorInfo;
+      insertLogs($level = 'Warning', 'Error sending email notification. Error: '.$mail->ErrorInfo);
+  		return false;
   	}
   }
 

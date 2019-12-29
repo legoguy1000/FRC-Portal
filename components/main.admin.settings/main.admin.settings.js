@@ -176,6 +176,19 @@ function mainAdminSettingsController($rootScope, $state, $timeout, $q, $scope, s
 		});
 	}
 
+	vm.testEmail = function() {
+		vm.loading = false;
+		settingsService.testEmail().then(function(response){
+			vm.loading = false;
+			$mdToast.show(
+				$mdToast.simple()
+					.textContent(response.msg)
+					.position('top right')
+					.hideDelay(3000)
+			);
+			//vm.settings[section] = response.data;
+		});
+	}
 	/*
 	vm.getUpdateBranches = function() {
 		settingsService.getUpdateBranches().then(function(response){

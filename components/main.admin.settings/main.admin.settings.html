@@ -223,8 +223,8 @@
 				</div>
 			</div>
 			<div layout="column" layout-gt-sm="row">
-				<div flex>
-					<md-input-container flex style="width: 100%;">
+				<div flex layout="column" layout-gt-sm="row">
+					<md-input-container flex>
 						<label>Slack API Token</label>
 						<input ng-model="vm.settings.notification.slack_api_token" pattern="xoxp-[A-Za-z0-9-]+" ng-disabled="!vm.settings.notification.slack_enable">
 					</md-input-container>
@@ -244,14 +244,21 @@
 				</md-switch>
 			</div>
 			<div layout="column" layout-gt-sm="row">
-				<md-input-container flex>
-					<label>Site Email</label>
-					<input ng-model="vm.settings.notification.notification_email" ng-disabled="!vm.settings.notification.email_enable">
-				</md-input-container>
-				<md-input-container flex>
-					<label>Reply-To Email (Leave blank to use Site Email)</label>
-					<input ng-model="vm.settings.notification.email_replyto" ng-disabled="!vm.settings.notification.email_enable">
-				</md-input-container>
+				<div flex layout="column" layout-gt-sm="row">
+					<md-input-container flex>
+						<label>Site Email</label>
+						<input ng-model="vm.settings.notification.notification_email" ng-disabled="!vm.settings.notification.email_enable">
+					</md-input-container>
+					<md-input-container flex>
+						<label>Reply-To Email (Leave blank to use Site Email)</label>
+						<input ng-model="vm.settings.notification.email_replyto" ng-disabled="!vm.settings.notification.email_enable">
+					</md-input-container>
+				</div>
+				<div class="layout-align-center-center layout-row">
+					<md-button type="button" class="md-raised md-primary"  ng-click="vm.testEmail()" ng-disabled="!vm.settings.notification.email_enable">
+						Test Email Notification
+					</md-button>
+				</div>
 			</div>
 			<div layout="column" ng-show="vm.settings.notification.email_enable_smtp">
 				<div layout="column" layout-gt-sm="row">
