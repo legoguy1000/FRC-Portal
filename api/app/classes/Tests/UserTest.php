@@ -90,7 +90,7 @@ class UserTest extends TestCase {
 
   public function testSetUserPinGood() {
     $env = Environment::mock([
-      'REQUEST_METHOD' => 'GET',
+      'REQUEST_METHOD' => 'PUT',
       'REQUEST_URI'    => '/users/'.self::$user->user_id.'/pin',
     ]);
     $request = Request::createFromEnvironment($env);
@@ -112,7 +112,7 @@ class UserTest extends TestCase {
 
   public function testSetUserPinEmpty() {
     $env = Environment::mock([
-      'REQUEST_METHOD' => 'GET',
+      'REQUEST_METHOD' => 'PUT',
       'REQUEST_URI'    => '/users/'.self::$user->user_id.'/pin',
     ]);
     $request = Request::createFromEnvironment($env);
@@ -133,7 +133,7 @@ class UserTest extends TestCase {
 
 public function testSetUserPinTooShort() {
     $env = Environment::mock([
-      'REQUEST_METHOD' => 'GET',
+      'REQUEST_METHOD' => 'PUT',
       'REQUEST_URI'    => '/users/'.self::$user->user_id.'/pin',
     ]);
     $request = Request::createFromEnvironment($env);
@@ -153,7 +153,7 @@ public function testSetUserPinTooShort() {
   }
   public function testSetUserPinTooLong() {
     $env = Environment::mock([
-      'REQUEST_METHOD' => 'GET',
+      'REQUEST_METHOD' => 'PUT',
       'REQUEST_URI'    => '/users/'.self::$user->user_id.'/pin',
     ]);
     $request = Request::createFromEnvironment($env);
@@ -173,7 +173,7 @@ public function testSetUserPinTooShort() {
   }
   public function testSetUserPinNotNumbers() {
     $env = Environment::mock([
-      'REQUEST_METHOD' => 'GET',
+      'REQUEST_METHOD' => 'PUT',
       'REQUEST_URI'    => '/users/'.self::$user->user_id.'/pin',
     ]);
     $request = Request::createFromEnvironment($env);
