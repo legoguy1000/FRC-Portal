@@ -233,19 +233,19 @@ class App {
     })->setName('Manifest');
 
 
-    require_once(__DIR__.'/../routes/auth.php');
-    require_once(__DIR__.'/../routes/seasons.php');
-    require_once(__DIR__.'/../routes/hours.php');
-    require_once(__DIR__.'/../routes/users.php');
-    require_once(__DIR__.'/../routes/events.php');
-    require_once(__DIR__.'/../routes/reports.php');
-    require_once(__DIR__.'/../routes/schools.php');
-    require_once(__DIR__.'/../routes/slack.php');
-    require_once(__DIR__.'/../routes/settings.php');
-    require_once(__DIR__.'/../routes/public.php');
-    require_once(__DIR__.'/../routes/eventTypes.php');
-    require_once(__DIR__.'/../routes/userCategories.php');
-    require_once(__DIR__.'/../routes/logs.php');
+    require(__DIR__.'/../routes/auth.php');
+    require(__DIR__.'/../routes/seasons.php');
+    require(__DIR__.'/../routes/hours.php');
+    require(__DIR__.'/../routes/users.php');
+    require(__DIR__.'/../routes/events.php');
+    require(__DIR__.'/../routes/reports.php');
+    require(__DIR__.'/../routes/schools.php');
+    require(__DIR__.'/../routes/slack.php');
+    require(__DIR__.'/../routes/settings.php');
+    require(__DIR__.'/../routes/public.php');
+    require(__DIR__.'/../routes/eventTypes.php');
+    require(__DIR__.'/../routes/userCategories.php');
+    require(__DIR__.'/../routes/logs.php');
 
     $this->app = $app;
   }
