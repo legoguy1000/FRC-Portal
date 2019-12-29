@@ -98,7 +98,7 @@ class UserTest extends TestCase {
     $request = $request->withHeader('Authorization', 'Bearer '.self::$jwt);
     $request = $request->withHeader('Content-Type', 'application/json');
     $request->getBody()->write(json_encode(array(
-      'pin' => '12345',
+      'pin' => 12345,
     )));
     $this->app->getContainer()['request'] = $request;
     $response = $this->app->run(true);
@@ -128,7 +128,7 @@ class UserTest extends TestCase {
     $body = json_decode((string) $response->getBody());
     $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
     $this->assertFalse($body->status);
-    $this->assertObjectNotHasAttribute('data' , $body);
+    $this->assertNull($body->data);
   }
 
 public function testSetUserPinTooShort() {
@@ -149,7 +149,7 @@ public function testSetUserPinTooShort() {
     $body = json_decode((string) $response->getBody());
     $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
     $this->assertFalse($body->status);
-    $this->assertObjectNotHasAttribute('data' , $body);
+    $this->assertNull($body->data);
   }
   public function testSetUserPinTooLong() {
     $env = Environment::mock([
@@ -169,7 +169,7 @@ public function testSetUserPinTooShort() {
     $body = json_decode((string) $response->getBody());
     $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
     $this->assertFalse($body->status);
-    $this->assertObjectNotHasAttribute('data' , $body);
+    $this->assertNull($body->data);
   }
   public function testSetUserPinNotNumbers() {
     $env = Environment::mock([
@@ -182,6 +182,29 @@ public function testSetUserPinTooShort() {
     $request = $request->withHeader('Content-Type', 'application/json');
     $request->getBody()->write(json_encode(array(
       'pin' => 'asdfasdf',
+    )));
+    $this->app->getContainer()['request'] = $request;
+    $response = $this->app->run(true);
+    $this->assertSame($response->getStatusCode(), 400);
+    $body = json_decode((string) $response->getBody());
+    $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
+    $this->assertFalse($body->status);
+    $this->assertNull($body->data);
+  }
+
+  public function testUpdateUser() {
+    $env = Environment::mock([
+      'REQUEST_METHOD' => 'PUT',
+      'REQUEST_URI'    => '/users/'.self::$user->user_id,
+    ]);
+    $request = Request::createFromEnvironment($env);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request = $request->withHeader('Authorization', 'Bearer '.self::$jwt);
+    $request = $request->withHeader('Content-Type', 'application/json');
+    $request->getBody()->write(json_encode(array(
+      'fname' => 'Test',
+      'lname' => 'User',
+      'email' => 'test@test.com',
     )));
     $this->app->getContainer()['request'] = $request;
     $response = $this->app->run(true);
