@@ -13,7 +13,7 @@ class UserTest extends TestCase {
   protected static $jwt;
   protected static $user;
 
-  public static function setUpBeforeClass() {
+  public static function setUpBeforeClass(): void {
     $this->app = (new FrcPortal\App())->get();
     $user = new FrcPortal\User();
     $user->email = 'abcd@example.org';
@@ -31,7 +31,7 @@ class UserTest extends TestCase {
     //$this->app->config('debug', true);
   }
 
-  public static function tearDownAfterClass() {
+  public static function tearDownAfterClass(): void {
       FrcPortal\User::destroy(self::$user->user_id);
   }
 
