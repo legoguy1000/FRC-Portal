@@ -240,7 +240,20 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 	}
 
 	vm.enrollCreds = function() {
-		$scope.main.askAuthenticator()
+		$scope.main.askAuthenticator().then(response => {
+			if(response) {
+				if(response.status) {
+					$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
+				}
+				vm.getUserWebAuthnCredentials();
+				return $mdToast.show(
+					$mdToast.simple()
+						.textContent(response.msg)
+						.position('top right')
+						.hideDelay(3000)
+				);
+			}
+		});
 		//vm.getUserWebAuthnCredentials();
 	}
 

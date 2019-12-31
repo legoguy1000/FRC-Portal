@@ -269,18 +269,6 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 				if(error) {
 					console.log(error)
 				}
-			}).then(response => {
-				if(response) {
-					if(response.status) {
-						$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
-					}
-					return $mdToast.show(
-						$mdToast.simple()
-							.textContent(response.msg)
-							.position('top right')
-							.hideDelay(3000)
-					);
-				}
 			});
 	  }
 	}
@@ -322,7 +310,19 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 		    	window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
 		      if (response == true) {
 						$timeout( function(){
-								main.askAuthenticator();
+								main.askAuthenticator().then(response => {
+									if(response) {
+										if(response.status) {
+											$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
+										}
+										return $mdToast.show(
+											$mdToast.simple()
+												.textContent(response.msg)
+												.position('top right')
+												.hideDelay(3000)
+										);
+									}
+								});
 							}, 600 );
 					}
 				})
