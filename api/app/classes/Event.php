@@ -23,7 +23,7 @@ class Event extends Eloquent {
   * @var array
   */
   protected $fillable = [
-    'event_id', 'google_cal_id', 'name', 'type', 'event_start', 'event_end', 'registration_deadline', 'registration_deadline_gcalid', 'details', 'location', 'payment_required', 'permission_slip_required', 'food_required', 'room_required', 'drivers_required', 'poc','time_slots_required'
+    'event_id', 'google_cal_id', 'name', 'type', 'event_start', 'event_end', 'registration_deadline', 'registration_deadline_gcalid', 'details', 'location', 'payment_required', 'permission_slip_required', 'food_required', 'room_required', 'drivers_required', 'poc','time_slots_required','hotel_info'
   ];
 
 
