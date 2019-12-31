@@ -240,10 +240,15 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 	}
 
 	vm.enrollCreds = function() {
-		$scope.main.askAuthenticator().then(response => {
+		var deferred = $q.defer();
+		$scope.main.askAuthenticator()
+		return deferred.promise;
+	}
+
+	vm.enrollCreds2 = function() {
+		vm.enrollCreds().then(response => {
 				vm.getUserWebAuthnCredentials();
 		});
-		//vm.getUserWebAuthnCredentials();
 	}
 
 	vm.showSeasonHoursGraph = function(ev,year) {

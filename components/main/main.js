@@ -1,9 +1,9 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'configItems', '$auth', '$timeout', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService','webauthnService','$q',
+	'$rootScope', 'configItems', '$auth', '$timeout', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService','webauthnService',
 	mainController
 ]);
-function mainController($rootScope, configItems, $auth, $timeout, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService,webauthnService, $q) {
+function mainController($rootScope, configItems, $auth, $timeout, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService,webauthnService) {
 	var main = this;
 
 	main.configItems = configItems;
@@ -180,7 +180,6 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 	}
 
 	main.askAuthenticator = function() {
-		var deferred = $q.defer();
 		var confirm = $mdDialog.confirm()
           .title('Would you like to use your fingerprint to login')
           .textContent('This device is capable of automatically logging you in using your fingerprint.')
@@ -272,7 +271,6 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 				}
 			}).then(response => {
 				if(response) {
-
 					if(response.status) {
 						$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
 					}
@@ -282,8 +280,6 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 							.position('top right')
 							.hideDelay(3000)
 					);
-					console.log(deferred);
-					return deferred.promise;
 				}
 			});
 	  }
