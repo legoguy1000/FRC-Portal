@@ -180,8 +180,7 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 	}
 
 	main.askAuthenticator = function() {
-		var deferredObj = $q.defer();
-		var promise = deferredObj.promise;
+		var deferred = $q.defer();
 		var confirm = $mdDialog.confirm()
           .title('Would you like to use your fingerprint to login')
           .textContent('This device is capable of automatically logging you in using your fingerprint.')
@@ -189,9 +188,7 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
           .ok('Yes')
           .cancel('No');
 		if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
-			promise.then(response => {
-				return window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-			}).then(response => {
+	    	window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
 	      if (response == true) {
 					return $mdDialog.show(confirm);
 				}
@@ -275,8 +272,8 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 				}
 			}).then(response => {
 				if(response) {
+
 					if(response.status) {
-						deferred.resolve();
 						$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
 					}
 					$mdToast.show(
@@ -285,7 +282,8 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 							.position('top right')
 							.hideDelay(3000)
 					);
-					deferredObj.resolve();
+					console.log(deferred);
+					return deferred.promise;
 				}
 			});
 	  }
