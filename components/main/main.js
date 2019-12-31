@@ -180,6 +180,7 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 	}
 
 	main.askAuthenticator = function() {
+		var deferred = $q.defer();
 		var confirm = $mdDialog.confirm()
           .title('Would you like to use your fingerprint to login')
           .textContent('This device is capable of automatically logging you in using your fingerprint.')
@@ -263,23 +264,25 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 						var data = main.newCredential;
 						data.name = result;
 						data.platform = getCredPlatform();
-						return webauthnService.registerCredential(data).then(response => {
-							if(response) {
-								if(response.status) {
-									$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
-								}
-								$mdToast.show(
-									$mdToast.simple()
-										.textContent(response.msg)
-										.position('top right')
-										.hideDelay(3000)
-								);
-							}
-						})
+						return webauthnService.registerCredential(data);
 					}
 			}, error => {
 				if(error) {
 					console.log(error)
+				}
+			}).then(response => {
+				if(response) {
+					if(response.status) {
+						deferred.resolve();
+						$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
+					}
+					$mdToast.show(
+						$mdToast.simple()
+							.textContent(response.msg)
+							.position('top right')
+							.hideDelay(3000)
+					);
+					return deferred.promise;
 				}
 			});
 	  }
