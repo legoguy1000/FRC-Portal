@@ -263,26 +263,23 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 						var data = main.newCredential;
 						data.name = result;
 						data.platform = getCredPlatform();
-						return webauthnService.registerCredential(data);
+						return webauthnService.registerCredential(data).then(response => {
+							if(response) {
+								if(response.status) {
+									$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
+								}
+								$mdToast.show(
+									$mdToast.simple()
+										.textContent(response.msg)
+										.position('top right')
+										.hideDelay(3000)
+								);
+							}
+						})
 					}
 			}, error => {
 				if(error) {
 					console.log(error)
-				}
-			}).then(response => {
-				if(response) {
-					var deferred = $q.defer();
-					if(response.status) {
-						$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
-					}
-					$mdToast.show(
-						$mdToast.simple()
-							.textContent(response.msg)
-							.position('top right')
-							.hideDelay(3000)
-					);
-					deferred.resolve();
-					return deferred.promise;
 				}
 			});
 	  }
