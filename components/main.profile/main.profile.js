@@ -247,7 +247,7 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 
 	vm.enrollCreds2 = function() {
 		console.log('start');
-		vm.enrollCreds().then(function() {
+		vm.enrollCreds().finally(function() {
 				console.log('in promise');
 				vm.getUserWebAuthnCredentials();
 		});
