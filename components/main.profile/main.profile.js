@@ -242,7 +242,6 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 	vm.enrollCreds = function() {
 		$scope.main.askAuthenticator().then(response => {
 				vm.getUserWebAuthnCredentials();
-			}
 		});
 		//vm.getUserWebAuthnCredentials();
 	}
