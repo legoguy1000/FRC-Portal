@@ -281,6 +281,7 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 							.position('top right')
 							.hideDelay(3000)
 					);
+					deferred.resolve();
 					return deferred.promise;
 				}
 			});
