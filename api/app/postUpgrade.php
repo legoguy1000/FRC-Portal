@@ -291,7 +291,7 @@ if(version_compare($version, '2.16.0','>=')) {
   if(Capsule::schema()->hasTable('events') && !Capsule::schema()->hasColumn('events','hotel_info')) {
     try {
       Capsule::schema()->table('events', function ($table, $as = null, $connection = null) {
-      $table->text('hotel_info')->nullable()->default(null)->change();
+        $table->text('hotel_info')->nullable()->default(null);
       });
     } catch (Exception $e) {
       //Exception will be logged in Monolog
