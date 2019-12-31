@@ -240,9 +240,8 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 	}
 
 	vm.enrollCreds = function() {
-		console.log('start');
 		$scope.main.askAuthenticator().finally(function() {
-			console.log('in promise');
+			vm.localWebAuthCred = angular.fromJson($window.localStorage['webauthn_cred']);
 			vm.getUserWebAuthnCredentials();
 		});
 	}
