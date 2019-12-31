@@ -249,7 +249,7 @@ $app->group('/events', function () {
       if($userId != IniConfig::iniDataProperty('admin_user')) {
         $event->poc_id = $userId;
       }
-      $event->hotel_info = '';
+      //$event->hotel_info = '';
       if($event->save()) {
         if($event->room_required && !empty($formData['rooms'])) {
           $roomTypes = array('boys','girls','adults');
