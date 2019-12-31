@@ -180,114 +180,114 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 	}
 
 	main.askAuthenticator = function() {
-		var confirm = $mdDialog.confirm()
+		return $q(function(resolve, reject) {
+			var confirm = $mdDialog.confirm()
           .title('Would you like to use your fingerprint to login')
           .textContent('This device is capable of automatically logging you in using your fingerprint.')
           .ariaLabel('Lucky day')
           .ok('Yes')
           .cancel('No');
-		if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
-	    	window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
-	      if (response == true) {
-					return $mdDialog.show(confirm);
-				}
-			}).then(function() {
-				return webauthnService.getRegisterOptions();
-			}).then(response => {
-				console.log('creating creds');
-				var excludeCredentials = response.excludeCredentials == undefined ? [] : response.excludeCredentials.map(function(val){
-					var temp = val;
-					var unsafeBase64 = atob(val.id.replace(/_/g, '/').replace(/-/g, '+'));
-					temp.id = Uint8Array.from(unsafeBase64, c=>c.charCodeAt(0));
-					return temp;
-				})
-				var publicKey = {
-						challenge: Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
-						rp: {
-							'name': response.rp.name,
-							'id': response.rp.id,
-						},
-						user: {
-								'id': Uint8Array.from(response.user.id, c=>c.charCodeAt(0)),
-								'name': response.user.name,
-								'displayName': response.user.displayName
-						},
-						excludeCredentials: excludeCredentials,
-						pubKeyCredParams: response.pubKeyCredParams,
-						extensions: {
-							txAuthSimple: 'Please verify your identity to FRC Portal'
+			if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+		    	window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
+		      if (response == true) {
+						return $mdDialog.show(confirm);
+					}
+				}).then(function() {
+					return webauthnService.getRegisterOptions();
+				}).then(response => {
+					console.log('creating creds');
+					var excludeCredentials = response.excludeCredentials == undefined ? [] : response.excludeCredentials.map(function(val){
+						var temp = val;
+						var unsafeBase64 = atob(val.id.replace(/_/g, '/').replace(/-/g, '+'));
+						temp.id = Uint8Array.from(unsafeBase64, c=>c.charCodeAt(0));
+						return temp;
+					})
+					var publicKey = {
+							challenge: Uint8Array.from(response.challenge, c=>c.charCodeAt(0)),
+							rp: {
+								'name': response.rp.name,
+								'id': response.rp.id,
+							},
+							user: {
+									'id': Uint8Array.from(response.user.id, c=>c.charCodeAt(0)),
+									'name': response.user.name,
+									'displayName': response.user.displayName
+							},
+							excludeCredentials: excludeCredentials,
+							pubKeyCredParams: response.pubKeyCredParams,
+							extensions: {
+								txAuthSimple: 'Please verify your identity to FRC Portal'
+							}
+					}
+					console.log(publicKey);
+					return navigator.credentials.create({ 'publicKey': publicKey })
+				}, error => {
+					if(error) {
+						console.log(error)
+					}
+				}).then(newCredential => {
+						if(newCredential != undefined) {
+							console.log('SUCCESS', newCredential);
+							let attestationObject = new Uint8Array(newCredential.response.attestationObject);
+					    let clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON);
+					    let rawId = new Uint8Array(newCredential.rawId);
+							var data = {
+								id: newCredential.id,
+		            rawId: webauthnService.bufferEncode(rawId),
+		            type: newCredential.type,
+		            response: {
+		                attestationObject: webauthnService.bufferEncode(attestationObject),
+		                clientDataJSON: webauthnService.bufferEncode(clientDataJSON),
+		            },
+								name: '',
+							};
+							main.newCredential = data;
+					    var confirm = $mdDialog.prompt()
+					      .title('Please enter a name for this credential')
+					      .textContent('Naming this credential will allow you to easily identify it.')
+					      .placeholder('Credential Name')
+					      .ariaLabel('Credential Name')
+					      .required(true)
+					      .ok('submit')
+					      .cancel('cancel');
+				    	return $mdDialog.show(confirm);
 						}
-				}
-				console.log(publicKey);
-				return navigator.credentials.create({ 'publicKey': publicKey })
-			}, error => {
-				if(error) {
-					console.log(error)
-				}
-			}).then(newCredential => {
-					if(newCredential != undefined) {
-						console.log('SUCCESS', newCredential);
-						let attestationObject = new Uint8Array(newCredential.response.attestationObject);
-				    let clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON);
-				    let rawId = new Uint8Array(newCredential.rawId);
-						var data = {
-							id: newCredential.id,
-	            rawId: webauthnService.bufferEncode(rawId),
-	            type: newCredential.type,
-	            response: {
-	                attestationObject: webauthnService.bufferEncode(attestationObject),
-	                clientDataJSON: webauthnService.bufferEncode(clientDataJSON),
-	            },
-							name: '',
-						};
-						main.newCredential = data;
-				    var confirm = $mdDialog.prompt()
-				      .title('Please enter a name for this credential')
-				      .textContent('Naming this credential will allow you to easily identify it.')
-				      .placeholder('Credential Name')
-				      .ariaLabel('Credential Name')
-				      .required(true)
-				      .ok('submit')
-				      .cancel('cancel');
-			    	return $mdDialog.show(confirm);
-					}
-				}, function(error) {
-					if(error && error.name == 'InvalidStateError') {
-						$window.localStorage['webauthn_cred'] = angular.toJson({user: main.userInfo.user_id});
-						loginModal(null);
-					}
-					console.log(error.name)
-					console.log(error.message)
-				}).then(result => {
-					if(main.newCredential != null) {
-						var data = main.newCredential;
-						data.name = result;
-						data.platform = getCredPlatform();
-						return webauthnService.registerCredential(data);
-					}
-			}, error => {
-				if(error) {
-					console.log(error)
-				}
-			}).then(response => {
-				return $q(function(resolve, reject) {
-					if(response) {
-						if(response.status) {
-							$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
+					}, function(error) {
+						if(error && error.name == 'InvalidStateError') {
+							$window.localStorage['webauthn_cred'] = angular.toJson({user: main.userInfo.user_id});
+							loginModal(null);
 						}
-						$mdToast.show(
-							$mdToast.simple()
-								.textContent(response.msg)
-								.position('top right')
-								.hideDelay(3000)
-						);
-						resolve();
-					}	 else {
-						reject();
+						console.log(error.name)
+						console.log(error.message)
+					}).then(result => {
+						if(main.newCredential != null) {
+							var data = main.newCredential;
+							data.name = result;
+							data.platform = getCredPlatform();
+							return webauthnService.registerCredential(data);
+						}
+				}, error => {
+					if(error) {
+						console.log(error)
 					}
-		    });
-			});
-	  }
+				}).then(response => {
+						if(response) {
+							if(response.status) {
+								$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
+							}
+							$mdToast.show(
+								$mdToast.simple()
+									.textContent(response.msg)
+									.position('top right')
+									.hideDelay(3000)
+							);
+							resolve();
+						}	 else {
+							reject();
+						}
+				});
+		  }
+		});
 	}
 
 	main.checkCamera = function() {
