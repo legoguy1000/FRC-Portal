@@ -192,7 +192,7 @@ public function testSetUserPinTooShort() {
     $this->assertNull($body->data);
   }
 
-  public function testUpdateUser() {
+  public function testUpdateUserGood() {
     $env = Environment::mock([
       'REQUEST_METHOD' => 'PUT',
       'REQUEST_URI'    => '/users/'.self::$user->user_id,
@@ -215,7 +215,7 @@ public function testSetUserPinTooShort() {
     $this->assertSame($response->getStatusCode(), 200);
     $body = json_decode((string) $response->getBody());
     $this->assertSame('application/json', $response->getHeaderLine('Content-Type'));
-    $this->assertFalse($body->status);
+    $this->assertTrue($body->status);
     $this->assertObjectNotHasAttribute('data' , $body);
   }
 }
