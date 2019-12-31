@@ -1,9 +1,9 @@
 angular.module('FrcPortal')
 .controller('mainController', [
-	'$rootScope', 'configItems', '$auth', '$timeout', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService','webauthnService',
+	'$rootScope', 'configItems', '$auth', '$timeout', 'navService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$state', '$mdToast', '$mdDialog', 'authed', 'usersService', '$scope', 'signinService', '$window', '$ocLazyLoad', 'generalService','webauthnService','$q',
 	mainController
 ]);
-function mainController($rootScope, configItems, $auth, $timeout, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService,webauthnService) {
+function mainController($rootScope, configItems, $auth, $timeout, navService, $mdSidenav, $mdBottomSheet, $log, $q, $state, $mdToast, $mdDialog, authed, usersService, $scope, signinService, $window, $ocLazyLoad, generalService,webauthnService, $q) {
 	var main = this;
 
 	main.configItems = configItems;
@@ -269,6 +269,20 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 				if(error) {
 					console.log(error)
 				}
+			}).then(response => {
+				if(response) {
+					var deferred = $q.defer();
+					if(response.status) {
+						$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
+					}
+					$mdToast.show(
+						$mdToast.simple()
+							.textContent(response.msg)
+							.position('top right')
+							.hideDelay(3000)
+					);
+					return deferred.promise;
+				}
 			});
 	  }
 	}
@@ -310,19 +324,7 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 		    	window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
 		      if (response == true) {
 						$timeout( function(){
-								main.askAuthenticator().then(response => {
-									if(response) {
-										if(response.status) {
-											$window.localStorage['webauthn_cred'] = angular.toJson(response.data);
-										}
-										return $mdToast.show(
-											$mdToast.simple()
-												.textContent(response.msg)
-												.position('top right')
-												.hideDelay(3000)
-										);
-									}
-								});
+								main.askAuthenticator();
 							}, 600 );
 					}
 				})
