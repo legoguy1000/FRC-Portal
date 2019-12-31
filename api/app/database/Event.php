@@ -21,7 +21,7 @@ Capsule::schema()->create('events', function ($table) {
   $table->boolean('drivers_required')->default(0);
   $table->boolean('time_slots_required')->default(0);
   $table->char('poc_id',13)->nullable()->default(null)->index();
-  $table->decimal('payment_amount', 5, 2)->default(00.00);
+  //$table->decimal('payment_amount', 5, 2)->default(00.00);
   $table->text('hotel_info')->nullable()->default(null);
   $table->timestamps();
 });
