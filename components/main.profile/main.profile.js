@@ -240,9 +240,10 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 	}
 
 	vm.enrollCreds = function() {
-		var deferred = $q.defer();
-		$scope.main.askAuthenticator()
-		return deferred.promise;
+		return $q(function(resolve, reject) {
+  		$scope.main.askAuthenticator()
+      resolve();
+    });
 	}
 
 	vm.enrollCreds2 = function() {
