@@ -247,12 +247,6 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 		});
 	}
 
-	vm.enrollCreds2 = function() {
-
-		vm.enrollCreds().finally(function() {
-		});
-	}
-
 	vm.showSeasonHoursGraph = function(ev,year) {
 		generalService.showSeasonHoursGraph(ev, $scope.main.userInfo.user_id, year);
 		/*$mdDialog.show({
