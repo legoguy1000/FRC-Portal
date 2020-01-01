@@ -9,40 +9,54 @@
 			</md-button>
 		  </div>
 		</md-toolbar>
-		<md-dialog-content class="md-margin">
-			<div flex layout="column">
-				<md-input-container >
-					<label>Email</label>
-				 	<input ng-model="vm.currentMap.email"/>
-				</md-input-container>
-				<md-input-container >
-					<label>First Name</label>
-				 	<input ng-model="vm.currentMap.fname"/>
-				</md-input-container>
-				<md-input-container >
-					<label>Last Name</label>
-				 	<input ng-model="vm.currentMap.lname"/>
-				</md-input-container>
-				<md-input-container >
-					<label>Phone</label>
-				 	<input ng-model="vm.currentMap.phone"/>
-				</md-input-container>
-				<md-input-container >
-					<label>User Type</label>
-				 	<input ng-model="vm.currentMap.user_type"/>
-				</md-input-container>
-				<md-input-container >
-					<label>School</label>
-				 	<input ng-model="vm.currentMap.school"/>
-				</md-input-container>
-				<md-input-container>
-					<label>Graduation Year</label>
-				 	<input ng-model="vm.currentMap.grad_year"/>
-				</md-input-container>
-				<md-input-container>
-					<label>PIN</label>
-				 	<input ng-model="vm.currentMap.pin_number"/>
-				</md-input-container>
+		<md-dialog-content class="layout-margin">
+			<div flex layout="column" flex>
+				<div flex layout="column" layout-gt-xs="row">
+					<md-input-container flex>
+						<label>Email</label>
+					 	<input ng-model="vm.currentMap.email"/>
+					</md-input-container>
+					<md-input-container flex>
+						<label>First Name</label>
+					 	<input ng-model="vm.currentMap.fname"/>
+					</md-input-container>
+				</div>
+				<div flex layout="column" layout-gt-xs="row">
+					<md-input-container flex>
+						<label>Last Name</label>
+					 	<input ng-model="vm.currentMap.lname"/>
+					</md-input-container>
+					<md-input-container flex>
+						<label>Phone</label>
+					 	<input ng-model="vm.currentMap.phone"/>
+					</md-input-container>
+				</div>
+				<div flex layout="column" layout-gt-xs="row">
+					<md-input-container flex>
+						<label>User Type</label>
+					 	<input ng-model="vm.currentMap.user_type"/>
+					</md-input-container>
+					<md-input-container flex>
+						<label>School</label>
+					 	<input ng-model="vm.currentMap.school"/>
+					</md-input-container>
+				</div>
+				<div flex layout="column" layout-gt-xs="row">
+					<md-input-container flex>
+						<label>Graduation Year</label>
+					 	<input ng-model="vm.currentMap.grad_year"/>
+					</md-input-container>
+					<md-input-container flex>
+						<label>PIN</label>
+					 	<input ng-model="vm.currentMap.pin_number"/>
+					</md-input-container>
+				</div>
+				<div flex layout="column" layout-gt-xs="row">
+					<md-input-container flex>
+						<label>Google Spreadsheet Sheet Name</label>
+					 	<input ng-model="vm.membership_form_sheet"/>
+					</md-input-container>
+				</div>
 			</div>
 		</md-dialog-content>
 		<md-dialog-actions layout="row" class="noprint">

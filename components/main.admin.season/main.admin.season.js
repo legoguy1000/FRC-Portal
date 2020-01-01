@@ -174,6 +174,7 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 			'hour_requirement_week': vm.season.hour_requirement_week,
 			'join_spreadsheet': vm.season.join_spreadsheet,
 			'membership_form_map': vm.season.membership_form_map,
+			'membership_form_sheet': vm.season.membership_form_sheet,
 		};
 		vm.promise = seasonsService.updateSeason(data).then(function(response){
 			if(response.status) {	}
@@ -225,8 +226,9 @@ function mainAdminSeasonController($timeout, $q, $scope, $state, seasonsService,
 				seasonInfo: vm.season,
 			}
 		})
-		.then(function(currentMap) {
-			vm.season.membership_form_map = currentMap;
+		.then(function(data) {
+			vm.season.membership_form_map = data.currentMap;
+			vm.season.membership_form_sheet = data.membership_form_sheet;
 			vm.updateSeason();
 		}, function() { });
 	};

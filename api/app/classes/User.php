@@ -333,7 +333,7 @@ class User extends Eloquent {
       $contents = json_decode($response->getBody());
   		if(!empty($contents)) {
         foreach($contents as $name) {
-          if(!empty($name->gender) && $name->probability > .90) {
+          if(!empty($name->gender) && $name->probability > .80) {
       			$this->gender = ucfirst($name->gender);
           	return true;
       		}

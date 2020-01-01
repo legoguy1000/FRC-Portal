@@ -9,10 +9,15 @@ function googleFormMapModalController($log,$element,$mdDialog,$scope,usersServic
 		$mdDialog.cancel();
 	}
 	vm.currentMap = seasonInfo.membership_form_map;
+	vm.membership_form_sheet = seasonInfo.membership_form_sheet;
 
 
 	vm.submit = function() {
-		$mdDialog.hide(vm.currentMap);
+		var data = {
+			currentMap: vm.currentMap,
+			membership_form_sheet: vm.membership_form_sheet
+		}
+		$mdDialog.hide(data);
 	};
 
 }
