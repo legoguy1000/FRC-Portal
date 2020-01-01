@@ -169,10 +169,10 @@ class Season extends Eloquent {
   			$form_user_type = !empty($userInfo[$userType_column]) ? $userInfo[$userType_column]: '';
   			$user_type = $form_user_type == 'Adult' ? 'Mentor' : $form_user_type;
   			//	$birthday = $userInfo['birthday'];
-  			$grad_year = !empty($userInfo[$grad_column]) ? getGradYear($userInfo[$grad_column]) : '';
-  			$school = !empty($userInfo[$school_column]) ? $userInfo[$school_column]: '';
-  			$student_id = !empty($userInfo[$pin_column]) ? $userInfo[$pin_column]: '';
-  			$phone = !empty($userInfo[$phone_column]) ? $userInfo[$phone_column] : '';
+  			$grad_year = !empty($grad_column) && !empty($userInfo[$grad_column]) ? getGradYear($userInfo[$grad_column]) : '';
+  			$school = !empty($school_column) && !empty($userInfo[$school_column]) ? $userInfo[$school_column]: '';
+  			$pin = !empty($pin_column) && !empty($userInfo[$pin_column]) ? $userInfo[$pin_column]: '';
+  			$phone = !empty($phone_column) && !empty($userInfo[$phone_column]) ? $userInfo[$phone_column] : '';
   			$clean_phone = preg_replace('/[^0-9]/s', '', $phone);
         if(empty($email)) {
           insertLogs($level = 'Information', $message = 'Email is blank. Cannot import '.$fname.' '.$lname.' from Google Form.');
@@ -206,8 +206,8 @@ class Season extends Eloquent {
   					if(!empty($grad_year) && is_numeric($grad_year)) {
   						$user->grad_year = $grad_year;
   					}
-  					if($student_id != '' && is_numeric($student_id)) {
-  						$signin_pin = hash('SHA256',$student_id);
+  					if($pin != '' && is_numeric($pin)) {
+  						$signin_pin = hash('SHA256',$pin);
   						$user->signin_pin = $signin_pin;
   					}
   				}
