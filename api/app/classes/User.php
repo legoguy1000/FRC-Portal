@@ -403,8 +403,7 @@ class User extends Eloquent {
 
   	$html = file_get_contents(__DIR__.'/../libraries/email/email_template.html');
   	$css = file_get_contents(__DIR__.'/../libraries/email/email_css.css');
-  	$emogrifier = new \Pelago\Emogrifier($html, $css);
-  	$mergedHtml = $emogrifier->emogrify();
+    $mergedHtml = \Pelago\Emogrifier\CssInliner::fromHtml($html)->inlineCss($css)->render();
 
   	$subjectLine = $subject;
   	$emailContent = $content ;
