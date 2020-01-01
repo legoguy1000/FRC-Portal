@@ -182,6 +182,7 @@ $app->group('/seasons', function () {
       $season->game_logo = $formData['game_logo'];
       $season->join_spreadsheet = $formData['join_spreadsheet'];
       $season->membership_form_map = $formData['membership_form_map'];
+      $season->membership_form_sheet = $formData['membership_form_sheet'];
 
       if($season->save()) {
         $responseArr = array('status'=>true, 'msg'=>'Season Information Saved', 'data' => $season);
