@@ -149,14 +149,14 @@ class Season extends Eloquent {
 
   	$season_id = $this->season_id;
   	$form_map = $this->membership_form_map;
-  	$email_column = $form_map['email']; //'email address';
-  	$fname_column = $form_map['fname']; //'first name';
-  	$lname_column = $form_map['lname']; //'last name';
-  	$userType_column = $form_map['user_type']; //'member type';
-  	$grad_column = $form_map['grad_year']; //'year of graduation';
-  	$school_column = $form_map['school']; //'school';
-  	$pin_column = $form_map['pin_number']; //'student id';
-  	$phone_column = $form_map['phone']; //'phone';
+  	$email_column = strtolower($form_map['email']); //'email address';
+  	$fname_column = strtolower($form_map['fname']); //'first name';
+  	$lname_column = strtolower($form_map['lname']); //'last name';
+  	$userType_column = strtolower($form_map['user_type']); //'member type';
+  	$grad_column = strtolower($form_map['grad_year']); //'year of graduation';
+  	$school_column = strtolower($form_map['school']); //'school';
+  	$pin_column = strtolower($form_map['pin_number']); //'student id';
+  	$phone_column = strtolower($form_map['phone']); //'phone';
 
   	//Itterate through data
   	if(!empty($this->googleFormData)) {
