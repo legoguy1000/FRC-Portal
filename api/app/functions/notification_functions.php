@@ -6,6 +6,9 @@ use Illuminate\Database\Capsule\Manager as DB;
 function sendMassNotifications($type, $msgData) {
 	$notifications = FrcPortal\NotificationPreference::with('user')->where('type',$type)->get();
 	foreach($notifications as $note) {
+		if(empty($note->user)) {
+			continue;
+		}
 		if($note['method'] == 'email') {
 			$msg = $msgData['email'];
 			$subject = $msg['subject'];
