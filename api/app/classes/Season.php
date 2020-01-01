@@ -225,8 +225,8 @@ class Season extends Eloquent {
   					$host = getSettingsProp('env_url');
   					$msgData = array(
   						'email' => array(
-  						'subject' => 'User account created for '.$team_name.'\s team portal',
-  						'content' =>  'Congratulations! You have been added to '.$team_name.'\s team portal.  Please go to '.$host.' to view your annual registration, event registration, season hours and more.',
+  						'subject' => 'User account created for '.$team_name.'\'s team portal',
+  						'content' =>  'Congratulations! You have been added to '.$team_name.'\'s team portal.  Please go to '.$host.' to view your annual registration, event registration, season hours and more.',
   						'userData' => $user
   						)
   					);
