@@ -169,12 +169,15 @@ class Season extends Eloquent {
   			$form_user_type = !empty($userInfo[$userType_column]) ? $userInfo[$userType_column]: '';
   			$user_type = $form_user_type == 'Adult' ? 'Mentor' : $form_user_type;
   			//	$birthday = $userInfo['birthday'];
-  			$grad_year = !empty($userInfo[$grad_column]) ? $userInfo[$grad_column]: '';
+  			$grad_year = !empty($userInfo[$grad_column]) ? getGradYear($userInfo[$grad_column]) : '';
   			$school = !empty($userInfo[$school_column]) ? $userInfo[$school_column]: '';
   			$student_id = !empty($userInfo[$pin_column]) ? $userInfo[$pin_column]: '';
   			$phone = !empty($userInfo[$phone_column]) ? $userInfo[$phone_column] : '';
   			$clean_phone = preg_replace('/[^0-9]/s', '', $phone);
-
+        if(empty($email)) {
+          insertLogs($level = 'Information', $message = 'Email is blank. Cannot import '.$fname.' '.$lname.' from Google Form.');
+          continue;
+        }
   			$user = null;
   			$user_id = null;
   			$user = User::where('email',$email)->orWhere('team_email',$email)->first();

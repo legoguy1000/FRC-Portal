@@ -53,6 +53,65 @@ function getSeasonMembershipForm($year) {
 	return $result;
 }
 
+function getGradYear($input = null) {
+	if(empty($input)) {
+		return null;
+	}
+	$year = date('Y');
+	$month = date('m');
+	$number_grades = array(9,10,11,12);
+	if(is_numeric($input) && strlen($input) == 4) {
+		return (integer) $input;
+	}	else if(is_numeric($input) && strlen($input) == 2 && !in_array($input, $number_grades) && $input > 19) {
+			return (integer) '20'.$input;
+	} else if(is_numeric($input) && in_array($input, $number_grades)) {
+		//Default to early in year < June
+		$input = (integer) $input;
+		$map = array(
+			'year_9' => $year+3,
+			'year_10' => $year+2,
+			'year_11' => $year+1,
+			'year_12' => $year
+		);
+		if($month >= 6) {
+			$map = array(
+				'year_9' => $year+4,
+				'year_10' => $year+3,
+				'year_11' => $year+2,
+				'year_12' => $year+1
+			);
+		}
+		return (integer) $map['year_'.$input];
+	}
+	if(is_string($input) && in_array(strtolower($input), array('f','s','j','sr')) || in_array(strtolower($input), array('freshman','sophmore','junior','senior'))) {
+		//Default to early in year < June
+		$map = array(
+			'f' => $year+3,
+			'freshman' => $year+3,
+			's' => $year+2,
+			'sophmore' => $year+2,
+			'j' => $year+1,
+			'junior' => $year+1,
+			'sr' => $year,
+			'senior' => $year
+		);
+		if($month >= 6) {
+			$map = array(
+				'f' => $year+4,
+				'freshman' => $year+4,
+				's' => $year+3,
+				'sophmore' => $year+3,
+				'j' => $year+2,
+				'junior' => $year+2,
+				'sr' => $year+1,
+				'senior' => $year+1
+			);
+		}
+		return (integer) $map[strtolower($input)];
+	}
+	return null;
+}
+
 function createSchoolAbv($name = null) {
 	$abv = '';
 	if(!empty($name) && is_string($name) && $name != '') {
