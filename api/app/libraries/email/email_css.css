@@ -204,6 +204,13 @@ hr {
   border-bottom: 1px solid #f6f6f6;
   Margin: 20px 0; }
 
+.team_logo > tr > td {
+  text-align: center;
+}
+
+.team_logo > tr > td > img {
+  max-height: 50px;
+}
 /* -------------------------------------
     RESPONSIVE AND MOBILE FRIENDLY STYLES
 ------------------------------------- */

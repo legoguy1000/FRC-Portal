@@ -296,14 +296,14 @@ class User extends Eloquent {
     $slack_enable = getSettingsProp('slack_enable');
     $email_enable = getSettingsProp('email_enable');
   	//$preferences = array('push' => true, 'email' => false);
-    if($slack_enable && ($type == '' || $preferences['email'][$type] == true) && !empty($msgData['email'])) {
+    if($email_enable && ($type == '' || $preferences['email'][$type] == true) && !empty($msgData['email'])) {
   		$msg = $msgData['email'];
   		$subject = $msg['subject'];
   		$content = $msg['content'];
   		$attachments = !empty($msg['attachments']) && is_array($msg['attachments']) ? $msg['attachments'] : false;
   		$this->emailUser($subject,$content,$attachments);
   	}
-  	if($email_enable && ($type == '' || $preferences['slack'][$type] == true) && !empty($msgData['slack'])) {
+  	if($slack_enable && ($type == '' || $preferences['slack'][$type] == true) && !empty($msgData['slack'])) {
   		$msg = $msgData['slack'];
   		$title = $msg['title'];
   		$body = $msg['body'];
@@ -409,11 +409,13 @@ class User extends Eloquent {
   	$emailContent = $content ;
   	$teamName = getSettingsProp('team_name');
   	$teamNumber = getSettingsProp('team_number');
-  	$teamLocation = getSettingsProp('location');
+    $teamLocation = getSettingsProp('location');
+  	$team_logo_url = getSettingsProp('team_logo_url');
   	$envUrl = getSettingsProp('env_url');
   	$email = str_replace('###TEAM_NAME###',$teamName,$mergedHtml);
   	$email = str_replace('###TEAM_NUMBER###',$teamNumber,$email);
-  	$email = str_replace('###TEAM_LOCATION###',$teamLocation,$email);
+    $email = str_replace('###TEAM_LOCATION###',$teamLocation,$email);
+  	$email = str_replace('###TEAM_LOGO###',$team_logo_url,$email);
   	$email = str_replace('###ENV_URL###',$envUrl,$email);
   	$email = str_replace('###SUBJECT###',$subjectLine,$email);
   	$email = str_replace('###FNAME###',$this->fname,$email);
