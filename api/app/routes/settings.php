@@ -1,7 +1,9 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
-$app->group('/settings', function () {
-  $this->get('', function ($request, $response, $args) {
+use Slim\Routing\RouteCollectorProxy;
+
+$app->group('/settings', function(RouteCollectorProxy $group) {
+  $group->get('', function ($request, $response, $args) {
     $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $formData = $request->getParsedBody();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -34,8 +36,8 @@ $app->group('/settings', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Get Settings');
-/*  $this->group('/{setting_id:[a-z0-9]{13}}', function () {
-    $this->get('', function ($request, $response, $args) {
+/*  $group->group('/{setting_id:[a-z0-9]{13}}', function(RouteCollectorProxy $group) {
+    $group->get('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $loggedInUser = $authToken['data']->user_id;
       $responseArr = array(
@@ -56,7 +58,7 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->put('', function ($request, $response, $args) {
+    $group->put('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $loggedInUser = $authToken['data']->user_id;
       $responseArr = array(
@@ -81,7 +83,7 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->delete('', function ($request, $response, $args) {
+    $group->delete('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $loggedInUser = $authToken['data']->user_id;
       $responseArr = array(
@@ -104,8 +106,8 @@ $app->group('/settings', function () {
       return $response;
     });
   });*/
-  $this->group('/section/{section}', function () {
-    $this->get('', function ($request, $response, $args) {
+  $group->group('/section/{section}', function(RouteCollectorProxy $group) {
+    $group->get('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Utilities\Auth::isAdmin()) {
@@ -134,7 +136,7 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get Settings by Section');
-    $this->put('', function ($request, $response, $args) {
+    $group->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -164,8 +166,8 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Update Settings');
   });
-  $this->group('/serviceAccountCredentials', function () {
-    $this->get('', function ($request, $response, $args) {
+  $group->group('/serviceAccountCredentials', function(RouteCollectorProxy $group) {
+    $group->get('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Utilities\Auth::isAdmin()) {
@@ -183,7 +185,7 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get Service Account Credentials');
-    $this->post('', function ($request, $response, $args) {
+    $group->post('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -191,7 +193,7 @@ $app->group('/settings', function () {
         return unauthorizedResponse($response);
       }
 
-      $directory = $this->get('upload_directory');
+      $directory = $group->get('upload_directory');
       $uploadedFiles = $request->getUploadedFiles();
       $uploadedFile = $uploadedFiles['file'];
       if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
@@ -217,7 +219,7 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update Service Account Credentials');
-    $this->delete('', function ($request, $response, $args) {
+    $group->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -232,8 +234,8 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Delete Google Service Account Credentials');
   });
-  $this->group('/firstPortalCredentials', function () {
-    $this->get('', function ($request, $response, $args) {
+  $group->group('/firstPortalCredentials', function(RouteCollectorProxy $group) {
+    $group->get('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Utilities\Auth::isAdmin()) {
@@ -251,7 +253,7 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get Service Account Credentials');
-    $this->post('', function ($request, $response, $args) {
+    $group->post('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -283,7 +285,7 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update FIRST Portal Credentials');
-    $this->delete('', function ($request, $response, $args) {
+    $group->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -298,8 +300,8 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Delete FIRST Portal Credentials');
   });
-  $this->group('/oauth/{provider}', function () {
-    $this->get('', function ($request, $response, $args) {
+  $group->group('/oauth/{provider}', function(RouteCollectorProxy $group) {
+    $group->get('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Utilities\Auth::isAdmin()) {
@@ -324,7 +326,7 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get OAuth Credentials');
-    $this->put('', function ($request, $response, $args) {
+    $group->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -345,7 +347,7 @@ $app->group('/settings', function () {
       return $response;
     })->setName('Update OAuth Credentials');
   });
-  $this->post('/resetAdminPass', function ($request, $response, $args) {
+  $group->post('/resetAdminPass', function ($request, $response, $args) {
     $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
     if(!FrcPortal\Utilities\Auth::isAdmin()) {
@@ -362,7 +364,7 @@ $app->group('/settings', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Reset Admin Password');
-  $this->post('/testSlack', function ($request, $response, $args) {
+  $group->post('/testSlack', function ($request, $response, $args) {
     $user = FrcPortal\Utilities\Auth::user();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
     if(!FrcPortal\Utilities\Auth::isAdmin()) {
@@ -380,7 +382,7 @@ $app->group('/settings', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Test Slack');
-  $this->post('/testEmail', function ($request, $response, $args) {
+  $group->post('/testEmail', function ($request, $response, $args) {
     $user = FrcPortal\Utilities\Auth::user();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
     if(!FrcPortal\Utilities\Auth::isAdmin()) {
@@ -397,8 +399,8 @@ $app->group('/settings', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Test Email');
-  $this->group('/update', function () {
-    $this->get('/branches', function ($request, $response, $args) {
+  $group->group('/update', function(RouteCollectorProxy $group) {
+    $group->get('/branches', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Utilities\Auth::isAdmin()) {
@@ -408,7 +410,7 @@ $app->group('/settings', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get Version Branch Options');
-    $this->get('/check', function ($request, $response, $args) {
+    $group->get('/check', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       if(!FrcPortal\Utilities\Auth::isAdmin()) {

@@ -1,7 +1,9 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
-$app->group('/eventTypes', function () {
-  $this->get('', function ($request, $response, $args) {
+use Slim\Routing\RouteCollectorProxy;
+
+$app->group('/eventTypes', function(RouteCollectorProxy $group) {
+  $group->get('', function ($request, $response, $args) {
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
 
     $users = FrcPortal\EventType::all();
@@ -13,7 +15,7 @@ $app->group('/eventTypes', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Get Event Types');
-  $this->post('', function ($request, $response, $args) {
+  $group->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $formData = $request->getParsedBody();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -38,8 +40,8 @@ $app->group('/eventTypes', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Add Event Type');
-  $this->group('/{type_id:[a-z0-9]{13}}', function () {
-    $this->put('', function ($request, $response, $args) {
+  $group->group('/{type_id:[a-z0-9]{13}}', function(RouteCollectorProxy $group) {
+    $group->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -67,7 +69,7 @@ $app->group('/eventTypes', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update Event Types');
-    $this->delete('', function ($request, $response, $args) {
+    $group->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);

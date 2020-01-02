@@ -6,8 +6,10 @@ use \Firebase\JWT\SignatureInvalidException;
 use \Firebase\JWT\BeforeValidException;
 use \Firebase\JWT\Exception;
 use Illuminate\Database\Capsule\Manager as DB;
-$app->group('/hours', function () {
-  $this->group('/{hours_id:[a-z0-9]{13}}', function () {
+use Slim\Routing\RouteCollectorProxy;
+
+$app->group('/hours', function(RouteCollectorProxy $group) {
+  $group->group('/{hours_id:[a-z0-9]{13}}', function (RouteCollectorProxy $group) {
     $this->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
@@ -30,8 +32,8 @@ $app->group('/hours', function () {
       return $response;
     })->setName('Delete Hours');
   });
-  $this->group('/missingHoursRequests', function () {
-    $this->get('', function ($request, $response, $args) {
+  $group->group('/missingHoursRequests', function(RouteCollectorProxy $group) {
+    $group->get('', function ($request, $response, $args) {
       $users = array();
     	$data = array();
 
@@ -94,8 +96,8 @@ $app->group('/hours', function () {
       $response = $response->withJson($data);
       return $response;
     })->setName('Get Missing Hours Requests');
-    $this->group('/{request_id:[a-z0-9]{13}}', function () {
-      $this->put('/approve', function ($request, $response, $args) {
+    $group->group('/{request_id:[a-z0-9]{13}}', function(RouteCollectorProxy $group) {
+      $group->put('/approve', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -131,7 +133,7 @@ $app->group('/hours', function () {
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Approve Missing Hours Request');
-      $this->put('/deny', function ($request, $response, $args) {
+      $group->put('/deny', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -157,9 +159,9 @@ $app->group('/hours', function () {
       })->setName('Deny Missing Hours Request');
     });
   });
-  $this->group('/signIn', function() {
+  $group->group('/signIn', function(RouteCollectorProxy $group) {
     //Get the list of users and their last sign/out and hours
-    $this->get('/list', function ($request, $response, $args) {
+    $group->get('/list', function ($request, $response, $args) {
       $authed = FrcPortal\Utilities\Auth::isAuthenticated() ? true:false;
       if(!$authed && !empty($request->getParam('signin_token'))) {
         $key = getSettingsProp('jwt_signin_key');
@@ -182,7 +184,7 @@ $app->group('/hours', function () {
       return $response;
     })->setName('Get Sign In List');
     //Time Sheet
-    $this->get('/timeSheet/{date:(?:[1-9]\d{3})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])}', function ($request, $response, $args) {
+    $group->get('/timeSheet/{date:(?:[1-9]\d{3})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])}', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -206,8 +208,8 @@ $app->group('/hours', function () {
       return $response;
     })->setName('Get Timesheet');
     //Get the list of all sign in/out records
-    $this->group('/records', function() {
-      $this->get('', function ($request, $response, $args) {
+    $group->group('/records', function(RouteCollectorProxy $group) {
+      $group->get('', function ($request, $response, $args) {
         $users = array();
         $data = array();
 
@@ -271,7 +273,7 @@ $app->group('/hours', function () {
         $response = $response->withJson($data);
         return $response;
       })->setName('Get Sign In Records');
-      $this->get('/my', function ($request, $response, $args) {
+      $group->get('/my', function ($request, $response, $args) {
         $users = array();
         $data = array();
         $user = FrcPortal\Utilities\Auth::user();
@@ -290,7 +292,7 @@ $app->group('/hours', function () {
       })->setName('Get Sign In Records');
     });
     //Create a new signin token
-    $this->post('/authorize', function ($request, $response, $args) {
+    $group->post('/authorize', function ($request, $response, $args) {
       $args = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
       $user = FrcPortal\Utilities\Auth::user();
@@ -315,7 +317,7 @@ $app->group('/hours', function () {
       return $response;
     })->setName('Authorize Sign In');
     //Create a new signin token
-    $this->post('/token', function ($request, $response, $args) {
+    $group->post('/token', function ($request, $response, $args) {
       $args = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
 
@@ -360,14 +362,14 @@ $app->group('/hours', function () {
       return $response;
     })->setName('Get Sign In Token');
     //Deauthorize the current signin token
-    $this->post('/deauthorize', function ($request, $response, $args) {
+    $group->post('/deauthorize', function ($request, $response, $args) {
       $responseArr = array('status'=>true, 'type'=>'success', 'msg'=>'Sign In Deauthorized');
       insertLogs($level = 'Information', $message = 'Sign In deauthorized.');
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Deauthorize Sign In');
     //Clock in and Out
-    $this->post('', function ($request, $response, $args) {
+    $group->post('', function ($request, $response, $args) {
       $args = $request->getParsedBody();
       FrcPortal\Utilities\Auth::setCurrentUser($args['user_id']);
       if(!empty($args['token'])) {
@@ -476,7 +478,7 @@ $app->group('/hours', function () {
       return $response;
     })->setName('Sign In with PIN');
     //Clock in and Out
-    $this->post('/qr', function ($request, $response, $args) {
+    $group->post('/qr', function ($request, $response, $args) {
       $user = FrcPortal\Utilities\Auth::user();
       $args = $request->getParsedBody();
       if($user->other_adult) {

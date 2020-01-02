@@ -1,7 +1,9 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
-$app->group('/userCategories', function () {
-  $this->get('', function ($request, $response, $args) {
+use Slim\Routing\RouteCollectorProxy;
+
+$app->group('/userCategories', function(RouteCollectorProxy $group) {
+  $group->get('', function ($request, $response, $args) {
     $responseArr = array(
       'status' => false,
       'msg' => 'Something went wrong',
@@ -16,7 +18,7 @@ $app->group('/userCategories', function () {
     $response = $response->withJson($responseArr);
     return $response;
   });
-  $this->post('', function ($request, $response, $args) {
+  $group->post('', function ($request, $response, $args) {
     $authToken = $request->getAttribute("token");
     $userId = $authToken['data']->user_id;
     $formData = $request->getParsedBody();
@@ -55,8 +57,8 @@ $app->group('/userCategories', function () {
     $response = $response->withJson($responseArr);
     return $response;
   });
-  $this->group('/{cat_id:[a-z0-9]{13}}', function () {
-    $this->put('', function ($request, $response, $args) {
+  $group->group('/{cat_id:[a-z0-9]{13}}', function(RouteCollectorProxy $group) {
+    $group->put('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
       $cat_id = $args['cat_id'];
@@ -104,7 +106,7 @@ $app->group('/userCategories', function () {
       $response = $response->withJson($responseArr);
       return $response;
     });
-    $this->delete('', function ($request, $response, $args) {
+    $group->delete('', function ($request, $response, $args) {
       $authToken = $request->getAttribute("token");
       $userId = $authToken['data']->user_id;
       $cat_id = $args['cat_id'];

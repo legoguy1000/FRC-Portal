@@ -1,7 +1,9 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
-$app->group('/slack', function () {
-  $this->post('', function ($request, $response, $args) {
+use Slim\Routing\RouteCollectorProxy;
+
+$app->group('/slack', function(RouteCollectorProxy $group) {
+  $group->post('', function ($request, $response, $args) {
     $formData = $request->getParsedBody();
     $json = urldecode($formData['payload']);
     $data = json_decode($json,true);
@@ -40,7 +42,7 @@ $app->group('/slack', function () {
     $response->getBody()->write($responseStr);
     return $response;
   });
-  $this->post('/myHours', function ($request, $response, $args) {
+  $group->post('/myHours', function ($request, $response, $args) {
     $formData = $request->getParsedBody();
     $responseStr = '';
     $token = $formData['token'];
@@ -60,7 +62,7 @@ $app->group('/slack', function () {
     $response->getBody()->write($responseStr);
     return $response;
   });
-  $this->post('/registerPortal', function ($request, $response, $args) {
+  $group->post('/registerPortal', function ($request, $response, $args) {
     $formData = $request->getParsedBody();
     $responseStr = '';
     $token = $formData['token'];
@@ -85,7 +87,7 @@ $app->group('/slack', function () {
     $response->getBody()->write($responseStr);
     return $response;
   });
-  /*$this->post('/signin', function ($request, $response, $args) {
+  /*$group->post('/signin', function ($request, $response, $args) {
     $formData = $request->getParsedBody();
     $responseStr = '';
     $token = $formData['token'];

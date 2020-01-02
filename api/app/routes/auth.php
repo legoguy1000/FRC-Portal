@@ -3,9 +3,10 @@ use \Firebase\JWT\JWT;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
 use FrcPortal\Utilities\IniConfig;
+use Slim\Routing\RouteCollectorProxy;
 
-$app->group('/auth', function () {
-  $this->post('/google', function ($request, $response) {
+$app->group('/auth', function(RouteCollectorProxy $group) {
+  $group->post('/google', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'google';
@@ -78,7 +79,7 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Google OAuth2');
-  $this->post('/facebook', function ($request, $response) {
+  $group->post('/facebook', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'facebook';
@@ -160,7 +161,7 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Facebook OAuth2');
-  $this->post('/microsoft', function ($request, $response) {
+  $group->post('/microsoft', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'microsoft';
@@ -243,7 +244,7 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Microsoft OAuth2');
-  $this->post('/amazon', function ($request, $response) {
+  $group->post('/amazon', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'amazon';
@@ -329,7 +330,7 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Amazon OAuth2');
-  $this->post('/github', function ($request, $response) {
+  $group->post('/github', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'github';
@@ -433,7 +434,7 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Github OAuth2');
-  $this->post('/discord', function ($request, $response) {
+  $group->post('/discord', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'discord';
@@ -521,7 +522,7 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   })->setName('Discord OAuth2');
-  /*$this->post('/slack', function ($request, $response) {
+  /*$group->post('/slack', function ($request, $response) {
     $responseData = false;
     $args = $request->getParsedBody();
     $provider = 'slack';
@@ -568,7 +569,7 @@ $app->group('/auth', function () {
     $response = $response->withJson($responseData);
     return $response;
   }); */
-  $this->post('/admin', function ($request, $response) {
+  $group->post('/admin', function ($request, $response) {
     $responseData = false;
     $formData = $request->getParsedBody();
     $provider = 'local_admin';
@@ -608,8 +609,8 @@ use MadWizard\WebAuthn\Server\Authentication\AuthenticationOptions;
 use MadWizard\WebAuthn\Server\Authentication\AuthenticationContext;
 use MadWizard\WebAuthn\Credential\CredentialId;
 
-$app->group('/webauthn', function () {
-  $this->get('/register', function ($request, $response) {
+$app->group('/webauthn', function(RouteCollectorProxy $group) {
+  $group->get('/register', function ($request, $response) {
     $responseData = false;
     $user = FrcPortal\Utilities\Auth::user();
     $formData = $request->getParsedBody();
@@ -632,7 +633,7 @@ $app->group('/webauthn', function () {
     $response = $response->withJson($opts);
     return $response;
   })->setName('Device Credentials Start Registration');
-  $this->post('/register', function ($request, $response) {
+  $group->post('/register', function ($request, $response) {
     $responseData = false;
     $user = FrcPortal\Utilities\Auth::user();
     $formData = $request->getParsedBody();
@@ -668,7 +669,7 @@ $app->group('/webauthn', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Device Credentials Finish Registration');
-  $this->get('/authenticate/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+  $group->get('/authenticate/{user_id:[a-z0-9]{13}}', function ($request, $response, $args) {
     $responseData = false;
     $formData = $request->getParsedBody();
     $user_id = $args['user_id'];
@@ -696,7 +697,7 @@ $app->group('/webauthn', function () {
     $response = $response->withJson($opts);
     return $response;
   })->setName('Device Credentials Start Authentication');
-  $this->post('/authenticate', function ($request, $response) {
+  $group->post('/authenticate', function ($request, $response) {
     $responseData = false;
     $formData = $request->getParsedBody();
     $provider = 'webauthn';

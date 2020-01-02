@@ -2,10 +2,12 @@
 use Illuminate\Database\Capsule\Manager as DB;
 use GuzzleHttp\Client;
 use FrcPortal\Utilities\IniConfig;
+use Slim\Routing\RouteCollectorProxy;
 
-$app->group('/events', function () {
+
+$app->group('/events', function(RouteCollectorProxy $group) {
   //Get all events
-  $this->get('', function ($request, $response, $args) {
+  $group->get('', function ($request, $response, $args) {
     $events = array();
   	$data = array();
 
@@ -88,7 +90,7 @@ $app->group('/events', function () {
     return $response;
   })->setName('Get Events');
   //Search Google Calendar for events
-  $this->get('/searchGoogleCalendar', function ($request, $response, $args) {
+  $group->get('/searchGoogleCalendar', function ($request, $response, $args) {
     $calendar = getSettingsProp('google_calendar_id');
     $api_key = decryptItems(getSettingsProp('google_api_key'));
     if(empty($api_key)) {
@@ -164,7 +166,7 @@ $app->group('/events', function () {
     return $response;
   })->setName('Search Google Calendar');
   //Browse FIRST Portal for events
-  // $this->get('/browseFirstPortalEvents', function ($request, $response, $args) {
+  // $group->get('/browseFirstPortalEvents', function ($request, $response, $args) {
   //   $creds = getSettingsProp('firstportal_credential_data');
   //   $creds_arr = explode(',',$creds->value);
   //   $enc_cookie = $creds_arr[1];
@@ -202,7 +204,7 @@ $app->group('/events', function () {
   //   return $response;
   // })->setName('Browse FIRST Portal Events');
   //Add New Event
-  $this->post('', function ($request, $response, $args) {
+  $group->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $formData = $request->getParsedBody();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -298,9 +300,9 @@ $app->group('/events', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Add Event');
-  $this->group('/{event_id:[a-z0-9]{13}}', function () {
+  $group->group('/{event_id:[a-z0-9]{13}}', function(RouteCollectorProxy $group) {
     //Get Event
-    $this->get('', function ($request, $response, $args) {
+    $group->get('', function ($request, $response, $args) {
       $authed = FrcPortal\Utilities\Auth::isAuthenticated();
       $event_id = $args['event_id'];
       //Event passed from middleware
@@ -349,7 +351,7 @@ $app->group('/events', function () {
       return $response;
     })->setName('Get Event');
     //Get Event Requirements
-    $this->get('/eventRequirements', function ($request, $response, $args) {
+    $group->get('/eventRequirements', function ($request, $response, $args) {
       $event_id = $args['event_id'];
       //Event passed from middleware
       $event = $request->getAttribute('event');
@@ -359,9 +361,9 @@ $app->group('/events', function () {
       insertLogs($level = 'Information', $message = 'Successfully returned event "'.$event->name.'" Requirements');
       return $response;
     })->setName('Get Event Requirements');
-    $this->group('/cars', function () {
+    $group->group('/cars', function(RouteCollectorProxy $group) {
       //Get Event Cars
-      $this->get('', function ($request, $response, $args) {
+      $group->get('', function ($request, $response, $args) {
         //Event passed from middleware
         $event = $request->getAttribute('event');
         $responseArr = standardResponse($status = true, $msg = '', $data = $event->getEventCarList());
@@ -370,7 +372,7 @@ $app->group('/events', function () {
         return $response;
       })->setName('Get Event Cars');
       //Update Event Car passengers
-      $this->put('', function ($request, $response, $args) {
+      $group->put('', function ($request, $response, $args) {
         //Event passed from middleware
         $event = $request->getAttribute('event');
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
@@ -406,9 +408,9 @@ $app->group('/events', function () {
         return $response;
       })->setName('Update Event Car Passengers');
     });
-    $this->group('/rooms', function () {
+    $group->group('/rooms', function(RouteCollectorProxy $group) {
       //Get Event Rooms
-      $this->get('', function ($request, $response, $args) {
+      $group->get('', function ($request, $response, $args) {
         //Event passed from middleware
         $event = $request->getAttribute('event');
         $data = $event->event_rooms()->with('users')->get();
@@ -417,7 +419,7 @@ $app->group('/events', function () {
         return $response;
       })->setName('Get Event Rooms');
       //Get Event Rooms
-      $this->get('/adminList', function ($request, $response, $args) {
+      $group->get('/adminList', function ($request, $response, $args) {
         //Event passed from middleware
         $event = $request->getAttribute('event');
         $responseArr = standardResponse($status = true, $msg = '', $data = $event->getEventRoomList());
@@ -425,7 +427,7 @@ $app->group('/events', function () {
         return $response;
       })->setName('Get Event Rooms Admin List');
       //Add New Event Room
-      $this->post('', function ($request, $response, $args) {
+      $group->post('', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -458,7 +460,7 @@ $app->group('/events', function () {
         return $response;
       })->setName('Add Event Room');
       //Add New Event Room for a user
-      $this->post('/user', function ($request, $response, $args) {
+      $group->post('/user', function ($request, $response, $args) {
         $user = FrcPortal\Utilities\Auth::user();
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -486,7 +488,7 @@ $app->group('/events', function () {
         return $response;
       })->setName('Add Event Room');
       //Update Room lists
-      $this->put('', function ($request, $response, $args) {
+      $group->put('', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -522,7 +524,7 @@ $app->group('/events', function () {
         return $response;
       })->setName('Update Event Room List');
       //Delete event room
-      $this->delete('/{room_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+      $group->delete('/{room_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -541,9 +543,9 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
       })->setName('Delete Event Room');
     });
-    $this->group('/timeSlots', function () {
+    $group->group('/timeSlots', function(RouteCollectorProxy $group) {
       //Get event time slots
-      $this->get('', function ($request, $response, $args) {
+      $group->get('', function ($request, $response, $args) {
         $event_id = $args['event_id'];
         try {
           $responseArr['data'] = getEventTimeSlotList($event_id);
@@ -555,9 +557,9 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get Event Time Slots');
-      $this->group('/{time_slot_id:[a-z0-9]{13}}', function () {
+      $group->group('/{time_slot_id:[a-z0-9]{13}}', function(RouteCollectorProxy $group) {
         //Update event time slot
-        $this->put('', function ($request, $response, $args) {
+        $group->put('', function ($request, $response, $args) {
           $userId = FrcPortal\Utilities\Auth::user()->user_id;
           $formData = $request->getParsedBody();
           $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -578,7 +580,7 @@ $app->group('/events', function () {
           return $response->withJson($responseArr);
         })->setName('Update Event Time Slot');
         //Delete event time slot
-        $this->delete('', function ($request, $response, $args) {
+        $group->delete('', function ($request, $response, $args) {
           $userId = FrcPortal\Utilities\Auth::user()->user_id;
           $formData = $request->getParsedBody();
           $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -600,7 +602,7 @@ $app->group('/events', function () {
         })->setName('Delete Event Time Slot');
       });
       //Add new event time slot
-      $this->post('', function ($request, $response, $args) {
+      $group->post('', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -619,9 +621,9 @@ $app->group('/events', function () {
         return $response->withJson($responseArr);
       })->setName('Add Event Time Slot');
     });
-    $this->group('/food', function () {
+    $group->group('/food', function(RouteCollectorProxy $group) {
       //Get Food  Options
-      $this->get('', function ($request, $response, $args) {
+      $group->get('', function ($request, $response, $args) {
         $event_id = $args['event_id'];
         $responseArr = array(
           'status' => false,
@@ -634,7 +636,7 @@ $app->group('/events', function () {
         return $response;
       })->setName('Get Event Food Options');
       //Get Food  Options
-      $this->get('/list', function ($request, $response, $args) {
+      $group->get('/list', function ($request, $response, $args) {
         $event_id = $args['event_id'];
         $responseArr = array(
           'status' => false,
@@ -652,9 +654,9 @@ $app->group('/events', function () {
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get Event Food Options List');
-      $this->group('/{food_id:[a-z0-9]{13}}', function () {
+      $group->group('/{food_id:[a-z0-9]{13}}', function(RouteCollectorProxy $group) {
         //Edit Food  Option
-        $this->put('', function ($request, $response, $args) {
+        $group->put('', function ($request, $response, $args) {
           $userId = FrcPortal\Utilities\Auth::user()->user_id;
           $formData = $request->getParsedBody();
           $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -679,7 +681,7 @@ $app->group('/events', function () {
           return $response;
         })->setName('Update Event Food Option');
         //Delete Food  Option
-        $this->delete('', function ($request, $response, $args) {
+        $group->delete('', function ($request, $response, $args) {
           $userId = FrcPortal\Utilities\Auth::user()->user_id;
           $formData = $request->getParsedBody();
           $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -701,7 +703,7 @@ $app->group('/events', function () {
         })->setName('Delete Event Food Option');
       });
       //Add Food  Option
-      $this->post('', function ($request, $response, $args) {
+      $group->post('', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -725,7 +727,7 @@ $app->group('/events', function () {
       })->setName('Add Event Food Option');
     });
     //Edit Event
-    $this->put('', function ($request, $response, $args) {
+    $group->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -763,7 +765,7 @@ $app->group('/events', function () {
       return $response;
     })->setName('Update Event');
     //Sync Google Calendar Event
-    $this->put('/syncGoogleCalEvent', function ($request, $response, $args) {
+    $group->put('/syncGoogleCalEvent', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -799,7 +801,7 @@ $app->group('/events', function () {
       return $response;
     })->setName('Sync Event with Google Calendar');
     //Toggle Event Requirements per User
-    $this->put('/toggleEventReqs', function ($request, $response, $args) {
+    $group->put('/toggleEventReqs', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -841,7 +843,7 @@ $app->group('/events', function () {
       return $response;
     })->setName('Toggle Event Requirements');
     //Toggle Attendance Confirm per User
-    $this->put('/toggleConfirmAttendance', function ($request, $response, $args) {
+    $group->put('/toggleConfirmAttendance', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -879,7 +881,7 @@ $app->group('/events', function () {
       return $response;
     })->setName('Confirm Event Attendance');
     //Register for Event
-    $this->post('/register', function ($request, $response, $args) {
+    $group->post('/register', function ($request, $response, $args) {
       $loggedInUser = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -1024,7 +1026,7 @@ $app->group('/events', function () {
       return $response;
     })->setName('Register for Event');
     //Delete Event
-    $this->delete('', function ($request, $response, $args) {
+    $group->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);

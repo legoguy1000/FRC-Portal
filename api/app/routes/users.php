@@ -1,7 +1,9 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
-$app->group('/users', function () {
-  $this->get('', function ($request, $response, $args) {
+use Slim\Routing\RouteCollectorProxy;
+
+$app->group('/users', function(RouteCollectorProxy $group) {
+  $group->get('', function ($request, $response, $args) {
     $users = array();
   	$data = array();
     $searchProperties = array(
@@ -85,9 +87,9 @@ $app->group('/users', function () {
     $response = $response->withJson($data);
     return $response;
   })->setName('Get Users');
-  //$this->post('', function ($request, $response, $args) { });
-  $this->group('/{user_id:[a-z0-9]{13}}', function () {
-    $this->get('', function ($request, $response, $args) {
+  //$group->post('', function ($request, $response, $args) { });
+  $group->group('/{user_id:[a-z0-9]{13}}', function(RouteCollectorProxy $group) {
+    $group->get('', function ($request, $response, $args) {
       $user_id = $args['user_id'];
       $reqsBool = $request->getParam('requirements') !== null && $request->getParam('requirements')==true ? true:false;
       //User passed from middleware
@@ -103,8 +105,8 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get User');
-    $this->group('/annualRequirements', function () {
-      $this->get('', function ($request, $response, $args) {
+    $group->group('/annualRequirements', function(RouteCollectorProxy $group) {
+      $group->get('', function ($request, $response, $args) {
         $user_id = $args['user_id'];
         $user = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
                   $query->where('user_id','=',$user_id); // fields from comments table,
@@ -113,7 +115,7 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get User Annual Requirements');
-      $this->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+      $group->get('/{season_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $user_id = $args['user_id'];
         $season_id = $args['season_id'];
         $user = FrcPortal\Season::with(['annual_requirements' => function ($query) use ($user_id) {
@@ -124,8 +126,8 @@ $app->group('/users', function () {
         return $response;
       })->setName('Get User Annual Requirements by Season');
     });
-    $this->group('/eventRequirements', function () {
-      $this->get('', function ($request, $response, $args) {
+    $group->group('/eventRequirements', function(RouteCollectorProxy $group) {
+      $group->get('', function ($request, $response, $args) {
         $user_id = $args['user_id'];
         $user = FrcPortal\Event::with(['event_requirements' => function ($query) use ($user_id) {
                   $query->where('user_id','=',$user_id); // fields from comments table,
@@ -134,8 +136,8 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get User Event Requirements');
-      $this->group('/{event_id:[a-z0-9]{13}}', function () {
-        $this->get('', function ($request, $response, $args) {
+      $group->group('/{event_id:[a-z0-9]{13}}', function(RouteCollectorProxy $group) {
+        $group->get('', function ($request, $response, $args) {
           $user_id = $args['user_id'];
           $event_id = $args['event_id'];
           $user = FrcPortal\Event::with(['event_requirements.event_cars.passengers', 'event_requirements.event_rooms.users', 'event_requirements.event_time_slots', 'event_requirements.event_food', 'event_requirements' => function ($query) use ($user_id) {
@@ -147,7 +149,7 @@ $app->group('/users', function () {
         })->setName('Get User Event Requirements by Event');
       });
     });
-    $this->put('/pin', function ($request, $response, $args) {
+    $group->put('/pin', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -174,7 +176,7 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update User Sign In PIN');
-    $this->get('/hoursByDate/{year:[0-9]{4}}', function ($request, $response, $args) {
+    $group->get('/hoursByDate/{year:[0-9]{4}}', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -214,8 +216,8 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get User Hours by Year');
-    $this->group('/linkedAccounts', function () {
-      $this->get('', function ($request, $response, $args) {
+    $group->group('/linkedAccounts', function(RouteCollectorProxy $group) {
+      $group->get('', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $user = $request->getAttribute('user');
@@ -223,7 +225,7 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get User Linked Accounts');
-      $this->delete('/{auth_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+      $group->delete('/{auth_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong unlinking the account', $data = null);
@@ -237,8 +239,8 @@ $app->group('/users', function () {
         return $response;
       })->setName('Delete User Linked Account');
     });
-    $this->group('/webAuthnCredentials', function () {
-      $this->get('', function ($request, $response, $args) {
+    $group->group('/webAuthnCredentials', function(RouteCollectorProxy $group) {
+      $group->get('', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $user = $request->getAttribute('user');
@@ -246,7 +248,7 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get User Web Authn Credentials');
-      $this->delete('/{cred_id:[a-z0-9]{13}}', function ($request, $response, $args) {
+      $group->delete('/{cred_id:[a-z0-9]{13}}', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong unlinking the account', $data = null);
@@ -260,8 +262,8 @@ $app->group('/users', function () {
         return $response;
       })->setName('Delete User Web Authn Credentials');
     });
-    $this->group('/notificationPreferences', function () {
-      $this->get('', function ($request, $response, $args) {
+    $group->group('/notificationPreferences', function(RouteCollectorProxy $group) {
+      $group->get('', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -270,7 +272,7 @@ $app->group('/users', function () {
         $response = $response->withJson($responseArr);
         return $response;
       })->setName('Get User Notification Preferences');
-      $this->put('', function ($request, $response, $args) {
+      $group->put('', function ($request, $response, $args) {
         $userId = FrcPortal\Utilities\Auth::user()->user_id;
         $formData = $request->getParsedBody();
         $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -305,7 +307,7 @@ $app->group('/users', function () {
         return $response;
       })->setName('Update User Notification Preferences');
     });
-    $this->post('/requestMissingHours', function ($request, $response, $args) {
+    $group->post('/requestMissingHours', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -352,7 +354,7 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Request Missing Hours');
-    $this->put('', function ($request, $response, $args) {
+    $group->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -404,7 +406,7 @@ $app->group('/users', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update User');
-    $this->delete('', function ($request, $response, $args) {
+    $group->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);

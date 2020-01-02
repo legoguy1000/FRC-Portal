@@ -1,7 +1,9 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
-$app->group('/seasons', function () {
-  $this->get('', function ($request, $response, $args) {
+use Slim\Routing\RouteCollectorProxy;
+
+$app->group('/seasons', function(RouteCollectorProxy $group) {
+  $group->get('', function ($request, $response, $args) {
     $seasons = array();
   	$data = array();
 
@@ -44,7 +46,7 @@ $app->group('/seasons', function () {
     $response = $response->withJson($data);
     return $response;
   })->setName('Get Seasons');
-  $this->post('', function ($request, $response, $args) {
+  $group->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $formData = $request->getParsedBody();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -130,8 +132,8 @@ $app->group('/seasons', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Add Season');
-  $this->group('/{season_id:[a-z0-9]{13}}', function () {
-    $this->get('', function ($request, $response, $args) {
+  $group->group('/{season_id:[a-z0-9]{13}}', function(RouteCollectorProxy $group) {
+    $group->get('', function ($request, $response, $args) {
       $season_id = $args['season_id'];
       //Season passed from middleware
       $season = $request->getAttribute('season');
@@ -144,14 +146,14 @@ $app->group('/seasons', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get Season');
-    $this->get('/annualRequirements', function ($request, $response, $args) {
+    $group->get('/annualRequirements', function ($request, $response, $args) {
       $season_id = $args['season_id'];
       $season = getUsersAnnualRequirements($season_id);
       $responseArr = array('status'=>true, 'msg'=>'', 'data' => $season);
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get Season Annual Requirements');
-    $this->put('', function ($request, $response, $args) {
+    $group->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -192,7 +194,7 @@ $app->group('/seasons', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update Season');
-    $this->put('/updateMembershipForm', function ($request, $response, $args) {
+    $group->put('/updateMembershipForm', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong updating season membership form', $data = null);
@@ -218,7 +220,7 @@ $app->group('/seasons', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update Season Membership Form');
-    $this->put('/pollMembershipForm', function ($request, $response, $args) {
+    $group->put('/pollMembershipForm', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -235,7 +237,7 @@ $app->group('/seasons', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Poll Season Membership Form');
-    $this->put('/toggleAnnualReqs', function ($request, $response, $args) {
+    $group->put('/toggleAnnualReqs', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -275,7 +277,7 @@ $app->group('/seasons', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Toggle Annual Requirements');
-    $this->delete('', function ($request, $response, $args) {
+    $group->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);

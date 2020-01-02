@@ -1,7 +1,9 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
-$app->group('/logs', function () {
-  $this->get('', function ($request, $response, $args) {
+use Slim\Routing\RouteCollectorProxy;
+
+$app->group('/logs', function(RouteCollectorProxy $group) {
+  $group->get('', function ($request, $response, $args) {
     if(!FrcPortal\Utilities\Auth::isAdmin()) {
       return unauthorizedResponse($response);
     }

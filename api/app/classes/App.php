@@ -3,6 +3,8 @@ namespace FrcPortal;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Slim\Factory\AppFactory;
 use \Firebase\JWT\JWT;
 use FrcPortal\Utilities\Auth;
 use FrcPortal\Utilities\IniConfig;
@@ -17,22 +19,13 @@ class App {
   private $app;
 
   public function __construct() {
-    $config = array();
-    $config['displayErrorDetails'] = true;
-    $config['addContentLengthHeader'] = false;
-    $config['determineRouteBeforeAppMiddleware'] = true;
-    $config['db']['driver']   = 'mysql'; //your mysql server
-    $config['db']['host']   = IniConfig::iniDataProperty('db_host'); //your mysql server
-    $config['db']['user']   = IniConfig::iniDataProperty('db_user'); //your mysql server username
-    $config['db']['pass']   = IniConfig::iniDataProperty('db_pass'); //your mysql server password
-    $config['db']['dbname'] = IniConfig::iniDataProperty('db_name'); //the mysql database to use
-    $config['db']['charset'] = 'utf8';
-    $config['db']['collation'] = 'utf8_unicode_ci';
-    $config['db']['prefix'] = '';
-     //asdf
-    $c = new \Slim\Container(['settings' => $config]);
-    $app = new \Slim\App($c);
-    $app->add(function ($request, $response, $next) {
+    $app = AppFactory::create();
+    // Parse json, form data and xml
+    $app->addBodyParsingMiddleware();
+    // Add routing middleware
+    $app->addRoutingMiddleware();
+    $app->setBasePath('/api');
+    $app->add(function(Request $request, RequestHandler $handler) {
       $header = "";
       $message = "Using token from request header";
       $token = null;
@@ -71,7 +64,7 @@ class App {
       Auth::setClientIP($ipAddress);
       $route = $request->getAttribute('route');
       Auth::setRoute($route);
-    	$response = $next($request, $response);
+    	$response = $handler->handle($request);
       return $response;
     });
     $app->add(new \RKA\Middleware\IpAddress($checkProxyHeaders = true, $trustedProxies = array()));
@@ -79,17 +72,17 @@ class App {
         "secret" => getSettingsProp('jwt_key') ? getSettingsProp('jwt_key') : IniConfig::iniDataProperty('db_pass'),
         "rules" => [
             new \Tuupola\Middleware\JwtAuthentication\RequestPathRule([
-              "path" => ['/'],
-              "ignore" => ['/version','/manifest.json','/auth','/webauthn/authenticate','/slack','/hours/signIn/list','/hours/signIn/authorize','/hours/signIn/deauthorize','/hours/signIn/token','/config'],
+              "path" => ['/api'],
+              "ignore" => ['/api/version','/api/manifest.json','/api/auth','/api/webauthn/authenticate','/api/slack','/api/hours/signIn/list','/api/hours/signIn/authorize','/api/hours/signIn/deauthorize','/api/hours/signIn/token','/api/config'],
             ]),
             new Utilities\RequestPathMethodRule([
               "passthrough" => [
-                "/events" => ["GET"],
-                "/eventTypes" => ["GET"],
-                "/events/([a-z0-9]{13})" => ["GET"],
-                "/events/([a-z0-9]{13})/timeSlots" => ["GET"],
-                "/reports/topHourUsers/([0-9]{4})" => ["GET"],
-                "/hours/signIn" => ["POST"],
+                "/api/events" => ["GET"],
+                "/api/eventTypes" => ["GET"],
+                "/api/events/([a-z0-9]{13})" => ["GET"],
+                "/api/events/([a-z0-9]{13})/timeSlots" => ["GET"],
+                "/api/reports/topHourUsers/([0-9]{4})" => ["GET"],
+                "/api/hours/signIn" => ["POST"],
               ],
             ])
         ],
@@ -117,15 +110,7 @@ class App {
           return $response;
         }
     ]));
-    $container = $app->getContainer();
-    $container['upload_directory'] = __DIR__ . '/../secured';
-    $container['logger'] = function($c) {
-        $logger = new \Monolog\Logger('my_logger');
-        $file_handler = new \Monolog\Handler\StreamHandler(__DIR__ . '/../secured/app-'.date('Y-m-d').'.log',Monolog\Logger::DEBUG);
-        $logger->pushHandler($file_handler);
-        return $logger;
-    };
-
+    $app->addErrorMiddleware(false, true, true);
     $app->get('/version', function (Request $request, Response $response, array $args) {
       //$this->logger->addInfo('Called version endpoint');
       $route = Auth::getRoute();
@@ -233,19 +218,19 @@ class App {
     })->setName('Manifest');
 
 
-    require_once(__DIR__.'/../routes/auth.php');
-    require_once(__DIR__.'/../routes/seasons.php');
-    require_once(__DIR__.'/../routes/hours.php');
-    require_once(__DIR__.'/../routes/users.php');
-    require_once(__DIR__.'/../routes/events.php');
-    require_once(__DIR__.'/../routes/reports.php');
-    require_once(__DIR__.'/../routes/schools.php');
-    require_once(__DIR__.'/../routes/slack.php');
-    require_once(__DIR__.'/../routes/settings.php');
-    require_once(__DIR__.'/../routes/public.php');
-    require_once(__DIR__.'/../routes/eventTypes.php');
-    require_once(__DIR__.'/../routes/userCategories.php');
-    require_once(__DIR__.'/../routes/logs.php');
+    require(__DIR__.'/../routes/auth.php');
+    require(__DIR__.'/../routes/seasons.php');
+    require(__DIR__.'/../routes/hours.php');
+    require(__DIR__.'/../routes/users.php');
+    require(__DIR__.'/../routes/events.php');
+    require(__DIR__.'/../routes/reports.php');
+    require(__DIR__.'/../routes/schools.php');
+    require(__DIR__.'/../routes/slack.php');
+    require(__DIR__.'/../routes/settings.php');
+    require(__DIR__.'/../routes/public.php');
+    require(__DIR__.'/../routes/eventTypes.php');
+    require(__DIR__.'/../routes/userCategories.php');
+    require(__DIR__.'/../routes/logs.php');
 
     $this->app = $app;
   }

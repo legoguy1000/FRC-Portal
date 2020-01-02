@@ -1,11 +1,13 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Support\Facades\Input as Input;
-$app->group('/reports', function () {
+use Slim\Routing\RouteCollectorProxy;
+
+$app->group('/reports', function(RouteCollectorProxy $group) {
   /**
   * Top Hours per Year
   **/
-  $this->get('/topHourUsers/{year:[0-9]{4}}', function ($request, $response, $args) {
+  $group->get('/topHourUsers/{year:[0-9]{4}}', function ($request, $response, $args) {
     $year = $args['year'];
     //$season = FrcPortal\Season::where('year',$year)->first();
     $seasons = FrcPortal\AnnualRequirement::with('users')->whereExists(function ($query) use ($year) {
@@ -24,7 +26,7 @@ $app->group('/reports', function () {
   /**
   * Average Hours per Person per Year
   **/
-  $this->get('/hoursPerPersonPerYear', function ($request, $response, $args) {
+  $group->get('/hoursPerPersonPerYear', function ($request, $response, $args) {
 
     $check = checkReportInputs($request, $response, $type = 'range');
     if($check !== true) {
@@ -71,7 +73,7 @@ $app->group('/reports', function () {
   /**
   * Active Users per Year
   **/
-  $this->get('/activeUsersPerYear', function ($request, $response, $args) {
+  $group->get('/activeUsersPerYear', function ($request, $response, $args) {
 
     $check = checkReportInputs($request, $response, $type = 'range');
     if($check !== true) {
@@ -195,7 +197,7 @@ $app->group('/reports', function () {
   /**
   * Total Hours per Grade per Year
   **/
-  $this->get('/hoursPerGradePerYear', function ($request, $response, $args) {
+  $group->get('/hoursPerGradePerYear', function ($request, $response, $args) {
 
     $check = checkReportInputs($request, $response, $type = 'range');
     if($check !== true) {
@@ -305,7 +307,7 @@ $app->group('/reports', function () {
   /**
   * Total & average Hours per Gender per Year
   **/
-  $this->get('/hoursPerGenderPerYear', function ($request, $response, $args) {
+  $group->get('/hoursPerGenderPerYear', function ($request, $response, $args) {
     $check = checkReportInputs($request, $response, $type = 'range');
     if($check !== true) {
       return $check;
@@ -345,7 +347,7 @@ $app->group('/reports', function () {
   /**
   * Total & average Hours per Gender per Year
   **/
-  $this->get('/hoursPerWeek', function ($request, $response, $args) {
+  $group->get('/hoursPerWeek', function ($request, $response, $args) {
 
     $check = checkReportInputs($request, $response, $type = 'single');
     if($check !== true) {
@@ -425,7 +427,7 @@ $app->group('/reports', function () {
   /**
   * Hours per Event per Year
   **/
-  $this->get('/hoursPerEventPerYear', function ($request, $response, $args) {
+  $group->get('/hoursPerEventPerYear', function ($request, $response, $args) {
     $check = checkReportInputs($request, $response, $type = 'single');
     if($check !== true) {
       return $check;
@@ -493,7 +495,7 @@ $app->group('/reports', function () {
   /**
   * Hours per Event Type per Year
   **/
-  $this->get('/hoursPerEventTypePerYear', function ($request, $response, $args) {
+  $group->get('/hoursPerEventTypePerYear', function ($request, $response, $args) {
     $check = checkReportInputs($request, $response, $type = 'single');
     if($check !== true) {
       return $check;
@@ -532,7 +534,7 @@ $app->group('/reports', function () {
   /**
   * Total & average Hours per User Type per Year
   **/
-  $this->get('/hoursPerUserTypePerYear', function ($request, $response, $args) {
+  $group->get('/hoursPerUserTypePerYear', function ($request, $response, $args) {
     $check = checkReportInputs($request, $response, $type = 'range');
     if($check !== true) {
       return $check;

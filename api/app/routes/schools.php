@@ -1,7 +1,9 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
-$app->group('/schools', function () {
-  $this->get('', function ($request, $response, $args) {
+use Slim\Routing\RouteCollectorProxy;
+
+$app->group('/schools', function(RouteCollectorProxy $group) {
+  $group->get('', function ($request, $response, $args) {
     $schools = array();
   	$data = array();
 
@@ -49,7 +51,7 @@ $app->group('/schools', function () {
     $response = $response->withJson($data);
     return $response;
   })->setName('Get Schools');
-  $this->post('', function ($request, $response, $args) {
+  $group->post('', function ($request, $response, $args) {
     $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $formData = $request->getParsedBody();
     $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -85,8 +87,8 @@ $app->group('/schools', function () {
     $response = $response->withJson($responseArr);
     return $response;
   })->setName('Add School');
-  $this->group('/{school_id:[a-z0-9]{13}}', function () {
-    $this->get('', function ($request, $response, $args) {
+  $group->group('/{school_id:[a-z0-9]{13}}', function(RouteCollectorProxy $group) {
+    $group->get('', function ($request, $response, $args) {
       $school_id = $args['school_id'];
       //School passed from middleware
       $school = $request->getAttribute('school');
@@ -95,7 +97,7 @@ $app->group('/schools', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Get School');
-    $this->put('', function ($request, $response, $args) {
+    $group->put('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
@@ -136,7 +138,7 @@ $app->group('/schools', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Update School');
-    $this->delete('', function ($request, $response, $args) {
+    $group->delete('', function ($request, $response, $args) {
       $userId = FrcPortal\Utilities\Auth::user()->user_id;
       $formData = $request->getParsedBody();
       $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
