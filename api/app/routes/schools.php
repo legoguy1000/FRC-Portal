@@ -1,6 +1,9 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
 use Slim\Routing\RouteCollectorProxy;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+
 
 $app->group('/schools', function(RouteCollectorProxy $group) {
   $group->get('', function ($request, $response, $args) {
@@ -155,24 +158,25 @@ $app->group('/schools', function(RouteCollectorProxy $group) {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Delete School');
-  })->add(function ($request, $response, $next) {
+  })->add(function(Request $request, RequestHandler $handler) {
     //Event Midddleware to pull event data
     // get the route from the request
     $route = FrcPortal\Utilities\Auth::getRoute();
     if (!$route) {
         // no route matched
-        return $next($request, $response);
+        return $handler->handle($request);
     }
     $args = $route->getArguments();
     $school_id = $args['school_id'];
     $school = FrcPortal\School::find($school_id);
     if(!is_null($school)) {
       $request = $request->withAttribute('school', $school);
-      $response = $next($request, $response);
+      return $handler->handle($request);
     } else {
+      $response = $handler->handle($request);
       $response = notFoundResponse($response, $msg = 'School not found');
     }
-  	return $response;
+    return $handler->handle($request);
   });
 });
 

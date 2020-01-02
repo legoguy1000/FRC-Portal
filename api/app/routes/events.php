@@ -3,6 +3,8 @@ use Illuminate\Database\Capsule\Manager as DB;
 use GuzzleHttp\Client;
 use FrcPortal\Utilities\IniConfig;
 use Slim\Routing\RouteCollectorProxy;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 
 $app->group('/events', function(RouteCollectorProxy $group) {
@@ -1045,24 +1047,25 @@ $app->group('/events', function(RouteCollectorProxy $group) {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Delete Event');
-  })->add(function ($request, $response, $next) {
+  })->add(function(Request $request, RequestHandler $handler) {
     //Event Midddleware to pull event data
     // get the route from the request
     $route = FrcPortal\Utilities\Auth::getRoute();
     if (!$route) {
         // no route matched
-        return $next($request, $response);
+        return $handler->handle($request);
     }
     $args = $route->getArguments();
     $event_id = $args['event_id'];
     $event = FrcPortal\Event::find($event_id);
     if(!empty($event)) {
       $request = $request->withAttribute('event', $event);
-      $response = $next($request, $response);
+      return $handler->handle($request);
     } else {
-      $response = notFoundResponse($response, $msg = 'Event not found');
+      $response = $handler->handle($request);
+      return notFoundResponse($response, $msg = 'Event not found');
     }
-  	return $response;
+    return $handler->handle($request);
   });
 });
 

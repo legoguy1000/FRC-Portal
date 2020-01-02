@@ -1,6 +1,8 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
 use Slim\Routing\RouteCollectorProxy;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 $app->group('/seasons', function(RouteCollectorProxy $group) {
   $group->get('', function ($request, $response, $args) {
@@ -294,24 +296,25 @@ $app->group('/seasons', function(RouteCollectorProxy $group) {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Delete Season');
-  })->add(function ($request, $response, $next) {
+  })->add(function(Request $request, RequestHandler $handler) {
     //Season Midddleware to pull season data
     // get the route from the request
     $route = FrcPortal\Utilities\Auth::getRoute();
     if (!$route) {
         // no route matched
-        return $next($request, $response);
+        return $handler->handle($request);
     }
     $args = $route->getArguments();
     $season_id = $args['season_id'];
     $season = FrcPortal\Season::find($season_id);
     if(!empty($season)) {
       $request = $request->withAttribute('season', $season);
-      $response = $next($request, $response);
+      return $handler->handle($request);
     } else {
+      $response = $handler->handle($request);
       $response = notFoundResponse($response, $msg = 'Season not found');
     }
-  	return $response;
+    return $handler->handle($request);
   });
 });
 

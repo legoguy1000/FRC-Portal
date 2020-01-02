@@ -439,9 +439,11 @@ $app->group('/users', function(RouteCollectorProxy $group) {
     $user_id = $args['user_id'];
     $user = FrcPortal\User::find($user_id);
     if(empty($user)) {
+      $response = $handler->handle($request);
       return notFoundResponse($response, $msg = 'User not found');
     }
     if($user_id != $userId && !FrcPortal\Utilities\Auth::isAdmin()) {
+      $response = $handler->handle($request);
       return unauthorizedResponse($response);
     }
     $request = $request->withAttribute('user', $user);
