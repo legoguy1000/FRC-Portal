@@ -1,6 +1,8 @@
 <?php
 use Illuminate\Database\Capsule\Manager as DB;
 use Slim\Routing\RouteCollectorProxy;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 $app->group('/users', function(RouteCollectorProxy $group) {
   $group->get('', function ($request, $response, $args) {
@@ -424,13 +426,13 @@ $app->group('/users', function(RouteCollectorProxy $group) {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Delete User');
-  })->add(function ($request, $response, $next) {
+  })->add(function(Request $request, RequestHandler $handler) {
     //User Midddleware to pull season data
     // get the route from the request
     $route = FrcPortal\Utilities\Auth::getRoute();
     if (!$route) {
         // no route matched
-        return $next($request, $response);
+        return $handler->handle($request);
     }
     $userId = FrcPortal\Utilities\Auth::user()->user_id;
     $args = $route->getArguments();
@@ -443,7 +445,7 @@ $app->group('/users', function(RouteCollectorProxy $group) {
       return unauthorizedResponse($response);
     }
     $request = $request->withAttribute('user', $user);
-    return $next($request, $response);
+    return $handler->handle($request);
   });
 });
 

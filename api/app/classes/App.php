@@ -4,6 +4,7 @@ namespace FrcPortal;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Slim\Routing\RouteContext;
 use Slim\Factory\AppFactory;
 use \Firebase\JWT\JWT;
 use FrcPortal\Utilities\Auth;
@@ -20,10 +21,6 @@ class App {
 
   public function __construct() {
     $app = AppFactory::create();
-    // Parse json, form data and xml
-    $app->addBodyParsingMiddleware();
-    // Add routing middleware
-    $app->addRoutingMiddleware();
     $app->setBasePath('/api');
     $app->add(function(Request $request, RequestHandler $handler) {
       $header = "";
@@ -62,7 +59,7 @@ class App {
       }
       $ipAddress = $request->getAttribute('ip_address');
       Auth::setClientIP($ipAddress);
-      $route = $request->getAttribute('route');
+      $route = RouteContext::fromRequest($request)->getRoute();
       Auth::setRoute($route);
     	$response = $handler->handle($request);
       return $response;
@@ -110,7 +107,7 @@ class App {
           return $response;
         }
     ]));
-    $app->addErrorMiddleware(false, true, true);
+    $errorMiddleware = $app->addErrorMiddleware(true, true, true);
     $app->get('/version', function (Request $request, Response $response, array $args) {
       //$this->logger->addInfo('Called version endpoint');
       $route = Auth::getRoute();
@@ -232,6 +229,10 @@ class App {
     require(__DIR__.'/../routes/userCategories.php');
     require(__DIR__.'/../routes/logs.php');
 
+    // Parse json, form data and xml
+    $app->addBodyParsingMiddleware();
+    // Add routing middleware
+    $app->addRoutingMiddleware();
     $this->app = $app;
   }
 
