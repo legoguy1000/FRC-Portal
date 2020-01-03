@@ -29,16 +29,12 @@
 					<input ng-model="vm.user.team_email" type="email" ng-pattern="main.configItems.team_domain != '' ? '[a-z0-9._%+-]+@{{main.configItems.team_domain}}' : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$'">
 				</md-input-container>
 			</div>
-			<md-button class="md-raised" ng-click="" ng-show="">
-				<md-tooltip md-direction="top">Change Password</md-tooltip>
-				Change Password
-			</md-button>
 			<div layout="row" layout-gt-md="column" layout-gt-lg="row">
 				<md-input-container flex>
 					<label>Phone</label>
 					<input ng-model="vm.user.phone" phone-input type='text'/>
 				</md-input-container>
-				<md-input-container flex>
+				<md-input-container flex ng-show="main.configItems.slack_enable">
 					<label>Slack User</label>
 					<input ng-model="vm.user.slack_id" type='text' readonly disabled/>
 				</md-input-container>

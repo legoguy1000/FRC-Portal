@@ -38,7 +38,7 @@
 					<label>Phone</label>
 					<input ng-model="vm.userInfo.phone" phone-input type='text'/>
 				</md-input-container>
-				<md-input-container flex>
+				<md-input-container flex ng-show="main.configItems.slack_enable">
 					<label>Slack User</label>
 					<input ng-model="vm.userInfo.slack_id" type='text' readonly disabled/>
 				</md-input-container>
