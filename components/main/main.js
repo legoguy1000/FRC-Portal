@@ -182,8 +182,8 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
 	main.askAuthenticator = function() {
 		return $q(function(resolve, reject) {
 			var confirm = $mdDialog.confirm()
-          .title('Would you like to use your fingerprint to login')
-          .textContent('This device is capable of automatically logging you in using your fingerprint.')
+          .title('Would you like to use your device to login')
+          .textContent('This device is capable of automatically logging you in using device credentials (Windows Hello, Apple Touch ID, Android Security...).')
           .ariaLabel('Lucky day')
           .ok('Yes')
           .cancel('No');

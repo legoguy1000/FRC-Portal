@@ -243,7 +243,7 @@
 						<span flex></span>
 						<md-button class="md-icon-button" ng-click="vm.enrollCreds()" ng-show="vm.webAuthnCredEnabled && vm.localWebAuthCred == null">
 							<md-tooltip md-direction="top">Enroll Device</md-tooltip>
-							<md-icon>fingerprint</md-icon>
+							<md-icon>lock_open</md-icon>
 						</md-button>
 					</h1>
 					<md-list flex>
@@ -268,8 +268,8 @@
 							</md-icon>
 							<div class="md-list-item-text" flex layout="row">
 								<div>
-									<h3>{{cred.name | capitalizeFirst}} <span ng-show="cred.credential_id == vm.localWebAuthCred.credential_id">-  This Device</span></h3>
-									<p hide-xs>{{cred.credential_id}}</p>
+									<h3>{{cred.name | capitalizeFirst}}</h3>
+									<p ng-show="cred.credential_id == vm.localWebAuthCred.credential_id">This Device</p>
 								</div>
 								<div flex></div>
 								<div hide-xs>
