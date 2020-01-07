@@ -15,7 +15,9 @@ $app->group('/reports', function () {
             ->where('seasons.year',$year);
     })->get();
     //->where('season_id',$season->season_id)->get();
-    $seasons = $seasons->sortByDesc('total_hours')->values()->slice(0,5);
+    $seasons = $seasons->sortByDesc('total_hours')->filter(function ($value, $key) {
+        return $value['total_hours'] > 0;
+    })->values()->slice(0,5);
     $response = $response->withJson($seasons);
     return $response;
   })->setName('Top User Hours by Year Report');

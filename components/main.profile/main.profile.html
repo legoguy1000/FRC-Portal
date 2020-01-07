@@ -29,16 +29,12 @@
 					<input ng-model="vm.user.team_email" type="email" ng-pattern="main.configItems.team_domain != '' ? '[a-z0-9._%+-]+@{{main.configItems.team_domain}}' : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$'">
 				</md-input-container>
 			</div>
-			<md-button class="md-raised" ng-click="" ng-show="">
-				<md-tooltip md-direction="top">Change Password</md-tooltip>
-				Change Password
-			</md-button>
 			<div layout="row" layout-gt-md="column" layout-gt-lg="row">
 				<md-input-container flex>
 					<label>Phone</label>
-					<input ng-model="vm.user.phone" phone-input type='text' required/>
+					<input ng-model="vm.user.phone" phone-input type='text'/>
 				</md-input-container>
-				<md-input-container flex>
+				<md-input-container flex ng-show="main.configItems.slack_enable">
 					<label>Slack User</label>
 					<input ng-model="vm.user.slack_id" type='text' readonly disabled/>
 				</md-input-container>
@@ -243,7 +239,7 @@
 						<span flex></span>
 						<md-button class="md-icon-button" ng-click="vm.enrollCreds()" ng-show="vm.webAuthnCredEnabled && vm.localWebAuthCred == null">
 							<md-tooltip md-direction="top">Enroll Device</md-tooltip>
-							<md-icon>fingerprint</md-icon>
+							<md-icon>lock_open</md-icon>
 						</md-button>
 					</h1>
 					<md-list flex>
@@ -268,8 +264,8 @@
 							</md-icon>
 							<div class="md-list-item-text" flex layout="row">
 								<div>
-									<h3>{{cred.name | capitalizeFirst}} <span ng-show="cred.credential_id == vm.localWebAuthCred.credential_id">-  This Device</span></h3>
-									<p hide-xs>{{cred.credential_id}}</p>
+									<h3>{{cred.name | capitalizeFirst}}</h3>
+									<p ng-show="cred.credential_id == vm.localWebAuthCred.credential_id">This Device</p>
 								</div>
 								<div flex></div>
 								<div hide-xs>
@@ -354,7 +350,7 @@
 										<md-input-container flex flex-sm="33" flex-xl="33" class="md-icon-float md-icon-left md-block">
 											<label>Date</label>
 											<md-icon md-font-library="material-icons">today</md-icon>
-											<input moment-picker="vm.rmhData.date" required
+											<input moment-picker="vm.rmhData.date" required autocomplete="off"
 												 format="LL"
 												 min-view="year"
 												 max-view="month"
@@ -366,7 +362,7 @@
 											<md-input-container flex class="md-icon-float md-icon-left md-block">
 												<label>Start Time</label>
 												<md-icon md-font-library="material-icons">today</md-icon>
-												<input moment-picker="vm.rmhData.start_time" required
+												<input moment-picker="vm.rmhData.start_time" required autocomplete="off"
 													 format="LT"
 													 min-view="day"
 													 ng-model="vm.rmhData.start_time_full">
@@ -375,7 +371,7 @@
 											<md-input-container flex class="md-icon-float md-icon-left md-block">
 												<label>End Time</label>
 												<md-icon md-font-library="material-icons">today</md-icon>
-												<input moment-picker="vm.rmhData.end_time" required
+												<input moment-picker="vm.rmhData.end_time" required autocomplete="off"
 													 format="LT"
 													 min-view="day"
 													 min-date="vm.rmhData.start_time_full"

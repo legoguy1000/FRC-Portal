@@ -32,7 +32,7 @@
 				<div class="md-list-item-text" flex layout="row">
 					<div><h3> {{ u.users.full_name }} </h3></div>
 					<div flex></div>
-					<div><h3> {{ u.total_hours }} </h3></div>
+					<div><h3> {{ u.total_hours | number : 2 }} </h3></div>
 				</div>
 			</md-list-item>
 			<div ng-show="vm.topUsers.length == 0 && !vm.loadingTopUsers" layout="row" layout-align="center center">

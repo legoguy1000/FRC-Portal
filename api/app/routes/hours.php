@@ -7,6 +7,29 @@ use \Firebase\JWT\BeforeValidException;
 use \Firebase\JWT\Exception;
 use Illuminate\Database\Capsule\Manager as DB;
 $app->group('/hours', function () {
+  $this->group('/{hours_id:[a-z0-9]{13}}', function () {
+    $this->delete('', function ($request, $response, $args) {
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+      $hours_id = $args['hours_id'];
+
+      $hours = FrcPortal\MeetingHour::find($hours_id);
+      $date = time();
+      if(!is_null($hours)) {
+        if($hours->delete()) {
+           $responseArr['status'] = true;
+           $responseArr['msg'] = 'Hours record deleted';
+           insertLogs($level = 'Information', $message = 'Hours record deleted for '.$hours->user->full_name.'. ('.$hours['time_in'].' - '.$hours['time_out'].')');
+        }
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    })->setName('Delete Hours');
+  });
   $this->group('/missingHoursRequests', function () {
     $this->get('', function ($request, $response, $args) {
       $users = array();
@@ -231,7 +254,10 @@ $app->group('/hours', function () {
       }
 
       $users = $users->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-
+      $users = $users->map(function ($user, $key) {
+        $user['hours'] = (double) $user['hours'];
+        return $user;
+      })->all();
       $data['data'] = $users;
       $data['total'] = $totalNum;
       $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;

@@ -194,7 +194,7 @@ class Season extends Eloquent {
   				if(checkTeamEmail($email)) {
   					$user->team_email = $email;
   				}
-  				$user->email = $email;
+  				$user->email = strtolower($email);
   				$user->fname = $fname;
   				$user->lname = $lname;
   				$user->getGenderByFirstName();

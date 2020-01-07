@@ -19,7 +19,7 @@
 				<md-input-container flex class="md-icon-float md-block">
 					<label>Date</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.date" required autocomplete="false"
+					<input moment-picker="vm.date" required autocomplete="off"
 						 format="dddd LL"
 						 min-view="decade"
 						 max-view="month"
@@ -45,14 +45,14 @@
 					<div layout="column" layout-align="start center" flex style="border-left:solid; border-right:solid;">
 						<div ng-repeat="mh in user.meeting_hours" style="width: 100%;" ng-class="{'minorBottomBorder': !$last}">
 							<div layout="row" layout-align="center center">
-								{{mh.date.time_in_formatted}}
+								{{mh.date.time_in.full_formatted}}
 							</div>
 						</div>
 					</div>
 					<div layout="column" layout-align="start center" flex>
 						<div ng-repeat="mh in user.meeting_hours" style="width: 100%;" ng-class="{'minorBottomBorder': !$last}">
 							<div layout="row" layout-align="center center">
-								{{mh.date.time_out_formatted}}
+								{{mh.date.time_out.full_formatted}}
 							</div>
 						</div>
 					</div>

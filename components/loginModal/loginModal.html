@@ -11,7 +11,7 @@
   <md-dialog-content layout="column" layout-align="center center" class="layout-margin" style="min-height: 200px;">
     <div layout="column" layout-align="center center" class="layout-margin" style="min-height: 200px;" ng-show="vm.loading">
       <i class="material-icons" style="font-size: 64px;position: absolute;margin: 0;" ng-show="vm.webauthn">
-        fingerprint
+        lock_open
       </i>
       <md-progress-circular md-mode="indeterminate" ng-disabled="!vm.loading" md-diameter="96"></md-progress-circular>
     </div>
@@ -74,8 +74,8 @@
           <md-icon>people</md-icon>
         </md-button>
         <md-button class="md-icon-button" ng-click="vm.webauthnLogin()" ng-show="vm.webauthn">
-          <md-tooltip md-direction="bottom">WebAuthn</md-tooltip>
-          <md-icon>fingerprint</md-icon>
+          <md-tooltip md-direction="bottom">Device Credentials</md-tooltip>
+          <md-icon>lock_open</md-icon>
         </md-button>
       </div>
     </div>
