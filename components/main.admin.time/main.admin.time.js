@@ -90,6 +90,12 @@ function mainAdminTimeController($timeout, $q, $scope, $state, signinService, ti
 			$mdDialog.show(confirm).then(function() {
 				vm.sil.promise = timeService.deleteMeetingHours(hours_record.hours_id).then(function(response){
 					vm.getSignIns();
+					$mdToast.show(
+			      $mdToast.simple()
+			        .textContent(response.msg)
+			        .position('top right')
+			        .hideDelay(3000)
+			    );
 				});
 			});
 		};
