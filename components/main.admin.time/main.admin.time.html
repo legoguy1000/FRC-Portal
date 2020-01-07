@@ -44,14 +44,20 @@
 					</tr>
 				</thead>
 				<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
-					<tr md-row ng-repeat="user in vm.users">
+					<tr md-row ng-repeat="record in vm.records">
 						<td md-cell>
-							<span>{{user.user.full_name}}</span>
+							<span>{{record.user.full_name}}</span>
 						</td>
-						<td md-cell><span ng-if="user.time_in">{{user.date.time_in.long_date}}</span></td>
-						<td md-cell><span ng-if="user.time_in">{{user.date.time_in.time_formatted}}</span></td>
-						<td md-cell><span ng-if="user.time_out">{{user.date.time_out.time_formatted}}</span></td>
-						<td md-cell><span>{{user.hours | number : 2}}</span></td>
+						<td md-cell><span ng-if="record.time_in">{{record.date.time_in.long_date}}</span></td>
+						<td md-cell><span ng-if="record.time_in">{{record.date.time_in.time_formatted}}</span></td>
+						<td md-cell><span ng-if="record.time_out">{{record.date.time_out.time_formatted}}</span></td>
+						<td md-cell><span>{{record.hours | number : 2}}</span></td>
+						<td md-cell>
+							<md-button class="md-icon-button" ng-click="vm.deleteMeetingHours(record)">
+								<md-icon class="material-icons" class="md-warn">delete</md-icon>
+								<md-tooltip md-direction="top">Delete Record</md-tooltip>
+							</md-button>
+						</td>
 					</tr>
 				</tbody>
 			</table>
