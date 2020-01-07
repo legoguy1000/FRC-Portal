@@ -137,6 +137,7 @@ function mainAdminTimeController($timeout, $q, $scope, $state, signinService, ti
 			vm.mhrl.promise = timeService.approveMissingHoursRequest(request).then(function(response){
 				if(response.status) {
 					vm.getAllMissingHoursRequestsFilter();
+					vm.getSignIns();
 				}
 				$mdToast.show(
 		      $mdToast.simple()
