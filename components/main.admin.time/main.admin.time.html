@@ -51,7 +51,7 @@
 						<td md-cell><span ng-if="user.time_in">{{user.date.time_in.long_date}}</span></td>
 						<td md-cell><span ng-if="user.time_in">{{user.date.time_in.time_formatted}}</span></td>
 						<td md-cell><span ng-if="user.time_out">{{user.date.time_out.time_formatted}}</span></td>
-						<td md-cell><span>{{user.hours}}</span></td>
+						<td md-cell><span>{{user.hours | number : 2}}</span></td>
 					</tr>
 				</tbody>
 			</table>
@@ -103,8 +103,8 @@
 						<td md-cell><span ng-if="req.time_in">{{req.date.time_in.long_date}}</span></td>
 						<td md-cell><span ng-if="req.time_in">{{req.date.time_in.time_formatted}}</span></td>
 						<td md-cell><span ng-if="req.time_out">{{req.date.time_out.time_formatted}}</span></td>
-						<td md-cell><span>{{req.hours}}</span></td>
-						<td md-cell ng-switch="req.approved">
+						<td md-cell><span>{{req.hours | number : 2}}</span></td>
+						<td md-cell ng-switch="req.approved" style="padding-right: 0px;">
 							<span ng-switch-when="true"><md-icon class="material-icons" style="color:green;">check_circle</md-icon></span>
 							<span ng-switch-when="false"><md-icon class="material-icons" style="color:red;">remove_circle</md-icon></span>
 							<span ng-switch-default layout="row">
