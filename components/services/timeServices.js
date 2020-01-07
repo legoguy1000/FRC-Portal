@@ -37,5 +37,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		deleteMeetingHours: function (hours_id) {
+			return $http.delete('api/hours/'+hours_id)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

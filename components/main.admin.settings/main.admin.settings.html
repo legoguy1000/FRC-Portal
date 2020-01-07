@@ -284,10 +284,17 @@
 						<label>SMTP Username</label>
 						<input ng-model="vm.settings.notification.email_smtp_user" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
 					</md-input-container>
-					<md-input-container flex>
-						<label><md-icon md-font-library="material-icons">lock</md-icon><span>SMTP Password</span></label>
-						<input ng-model="vm.settings.notification.email_smtp_password" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable">
-					</md-input-container>
+					<div flex layout="row" layout-align="start center">
+						<md-input-container flex>
+							<label><md-icon md-font-library="material-icons">lock</md-icon><span>SMTP Password</span></label>
+							<input ng-model="vm.settings.notification.email_smtp_password" ng-required="vm.settings.notification.email_enable_smtp" ng-disabled="!vm.settings.notification.email_enable" type="{{vm.show_smtp_pass ? 'text':'password'}}">
+						</md-input-container>
+						<md-button class="md-icon-button" ng-click="vm.show_smtp_pass = !vm.show_smtp_pass">
+							<md-tooltip md-direction="top"><span ng-show="!vm.show_smtp_pass">Show</span><span ng-show="vm.show_smtp_pass">Hide</span> Password</md-tooltip>
+							<md-icon md-font-library="material-icons" ng-show="!vm.show_smtp_pass">visibility</md-icon>
+							<md-icon md-font-library="material-icons" ng-show="vm.show_smtp_pass">visibility_off</md-icon>
+						</md-button>
+					</div>
 				</div>
 			</div>
 			<div flex layout="row">
@@ -414,7 +421,7 @@
 				Automatically update events from Google Calendar
 			</md-switch>
 			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-tooLong']" class="md-warn" ng-change="vm.updateSettingBySection('cronjob')">
-				Automatically remove sign-ins that haven't signed out after 12 hours
+				Automatically remove sign-ins that haven't signed out after 18 hours
 			</md-switch>
 			<md-switch aria-label="Enable Automated Task" ng-model="vm.settings.cronjob['enable_cronjob-endOfDayHoursToSlack']" class="md-warn" ng-change="vm.updateSettingBySection('cronjob')">
 				Automatically send Slack notification at 9pm local with the numberof hours completed that day

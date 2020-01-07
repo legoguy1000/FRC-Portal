@@ -73,9 +73,30 @@ function mainAdminTimeController($timeout, $q, $scope, $state, signinService, ti
 
 		vm.getSignIns = function () {
 			vm.sil.promise = timeService.getAllSignInsFilter($.param(vm.sil.query)).then(function(response){
-				vm.users = response.data;
+				vm.records = response.data;
 				vm.sil.total = response.total;
 				vm.sil.maxPage = response.maxPage;
+			});
+		};
+
+		vm.deleteMeetingHours = function (hours_record) {
+			var hours = hours_record.hours.toFixed(2);
+			var confirm = $mdDialog.confirm()
+						.title('Delete Hours Record for '+hours_record.user.full_name)
+						.textContent('Are you sure you want to remove '+hours+' hour'+(hours>1 ? 's ':' ')+'for '+hours_record.user.full_name+'?   This action is unreversable.'	)
+						.ariaLabel('Delete Hours Record')
+						.ok('Delete')
+						.cancel('Cancel');
+			$mdDialog.show(confirm).then(function() {
+				vm.sil.promise = timeService.deleteMeetingHours(hours_record.hours_id).then(function(response){
+					vm.getSignIns();
+					$mdToast.show(
+			      $mdToast.simple()
+			        .textContent(response.msg)
+			        .position('top right')
+			        .hideDelay(3000)
+			    );
+				});
 			});
 		};
 
@@ -122,6 +143,7 @@ function mainAdminTimeController($timeout, $q, $scope, $state, signinService, ti
 			vm.mhrl.promise = timeService.approveMissingHoursRequest(request).then(function(response){
 				if(response.status) {
 					vm.getAllMissingHoursRequestsFilter();
+					vm.getSignIns();
 				}
 				$mdToast.show(
 		      $mdToast.simple()

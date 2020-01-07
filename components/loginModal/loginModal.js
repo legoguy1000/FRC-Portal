@@ -172,7 +172,7 @@ function loginModalController($rootScope,$scope,$auth,$mdDialog,$window, configI
 		scopeDelimiter: ' ',
 		hd: hdBool ? '&hd='+configItems.team_domain : '',
 	}
-	vm.oauth_urls.google = googleData.authorizationEndpoint+'?scope='+googleData.scope.join(googleData.scopeDelimiter)+'&redirect_uri='+googleData.redirectUri+'&response_type=code&client_id='+googleData.clientId+'&state='+vm.urlStateEncode+googleData.hd;
+	vm.oauth_urls.google = googleData.authorizationEndpoint+'?prompt=select_account&scope='+googleData.scope.join(googleData.scopeDelimiter)+'&redirect_uri='+googleData.redirectUri+'&response_type=code&client_id='+googleData.clientId+'&state='+vm.urlStateEncode+googleData.hd;
 	//Facebook
 	var facebookData = {
 		clientId: configItems.facebook_oauth_client_id,
