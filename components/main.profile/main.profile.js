@@ -1,8 +1,8 @@
 angular.module('FrcPortal')
-.controller('main.profileController', ['$rootScope', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams', '$window', 'generalService',
+.controller('main.profileController', ['$rootScope', '$timeout', '$q', '$scope', 'schoolsService', 'usersService', 'signinService', '$mdDialog', '$auth','$mdToast', '$stateParams', '$window', 'generalService','timeService',
 	mainProfileController
 ]);
-function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams, $window, generalService) {
+function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService, usersService, signinService, $mdDialog, $auth, $mdToast, $stateParams, $window, generalService,timeService) {
     var vm = this;
 
   vm.selectedItem  = null;
@@ -18,7 +18,14 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 	vm.changePinNum = null;
 	vm.selectedTab = 0;
 	vm.localWebAuthCred = angular.fromJson($window.localStorage['webauthn_cred']);
-
+	vm.records = [];
+	vm.limitOptions = [5,10,25,50,100];
+	vm.sil_query = {
+		filter: '',
+		limit: 10,
+		order: '-time_in',
+		page: 1
+	};
 	if (window.PublicKeyCredential && window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
 			window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(response => {
 			vm.webAuthnCredEnabled = response;
@@ -166,6 +173,14 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 		});
 	}
 	vm.getUserNotificationPreferences();
+
+	vm.getSignIns = function () {
+		vm.sil.promise = timeService.getMySignIns().then(function(response){
+			vm.records = response.data;
+			vm.sil_query.total = response.total;
+			vm.sil_query.maxPage = response.maxPage;
+		});
+	};
 
 	vm.updateUser = function() {
 		vm.loading = true;

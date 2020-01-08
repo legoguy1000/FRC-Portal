@@ -7,6 +7,12 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		getMySignIns: function () {
+			return $http.get('api/hours/signIn/records/my')
+			.then(function(response) {
+				return response.data;
+			});
+		},
 		getAllMissingHoursRequestsFilter: function (params) {
 			return $http.get('api/hours/missingHoursRequests?'+params)
 			.then(function(response) {
