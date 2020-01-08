@@ -209,6 +209,10 @@
 		</div>
 	</div>
 	<div flex layout="column" class="md-margin">
+	</div>
+</md-content>
+<md-content layout="column" layout-gt-sm="row" flex>
+	<div flex layout="column" class="md-margin">
 		<div layout="row" layout-align="start center">
 			<div flex>
 				<md-input-container flex class="md-icon-float md-block">
@@ -233,6 +237,47 @@
 		<div layout="column">
 			<div>Hours per Week</div> <!-- chart-dataset-override="vm.datasetOverride3"  -->
 			<canvas id="line" class="chart chart-line" chart-data="vm.data6" chart-labels="vm.labels6" chart-series="vm.series6" chart-click="" chart-options="vm.options"></canvas>
+		</div>
+	</div>
+	<div flex layout="column" class="md-margin">
+		<div layout="row" layout-align="start center">
+			<div flex>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Start Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.start_date9" required
+						 format="YYYY"
+						 min-view="decade"
+						 max-view="decade"
+						 min-date="2015"
+						 max-date="vm.end_date9"
+						 ng-model="vm.start_date9_full">
+					</input>
+				</md-input-container>
+			</div>
+			<div flex>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>End Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.end_date9" required
+						 format="YYYY"
+						 min-view="decade"
+						 max-view="decade"
+						 min-date="vm.start_date9"
+						 ng-model="vm.end_date9_full">
+					</input>
+				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsHoursPerDayOfWeek()"><i class="material-icons">arrow_forward</i></md-button>
+			</div>
+			<div>
+				<md-button type="button" class="" ng-csv="vm.csvData9.data" csv-header="vm.csvData9.header" filename="test.csv">Export</md-button>
+			</div>
+		</div>
+		<div layout="column">
+			<div>Hours per Day of Week</div>  <!-- chart-dataset-override="vm.datasetOverride3"  -->
+			<canvas id="line" class="chart chart-bar" chart-dataset-override="vm.datasetOverride9" chart-data="vm.data9" chart-labels="vm.labels9" chart-series="vm.series9" chart-click="" chart-options="vm.stackedOptions"></canvas>
 		</div>
 	</div>
 </md-content>

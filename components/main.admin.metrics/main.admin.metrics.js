@@ -191,4 +191,45 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 		});
 	};
 	vm.reportsHoursPerEventTypePerYear();
+
+	vm.labels9 = [];
+	vm.series9 = [];
+	vm.data9 = [];
+	vm.csvData9 = [];
+	vm.start_date9 = new Date().getFullYear()-2;
+	vm.end_date9 = new Date().getFullYear();
+
+	vm.reportsHoursPerDayOfWeek = function () {
+		metricsService.reportsHoursPerDayOfWeek(vm.start_date9, vm.end_date9).then(function(response){
+			vm.labels9 = response.labels;
+			vm.series9 = response.series;
+			vm.data9 = response.data;
+			vm.csvData9 = response.csvData;
+			vm.datasetOverride9 = [
+				{
+				label: vm.series9[0],
+				stack: 'Stack 0',
+				}, {
+				label: vm.series9[1],
+				stack: 'Stack 1',
+				}, {
+				label: vm.series9[2],
+				stack: 'Stack 2',
+				}, {
+				label: vm.series9[3],
+				stack: 'Stack 3',
+				}, {
+				label: vm.series9[4],
+				stack: 'Stack 4',
+				}, {
+				label: vm.series9[5],
+				stack: 'Stack 5',
+				}, {
+				label: vm.series9[6],
+				stack: 'Stack 6',
+				}
+			];
+		});
+	};
+	vm.reportsHoursPerDayOfWeek();
 }
