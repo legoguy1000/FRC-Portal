@@ -23,16 +23,30 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 		  stacked: true
 		}]
 	};
+	vm.start_date = new Date().getFullYear()-2;
+	vm.end_date = new Date().getFullYear();
+
+	vm.changeYear = function() {
+		vm.reportsAvgHrsPerPersonPerYear();
+		vm.reportsAvgHrsPerUserTypePerYear();
+		vm.reportsActiveUsersPerYear();
+		vm.reportsHoursPerEventPerYear();
+		vm.reportsAvgHrsPerGenderPerYear();
+		vm.reportsHoursPerWeek();
+		vm.reportsHoursPerGradePerYear();
+		vm.reportsHoursPerEventTypePerYear();
+		vm.reportsHoursPerDayOfWeek();
+		vm.reportsHoursPerSchool();
+
+	}
 
 	vm.myInput = 2016
 	vm.labels = [];
 	vm.series = [];
 	vm.data = [];
 	vm.csvData = [];
-	vm.start_date1 = new Date().getFullYear()-2;
-	vm.end_date1 = new Date().getFullYear();
 	vm.reportsAvgHrsPerPersonPerYear = function () {
-		metricsService.reportsAvgHrsPerPersonPerYear(vm.start_date1, vm.end_date1).then(function(response){
+		metricsService.reportsAvgHrsPerPersonPerYear(vm.start_date, vm.end_date).then(function(response){
 			vm.labels = response.labels;
 			vm.series = response.series;
 			vm.data = response.data;
@@ -46,10 +60,8 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.series2 = [];
 	vm.data2 = [];
 	vm.csvData2 = [];
-	vm.start_date2 = new Date().getFullYear()-2;
-	vm.end_date2 = new Date().getFullYear();
 	vm.reportsAvgHrsPerUserTypePerYear = function () {
-		metricsService.reportsAvgHrsPerUserTypePerYear(vm.start_date2, vm.end_date2).then(function(response){
+		metricsService.reportsAvgHrsPerUserTypePerYear(vm.start_date, vm.end_date).then(function(response){
 			vm.labels2 = response.labels;
 			vm.series2 = response.series;
 			vm.data2 = response.data;
@@ -63,11 +75,8 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.series3 = [];
 	vm.data3 = [];
 	vm.csvData3 = [];
-	vm.start_date3 = new Date().getFullYear()-2;
-	vm.end_date3 = new Date().getFullYear();
-
 	vm.reportsActiveUsersPerYear = function () {
-		metricsService.reportsActiveUsersPerYear(vm.start_date3, vm.end_date3).then(function(response){
+		metricsService.reportsActiveUsersPerYear(vm.start_date, vm.end_date).then(function(response){
 			vm.labels3 = response.labels;
 			vm.series3 = response.series;
 			vm.data3 = response.data;
@@ -114,10 +123,8 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.series4 = [];
 	vm.data4 = [];
 	vm.csvData4 = [];
-	vm.year4 = new Date().getFullYear();
-
 	vm.reportsHoursPerEventPerYear = function () {
-		metricsService.reportsHoursPerEventPerYear(vm.year4).then(function(response){
+		metricsService.reportsHoursPerEventPerYear(vm.start_date).then(function(response){
 			vm.labels4 = response.labels;
 			vm.series4 = response.series;
 			vm.data4 = response.data;
@@ -130,11 +137,8 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.series5 = [];
 	vm.data5 = [];
 	vm.csvData6 = [];
-	vm.start_date5 = new Date().getFullYear()-2;
-	vm.end_date5 = new Date().getFullYear();
-
 	vm.reportsAvgHrsPerGenderPerYear = function () {
-		metricsService.reportsAvgHrsPerGenderPerYear(vm.start_date5, vm.end_date5).then(function(response){
+		metricsService.reportsAvgHrsPerGenderPerYear(vm.start_date, vm.end_date).then(function(response){
 			vm.labels5 = response.labels;
 			vm.series5 = response.series;
 			vm.data5 = response.data;
@@ -147,10 +151,8 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.series6 = [];
 	vm.data6 = [];
 	vm.csvData6 = [];
-	vm.year6= new Date().getFullYear();
-
 	vm.reportsHoursPerWeek = function () {
-		metricsService.reportsHoursPerWeek(vm.year6).then(function(response){
+		metricsService.reportsHoursPerWeek(vm.start_date).then(function(response){
 			vm.labels6 = response.labels;
 			vm.series6 = response.series;
 			vm.data6 = response.data;
@@ -163,11 +165,8 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.series7 = [];
 	vm.data7 = [];
 	vm.csvData7 = [];
-	vm.start_date7 = new Date().getFullYear()-2;
-	vm.end_date7 = new Date().getFullYear();
-
 	vm.reportsHoursPerGradePerYear = function () {
-		metricsService.reportsHoursPerGradePerYear(vm.start_date7, vm.end_date7).then(function(response){
+		metricsService.reportsHoursPerGradePerYear(vm.start_date, vm.end_date).then(function(response){
 			vm.labels7 = response.labels;
 			vm.series7 = response.series;
 			vm.data7 = response.data;
@@ -180,10 +179,8 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.series8 = [];
 	vm.data8 = [];
 	vm.csvData8 = [];
-	vm.year8 = new Date().getFullYear();
-
 	vm.reportsHoursPerEventTypePerYear = function () {
-		metricsService.reportsHoursPerEventTypePerYear(vm.year8).then(function(response){
+		metricsService.reportsHoursPerEventTypePerYear(vm.start_date).then(function(response){
 			vm.labels8 = response.labels;
 			vm.series8 = response.series;
 			vm.data8 = response.data;
@@ -196,11 +193,8 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.series9 = [];
 	vm.data9 = [];
 	vm.csvData9 = [];
-	vm.start_date9 = new Date().getFullYear()-2;
-	vm.end_date9 = new Date().getFullYear();
-
 	vm.reportsHoursPerDayOfWeek = function () {
-		metricsService.reportsHoursPerDayOfWeek(vm.start_date9, vm.end_date9).then(function(response){
+		metricsService.reportsHoursPerDayOfWeek(vm.start_date, vm.end_date).then(function(response){
 			vm.labels9 = response.labels;
 			vm.series9 = response.series;
 			vm.data9 = response.data;
@@ -237,11 +231,8 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.series10 = [];
 	vm.data10 = [];
 	vm.csvData10 = [];
-	vm.start_date10 = new Date().getFullYear()-2;
-	vm.end_date10 = new Date().getFullYear();
-
 	vm.reportsHoursPerSchool = function () {
-		metricsService.reportsHoursPerSchool(vm.start_date10, vm.end_date10).then(function(response){
+		metricsService.reportsHoursPerSchool(vm.start_date, vm.end_date).then(function(response){
 			vm.labels10 = response.labels;
 			vm.series10 = response.series;
 			vm.data10 = response.data;
