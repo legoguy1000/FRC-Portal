@@ -312,91 +312,126 @@
 						<span>Time Information</span>
 						<span flex></span>
 					</h1>
-					<div flex layout="column" layout-gt-sm="row">
-						<md-card flex>
-							<form ng-submit="vm.changePin()"  name="vm.changePinForm">
+					<div flex layout="column">
+						<div flex layout="column" layout-gt-sm="row">
+							<md-card flex>
+								<form ng-submit="vm.changePin()"  name="vm.changePinForm">
+									<md-card-title>
+										<md-card-title-text>
+											<span class="md-headline">Change PIN</span>
+										</md-card-title-text>
+									</md-card-title>
+									<md-card-content>
+										<md-input-container flex class="md-icon-float md-icon-right md-block">
+											<label>Change PIN</label>
+											<input ng-model="vm.changePinNum" name="changePinNum" type="text" pattern="[0-9]{4,8}" md-maxlength="8" required/>
+											<md-icon class="material-icons">help</md-icon>
+											<div class="hint">4 to 8 digits.  Numbers ONLY!</div>
+										<!--	<div ng-messages="vm.changePinForm.changePinNum.$error" role="alert" multiple>
+												<div ng-message="required" class="my-message">PIN cannot be blank</div>
+												<div ng-message="pattern" class="my-message">The PIN must be 4-8 numbers only</div>
+												<div ng-message="md-maxlength" class="my-message">The PIN cannot be greater than 8 numbers long.</div>
+											</div> -->
+										</md-input-container>
+									</md-card-content>
+									<md-card-actions layout="row" layout-align="end center">
+										<md-button type="submit" ng-disabled="!vm.changePinForm.$valid">Submit</md-button>
+									</md-card-actions>
+								</form>
+							</md-card>
+							<md-card flex>
+								<form ng-submit="vm.requestMissingHours()" name="vm.rmhForm">
+									<md-card-title>
+										<md-card-title-text>
+											<span class="md-headline">Request Lost Hours</span>
+										</md-card-title-text>
+									</md-card-title>
+									<md-card-content layout="column">
+										<div flex layout-xs="column" layout-md="column" layout-lg="column" layout="row">
+											<md-input-container flex flex-sm="33" flex-xl="33" class="md-icon-float md-icon-left md-block">
+												<label>Date</label>
+												<md-icon md-font-library="material-icons">today</md-icon>
+												<input moment-picker="vm.rmhData.date" required autocomplete="off"
+													 format="LL"
+													 min-view="year"
+													 max-view="month"
+													 today="true"
+													 ng-model="vm.rmhData.date_full">
+												</input>
+											</md-input-container>
+											<div flex layout="row">
+												<md-input-container flex class="md-icon-float md-icon-left md-block">
+													<label>Start Time</label>
+													<md-icon md-font-library="material-icons">today</md-icon>
+													<input moment-picker="vm.rmhData.start_time" required autocomplete="off"
+														 format="LT"
+														 min-view="day"
+														 ng-model="vm.rmhData.start_time_full">
+													</input>
+												</md-input-container>
+												<md-input-container flex class="md-icon-float md-icon-left md-block">
+													<label>End Time</label>
+													<md-icon md-font-library="material-icons">today</md-icon>
+													<input moment-picker="vm.rmhData.end_time" required autocomplete="off"
+														 format="LT"
+														 min-view="day"
+														 min-date="vm.rmhData.start_time_full"
+														 ng-model="vm.rmhData.end_time_full">
+													</input>
+												</md-input-container>
+											</div>
+										</div>
+										<div flex>
+											<md-input-container flex class="md-icon-float md-icon-left md-block">
+												<label>Comment</label>
+												<md-icon md-font-library="material-icons">comment</md-icon>
+												<textarea ng-model="vm.rmhData.comment"  md-maxlength="200" required>
+												</textarea>
+											</md-input-container>
+										</div>
+									</md-card-content>
+									<md-card-actions layout="row" layout-align="end center">
+										<md-button type="submit" ng-disabled="!vm.rmhForm.$valid">Submit</md-button>
+									</md-card-actions>
+								</form>
+							</md-card>
+						</div>
+						<div flex>
+							<md-card>
 								<md-card-title>
-									<md-card-title-text>
-										<span class="md-headline">Change PIN</span>
+									<md-card-title-text layout="row">
+										<span class="md-headline">My Sign In/Out Records</span>
+										<div flex></div>
+										<md-button class="md-icon-button" ng-click="vm.getSignIns()">
+											<md-icon>refresh</md-icon>
+										</md-button>
 									</md-card-title-text>
 								</md-card-title>
 								<md-card-content>
-									<md-input-container flex class="md-icon-float md-icon-right md-block">
-										<label>Change PIN</label>
-										<input ng-model="vm.changePinNum" name="changePinNum" type="text" pattern="[0-9]{4,8}" md-maxlength="8" required/>
-										<md-icon class="material-icons">help</md-icon>
-										<div class="hint">4 to 8 digits.  Numbers ONLY!</div>
-									<!--	<div ng-messages="vm.changePinForm.changePinNum.$error" role="alert" multiple>
-											<div ng-message="required" class="my-message">PIN cannot be blank</div>
-											<div ng-message="pattern" class="my-message">The PIN must be 4-8 numbers only</div>
-											<div ng-message="md-maxlength" class="my-message">The PIN cannot be greater than 8 numbers long.</div>
-										</div> -->
-									</md-input-container>
+									<md-table-container>
+										<table md-table ng-model="selected" md-progress="vm.sil_promise">
+											<thead md-head md-order="vm.sil_query.order">
+												<tr md-row>
+													<th md-column><span>Date</span></th>
+													<th md-column md-order-by="time_in"><span>Time In</span></th>
+													<th md-column md-order-by="time_out"><span>Time Out</span></th>
+													<th md-column md-order-by="hours"><span>Hours</span></th>
+												</tr>
+											</thead>
+											<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+												<tr md-row ng-repeat="record in vm.records | filter: vm.sil_query.filter | orderBy: vm.sil_query.order | limitTo: vm.sil_query.limit : (vm.sil_query.page -1) * vm.sil_query.limit as filtered">
+													<td md-cell><span ng-if="record.time_in">{{record.date.time_in.long_date}}</span></td>
+													<td md-cell><span ng-if="record.time_in">{{record.date.time_in.time_formatted}}</span></td>
+													<td md-cell><span ng-if="record.time_out">{{record.date.time_out.time_formatted}}</span></td>
+													<td md-cell><span>{{record.hours | number : 2}}</span></td>
+												</tr>
+											</tbody>
+										</table>
+									</md-table-container>
+									<md-table-pagination md-limit="vm.sil_query.limit" md-limit-options="vm.limitOptions" md-page="vm.sil_query.page" md-total="{{vm.sil_query.total}}" md-page-select md-boundary-links></md-table-pagination>
 								</md-card-content>
-								<md-card-actions layout="row" layout-align="end center">
-									<md-button type="submit" ng-disabled="!vm.changePinForm.$valid">Submit</md-button>
-								</md-card-actions>
-							</form>
-						</md-card>
-						<md-card flex>
-							<form ng-submit="vm.requestMissingHours()" name="vm.rmhForm">
-								<md-card-title>
-									<md-card-title-text>
-										<span class="md-headline">Request Lost Hours</span>
-									</md-card-title-text>
-								</md-card-title>
-								<md-card-content layout="column">
-									<div flex layout-xs="column" layout-md="column" layout-lg="column" layout="row">
-										<md-input-container flex flex-sm="33" flex-xl="33" class="md-icon-float md-icon-left md-block">
-											<label>Date</label>
-											<md-icon md-font-library="material-icons">today</md-icon>
-											<input moment-picker="vm.rmhData.date" required autocomplete="off"
-												 format="LL"
-												 min-view="year"
-												 max-view="month"
-												 today="true"
-												 ng-model="vm.rmhData.date_full">
-											</input>
-										</md-input-container>
-										<div flex layout="row">
-											<md-input-container flex class="md-icon-float md-icon-left md-block">
-												<label>Start Time</label>
-												<md-icon md-font-library="material-icons">today</md-icon>
-												<input moment-picker="vm.rmhData.start_time" required autocomplete="off"
-													 format="LT"
-													 min-view="day"
-													 ng-model="vm.rmhData.start_time_full">
-												</input>
-											</md-input-container>
-											<md-input-container flex class="md-icon-float md-icon-left md-block">
-												<label>End Time</label>
-												<md-icon md-font-library="material-icons">today</md-icon>
-												<input moment-picker="vm.rmhData.end_time" required autocomplete="off"
-													 format="LT"
-													 min-view="day"
-													 min-date="vm.rmhData.start_time_full"
-													 ng-model="vm.rmhData.end_time_full">
-												</input>
-											</md-input-container>
-										</div>
-									</div>
-									<div flex>
-										<md-input-container flex class="md-icon-float md-icon-left md-block">
-											<label>Comment</label>
-											<md-icon md-font-library="material-icons">comment</md-icon>
-											<textarea ng-model="vm.rmhData.comment"  md-maxlength="200" required>
-											</textarea>
-										</md-input-container>
-									</div>
-								</md-card-content>
-								<md-card-actions layout="row" layout-align="end center">
-									<md-button type="submit" ng-disabled="!vm.rmhForm.$valid">Submit</md-button>
-								</md-card-actions>
-							</form>
-						</md-card>
-					</div>
-					<div flex layout="column" layout-gt-sm="row">
-
+							</md-card>
+						</div>
 					</div>
 				</md-content>
 			</md-tab>
