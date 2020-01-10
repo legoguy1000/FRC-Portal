@@ -130,49 +130,6 @@
 				<md-input-container flex class="md-icon-float md-block">
 					<label>Start Date</label>
 					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.start_date7" required
-						 format="YYYY"
-						 min-view="decade"
-						 max-view="decade"
-						 min-date="2015"
-						 max-date="vm.end_date7"
-						 ng-model="vm.start_date7_full">
-					</input>
-				</md-input-container>
-			</div>
-			<div flex>
-				<md-input-container flex class="md-icon-float md-block">
-					<label>End Date</label>
-					<md-icon md-font-library="material-icons">today</md-icon>
-					<input moment-picker="vm.end_date7" required
-						 format="YYYY"
-						 min-view="decade"
-						 max-view="decade"
-						 min-date="vm.start_date7"
-						 ng-model="vm.end_date7_full">
-					</input>
-				</md-input-container>
-			</div>
-			<div>
-				<md-button type="button" class="md-primary" ng-click="vm.reportsHoursPerGradePerYear()"><i class="material-icons">arrow_forward</i></md-button>
-			</div>
-			<div>
-				<md-button type="button" class="" ng-csv="vm.csvData7.data" csv-header="vm.csvData7.header" filename="test.csv">Export</md-button>
-			</div>
-		</div>
-		<div layout="column">
-			<div>Hours per Grade</div>
-			<canvas id="line" class="chart chart-line" chart-data="vm.data7" chart-labels="vm.labels7" chart-series="vm.series7" chart-click="" chart-options="vm.options"></canvas>
-		</div>
-	</div>
-</md-content>
-<md-content layout="column" layout-gt-sm="row" flex>
-	<div flex layout="column" class="md-margin">
-		<div layout="row" layout-align="start center">
-			<div flex>
-				<md-input-container flex class="md-icon-float md-block">
-					<label>Start Date</label>
-					<md-icon md-font-library="material-icons">today</md-icon>
 					<input moment-picker="vm.start_date5" required
 						 format="YYYY"
 						 min-view="decade"
@@ -208,7 +165,89 @@
 			<canvas id="line" class="chart chart-line" chart-data="vm.data5" chart-labels="vm.labels5" chart-series="vm.series5" chart-click="" chart-options="vm.options"></canvas>
 		</div>
 	</div>
+</md-content>
+<md-content layout="column" layout-gt-sm="row" flex>
 	<div flex layout="column" class="md-margin">
+		<div layout="row" layout-align="start center">
+			<div flex>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Start Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.start_date7" required
+						 format="YYYY"
+						 min-view="decade"
+						 max-view="decade"
+						 min-date="2015"
+						 max-date="vm.end_date7"
+						 ng-model="vm.start_date7_full">
+					</input>
+				</md-input-container>
+			</div>
+			<div flex>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>End Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.end_date7" required
+						 format="YYYY"
+						 min-view="decade"
+						 max-view="decade"
+						 min-date="vm.start_date7"
+						 ng-model="vm.end_date7_full">
+					</input>
+				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsHoursPerGradePerYear()"><i class="material-icons">arrow_forward</i></md-button>
+			</div>
+			<div>
+				<md-button type="button" class="" ng-csv="vm.csvData7.data" csv-header="vm.csvData7.header" filename="test.csv">Export</md-button>
+			</div>
+		</div>
+		<div layout="column">
+			<div>Hours per Grade</div>
+			<canvas id="line" class="chart chart-line" chart-data="vm.data7" chart-labels="vm.labels7" chart-series="vm.series7" chart-click="" chart-options="vm.options"></canvas>
+		</div>
+	</div>
+	<div flex layout="column" class="md-margin">
+		<div layout="row" layout-align="start center">
+			<div flex>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>Start Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.start_date10" required
+						 format="YYYY"
+						 min-view="decade"
+						 max-view="decade"
+						 min-date="2015"
+						 max-date="vm.end_date10"
+						 ng-model="vm.start_date10_full">
+					</input>
+				</md-input-container>
+			</div>
+			<div flex>
+				<md-input-container flex class="md-icon-float md-block">
+					<label>End Date</label>
+					<md-icon md-font-library="material-icons">today</md-icon>
+					<input moment-picker="vm.end_date10" required
+						 format="YYYY"
+						 min-view="decade"
+						 max-view="decade"
+						 min-date="vm.start_date10"
+						 ng-model="vm.end_date10_full">
+					</input>
+				</md-input-container>
+			</div>
+			<div>
+				<md-button type="button" class="md-primary" ng-click="vm.reportsHoursPerSchool()"><i class="material-icons">arrow_forward</i></md-button>
+			</div>
+			<div>
+				<md-button type="button" class="" ng-csv="vm.csvData10.data" csv-header="vm.csvData10.header" filename="test.csv">Export</md-button>
+			</div>
+		</div>
+		<div layout="column">
+			<div>Hours per School</div>
+			<canvas id="line" class="chart chart-line" chart-data="vm.data10" chart-labels="vm.labels10" chart-series="vm.series10" chart-click="" chart-options="vm.options"></canvas>
+		</div>
 	</div>
 </md-content>
 <md-content layout="column" layout-gt-sm="row" flex>

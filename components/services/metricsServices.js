@@ -65,5 +65,11 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		reportsHoursPerSchool: function (start,end) {
+			return $http.get('api/reports/hoursPerSchool?start_date='+start+'&end_date='+end)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

@@ -232,4 +232,21 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 		});
 	};
 	vm.reportsHoursPerDayOfWeek();
+
+	vm.labels10 = [];
+	vm.series10 = [];
+	vm.data10 = [];
+	vm.csvData10 = [];
+	vm.start_date10 = new Date().getFullYear()-2;
+	vm.end_date10 = new Date().getFullYear();
+
+	vm.reportsHoursPerSchool = function () {
+		metricsService.reportsHoursPerSchool(vm.start_date10, vm.end_date10).then(function(response){
+			vm.labels10 = response.labels;
+			vm.series10 = response.series;
+			vm.data10 = response.data;
+			vm.csvData10 = response.csvData;
+		});
+	};
+	vm.reportsHoursPerSchool();
 }
