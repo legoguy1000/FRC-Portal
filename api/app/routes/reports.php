@@ -262,6 +262,47 @@ $app->group('/reports', function () {
     return $response;
   })->setName('Hours per Grade per Year Report');
   /**
+  * Total & average Hours per School per Year
+  **/
+  $this->get('/hoursPerSchool', function ($request, $response, $args) {
+    $check = checkReportInputs($request, $response, $type = 'range');
+    if($check !== true) {
+      return $check;
+    }
+    $start_date = $request->getParam('start_date');
+    $end_date = $request->getParam('end_date');
+    $schoolsCollection = FrcPortal\School::all();
+    $schools = $schoolsCollection->mapWithKeys(function ($school) {
+        return [$school['school_id'] => $school['school_name']];
+    })->all();
+    $series = array_values($schools); //,'Total'
+    $init = initializeMultiYearData($start_date, $end_date, $series);
+    $years = $init['years'];
+    $data = $init['data'];
+
+    $labels = array();
+    $query = 'SELECT b.school_id, SUM(d.hours) as sum, AVG(d.hours) as avg, d.year FROM
+    (SELECT a.user_id, IFNULL(SUM(time_to_sec(timediff(a.time_out, a.time_in)) / 3600),0) as hours, year(a.time_in) as year FROM meeting_hours a WHERE year(a.time_in) BETWEEN :sd AND :ed GROUP BY user_id,year) d
+    LEFT JOIN users b USING (user_id)
+    WHERE school_id <> "" AND school_id IS NOT NULL
+    GROUP BY year,school_id';
+
+    $result = DB::select( DB::raw($query), array(
+        'sd' => $start_date,
+        'ed' => $end_date,
+     ));
+
+    foreach($result as $re) {
+      $school = $schools[$re->school_id];
+      $year = (integer) $re->year;
+      $sum = (double) $re->sum;
+      $data[$school][$year] = $sum;
+    }
+    $allData = multiYearReportData($data, $series, $years);
+    $response = $response->withJson($allData);
+    return $response;
+  })->setName('Hours per School per Year Report');
+  /**
   * Total & average Hours per Gender per Year
   **/
   $this->get('/hoursPerGenderPerYear', function ($request, $response, $args) {
@@ -337,7 +378,50 @@ $app->group('/reports', function () {
     );
     $response = $response->withJson($allData);
     return $response;
-  })->setName('Hours per Gender per Year Report');
+  })->setName('Hours per Week per Year Report');
+  /**
+  * Total & average Hours per Day of Week per Year
+  **/
+  $this->get('/hoursPerDayOfWeek', function ($request, $response, $args) {
+    $check = checkReportInputs($request, $response, $type = 'range');
+    if($check !== true) {
+      return $check;
+    }
+    $start_date = $request->getParam('start_date');
+    $end_date = $request->getParam('end_date');
+    $weekdays = array(
+      "1" => 'Sunday',
+      "2" => 'Monday',
+      "3" => 'Tuesday',
+      "4" => 'Wednesday',
+      "5" => 'Thursday',
+      "6" => 'Friday',
+      "7" => 'Saturday'
+    );
+    $series = array_values($weekdays); //,'Total'
+    $init = initializeMultiYearData($start_date, $end_date, $series);
+    $years = $init['years'];
+    $data = $init['data'];
+
+    $labels = array();
+    $query = 'SELECT SUM(a.hours) as sum, AVG(a.hours) as avg, a.weekday, a.year
+              FROM (SELECT IFNULL(SUM(time_to_sec(timediff(mh.time_out, mh.time_in)) / 3600),0) as hours, DAYOFWEEK(mh.time_in) as weekday, year(mh.time_in) as year from meeting_hours mh WHERE year(mh.time_in) BETWEEN :sd AND :ed GROUP BY weekday,year) a
+              GROUP BY year,weekday';
+
+    $result = DB::select( DB::raw($query), array(
+      'sd' => $start_date,
+      'ed' => $end_date,
+    ));
+    foreach($result as $re) {
+      $weekday = $weekdays[$re->weekday];
+      $year = (integer) $re->year;
+      $sum = (double) $re->sum;
+      $data[$weekday][$year] = $sum;
+    }
+    $allData = multiYearReportData($data, $series, $years);
+    $response = $response->withJson($allData);
+    return $response;
+  })->setName('Hours per Day of Week per Year Report');
   /**
   * Hours per Event per Year
   **/
