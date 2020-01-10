@@ -206,70 +206,89 @@ $app->group('/hours', function () {
       return $response;
     })->setName('Get Timesheet');
     //Get the list of all sign in/out records
-    $this->get('/records', function ($request, $response, $args) {
-      $users = array();
-      $data = array();
+    $this->group('/records', function() {
+      $this->get('', function ($request, $response, $args) {
+        $users = array();
+        $data = array();
 
-      $defaults = array(
-        'filter' => '',
-        'limit' => 10,
-        'order' => 'full_name',
-        'page' => 1,
-      );
-      $inputs = checkSearchInputs($request, $defaults);
-      $filter = $inputs['filter'];
-      $limit = $inputs['limit'];
-      $order = $inputs['order'];
-      $page = $inputs['page'];
-      $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
+        $defaults = array(
+          'filter' => '',
+          'limit' => 10,
+          'order' => 'full_name',
+          'page' => 1,
+        );
+        $inputs = checkSearchInputs($request, $defaults);
+        $filter = $inputs['filter'];
+        $limit = $inputs['limit'];
+        $order = $inputs['order'];
+        $page = $inputs['page'];
+        $listOnly = $request->getParam('listOnly') !== null && $request->getParam('listOnly')==true ? true:false;
 
-      $users = FrcPortal\MeetingHour::with('user')->select()->addSelect(DB::raw('(time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'));
-      $totalNum = 0;
-      if($filter != '') {
-        $filterArr = explode(' ',$filter);
-        $users = $users->whereHas('user', function ($query) use ($filterArr) {
-      		foreach($filterArr as $filter) {
-      			$query->where('email', 'like', '%'.$filter.'%');
-            $query->orWhere('fname', 'like', '%'.$filter.'%');
-      			$query->orWhere('lname', 'like', '%'.$filter.'%');
-      		}
-      	});
-        $users = $users->orHavingRaw('hours LIKE ?',array('%'.$filter.'%'));
-      }
-      $totalNum = count($users->get());
-
-      $orderBy = '';
-      $orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
-      if(in_array($orderCol,array('full_name','time_in','time_out','hours'))) {
-        $orderBy = 'ASC';
-        if($order[0] == '-') {
-          $orderBy = 'DESC';
+        $users = FrcPortal\MeetingHour::with('user')->select()->addSelect(DB::raw('(time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'));
+        $totalNum = 0;
+        if($filter != '') {
+          $filterArr = explode(' ',$filter);
+          $users = $users->whereHas('user', function ($query) use ($filterArr) {
+        		foreach($filterArr as $filter) {
+        			$query->where('email', 'like', '%'.$filter.'%');
+              $query->orWhere('fname', 'like', '%'.$filter.'%');
+        			$query->orWhere('lname', 'like', '%'.$filter.'%');
+        		}
+        	});
+          $users = $users->orHavingRaw('hours LIKE ?',array('%'.$filter.'%'));
         }
-      }
+        $totalNum = count($users->get());
 
-      if($limit > 0) {
-        $offset	= ($page - 1) * $limit;
-      } elseif($limit == 0) {
-        $limit = $totalNum;
-      }
+        $orderBy = '';
+        $orderCol = $order[0] == '-' ? str_replace('-','',$order) : $order;
+        if(in_array($orderCol,array('full_name','time_in','time_out','hours'))) {
+          $orderBy = 'ASC';
+          if($order[0] == '-') {
+            $orderBy = 'DESC';
+          }
+        }
 
-      $users = $users->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
-      $users = $users->map(function ($user, $key) {
-        $user['hours'] = (double) $user['hours'];
-        return $user;
-      })->all();
-      $data['data'] = $users;
-      $data['total'] = $totalNum;
-      $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
-      $data['status'] =true;
-      $data['msg'] = '';
-      if($listOnly) {
-        $data = $users;
-      }
+        if($limit > 0) {
+          $offset	= ($page - 1) * $limit;
+        } elseif($limit == 0) {
+          $limit = $totalNum;
+        }
 
-      $response = $response->withJson($data);
-      return $response;
-    })->setName('Get Sign In Records');
+        $users = $users->orderBy($orderCol,$orderBy)->offset($offset)->limit($limit)->get();
+        $users = $users->map(function ($user, $key) {
+          $user['hours'] = (double) $user['hours'];
+          return $user;
+        })->all();
+        $data['data'] = $users;
+        $data['total'] = $totalNum;
+        $data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
+        $data['status'] =true;
+        $data['msg'] = '';
+        if($listOnly) {
+          $data = $users;
+        }
+
+        $response = $response->withJson($data);
+        return $response;
+      })->setName('Get Sign In Records');
+      $this->get('/my', function ($request, $response, $args) {
+        $users = array();
+        $data = array();
+        $user = FrcPortal\Utilities\Auth::user();
+        $hours = FrcPortal\MeetingHour::select()->addSelect(DB::raw('(time_to_sec(IFNULL(timediff(time_out, time_in),0)) / 3600) as hours'))->where('user_id',$user->user_id)->get();
+        $hours = $hours->map(function ($hour, $key) {
+          $hour['hours'] = (double) $hour['hours'];
+          return $hour;
+        })->all();
+        $data['data'] = $hours;
+        $data['total'] = count($hours);
+        //$data['maxPage'] = $limit > 0 ? ceil($totalNum/$limit) : 0;
+        $data['status'] =true;
+        $data['msg'] = '';
+        $response = $response->withJson($data);
+        return $response;
+      })->setName('Get Sign In Records');
+    });
     //Create a new signin token
     $this->post('/authorize', function ($request, $response, $args) {
       $args = $request->getParsedBody();
