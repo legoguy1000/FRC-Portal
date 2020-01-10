@@ -312,45 +312,9 @@
 						<span>Time Information</span>
 						<span flex></span>
 					</h1>
-					<div flex layout="column" layout-gt-sm="row">
-						<div flex>
-							<md-card>
-								<md-card-title>
-									<md-card-title-text layout="row">
-										<span class="md-headline">My Sign In/Out Records</span>
-										<div flex></div>
-										<md-button class="md-icon-button" ng-click="vm.getSignIns()">
-											<md-icon>refresh</md-icon>
-										</md-button>
-									</md-card-title-text>
-								</md-card-title>
-								<md-card-content>
-									<md-table-container>
-										<table md-table ng-model="selected" md-progress="vm.sil_query.promise">
-											<thead md-head md-order="vm.sil_query.order">
-												<tr md-row>
-													<th md-column><span>Date</span></th>
-													<th md-column md-order-by="time_in"><span>Time In</span></th>
-													<th md-column md-order-by="time_out"><span>Time Out</span></th>
-													<th md-column md-order-by="hours"><span>Hours</span></th>
-												</tr>
-											</thead>
-											<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
-												<tr md-row ng-repeat="record in vm.records | filter: vm.sil_query.filter | orderBy: vm.sil_query.order | limitTo: vm.sil_query.limit : (vm.sil_query.page -1) * vm.sil_query.limit as filtered">
-													<td md-cell><span ng-if="record.time_in">{{record.date.time_in.long_date}}</span></td>
-													<td md-cell><span ng-if="record.time_in">{{record.date.time_in.time_formatted}}</span></td>
-													<td md-cell><span ng-if="record.time_out">{{record.date.time_out.time_formatted}}</span></td>
-													<td md-cell><span>{{record.hours | number : 2}}</span></td>
-												</tr>
-											</tbody>
-										</table>
-									</md-table-container>
-									<md-table-pagination md-limit="vm.sil_query.limit" md-limit-options="vm.limitOptions" md-page="vm.sil_query.page" md-total="{{vm.sil_query.total}}" md-page-select md-boundary-links></md-table-pagination>
-								</md-card-content>
-							</md-card>
-						</div>
-						<div flex layout="column">
-							<md-card>
+					<div flex layout="column">
+						<div flex layout="column" layout-gt-sm="row">
+							<md-card flex>
 								<form ng-submit="vm.changePin()"  name="vm.changePinForm">
 									<md-card-title>
 										<md-card-title-text>
@@ -375,7 +339,7 @@
 									</md-card-actions>
 								</form>
 							</md-card>
-							<md-card>
+							<md-card flex>
 								<form ng-submit="vm.requestMissingHours()" name="vm.rmhForm">
 									<md-card-title>
 										<md-card-title-text>
@@ -430,6 +394,42 @@
 										<md-button type="submit" ng-disabled="!vm.rmhForm.$valid">Submit</md-button>
 									</md-card-actions>
 								</form>
+							</md-card>
+						</div>
+						<div flex>
+							<md-card>
+								<md-card-title>
+									<md-card-title-text layout="row">
+										<span class="md-headline">My Sign In/Out Records</span>
+										<div flex></div>
+										<md-button class="md-icon-button" ng-click="vm.getSignIns()">
+											<md-icon>refresh</md-icon>
+										</md-button>
+									</md-card-title-text>
+								</md-card-title>
+								<md-card-content>
+									<md-table-container>
+										<table md-table ng-model="selected" md-progress="vm.sil_promise">
+											<thead md-head md-order="vm.sil_query.order">
+												<tr md-row>
+													<th md-column><span>Date</span></th>
+													<th md-column md-order-by="time_in"><span>Time In</span></th>
+													<th md-column md-order-by="time_out"><span>Time Out</span></th>
+													<th md-column md-order-by="hours"><span>Hours</span></th>
+												</tr>
+											</thead>
+											<tbody md-body> <!-- | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit -->
+												<tr md-row ng-repeat="record in vm.records | filter: vm.sil_query.filter | orderBy: vm.sil_query.order | limitTo: vm.sil_query.limit : (vm.sil_query.page -1) * vm.sil_query.limit as filtered">
+													<td md-cell><span ng-if="record.time_in">{{record.date.time_in.long_date}}</span></td>
+													<td md-cell><span ng-if="record.time_in">{{record.date.time_in.time_formatted}}</span></td>
+													<td md-cell><span ng-if="record.time_out">{{record.date.time_out.time_formatted}}</span></td>
+													<td md-cell><span>{{record.hours | number : 2}}</span></td>
+												</tr>
+											</tbody>
+										</table>
+									</md-table-container>
+									<md-table-pagination md-limit="vm.sil_query.limit" md-limit-options="vm.limitOptions" md-page="vm.sil_query.page" md-total="{{vm.sil_query.total}}" md-page-select md-boundary-links></md-table-pagination>
+								</md-card-content>
 							</md-card>
 						</div>
 					</div>

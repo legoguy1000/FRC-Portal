@@ -175,13 +175,14 @@ function mainProfileController($rootScope, $timeout, $q, $scope, schoolsService,
 	vm.getUserNotificationPreferences();
 
 	vm.getSignIns = function () {
-		vm.sil.promise = timeService.getMySignIns().then(function(response){
+		vm.sil_promise = timeService.getMySignIns().then(function(response){
 			vm.records = response.data;
 			vm.sil_query.total = response.total;
 			vm.sil_query.maxPage = response.maxPage;
 		});
 	};
-
+	vm.getSignIns();
+	
 	vm.updateUser = function() {
 		vm.loading = true;
 		var data = {
