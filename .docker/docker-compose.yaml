@@ -52,8 +52,6 @@ services:
     - "C:/Users/adr82/Documents/DockerStuff/test1/secured:/var/www/html/api/app/secured"
     # REQUIRED: used to maintain the config.ini file
     - "C:/Users/adr82/Documents/GitHub/FRC-Portal:/var/www/html/"
-    # REQUIRED: used to maintain the config.ini file
-    - "/var/www/html/api/app/vendor"
     # OPTIONAL: Used for the favicons
     - "C:/Users/adr82/Documents/DockerStuff/test1/favicons:/var/www/html/favicons"
     # Required (or self signed certs will be used):Must be cert.crt & key.key.

@@ -1,5 +1,10 @@
 #!/bin/sh
 set -e
+
+if [ ! -f "/ssl_certs/cert.crt" || ! -f "/ssl_certs/cert.key"]; then
+	openssl req -new -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -subj '/CN=frc-portal' -out /ssl_certs/cert.crt -keyout /ssl_certs/cert.key
+else
+
 /usr/local/bin/php "/var/www/html/api/app/dockerRun.php"
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then

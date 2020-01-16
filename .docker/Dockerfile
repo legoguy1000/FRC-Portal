@@ -35,11 +35,11 @@ RUN cp /var/www/html/api/app/secured/config.example.ini /var/www/html/api/app/se
 
 # Apache Config
 COPY .docker/apache-default.conf /etc/apache2/sites-available/000-default.conf
-RUN mkdir /ssl_certs && openssl req -new -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -subj '/CN=frc-portal' -out /ssl_certs/cert.crt -keyout /ssl_certs/key.key
+RUN mkdir /ssl_certs
 
 # Configure the server
 #HEALTHCHECK --timeout=5m --start-period=15s \
-
+VOLUME ["/var/www/html/api/app/secured","/var/www/html/favicons","/ssl_certs"]
 
 # Enable apache mods
 RUN a2enmod rewrite
