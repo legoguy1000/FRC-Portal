@@ -27,7 +27,7 @@ services:
   #   - NGINX_HOST=www.example.com
   #   - NGINX_PORT=80
   #   volumes:
-  #   # Required (or self signed certs will be used):Must be cert.crt & key.key.
+  #   # Required (or self signed certs will be used):Must be cert.crt & cert.key.
   #   - "C:/Users/adr82/Documents/DockerStuff/test1/certs:/ssl_certs"
   #   # Required to configre nginx as reverse proxy
   #   - "C:/Users/adr82/Documents/GitHub/FRC-Portal/.docker/nginx-default.conf:/etc/nginx/conf.d/default.conf"
@@ -35,8 +35,8 @@ services:
   #   - portal-web
   portal-web:
     image: legoguy1000/frc-portal:dev
-    # expose:
-    #   - "443"
+    # expose: #Use if behind reverse proxy running in docker
+    #   - "80"
     ports:
     - "80:80"
     - "443:443"
@@ -45,6 +45,7 @@ services:
     - DB_USER=user
     - DB_PASS=password
     - DB_NAME=demodb
+    # - REVERSE_PROXY=true #Use if behind reverse proxy
     depends_on:
     - portal-db
     volumes:
