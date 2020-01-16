@@ -6,7 +6,8 @@ WORKDIR /var/www/html/
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends git libxml2-dev libzip-dev libcurl4-gnutls-dev unzip libgmp-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-#cron
+ADD https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb /tmp/
+RUN cd /tmp && dpkg -i mod-pagespeed-*.deb && apt-get install -f -y --no-install-recommends && rm mod-pagespeed-*.deb
 
 # Install composer for PHP dependencies
 RUN cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
@@ -35,15 +36,14 @@ RUN cp /var/www/html/api/app/secured/config.example.ini /var/www/html/api/app/se
 
 # Apache Config
 COPY .docker/apache-default.conf /etc/apache2/sites-available/000-default.conf
-RUN mkdir /ssl_certs && openssl req -new -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -subj '/CN=frc-portal' -out /ssl_certs/cert.crt -keyout /ssl_certs/key.key
+RUN mkdir /ssl_certs
 
 # Configure the server
 #HEALTHCHECK --timeout=5m --start-period=15s \
-
+VOLUME ["/var/www/html/api/app/secured","/var/www/html/favicons","/ssl_certs"]
 
 # Enable apache mods
-RUN a2enmod rewrite
-RUN a2enmod ssl
+RUN a2enmod rewrite ssl headers deflate pagespeed
 RUN a2ensite 000-default.conf
 
 EXPOSE 80 443
