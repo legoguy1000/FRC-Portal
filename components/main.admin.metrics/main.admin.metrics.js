@@ -124,7 +124,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.data4 = [];
 	vm.csvData4 = [];
 	vm.reportsHoursPerEventPerYear = function () {
-		metricsService.reportsHoursPerEventPerYear(vm.start_date).then(function(response){
+		metricsService.reportsHoursPerEventPerYear(vm.end_date).then(function(response){
 			vm.labels4 = response.labels;
 			vm.series4 = response.series;
 			vm.data4 = response.data;
@@ -152,7 +152,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.data6 = [];
 	vm.csvData6 = [];
 	vm.reportsHoursPerWeek = function () {
-		metricsService.reportsHoursPerWeek(vm.start_date).then(function(response){
+		metricsService.reportsHoursPerWeek(vm.end_date).then(function(response){
 			vm.labels6 = response.labels;
 			vm.series6 = response.series;
 			vm.data6 = response.data;
@@ -180,7 +180,7 @@ function mainAdminMetricsController($timeout, $q, $scope, $state, metricsService
 	vm.data8 = [];
 	vm.csvData8 = [];
 	vm.reportsHoursPerEventTypePerYear = function () {
-		metricsService.reportsHoursPerEventTypePerYear(vm.start_date).then(function(response){
+		metricsService.reportsHoursPerEventTypePerYear(vm.end_date).then(function(response){
 			vm.labels8 = response.labels;
 			vm.series8 = response.series;
 			vm.data8 = response.data;

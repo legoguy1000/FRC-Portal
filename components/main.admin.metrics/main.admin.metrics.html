@@ -82,7 +82,7 @@
 <md-content layout="column" layout-gt-sm="row" flex>
 	<div flex layout="column" class="md-margin">
 		<div layout="column">
-			<div>Hours per Week ({{vm.start_date}})</div> <!-- chart-dataset-override="vm.datasetOverride3"  -->
+			<div>Hours per Week ({{vm.end_date}})</div> <!-- chart-dataset-override="vm.datasetOverride3"  -->
 			<canvas id="line" class="chart chart-line" chart-data="vm.data6" chart-labels="vm.labels6" chart-series="vm.series6" chart-click="" chart-options="vm.options"></canvas>
 		</div>
 	</div>
@@ -96,13 +96,13 @@
 <md-content layout="column" layout-gt-sm="row" flex>
 	<div flex layout="column" class="md-margin">
 		<div layout="column">
-			<div>Hours per Event ({{vm.start_date}})</div> <!-- chart-dataset-override="vm.datasetOverride3"  -->
+			<div>Hours per Event ({{vm.end_date}})</div> <!-- chart-dataset-override="vm.datasetOverride3"  -->
 			<canvas id="line" class="chart chart-bar" chart-data="vm.data4" chart-labels="vm.labels4" chart-series="vm.series4" chart-click="" chart-options="vm.options"></canvas>
 		</div>
 	</div>
 	<div flex layout="column" class="md-margin">
 		<div layout="column">
-			<div>Hours per Event Type ({{vm.start_date}})</div> <!-- chart-dataset-override="vm.datasetOverride3"  -->
+			<div>Hours per Event Type ({{vm.end_date}})</div> <!-- chart-dataset-override="vm.datasetOverride3"  -->
 			<canvas id="line" class="chart chart-bar" chart-data="vm.data8" chart-labels="vm.labels8" chart-series="vm.series8" chart-click="" chart-options="vm.options"></canvas>
 		</div>
 	</div>
