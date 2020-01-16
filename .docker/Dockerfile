@@ -6,7 +6,8 @@ WORKDIR /var/www/html/
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends git libxml2-dev libzip-dev libcurl4-gnutls-dev unzip libgmp-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-#cron
+ADD https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb /tmp/
+RUN cd /tmp && dpkg -i mod-pagespeed-*.deb && apt-get install -f && rm mod-pagespeed-*.deb
 
 # Install composer for PHP dependencies
 RUN cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
@@ -42,8 +43,7 @@ RUN mkdir /ssl_certs
 VOLUME ["/var/www/html/api/app/secured","/var/www/html/favicons","/ssl_certs"]
 
 # Enable apache mods
-RUN a2enmod rewrite
-RUN a2enmod ssl
+RUN a2enmod rewrite ssl headers deflate pagespeed
 RUN a2ensite 000-default.conf
 
 EXPOSE 80 443
