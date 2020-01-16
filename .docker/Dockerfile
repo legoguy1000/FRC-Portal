@@ -7,7 +7,7 @@ RUN apt-get update && \
 	apt-get install -y --no-install-recommends git libxml2-dev libzip-dev libcurl4-gnutls-dev unzip libgmp-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ADD https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_amd64.deb /tmp/
-RUN cd /tmp && dpkg -i mod-pagespeed-*.deb && apt-get install -f && rm mod-pagespeed-*.deb
+RUN cd /tmp && dpkg -i mod-pagespeed-*.deb && apt-get install -f -y --no-install-recommends && rm mod-pagespeed-*.deb
 
 # Install composer for PHP dependencies
 RUN cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
