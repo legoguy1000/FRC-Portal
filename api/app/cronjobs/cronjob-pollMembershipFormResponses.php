@@ -23,7 +23,7 @@ if(!empty($season)) {
 	try {
 		$result = getSeasonMembershipForm($season->year);
 		$spreadsheetId = $result['data']['join_spreadsheet'];
-		$season = FrcPortal\Season::where('year',$year)->first()
+		$season = FrcPortal\Season::where('year',$year)->first();
 		if(!is_null($season)) {
 			$season_id = $season['season_id'];
 			$season->join_spreadsheet = $spreadsheetId;
