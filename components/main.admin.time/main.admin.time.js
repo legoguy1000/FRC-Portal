@@ -79,24 +79,17 @@ function mainAdminTimeController($timeout, $q, $scope, $state, signinService, ti
 			});
 		};
 
-		vm.deleteMeetingHours = function (hours_record) {
-			var hours = hours_record.hours.toFixed(2);
-			var confirm = $mdDialog.confirm()
-						.title('Delete Hours Record for '+hours_record.user.full_name)
-						.textContent('Are you sure you want to remove '+hours+' hour'+(hours>1 ? 's ':' ')+'for '+hours_record.user.full_name+'?   This action is unreversable.'	)
-						.ariaLabel('Delete Hours Record')
-						.ok('Delete')
-						.cancel('Cancel');
-			$mdDialog.show(confirm).then(function() {
-				vm.sil.promise = timeService.deleteMeetingHours(hours_record.hours_id).then(function(response){
-					vm.getSignIns();
-					$mdToast.show(
-			      $mdToast.simple()
-			        .textContent(response.msg)
-			        .position('top right')
-			        .hideDelay(3000)
-			    );
-				});
+		vm.showEditDialog = function (hours_record) {
+			$mdDialog.show({
+				controller: editHoursRecordDialogController,
+				controllerAs: 'vm',
+				templateUrl: 'components/editHoursRecordDialog/editHoursRecordDialog.html',
+				parent: angular.element(document.body),
+				clickOutsideToClose:true,
+				fullscreen: true, // Only for -xs, -sm breakpoints.
+				locals: {
+					hoursRecord: hours_record
+				}
 			});
 		};
 

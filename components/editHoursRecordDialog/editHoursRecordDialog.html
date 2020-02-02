@@ -1,0 +1,49 @@
+<md-dialog aria-label="New Event" style="" flex="50" >
+	<md-toolbar layout="row">
+	  <div class="md-toolbar-tools">
+		<h2>Edit Hours Record for {{vm.hoursRecord.user.full_name}}</h2>
+		<span flex></span>
+		<md-button class="md-icon-button noprint" ng-click="vm.cancel()">
+			<md-tooltip md-direction="top">Close</md-tooltip>
+		  <md-icon class=""> close </md-icon>
+		</md-button>
+	  </div>
+	</md-toolbar>
+	<md-progress-linear md-mode="indeterminate" ng-show="vm.loading"></md-progress-linear>
+	<form ng-submit="vm.editSubmit()">
+		<md-dialog-content class="md-margin">
+			<md-input-container flex class="md-icon-float md-block">
+				<label>Start Time</label>
+				<md-icon md-font-library="material-icons">today</md-icon>
+				<input moment-picker="vm.hoursRecord.time_in_formatted" required
+					format="LL LT"
+					min-view="month"
+					max-view="hour"
+					start-view="month"
+					ng-model="vm.timeIn">
+				</input>
+			</md-input-container>
+			<md-input-container flex class="md-icon-float md-block">
+				<label>End Time</label>
+				<md-icon md-font-library="material-icons">today</md-icon>
+				<input moment-picker="vm.hoursRecord.time_out_formatted" required
+					format="LL LT"
+					min-view="month"
+					max-view="hour"
+					start-view="month"
+					ng-model="vm.timeOut">
+				</input>
+			</md-input-container>
+		</md-dialog-content>
+		<md-dialog-actions layout="row" class="noprint">
+			<md-button ng-click="vm.deleteMeetingHours()">
+				<md-tooltip md-direction="top">Delete Record</md-tooltip>
+				Delete Record
+			</md-button>
+			<md-button type="submit">
+				<md-tooltip md-direction="top">Save</md-tooltip>
+				Save
+			</md-button>
+		</md-dialog-actions>
+	</form>
+</md-dialog>
