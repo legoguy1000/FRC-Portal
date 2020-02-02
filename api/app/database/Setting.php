@@ -58,6 +58,13 @@ Capsule::schema()->create('settings', function ($table) {
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'slack_api_token'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'slack_team_id'], ['value' => '']);
  $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'notification_email'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'email_enable_smtp'], ['value' => false]);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'email_smtp_server'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'email_smtp_port'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'email_smtp_user'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'email_smtp_password'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'email_smtp_encryption'], ['value' => '']);
+ $setting = FrcPortal\Setting::updateOrCreate(['section' => 'notification', 'setting' => 'email_replyto'], ['value' => '']);
 
 $setting = FrcPortal\Setting::updateOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-changeUserStatus'], ['value' => false]);
 $setting = FrcPortal\Setting::updateOrCreate(['section' => 'cronjob', 'setting' => 'enable_cronjob-importSlackProfiles'], ['value' => false]);
