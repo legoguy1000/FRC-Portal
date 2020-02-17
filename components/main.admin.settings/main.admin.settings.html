@@ -332,9 +332,9 @@
 				</div>
 				<div flex>
 					<md-input-container flex>
-						<label>Google Analytics ID</label>
-						<input ng-model="vm.settings.other.google_analytics_id">
-						<span class="hint">Optional if you want to use Google Analytics</span>
+						<label>Max Hours per Record</label>
+						<input ng-model="vm.settings.other.max_hours" type="number" min="0">
+						<span class="hint">If not signed out by this many hours since signed in, the record will be deleted.</span>
 					</md-input-container>
 				</div>
 			</div>
@@ -349,6 +349,13 @@
 					<md-input-container flex style="width: 100%;">
 						<label>Google Calendar ID</label>
 						<input ng-model="vm.settings.other.google_calendar_id">
+					</md-input-container>
+				</div>
+				<div flex>
+					<md-input-container flex>
+						<label>Google Analytics ID</label>
+						<input ng-model="vm.settings.other.google_analytics_id">
+						<span class="hint">Optional if you want to use Google Analytics</span>
 					</md-input-container>
 				</div>
 			</div>

@@ -400,6 +400,7 @@ if(version_compare($version, '2.17.0','>=')) {
     }
     //echo 'API Tokens are now encrypted' . PHP_EOL . PHP_EOL;
   }
+  $setting = FrcPortal\Setting::firstOrCreate(['section' => 'other', 'setting' => 'max_hours'], ['value' => '18']);
   echo 'FRC Portal has been sucessfully upgrade to version '.$version . PHP_EOL . PHP_EOL;
 }
 ?>
