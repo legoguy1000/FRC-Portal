@@ -36,6 +36,7 @@ function editHoursRecordDialogController($log,$element,$mdDialog,$scope,hoursRec
 	}
 
 	vm.deleteMeetingHours = function () {
+		vm.loading = true;
 		var hours = vm.hoursRecord.hours.toFixed(2);
 		var confirm = $mdDialog.confirm()
 					.title('Delete Hours Record for '+vm.hoursRecord.user.full_name)
@@ -45,7 +46,10 @@ function editHoursRecordDialogController($log,$element,$mdDialog,$scope,hoursRec
 					.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
 			vm.sil.promise = timeService.deleteMeetingHours(vm.hoursRecord.hours_id).then(function(response){
-				vm.getSignIns();
+				if(response.status) {
+					$mdDialog.hide(response.data);
+				}
+				vm.loading = false;
 				$mdToast.show(
 					$mdToast.simple()
 						.textContent(response.msg)

@@ -50,6 +50,7 @@ function mainController($rootScope, configItems, $auth, $timeout, navService, $m
   //$ocLazyLoad.load('https://rawgit.com/schmich/instascan-builds/master/instascan.min.js');
 	$ocLazyLoad.load('components/newSchoolModal/newSchoolModal.js');
 	$ocLazyLoad.load('components/firstPortalCredentialModal/firstPortalCredentialModal.js');
+	$ocLazyLoad.load('components/editHoursRecordDialog/editHoursRecordDialog.js');
 
 	navService.loadAllItems().then(function(menuItems) {
 		main.menuItems = [].concat(menuItems);

@@ -35,12 +35,12 @@
 				</input>
 			</md-input-container>
 		</md-dialog-content>
-		<md-dialog-actions layout="row" class="noprint">
-			<md-button ng-click="vm.deleteMeetingHours()">
+		<md-dialog-actions layout="row" class="noprint" layout-align="space-between center">
+			<md-button class="md-icon-button md-warn" ng-click="vm.deleteMeetingHours()">
+				<md-icon class="material-icons" class="md-warn">delete</md-icon>
 				<md-tooltip md-direction="top">Delete Record</md-tooltip>
-				Delete Record
 			</md-button>
-			<md-button type="submit">
+			<md-button type="submit" class="md-primary">
 				<md-tooltip md-direction="top">Save</md-tooltip>
 				Save
 			</md-button>

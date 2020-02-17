@@ -53,7 +53,7 @@
 						<td md-cell><span ng-if="record.time_out">{{record.date.time_out.time_formatted}}</span></td>
 						<td md-cell><span>{{record.hours | number : 2}}</span></td>
 						<td md-cell>
-							<md-button class="md-icon-button" ng-click="vm.deleteMeetingHours(record)">
+							<md-button class="md-icon-button" ng-click="vm.showEditDialog(record)">
 								<md-icon class="material-icons" class="md-warn">edit</md-icon>
 								<md-tooltip md-direction="top">Edit Record</md-tooltip>
 							</md-button>

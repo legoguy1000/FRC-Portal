@@ -85,11 +85,16 @@ function mainAdminTimeController($timeout, $q, $scope, $state, signinService, ti
 				controllerAs: 'vm',
 				templateUrl: 'components/editHoursRecordDialog/editHoursRecordDialog.html',
 				parent: angular.element(document.body),
+				multiple: true,
 				clickOutsideToClose:true,
 				fullscreen: true, // Only for -xs, -sm breakpoints.
 				locals: {
 					hoursRecord: hours_record
 				}
+			}).then(response => {
+				vm.getSignIns();
+			},response => {
+				vm.getSignIns();
 			});
 		};
 
