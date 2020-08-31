@@ -49,5 +49,12 @@ angular.module('FrcPortal')
 				return response.data;
 			});
 		},
+		editMeetingHours: function (formData) {
+			var hours_id = formData.hours_id != undefined && formData.hours_id != null ? formData.hours_id:'';
+			return $http.put('api/hours/'+hours_id,formData)
+			.then(function(response) {
+				return response.data;
+			});
+		},
 	};
 });

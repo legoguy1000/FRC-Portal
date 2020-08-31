@@ -16,9 +16,9 @@ $app->group('/hours', function () {
         return unauthorizedResponse($response);
       }
       $hours_id = $args['hours_id'];
-
-      $hours = FrcPortal\MeetingHour::find($hours_id);
-      $date = time();
+      //Hours passed from middleware
+      $hours = $request->getAttribute('hours');
+      //$hours = FrcPortal\MeetingHour::find($hours_id);
       if(!is_null($hours)) {
         if($hours->delete()) {
            $responseArr['status'] = true;
@@ -29,6 +29,58 @@ $app->group('/hours', function () {
       $response = $response->withJson($responseArr);
       return $response;
     })->setName('Delete Hours');
+    $this->put('', function ($request, $response, $args) {
+      $userId = FrcPortal\Utilities\Auth::user()->user_id;
+      $formData = $request->getParsedBody();
+      $responseArr = standardResponse($status = false, $msg = 'Something went wrong', $data = null);
+      if(!FrcPortal\Utilities\Auth::isAdmin()) {
+        return unauthorizedResponse($response);
+      }
+      $hours_id = $args['hours_id'];
+      //Hours passed from middleware
+      $hours = $request->getAttribute('hours');
+  //    $hours = FrcPortal\MeetingHour::find($hours_id);
+      if(!is_null($hours)) {
+        if(empty($formData['time_in'])) {
+          return badRequestResponse($response, $msg = 'Time In cannot be blank');
+        }
+        if(empty($formData['time_out'])) {
+          return badRequestResponse($response, $msg = 'Time Out cannot be blank');
+        }
+        if(strtotime($formData['time_in']) >= strtotime($formData['time_out'])) {
+          return badRequestResponse($response, $msg = 'Time In cannpot be greater than Time Out');
+        }
+        $time_in = new DateTime($formData['time_in']);
+        $hours->time_in = $time_in->format('Y-m-d H:i:s');
+        $time_out = new DateTime($formData['time_out']);
+        $hours->time_out = $time_out->format('Y-m-d H:i:s');
+        if($hours->save()) {
+           $responseArr['status'] = true;
+           $responseArr['msg'] = 'Hours record updated';
+           insertLogs($level = 'Information', $message = 'Hours record updated for '.$hours->user->full_name.'. ('.$hours['time_in'].' - '.$hours['time_out'].')');
+        }
+      }
+      $response = $response->withJson($responseArr);
+      return $response;
+    })->setName('Delete Hours');
+  })->add(function ($request, $response, $next) {
+    //Event Midddleware to pull event data
+    // get the route from the request
+    $route = FrcPortal\Utilities\Auth::getRoute();
+    if (!$route) {
+        // no route matched
+        return $next($request, $response);
+    }
+    $args = $route->getArguments();
+    $hours_id = $args['hours_id'];
+    $hours = FrcPortal\MeetingHour::find($hours_id);
+    if(!empty($hours)) {
+      $request = $request->withAttribute('hours', $hours);
+      $response = $next($request, $response);
+    } else {
+      $response = notFoundResponse($response, $msg = 'Hopurs record not found');
+    }
+    return $response;
   });
   $this->group('/missingHoursRequests', function () {
     $this->get('', function ($request, $response, $args) {

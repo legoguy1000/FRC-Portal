@@ -126,6 +126,7 @@ $app->group('/settings', function () {
         $data['slack_api_token'] = !empty($data['slack_api_token']) ? decryptItems($data['slack_api_token']) : '';
       } else if($section == 'other') {
         $data['google_api_key'] = !empty($data['google_api_key']) ? decryptItems($data['google_api_key']) : '';
+        $data['max_hours'] = !empty($data['max_hours']) ? (integer) $data['max_hours']: 0;
       }
 
       $responseArr['status'] = true;
